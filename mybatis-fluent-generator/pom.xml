@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.github.atool</groupId>
+        <artifactId>mybatis-fluent-parent</artifactId>
+        <version>1.0.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mybatis-fluent-generator</artifactId>
+    <properties>
+        <skipTests>true</skipTests>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${baomidou.mybatis.plus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>${baomidou.mybatis.plus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>${jmockit.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.46</version>
+        </dependency>
+        <dependency>
+            <groupId>org.test4j</groupId>
+            <artifactId>test4j</artifactId>
+            <version>${test4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

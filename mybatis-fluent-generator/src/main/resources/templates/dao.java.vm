@@ -1,0 +1,15 @@
+package ${cfg.packDao};
+
+import cn.org.atool.mbplus.base.IBaseDao;
+import ${package.Entity}.${entity};
+import org.springframework.stereotype.Repository;
+
+/**
+ * @ClassName ${cfg.fileDao}
+ * @Description ${entity}数据操作接口
+ *
+ * @author ${author}
+ */
+@Repository
+public interface ${cfg.fileDao} extends IBaseDao<${entity}>  {
+}

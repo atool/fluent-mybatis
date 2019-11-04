@@ -1,0 +1,14 @@
+package ${basePackage}.dm;
+
+import ${basePackage}.mapping.*;
+
+/**
+ *
+ * @author: generate code
+ */
+public interface ITable {
+    #foreach(${obj} in ${objs})
+
+    String t_${obj.tableName} = ${obj.mp}.Table_Name;
+    #end
+}

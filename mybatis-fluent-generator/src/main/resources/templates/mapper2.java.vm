@@ -1,0 +1,26 @@
+package ${package.Mapper};
+
+import ${package.Entity}.${entity};
+import cn.org.atool.mbplus.mapper.IEntityMapper;
+import org.apache.ibatis.annotations.Mapper;
+#if(${cfg.mapperPrefix})
+import org.springframework.stereotype.Component;
+#end
+
+/**
+ * <p>
+ * $!{table.comment} Mapper接口
+ * </p>
+ *
+ * @author ${author}
+ */
+@Mapper
+#if(${cfg.mapperPrefix})
+@Component("${cfg.mapperPrefix}${table.mapperName}")
+#end
+#if(${kotlin})
+interface ${table.mapperName} : IEntityMapper<${entity}>
+#else
+public interface ${table.mapperName} extends IEntityMapper<${entity}>{
+}
+#end

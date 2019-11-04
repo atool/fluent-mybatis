@@ -1,0 +1,104 @@
+package ${cfg.packEntityWrapperHelper};
+
+import cn.org.atool.mbplus.and.*;
+import cn.org.atool.mbplus.base.BaseQueryAnd;
+import cn.org.atool.mbplus.base.BaseUpdateSet;
+import cn.org.atool.mbplus.base.BaseWrapperOrder;
+import cn.org.atool.mbplus.base.IProperty2Column;
+import ${cfg.packMP}.${cfg.fileMP}.Property;
+import ${cfg.packMP}.${cfg.fileMP}.Column;
+import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+
+#foreach($pkg in ${table.importPackages})
+    #if(!$pkg.startsWith("com.baomidou.mybatisplus.annotation"))
+import $pkg;
+    #end
+#end
+
+/**
+ * <p>
+ * ${cfg.fileEntityWrapperHelper}
+ * ${entity} 查询更新帮助类
+ * </p>
+ *
+ * @author ${author}
+ */
+class ${cfg.fileEntityWrapperHelper} {
+    public static class And<Q extends AbstractWrapper & IProperty2Column> extends BaseQueryAnd<Q> {
+#foreach($field in ${table.fields})
+    #if(${field.propertyType}=="String")
+        public final AndString<Q> ${field.propertyName};
+    #elseif((${field.propertyType}=="Boolean"))
+        public final AndBoolean<Q> ${field.propertyName};
+    #else
+        public final AndObject<${field.propertyType}, Q> ${field.propertyName};
+    #end
+#end
+
+        And(Q query) {
+            super(query);
+    #foreach($field in ${table.fields})
+        #if(${field.propertyType}=="String")
+            this.${field.propertyName} = new AndString<>(query, Column.${field.name}, Property.${field.propertyName});
+        #elseif((${field.propertyType}=="Boolean"))
+            this.${field.propertyName} = new AndBoolean<>(query, Column.${field.name}, Property.${field.propertyName});
+        #else
+            this.${field.propertyName} = new AndObject<>(query, Column.${field.name}, Property.${field.propertyName});
+        #end
+    #end
+        }
+    }
+
+    public static abstract class BaseOrder<Q extends AbstractWrapper & IProperty2Column, O extends BaseOrder>
+            extends BaseWrapperOrder<Q> {
+#foreach($field in ${table.fields})
+        public final ColumnOrder<Q, O> ${field.propertyName};
+#end
+
+        public BaseOrder(Q query) {
+            super(query);
+        #foreach($field in ${table.fields})
+            this.${field.propertyName} = new ColumnOrder(query, Column.${field.name}, this);
+        #end
+        }
+    }
+
+    public static class QueryOrder extends BaseOrder<${cfg.fileEntityQuery}, QueryOrder> {
+
+        public QueryOrder(${cfg.fileEntityQuery} query) {
+            super(query);
+        }
+    }
+
+    public static class UpdateOrder extends BaseOrder<${cfg.fileEntityUpdate}, UpdateOrder> {
+
+        public UpdateOrder(${cfg.fileEntityUpdate} update) {
+            super(update);
+        }
+    }
+
+    public static class Set extends BaseUpdateSet<${cfg.fileEntityUpdate}> {
+#foreach($field in ${table.fields})
+    #if(${field.propertyType}=="String")
+        public final SetString<${cfg.fileEntityUpdate}> ${field.propertyName};
+    #elseif((${field.propertyType}=="Boolean"))
+        public final SetBoolean<${cfg.fileEntityUpdate}> ${field.propertyName};
+    #else
+        public final SetObject<${field.propertyType}, ${cfg.fileEntityUpdate}> ${field.propertyName};
+    #end
+#end
+
+        public Set(${cfg.fileEntityUpdate} update) {
+            super(update);
+    #foreach($field in ${table.fields})
+        #if(${field.propertyType}=="String")
+            this.${field.propertyName} = new SetString<>(update, Column.${field.name}, Property.${field.propertyName});
+        #elseif((${field.propertyType}=="Boolean"))
+            this.${field.propertyName} = new SetBoolean<>(update, Column.${field.name}, Property.${field.propertyName});
+        #else
+            this.${field.propertyName} = new SetObject<>(update, Column.${field.name}, Property.${field.propertyName});
+        #end
+    #end
+        }
+    }
+}
