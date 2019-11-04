@@ -1,6 +1,6 @@
 package ${cfg.packTableMap};
 
-import cn.org.atool.mbplus.annotation.ColumnDef;
+import cn.org.atool.mybatis.fluent.annotation.ColumnDef;
 import com.baomidou.mybatisplus.annotation.TableName;
 import org.test4j.module.ICore.DataGenerator;
 import org.test4j.module.ICore.DataMap;

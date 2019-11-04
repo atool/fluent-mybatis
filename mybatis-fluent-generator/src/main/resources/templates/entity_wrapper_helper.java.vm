@@ -1,10 +1,10 @@
 package ${cfg.packEntityWrapperHelper};
 
-import cn.org.atool.mbplus.and.*;
-import cn.org.atool.mbplus.base.BaseQueryAnd;
-import cn.org.atool.mbplus.base.BaseUpdateSet;
-import cn.org.atool.mbplus.base.BaseWrapperOrder;
-import cn.org.atool.mbplus.base.IProperty2Column;
+import cn.org.atool.mybatis.fluent.and.*;
+import cn.org.atool.mybatis.fluent.base.BaseQueryAnd;
+import cn.org.atool.mybatis.fluent.base.BaseUpdateSet;
+import cn.org.atool.mybatis.fluent.base.BaseWrapperOrder;
+import cn.org.atool.mybatis.fluent.base.IProperty2Column;
 import ${cfg.packMP}.${cfg.fileMP}.Property;
 import ${cfg.packMP}.${cfg.fileMP}.Column;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;

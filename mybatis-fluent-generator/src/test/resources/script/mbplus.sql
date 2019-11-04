@@ -1,4 +1,4 @@
-create schema if not exists mbplus collate utf8_bin;
+create schema if not exists mybatis-fluent collate utf8_bin;
 
 create table if not exists address
 (

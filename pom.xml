@@ -35,9 +35,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:atool/mbplus.git</connection>
-        <developerConnection>scm:git:git@github.com:atool/mbplus.git</developerConnection>
-        <url>git@github.com:atool/mbplus.git</url>
+        <connection>scm:git:git@github.com:atool/mybatis-fluent.git</connection>
+        <developerConnection>scm:git:git@github.com:atool/mybatis-fluent.git</developerConnection>
+        <url>git@github.com:atool/mybatis-fluent.git</url>
         <tag>HEAD</tag>
     </scm>
     <developers>

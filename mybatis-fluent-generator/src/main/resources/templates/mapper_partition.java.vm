@@ -1,7 +1,7 @@
 package ${package.Mapper};
 
 import ${package.Entity}.${entity};
-import cn.org.atool.mbplus.mapper.PartitionMapper;
+import cn.org.atool.mybatis.fluent.mapper.PartitionMapper;
 
 /**
  * <p>

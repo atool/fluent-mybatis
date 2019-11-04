@@ -1,6 +1,6 @@
 package ${cfg.packBaseDao};
 
-import cn.org.atool.mbplus.base.BaseDaoImpl;
+import cn.org.atool.mybatis.fluent.base.BaseDaoImpl;
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${cfg.packMP}.${cfg.fileMP};
