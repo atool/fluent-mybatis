@@ -8,7 +8,7 @@
     <artifactId>mybatis-fluent-parent</artifactId>
     <version>1.0.3</version>
     <packaging>pom</packaging>
-    <name>mbplus parent pom</name>
+    <name>mybatis fluent parent pom</name>
     <description>mybatis fluent parent pom</description>
     <url>https://github.com/atool/mybatis-fluent</url>
     <properties>
