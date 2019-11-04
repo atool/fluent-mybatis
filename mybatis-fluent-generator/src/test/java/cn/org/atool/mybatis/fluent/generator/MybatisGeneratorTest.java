@@ -8,7 +8,7 @@ public class MybatisGeneratorTest {
 
     @Test
     public void generate() {
-        String outdir = System.getProperty("user.dir") + "/../mbplus/src/test/java";
+        String outdir = System.getProperty("user.dir") + "/../mybatis-fluent/src/test/java";
         new MybatisGenerator("cn.org.atool.mybatis.fluent.demo")
                 .setOutputDir(outdir, outdir, outdir)
                 .setEntitySetChain(true)

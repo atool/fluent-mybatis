@@ -3,6 +3,7 @@ package cn.org.atool.mybatis.fluent.demo.entity;
 import cn.org.atool.mybatis.fluent.base.IEntity;
 import cn.org.atool.mybatis.fluent.demo.helper.UserEntityHelper;
 import cn.org.atool.mybatis.fluent.demo.mapping.UserMP;
+import cn.org.atool.mybatis.fluent.demo.mapping.UserMP.Column;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,43 +30,43 @@ public class UserEntity implements IEntity {
     /**
      * 
      */
-    @TableId(value = UserMP.Column.id, type = IdType.AUTO)
+    @TableId(value = Column.id, type = IdType.AUTO)
     private Long id;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.user_name)
+    @TableField(value = Column.user_name)
     private String userName;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.address_id)
+    @TableField(value = Column.address_id)
     private Long addressId;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.gmt_created, update = "now()", fill = FieldFill.INSERT)
+    @TableField(value = Column.gmt_created, update = "now()", fill = FieldFill.INSERT)
     private Date gmtCreated;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.gmt_modified, update = "now()", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = Column.gmt_modified, update = "now()", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.is_deleted)
+    @TableField(value = Column.is_deleted)
     @TableLogic
     private Boolean isDeleted;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.age)
+    @TableField(value = Column.age)
     private Integer age;
     /**
      * 
      */
-    @TableField(value = UserMP.Column.version)
+    @TableField(value = Column.version)
     @Version
     private String version;
 

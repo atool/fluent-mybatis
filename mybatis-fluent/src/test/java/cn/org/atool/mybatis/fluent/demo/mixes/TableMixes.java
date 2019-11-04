@@ -1,7 +1,6 @@
 package cn.org.atool.mybatis.fluent.demo.mixes;
 
-import cn.org.atool.mybatis.fluent.demo.mixes.mix.AddressTableMix;
-import cn.org.atool.mybatis.fluent.demo.mixes.mix.UserTableMix;
+import cn.org.atool.mybatis.fluent.demo.mixes.mix.*;
 import org.test4j.module.spec.annotations.Mix;
 import org.test4j.module.spec.annotations.Mixes;
 

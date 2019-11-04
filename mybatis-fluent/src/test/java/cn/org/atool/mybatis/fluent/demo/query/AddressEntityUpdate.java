@@ -14,6 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.org.atool.mybatis.fluent.demo.entity.AddressEntity;
 import cn.org.atool.mybatis.fluent.demo.mapping.AddressMP;
+import cn.org.atool.mybatis.fluent.demo.query.AddressEntityWrapperHelper.And;
+import cn.org.atool.mybatis.fluent.demo.query.AddressEntityWrapperHelper.Set;
+import cn.org.atool.mybatis.fluent.demo.query.AddressEntityWrapperHelper.UpdateOrder;
 
 /**
  * @ClassName AddressEntityUpdate
@@ -30,11 +33,11 @@ public class AddressEntityUpdate extends AbstractWrapper<AddressEntity, String, 
 
     private final Map<String, Object> updates = new HashMap<>();
 
-    public final AddressEntityWrapperHelper.And<AddressEntityUpdate> and = new AddressEntityWrapperHelper.And<>(this);
+    public final And<AddressEntityUpdate> and = new And<>(this);
 
-    public final AddressEntityWrapperHelper.Set set = new AddressEntityWrapperHelper.Set(this);
+    public final Set set = new Set(this);
 
-    public final AddressEntityWrapperHelper.UpdateOrder orderBy = new AddressEntityWrapperHelper.UpdateOrder(this);
+    public final UpdateOrder orderBy = new UpdateOrder(this);
 
     public AddressEntityUpdate(){
         // 如果无参构造函数，请注意实体 NULL 情况 SET 必须有否则 SQL 异常

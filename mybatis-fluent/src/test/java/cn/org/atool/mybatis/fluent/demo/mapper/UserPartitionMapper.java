@@ -10,5 +10,5 @@ import cn.org.atool.mybatis.fluent.mapper.PartitionMapper;
  *
  * @author generate code
  */
-public interface UserPartitionMapper extends PartitionMapper<UserEntity> {
+public interface UserPartitionMapper extends PartitionMapper<UserEntity>{
 }

@@ -5,11 +5,12 @@ import cn.org.atool.mybatis.fluent.base.BaseQueryAnd;
 import cn.org.atool.mybatis.fluent.base.BaseUpdateSet;
 import cn.org.atool.mybatis.fluent.base.BaseWrapperOrder;
 import cn.org.atool.mybatis.fluent.base.IProperty2Column;
-import cn.org.atool.mybatis.fluent.demo.mapping.AddressMP.Column;
 import cn.org.atool.mybatis.fluent.demo.mapping.AddressMP.Property;
+import cn.org.atool.mybatis.fluent.demo.mapping.AddressMP.Column;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * <p>

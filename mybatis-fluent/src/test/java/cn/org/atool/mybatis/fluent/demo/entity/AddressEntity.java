@@ -3,6 +3,7 @@ package cn.org.atool.mybatis.fluent.demo.entity;
 import cn.org.atool.mybatis.fluent.base.IEntity;
 import cn.org.atool.mybatis.fluent.demo.helper.AddressEntityHelper;
 import cn.org.atool.mybatis.fluent.demo.mapping.AddressMP;
+import cn.org.atool.mybatis.fluent.demo.mapping.AddressMP.Column;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,28 +30,28 @@ public class AddressEntity implements IEntity {
     /**
      * 
      */
-    @TableId(value = AddressMP.Column.id, type = IdType.AUTO)
+    @TableId(value = Column.id, type = IdType.AUTO)
     private Long id;
     /**
      * 
      */
-    @TableField(value = AddressMP.Column.address)
+    @TableField(value = Column.address)
     private String address;
     /**
      * 
      */
-    @TableField(value = AddressMP.Column.is_deleted)
+    @TableField(value = Column.is_deleted)
     @TableLogic
     private Boolean isDeleted;
     /**
      * 
      */
-    @TableField(value = AddressMP.Column.gmt_created, update = "now()", fill = FieldFill.INSERT)
+    @TableField(value = Column.gmt_created, update = "now()", fill = FieldFill.INSERT)
     private Date gmtCreated;
     /**
      * 
      */
-    @TableField(value = AddressMP.Column.gmt_modified, update = "now()", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = Column.gmt_modified, update = "now()", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
     @Override

@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * @author generate code
  */
 @Repository
-public interface AddressDao extends IBaseDao<AddressEntity> {
+public interface AddressDao extends IBaseDao<AddressEntity>  {
 }

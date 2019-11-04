@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author generate code
  */
 @Mapper
-public interface UserMapper extends IEntityMapper<UserEntity> {
+public interface UserMapper extends IEntityMapper<UserEntity>{
 }

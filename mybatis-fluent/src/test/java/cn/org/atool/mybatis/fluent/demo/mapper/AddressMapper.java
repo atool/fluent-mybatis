@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author generate code
  */
 @Mapper
-public interface AddressMapper extends IEntityMapper<AddressEntity> {
+public interface AddressMapper extends IEntityMapper<AddressEntity>{
 }
