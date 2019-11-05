@@ -1,9 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.dm;
 
-import cn.org.atool.fluent.mybatis.demo.dm.table.AddressTableMap;
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
-import cn.org.atool.mybatis.fluent.demo.dm.table.*;
-import cn.org.atool.mybatis.fluent.demo.mapping.*;
+import cn.org.atool.fluent.mybatis.demo.dm.table.*;
+import cn.org.atool.fluent.mybatis.demo.mapping.*;
 import org.test4j.module.IScript;
 
 /**

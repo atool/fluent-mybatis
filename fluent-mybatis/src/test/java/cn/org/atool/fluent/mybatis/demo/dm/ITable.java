@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.dm;
 
-import cn.org.atool.fluent.mybatis.demo.mapping.AddressMP;
-import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
+import cn.org.atool.fluent.mybatis.demo.mapping.*;
 
 /**
  *

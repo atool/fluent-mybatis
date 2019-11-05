@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.query;
 
 import cn.org.atool.fluent.mybatis.and.*;
-import cn.org.atool.mybatis.fluent.and.*;
 import cn.org.atool.fluent.mybatis.base.BaseQueryAnd;
 import cn.org.atool.fluent.mybatis.base.BaseUpdateSet;
 import cn.org.atool.fluent.mybatis.base.BaseWrapperOrder;
@@ -11,6 +10,7 @@ import cn.org.atool.fluent.mybatis.demo.mapping.UserMP.Column;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * <p>

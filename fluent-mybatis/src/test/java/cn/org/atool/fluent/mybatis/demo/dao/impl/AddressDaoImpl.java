@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.dao.impl;
 
-import cn.org.atool.fluent.mybatis.demo.dao.intf.AddressDao;
 import cn.org.atool.fluent.mybatis.demo.dao.base.AddressBaseDao;
+import cn.org.atool.fluent.mybatis.demo.dao.intf.AddressDao;
 import org.springframework.stereotype.Repository;
 
 

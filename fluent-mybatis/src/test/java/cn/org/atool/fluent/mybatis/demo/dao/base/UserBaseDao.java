@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.demo.dao.base;
 
+import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.demo.query.UserEntityUpdate;
-import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
 

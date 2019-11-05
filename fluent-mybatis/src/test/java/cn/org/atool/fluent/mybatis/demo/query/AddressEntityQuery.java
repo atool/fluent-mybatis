@@ -19,6 +19,8 @@ import java.util.function.Predicate;
 import cn.org.atool.fluent.mybatis.demo.entity.AddressEntity;
 import cn.org.atool.fluent.mybatis.demo.mapping.AddressMP;
 import cn.org.atool.fluent.mybatis.demo.mapping.AddressMP.Column;
+import cn.org.atool.fluent.mybatis.demo.query.AddressEntityWrapperHelper.And;
+import cn.org.atool.fluent.mybatis.demo.query.AddressEntityWrapperHelper.QueryOrder;
 
 /**
  * @ClassName AddressEntityQuery
@@ -33,9 +35,9 @@ public class AddressEntityQuery extends AbstractWrapper<AddressEntity, String, A
      */
     private SharedString sqlSelect = new SharedString();
 
-    public final AddressEntityWrapperHelper.And<AddressEntityQuery> and = new AddressEntityWrapperHelper.And<>(this);
+    public final And<AddressEntityQuery> and = new And<>(this);
 
-    public final AddressEntityWrapperHelper.QueryOrder orderBy = new AddressEntityWrapperHelper.QueryOrder(this);
+    public final QueryOrder orderBy = new QueryOrder(this);
 
     public AddressEntityQuery(){
         this(null);

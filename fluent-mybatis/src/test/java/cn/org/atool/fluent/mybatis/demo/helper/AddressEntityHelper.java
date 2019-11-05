@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.demo.helper;
 
-import cn.org.atool.fluent.mybatis.demo.mapping.AddressMP;
 import cn.org.atool.fluent.mybatis.demo.entity.AddressEntity;
+import cn.org.atool.fluent.mybatis.demo.mapping.AddressMP;
 
 import java.util.Date;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  *
  * @author generate code
  */
-public class AddressEntityHelper implements AddressMP {
+public class AddressEntityHelper implements AddressMP{
 
     public static Map<String, Object> map(AddressEntity entity){
         Map<String, Object> map = new HashMap<>();

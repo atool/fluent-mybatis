@@ -1,6 +1,6 @@
 package ${package.Entity};
 
-import cn.org.atool.mybatis.fluent.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import ${cfg.packEntityHelper}.${cfg.fileEntityHelper};
 import ${cfg.packMP}.${cfg.fileMP};
 import ${cfg.packMP}.${cfg.fileMP}.Column;

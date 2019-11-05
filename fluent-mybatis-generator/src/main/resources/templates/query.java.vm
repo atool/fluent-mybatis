@@ -5,9 +5,9 @@ package ${cfg.packEntityQuery};
     #end
 #end
 
-import cn.org.atool.mybatis.fluent.base.IEntityQuery;
-import cn.org.atool.mybatis.fluent.base.IProperty2Column;
-import cn.org.atool.mybatis.fluent.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.base.IEntityQuery;
+import cn.org.atool.fluent.mybatis.base.IProperty2Column;
+import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.SharedString;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

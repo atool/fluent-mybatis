@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.demo.helper;
 
-import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 
 import java.util.Date;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  *
  * @author generate code
  */
-public class UserEntityHelper implements UserMP {
+public class UserEntityHelper implements UserMP{
 
     public static Map<String, Object> map(UserEntity entity){
         Map<String, Object> map = new HashMap<>();

@@ -20,8 +20,8 @@ public abstract class BaseTest extends Test4J implements ITable {
 }
 
 @Configuration
-@ComponentScan(basePackages = {"cn.org.atool.mybatis.fluent.demo"})
-@MapperScan("cn.org.atool.mybatis.fluent.demo.mapper")
+@ComponentScan(basePackages = {"cn.org.atool.fluent.mybatis.demo"})
+@MapperScan("cn.org.atool.fluent.mybatis.demo.mapper")
 class TestSpringConfig {
     @Bean("dataSource")
     public DataSource newDataSource() {

@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.demo.dao.base;
 
+import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.entity.AddressEntity;
 import cn.org.atool.fluent.mybatis.demo.mapper.AddressMapper;
 import cn.org.atool.fluent.mybatis.demo.mapping.AddressMP;
 import cn.org.atool.fluent.mybatis.demo.query.AddressEntityQuery;
 import cn.org.atool.fluent.mybatis.demo.query.AddressEntityUpdate;
-import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
 

@@ -1,7 +1,7 @@
 package ${cfg.packEntityUpdate};
 
-import cn.org.atool.mybatis.fluent.base.IEntityUpdate;
-import cn.org.atool.mybatis.fluent.base.IProperty2Column;
+import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.base.IProperty2Column;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;

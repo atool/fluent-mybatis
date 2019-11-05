@@ -19,6 +19,8 @@ import java.util.function.Predicate;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP.Column;
+import cn.org.atool.fluent.mybatis.demo.query.UserEntityWrapperHelper.And;
+import cn.org.atool.fluent.mybatis.demo.query.UserEntityWrapperHelper.QueryOrder;
 
 /**
  * @ClassName UserEntityQuery
@@ -33,9 +35,9 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
      */
     private SharedString sqlSelect = new SharedString();
 
-    public final UserEntityWrapperHelper.And<UserEntityQuery> and = new UserEntityWrapperHelper.And<>(this);
+    public final And<UserEntityQuery> and = new And<>(this);
 
-    public final UserEntityWrapperHelper.QueryOrder orderBy = new UserEntityWrapperHelper.QueryOrder(this);
+    public final QueryOrder orderBy = new QueryOrder(this);
 
     public UserEntityQuery(){
         this(null);

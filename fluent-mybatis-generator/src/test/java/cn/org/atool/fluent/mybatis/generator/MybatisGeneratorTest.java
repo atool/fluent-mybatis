@@ -13,7 +13,7 @@ public class MybatisGeneratorTest {
                 .setOutputDir(outdir, outdir, outdir)
                 .setEntitySetChain(true)
                 .setDataSource(url, "root", "password")
-                .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>","cn.org.atool.mybatis.fluent.demo.MyCustomerInterface")
+                .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>","cn.org.atool.fluent.mybatis.demo.MyCustomerInterface")
                 .generate(new TableConvertor("t_") {
                             {
                                 this.table("address");
