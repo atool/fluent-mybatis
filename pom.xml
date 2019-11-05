@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.atool</groupId>
-    <artifactId>mybatis-fluent-parent</artifactId>
+    <artifactId>fluent-mybatis-parent</artifactId>
     <version>1.0.3</version>
     <packaging>pom</packaging>
-    <name>mybatis fluent parent pom</name>
-    <description>mybatis fluent parent pom</description>
-    <url>https://github.com/atool/mybatis-fluent</url>
+    <name>fluent mybatis parent pom</name>
+    <description>fluent mybatis parent pom</description>
+    <url>https://github.com/atool/fluent-mybatis</url>
     <properties>
         <spring.version>4.3.14.RELEASE</spring.version>
         <baomidou.mybatis.plus.version>3.0.7.1</baomidou.mybatis.plus.version>
@@ -24,8 +24,8 @@
         <release.plugin.version>2.4.1</release.plugin.version>
     </properties>
     <modules>
-        <module>mybatis-fluent</module>
-        <module>mybatis-fluent-generator</module>
+        <module>fluent-mybatis</module>
+        <module>fluent-mybatis-generator</module>
     </modules>
     <licenses>
         <license>
@@ -35,9 +35,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:atool/mybatis-fluent.git</connection>
-        <developerConnection>scm:git:git@github.com:atool/mybatis-fluent.git</developerConnection>
-        <url>git@github.com:atool/mybatis-fluent.git</url>
+        <connection>scm:git:git@github.com:atool/fluent-mybatis.git</connection>
+        <developerConnection>scm:git:git@github.com:atool/fluent-mybatis.git</developerConnection>
+        <url>git@github.com:atool/fluent-mybatis.git</url>
         <tag>HEAD</tag>
     </scm>
     <developers>

@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.github.atool</groupId>
-        <artifactId>mybatis-fluent-parent</artifactId>
+        <artifactId>fluent-mybatis-parent</artifactId>
         <version>1.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mybatis-fluent</artifactId>
-    <name>mybatis fluent</name>
+    <artifactId>fluent-mybatis</artifactId>
+    <name>fluent mybatis</name>
 
     <dependencies>
         <dependency>
