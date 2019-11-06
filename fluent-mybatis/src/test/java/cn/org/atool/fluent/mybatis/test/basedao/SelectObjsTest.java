@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 import cn.org.atool.fluent.mybatis.demo.dao.intf.UserDao;
 import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

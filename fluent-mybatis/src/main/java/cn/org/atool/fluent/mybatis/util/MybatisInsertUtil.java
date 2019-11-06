@@ -53,12 +53,12 @@ public class MybatisInsertUtil {
      */
     public static String getInsertSqlColumnMaybeIf(TableFieldInfo field) {
         final String sqlScript = field.getInsertSqlColumn();
-        if (field.getFieldStrategy() == FieldStrategy.IGNORED || isFillInsertOrLogicDelete(field)) {
+        if (field.getInsertStrategy() == FieldStrategy.IGNORED || isFillInsertOrLogicDelete(field)) {
             return sqlScript;
         }
         String property = field.getProperty();
         String condition = String.format("%s != null", property);
-        if (field.getFieldStrategy() == FieldStrategy.NOT_EMPTY && field.isCharSequence()) {
+        if (field.getInsertStrategy() == FieldStrategy.NOT_EMPTY && field.isCharSequence()) {
             condition = String.format("%s != null and %s != ''", property, property);
         }
         return SqlScriptUtils.convertIf(sqlScript, condition, false);
@@ -94,7 +94,7 @@ public class MybatisInsertUtil {
 
     private static String getInsertValueSql(TableFieldInfo field) {
         String sqlScript = field.getInsertSqlProperty(EMPTY);
-        if (field.getFieldStrategy() == FieldStrategy.IGNORED) {
+        if (field.getInsertStrategy() == FieldStrategy.IGNORED) {
             return sqlScript;
         }
         String defaultValue = findDefaultInsertValue(field, EMPTY);
@@ -103,7 +103,7 @@ public class MybatisInsertUtil {
         }
         String property = field.getProperty();
         String condition = String.format("%s != null", property);
-        if (field.getFieldStrategy() == FieldStrategy.NOT_EMPTY && field.isCharSequence()) {
+        if (field.getInsertStrategy() == FieldStrategy.NOT_EMPTY && field.isCharSequence()) {
             condition = String.format("%s != null and %s != ''", property, property);
         }
         return SqlScriptUtils.convertChoose(condition, sqlScript, defaultValue);
@@ -174,7 +174,7 @@ public class MybatisInsertUtil {
      */
     public static String insertBatchValue(TableFieldInfo field, String prefix) {
         String sqlScript = field.getInsertSqlProperty(prefix);
-        if (field.getFieldStrategy() == FieldStrategy.IGNORED || !isFillInsertOrLogicDelete(field)) {
+        if (field.getInsertStrategy() == FieldStrategy.IGNORED || !isFillInsertOrLogicDelete(field)) {
             return sqlScript;
         }
         String property = prefix + field.getProperty();

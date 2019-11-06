@@ -3,7 +3,11 @@ package cn.org.atool.fluent.mybatis.util;
 import cn.org.atool.fluent.mybatis.exception.NullParameterException;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.toolkit.*;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.ColumnCache;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -167,7 +171,7 @@ public class MybatisUtil {
         } else {
             SerializedLambda lambda = LambdaUtils.resolve(function);
             String fieldName = StringUtils.resolveFieldName(lambda.getImplMethodName());
-            Map<String, ColumnCache> columnMap = LambdaUtils.getColumnMap((lambda.getImplClassName()));
+            Map<String, ColumnCache> columnMap = LambdaUtils.getColumnMap((lambda.getImplClass()));
 
             return Optional.ofNullable(columnMap.get(fieldName.toUpperCase(Locale.ENGLISH)))
                     .map(ColumnCache::getColumn)

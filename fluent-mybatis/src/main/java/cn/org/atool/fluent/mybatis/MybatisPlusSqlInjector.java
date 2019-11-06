@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class MybatisPlusSqlInjector extends DefaultSqlInjector {
     @Override
-    public List<AbstractMethod> getMethodList() {
+    public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
         return Stream.of(
                 // 替换掉Insert默认实现
                 new Insert(),

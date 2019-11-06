@@ -22,6 +22,6 @@ public class SelectListInPartition extends SelectList {
                 this.sqlWhereEntityWrapper(true, tableInfo)
         );
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
-        return this.addSelectMappedStatement(mapperClass, MAPPER_METHOD_ID, sqlSource, modelClass, tableInfo);
+        return this.addSelectMappedStatementForTable(mapperClass, MAPPER_METHOD_ID, sqlSource, tableInfo);
     }
 }

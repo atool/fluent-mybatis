@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.test4j.junit.Test4J;
+import org.test4j.junit5.Test4J;
 import org.test4j.module.database.sql.Test4JDataSourceHelper;
 
 import javax.sql.DataSource;

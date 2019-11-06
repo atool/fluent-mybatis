@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;

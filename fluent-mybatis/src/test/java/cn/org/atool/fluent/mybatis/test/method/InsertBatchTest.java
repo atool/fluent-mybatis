@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import com.google.common.collect.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class InsertBatchTest extends BaseTest {

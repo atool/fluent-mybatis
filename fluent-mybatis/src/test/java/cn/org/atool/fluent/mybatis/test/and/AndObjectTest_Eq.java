@@ -4,8 +4,10 @@ import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.exception.NullParameterException;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AndObjectTest_Eq extends BaseTest {
     @Autowired
@@ -20,11 +22,12 @@ public class AndObjectTest_Eq extends BaseTest {
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
-    @Test(expected = NullParameterException.class)
+    @Test
     public void eq_null() {
-        UserEntityQuery query = new UserEntityQuery()
-                .and.age.eq(null);
-        mapper.selectCount(query);
+        assertThrows(NullParameterException.class,
+                () -> new UserEntityQuery()
+                        .and.age.eq(null)
+        );
     }
 
     @Test
@@ -117,10 +120,11 @@ public class AndObjectTest_Eq extends BaseTest {
         db.sqlList().wantFirstPara().sizeEq(0);
     }
 
-    @Test(expected = NullParameterException.class)
+    @Test
     public void eq_Predicate_true_Supplier_null() {
-        UserEntityQuery query = new UserEntityQuery()
-                .and.age.eq((age) -> age == null, () -> null);
-        mapper.selectCount(query);
+        assertThrows(NullParameterException.class,
+                () -> new UserEntityQuery()
+                        .and.age.eq((age) -> age == null, () -> null)
+        );
     }
 }

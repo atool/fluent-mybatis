@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.and;
 import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AndObjectTest_Le extends BaseTest {

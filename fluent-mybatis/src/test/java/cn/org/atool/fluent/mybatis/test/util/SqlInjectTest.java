@@ -1,18 +1,21 @@
 package cn.org.atool.fluent.mybatis.test.util;
 
 import cn.org.atool.fluent.mybatis.util.SqlInject;
-import org.junit.Test;
-import org.test4j.junit.DataFrom;
-import org.test4j.junit.Test4J;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.test4j.junit5.Test4J;
 import org.test4j.tools.datagen.DataProvider;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author darui.wu
  * @create 2019/10/31 7:10 下午
  */
 public class SqlInjectTest extends Test4J {
-    @DataFrom("data_isKeyword")
-    @Test
+    @MethodSource("data_isKeyword")
+    @ParameterizedTest
     public void test_isKeyword(String string, boolean isKeyword) {
         boolean result = SqlInject.probablySqlInject(string);
         want.bool(result).is(isKeyword);
@@ -37,8 +40,8 @@ public class SqlInjectTest extends Test4J {
     }
 
 
-    @DataFrom("data_isDanger")
-    @Test
+    @MethodSource("data_isDanger")
+    @ParameterizedTest
     public void test_isDanger(String string, boolean isKeyword) {
         boolean result = SqlInject.probablySqlInject(string);
         want.bool(result).is(isKeyword);
@@ -60,8 +63,8 @@ public class SqlInjectTest extends Test4J {
     }
 
 
-    @DataFrom("data_simpleNoInject")
-    @Test
+    @MethodSource("data_simpleNoInject")
+    @ParameterizedTest
     public void test_simpleNoInject(String string, boolean isKeyword) {
         boolean result = SqlInject.hasSimpleInject(string);
         want.bool(result).is(isKeyword);
@@ -84,13 +87,17 @@ public class SqlInjectTest extends Test4J {
                 ;
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void test_assertSimpleNoInject() {
-        SqlInject.assertSimpleNoInject("test", "--");
+        assertThrows(RuntimeException.class, () ->
+                SqlInject.assertSimpleNoInject("test", "--")
+        );
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void test_assertNoInject() {
-        SqlInject.assertNoInject("test", "and");
+        assertThrows(RuntimeException.class, () ->
+                SqlInject.assertNoInject("test", "and")
+        );
     }
 }
