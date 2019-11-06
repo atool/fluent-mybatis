@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ public class DeleteByMapTest extends BaseTest {
                 this.put(UserMP.Column.user_name, "test12");
             }
         });
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE user_name = ?");
+        db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE (user_name = ?)", StringMode.SameAsSpace);
         db.table(t_user).count().eq(8L);
     }
 }

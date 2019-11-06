@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 public class DeleteByQueryTest extends BaseTest {
     @Autowired
@@ -16,6 +17,7 @@ public class DeleteByQueryTest extends BaseTest {
                 .user_name.values(DataGenerator.increase("username_%d")));
         dao.deleteByQuery("username_4", "username_5", "username_7");
         db.table(t_user).count().eq(7L);
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE user_name IN (?,?,?)");
+        db.sqlList().wantFirstSql()
+                .eq("DELETE FROM t_user WHERE (user_name IN (?,?,?))", StringMode.SameAsSpace);
     }
 }

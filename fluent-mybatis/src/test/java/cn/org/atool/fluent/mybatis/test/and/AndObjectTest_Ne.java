@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 public class AndObjectTest_Ne extends BaseTest {
     @Autowired
@@ -15,7 +16,7 @@ public class AndObjectTest_Ne extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.ne(34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <> ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <> ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -24,7 +25,7 @@ public class AndObjectTest_Ne extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.ne(true, 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <> ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <> ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -33,7 +34,7 @@ public class AndObjectTest_Ne extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.ne((age) -> true, 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <> ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <> ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -51,7 +52,7 @@ public class AndObjectTest_Ne extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.ne(true, () -> 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <> ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <> ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 

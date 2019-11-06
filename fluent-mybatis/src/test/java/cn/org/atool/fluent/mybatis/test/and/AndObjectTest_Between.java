@@ -15,7 +15,7 @@ public class AndObjectTest_Between extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.between(23, 40);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().where().eq("age BETWEEN ? AND ?");
+        db.sqlList().wantFirstSql().where().eq("(age BETWEEN ? AND ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{23, 40});
     }
 
@@ -24,7 +24,7 @@ public class AndObjectTest_Between extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.between(true, 23, 40);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().where().eq("age BETWEEN ? AND ?");
+        db.sqlList().wantFirstSql().where().eq("(age BETWEEN ? AND ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{23, 40});
     }
 
@@ -42,7 +42,7 @@ public class AndObjectTest_Between extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notBetween(23, 40);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().where().eq("age NOT BETWEEN ? AND ?");
+        db.sqlList().wantFirstSql().where().eq("(age NOT BETWEEN ? AND ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{23, 40});
     }
 
@@ -51,7 +51,7 @@ public class AndObjectTest_Between extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notBetween(true, 23, 40);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().where().eq("age NOT BETWEEN ? AND ?");
+        db.sqlList().wantFirstSql().where().eq("(age NOT BETWEEN ? AND ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{23, 40});
     }
 

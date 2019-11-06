@@ -18,6 +18,6 @@ public class OrderTest extends BaseTest {
                 .orderByAsc("id+0");
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
-                .where().eq("user_name LIKE ? ORDER BY id ASC , address_id ASC , user_name DESC , id+0 ASC");
+                .where().eq("(user_name LIKE ?) ORDER BY id ASC , address_id ASC , user_name DESC , id+0 ASC");
     }
 }

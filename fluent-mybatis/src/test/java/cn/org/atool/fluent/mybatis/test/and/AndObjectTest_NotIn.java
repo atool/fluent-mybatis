@@ -17,7 +17,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn(Arrays.asList(34, 35));
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -26,7 +26,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn(true, Arrays.asList(34, 35));
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -35,7 +35,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn(true, () -> Arrays.asList(34, 35));
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -44,7 +44,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn_IfNotEmpty(Arrays.asList(34, 35));
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -53,7 +53,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn((ages) -> true, Arrays.asList(34, 35));
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -62,7 +62,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn((ages) -> true, () -> Arrays.asList(34, 35));
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -71,7 +71,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn(34, 35);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -80,7 +80,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn(true, new Integer[]{34, 35});
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -89,7 +89,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn(true, 34, 35);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -98,7 +98,7 @@ public class AndObjectTest_NotIn extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.notIn_IfNotEmpty(34, 35);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age NOT IN (?,?)");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age NOT IN (?,?))");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 

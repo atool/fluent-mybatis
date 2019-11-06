@@ -41,7 +41,6 @@ public class AddressEntity implements IEntity {
      * 
      */
     @TableField(value = Column.is_deleted)
-    @TableLogic
     private Boolean isDeleted;
     /**
      * 

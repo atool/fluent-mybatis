@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 /**
  * @author darui.wu
@@ -20,7 +21,7 @@ public class ExistPkTest extends BaseTest {
                 .id.values(1, 3)
         );
         boolean existed = dao.existPk(1);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE id = ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
         want.bool(existed).is(true);
 
         existed = dao.existPk(2);

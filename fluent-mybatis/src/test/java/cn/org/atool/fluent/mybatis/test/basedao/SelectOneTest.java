@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 /**
  * @author darui.wu
@@ -23,7 +24,7 @@ public class SelectOneTest extends BaseTest {
         UserEntity user = dao.selectOne("username");
         want.object(user).notNull();
         db.sqlList().wantFirstSql().start("SELECT")
-                .end("FROM t_user WHERE user_name LIKE ? limit 1");
+                .end("FROM t_user WHERE (user_name LIKE ?) limit 1", StringMode.SameAsSpace);
     }
 
     @Test
@@ -34,6 +35,6 @@ public class SelectOneTest extends BaseTest {
         String username = dao.selectOne(5);
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
-                .end("FROM t_user WHERE id = ? limit 1");
+                .end("FROM t_user WHERE (id = ?) limit 1", StringMode.SameAsSpace);
     }
 }

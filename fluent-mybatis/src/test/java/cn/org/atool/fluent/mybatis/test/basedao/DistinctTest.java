@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class DistinctTest extends BaseTest {
                 .and.age.eq(30);
 
         List<UserEntity> users = mapper.selectList(query);
-        db.sqlList().wantFirstSql().eq("SELECT distinct user_name FROM t_user WHERE age = ?");
+        db.sqlList().wantFirstSql().eq("SELECT distinct user_name FROM t_user WHERE (age = ?)", StringMode.SameAsSpace);
         want.list(users).eqDataMap(new UserEntityMap(2).userName.values("user1", "user2"));
     }
 }

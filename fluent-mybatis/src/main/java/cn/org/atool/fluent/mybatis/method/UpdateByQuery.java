@@ -25,7 +25,7 @@ public class UpdateByQuery extends AbstractMethod {
         SqlMethod sqlMethod = SqlMethod.UPDATE;
         String setSql = this.updateSetSql(tableInfo);
         String whereSql = sqlWhereEntityWrapper(true, tableInfo);
-        String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), setSql, whereSql);
+        String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), setSql, whereSql,sqlComment());
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, mapperClass);
         return this.addUpdateMappedStatement(mapperClass, modelClass, MAPPER_METHOD_ID, sqlSource);
     }

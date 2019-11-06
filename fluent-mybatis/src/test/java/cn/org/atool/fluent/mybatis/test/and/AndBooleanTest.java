@@ -15,7 +15,7 @@ public class AndBooleanTest extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.isDeleted.isTrue();
         mapper.selectList(query);
-        db.sqlList().wantFirstSql().where().eq("is_deleted = ?");
+        db.sqlList().wantFirstSql().where().eq("(is_deleted = ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{true});
     }
 
@@ -24,7 +24,7 @@ public class AndBooleanTest extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.isDeleted.isFalse();
         mapper.selectList(query);
-        db.sqlList().wantFirstSql().where().eq("is_deleted = ?");
+        db.sqlList().wantFirstSql().where().eq("(is_deleted = ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{false});
     }
 }

@@ -56,7 +56,6 @@ public class UserEntity implements IEntity {
      * 
      */
     @TableField(value = Column.is_deleted)
-    @TableLogic
     private Boolean isDeleted;
     /**
      * 
@@ -67,7 +66,6 @@ public class UserEntity implements IEntity {
      * 
      */
     @TableField(value = Column.version)
-    @Version
     private String version;
 
     @Override
