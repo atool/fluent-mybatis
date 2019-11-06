@@ -3,7 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-parent</artifactId>
     <version>1.0.3</version>
@@ -11,22 +15,6 @@
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
     <url>https://github.com/atool/fluent-mybatis</url>
-    <properties>
-        <spring.version>4.3.14.RELEASE</spring.version>
-        <baomidou.mybatis.plus.version>3.0.7.1</baomidou.mybatis.plus.version>
-        <jmockit.version>1.45</jmockit.version>
-        <test4j.version>2.5.3</test4j.version>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <release.plugin.version>2.4.1</release.plugin.version>
-    </properties>
-    <modules>
-        <module>fluent-mybatis</module>
-        <module>fluent-mybatis-generator</module>
-    </modules>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -40,6 +28,7 @@
         <url>git@github.com:atool/fluent-mybatis.git</url>
         <tag>HEAD</tag>
     </scm>
+
     <developers>
         <developer>
             <id>davey.wu</id>
@@ -47,6 +36,23 @@
             <email>darui.wu@163.com</email>
         </developer>
     </developers>
+    <properties>
+        <spring.version>4.3.14.RELEASE</spring.version>
+        <mybatis.plus.version>3.2.0</mybatis.plus.version>
+        <mybatis.version>3.5.2</mybatis.version>
+        <jmockit.version>1.48</jmockit.version>
+        <test4j.version>2.5.4-SNAPSHOT</test4j.version>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <release.plugin.version>2.4.1</release.plugin.version>
+    </properties>
+    <modules>
+        <module>fluent-mybatis</module>
+        <module>fluent-mybatis-generator</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -64,13 +70,7 @@
         <dependency>
             <groupId>org.jmockit</groupId>
             <artifactId>jmockit</artifactId>
-            <version>1.45</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${jmockit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -81,7 +81,7 @@
         </dependency>
         <dependency>
             <groupId>org.test4j</groupId>
-            <artifactId>test4j</artifactId>
+            <artifactId>test4j-junit5</artifactId>
             <version>${test4j.version}</version>
             <scope>test</scope>
         </dependency>

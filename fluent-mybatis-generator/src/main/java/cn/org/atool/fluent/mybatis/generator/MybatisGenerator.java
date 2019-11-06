@@ -1,28 +1,24 @@
 package cn.org.atool.fluent.mybatis.generator;
 
+import cn.org.atool.fluent.mybatis.generator.mock.CopyAutoGenerator;
+import cn.org.atool.fluent.mybatis.generator.mock.MockConfigBuilder;
+import cn.org.atool.fluent.mybatis.generator.mock.MockTableField;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.mybatisplus.generator.config.po.TableField;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
-import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
 import org.apache.commons.lang3.StringUtils;
 import org.test4j.module.core.utility.MessageHelper;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
@@ -98,7 +94,7 @@ public class MybatisGenerator {
         this.daoBasePackage = daoBasePackage;
     }
 
-    public Table currTable() {
+    public static Table currTable() {
         return currTable.get();
     }
 
@@ -172,7 +168,7 @@ public class MybatisGenerator {
      * @param verField   乐观锁字段
      */
     private void generate(TableConvertor tables, String[] tableNames, String verField) {
-        new AutoGenerator()
+        new CopyAutoGenerator()
                 .setGlobalConfig(this.initGlobalConfig(tables.getEntitySuffix()))
                 .setDataSource(this.dataSourceConfig)
                 .setPackageInfo(this.initPackageConfig())
@@ -235,7 +231,6 @@ public class MybatisGenerator {
         GenerateObj.setCurrConfig(config);
         return cfg;
     }
-
 
 
     private String getInterfacePacks() {
@@ -311,87 +306,8 @@ public class MybatisGenerator {
         if (MockFlag.flag()) {
             return;
         }
-        new MockUp<ConfigBuilder>() {
-            @Mock
-            public String processName(Invocation it, String name, NamingStrategy strategy, String[] prefix) {
-                if (prefix == null) {
-                    return processColumnName(it, name, strategy);
-                } else {
-                    String _name = processTableName(it, name, strategy, prefix);
-                    String withSuffix = NamingStrategy.capitalFirst(_name);
-                    currTable.get().setWithoutSuffixEntity(withSuffix);
-                    return _name;
-                }
-            }
-
-            private String processColumnName(Invocation it, String name, NamingStrategy strategy) {
-                String propertyName = currTable.get().getPropertyNameByColumn(name);
-                if (StringUtils.isNotBlank(propertyName)) {
-                    return propertyName;
-                } else {
-                    return it.proceed(name, strategy, null);
-                }
-            }
-
-            private String processTableName(Invocation it, String name, NamingStrategy strategy, String[] prefix) {
-                if (StringUtils.isNotBlank(currTable.get().getWithoutSuffixEntity())) {
-                    return currTable.get().getWithoutSuffixEntity();
-                } else {
-                    return it.proceed(name, strategy, prefix);
-                }
-            }
-
-            @Mock
-            public List<TableInfo> processTable(Invocation it, List<TableInfo> tableList, NamingStrategy strategy, StrategyConfig config) {
-                it.proceed(tableList, strategy, config);
-                for (TableInfo tableInfo : tableList) {
-                    String entityName = currTable.get().getWithoutSuffixEntity();
-                }
-                return tableList;
-            }
-
-            @Mock
-            public TableInfo convertTableFields(Invocation it, TableInfo tableInfo, NamingStrategy strategy) {
-                TableInfo _tableInfo = it.proceed(tableInfo, strategy);
-                _tableInfo.setFields(_tableInfo.getFields().stream()
-                        .filter(field -> !currTable.get().getColumn(field.getName())
-                                .map(TableColumn::isExclude)
-                                .orElse(false)
-                        ).collect(Collectors.toList())
-                );
-                return _tableInfo;
-            }
-        };
-
-        new MockUp<TableField>() {
-            @Mock
-            public TableField setColumnType(Invocation it, final IColumnType columnType) {
-                String name = ((TableField) it.getInvokedInstance()).getName();
-                IColumnType specType = currTable.get().columnType(name);
-                return it.proceed(specType == null ? columnType : specType);
-            }
-
-            @Mock
-            public String getComment(Invocation it) {
-                String comment = it.proceed();
-                return comment == null ? null : comment.replaceAll("\\/\\\\", "");
-            }
-
-            @Mock
-            public String getCapitalName(Invocation it) {
-                String propertyName = ((TableField) it.getInvokedInstance()).getPropertyName();
-                if (propertyName.length() <= 1) {
-                    return propertyName.toUpperCase();
-                }
-                // 第一个字母小写， 第二个字母大写，特殊处理
-                String firstChar = propertyName.substring(0, 1);
-                if (Character.isLowerCase(firstChar.toCharArray()[0]) && Character.isUpperCase(propertyName.substring(1, 2).toCharArray()[0])) {
-                    return firstChar.toLowerCase() + propertyName.substring(1);
-                } else {
-                    return firstChar.toUpperCase() + propertyName.substring(1);
-                }
-            }
-        };
+        new MockConfigBuilder();
+        new MockTableField();
 
         new MockUp<MockFlag>() {
             @Mock

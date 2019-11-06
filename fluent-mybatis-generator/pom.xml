@@ -18,12 +18,12 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
-            <version>${baomidou.mybatis.plus.version}</version>
+            <version>${mybatis.plus.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>${baomidou.mybatis.plus.version}</version>
+            <version>${mybatis.plus.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>org.test4j</groupId>
-            <artifactId>test4j</artifactId>
+            <artifactId>test4j-junit5</artifactId>
             <version>${test4j.version}</version>
             <scope>provided</scope>
         </dependency>

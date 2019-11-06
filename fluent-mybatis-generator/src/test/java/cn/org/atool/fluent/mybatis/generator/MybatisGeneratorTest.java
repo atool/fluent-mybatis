@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.generator;
 
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MybatisGeneratorTest {
     private static String url = "jdbc:mysql://localhost:3306/mbplus";
@@ -13,7 +13,7 @@ public class MybatisGeneratorTest {
                 .setOutputDir(outdir, outdir, outdir)
                 .setEntitySetChain(true)
                 .setDataSource(url, "root", "password")
-                .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>","cn.org.atool.fluent.mybatis.demo.MyCustomerInterface")
+                .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>", "cn.org.atool.fluent.mybatis.demo.MyCustomerInterface")
                 .generate(new TableConvertor("t_") {
                             {
                                 this.table("address");
