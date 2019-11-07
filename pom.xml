@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -180,15 +180,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M3</version>
 
                 <configuration>
-                    <useSystemClassLoader>true</useSystemClassLoader>
-                    <testFailureIgnore>true</testFailureIgnore>
-                    <parallel>all</parallel>
-                    <argLine>-javaagent:"${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</argLine>
-                    <forkMode>always</forkMode>
-                    <threadCount>1</threadCount>
+<!--                    <useSystemClassLoader>true</useSystemClassLoader>-->
+<!--                    <testFailureIgnore>true</testFailureIgnore>-->
+<!--                    <parallel>all</parallel>-->
+                    <argLine>-javaagent:"${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar"</argLine>
+<!--                    <forkMode>always</forkMode>-->
+<!--                    <threadCount>1</threadCount>-->
                 </configuration>
             </plugin>
         </plugins>
