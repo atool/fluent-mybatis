@@ -25,7 +25,7 @@ public class SelectByIdTest extends BaseTest {
                 .user_name.values(DataGenerator.increase("username_%d")));
         UserEntity user = dao.selectById(3L);
         db.sqlList().wantFirstSql()
-                .eq("SELECT id,user_name,address_id,gmt_created,gmt_modified,is_deleted,age,version FROM t_user WHERE id=?");
+                .where().eq("id=?");
         want.object(user).eqHashMap(new UserEntityMap().userName.values("username_3"));
     }
 
@@ -35,8 +35,7 @@ public class SelectByIdTest extends BaseTest {
                 .user_name.values(DataGenerator.increase("username_%d")));
         List<UserEntity> users = dao.selectByIds(Arrays.asList(3L, 5L));
         db.sqlList().wantFirstSql()
-                .eq("SELECT id,user_name,address_id,gmt_created,gmt_modified,is_deleted,age,version " +
-                        "FROM t_user WHERE id IN ( ? , ? )");
+                .where().eq("id IN ( ? , ? )");
         want.object(users).eqDataMap(new UserEntityMap(2)
                 .userName.values("username_3", "username_5")
         );

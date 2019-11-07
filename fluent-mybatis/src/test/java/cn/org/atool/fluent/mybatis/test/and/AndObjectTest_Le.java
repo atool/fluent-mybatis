@@ -15,7 +15,7 @@ public class AndObjectTest_Le extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.le(34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <= ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <= ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -24,7 +24,7 @@ public class AndObjectTest_Le extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.le(true, 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <= ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <= ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -33,7 +33,7 @@ public class AndObjectTest_Le extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.le(true, () -> 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <= ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <= ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -42,7 +42,7 @@ public class AndObjectTest_Le extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.le_IfNotNull(34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <= ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <= ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -51,7 +51,7 @@ public class AndObjectTest_Le extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.le((age) -> true, 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <= ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <= ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -60,7 +60,7 @@ public class AndObjectTest_Le extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.le((age) -> true, () -> 34);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age <= ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age <= ?)");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 }

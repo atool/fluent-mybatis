@@ -15,7 +15,7 @@ public class AndObjectTest_Null extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.isNull();
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age IS NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age IS NULL)");
     }
 
     @Test
@@ -23,7 +23,7 @@ public class AndObjectTest_Null extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.isNull(true);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age IS NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age IS NULL)");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class AndObjectTest_Null extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.isNotNull();
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age IS NOT NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age IS NOT NULL)");
     }
 
     @Test
@@ -47,7 +47,7 @@ public class AndObjectTest_Null extends BaseTest {
         UserEntityQuery query = new UserEntityQuery()
                 .and.age.isNotNull(true);
         mapper.selectCount(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE age IS NOT NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (age IS NOT NULL)");
     }
 
     @Test

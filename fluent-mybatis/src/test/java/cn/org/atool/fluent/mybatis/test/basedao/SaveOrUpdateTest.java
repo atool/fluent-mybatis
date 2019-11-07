@@ -21,7 +21,7 @@ public class SaveOrUpdateTest extends BaseTest {
         db.table(t_user).clean().insert(new UserTableMap(3).init());
         dao.saveOrUpdate(new UserEntity().setId(3L).setUserName("test_111").setAge(30));
         db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
-        db.sqlList().wantSql(1).eq("UPDATE t_user SET user_name=?, gmt_modified=now(), age=? WHERE id=?");
+        db.sqlList().wantSql(1).eq("UPDATE t_user SET gmt_modified=now(), user_name=?, age=? WHERE id=?");
         db.table(t_user).queryWhere("id=3").eqDataMap(new UserTableMap(1).user_name.values("test_111").age.values(30));
     }
 

@@ -21,7 +21,7 @@ public class UpdateTest extends BaseTest {
         db.table(t_user).clean().insert(new UserTableMap(5).init()
                 .user_name.values(DataGenerator.increase("username_%d")));
         dao.updateUserNameById("new_user_name", 4L);
-        db.sqlList().wantFirstSql().eq("UPDATE t_user SET user_name=?, gmt_modified=now() WHERE id = ?");
+        db.sqlList().wantFirstSql().eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ?)");
         db.table(t_user).queryWhere("id=4").eqDataMap(UserTableMap.create(1)
                 .user_name.values("new_user_name")
         );
