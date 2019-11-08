@@ -24,7 +24,7 @@ public class SelectListTest extends BaseTest {
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<UserEntity> users = dao.selectList(3L, 6L, 7L);
-        want.list(users).eqDataMap(new UserEntityMap(3)
+        want.list(users).eqDataMap(UserEntityMap.create(3)
                 .id.values(3, 6, 7)
                 .userName.values("username_3", "username_6", "username_7")
         );

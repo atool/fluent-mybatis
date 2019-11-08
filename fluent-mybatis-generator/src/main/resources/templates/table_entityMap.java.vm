@@ -18,19 +18,19 @@ public class ${cfg.fileEntityMap} extends DataMap<${cfg.fileEntityMap}> {
     public transient final KeyValue<${cfg.fileEntityMap}> ${field.propertyName} = new KeyValue(this, Property.${field.propertyName});
 #end
 
-    public ${cfg.fileEntityMap}(){
+    protected ${cfg.fileEntityMap}() {
         super();
     }
 
-    public ${cfg.fileEntityMap}(int size){
+    protected ${cfg.fileEntityMap}(int size) {
         super(size);
     }
 
-    public static ${cfg.fileEntityMap} create(){
+    public static ${cfg.fileEntityMap} create() {
         return new ${cfg.fileEntityMap}();
     }
 
-    public static ${cfg.fileEntityMap} create(int size){
+    public static ${cfg.fileEntityMap} create(int size) {
         return new ${cfg.fileEntityMap}(size);
     }
 }

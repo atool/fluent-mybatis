@@ -26,7 +26,10 @@ public class SelectByIdTest extends BaseTest {
         UserEntity user = dao.selectById(3L);
         db.sqlList().wantFirstSql()
                 .where().eq("id=?");
-        want.object(user).eqHashMap(new UserEntityMap().userName.values("username_3"));
+        want.object(user)
+                .eqHashMap(UserEntityMap.create()
+                        .userName.values("username_3")
+                );
     }
 
     @Test
@@ -36,7 +39,7 @@ public class SelectByIdTest extends BaseTest {
         List<UserEntity> users = dao.selectByIds(Arrays.asList(3L, 5L));
         db.sqlList().wantFirstSql()
                 .where().eq("id IN ( ? , ? )");
-        want.object(users).eqDataMap(new UserEntityMap(2)
+        want.object(users).eqDataMap(UserEntityMap.create(2)
                 .userName.values("username_3", "username_5")
         );
     }
