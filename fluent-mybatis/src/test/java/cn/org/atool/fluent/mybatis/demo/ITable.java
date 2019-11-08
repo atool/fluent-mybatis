@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.demo.dm;
+package cn.org.atool.fluent.mybatis.demo;
 
 import cn.org.atool.fluent.mybatis.demo.mapping.*;
 

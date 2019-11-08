@@ -1,4 +1,4 @@
-package ${basePackage}.dm;
+package ${basePackage};
 
 import ${basePackage}.mapping.*;
 

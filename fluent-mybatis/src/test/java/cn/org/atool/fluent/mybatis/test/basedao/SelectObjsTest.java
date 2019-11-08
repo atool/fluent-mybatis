@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class SelectObjsTest extends BaseTest {
     @Autowired
-    private UserDao dao;
+    private UserExtDao dao;
 
     @Test
     public void test_selectObjs() throws Exception {
@@ -23,5 +23,21 @@ public class SelectObjsTest extends BaseTest {
 
         List<String> names = dao.selectObjs(2L, 3L, 5L);
         want.list(names).eqReflect(new String[]{"username_2", "username_3", "username_5"});
+    }
+
+    @Test
+    public void test_selectObjs_2() throws Exception {
+        db.table(t_user).clean().insert(UserTableMap.init(1).user_name.values(null));
+
+        List<String> names = dao.selectObjs(1L);
+        want.list(names).eqReflect(new String[]{null});
+    }
+
+    @Test
+    public void test_selectObjs2() throws Exception {
+        db.table(t_user).clean().insert(UserTableMap.init(1).user_name.values(null).age.values(null));
+
+        List<String> names = dao.selectObjs2(1L);
+        want.list(names).eqReflect(new String[]{null});
     }
 }

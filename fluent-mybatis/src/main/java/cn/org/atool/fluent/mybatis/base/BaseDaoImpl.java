@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,7 +109,10 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
      * @return
      */
     public <F> List<F> selectObjs(IEntityQuery query, SFunction<Map<String, Object>, F> function) {
-        return this.mapper().selectMaps((Wrapper<E>) query).stream()
+        List<Map<String, Object>> list = this.mapper().selectMaps((Wrapper<E>) query);
+        return list.stream()
+                // mybatis有个bug，当所有字段值为null时, 不会返回Map对象, 而是返回一个null
+                .map(map -> map == null ? new HashMap<String, Object>() : map)
                 .map(function::apply)
                 .collect(toList());
     }

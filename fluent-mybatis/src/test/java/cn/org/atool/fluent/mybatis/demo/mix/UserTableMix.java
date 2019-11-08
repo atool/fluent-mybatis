@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.demo.mixes.mix;
+package cn.org.atool.fluent.mybatis.demo.mix;
 
 import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
 import org.test4j.hamcrest.matcher.property.reflection.EqMode;

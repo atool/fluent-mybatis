@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class UpdateTest extends BaseTest {
     @Autowired
-    private UserDao dao;
+    private UserExtDao dao;
 
     @Test
     public void test_update() throws Exception {

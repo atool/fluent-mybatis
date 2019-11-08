@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.method;
 
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;

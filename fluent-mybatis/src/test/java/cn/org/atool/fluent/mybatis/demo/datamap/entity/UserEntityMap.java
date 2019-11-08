@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.demo.dm.entity;
+package cn.org.atool.fluent.mybatis.demo.datamap.entity;
 
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP.Property;
 import org.test4j.module.ICore.DataMap;
@@ -16,14 +16,6 @@ public class UserEntityMap extends DataMap<UserEntityMap> {
      */
     public transient final KeyValue<UserEntityMap> id = new KeyValue(this, Property.id);
     /**
-     * 设置UserEntity对象userName字段值
-     */
-    public transient final KeyValue<UserEntityMap> userName = new KeyValue(this, Property.userName);
-    /**
-     * 设置UserEntity对象addressId字段值
-     */
-    public transient final KeyValue<UserEntityMap> addressId = new KeyValue(this, Property.addressId);
-    /**
      * 设置UserEntity对象gmtCreated字段值
      */
     public transient final KeyValue<UserEntityMap> gmtCreated = new KeyValue(this, Property.gmtCreated);
@@ -36,9 +28,17 @@ public class UserEntityMap extends DataMap<UserEntityMap> {
      */
     public transient final KeyValue<UserEntityMap> isDeleted = new KeyValue(this, Property.isDeleted);
     /**
+     * 设置UserEntity对象addressId字段值
+     */
+    public transient final KeyValue<UserEntityMap> addressId = new KeyValue(this, Property.addressId);
+    /**
      * 设置UserEntity对象age字段值
      */
     public transient final KeyValue<UserEntityMap> age = new KeyValue(this, Property.age);
+    /**
+     * 设置UserEntity对象userName字段值
+     */
+    public transient final KeyValue<UserEntityMap> userName = new KeyValue(this, Property.userName);
     /**
      * 设置UserEntity对象version字段值
      */

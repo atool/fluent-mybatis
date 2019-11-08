@@ -35,16 +35,6 @@ public class AddressEntity implements IEntity {
     /**
      * 
      */
-    @TableField(value = Column.address)
-    private String address;
-    /**
-     * 
-     */
-    @TableField(value = Column.is_deleted)
-    private Boolean isDeleted;
-    /**
-     * 
-     */
     @TableField(value = Column.gmt_created, update = "now()", fill = FieldFill.INSERT)
     private Date gmtCreated;
     /**
@@ -52,6 +42,16 @@ public class AddressEntity implements IEntity {
      */
     @TableField(value = Column.gmt_modified, update = "now()", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
+    /**
+     * 
+     */
+    @TableField(value = Column.is_deleted, update = "0", fill = FieldFill.INSERT)
+    private Boolean isDeleted;
+    /**
+     * 
+     */
+    @TableField(value = Column.address)
+    private String address;
 
     @Override
     public Serializable findPk() {

@@ -31,9 +31,9 @@ public class TemplateFile {
             //test
             this.add(new TemplateFile("dao.java.vm", "dao/intf/*Dao.java", TemplateType.Dao));
             this.add(new TemplateFile("dao.impl.java.vm", "dao/impl/*DaoImpl.java", TemplateType.Dao));
-            this.add(new TemplateFile("table_tableMap.java.vm", "dm/table/*TableMap.java", TemplateType.Test));
-            this.add(new TemplateFile("table_entityMap.java.vm", "dm/entity/*EntityMap.java", TemplateType.Test));
-            this.add(new TemplateFile("table_mix.java.vm", "mixes/mix/*TableMix.java", TemplateType.Test));
+            this.add(new TemplateFile("table_tableMap.java.vm", "datamap/table/*TableMap.java", TemplateType.Test));
+            this.add(new TemplateFile("table_entityMap.java.vm", "datamap/entity/*EntityMap.java", TemplateType.Test));
+            this.add(new TemplateFile("table_mix.java.vm", "mix/*TableMix.java", TemplateType.Test));
         }
     };
 

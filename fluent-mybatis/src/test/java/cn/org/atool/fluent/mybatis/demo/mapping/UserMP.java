@@ -16,12 +16,12 @@ public interface UserMP {
     Map<String, String> Property2Column = new HashMap<String,String>(){
         {
             this.put(Property.id, Column.id);
-            this.put(Property.userName, Column.user_name);
-            this.put(Property.addressId, Column.address_id);
             this.put(Property.gmtCreated, Column.gmt_created);
             this.put(Property.gmtModified, Column.gmt_modified);
             this.put(Property.isDeleted, Column.is_deleted);
+            this.put(Property.addressId, Column.address_id);
             this.put(Property.age, Column.age);
+            this.put(Property.userName, Column.user_name);
             this.put(Property.version, Column.version);
         }
     };
@@ -46,14 +46,6 @@ public interface UserMP {
         /**
          * 
          */
-        String user_name = "user_name";
-        /**
-         * 
-         */
-        String address_id = "address_id";
-        /**
-         * 
-         */
         String gmt_created = "gmt_created";
         /**
          * 
@@ -66,7 +58,15 @@ public interface UserMP {
         /**
          * 
          */
+        String address_id = "address_id";
+        /**
+         * 
+         */
         String age = "age";
+        /**
+         * 
+         */
+        String user_name = "user_name";
         /**
          * 
          */
@@ -84,14 +84,6 @@ public interface UserMP {
         /**
          * 
          */
-        String userName = "userName";
-        /**
-         * 
-         */
-        String addressId = "addressId";
-        /**
-         * 
-         */
         String gmtCreated = "gmtCreated";
         /**
          * 
@@ -104,7 +96,15 @@ public interface UserMP {
         /**
          * 
          */
+        String addressId = "addressId";
+        /**
+         * 
+         */
         String age = "age";
+        /**
+         * 
+         */
+        String userName = "userName";
         /**
          * 
          */

@@ -55,6 +55,8 @@ public class ${entity} implements IEntity #if(${cfg.interface}), ${cfg.interface
     @TableField(value = Column.${field.name}, update = "now()", fill = FieldFill.INSERT_UPDATE)
     #elseif(${cfg.field_gmtCreated} == ${field.name})
     @TableField(value = Column.${field.name}, update = "now()", fill = FieldFill.INSERT)
+    #elseif(${cfg.field_logicDeleted}==${field.name})## 逻辑删除字段
+    @TableField(value = Column.${field.name}, update = "0", fill = FieldFill.INSERT)
     #else
     @TableField(value = Column.${field.name})
     #end

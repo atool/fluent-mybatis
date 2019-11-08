@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.dm.entity.UserEntityMap;
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.datamap.entity.UserEntityMap;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;

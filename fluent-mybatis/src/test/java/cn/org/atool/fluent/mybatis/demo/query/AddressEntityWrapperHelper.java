@@ -23,36 +23,36 @@ import java.io.Serializable;
 class AddressEntityWrapperHelper {
     public static class And<Q extends AbstractWrapper & IProperty2Column> extends BaseQueryAnd<Q> {
         public final AndObject<Long, Q> id;
-        public final AndString<Q> address;
-        public final AndBoolean<Q> isDeleted;
         public final AndObject<Date, Q> gmtCreated;
         public final AndObject<Date, Q> gmtModified;
+        public final AndBoolean<Q> isDeleted;
+        public final AndString<Q> address;
 
         And(Q query) {
             super(query);
             this.id = new AndObject<>(query, Column.id, Property.id);
-            this.address = new AndString<>(query, Column.address, Property.address);
-            this.isDeleted = new AndBoolean<>(query, Column.is_deleted, Property.isDeleted);
             this.gmtCreated = new AndObject<>(query, Column.gmt_created, Property.gmtCreated);
             this.gmtModified = new AndObject<>(query, Column.gmt_modified, Property.gmtModified);
+            this.isDeleted = new AndBoolean<>(query, Column.is_deleted, Property.isDeleted);
+            this.address = new AndString<>(query, Column.address, Property.address);
         }
     }
 
     public static abstract class BaseOrder<Q extends AbstractWrapper & IProperty2Column, O extends BaseOrder>
             extends BaseWrapperOrder<Q> {
         public final ColumnOrder<Q, O> id;
-        public final ColumnOrder<Q, O> address;
-        public final ColumnOrder<Q, O> isDeleted;
         public final ColumnOrder<Q, O> gmtCreated;
         public final ColumnOrder<Q, O> gmtModified;
+        public final ColumnOrder<Q, O> isDeleted;
+        public final ColumnOrder<Q, O> address;
 
         public BaseOrder(Q query) {
             super(query);
             this.id = new ColumnOrder(query, Column.id, this);
-            this.address = new ColumnOrder(query, Column.address, this);
-            this.isDeleted = new ColumnOrder(query, Column.is_deleted, this);
             this.gmtCreated = new ColumnOrder(query, Column.gmt_created, this);
             this.gmtModified = new ColumnOrder(query, Column.gmt_modified, this);
+            this.isDeleted = new ColumnOrder(query, Column.is_deleted, this);
+            this.address = new ColumnOrder(query, Column.address, this);
         }
     }
 
@@ -72,18 +72,18 @@ class AddressEntityWrapperHelper {
 
     public static class Set extends BaseUpdateSet<AddressEntityUpdate> {
         public final SetObject<Long, AddressEntityUpdate> id;
-        public final SetString<AddressEntityUpdate> address;
-        public final SetBoolean<AddressEntityUpdate> isDeleted;
         public final SetObject<Date, AddressEntityUpdate> gmtCreated;
         public final SetObject<Date, AddressEntityUpdate> gmtModified;
+        public final SetBoolean<AddressEntityUpdate> isDeleted;
+        public final SetString<AddressEntityUpdate> address;
 
         public Set(AddressEntityUpdate update) {
             super(update);
             this.id = new SetObject<>(update, Column.id, Property.id);
-            this.address = new SetString<>(update, Column.address, Property.address);
-            this.isDeleted = new SetBoolean<>(update, Column.is_deleted, Property.isDeleted);
             this.gmtCreated = new SetObject<>(update, Column.gmt_created, Property.gmtCreated);
             this.gmtModified = new SetObject<>(update, Column.gmt_modified, Property.gmtModified);
+            this.isDeleted = new SetBoolean<>(update, Column.is_deleted, Property.isDeleted);
+            this.address = new SetString<>(update, Column.address, Property.address);
         }
     }
 }

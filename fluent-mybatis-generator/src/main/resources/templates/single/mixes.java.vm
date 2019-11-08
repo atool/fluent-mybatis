@@ -1,6 +1,6 @@
-package ${basePackage}.mixes;
+package ${basePackage};
 
-import ${basePackage}.mixes.mix.*;
+import ${basePackage}.mix.*;
 import org.test4j.module.spec.annotations.Mix;
 import org.test4j.module.spec.annotations.Mixes;
 

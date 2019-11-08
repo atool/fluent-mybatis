@@ -1,7 +1,6 @@
-package ${basePackage}.dm;
+package ${basePackage};
 
-import ${basePackage}.dm.table.*;
-import ${basePackage}.mapping.*;
+import ${basePackage}.data.table.*;
 import org.test4j.module.IScript;
 
 /**

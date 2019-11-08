@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test;
 
 import cn.org.atool.fluent.mybatis.MybatisPlusBootConfiguration;
-import cn.org.atool.fluent.mybatis.demo.dm.ITable;
+import cn.org.atool.fluent.mybatis.demo.ITable;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

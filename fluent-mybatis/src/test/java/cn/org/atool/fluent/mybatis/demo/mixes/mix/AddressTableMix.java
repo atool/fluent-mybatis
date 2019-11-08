@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.mixes.mix;
 
-import cn.org.atool.fluent.mybatis.demo.dm.table.AddressTableMap;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.AddressTableMap;
 import org.test4j.hamcrest.matcher.property.reflection.EqMode;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;

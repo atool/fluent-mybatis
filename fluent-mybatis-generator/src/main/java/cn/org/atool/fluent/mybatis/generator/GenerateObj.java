@@ -64,9 +64,9 @@ public class GenerateObj {
         String templateDir = "/templates/single/";
         String packDir = String.format("%s/%s/", output, basePackage.replace('.', '/'));
         try {
-            engine.writer(config, templateDir + "mixes.java.vm", packDir + "mixes/TableMixes.java");
-            engine.writer(config, templateDir + "itable.java.vm", packDir + "dm/ITable.java");
-            engine.writer(config, templateDir + "datasource_script.java.vm", packDir + "dm/DataSourceScript.java");
+            engine.writer(config, templateDir + "mixes.java.vm", packDir + "TableMixes.java");
+            engine.writer(config, templateDir + "itable.java.vm", packDir + "ITable.java");
+            engine.writer(config, templateDir + "datasource_script.java.vm", packDir + "DataSourceScript.java");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

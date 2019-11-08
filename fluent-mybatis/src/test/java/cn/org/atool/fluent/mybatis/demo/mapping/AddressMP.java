@@ -16,10 +16,10 @@ public interface AddressMP {
     Map<String, String> Property2Column = new HashMap<String,String>(){
         {
             this.put(Property.id, Column.id);
-            this.put(Property.address, Column.address);
-            this.put(Property.isDeleted, Column.is_deleted);
             this.put(Property.gmtCreated, Column.gmt_created);
             this.put(Property.gmtModified, Column.gmt_modified);
+            this.put(Property.isDeleted, Column.is_deleted);
+            this.put(Property.address, Column.address);
         }
     };
 
@@ -43,7 +43,11 @@ public interface AddressMP {
         /**
          * 
          */
-        String address = "address";
+        String gmt_created = "gmt_created";
+        /**
+         * 
+         */
+        String gmt_modified = "gmt_modified";
         /**
          * 
          */
@@ -51,11 +55,7 @@ public interface AddressMP {
         /**
          * 
          */
-        String gmt_created = "gmt_created";
-        /**
-         * 
-         */
-        String gmt_modified = "gmt_modified";
+        String address = "address";
     }
 
     /**
@@ -69,7 +69,11 @@ public interface AddressMP {
         /**
          * 
          */
-        String address = "address";
+        String gmtCreated = "gmtCreated";
+        /**
+         * 
+         */
+        String gmtModified = "gmtModified";
         /**
          * 
          */
@@ -77,10 +81,6 @@ public interface AddressMP {
         /**
          * 
          */
-        String gmtCreated = "gmtCreated";
-        /**
-         * 
-         */
-        String gmtModified = "gmtModified";
+        String address = "address";
     }
 }

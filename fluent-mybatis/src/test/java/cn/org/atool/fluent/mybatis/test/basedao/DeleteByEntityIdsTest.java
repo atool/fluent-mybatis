@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import java.util.Arrays;
  */
 public class DeleteByEntityIdsTest extends BaseTest {
     @Autowired
-    private UserDao dao;
+    private UserExtDao dao;
 
     @Test
     public void test_deleteByEntityIds() throws Exception {

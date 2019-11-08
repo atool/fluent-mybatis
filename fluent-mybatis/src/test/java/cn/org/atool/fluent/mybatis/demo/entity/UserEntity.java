@@ -35,16 +35,6 @@ public class UserEntity implements IEntity {
     /**
      * 
      */
-    @TableField(value = Column.user_name)
-    private String userName;
-    /**
-     * 
-     */
-    @TableField(value = Column.address_id)
-    private Long addressId;
-    /**
-     * 
-     */
     @TableField(value = Column.gmt_created, update = "now()", fill = FieldFill.INSERT)
     private Date gmtCreated;
     /**
@@ -55,13 +45,23 @@ public class UserEntity implements IEntity {
     /**
      * 
      */
-    @TableField(value = Column.is_deleted)
+    @TableField(value = Column.is_deleted, update = "0", fill = FieldFill.INSERT)
     private Boolean isDeleted;
+    /**
+     * 
+     */
+    @TableField(value = Column.address_id)
+    private Long addressId;
     /**
      * 
      */
     @TableField(value = Column.age)
     private Integer age;
+    /**
+     * 
+     */
+    @TableField(value = Column.user_name)
+    private String userName;
     /**
      * 
      */

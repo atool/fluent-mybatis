@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.demo.dm.table;
+package cn.org.atool.fluent.mybatis.demo.datamap.table;
 
 import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -26,16 +26,6 @@ public class UserTableMap extends DataMap<UserTableMap> {
     @ColumnDef(type = "bigint(21) unsigned", primary = true)
     public transient final KeyValue<UserTableMap> id = new KeyValue(this, Column.id);
     /**
-     * 设置t_user对象user_name字段值
-     */
-    @ColumnDef(type = "varchar(45)")
-    public transient final KeyValue<UserTableMap> user_name = new KeyValue(this, Column.user_name);
-    /**
-     * 设置t_user对象address_id字段值
-     */
-    @ColumnDef(type = "bigint(21)")
-    public transient final KeyValue<UserTableMap> address_id = new KeyValue(this, Column.address_id);
-    /**
      * 设置t_user对象gmt_created字段值
      */
     @ColumnDef(type = "datetime")
@@ -51,42 +41,67 @@ public class UserTableMap extends DataMap<UserTableMap> {
     @ColumnDef(type = "tinyint(2)")
     public transient final KeyValue<UserTableMap> is_deleted = new KeyValue(this, Column.is_deleted);
     /**
+     * 设置t_user对象address_id字段值
+     */
+    @ColumnDef(type = "bigint(21)")
+    public transient final KeyValue<UserTableMap> address_id = new KeyValue(this, Column.address_id);
+    /**
      * 设置t_user对象age字段值
      */
     @ColumnDef(type = "int(11)")
     public transient final KeyValue<UserTableMap> age = new KeyValue(this, Column.age);
+    /**
+     * 设置t_user对象user_name字段值
+     */
+    @ColumnDef(type = "varchar(45)")
+    public transient final KeyValue<UserTableMap> user_name = new KeyValue(this, Column.user_name);
     /**
      * 设置t_user对象version字段值
      */
     @ColumnDef(type = "varchar(45)")
     public transient final KeyValue<UserTableMap> version = new KeyValue(this, Column.version);
 
-    public UserTableMap(){
+    public UserTableMap() {
         super();
     }
 
-    public UserTableMap(int size){
+    public UserTableMap(int size) {
         super(size);
     }
 
-    public UserTableMap init(){
-        this.id.values(DataGenerator.increase(1, 1));
-        this.gmt_created.values(new Date());
-        this.gmt_modified.values(new Date());
-        this.is_deleted.values(false);
-        return this;
+    /**
+     * 创建UserTableMap
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     */
+    public static UserTableMap init() {
+        return init(1);
     }
 
-    public UserTableMap with(Consumer<UserTableMap> init){
+    /**
+     * 创建UserTableMap
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
+     * @param size
+     */
+    public static UserTableMap init(int size) {
+        return new UserTableMap(size)
+                    .id.values(DataGenerator.increase(1,1))
+                .gmt_created.values(new Date())
+                .gmt_modified.values(new Date())
+                .is_deleted.values(false)
+                ;
+        }
+
+    public UserTableMap with(Consumer<UserTableMap> init) {
         init.accept(this);
         return this;
     }
 
-    public static UserTableMap create(){
+    public static UserTableMap create() {
         return new UserTableMap();
     }
 
-    public static UserTableMap create(int size){
+    public static UserTableMap create(int size) {
         return new UserTableMap(size);
     }
 }

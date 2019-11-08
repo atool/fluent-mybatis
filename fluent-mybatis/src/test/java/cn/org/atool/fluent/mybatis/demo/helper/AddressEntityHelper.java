@@ -21,10 +21,10 @@ public class AddressEntityHelper implements AddressMP{
         Map<String, Object> map = new HashMap<>();
         {
             map.put(Property.id, entity.getId());
-            map.put(Property.address, entity.getAddress());
-            map.put(Property.isDeleted, entity.getIsDeleted());
             map.put(Property.gmtCreated, entity.getGmtCreated());
             map.put(Property.gmtModified, entity.getGmtModified());
+            map.put(Property.isDeleted, entity.getIsDeleted());
+            map.put(Property.address, entity.getAddress());
         }
         return map;
     }
@@ -33,10 +33,10 @@ public class AddressEntityHelper implements AddressMP{
         AddressEntity entity = new AddressEntity();
         {
             entity.setId((Long)map.get(Property.id));
-            entity.setAddress((String)map.get(Property.address));
-            entity.setIsDeleted((Boolean)map.get(Property.isDeleted));
             entity.setGmtCreated((Date)map.get(Property.gmtCreated));
             entity.setGmtModified((Date)map.get(Property.gmtModified));
+            entity.setIsDeleted((Boolean)map.get(Property.isDeleted));
+            entity.setAddress((String)map.get(Property.address));
         }
         return entity;
     }
@@ -45,10 +45,10 @@ public class AddressEntityHelper implements AddressMP{
         AddressEntity copy = new AddressEntity();
         {
             copy.setId(entity.getId());
-            copy.setAddress(entity.getAddress());
-            copy.setIsDeleted(entity.getIsDeleted());
             copy.setGmtCreated(entity.getGmtCreated());
             copy.setGmtModified(entity.getGmtModified());
+            copy.setIsDeleted(entity.getIsDeleted());
+            copy.setAddress(entity.getAddress());
         }
         return copy;
     }

@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.demo.dm.entity.UserEntityMap;
-import cn.org.atool.fluent.mybatis.demo.dm.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
+import cn.org.atool.fluent.mybatis.demo.datamap.entity.UserEntityMap;
+import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class SelectByMapTest extends BaseTest {
     @Autowired
-    private UserDao dao;
+    private UserExtDao dao;
 
     @Test
     public void test_selectByMap() throws Exception {
