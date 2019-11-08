@@ -15,7 +15,7 @@ public class DeleteByIdTest extends BaseTest {
 
     @Test
     public void test_deleteById() throws Exception {
-        db.table(t_user).clean().insert(new UserTableMap(10).init());
+        db.table(t_user).clean().insert(UserTableMap.init(10));
         dao.deleteById(4L);
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id=?");
         db.table(t_user).count().eq(9L);
@@ -23,7 +23,7 @@ public class DeleteByIdTest extends BaseTest {
 
     @Test
     public void test_deleteByIds() throws Exception {
-        db.table(t_user).clean().insert(new UserTableMap(10).init());
+        db.table(t_user).clean().insert(UserTableMap.init(10));
         dao.deleteByIds(Arrays.asList(4L, 6L, 9L));
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id IN ( ? , ? , ? )", StringMode.SameAsSpace);
         db.table(t_user).count().eq(7L);

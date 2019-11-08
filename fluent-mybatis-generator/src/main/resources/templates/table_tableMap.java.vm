@@ -28,11 +28,11 @@ public class ${cfg.fileTableMap} extends DataMap<${cfg.fileTableMap}> {
     public transient final KeyValue<${cfg.fileTableMap}> ${field.name} = new KeyValue(this, Column.${field.name});
 #end
 
-    public ${cfg.fileTableMap}() {
+    protected ${cfg.fileTableMap}() {
         super();
     }
 
-    public ${cfg.fileTableMap}(int size) {
+    protected ${cfg.fileTableMap}(int size) {
         super(size);
     }
 

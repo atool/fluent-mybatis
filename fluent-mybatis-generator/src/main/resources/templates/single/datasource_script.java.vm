@@ -1,6 +1,6 @@
 package ${basePackage};
 
-import ${basePackage}.data.table.*;
+import ${basePackage}.datamap.table.*;
 import org.test4j.module.IScript;
 
 /**

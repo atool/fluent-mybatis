@@ -17,7 +17,7 @@ public class ExistPkTest extends BaseTest {
 
     @Test
     public void test_exist() {
-        db.table(t_user).clean().insert(new UserTableMap(2)
+        db.table(t_user).clean().insert(UserTableMap.create(2)
                 .id.values(1, 3)
         );
         boolean existed = dao.existPk(1);

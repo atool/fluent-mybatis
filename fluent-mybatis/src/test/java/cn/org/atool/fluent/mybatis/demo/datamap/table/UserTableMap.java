@@ -61,11 +61,11 @@ public class UserTableMap extends DataMap<UserTableMap> {
     @ColumnDef(type = "varchar(45)")
     public transient final KeyValue<UserTableMap> version = new KeyValue(this, Column.version);
 
-    public UserTableMap() {
+    protected UserTableMap() {
         super();
     }
 
-    public UserTableMap(int size) {
+    protected UserTableMap(int size) {
         super(size);
     }
 

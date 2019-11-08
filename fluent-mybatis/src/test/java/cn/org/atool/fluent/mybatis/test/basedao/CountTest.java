@@ -17,7 +17,7 @@ public class CountTest extends BaseTest {
 
     @Test
     public void test_count() throws Exception {
-        db.table(t_user).clean().insert(new UserTableMap(10).init()
+        db.table(t_user).clean().insert(UserTableMap.init(10)
                 .user_name.values("test1", "test12", "test3", "test12", "tess2")
         );
         int count = dao.count("test12");

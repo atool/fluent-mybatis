@@ -13,9 +13,9 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.List;
 
+import static org.test4j.tools.datagen.AbstractDataGenerator.increase;
+
 /**
- * TODO:类说明
- *
  * @author darui.wu
  * @create 2019/10/31 6:18 下午
  */
@@ -25,10 +25,11 @@ public class DistinctTest extends BaseTest {
 
     @Test
     public void test_distinct() {
-        db.table(t_user).clean().insert(new UserTableMap(10).init()
-                .user_name.values(DataGenerator.increase(index -> index > 5 ? "user2" : "user1"))
-                .age.values(30)
-        );
+        db.table(t_user).clean()
+                .insert(UserTableMap.init(10)
+                        .user_name.values(increase(index -> index > 5 ? "user2" : "user1"))
+                        .age.values(30)
+                );
         UserEntityQuery query = new UserEntityQuery()
                 .distinct(UserMP.Column.user_name)
                 .and.age.eq(30);

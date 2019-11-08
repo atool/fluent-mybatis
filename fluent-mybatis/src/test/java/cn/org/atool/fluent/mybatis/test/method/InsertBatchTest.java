@@ -19,9 +19,10 @@ public class InsertBatchTest extends BaseTest {
                 new UserEntity().setUserName("name1").setAge(23),
                 new UserEntity().setUserName("name2").setAge(24)));
         db.table(t_user).count().eq(2L);
-        db.table(t_user).query().print().eqDataMap(new UserTableMap(2)
-                .age.values(23, 24)
-                .user_name.values("name1", "name2"));
+        db.table(t_user).query().print()
+                .eqDataMap(UserTableMap.create(2)
+                        .age.values(23, 24)
+                        .user_name.values("name1", "name2"));
     }
 
     @Test
@@ -31,8 +32,9 @@ public class InsertBatchTest extends BaseTest {
                 new UserEntity().setId(23L).setUserName("name1").setAge(23),
                 new UserEntity().setId(24L).setUserName("name2").setAge(24)));
         db.table(t_user).count().eq(2L);
-        db.table(t_user).query().print().eqDataMap(new UserTableMap(2)
-                .age.values(23, 24)
-                .user_name.values("name1", "name2"));
+        db.table(t_user).query().print()
+                .eqDataMap(UserTableMap.create(2)
+                        .age.values(23, 24)
+                        .user_name.values("name1", "name2"));
     }
 }

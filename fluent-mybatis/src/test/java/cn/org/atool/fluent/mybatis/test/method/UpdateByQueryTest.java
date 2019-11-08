@@ -15,7 +15,7 @@ public class UpdateByQueryTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        db.table(ITable.t_user).clean().insert(new UserTableMap(2)
+        db.table(ITable.t_user).clean().insert(UserTableMap.init(2)
                 .id.values(23L, 24L)
                 .user_name.values("user1", "user2")
         );
@@ -25,7 +25,7 @@ public class UpdateByQueryTest extends BaseTest {
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
                 .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ?)", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(new UserTableMap(2)
+        db.table(ITable.t_user).query().eqDataMap(UserTableMap.create(2)
                 .id.values(23L, 24L)
                 .user_name.values("user1", "user name2")
         );

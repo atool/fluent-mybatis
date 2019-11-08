@@ -13,7 +13,7 @@ public class DeleteByQueryTest extends BaseTest {
 
     @Test
     public void test_deleteByQuery() throws Exception {
-        db.table(t_user).clean().insert(new UserTableMap(10).init()
+        db.table(t_user).clean().insert(UserTableMap.init(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
         dao.deleteByQuery("username_4", "username_5", "username_7");
         db.table(t_user).count().eq(7L);

@@ -46,11 +46,11 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
     @ColumnDef(type = "varchar(45)")
     public transient final KeyValue<AddressTableMap> address = new KeyValue(this, Column.address);
 
-    public AddressTableMap() {
+    protected AddressTableMap() {
         super();
     }
 
-    public AddressTableMap(int size) {
+    protected AddressTableMap(int size) {
         super(size);
     }
 

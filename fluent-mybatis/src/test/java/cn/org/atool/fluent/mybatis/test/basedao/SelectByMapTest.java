@@ -22,7 +22,7 @@ public class SelectByMapTest extends BaseTest {
 
     @Test
     public void test_selectByMap() throws Exception {
-        db.table(t_user).clean().insert(new UserTableMap(10).init()
+        db.table(t_user).clean().insert( UserTableMap.init(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<UserEntity> users = dao.selectByMap(new HashMap<String, Object>() {
