@@ -85,12 +85,12 @@ public class UserTableMap extends DataMap<UserTableMap> {
      */
     public static UserTableMap init(int size) {
         return new UserTableMap(size)
-                    .id.values(DataGenerator.increase(1,1))
+                .id.values(DataGenerator.increase(1,1))
                 .gmt_created.values(new Date())
                 .gmt_modified.values(new Date())
                 .is_deleted.values(false)
                 ;
-        }
+    }
 
     public UserTableMap with(Consumer<UserTableMap> init) {
         init.accept(this);

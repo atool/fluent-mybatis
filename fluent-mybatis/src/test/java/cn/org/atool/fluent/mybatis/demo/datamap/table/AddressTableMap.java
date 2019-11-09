@@ -70,12 +70,12 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
      */
     public static AddressTableMap init(int size) {
         return new AddressTableMap(size)
-                    .id.values(DataGenerator.increase(1,1))
+                .id.values(DataGenerator.increase(1,1))
                 .gmt_created.values(new Date())
                 .gmt_modified.values(new Date())
                 .is_deleted.values(false)
                 ;
-        }
+    }
 
     public AddressTableMap with(Consumer<AddressTableMap> init) {
         init.accept(this);

@@ -55,7 +55,7 @@ public class ${cfg.fileTableMap} extends DataMap<${cfg.fileTableMap}> {
     #foreach($field in ${table.fields})
         #if(${field.keyFlag})
             #if(${field.keyIdentityFlag})
-                    .${field.name}.values(DataGenerator.increase(1,1))
+                .${field.name}.values(DataGenerator.increase(1,1))
             #end
         #elseif(${cfg.field_gmtModified} == ${field.name} || ${cfg.field_gmtCreated} == ${field.name})
                 .${field.name}.values(new Date())
@@ -63,7 +63,7 @@ public class ${cfg.fileTableMap} extends DataMap<${cfg.fileTableMap}> {
                 .${field.name}.values(false)
         #end
     #end                ;
-        }
+    }
 
     public ${cfg.fileTableMap} with(Consumer<${cfg.fileTableMap}> init) {
         init.accept(this);
