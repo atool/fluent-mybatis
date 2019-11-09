@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CountTest extends BaseTest {
 
     @Test
     public void test_count() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(10)
+        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
                 .user_name.values("test1", "test12", "test3", "test12", "tess2")
         );
         int count = dao.count("test12");

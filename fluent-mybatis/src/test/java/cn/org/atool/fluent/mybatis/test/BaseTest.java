@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test;
 
 import cn.org.atool.fluent.mybatis.MybatisPlusBootConfiguration;
-import cn.org.atool.fluent.mybatis.demo.ITable;
+import cn.org.atool.fluent.mybatis.demo.generate.ITable;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,8 +20,11 @@ public abstract class BaseTest extends Test4J implements ITable {
 }
 
 @Configuration
-@ComponentScan(basePackages = {"cn.org.atool.fluent.mybatis.demo"})
-@MapperScan("cn.org.atool.fluent.mybatis.demo.mapper")
+@ComponentScan(basePackages = {
+        "cn.org.atool.fluent.mybatis.demo.generate",
+        "cn.org.atool.fluent.mybatis.demo.notgen"
+})
+@MapperScan("cn.org.atool.fluent.mybatis.demo.generate.mapper")
 class TestSpringConfig {
     @Bean("dataSource")
     public DataSource newDataSource() {

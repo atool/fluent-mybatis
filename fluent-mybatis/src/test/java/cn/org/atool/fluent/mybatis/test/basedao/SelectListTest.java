@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
-import cn.org.atool.fluent.mybatis.demo.datamap.entity.UserEntityMap;
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
-import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.entity.UserEntityMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SelectListTest extends BaseTest {
 
     @Test
     public void test_selectList() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(10)
+        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<UserEntity> users = dao.selectList(3L, 6L, 7L);

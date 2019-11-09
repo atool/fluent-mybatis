@@ -1,0 +1,80 @@
+package ${cfg.packTableMap};
+
+import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
+import com.baomidou.mybatisplus.annotation.TableName;
+import org.test4j.module.ICore.DataGenerator;
+import org.test4j.module.ICore.DataMap;
+import org.test4j.tools.datagen.KeyValue;
+
+import java.util.Date;
+import java.util.function.Consumer;
+
+import ${cfg.packMP}.${cfg.fileMP};
+import ${cfg.packMP}.${cfg.fileMP}.Column;
+
+/**
+ * @ClassName ${cfg.fileTableMap}
+ * @Description ${cfg.fileTableMap}
+ *
+ * @author ${author}
+ */
+@TableName(${cfg.fileMP}.Table_Name)
+public class ${cfg.fileTableMap} extends DataMap<${cfg.fileTableMap}> {
+#foreach($field in ${table.fields})
+    /**
+     * 设置${table.name}对象${field.name}字段值
+     */
+    @ColumnDef(type = "${field.type}"#if(${field.keyFlag}), primary = true#end)
+    public transient final KeyValue<${cfg.fileTableMap}> ${field.name} = new KeyValue(this, Column.${field.name});
+#end
+
+    protected ${cfg.fileTableMap}() {
+        super();
+    }
+
+    protected ${cfg.fileTableMap}(int size) {
+        super(size);
+    }
+
+    public ${cfg.fileTableMap} with(Consumer<${cfg.fileTableMap}> init) {
+        init.accept(this);
+        return this;
+    }
+
+    public static ${cfg.fileTableMap} create() {
+        return create(1);
+    }
+
+    public static ${cfg.fileTableMap} create(int size) {
+        return new ${cfg.fileTableMap}(size);
+    }
+
+    /**
+     * 创建${cfg.fileTableMap}
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     */
+    public static ${cfg.fileTableMap} createWithInit() {
+        return createWithInit(1);
+    }
+
+    /**
+     * 创建${cfg.fileTableMap}
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
+     * @param size
+     */
+    public static ${cfg.fileTableMap} createWithInit(int size) {
+        return new ${cfg.fileTableMap}(size)
+    #foreach($field in ${table.fields})
+        #if(${field.keyFlag})
+            #if(${field.keyIdentityFlag})
+                .${field.name}.values(DataGenerator.increase(1, 1))
+            #end
+        #elseif(${cfg.field_gmtModified} == ${field.name} || ${cfg.field_gmtCreated} == ${field.name})
+                .${field.name}.values(new Date())
+        #elseif(${cfg.field_logicDeleted} == ${field.name} && ${field.propertyType} == 'Boolean')
+                .${field.name}.values(false)
+        #end
+    #end                ;
+    }
+}

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.notgen;
 
-import cn.org.atool.fluent.mybatis.demo.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.dao.intf.UserDao;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 
 import java.util.List;
 

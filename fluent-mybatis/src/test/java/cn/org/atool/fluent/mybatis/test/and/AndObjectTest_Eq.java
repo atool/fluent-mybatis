@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.exception.NullParameterException;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;

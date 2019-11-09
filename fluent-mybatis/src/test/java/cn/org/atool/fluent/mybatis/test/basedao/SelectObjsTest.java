@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(10)
+        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<String> names = dao.selectObjs(2L, 3L, 5L);
@@ -27,7 +27,10 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs_2() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(1).user_name.values(null));
+        db.table(t_user).clean()
+                .insert(UserTableMap.createWithInit(1)
+                        .user_name.values(null)
+                );
 
         List<String> names = dao.selectObjs(1L);
         want.list(names).eqReflect(new String[]{null});
@@ -35,7 +38,11 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs2() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(1).user_name.values(null).age.values(null));
+        db.table(t_user).clean()
+                .insert(UserTableMap.createWithInit(1)
+                        .user_name.values(null)
+                        .age.values(null)
+                );
 
         List<String> names = dao.selectObjs2(1L);
         want.list(names).eqReflect(new String[]{null});

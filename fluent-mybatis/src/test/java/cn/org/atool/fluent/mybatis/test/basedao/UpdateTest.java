@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class UpdateTest extends BaseTest {
 
     @Test
     public void test_update() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(5)
+        db.table(t_user).clean().insert(UserTableMap.createWithInit(5)
                 .user_name.values(DataGenerator.increase("username_%d")));
         dao.updateUserNameById("new_user_name", 4L);
         db.sqlList().wantFirstSql().eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ?)");

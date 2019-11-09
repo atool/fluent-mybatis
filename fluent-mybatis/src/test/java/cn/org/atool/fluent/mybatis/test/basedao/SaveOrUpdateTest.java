@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
-import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class SaveOrUpdateTest extends BaseTest {
 
     @Test
     public void test_saveOrUpdate() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(3));
+        db.table(t_user).clean().insert(UserTableMap.createWithInit(3));
         dao.saveOrUpdate(new UserEntity().setId(3L).setUserName("test_111").setAge(30));
         db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).eq("UPDATE t_user SET gmt_modified=now(), user_name=?, age=? WHERE id=?");
@@ -27,7 +27,7 @@ public class SaveOrUpdateTest extends BaseTest {
 
     @Test
     public void test_saveOrUpdate_2() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.init(3));
+        db.table(t_user).clean().insert(UserTableMap.createWithInit(3));
         dao.saveOrUpdate(new UserEntity().setId(4L).setUserName("test_111").setAge(30));
         db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).contains("INSERT INTO t_user");

@@ -274,8 +274,8 @@ public class MybatisGenerator {
     private TemplateConfig initTemplate() {
         TemplateConfig tc = new TemplateConfig();
         {
-            tc.setEntity("/templates/entity2.java.vm");
-            tc.setMapper("/templates/mapper2.java.vm");
+            tc.setEntity("/templates/entity/Entity.java.vm");
+            tc.setMapper("/templates/mapper/Mapper.java.vm");
             tc.setXml(null);
             tc.setController(null);
             tc.setService(null);

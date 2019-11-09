@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.method;
 
-import cn.org.atool.fluent.mybatis.demo.ITable;
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
-import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.demo.generate.ITable;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

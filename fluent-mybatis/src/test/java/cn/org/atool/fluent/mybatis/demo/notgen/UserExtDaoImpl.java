@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.notgen;
 
-import cn.org.atool.fluent.mybatis.demo.dao.impl.UserDaoImpl;
-import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.dao.impl.UserDaoImpl;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

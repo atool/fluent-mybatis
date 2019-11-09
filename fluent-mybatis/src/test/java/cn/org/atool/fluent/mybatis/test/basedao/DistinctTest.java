@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.datamap.entity.UserEntityMap;
-import cn.org.atool.fluent.mybatis.demo.datamap.table.UserTableMap;
-import cn.org.atool.fluent.mybatis.demo.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.demo.query.UserEntityQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.entity.UserEntityMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class DistinctTest extends BaseTest {
     @Test
     public void test_distinct() {
         db.table(t_user).clean()
-                .insert(UserTableMap.init(10)
+                .insert(UserTableMap.createWithInit(10)
                         .user_name.values(increase(index -> index > 5 ? "user2" : "user1"))
                         .age.values(30)
                 );
