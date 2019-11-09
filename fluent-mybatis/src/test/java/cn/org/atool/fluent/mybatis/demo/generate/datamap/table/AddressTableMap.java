@@ -13,9 +13,10 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Column;
 
 /**
- * @author generate code
  * @ClassName AddressTableMap
  * @Description AddressTableMap
+ *
+ * @author generate code
  */
 @TableName(AddressMP.Table_Name)
 public class AddressTableMap extends DataMap<AddressTableMap> {
