@@ -21,7 +21,7 @@ public class DeleteByMapTest extends BaseTest {
 
     @Test
     public void test_deleteByMap() throws Exception {
-        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
+        db.table(t_user).clean().insert(TM.user.createWithInit(10)
                 .user_name.values("test1", "test12", "test3", "test12", "tess2")
         );
         dao.deleteByMap(new HashMap<String, Object>() {

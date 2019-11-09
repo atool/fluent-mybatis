@@ -21,7 +21,7 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectById() throws Exception {
-        db.table(t_user).clean().insert(TM.t_user.createWithInit(3)
+        db.table(t_user).clean().insert(TM.user.createWithInit(3)
                 .user_name.values(DataGenerator.increase("username_%d")));
         UserEntity user = dao.selectById(3L);
         db.sqlList().wantFirstSql()
@@ -34,7 +34,7 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectByIds() throws Exception {
-        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
+        db.table(t_user).clean().insert(TM.user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
         List<UserEntity> users = dao.selectByIds(Arrays.asList(3L, 5L));
         db.sqlList().wantFirstSql()

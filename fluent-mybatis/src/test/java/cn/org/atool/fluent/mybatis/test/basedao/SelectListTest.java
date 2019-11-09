@@ -22,7 +22,7 @@ public class SelectListTest extends BaseTest {
 
     @Test
     public void test_selectList() throws Exception {
-        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
+        db.table(t_user).clean().insert(TM.user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<UserEntity> users = dao.selectList(3L, 6L, 7L);

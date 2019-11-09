@@ -19,7 +19,7 @@ public class InsertTest extends BaseTest {
                 .setAge(23)
                 .setUserName("tom mike")
         );
-        db.table(t_user).query().eqDataMap(TM.t_user.create(1)
+        db.table(t_user).query().eqDataMap(TM.user.create(1)
                 .age.values(23)
                 .user_name.values("tom mike")
         );

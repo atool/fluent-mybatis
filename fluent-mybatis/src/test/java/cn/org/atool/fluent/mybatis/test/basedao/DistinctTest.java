@@ -28,7 +28,7 @@ public class DistinctTest extends BaseTest {
     @Test
     public void test_distinct() {
         db.table(t_user).clean()
-                .insert(TM.t_user.createWithInit(10)
+                .insert(TM.user.createWithInit(10)
                         .user_name.values(increase(index -> index > 5 ? "user2" : "user1"))
                         .age.values(30)
                 );

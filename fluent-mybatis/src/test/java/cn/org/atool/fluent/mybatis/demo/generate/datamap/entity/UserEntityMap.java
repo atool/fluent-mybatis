@@ -53,11 +53,11 @@ public class UserEntityMap extends DataMap<UserEntityMap> {
     }
 
     public static class Factory {
-        public static UserEntityMap create() {
+        public UserEntityMap create() {
             return new UserEntityMap();
         }
 
-        public static UserEntityMap create(int size) {
+        public UserEntityMap create(int size) {
             return new UserEntityMap(size);
         }
     }

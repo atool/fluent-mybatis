@@ -19,12 +19,12 @@ public class UpdateByEntityIdTest extends BaseTest {
 
     @Test
     public void test_byEntityId() throws Exception {
-        db.table(t_user).clean().insert(TM.t_user.createWithInit(5));
+        db.table(t_user).clean().insert(TM.user.createWithInit(5));
         dao.updateById(new UserEntity().setId(2L).setUserName("test3").setAge(30));
         db.sqlList().wantFirstSql()
                 .eq("UPDATE t_user SET gmt_modified=now(), user_name=?, age=? WHERE id=?", StringMode.SameAsSpace);
         db.table(t_user).queryWhere("id=2")
-                .eqDataMap(TM.t_user.create(1)
+                .eqDataMap(TM.user.create(1)
                         .user_name.values("test3")
                         .age.values(30)
                 );

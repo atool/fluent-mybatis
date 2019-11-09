@@ -20,7 +20,7 @@ public class SelectFieldsTest extends BaseTest {
     @Test
     public void test_selectFields() throws Exception {
         db.table(t_user).clean()
-                .insert(TM.t_user.createWithInit(10)
+                .insert(TM.user.createWithInit(10)
                         .user_name.values(DataGenerator.increase("username_%d"))
                 );
 

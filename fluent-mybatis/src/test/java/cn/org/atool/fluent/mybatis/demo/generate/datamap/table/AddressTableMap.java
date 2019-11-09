@@ -60,11 +60,11 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
     }
 
     public static class Factory {
-        public static AddressTableMap create() {
+        public AddressTableMap create() {
             return create(1);
         }
 
-        public static AddressTableMap create(int size) {
+        public AddressTableMap create(int size) {
             return new AddressTableMap(size);
         }
 
@@ -72,7 +72,7 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
          * 创建AddressTableMap
          * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
          */
-        public static AddressTableMap createWithInit() {
+        public AddressTableMap createWithInit() {
             return createWithInit(1);
         }
 
@@ -82,7 +82,7 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
          *
          * @param size
          */
-        public static AddressTableMap createWithInit(int size) {
+        public AddressTableMap createWithInit(int size) {
             return new AddressTableMap(size)
                     .id.values(DataGenerator.increase(1, 1))
                     .gmt_created.values(new Date())

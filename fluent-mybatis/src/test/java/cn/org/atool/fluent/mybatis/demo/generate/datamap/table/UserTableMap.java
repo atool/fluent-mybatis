@@ -75,11 +75,11 @@ public class UserTableMap extends DataMap<UserTableMap> {
     }
 
     public static class Factory {
-        public static UserTableMap create() {
+        public UserTableMap create() {
             return create(1);
         }
 
-        public static UserTableMap create(int size) {
+        public UserTableMap create(int size) {
             return new UserTableMap(size);
         }
 
@@ -87,7 +87,7 @@ public class UserTableMap extends DataMap<UserTableMap> {
          * 创建UserTableMap
          * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
          */
-        public static UserTableMap createWithInit() {
+        public UserTableMap createWithInit() {
             return createWithInit(1);
         }
 
@@ -97,7 +97,7 @@ public class UserTableMap extends DataMap<UserTableMap> {
          *
          * @param size
          */
-        public static UserTableMap createWithInit(int size) {
+        public UserTableMap createWithInit(int size) {
             return new UserTableMap(size)
                     .id.values(DataGenerator.increase(1, 1))
                     .gmt_created.values(new Date())

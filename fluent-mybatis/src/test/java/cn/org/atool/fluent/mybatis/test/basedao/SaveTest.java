@@ -25,7 +25,7 @@ public class SaveTest extends BaseTest {
         db.table(t_user).clean();
         dao.save(new UserEntity().setId(4L).setUserName("test name").setAge(43));
         db.sqlList().wantFirstSql().notContain(" id,");
-        db.table(t_user).query().eqDataMap(TM.t_user.create(1)
+        db.table(t_user).query().eqDataMap(TM.user.create(1)
                 .user_name.values("test name")
                 .age.values(43)
         );
@@ -36,7 +36,7 @@ public class SaveTest extends BaseTest {
         db.table(t_user).clean();
         dao.saveWithPk(new UserEntity().setId(4L).setUserName("test name").setAge(43));
         db.sqlList().wantFirstSql().contains(" id,");
-        db.table(t_user).query().eqDataMap(TM.t_user.create(1)
+        db.table(t_user).query().eqDataMap(TM.user.create(1)
                 .id.values(4)
                 .user_name.values("test name")
                 .age.values(43)
@@ -49,7 +49,7 @@ public class SaveTest extends BaseTest {
         dao.saveWithPk(Arrays.asList(new UserEntity().setId(4L).setUserName("test name1").setAge(43),
                 new UserEntity().setId(5L).setUserName("test name2").setAge(43)
         ));
-        db.table(t_user).query().eqDataMap(TM.t_user.create(2)
+        db.table(t_user).query().eqDataMap(TM.user.create(2)
                 .id.values(4, 5)
                 .user_name.values("test name1", "test name2")
                 .age.values(43)

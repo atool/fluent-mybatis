@@ -27,11 +27,11 @@ public class ${cfg.fileEntityMap} extends DataMap<${cfg.fileEntityMap}> {
     }
 
     public static class Factory {
-        public static ${cfg.fileEntityMap} create() {
+        public ${cfg.fileEntityMap} create() {
             return new ${cfg.fileEntityMap}();
         }
 
-        public static ${cfg.fileEntityMap} create(int size) {
+        public ${cfg.fileEntityMap} create(int size) {
             return new ${cfg.fileEntityMap}(size);
         }
     }

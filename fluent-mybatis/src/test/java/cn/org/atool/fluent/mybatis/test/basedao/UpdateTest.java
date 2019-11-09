@@ -19,12 +19,13 @@ public class UpdateTest extends BaseTest {
 
     @Test
     public void test_update() throws Exception {
-        db.table(t_user).clean().insert(TM.t_user.createWithInit(5)
+        db.table(t_user).clean().insert(TM.user.createWithInit(5)
                 .user_name.values(DataGenerator.increase("username_%d")));
         dao.updateUserNameById("new_user_name", 4L);
         db.sqlList().wantFirstSql().eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ?)");
-        db.table(t_user).queryWhere("id=4").eqDataMap(TM.t_user.create(1)
-                .user_name.values("new_user_name")
-        );
+        db.table(t_user).queryWhere("id=4")
+                .eqDataMap(TM.user.create(1)
+                        .user_name.values("new_user_name")
+                );
     }
 }

@@ -41,11 +41,11 @@ public class AddressEntityMap extends DataMap<AddressEntityMap> {
     }
 
     public static class Factory {
-        public static AddressEntityMap create() {
+        public AddressEntityMap create() {
             return new AddressEntityMap();
         }
 
-        public static AddressEntityMap create(int size) {
+        public AddressEntityMap create(int size) {
             return new AddressEntityMap(size);
         }
     }

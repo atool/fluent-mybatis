@@ -22,7 +22,7 @@ public class InsertWithPkTest extends BaseTest {
                 .setAge(25);
         mapper.insertWithPk(user);
         db.table(ITable.t_user).query()
-                .eqDataMap(TM.t_user.create(1)
+                .eqDataMap(TM.user.create(1)
                         .id.values(34L)
                         .user_name.values("user name")
                         .age.values(25));
