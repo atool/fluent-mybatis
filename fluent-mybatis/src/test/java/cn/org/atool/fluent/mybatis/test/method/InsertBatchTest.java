@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.method;
 
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
@@ -20,7 +21,7 @@ public class InsertBatchTest extends BaseTest {
                 new UserEntity().setUserName("name2").setAge(24)));
         db.table(t_user).count().eq(2L);
         db.table(t_user).query().print()
-                .eqDataMap(UserTableMap.create(2)
+                .eqDataMap(TM.t_user.create(2)
                         .age.values(23, 24)
                         .user_name.values("name1", "name2"));
     }
@@ -33,7 +34,7 @@ public class InsertBatchTest extends BaseTest {
                 new UserEntity().setId(24L).setUserName("name2").setAge(24)));
         db.table(t_user).count().eq(2L);
         db.table(t_user).query().print()
-                .eqDataMap(UserTableMap.create(2)
+                .eqDataMap(TM.t_user.create(2)
                         .age.values(23, 24)
                         .user_name.values("name1", "name2"));
     }

@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
@@ -18,7 +19,7 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
+        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         UserEntity user = dao.selectOne("username");
@@ -29,7 +30,7 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne2() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
+        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         String username = dao.selectOne(5);

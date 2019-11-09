@@ -1,0 +1,13 @@
+package ${basePackage}.datamap;
+
+import ${basePackage}.datamap.table.*;
+
+/**
+ * Table Data Map
+ */
+public interface TM {
+#foreach(${obj} in ${objs})
+
+    ${obj.tableMap}.Factory ${obj.tableName} = new ${obj.tableMap}.Factory();
+#end
+}

@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.method;
 
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
@@ -18,7 +19,7 @@ public class InsertTest extends BaseTest {
                 .setAge(23)
                 .setUserName("tom mike")
         );
-        db.table(t_user).query().eqDataMap(UserTableMap.create(1)
+        db.table(t_user).query().eqDataMap(TM.t_user.create(1)
                 .age.values(23)
                 .user_name.values("tom mike")
         );

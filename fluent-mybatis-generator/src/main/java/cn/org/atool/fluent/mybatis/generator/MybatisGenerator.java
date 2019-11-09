@@ -113,7 +113,7 @@ public class MybatisGenerator {
             log.info("generate table {} successful.", table.getTableName());
         }
         currTable.remove();
-        GenerateObj.generate(generateObjs, testOutputDir, basePackage);
+        GenerateObj.generate(generateObjs, outputDir, testOutputDir, basePackage);
     }
 
     public MybatisGenerator addModelInterface(Class klass) {

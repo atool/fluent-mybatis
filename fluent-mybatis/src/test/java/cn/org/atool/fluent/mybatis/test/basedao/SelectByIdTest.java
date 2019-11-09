@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
-import cn.org.atool.fluent.mybatis.demo.generate.datamap.entity.UserEntityMap;
-import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.EM;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +21,25 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectById() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.createWithInit(3)
+        db.table(t_user).clean().insert(TM.t_user.createWithInit(3)
                 .user_name.values(DataGenerator.increase("username_%d")));
         UserEntity user = dao.selectById(3L);
         db.sqlList().wantFirstSql()
                 .where().eq("id=?");
         want.object(user)
-                .eqHashMap(UserEntityMap.create()
+                .eqHashMap(EM.user.create()
                         .userName.values("username_3")
                 );
     }
 
     @Test
     public void test_selectByIds() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
+        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
         List<UserEntity> users = dao.selectByIds(Arrays.asList(3L, 5L));
         db.sqlList().wantFirstSql()
                 .where().eq("id IN ( ? , ? )");
-        want.object(users).eqDataMap(UserEntityMap.create(2)
+        want.object(users).eqDataMap(EM.user.create(2)
                 .userName.values("username_3", "username_5")
         );
     }

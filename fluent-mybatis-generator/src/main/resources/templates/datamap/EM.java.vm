@@ -1,0 +1,13 @@
+package ${basePackage}.datamap;
+
+import ${basePackage}.datamap.entity.*;
+
+/**
+ * Entity Data Map
+ */
+public interface EM {
+#foreach(${obj} in ${objs})
+
+    ${obj.entityMap}.Factory ${obj.camelEntity} = new ${obj.entityMap}.Factory();
+#end
+}

@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -18,7 +19,7 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
+        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<String> names = dao.selectObjs(2L, 3L, 5L);
@@ -28,7 +29,7 @@ public class SelectObjsTest extends BaseTest {
     @Test
     public void test_selectObjs_2() throws Exception {
         db.table(t_user).clean()
-                .insert(UserTableMap.createWithInit(1)
+                .insert(TM.t_user.createWithInit(1)
                         .user_name.values(null)
                 );
 
@@ -39,7 +40,7 @@ public class SelectObjsTest extends BaseTest {
     @Test
     public void test_selectObjs2() throws Exception {
         db.table(t_user).clean()
-                .insert(UserTableMap.createWithInit(1)
+                .insert(TM.t_user.createWithInit(1)
                         .user_name.values(null)
                         .age.values(null)
                 );

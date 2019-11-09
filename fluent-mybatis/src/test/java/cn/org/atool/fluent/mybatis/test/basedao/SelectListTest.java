@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.EM;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.entity.UserEntityMap;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
@@ -20,11 +22,11 @@ public class SelectListTest extends BaseTest {
 
     @Test
     public void test_selectList() throws Exception {
-        db.table(t_user).clean().insert(UserTableMap.createWithInit(10)
+        db.table(t_user).clean().insert(TM.t_user.createWithInit(10)
                 .user_name.values(DataGenerator.increase("username_%d")));
 
         List<UserEntity> users = dao.selectList(3L, 6L, 7L);
-        want.list(users).eqDataMap(UserEntityMap.create(3)
+        want.list(users).eqDataMap(EM.user.create(3)
                 .id.values(3, 6, 7)
                 .userName.values("username_3", "username_6", "username_7")
         );

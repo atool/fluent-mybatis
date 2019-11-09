@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -17,7 +18,7 @@ public class ExistPkTest extends BaseTest {
 
     @Test
     public void test_exist() {
-        db.table(t_user).clean().insert(UserTableMap.create(2)
+        db.table(t_user).clean().insert(TM.t_user.create(2)
                 .id.values(1, 3)
         );
         boolean existed = dao.existPk(1);

@@ -32,19 +32,21 @@ public class AddressEntityMap extends DataMap<AddressEntityMap> {
      */
     public transient final KeyValue<AddressEntityMap> address = new KeyValue(this, Property.address);
 
-    protected AddressEntityMap() {
+    public AddressEntityMap() {
         super();
     }
 
-    protected AddressEntityMap(int size) {
+    public AddressEntityMap(int size) {
         super(size);
     }
 
-    public static AddressEntityMap create() {
-        return new AddressEntityMap();
-    }
+    public static class Factory {
+        public static AddressEntityMap create() {
+            return new AddressEntityMap();
+        }
 
-    public static AddressEntityMap create(int size) {
-        return new AddressEntityMap(size);
+        public static AddressEntityMap create(int size) {
+            return new AddressEntityMap(size);
+        }
     }
 }

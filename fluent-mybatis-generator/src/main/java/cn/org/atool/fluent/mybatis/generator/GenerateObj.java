@@ -22,6 +22,8 @@ public class GenerateObj {
 
     private String withoutSuffixEntity;
 
+    private String camelEntity;
+
     private String mix;
 
     private String mixInstance;
@@ -31,6 +33,8 @@ public class GenerateObj {
     private String mp;
 
     private String tableMap;
+
+    private String entityMap;
 
 
     public static GenerateObj init(Table table) {
@@ -42,7 +46,9 @@ public class GenerateObj {
                 .setMix(config.get("fileTableMix"))
                 .setMixCleanMethod(String.format("clean%sTable", config.get("withoutSuffixEntity")))
                 .setMp(config.get("fileMP"))
-                .setTableMap(config.get("fileTableMap"));
+                .setTableMap(config.get("fileTableMap"))
+                .setEntityMap(config.get("fileEntityMap"));
+        obj.setCamelEntity(obj.withoutSuffixEntity.substring(0, 1).toLowerCase() + obj.withoutSuffixEntity.substring(1));
         obj.mixInstance = obj.mix.substring(0, 1).toLowerCase() + obj.mix.substring(1);
         if (obj.tableName.startsWith("t_")) {
             obj.tableName = obj.tableName.substring(2);
@@ -56,17 +62,22 @@ public class GenerateObj {
         GenerateObj.currConfig.set(currConfig);
     }
 
-    public static void generate(List<GenerateObj> objs, String output, String basePackage) {
+    public static void generate(List<GenerateObj> objs, String output, String testOutput, String basePackage) {
         VelocityTemplateEngine engine = new VelocityTemplateEngine().init(null);
         Map<String, Object> config = new HashMap<>();
         config.put("basePackage", basePackage);
         config.put("objs", objs);
-        String templateDir = "/templates/single/";
-        String packDir = String.format("%s/%s/", output, basePackage.replace('.', '/'));
+        String templateDir = "/templates/";
+        String srcPackDir = String.format("%s/%s/", output, basePackage.replace('.', '/'));
+        String testPackDir = String.format("%s/%s/", testOutput, basePackage.replace('.', '/'));
+
         try {
-            engine.writer(config, templateDir + "Mixes.java.vm", packDir + "TableMixes.java");
-            engine.writer(config, templateDir + "ITable.java.vm", packDir + "ITable.java");
-            engine.writer(config, templateDir + "DataSourceScript.java.vm", packDir + "DataSourceScript.java");
+            engine.writer(config, templateDir + "mix/Mixes.java.vm", srcPackDir + "TableMixes.java");
+            engine.writer(config, templateDir + "ITable.java.vm", srcPackDir + "ITable.java");
+            engine.writer(config, templateDir + "DataSourceScript.java.vm", srcPackDir + "DataSourceScript.java");
+
+            engine.writer(config, templateDir + "datamap/TM.java.vm", testPackDir + "datamap/TM.java");
+            engine.writer(config, templateDir + "datamap/EM.java.vm", testPackDir + "datamap/EM.java");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

@@ -13,10 +13,9 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Column;
 
 /**
+ * @author generate code
  * @ClassName AddressTableMap
  * @Description AddressTableMap
- *
- * @author generate code
  */
 @TableName(AddressMP.Table_Name)
 public class AddressTableMap extends DataMap<AddressTableMap> {
@@ -46,11 +45,11 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
     @ColumnDef(type = "varchar(45)")
     public transient final KeyValue<AddressTableMap> address = new KeyValue(this, Column.address);
 
-    protected AddressTableMap() {
+    public AddressTableMap() {
         super();
     }
 
-    protected AddressTableMap(int size) {
+    public AddressTableMap(int size) {
         super(size);
     }
 
@@ -59,34 +58,36 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
         return this;
     }
 
-    public static AddressTableMap create() {
-        return create(1);
-    }
+    public static class Factory {
+        public static AddressTableMap create() {
+            return create(1);
+        }
 
-    public static AddressTableMap create(int size) {
-        return new AddressTableMap(size);
-    }
+        public static AddressTableMap create(int size) {
+            return new AddressTableMap(size);
+        }
 
-    /**
-     * 创建AddressTableMap
-     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-     */
-    public static AddressTableMap createWithInit() {
-        return createWithInit(1);
-    }
+        /**
+         * 创建AddressTableMap
+         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+         */
+        public static AddressTableMap createWithInit() {
+            return createWithInit(1);
+        }
 
-    /**
-     * 创建AddressTableMap
-     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-     *
-     * @param size
-     */
-    public static AddressTableMap createWithInit(int size) {
-        return new AddressTableMap(size)
-                .id.values(DataGenerator.increase(1, 1))
-                .gmt_created.values(new Date())
-                .gmt_modified.values(new Date())
-                .is_deleted.values(false)
-                ;
+        /**
+         * 创建AddressTableMap
+         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+         *
+         * @param size
+         */
+        public static AddressTableMap createWithInit(int size) {
+            return new AddressTableMap(size)
+                    .id.values(DataGenerator.increase(1, 1))
+                    .gmt_created.values(new Date())
+                    .gmt_modified.values(new Date())
+                    .is_deleted.values(false)
+                    ;
+        }
     }
 }

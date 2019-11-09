@@ -44,19 +44,21 @@ public class UserEntityMap extends DataMap<UserEntityMap> {
      */
     public transient final KeyValue<UserEntityMap> version = new KeyValue(this, Property.version);
 
-    protected UserEntityMap() {
+    public UserEntityMap() {
         super();
     }
 
-    protected UserEntityMap(int size) {
+    public UserEntityMap(int size) {
         super(size);
     }
 
-    public static UserEntityMap create() {
-        return new UserEntityMap();
-    }
+    public static class Factory {
+        public static UserEntityMap create() {
+            return new UserEntityMap();
+        }
 
-    public static UserEntityMap create(int size) {
-        return new UserEntityMap(size);
+        public static UserEntityMap create(int size) {
+            return new UserEntityMap(size);
+        }
     }
 }

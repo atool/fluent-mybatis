@@ -61,11 +61,11 @@ public class UserTableMap extends DataMap<UserTableMap> {
     @ColumnDef(type = "varchar(45)")
     public transient final KeyValue<UserTableMap> version = new KeyValue(this, Column.version);
 
-    protected UserTableMap() {
+    public UserTableMap() {
         super();
     }
 
-    protected UserTableMap(int size) {
+    public UserTableMap(int size) {
         super(size);
     }
 
@@ -74,34 +74,36 @@ public class UserTableMap extends DataMap<UserTableMap> {
         return this;
     }
 
-    public static UserTableMap create() {
-        return create(1);
-    }
+    public static class Factory {
+        public static UserTableMap create() {
+            return create(1);
+        }
 
-    public static UserTableMap create(int size) {
-        return new UserTableMap(size);
-    }
+        public static UserTableMap create(int size) {
+            return new UserTableMap(size);
+        }
 
-    /**
-     * 创建UserTableMap
-     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-     */
-    public static UserTableMap createWithInit() {
-        return createWithInit(1);
-    }
+        /**
+         * 创建UserTableMap
+         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+         */
+        public static UserTableMap createWithInit() {
+            return createWithInit(1);
+        }
 
-    /**
-     * 创建UserTableMap
-     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-     *
-     * @param size
-     */
-    public static UserTableMap createWithInit(int size) {
-        return new UserTableMap(size)
-                .id.values(DataGenerator.increase(1, 1))
-                .gmt_created.values(new Date())
-                .gmt_modified.values(new Date())
-                .is_deleted.values(false)
-                ;
+        /**
+         * 创建UserTableMap
+         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+         *
+         * @param size
+         */
+        public static UserTableMap createWithInit(int size) {
+            return new UserTableMap(size)
+                    .id.values(DataGenerator.increase(1, 1))
+                    .gmt_created.values(new Date())
+                    .gmt_modified.values(new Date())
+                    .is_deleted.values(false)
+                    ;
+        }
     }
 }
