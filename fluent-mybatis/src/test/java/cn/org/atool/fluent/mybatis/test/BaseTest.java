@@ -8,7 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.test4j.junit5.Test4J;
-import org.test4j.module.database.sql.Test4JDataSourceHelper;
+import org.test4j.module.database.sql.DataSourceCreatorFactory;
+import org.test4j.module.database.sql.DataSourceDefaultCreator;
 
 import javax.sql.DataSource;
 
@@ -28,6 +29,6 @@ public abstract class BaseTest extends Test4J implements ITable {
 class TestSpringConfig {
     @Bean("dataSource")
     public DataSource newDataSource() {
-        return Test4JDataSourceHelper.createLocalDataSource("dataSource");
+        return null;
     }
 }

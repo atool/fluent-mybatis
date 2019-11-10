@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.mybatis.demo.generate;
 
-import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.*;
-import org.test4j.module.IScript;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.AddressTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import org.test4j.module.database.IDataSourceScript;
 
 /**
  * 生成内存数据库（h2)脚本
@@ -9,7 +10,7 @@ import org.test4j.module.IScript;
  * @author darui.wu
  * @create 2019-09-02 18:03
  */
-public class DataSourceScript implements IScript {
+public class DataSourceScript implements IDataSourceScript {
     @Override
     public Class[] getTableKlass() {
         return new Class[]{
