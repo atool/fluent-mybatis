@@ -22,8 +22,8 @@ $!{cfg.interfacePack}
  *
  * @author ${author}
  */
-@Setter
 @Getter
+@Setter
 #if(${cfg.chainSet})
 @Accessors(chain = true)
 #end
