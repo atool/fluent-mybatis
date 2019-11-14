@@ -5,12 +5,11 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressEntityHelper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Column;
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import java.util.Date;
 import java.io.Serializable;
-
 import java.util.Map;
 
 /**
@@ -20,9 +19,9 @@ import java.util.Map;
  *
  * @author generate code
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @TableName(AddressMP.Table_Name)
 public class AddressEntity implements IEntity {
     private static final long serialVersionUID = 1L;

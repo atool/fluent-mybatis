@@ -1,8 +1,8 @@
 package ${cfg.packTableMap};
 
 import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
+import cn.org.atool.fluent.mybatis.annotation.ColumnDef.PrimaryType;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.test4j.module.ICore.DataGenerator;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
@@ -21,10 +21,15 @@ import ${cfg.packMP}.${cfg.fileMP}.Column;
 @TableName(${cfg.fileMP}.Table_Name)
 public class ${cfg.fileTableMap} extends DataMap<${cfg.fileTableMap}> {
 #foreach($field in ${table.fields})
+    #if(${field.keyFlag})
+        #if(${field.keyIdentityFlag})#set($primary=", primary = PrimaryType.AutoIncrease")#else#set($primary=", primary = PrimaryType.Customized")#end
+    #else
+        #set($primary="")
+    #end
     /**
      * 设置${table.name}对象${field.name}字段值
      */
-    @ColumnDef(type = "${field.type}"#if(${field.keyFlag}), primary = true#end)
+    @ColumnDef(type = "${field.type}"${primary})
     public transient final KeyValue<${cfg.fileTableMap}> ${field.name} = new KeyValue(this, Column.${field.name});
 #end
 
@@ -36,47 +41,54 @@ public class ${cfg.fileTableMap} extends DataMap<${cfg.fileTableMap}> {
         super(size);
     }
 
+    /**
+     * 创建${cfg.fileTableMap}
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
+     */
+    public ${cfg.fileTableMap} init() {
+#foreach($field in ${table.fields})
+    #if(${field.keyFlag})
+    #if(${field.keyIdentityFlag})
+        this.${field.name}.autoIncrease();
+    #end
+    #elseif(${cfg.field_gmtModified} == ${field.name} || ${cfg.field_gmtCreated} == ${field.name})
+        this.${field.name}.values(new Date());
+    #elseif(${cfg.field_logicDeleted} == ${field.name} && ${field.propertyType} == 'Boolean')
+        this.${field.name}.values(false);
+    #end
+#end
+        return this;
+    }
+
     public ${cfg.fileTableMap} with(Consumer<${cfg.fileTableMap}> init) {
         init.accept(this);
         return this;
     }
 
+    public static ${cfg.fileTableMap} create() {
+        return new ${cfg.fileTableMap}(1);
+    }
+
+    public static ${cfg.fileTableMap} create(int size) {
+        return new ${cfg.fileTableMap}(size);
+    }
+
     public static class Factory {
         public ${cfg.fileTableMap} create() {
-            return create(1);
+            return ${cfg.fileTableMap}.create();
         }
 
         public ${cfg.fileTableMap} create(int size) {
-            return new ${cfg.fileTableMap}(size);
+            return ${cfg.fileTableMap}.create(size);
         }
 
-        /**
-         * 创建${cfg.fileTableMap}
-         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-         */
         public ${cfg.fileTableMap} createWithInit() {
-            return createWithInit(1);
+            return ${cfg.fileTableMap}.create(1).init();
         }
 
-        /**
-         * 创建${cfg.fileTableMap}
-         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-         *
-         * @param size
-         */
         public ${cfg.fileTableMap} createWithInit(int size) {
-            return new ${cfg.fileTableMap}(size)
-        #foreach($field in ${table.fields})
-            #if(${field.keyFlag})
-                #if(${field.keyIdentityFlag})
-                    .${field.name}.values(DataGenerator.increase(1, 1))
-                #end
-            #elseif(${cfg.field_gmtModified} == ${field.name} || ${cfg.field_gmtCreated} == ${field.name})
-                    .${field.name}.values(new Date())
-            #elseif(${cfg.field_logicDeleted} == ${field.name} && ${field.propertyType} == 'Boolean')
-                    .${field.name}.values(false)
-            #end
-        #end                    ;
+            return ${cfg.fileTableMap}.create(size).init();
         }
     }
 }

@@ -52,13 +52,21 @@ public class UserEntityMap extends DataMap<UserEntityMap> {
         super(size);
     }
 
+    public static UserEntityMap create() {
+        return new UserEntityMap();
+    }
+
+    public static UserEntityMap create(int size) {
+        return new UserEntityMap(size);
+    }
+
     public static class Factory {
         public UserEntityMap create() {
-            return new UserEntityMap();
+            return UserEntityMap.create();
         }
 
         public UserEntityMap create(int size) {
-            return new UserEntityMap(size);
+            return UserEntityMap.create(size);
         }
     }
 }

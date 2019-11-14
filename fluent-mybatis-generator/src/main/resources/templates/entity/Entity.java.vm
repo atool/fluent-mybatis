@@ -5,15 +5,14 @@ import ${cfg.packEntityHelper}.${cfg.fileEntityHelper};
 import ${cfg.packMP}.${cfg.fileMP};
 import ${cfg.packMP}.${cfg.fileMP}.Column;
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 #foreach($pkg in ${table.importPackages})
 #if(!$pkg.startsWith("com.baomidou.mybatisplus.annotation"))
 import $pkg;
 #end
 #end
-
 import java.util.Map;
 $!{cfg.interfacePack}
 /**
@@ -23,11 +22,11 @@ $!{cfg.interfacePack}
  *
  * @author ${author}
  */
-@Data
+@Setter
+@Getter
 #if(${cfg.chainSet})
 @Accessors(chain = true)
 #end
-@EqualsAndHashCode(callSuper =#if(${supperEntityClass}) true#else false#end)
 #if(${table.convert})
 @TableName(${cfg.fileMP}.Table_Name)
 #end
@@ -36,13 +35,11 @@ public class ${entity} implements IEntity #if(${cfg.interface}), ${cfg.interface
 
 ## ---------- for each 字段循环开始 -----------
 #foreach($field in ${table.fields})
-    #if(${field.keyFlag})
-        #set($keyPropertyName=${field.propertyName})
-    #end
     /**
      * ${field.comment}
      */
 #if(${field.keyFlag})## 主键
+    #set($keyPropertyName=${field.propertyName})
     #if(${field.keyIdentityFlag})
 @TableId(value = Column.${field.name}, type = IdType.AUTO)
     #elseif(!$null.isNull(${idType}) && "$!idType" != "")

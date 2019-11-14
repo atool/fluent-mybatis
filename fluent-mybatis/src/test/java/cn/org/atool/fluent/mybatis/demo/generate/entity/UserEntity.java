@@ -5,12 +5,11 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.UserEntityHelper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Column;
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import java.util.Date;
 import java.io.Serializable;
-
 import java.util.Map;
 
 /**
@@ -20,9 +19,9 @@ import java.util.Map;
  *
  * @author generate code
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @TableName(UserMP.Table_Name)
 public class UserEntity implements IEntity {
     private static final long serialVersionUID = 1L;

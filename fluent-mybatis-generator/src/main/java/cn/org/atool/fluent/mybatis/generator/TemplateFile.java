@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static cn.org.atool.fluent.mybatis.generator.MybatisGenerator.currTable;
 import static java.util.stream.Collectors.joining;
 
 @Accessors(chain = true)
@@ -81,9 +82,8 @@ public class TemplateFile {
     }
 
     public static List<FileOutConfig> parseConfigList(MybatisGenerator generator, Map<String, Object> config) {
-
         return TEMPLATE_FILE_LIST.stream()
-                .filter(template -> !template.isPartition || generator.currTable().isPartition())
+                .filter(template -> !template.isPartition || currTable().isPartition())
                 .map(template -> template.parse(generator, config))
                 .collect(Collectors.toList());
     }
@@ -92,27 +92,27 @@ public class TemplateFile {
         return new FileOutConfig("/templates/" + template) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                parse(generator.currTable().getWithoutSuffixEntity());
-                config.put("withoutSuffixEntity", generator.currTable().getWithoutSuffixEntity());
-                config.put("withSuffixEntity", generator.currTable().getWithSuffixEntity());
+                parse(currTable().getWithoutSuffixEntity());
+                config.put("withoutSuffixEntity", currTable().getWithoutSuffixEntity());
+                config.put("withSuffixEntity", currTable().getWithSuffixEntity());
                 String _package = getFilePack(generator.getPackage(templateType));
 
                 config.put("pack" + templateId, _package);
                 config.put("file" + templateId, fileName);
-                setBaseDaoImports(generator, config);
+                setBaseDaoImports(config);
                 return getFullFileName(generator);
             }
         };
     }
 
-    private void setBaseDaoImports(MybatisGenerator generator, Map<String, Object> config) {
-        if (!this.isBaseDao || generator.getBaseDaoInterfaces().size() == 0) {
+    private void setBaseDaoImports(Map<String, Object> config) {
+        if (!this.isBaseDao || currTable().getBaseDaoInterfaces().size() == 0) {
             return;
         }
-        String imports = generator.getBaseDaoInterfaces().values().stream().map(item -> "import " + item + ";").collect(joining("\n"));
+        String imports = currTable().getBaseDaoInterfaces().values().stream().map(item -> "import " + item + ";").collect(joining("\n"));
         config.put("baseDaoInterfaceImports", imports);
 
-        String implement = generator.getBaseDaoInterfaces().keySet().stream().map(item -> {
+        String implement = currTable().getBaseDaoInterfaces().keySet().stream().map(item -> {
             item = item.replaceAll("\\$\\{entity\\}", (String) config.get("withSuffixEntity"));
             item = item.replaceAll("\\$\\{update\\}", (String) config.get("fileEntityUpdate"));
             item = item.replaceAll("\\$\\{query\\}", (String) config.get("fileEntityQuery"));

@@ -13,19 +13,22 @@ public class MybatisGeneratorTest {
                 .setOutputDir(outdir, outdir, outdir)
                 .setEntitySetChain(true)
                 .setDataSource(url, "root", "password")
-                .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>", "cn.org.atool.fluent.mybatis.demo.MyCustomerInterface")
-                .generate(new TableConvertor("t_") {
-                            {
-                                this.table("address");
-                                this.table("t_user").setPartition(true);
-                            }
-                        }.allTable(table -> {
-                            table.column("is_deleted", DbColumnType.BOOLEAN)
-                                    .setGmtCreateColumn("gmt_created")
-                                    .setGmtModifiedColumn("gmt_modified")
-                                    .setVersionColumn("version")
-                                    .setLogicDeletedColumn("is_deleted");
-                        })
+                .generate(new TableConvertor("t_")
+                                .addTable("address")
+                                .addTable("t_user", true)
+                                .allTable(table -> {
+                                    table.column("is_deleted", DbColumnType.BOOLEAN)
+                                            .setGmtCreateColumn("gmt_created")
+                                            .setGmtModifiedColumn("gmt_modified")
+                                            .setVersionColumn("version")
+                                            .setLogicDeletedColumn("is_deleted")
+                                            .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>", "cn.org.atool.fluent.mybatis.demo.MyCustomerInterface")
+                                    ;
+                                })
+                        , new TableConvertor()
+                                .addTable("no_auto_id")
+                                .addTable("no_primary")
+                                .allTable(table -> table.setMapperPrefix("new"))
                 );
     }
 }

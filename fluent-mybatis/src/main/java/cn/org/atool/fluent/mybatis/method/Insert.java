@@ -32,7 +32,7 @@ public class Insert extends AbstractMethod {
                 keyGenerator = new Jdbc3KeyGenerator();
                 keyProperty = tableInfo.getKeyProperty();
                 keyColumn = tableInfo.getKeyColumn();
-            } else if (tableInfo.getKeySequence() == null) {
+            } else if (tableInfo.getKeySequence() != null) {
                 keyGenerator = TableInfoHelper.genKeyGenerator(tableInfo, builderAssistant, sqlMethod.getMethod(), languageDriver);
                 keyProperty = tableInfo.getKeyProperty();
                 keyColumn = tableInfo.getKeyColumn();

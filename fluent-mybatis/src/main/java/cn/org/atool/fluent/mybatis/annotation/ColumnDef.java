@@ -5,6 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * @author darui.wu
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ColumnDef {
@@ -20,7 +23,7 @@ public @interface ColumnDef {
      *
      * @return
      */
-    boolean primary() default false;
+    PrimaryType primary() default PrimaryType.None;
 
     /**
      * 允许字段为null
@@ -28,4 +31,19 @@ public @interface ColumnDef {
      * @return
      */
     boolean notNull() default false;
+
+    enum PrimaryType {
+        /**
+         * 非主键
+         */
+        None,
+        /**
+         * 自增主键
+         */
+        AutoIncrease,
+        /**
+         * 自定义
+         */
+        Customized;
+    }
 }

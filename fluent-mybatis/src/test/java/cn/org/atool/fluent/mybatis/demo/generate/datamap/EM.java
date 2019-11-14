@@ -10,4 +10,8 @@ public interface EM {
     AddressEntityMap.Factory address = new AddressEntityMap.Factory();
 
     UserEntityMap.Factory user = new UserEntityMap.Factory();
+
+    NoAutoIdEntityMap.Factory noAutoId = new NoAutoIdEntityMap.Factory();
+
+    NoPrimaryEntityMap.Factory noPrimary = new NoPrimaryEntityMap.Factory();
 }

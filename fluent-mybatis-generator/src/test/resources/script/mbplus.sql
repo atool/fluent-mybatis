@@ -27,3 +27,16 @@ create table if not exists t_user
 alter table t_user
 	add primary key (id);
 
+create table if not exists no_auto_id
+(
+    id varchar(50) not null
+        primary key,
+    column_1 varchar(20) null
+);
+
+
+create table if not exists no_primary
+(
+    column_1 int null,
+    column_2 varchar(100) null
+);

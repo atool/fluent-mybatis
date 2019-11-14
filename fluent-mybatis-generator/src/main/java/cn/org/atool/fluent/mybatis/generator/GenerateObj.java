@@ -72,9 +72,9 @@ public class GenerateObj {
         String testPackDir = String.format("%s/%s/", testOutput, basePackage.replace('.', '/'));
 
         try {
-            engine.writer(config, templateDir + "mix/Mixes.java.vm", srcPackDir + "TableMixes.java");
-            engine.writer(config, templateDir + "ITable.java.vm", srcPackDir + "ITable.java");
-            engine.writer(config, templateDir + "DataSourceScript.java.vm", srcPackDir + "DataSourceScript.java");
+            engine.writer(config, templateDir + "mix/Mixes.java.vm", testPackDir + "TableMixes.java");
+            engine.writer(config, templateDir + "ITable.java.vm", testPackDir + "ITable.java");
+            engine.writer(config, templateDir + "DataSourceScript.java.vm", testPackDir + "DataSourceScript.java");
 
             engine.writer(config, templateDir + "datamap/TM.java.vm", testPackDir + "datamap/TM.java");
             engine.writer(config, templateDir + "datamap/EM.java.vm", testPackDir + "datamap/EM.java");

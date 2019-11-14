@@ -13,6 +13,7 @@ import java.util.Optional;
 @Getter
 @Accessors(chain = true)
 public class Table implements Comparable<Table> {
+    @Setter
     private TableConvertor convertor;
 
     private final String tableName;
@@ -31,7 +32,26 @@ public class Table implements Comparable<Table> {
     @Setter
     private boolean isPartition = false;
 
+    /**
+     * mapper类bean名称前缀
+     */
+    @Setter
+    private String mapperPrefix = "";
+
+    /**
+     * base dao 导入的自定义接口
+     * key: implements 接口完整定义，包含泛型
+     * value: 接口import完整路径
+     */
+    @Setter
+    @Getter
+    private Map<String, String> baseDaoInterfaces = new HashMap<>();
+
     private Map<String, TableColumn> columns = new HashMap<String, TableColumn>();
+
+    public Table(String tableName) {
+        this.tableName = tableName;
+    }
 
     public Table(TableConvertor convertor, String tableName) {
         this.convertor = convertor;
@@ -155,5 +175,10 @@ public class Table implements Comparable<Table> {
     @Override
     public int compareTo(Table table) {
         return this.tableName.compareTo(table.getTableName());
+    }
+
+    public Table addBaseDaoInterface(String interfaceName, String interfacePackage) {
+        this.baseDaoInterfaces.put(interfaceName, interfacePackage);
+        return this;
     }
 }

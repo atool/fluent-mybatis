@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate;
 
-import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.AddressTableMap;
-import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.*;
 import org.test4j.module.database.IDataSourceScript;
 
 /**
@@ -15,7 +14,9 @@ public class DataSourceScript implements IDataSourceScript {
     public Class[] getTableKlass() {
         return new Class[]{
                 AddressTableMap.class,
-                UserTableMap.class
+                UserTableMap.class,
+                NoAutoIdTableMap.class,
+                NoPrimaryTableMap.class
         };
     }
 

@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.generator.mock.CopyAutoGenerator;
 import cn.org.atool.fluent.mybatis.generator.mock.MockConfigBuilder;
 import cn.org.atool.fluent.mybatis.generator.mock.MockTableField;
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -17,6 +18,7 @@ import mockit.Mock;
 import mockit.MockUp;
 import org.apache.commons.lang3.StringUtils;
 import org.test4j.module.core.utility.MessageHelper;
+import org.test4j.tools.commons.StringHelper;
 
 import java.util.*;
 
@@ -61,28 +63,13 @@ public class MybatisGenerator {
     private DataSourceConfig dataSourceConfig;
 
     @Setter
-    private boolean activeRecord = false;
-
-    @Setter
     private List<Class> modelInterface = new ArrayList<>();
-
-    /**
-     * base dao 导入的自定义接口
-     * key: implements 接口完整定义，包含泛型
-     * value: 接口import完整路径
-     */
-    @Setter
-    @Getter
-    private Map<String, String> baseDaoInterfaces = new HashMap<>();
 
     @Setter
     private boolean isEntitySetChain = true;
-    /**
-     * mapper类bean名称前缀
-     */
-    @Setter
-    private String mapperPrefix = "";
 
+    @Setter
+    private IdType idType;
 
     public MybatisGenerator(String basePackage) {
         this.basePackage = basePackage;
@@ -98,19 +85,21 @@ public class MybatisGenerator {
         return currTable.get();
     }
 
-    public void generate(TableConvertor tables) {
+    public void generate(TableConvertor... convertors) {
         List<GenerateObj> generateObjs = new ArrayList<>();
         doMock();
-        List<Table> list = new ArrayList<>();
-        list.addAll(tables.getTables().values());
-        Collections.sort(list);
+        for (TableConvertor tableConvertor : convertors) {
+            List<Table> list = new ArrayList<>();
+            list.addAll(tableConvertor.getTables().values());
+            Collections.sort(list);
 
-        for (Table table : list) {
-            currTable.set(table);
-            MessageHelper.info("begin to generate table:" + table.getTableName());
-            this.generate(tables, new String[]{table.getTableName()}, table.getVersionColumn());
-            generateObjs.add(GenerateObj.init(table));
-            log.info("generate table {} successful.", table.getTableName());
+            for (Table table : list) {
+                currTable.set(table);
+                MessageHelper.info("begin to generate table:" + table.getTableName());
+                this.generate(tableConvertor, new String[]{table.getTableName()}, table.getVersionColumn());
+                generateObjs.add(GenerateObj.init(table));
+                log.info("generate table {} successful.", table.getTableName());
+            }
         }
         currTable.remove();
         GenerateObj.generate(generateObjs, outputDir, testOutputDir, basePackage);
@@ -193,17 +182,21 @@ public class MybatisGenerator {
      * @return
      */
     private GlobalConfig initGlobalConfig(String entitySuffix) {
-        return new GlobalConfig()
+        GlobalConfig config = new GlobalConfig()
                 .setAuthor(this.author)
                 .setOutputDir(this.outputDir)
                 .setFileOverride(true)
-                .setActiveRecord(this.activeRecord)
+                .setActiveRecord(false)
                 .setEnableCache(false)
                 .setBaseResultMap(true)
                 .setBaseColumnList(true)
                 .setDateType(DateType.ONLY_DATE)
                 .setOpen(false)
                 .setEntityName("%s" + entitySuffix);
+        if (idType != null) {
+            config.setIdType(idType);
+        }
+        return config;
     }
 
     private InjectionConfig initInjectConfig() {
@@ -218,8 +211,8 @@ public class MybatisGenerator {
             config.put("interfacePack", this.getInterfacePacks());
             config.put("interfaceName", this.getInterfaceNames());
         }
-        if (this.mapperPrefix != null && !"".equals(this.mapperPrefix.trim())) {
-            config.put("mapperPrefix", this.mapperPrefix);
+        if (!StringHelper.isBlankOrNull(currTable().getMapperPrefix())) {
+            config.put("mapperPrefix", currTable().getMapperPrefix().trim());
         }
         InjectionConfig cfg = new InjectionConfig() {
             @Override
@@ -231,7 +224,6 @@ public class MybatisGenerator {
         GenerateObj.setCurrConfig(config);
         return cfg;
     }
-
 
     private String getInterfacePacks() {
         return modelInterface.stream()
@@ -290,11 +282,6 @@ public class MybatisGenerator {
                 .setEntity("entity")
                 .setService("dao")
                 .setServiceImpl("dao.impl");
-    }
-
-    public MybatisGenerator addBaseDaoInterface(String interfaceName, String interfacePackage) {
-        this.baseDaoInterfaces.put(interfaceName, interfacePackage);
-        return this;
     }
 
     /**

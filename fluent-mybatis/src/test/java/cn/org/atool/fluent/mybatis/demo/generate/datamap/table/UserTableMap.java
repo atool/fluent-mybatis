@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.table;
 
 import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
+import cn.org.atool.fluent.mybatis.annotation.ColumnDef.PrimaryType;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.test4j.module.ICore.DataGenerator;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
@@ -23,7 +23,7 @@ public class UserTableMap extends DataMap<UserTableMap> {
     /**
      * 设置t_user对象id字段值
      */
-    @ColumnDef(type = "bigint(21) unsigned", primary = true)
+    @ColumnDef(type = "bigint(21) unsigned", primary = PrimaryType.AutoIncrease)
     public transient final KeyValue<UserTableMap> id = new KeyValue(this, Column.id);
     /**
      * 设置t_user对象gmt_created字段值
@@ -69,41 +69,47 @@ public class UserTableMap extends DataMap<UserTableMap> {
         super(size);
     }
 
+    /**
+     * 创建UserTableMap
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
+     */
+    public UserTableMap init() {
+        this.id.autoIncrease();
+        this.gmt_created.values(new Date());
+        this.gmt_modified.values(new Date());
+        this.is_deleted.values(false);
+        return this;
+    }
+
     public UserTableMap with(Consumer<UserTableMap> init) {
         init.accept(this);
         return this;
     }
 
+    public static UserTableMap create() {
+        return new UserTableMap(1);
+    }
+
+    public static UserTableMap create(int size) {
+        return new UserTableMap(size);
+    }
+
     public static class Factory {
         public UserTableMap create() {
-            return create(1);
+            return UserTableMap.create();
         }
 
         public UserTableMap create(int size) {
-            return new UserTableMap(size);
+            return UserTableMap.create(size);
         }
 
-        /**
-         * 创建UserTableMap
-         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-         */
         public UserTableMap createWithInit() {
-            return createWithInit(1);
+            return UserTableMap.create(1).init();
         }
 
-        /**
-         * 创建UserTableMap
-         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-         *
-         * @param size
-         */
         public UserTableMap createWithInit(int size) {
-            return new UserTableMap(size)
-                    .id.values(DataGenerator.increase(1, 1))
-                    .gmt_created.values(new Date())
-                    .gmt_modified.values(new Date())
-                    .is_deleted.values(false)
-                    ;
+            return UserTableMap.create(size).init();
         }
     }
 }

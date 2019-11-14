@@ -26,13 +26,21 @@ public class ${cfg.fileEntityMap} extends DataMap<${cfg.fileEntityMap}> {
         super(size);
     }
 
+    public static ${cfg.fileEntityMap} create() {
+        return new ${cfg.fileEntityMap}();
+    }
+
+    public static ${cfg.fileEntityMap} create(int size) {
+        return new ${cfg.fileEntityMap}(size);
+    }
+
     public static class Factory {
         public ${cfg.fileEntityMap} create() {
-            return new ${cfg.fileEntityMap}();
+            return ${cfg.fileEntityMap}.create();
         }
 
         public ${cfg.fileEntityMap} create(int size) {
-            return new ${cfg.fileEntityMap}(size);
+            return ${cfg.fileEntityMap}.create(size);
         }
     }
 }

@@ -1,7 +1,7 @@
 package ${basePackage};
 
 import ${basePackage}.datamap.table.*;
-import org.test4j.module.IScript;
+import org.test4j.module.database.IDataSourceScript;
 
 /**
  * 生成内存数据库（h2)脚本
@@ -9,7 +9,7 @@ import org.test4j.module.IScript;
  * @author darui.wu
  * @create 2019-09-02 18:03
  */
-public class DataSourceScript implements IScript {
+public class DataSourceScript implements IDataSourceScript {
     #set ($i=1)
     @Override
     public Class[] getTableKlass() {

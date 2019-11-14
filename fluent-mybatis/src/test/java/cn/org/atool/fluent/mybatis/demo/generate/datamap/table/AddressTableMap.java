@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.table;
 
 import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
+import cn.org.atool.fluent.mybatis.annotation.ColumnDef.PrimaryType;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.test4j.module.ICore.DataGenerator;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
@@ -23,7 +23,7 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
     /**
      * 设置address对象id字段值
      */
-    @ColumnDef(type = "bigint(21) unsigned", primary = true)
+    @ColumnDef(type = "bigint(21) unsigned", primary = PrimaryType.AutoIncrease)
     public transient final KeyValue<AddressTableMap> id = new KeyValue(this, Column.id);
     /**
      * 设置address对象gmt_created字段值
@@ -54,41 +54,47 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
         super(size);
     }
 
+    /**
+     * 创建AddressTableMap
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
+     */
+    public AddressTableMap init() {
+        this.id.autoIncrease();
+        this.gmt_created.values(new Date());
+        this.gmt_modified.values(new Date());
+        this.is_deleted.values(false);
+        return this;
+    }
+
     public AddressTableMap with(Consumer<AddressTableMap> init) {
         init.accept(this);
         return this;
     }
 
+    public static AddressTableMap create() {
+        return new AddressTableMap(1);
+    }
+
+    public static AddressTableMap create(int size) {
+        return new AddressTableMap(size);
+    }
+
     public static class Factory {
         public AddressTableMap create() {
-            return create(1);
+            return AddressTableMap.create();
         }
 
         public AddressTableMap create(int size) {
-            return new AddressTableMap(size);
+            return AddressTableMap.create(size);
         }
 
-        /**
-         * 创建AddressTableMap
-         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-         */
         public AddressTableMap createWithInit() {
-            return createWithInit(1);
+            return AddressTableMap.create(1).init();
         }
 
-        /**
-         * 创建AddressTableMap
-         * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-         *
-         * @param size
-         */
         public AddressTableMap createWithInit(int size) {
-            return new AddressTableMap(size)
-                    .id.values(DataGenerator.increase(1, 1))
-                    .gmt_created.values(new Date())
-                    .gmt_modified.values(new Date())
-                    .is_deleted.values(false)
-                    ;
+            return AddressTableMap.create(size).init();
         }
     }
 }

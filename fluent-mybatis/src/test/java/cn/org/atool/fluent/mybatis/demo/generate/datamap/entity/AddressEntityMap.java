@@ -40,13 +40,21 @@ public class AddressEntityMap extends DataMap<AddressEntityMap> {
         super(size);
     }
 
+    public static AddressEntityMap create() {
+        return new AddressEntityMap();
+    }
+
+    public static AddressEntityMap create(int size) {
+        return new AddressEntityMap(size);
+    }
+
     public static class Factory {
         public AddressEntityMap create() {
-            return new AddressEntityMap();
+            return AddressEntityMap.create();
         }
 
         public AddressEntityMap create(int size) {
-            return new AddressEntityMap(size);
+            return AddressEntityMap.create(size);
         }
     }
 }

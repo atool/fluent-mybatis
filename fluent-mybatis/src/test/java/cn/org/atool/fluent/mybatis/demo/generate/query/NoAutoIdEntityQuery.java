@@ -1,9 +1,4 @@
-package ${cfg.packEntityQuery};
-#foreach($field in ${table.fields})
-    #if(${field.keyFlag})
-        #set($keyColumnName=${field.name})
-    #end
-#end
+package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.base.IEntityQuery;
 import cn.org.atool.fluent.mybatis.base.IProperty2Column;
@@ -21,39 +16,39 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import ${package.Entity}.${entity};
-import ${cfg.packMP}.${cfg.fileMP};
-import ${cfg.packMP}.${cfg.fileMP}.Column;
-import ${cfg.packEntityQuery}.${entity}WrapperHelper.And;
-import ${cfg.packEntityQuery}.${entity}WrapperHelper.QueryOrder;
+import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.And;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.QueryOrder;
 
 /**
- * @ClassName ${entity}Query
- * @Description ${entity}查询（删除）条件
+ * @ClassName NoAutoIdEntityQuery
+ * @Description NoAutoIdEntity查询（删除）条件
  *
- * @author ${author}
+ * @author generate code
  */
-public class ${cfg.fileEntityQuery} extends AbstractWrapper<${entity}, String, ${cfg.fileEntityQuery}>
-    implements IEntityQuery<${cfg.fileEntityQuery}, ${entity}>, IProperty2Column {
+public class NoAutoIdEntityQuery extends AbstractWrapper<NoAutoIdEntity, String, NoAutoIdEntityQuery>
+    implements IEntityQuery<NoAutoIdEntityQuery, NoAutoIdEntity>, IProperty2Column {
     /**
      * 查询字段
      */
     private SharedString sqlSelect = new SharedString();
 
-    public final And<${cfg.fileEntityQuery}> and = new And<>(this);
+    public final And<NoAutoIdEntityQuery> and = new And<>(this);
 
     public final QueryOrder orderBy = new QueryOrder(this);
 
-    public ${cfg.fileEntityQuery}(){
+    public NoAutoIdEntityQuery(){
         this(null);
     }
 
-    public ${cfg.fileEntityQuery}(${entity} entity){
+    public NoAutoIdEntityQuery(NoAutoIdEntity entity){
         super.setEntity(entity);
         super.initNeed();
     }
 
-    public ${cfg.fileEntityQuery}(${entity} entity, String... columns){
+    public NoAutoIdEntityQuery(NoAutoIdEntity entity, String... columns){
         super.setEntity(entity);
         super.initNeed();
         this.select(columns);
@@ -62,17 +57,17 @@ public class ${cfg.fileEntityQuery} extends AbstractWrapper<${entity}, String, $
     /**
      * 非对外公开的构造方法,只用于生产嵌套 sql
      */
-    private ${cfg.fileEntityQuery}(${entity} entity, AtomicInteger paramNameSeq,
+    private NoAutoIdEntityQuery(NoAutoIdEntity entity, AtomicInteger paramNameSeq,
         Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments) {
         super.setEntity(entity);
-        this.entityClass = ${entity}.class;
+        this.entityClass = NoAutoIdEntity.class;
         this.paramNameSeq = paramNameSeq;
         this.paramNameValuePairs = paramNameValuePairs;
         this.expression = mergeSegments;
     }
 
     @Override
-    public ${cfg.fileEntityQuery} select(String... columns) {
+    public NoAutoIdEntityQuery select(String... columns) {
         if (ArrayUtils.isNotEmpty(columns)) {
             this.sqlSelect.setStringValue(String.join(StringPool.COMMA, columns));
         }
@@ -80,14 +75,14 @@ public class ${cfg.fileEntityQuery} extends AbstractWrapper<${entity}, String, $
     }
 
     @Override
-    public ${cfg.fileEntityQuery} select(Predicate<TableFieldInfo> predicate) {
-        this.entityClass = ${entity}.class;
+    public NoAutoIdEntityQuery select(Predicate<TableFieldInfo> predicate) {
+        this.entityClass = NoAutoIdEntity.class;
         this.sqlSelect.setStringValue(TableInfoHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
         return this;
     }
 
     @Override
-    public ${cfg.fileEntityQuery} select(Class<${entity}> entityClass, Predicate<TableFieldInfo> predicate) {
+    public NoAutoIdEntityQuery select(Class<NoAutoIdEntity> entityClass, Predicate<TableFieldInfo> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(TableInfoHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
         return this;
@@ -103,29 +98,25 @@ public class ${cfg.fileEntityQuery} extends AbstractWrapper<${entity}, String, $
      *
      * @return
      */
-    public ${cfg.fileEntityQuery} selectId(){
-        #if(${keyColumnName})
-        return this.select(Column.${keyColumnName});
-        #else
-        throw new RuntimeException("table primary undefined!");
-        #end
+    public NoAutoIdEntityQuery selectId(){
+        return this.select(Column.id);
     }
 
     @Override
-    public ${cfg.fileEntityQuery} distinct(String... columns){
+    public NoAutoIdEntityQuery distinct(String... columns){
         if(ArrayUtils.isNotEmpty(columns)){
             this.sqlSelect.setStringValue(MybatisUtil.distinct(columns));
         }
         return this;
     }
 
-    public ${cfg.fileEntityQuery} distinct(Predicate<TableFieldInfo> predicate) {
-        this.entityClass = ${entity}.class;
+    public NoAutoIdEntityQuery distinct(Predicate<TableFieldInfo> predicate) {
+        this.entityClass = NoAutoIdEntity.class;
         this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public ${cfg.fileEntityQuery} distinct(Class<${entity}> entityClass, Predicate<TableFieldInfo> predicate) {
+    public NoAutoIdEntityQuery distinct(Class<NoAutoIdEntity> entityClass, Predicate<TableFieldInfo> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
         return this;
@@ -135,7 +126,7 @@ public class ${cfg.fileEntityQuery} extends AbstractWrapper<${entity}, String, $
     /**
      * 暂不支持
      */
-    public LambdaQueryWrapper<${entity}> lambda() {
+    public LambdaQueryWrapper<NoAutoIdEntity> lambda() {
         throw new RuntimeException("no support!");
     }
 
@@ -146,23 +137,23 @@ public class ${cfg.fileEntityQuery} extends AbstractWrapper<${entity}, String, $
     * </p>
     */
     @Override
-    protected ${cfg.fileEntityQuery} instance() {
-        return new ${cfg.fileEntityQuery}(entity, paramNameSeq, paramNameValuePairs, new MergeSegments());
+    protected NoAutoIdEntityQuery instance() {
+        return new NoAutoIdEntityQuery(entity, paramNameSeq, paramNameValuePairs, new MergeSegments());
     }
 
     @Override
     public Map<String, String> getProperty2Column(){
-        return ${cfg.fileMP}.Property2Column;
+        return NoAutoIdMP.Property2Column;
     }
 
     @Override
-    public ${cfg.fileEntityQuery} limit(int from, int limit){
+    public NoAutoIdEntityQuery limit(int from, int limit){
         super.last(String.format("limit %d, %d", from, limit));
         return this;
     }
 
     @Override
-    public ${cfg.fileEntityQuery} limit(int limit){
+    public NoAutoIdEntityQuery limit(int limit){
         super.last(String.format("limit %d", limit));
         return this;
     }

@@ -58,5 +58,26 @@ public class TableConvertor {
         this.tables.put(tableName, table);
         return table;
     }
+
+    public TableConvertor addTable(Table table) {
+        table.setConvertor(this);
+        this.tables.put(table.getTableName(), table);
+        return this;
+    }
+
+    public TableConvertor addTable(String tableName) {
+        Table table = new Table(this, tableName);
+        this.tables.put(tableName, table);
+        return this;
+    }
+
+    public TableConvertor addTable(String tableName, boolean isPartition) {
+        Table table = new Table(this, tableName);
+        if (isPartition) {
+            table.isPartition();
+        }
+        this.tables.put(tableName, table);
+        return this;
+    }
 }
 
