@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * @param <T>
+ * @author darui.wu
  */
-public interface IEntity<T> extends Serializable {
+public interface IEntity extends Serializable {
     /**
      * 返回实体主键
      *

@@ -22,8 +22,8 @@ import org.test4j.tools.commons.StringHelper;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.joining;
-
+@Getter
+@Setter
 @Accessors(chain = true)
 @Slf4j
 public class MybatisGenerator {
@@ -32,24 +32,20 @@ public class MybatisGenerator {
     /**
      * 代码作者
      */
-    @Setter
     private String author = "generate code";
     /**
      * 代码生成路径
      */
-    @Getter
     private String outputDir = System.getProperty("user.dir") + "/target/generate/base";
 
     /**
      * 测试代码生成路径
      */
-    @Getter
     private String testOutputDir = System.getProperty("user.dir") + "/target/generate/test";
 
     /**
      * dao代码生成路径
      */
-    @Getter
     private String daoOutputDir = System.getProperty("user.dir") + "/target/generate/dao";
     /**
      * 代码package前缀
@@ -62,13 +58,9 @@ public class MybatisGenerator {
 
     private DataSourceConfig dataSourceConfig;
 
-    @Setter
-    private List<Class> modelInterface = new ArrayList<>();
 
-    @Setter
     private boolean isEntitySetChain = true;
 
-    @Setter
     private IdType idType;
 
     public MybatisGenerator(String basePackage) {
@@ -89,6 +81,7 @@ public class MybatisGenerator {
         List<GenerateObj> generateObjs = new ArrayList<>();
         doMock();
         for (TableConvertor tableConvertor : convertors) {
+            tableConvertor.setMybatisGenerator(this);
             List<Table> list = new ArrayList<>();
             list.addAll(tableConvertor.getTables().values());
             Collections.sort(list);
@@ -103,11 +96,6 @@ public class MybatisGenerator {
         }
         currTable.remove();
         GenerateObj.generate(generateObjs, outputDir, testOutputDir, basePackage);
-    }
-
-    public MybatisGenerator addModelInterface(Class klass) {
-        this.modelInterface.add(klass);
-        return this;
     }
 
     public MybatisGenerator setOutputDir(String outputDir, String testOutputDir, String daoOutputDir) {
@@ -128,23 +116,24 @@ public class MybatisGenerator {
     }
 
     public MybatisGenerator setDataSource(String url, String username, String password, ITypeConvert typeConvert) {
-        return this.setDataSource(DbType.MYSQL, "com.mysql.jdbc.Driver", url, username, password, typeConvert);
+        this.dataSourceConfig = buildDataSourceConfig(DbType.MYSQL, "com.mysql.jdbc.Driver", url, username, password, typeConvert);
+        return this;
     }
 
-    private MybatisGenerator setDataSource(DbType type, String driver, String url, String username, String password, ITypeConvert typeConvert) {
+    public static DataSourceConfig buildDataSourceConfig(DbType type, String driver, String url, String username, String password, ITypeConvert typeConvert) {
         if (url == null) {
             throw new RuntimeException("请设置数据库链接信息 url");
         }
-        this.dataSourceConfig = new DataSourceConfig()
+        DataSourceConfig config = new DataSourceConfig()
                 .setDbType(type)
                 .setUrl(url)
                 .setUsername(username)
                 .setPassword(password)
                 .setDriverName(driver);
         if (typeConvert != null) {
-            this.dataSourceConfig.setTypeConvert(typeConvert);
+            config.setTypeConvert(typeConvert);
         }
-        return this;
+        return config;
     }
 
     /**
@@ -152,18 +141,18 @@ public class MybatisGenerator {
      * <p/>
      * 如果多张表的策略不一致， 可以把表分开重复调用此方法
      *
-     * @param tables
+     * @param convertor
      * @param tableNames 生成表列表
      * @param verField   乐观锁字段
      */
-    private void generate(TableConvertor tables, String[] tableNames, String verField) {
+    private void generate(TableConvertor convertor, String[] tableNames, String verField) {
         new CopyAutoGenerator()
-                .setGlobalConfig(this.initGlobalConfig(tables.getEntitySuffix()))
-                .setDataSource(this.dataSourceConfig)
+                .setGlobalConfig(this.initGlobalConfig(convertor.getEntitySuffix()))
+                .setDataSource(convertor.getDataSourceConfig())
                 .setPackageInfo(this.initPackageConfig())
                 .setTemplate(this.initTemplate())
-                .setStrategy(this.initStrategy(tables.getPrefix(), tableNames, verField))
-                .setCfg(this.initInjectConfig())
+                .setStrategy(this.initStrategy(convertor.getPrefix(), tableNames, verField))
+                .setCfg(this.initInjectConfig(convertor))
                 .execute();
     }
 
@@ -199,17 +188,17 @@ public class MybatisGenerator {
         return config;
     }
 
-    private InjectionConfig initInjectConfig() {
+    private InjectionConfig initInjectConfig(TableConvertor convertor) {
         Map<String, Object> config = new HashMap<>();
         {
             config.put("chainSet", this.isEntitySetChain);
             config.putAll(currTable.get().findFieldConfig());
 
         }
-        if (CollectionUtils.isNotEmpty(modelInterface)) {
+        if (CollectionUtils.isNotEmpty(convertor.getModelInterface())) {
             config.put("interface", true);
-            config.put("interfacePack", this.getInterfacePacks());
-            config.put("interfaceName", this.getInterfaceNames());
+            config.put("interfacePack", convertor.getInterfacePacks());
+            config.put("interfaceName", convertor.getInterfaceNames());
         }
         if (!StringHelper.isBlankOrNull(currTable().getMapperPrefix())) {
             config.put("mapperPrefix", currTable().getMapperPrefix().trim());
@@ -224,19 +213,6 @@ public class MybatisGenerator {
         GenerateObj.setCurrConfig(config);
         return cfg;
     }
-
-    private String getInterfacePacks() {
-        return modelInterface.stream()
-                .map(klass -> "import " + klass.getName() + ";")
-                .collect(joining("\n"));
-    }
-
-    private String getInterfaceNames() {
-        return modelInterface.stream()
-                .map(Class::getSimpleName)
-                .collect(joining(", "));
-    }
-
 
     private StrategyConfig initStrategy(String[] tablePrefix, String[] tables, String verField) {
         StrategyConfig sc = new StrategyConfig();
