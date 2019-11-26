@@ -32,7 +32,7 @@ public class SelectObjsTest extends BaseTest {
     public void test_selectObjs_2() throws Exception {
         db.table(t_user).clean()
                 .insert(TM.user.createWithInit(1)
-                        .user_name.values(null)
+                        .user_name.values((Object)null)
                 );
 
         List<String> names = dao.selectObjs(1L);
@@ -43,8 +43,8 @@ public class SelectObjsTest extends BaseTest {
     public void test_selectObjs2() throws Exception {
         db.table(t_user).clean()
                 .insert(TM.user.createWithInit(1)
-                        .user_name.values(null)
-                        .age.values(null)
+                        .user_name.values((Object) null)
+                        .age.values((Object)null)
                 );
 
         List<String> names = dao.selectObjs2(1L);
