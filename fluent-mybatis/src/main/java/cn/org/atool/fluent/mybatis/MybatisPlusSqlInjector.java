@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.method.Insert;
-import cn.org.atool.fluent.mybatis.method.InsertBatch;
-import cn.org.atool.fluent.mybatis.method.InsertWithPk;
-import cn.org.atool.fluent.mybatis.method.UpdateByQuery;
+import cn.org.atool.fluent.mybatis.method.UpdateById;
+import cn.org.atool.fluent.mybatis.method.*;
 import cn.org.atool.fluent.mybatis.method.partition.DeleteInPartition;
 import cn.org.atool.fluent.mybatis.method.partition.SelectListInPartition;
 import cn.org.atool.fluent.mybatis.method.partition.UpdateInPartition;
