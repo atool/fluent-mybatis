@@ -27,7 +27,7 @@ public class SelectByIdTest extends BaseTest {
         db.sqlList().wantFirstSql()
                 .where().eq("id=?");
         want.object(user)
-                .eqHashMap(EM.user.create()
+                .eqMap(EM.user.create()
                         .userName.values("username_3")
                 );
     }

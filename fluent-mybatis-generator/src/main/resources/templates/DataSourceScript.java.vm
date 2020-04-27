@@ -3,6 +3,7 @@ package ${basePackage};
 import ${basePackage}.datamap.table.*;
 import org.test4j.module.database.IDataSourceScript;
 
+import java.util.List;
 /**
  * 生成内存数据库（h2)脚本
  *
@@ -12,14 +13,14 @@ import org.test4j.module.database.IDataSourceScript;
 public class DataSourceScript implements IDataSourceScript {
     #set ($i=1)
     @Override
-    public Class[] getTableKlass() {
-        return new Class[]{
+    public List<Class> getTableKlass() {
+        return list(
         #foreach(${obj} in ${objs})
                 ${obj.tableMap}.class#if($i<${objs.size()}),#end
             #set ($i=$i+1)
 
         #end
-        };
+        );
     }
 
     @Override

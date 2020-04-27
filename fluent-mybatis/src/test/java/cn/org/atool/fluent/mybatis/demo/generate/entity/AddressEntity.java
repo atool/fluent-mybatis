@@ -19,8 +19,8 @@ import java.util.Map;
  *
  * @author generate code
  */
-@Setter
 @Getter
+@Setter
 @Accessors(chain = true)
 @TableName(AddressMP.Table_Name)
 public class AddressEntity implements IEntity {

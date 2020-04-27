@@ -18,7 +18,7 @@ public class DeleteByIdTest extends BaseTest {
         db.table(t_user).clean().insert(TM.user.createWithInit(10));
         dao.deleteById(4L);
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id=?");
-        db.table(t_user).count().eq(9L);
+        db.table(t_user).count().eq(9);
     }
 
     @Test
@@ -26,6 +26,6 @@ public class DeleteByIdTest extends BaseTest {
         db.table(t_user).clean().insert(TM.user.createWithInit(10));
         dao.deleteByIds(Arrays.asList(4L, 6L, 9L));
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id IN ( ? , ? , ? )", StringMode.SameAsSpace);
-        db.table(t_user).count().eq(7L);
+        db.table(t_user).count().eq(7);
     }
 }

@@ -18,8 +18,8 @@ import java.util.Map;
  *
  * @author generate code
  */
-@Setter
 @Getter
+@Setter
 @Accessors(chain = true)
 @TableName(NoAutoIdMP.Table_Name)
 public class NoAutoIdEntity implements IEntity {

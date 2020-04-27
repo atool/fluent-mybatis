@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import org.junit.jupiter.api.Test;
 
 public class MybatisGeneratorTest {
-    private static String url = "jdbc:mysql://localhost:3306/mbplus";
+    private static String url = "jdbc:mysql://localhost:3306/fluent_mybatis";
 
     @Test
     public void generate() {

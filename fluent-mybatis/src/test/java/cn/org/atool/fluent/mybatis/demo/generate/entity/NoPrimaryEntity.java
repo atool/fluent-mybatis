@@ -18,8 +18,8 @@ import java.util.Map;
  *
  * @author generate code
  */
-@Setter
 @Getter
+@Setter
 @Accessors(chain = true)
 @TableName(NoPrimaryMP.Table_Name)
 public class NoPrimaryEntity implements IEntity {

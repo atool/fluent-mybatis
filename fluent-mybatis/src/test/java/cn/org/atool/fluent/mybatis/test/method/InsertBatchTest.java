@@ -19,7 +19,7 @@ public class InsertBatchTest extends BaseTest {
         mapper.insertBatch(Lists.newArrayList(
                 new UserEntity().setUserName("name1").setAge(23),
                 new UserEntity().setUserName("name2").setAge(24)));
-        db.table(t_user).count().eq(2L);
+        db.table(t_user).count().eq(2);
         db.table(t_user).query().print()
                 .eqDataMap(TM.user.create(2)
                         .age.values(23, 24)
@@ -33,7 +33,7 @@ public class InsertBatchTest extends BaseTest {
         mapper.insertBatch(Lists.newArrayList(
                 new UserEntity().setId(23L).setUserName("name1").setAge(23),
                 new UserEntity().setId(24L).setUserName("name2").setAge(24)));
-        db.table(t_user).count().eq(2L);
+        db.table(t_user).count().eq(2);
         db.table(t_user).query().print()
                 .eqDataMap(TM.user.create(2)
                         .age.values(23, 24)

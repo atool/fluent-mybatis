@@ -30,6 +30,6 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE (user_name = ?)", StringMode.SameAsSpace);
-        db.table(t_user).count().eq(8L);
+        db.table(t_user).count().eq(8);
     }
 }

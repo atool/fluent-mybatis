@@ -36,7 +36,7 @@ public class SaveOrUpdateTest extends BaseTest {
         dao.saveOrUpdate(new UserEntity().setId(4L).setUserName("test_111").setAge(30));
         db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).contains("INSERT INTO t_user");
-        db.table(t_user).count().eq(4L);
+        db.table(t_user).count().eq(4);
         db.table(t_user).queryWhere("id=4")
                 .eqDataMap(TM.user.create(1)
                         .user_name.values("test_111")
