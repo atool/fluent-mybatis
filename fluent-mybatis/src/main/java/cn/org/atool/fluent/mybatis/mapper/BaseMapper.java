@@ -26,6 +26,14 @@ public interface BaseMapper<T> {
     int insert(T entity);
 
     /**
+     * 根据entity非空字段插入记录值
+     *
+     * @param entity
+     * @return
+     */
+    int insertSelected(T entity);
+
+    /**
      * 根据id删除记录
      *
      * @param id

@@ -44,6 +44,31 @@ public class UpdateByIdTest extends BaseTest {
     }
 
     @Test
+    public void testUpdate_gmtCreate() {
+        db.table(ITable.t_user).clean().insert(TM.user.createWithInit(2)
+            .id.values(23L, 24L)
+            .user_name.values("user1", "user2")
+        );
+
+        UserEntity update = new UserEntity()
+            .setAge(45)
+            .setUserName("test name")
+            .setIsDeleted(true)
+            .setId(24L)
+            .setGmtCreated(new Date());
+
+        mapper.updateById(update);
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE t_user SET gmt_modified=now(), is_deleted=?, gmt_created=?, user_name=?, age=? WHERE id=?", StringMode.SameAsSpace);
+
+        db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
+            .id.values(23L, 24L)
+            .user_name.values("user1", "test name")
+            .age.values((Object) null, 45)
+        );
+    }
+
+    @Test
     public void testUpdate2() {
         db.table(ITable.t_user).clean().insert(TM.user.createWithInit(2)
                 .id.values(23L, 24L)

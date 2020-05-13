@@ -128,6 +128,16 @@ public class MybatisInsertUtil {
     }
 
     /**
+     * 返回新增时字段的默认值
+     *
+     * @param field
+     * @return 如果有默认值返回默认值，如果没有返回null
+     */
+    public static String findInsertDefaultValue(TableFieldInfo field) {
+        return isInsertDefaultField(field) ? field.getUpdate() : null;
+    }
+
+    /**
      * 是否是insert时默认赋值字段
      *
      * @param field
