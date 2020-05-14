@@ -1,45 +1,137 @@
 package cn.org.atool.fluent.mybatis.method;
 
+import cn.org.atool.fluent.mybatis.method.model.MapperParam;
+import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.util.MybatisInsertUtil;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.core.enums.SqlMethod;
-import com.baomidou.mybatisplus.core.injector.AbstractMethod;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlSource;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class Insert extends AbstractMethod {
+import static cn.org.atool.fluent.mybatis.method.model.SqlBuilder.safeParam;
+import static java.util.stream.Collectors.joining;
+
+/**
+ * InsertSelected 插入非null的字段，忽略null字段
+ *
+ * @author darui.wu
+ * @create 2020/5/12 8:51 下午
+ */
+public class Insert extends BaseMethod {
     @Override
-    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        KeyGenerator keyGenerator = new NoKeyGenerator();
-        SqlMethod sqlMethod = SqlMethod.INSERT_ONE;
-        String columns = MybatisInsertUtil.getAllInsertSqlColumn(tableInfo, false);
-        String columnScript = SqlScriptUtils.convertTrim(columns, LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
-        String values = MybatisInsertUtil.getAllInsertValueSql(tableInfo, false);
-        String valuesScript = SqlScriptUtils.convertTrim(values, LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
-        String keyProperty = null;
-        String keyColumn = null;
-        // 表包含主键处理逻辑， 如果不包含主键当普通字段处理
-        if (StringUtils.isNotEmpty(tableInfo.getKeyProperty())) {
-            if (tableInfo.getIdType() == IdType.AUTO) {
-                keyGenerator = new Jdbc3KeyGenerator();
-                keyProperty = tableInfo.getKeyProperty();
-                keyColumn = tableInfo.getKeyColumn();
-            } else if (tableInfo.getKeySequence() != null) {
-                keyGenerator = TableInfoHelper.genKeyGenerator(tableInfo, builderAssistant, sqlMethod.getMethod(), languageDriver);
-                keyProperty = tableInfo.getKeyProperty();
-                keyColumn = tableInfo.getKeyColumn();
-            }
+    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "insert")
+            .setParameterType(modelClass)
+            .setResultType(Integer.class)
+            .setSql(this.getMethodSql(table));
+        super.setPrimaryKey(mapper, table);
+
+        super.setPrimaryKey(mapper, table);
+        return super.addMappedStatement(mapper);
+    }
+
+
+    /**
+     * <pre>
+     *      INSERT INTO table_name
+     * 		<trim prefix="(" suffix=")" suffixOverrides=",">
+     * 			<if test="ew.field != null">
+     * 				field,
+     * 			</if>
+     * 		</trim>
+     * 		<trim prefix="values (" suffix=")" suffixOverrides=",">
+     * 			<if test="ew.field != null">
+     * 				#{field},
+     * 			</if>
+     * 		</trim>
+     * 	</pre>
+     *
+     * @param table 表结构
+     * @return
+     */
+    @Override
+    protected String getMethodSql(TableInfo table) {
+        return SqlBuilder.instance()
+            .beginScript()
+            .insert(table.getTableName())
+            .beginTrim("(", ")", ",")
+            .append(this.getInsertFields(table))
+            .endTrim()
+            .beginTrim("VALUES (", ")", ",")
+            .append(this.getInsertValues(table))
+            .endTrim()
+            .endScript()
+            .toString();
+    }
+
+    /**
+     * <pre>
+     *      <if test="field != null">field,</if>
+     * </pre>
+     *
+     * @param table 表结构
+     * @return
+     */
+    private String getInsertFields(TableInfo table) {
+        List<String> ifList = new ArrayList<>();
+
+        ifList.add(SqlBuilder.instance()
+            .ifValue("", table.getKeyProperty(), table.getKeyColumn())
+            .toString()
+        );
+        table.getFieldList().stream()
+            .map(field -> {
+                if (MybatisInsertUtil.isInsertDefaultField(field)) {
+                    return field.getColumn() + COMMA;
+                } else {
+                    return SqlBuilder.instance()
+                        .ifValue("", field.getProperty(), field.getColumn())
+                        .toString();
+                }
+            })
+            .forEach(ifList::add);
+        return ifList.stream().collect(joining(NEWLINE));
+    }
+
+    /**
+     * <pre>
+     *     <if test="field != null">#{field},</if>
+     * </pre>
+     *
+     * @param table
+     * @return
+     */
+    private String getInsertValues(TableInfo table) {
+        List<String> ifList = new ArrayList<>();
+
+        ifList.add(SqlBuilder.instance()
+            .ifValue("", table.getKeyProperty(), safeParam(table.getKeyProperty()))
+            .toString()
+        );
+
+        table.getFieldList().stream()
+            .map(this::fieldValue)
+            .forEach(ifList::add);
+        return ifList.stream().collect(joining(NEWLINE));
+    }
+
+    /**
+     * 单个字段值, if or choose 标签
+     *
+     * @param field
+     * @return
+     */
+    private String fieldValue(TableFieldInfo field) {
+        if (MybatisInsertUtil.isInsertDefaultField(field)) {
+            return SqlBuilder.instance()
+                .choose("", field.getProperty(), field.getUpdate())
+                .toString();
+        } else {
+            return SqlBuilder.instance()
+                .ifValue("", field.getProperty(), safeParam(field.getProperty()))
+                .toString();
         }
-        String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), columnScript, valuesScript);
-        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
-        return this.addInsertMappedStatement(mapperClass, modelClass, sqlMethod.getMethod(), sqlSource, keyGenerator, keyProperty, keyColumn);
     }
 }

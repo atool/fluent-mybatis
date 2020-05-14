@@ -1,51 +1,77 @@
 package cn.org.atool.fluent.mybatis.method;
 
+import cn.org.atool.fluent.mybatis.method.model.MapperParam;
+import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.util.MybatisInsertUtil;
-import com.baomidou.mybatisplus.core.injector.AbstractMethod;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static cn.org.atool.fluent.mybatis.method.model.SqlBuilder.safeParam;
 import static java.util.stream.Collectors.joining;
 
-public class InsertBatch extends AbstractMethod {
+/**
+ * InsertBatch: 批量插入实现
+ *
+ * @author darui.wu
+ */
+public class InsertBatch extends BaseMethod {
     @Override
-    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        String columns = tableInfo.getAllSqlSelect();
-        String values = this.buildValueScript(tableInfo);
+    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "insertBatch")
+            .setSql(getMethodSql(table));
 
-        String sql = String.format(this.getMethodSql(), tableInfo.getTableName(), columns, values);
-        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
-        return this.addInsertMappedStatement(mapperClass, modelClass, this.getMethodName(), sqlSource);
+        return super.addMappedStatement(mapper);
     }
 
-    private MappedStatement addInsertMappedStatement(Class<?> mapperClass, Class<?> modelClass, String id, SqlSource sqlSource) {
-        return super.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.INSERT, modelClass, null, Integer.class, new NoKeyGenerator(), null, null);
+    @Override
+    protected String getMethodSql(TableInfo table) {
+        return SqlBuilder.instance()
+            .beginScript()
+            .insert(table.getTableName())
+            .append("(").append(super.getColumnsWithPrimary(table)).append(")")
+            .append("VALUES ")
+            .append(this.getInsertValues(table))
+            .endScript()
+            .toString();
     }
 
+    final static String prefix = "item.";
 
-    private String buildValueScript(TableInfo tableInfo) {
-        String valuesScript = tableInfo.getFieldList().stream()
-                .map(field -> MybatisInsertUtil.insertBatchValue(field, "item."))
-                .collect(joining(NEWLINE));
-        return new StringBuilder(NEWLINE)
-                .append("<foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">")
-                .append(NEWLINE)
-                .append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">")
-                .append("#{item.").append(tableInfo.getKeyColumn()).append("}, ").append(valuesScript)
-                .append("</trim>")
-                .append(NEWLINE)
-                .append("</foreach>")
+    private String getInsertValues(TableInfo table) {
+        List<String> values = new ArrayList<>();
+        if (table.getKeyColumn() != null) {
+            values.add(safeParam(prefix + table.getKeyColumn()) + ",");
+        }
+        table.getFieldList().forEach(field -> values.add(fieldValue("item.", field)));
+        String valuesScript = values.stream().collect(joining(NEWLINE));
+
+        return SqlBuilder.instance()
+            .beginForeach("list", "item", ",")
+            .beginTrim("(", ")", ",")
+            .append(valuesScript)
+            .endTrim()
+            .endForeach()
+            .toString();
+    }
+
+    /**
+     * 当个字段值, if or choose 标签
+     *
+     * @param field
+     * @return
+     */
+    private String fieldValue(String prefix, TableFieldInfo field) {
+        String defaultValue = MybatisInsertUtil.findInsertDefaultValue(field);
+        if (defaultValue == null) {
+            return safeParam(prefix + field.getEl()) + ",";
+        } else {
+            return SqlBuilder.instance()
+                .choose(prefix, field.getProperty(), defaultValue)
                 .toString();
-    }
-
-    private String getMethodSql() {
-        return "<script>INSERT INTO %s (%s) VALUES %s</script>";
-    }
-
-    private String getMethodName() {
-        return "insertBatch";
+        }
     }
 }

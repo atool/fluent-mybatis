@@ -24,7 +24,6 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
         return Stream.of(
             // 替换掉Insert默认实现
             new Insert(),
-            new InsertSelected(),
             new UpdateByQuery(),
             //
             new Delete(),

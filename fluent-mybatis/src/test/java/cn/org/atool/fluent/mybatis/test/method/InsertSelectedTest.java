@@ -20,7 +20,7 @@ public class InsertSelectedTest extends BaseTest {
     @Test
     void testInsert() {
         db.table(t_user).clean();
-        userMapper.insertSelected(new UserEntity()
+        userMapper.insert(new UserEntity()
             .setAge(23)
             .setUserName("tom mike")
         );
@@ -34,7 +34,7 @@ public class InsertSelectedTest extends BaseTest {
     @Test
     void testInsert_withId() {
         db.table(t_user).clean();
-        userMapper.insertSelected(new UserEntity()
+        userMapper.insert(new UserEntity()
             .setUserName("tom mike")
             .setId(100L)
             .setAddressId(200L)
