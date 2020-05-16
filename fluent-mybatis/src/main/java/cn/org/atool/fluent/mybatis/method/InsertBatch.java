@@ -3,15 +3,11 @@ package cn.org.atool.fluent.mybatis.method;
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.util.MybatisInsertUtil;
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static cn.org.atool.fluent.mybatis.method.model.SqlBuilder.safeParam;
-import static java.util.stream.Collectors.joining;
+import static java.lang.String.format;
 
 /**
  * InsertBatch: 批量插入实现
@@ -29,49 +25,38 @@ public class InsertBatch extends BaseMethod {
 
     @Override
     protected String getMethodSql(TableInfo table) {
-        return SqlBuilder.instance()
-            .beginScript()
+        String values = this.getInsertValues(table);
+        SqlBuilder builder = SqlBuilder.instance();
+        return builder.beginScript()
             .insert(table.getTableName())
             .append("(").append(super.getColumnsWithPrimary(table)).append(")")
             .append("VALUES ")
-            .append(this.getInsertValues(table))
-            .endScript()
-            .toString();
+            .foreach("list", "item", ",", () -> builder.brackets(values))
+            .endScript();
     }
 
     final static String prefix = "item.";
 
-    private String getInsertValues(TableInfo table) {
-        List<String> values = new ArrayList<>();
-        if (table.getKeyColumn() != null) {
-            values.add(safeParam(prefix + table.getKeyColumn()) + ",");
-        }
-        table.getFieldList().forEach(field -> values.add(fieldValue("item.", field)));
-        String valuesScript = values.stream().collect(joining(NEWLINE));
-
-        return SqlBuilder.instance()
-            .beginForeach("list", "item", ",")
-            .beginTrim("(", ")", ",")
-            .append(valuesScript)
-            .endTrim()
-            .endForeach()
-            .toString();
-    }
-
     /**
-     * 当个字段值, if or choose 标签
+     * 构建要插入的值sql片段
      *
-     * @param field
+     * @param table
      * @return
      */
-    private String fieldValue(String prefix, TableFieldInfo field) {
-        String defaultValue = MybatisInsertUtil.findInsertDefaultValue(field);
-        if (defaultValue == null) {
-            return safeParam(prefix + field.getEl()) + ",";
-        } else {
-            return SqlBuilder.instance()
-                .choose(prefix, field.getProperty(), defaultValue)
-                .toString();
+    private String getInsertValues(TableInfo table) {
+        SqlBuilder values = SqlBuilder.instance();
+        if (table.getKeyColumn() != null) {
+            values.append(safeParam(prefix + table.getKeyColumn()) + ",");
         }
+        return values.eachJoining(table.getFieldList(), (field) -> {
+            if (MybatisInsertUtil.isInsertDefaultField(field)) {
+                values.choose(
+                    format("%s%s != null", prefix, field.getProperty()),
+                    format("#{%s%s},", prefix, field.getProperty()),
+                    format("%s,", field.getUpdate()));
+            } else {
+                values.append("#{%s%s},", prefix, field.getProperty());
+            }
+        }).toString();
     }
 }

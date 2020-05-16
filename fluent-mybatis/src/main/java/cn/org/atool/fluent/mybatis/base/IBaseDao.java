@@ -23,15 +23,6 @@ public interface IBaseDao<E extends IEntity> {
     <PK extends Serializable> PK save(E entity);
 
     /**
-     * 插入带主键记录
-     *
-     * @param entity
-     * @param <PK>
-     * @return 主键
-     */
-    <PK extends Serializable> PK saveWithPk(E entity);
-
-    /**
      * 批量插入
      *
      * @param list

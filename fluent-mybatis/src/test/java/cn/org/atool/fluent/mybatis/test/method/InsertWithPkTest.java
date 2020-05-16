@@ -19,7 +19,7 @@ public class InsertWithPkTest extends BaseTest {
                 .setId(34L)
                 .setUserName("user name")
                 .setAge(25);
-        mapper.insertWithPk(user);
+        mapper.insert(user);
         db.table(ITable.t_user)
                 .query()
                 .eqDataMap(TM.user.create(1)

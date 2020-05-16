@@ -22,14 +22,6 @@ public interface IEntityMapper<T> extends BaseMapper<T>, IMapper {
     int insertBatch(List<T> list);
 
     /**
-     * 插入单条记录（主键必须赋值好）
-     *
-     * @param entity
-     * @return
-     */
-    int insertWithPk(T entity);
-
-    /**
      * 根据update对象更新记录
      *
      * @param update

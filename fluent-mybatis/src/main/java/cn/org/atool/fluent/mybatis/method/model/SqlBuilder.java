@@ -1,10 +1,9 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
+import cn.org.atool.fluent.mybatis.function.Executor;
 
-import static java.util.stream.Collectors.joining;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Script
@@ -18,6 +17,8 @@ public class SqlBuilder {
     public static final String NEWLINE = "\n";
 
     private final StringBuilder buff = new StringBuilder();
+
+    private boolean endNewLine = false;
 
     private SqlBuilder() {
     }
@@ -39,7 +40,7 @@ public class SqlBuilder {
         } else {
             buff.append(String.format(format, args));
         }
-        buff.append(NEWLINE);
+        this.endNewLine = false;
         return this;
     }
 
@@ -56,7 +57,7 @@ public class SqlBuilder {
         } else {
             buff.append(String.format(format.replace('\'', '"'), args));
         }
-        buff.append(NEWLINE);
+        this.endNewLine = false;
         return this;
     }
 
@@ -66,7 +67,10 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder newLine() {
-        buff.append(NEWLINE);
+        if (!this.endNewLine) {
+            buff.append(NEWLINE);
+        }
+        this.endNewLine = true;
         return this;
     }
 
@@ -81,7 +85,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder beginScript() {
-        return this.append("<script>");
+        return this.append("<script>").newLine();
     }
 
     /**
@@ -89,69 +93,10 @@ public class SqlBuilder {
      *
      * @return
      */
-    public SqlBuilder endScript() {
-        return this.append("</script>");
+    public String endScript() {
+        return this.append("</script>").toString();
     }
 
-    /**
-     * 标签: &lt;trim prefix="{}" suffix="{}" suffixOverrides="{}">
-     *
-     * @param prefix
-     * @param suffix
-     * @param suffixOverrides
-     * @return
-     */
-    public SqlBuilder beginTrim(String prefix, String suffix, String suffixOverrides) {
-        return this.quotas("<trim prefix='%s' suffix='%s' suffixOverrides='%s'>", prefix, suffix, suffixOverrides);
-    }
-
-    /**
-     * 标签: &lt;/trim>
-     *
-     * @return
-     */
-    public SqlBuilder endTrim() {
-        return this.append("</trim>");
-    }
-
-    /**
-     * 标签： &lt;foreach collection="{}" item="{}" index="index" separator="{}">
-     *
-     * @param collection
-     * @param item
-     * @param separator
-     * @return
-     */
-    public SqlBuilder beginForeach(String collection, String item, String separator) {
-        return this.quotas("<foreach collection='%s' item='%s' index='index' separator='%s'>", collection, item, separator);
-    }
-
-    /**
-     * 标签: &lt;/foreach>
-     *
-     * @return
-     */
-    public SqlBuilder endForeach() {
-        return this.append("</foreach>");
-    }
-
-    /**
-     * 标签: &lt;set>
-     *
-     * @return
-     */
-    public SqlBuilder beginSet() {
-        return this.append("<set>");
-    }
-
-    /**
-     * 标签: &lt;/set>
-     *
-     * @return
-     */
-    public SqlBuilder endSet() {
-        return this.append("</set>");
-    }
 
     /**
      * update tableName
@@ -160,7 +105,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder update(String tableName) {
-        return this.append("UPDATE ").append(tableName);
+        return this.newLine().append("UPDATE ").append(tableName).newLine();
     }
 
     /**
@@ -170,39 +115,24 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder insert(String tableName) {
-        return this.append("INSERT INTO ").append(tableName);
-    }
-
-    /**
-     * where
-     *
-     * @return
-     */
-    public SqlBuilder beginWhere() {
-        return this.append("<where>");
-    }
-
-
-    /**
-     * where
-     *
-     * @return
-     */
-    public SqlBuilder endWhere() {
-        return this.append("</where>");
+        return this.newLine().append("INSERT INTO ").append(tableName).newLine();
     }
 
     /**
      * 将list处理完毕后joining起来追加
      *
-     * @param list      列表
-     * @param apply     映射函数
-     * @param delimiter 分割符
+     * @param list     列表
+     * @param consumer 映射函数
      * @return
      */
-    public <T> SqlBuilder joinEach(List<T> list, Function<T, String> apply, String delimiter) {
-        String value = list.stream().map(apply::apply).filter(Objects::nonNull).collect(joining(delimiter));
-        return this.append(value);
+    public <T> SqlBuilder eachJoining(List<T> list, Consumer<T> consumer) {
+        for (T item : list) {
+            if (!this.endNewLine) {
+                this.newLine();
+            }
+            consumer.accept(item);
+        }
+        return this;
     }
 
     /**
@@ -240,72 +170,41 @@ public class SqlBuilder {
         return this.append("AND %s=#{%s} ", column, prefix + property);
     }
 
-    final static String VALUE_IF_NOT_NULL = "<if test='%s != null'>%s,</if>";
-
     /**
      * <pre>
-     * &lt;if test="property != null>
-     *  value,
+     * &lt;if test="if_condition">
+     *  executor.execute()
      * &lt;/if>
      * </pre>
      *
-     * @param prefix
-     * @param property
+     * @param ifCondition
+     * @param executor
+     * @return
+     */
+    public SqlBuilder ifThen(String ifCondition, Executor executor) {
+        this.newLine().quotas("<if test='%s'>", ifCondition);
+        this.newLine();
+        executor.execute();
+        this.newLine();
+        return this.newLine().append("</if>");
+    }
+
+    /**
+     * <pre>
+     * &lt;if test="if_condition">
+     *  value
+     * &lt;/if>
+     * </pre>
+     *
+     * @param ifCondition
      * @param value
      * @return
      */
-    public SqlBuilder ifValue(String prefix, String property, String value) {
-        return this.quotas(VALUE_IF_NOT_NULL,
-            prefix + property,
-            value);
+    public SqlBuilder ifThen(String ifCondition, String value) {
+        this.newLine().quotas("<if test='%s'>", ifCondition);
+        this.newLine().append(value).newLine();
+        return this.newLine().append("</if>");
     }
-
-    final static String SET_IF_NOT_NULL = "<if test='%s != null'>%s=#{%s},</if>";
-
-    /**
-     * <pre>
-     * &lt;if test="prefix.property != null>
-     *  column=#{prefix.property},
-     * &lt;/if>
-     * </pre>
-     *
-     * @param prefix
-     * @param property
-     * @param column
-     * @return
-     */
-    public SqlBuilder ifSet(String prefix, String property, String column) {
-        return this.quotas(SET_IF_NOT_NULL,
-            prefix + property,
-            column,
-            prefix + property
-        );
-    }
-
-    final static String AND_IF_NOT_NULL = "<if test='%s != null'>AND %s=#{%s}</if>";
-
-    /**
-     * <pre>
-     * &lt;if test="prefix.property != null>
-     *  and column=#{prefix.property}
-     * &lt;/if>
-     * </pre>
-     *
-     * @param prefix
-     * @param property
-     * @param column
-     * @return
-     */
-    public SqlBuilder ifAnd(String prefix, String property, String column) {
-        return this.quotas(AND_IF_NOT_NULL,
-            prefix + property,
-            column,
-            prefix + property
-        );
-    }
-
-    final static String CHOOSE_NOTNULL_OR_DEFAULT =
-        "<choose><when test='%s != null'>%s,</when><otherwise>%s,</otherwise></choose>";
 
     /**
      * 当字段不为空时，插入字段值
@@ -317,17 +216,21 @@ public class SqlBuilder {
      * &lt;/choose>
      * </pre>
      *
-     * @param prefix
-     * @param property
+     * @param ifCondition
+     * @param value
      * @param defaultValue
      * @return
      */
-    public SqlBuilder choose(String prefix, String property, String defaultValue) {
-        return this.quotas(CHOOSE_NOTNULL_OR_DEFAULT,
-            prefix + property,
-            safeParam(prefix + property),
-            defaultValue
-        );
+    public SqlBuilder choose(String ifCondition, String value, String defaultValue) {
+        this.newLine().append("<choose>").newLine()
+            .quotas("<when test='%s'>", ifCondition).newLine()
+            .append(value).newLine()
+            .append("</when>").newLine()
+            .append("<otherwise>").newLine()
+            .append(defaultValue).newLine()
+            .append("</otherwise>").newLine()
+            .append("</choose>").newLine();
+        return this;
     }
 
     /**
@@ -338,5 +241,87 @@ public class SqlBuilder {
      */
     public static String safeParam(final String param) {
         return "#{" + param + "}";
+    }
+
+    /**
+     * 标签set
+     * <pre>
+     * &lt;set>
+     *  sql fragment
+     * &lt;/set>
+     * </pre>
+     *
+     * @param executor
+     * @return
+     */
+    public SqlBuilder set(Executor executor) {
+        this.append("<set>").newLine();
+        executor.execute();
+        return this.newLine().append("</set>").newLine();
+    }
+
+    /**
+     * 标签where
+     * <pre>
+     * &lt;where>
+     *  sql fragment
+     * &lt;/where>
+     * </pre>
+     *
+     * @param executor
+     * @return
+     */
+    public SqlBuilder where(Executor executor) {
+        this.append("<where>").newLine();
+        executor.execute();
+        return this.newLine().append("</where>").newLine();
+    }
+
+    /**
+     * 标签： &lt;foreach collection="{}" item="{}" index="index" separator="{}">
+     *
+     * @param collection
+     * @param item
+     * @param separator
+     * @return
+     */
+    public SqlBuilder foreach(String collection, String item, String separator, Executor executor) {
+        this.quotas("<foreach collection='%s' item='%s' index='index' separator='%s'>", collection, item, separator).newLine();
+        executor.execute();
+        return this.newLine().append("</foreach>").newLine();
+    }
+
+    /**
+     * 标签
+     * <pre>
+     * &lt;trim prefix="{}" suffix="{}" suffixOverrides="{}">
+     *  sql fragment
+     * &lt;/trim>
+     * </pre>
+     *
+     * @param prefix
+     * @param suffix
+     * @param suffixOverrides
+     * @param executor
+     * @return
+     */
+    public SqlBuilder trim(String prefix, String suffix, String suffixOverrides, Executor executor) {
+        this.quotas("<trim prefix='%s' suffix='%s' suffixOverrides='%s'>", prefix, suffix, suffixOverrides).newLine();
+        executor.execute();
+        return this.newLine().append("</trim>").newLine();
+    }
+
+    /**
+     * (value1, value2, value3)
+     *
+     * @param executor
+     * @return
+     */
+    public SqlBuilder brackets(Executor executor) {
+        return this.trim("(", ")", ",", executor);
+    }
+
+    public SqlBuilder brackets(String values) {
+        return this.trim("(", ")", ",", () -> this.append(values));
     }
 }

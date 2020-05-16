@@ -1,57 +1,83 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.util.MybatisInsertUtil;
-import com.baomidou.mybatisplus.core.enums.SqlMethod;
-import com.baomidou.mybatisplus.core.injector.AbstractMethod;
+import cn.org.atool.fluent.mybatis.method.model.MapperParam;
+import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlSource;
 
-import static java.util.stream.Collectors.joining;
+import static cn.org.atool.fluent.mybatis.util.MybatisInsertUtil.isUpdateDefaultField;
+import static java.lang.String.format;
 
-public class UpdateByQuery extends AbstractMethod {
-    private final static String WRAPPER_PROPERTIES = "ew.updates";
+/**
+ * UpdateByQuery
+ *
+ * @author darui.wu
+ */
+public class UpdateByQuery extends BaseMethod {
 
     private final static String MAPPER_METHOD_ID = "updateBy";
 
-    private final static String EW_PROPERTIES_NOT_NULL = String.format("%s != null and %s != null", WRAPPER, WRAPPER_PROPERTIES);
-
-    private final static String EW_SQLSET_NOT_NULL = String.format("%s != null and %s != null", WRAPPER, U_WRAPPER_SQL_SET);
-
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        SqlMethod sqlMethod = SqlMethod.UPDATE;
-        String setSql = this.updateSetSql(tableInfo);
-        String whereSql = sqlWhereEntityWrapper(true, tableInfo);
-        String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), setSql, whereSql,sqlComment());
-        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, mapperClass);
-        return this.addUpdateMappedStatement(mapperClass, modelClass, MAPPER_METHOD_ID, sqlSource);
+        MapperParam mapper = MapperParam.updateMapperParam(mapperClass, MAPPER_METHOD_ID)
+            .setParameterType(modelClass)
+            .setSql(this.getMethodSql(tableInfo));
+
+        return super.addMappedStatement(mapper);
     }
 
-    protected String updateSetSql(TableInfo tableInfo) {
-        String setSql = getUpdateFiledSql(tableInfo, WRAPPER_PROPERTIES);
-        String sqlScript = SqlScriptUtils.convertIf(setSql, EW_PROPERTIES_NOT_NULL, true)
-                + NEWLINE
-                + SqlScriptUtils.convertIf(SqlScriptUtils.unSafeParam(U_WRAPPER_SQL_SET), EW_SQLSET_NOT_NULL, false);
-        return SqlScriptUtils.convertSet(sqlScript);
+    @Override
+    protected String getMethodSql(TableInfo table) {
+        SqlBuilder builder = SqlBuilder.instance();
+        return builder.beginScript()
+            .update(table.getTableName())
+            .set(() -> update(table, builder))
+            .where(() -> where(table, builder))
+            .ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}")
+            .endScript();
     }
 
-    private String getUpdateFiledSql(TableInfo tableInfo, String prefix) {
-        return tableInfo.getFieldList().stream()
-                .map(field -> this.getUpdateValueSql(field, prefix))
-                .collect(joining(NEWLINE));
+    /**
+     * update set 设置部分
+     *
+     * @param table
+     * @param builder
+     * @return
+     */
+    protected SqlBuilder update(TableInfo table, SqlBuilder builder) {
+        return builder
+            .ifThen("ew != null and ew.updates != null", () -> builder.eachJoining(table.getFieldList(), (field) -> updateField(builder, field)))
+            .ifThen("ew != null and ew.sqlSet != null", "${ew.sqlSet}");
     }
 
-    private String getUpdateValueSql(TableFieldInfo field, String prefix) {
-        String setValue = field.getColumn() + "=" + field.getInsertSqlProperty(prefix + DOT);
-
-        if (!MybatisInsertUtil.isUpdateDefaultField(field)) {
-            String test = String.format("%s.containsKey('%s')", prefix, field.getProperty());
-            return SqlScriptUtils.convertIf(setValue, test, false);
+    private void updateField(SqlBuilder builder, TableFieldInfo field) {
+        if (isUpdateDefaultField(field)) {
+            builder.append("%s=%s,", field.getColumn(), field.getUpdate());
         } else {
-            return field.getColumn() + "=" + field.getUpdate() + COMMA;
+            builder.ifThen(
+                format("ew.updates.containsKey('%s')", field.getProperty()),
+                format("%s=#{ew.updates.%s},", field.getColumn(), field.getProperty())
+            );
         }
+    }
+
+    /**
+     * where部分
+     *
+     * @param table
+     * @param builder
+     * @return
+     */
+    protected SqlBuilder where(TableInfo table, SqlBuilder builder) {
+        return builder
+            .ifThen("ew != null and ew.entity != null",
+                () -> builder.eachJoining(table.getFieldList(), (field) -> builder.ifThen(
+                    format("ew.entity.%s != null", field.getProperty()),
+                    format("AND %s=#{ew.entity.%s}", field.getColumn(), field.getProperty()))
+                ))
+            .ifThen(
+                "ew != null and ew.sqlSegment != null and ew.sqlSegment != ''",
+                "AND ${ew.sqlSegment}");
     }
 }

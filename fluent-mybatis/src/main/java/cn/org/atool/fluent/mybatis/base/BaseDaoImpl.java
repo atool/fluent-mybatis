@@ -24,12 +24,6 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
     }
 
     @Override
-    public <PK extends Serializable> PK saveWithPk(E entity) {
-        this.mapper().insertWithPk(entity);
-        return (PK) entity.findPk();
-    }
-
-    @Override
     public int saveWithPk(List<E> list) {
         return this.mapper().insertBatch(list);
     }
@@ -41,7 +35,7 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
         } else if (this.existPk(entity.findPk())) {
             return this.mapper().updateById(entity) > 0;
         } else {
-            return this.mapper().insertWithPk(entity) > 0;
+            return this.mapper().insert(entity) > 0;
         }
     }
 

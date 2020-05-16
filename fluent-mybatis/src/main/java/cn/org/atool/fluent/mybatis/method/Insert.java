@@ -7,11 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static cn.org.atool.fluent.mybatis.method.model.SqlBuilder.safeParam;
-import static java.util.stream.Collectors.joining;
+import static java.lang.String.format;
 
 /**
  * InsertSelected 插入非null的字段，忽略null字段
@@ -22,7 +18,7 @@ import static java.util.stream.Collectors.joining;
 public class Insert extends BaseMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
-        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "insert")
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, this.getMethodId())
             .setParameterType(modelClass)
             .setResultType(Integer.class)
             .setSql(this.getMethodSql(table));
@@ -32,6 +28,9 @@ public class Insert extends BaseMethod {
         return super.addMappedStatement(mapper);
     }
 
+    protected String getMethodId() {
+        return "insert";
+    }
 
     /**
      * <pre>
@@ -53,85 +52,37 @@ public class Insert extends BaseMethod {
      */
     @Override
     protected String getMethodSql(TableInfo table) {
-        return SqlBuilder.instance()
-            .beginScript()
+        SqlBuilder builder = SqlBuilder.instance();
+        return builder.beginScript()
             .insert(table.getTableName())
-            .beginTrim("(", ")", ",")
-            .append(this.getInsertFields(table))
-            .endTrim()
-            .beginTrim("VALUES (", ")", ",")
-            .append(this.getInsertValues(table))
-            .endTrim()
-            .endScript()
-            .toString();
+            .brackets(() -> builder
+                .ifThen(format("%s != null", table.getKeyProperty()), table.getKeyColumn() + COMMA)
+                .eachJoining(table.getFieldList(), (field) -> field(builder, field)))
+            .append("VALUES")
+            .brackets(() -> builder
+                .ifThen(format("%s != null", table.getKeyProperty()), format("#{%s},", table.getKeyProperty()))
+                .eachJoining(table.getFieldList(), (field) -> value(builder, field)))
+            .endScript();
     }
 
-    /**
-     * <pre>
-     *      <if test="field != null">field,</if>
-     * </pre>
-     *
-     * @param table 表结构
-     * @return
-     */
-    private String getInsertFields(TableInfo table) {
-        List<String> ifList = new ArrayList<>();
-
-        ifList.add(SqlBuilder.instance()
-            .ifValue("", table.getKeyProperty(), table.getKeyColumn())
-            .toString()
-        );
-        table.getFieldList().stream()
-            .map(field -> {
-                if (MybatisInsertUtil.isInsertDefaultField(field)) {
-                    return field.getColumn() + COMMA;
-                } else {
-                    return SqlBuilder.instance()
-                        .ifValue("", field.getProperty(), field.getColumn())
-                        .toString();
-                }
-            })
-            .forEach(ifList::add);
-        return ifList.stream().collect(joining(NEWLINE));
-    }
-
-    /**
-     * <pre>
-     *     <if test="field != null">#{field},</if>
-     * </pre>
-     *
-     * @param table
-     * @return
-     */
-    private String getInsertValues(TableInfo table) {
-        List<String> ifList = new ArrayList<>();
-
-        ifList.add(SqlBuilder.instance()
-            .ifValue("", table.getKeyProperty(), safeParam(table.getKeyProperty()))
-            .toString()
-        );
-
-        table.getFieldList().stream()
-            .map(this::fieldValue)
-            .forEach(ifList::add);
-        return ifList.stream().collect(joining(NEWLINE));
-    }
-
-    /**
-     * 单个字段值, if or choose 标签
-     *
-     * @param field
-     * @return
-     */
-    private String fieldValue(TableFieldInfo field) {
+    private void value(SqlBuilder builder, TableFieldInfo field) {
         if (MybatisInsertUtil.isInsertDefaultField(field)) {
-            return SqlBuilder.instance()
-                .choose("", field.getProperty(), field.getUpdate())
-                .toString();
+            builder.choose(
+                format("%s != null", field.getProperty()),
+                format("#{%s},", field.getProperty()),
+                format("%s,", field.getUpdate()));
         } else {
-            return SqlBuilder.instance()
-                .ifValue("", field.getProperty(), safeParam(field.getProperty()))
-                .toString();
+            builder.ifThen(
+                format("%s != null", field.getProperty()),
+                format("#{%s},", field.getProperty()));
+        }
+    }
+
+    private void field(SqlBuilder builder, TableFieldInfo field) {
+        if (MybatisInsertUtil.isInsertDefaultField(field)) {
+            builder.append(field.getColumn() + COMMA);
+        } else {
+            builder.ifThen(format("%s != null", field.getProperty()), field.getColumn() + COMMA);
         }
     }
 }

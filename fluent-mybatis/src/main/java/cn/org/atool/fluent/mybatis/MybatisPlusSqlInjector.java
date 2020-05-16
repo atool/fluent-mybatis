@@ -44,7 +44,6 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
             new SelectPage(),
             //
             new InsertBatch(),
-            new InsertWithPk(),
             //
             new SelectListInPartition(),
             new UpdateInPartition(),

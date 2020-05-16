@@ -21,38 +21,24 @@ public class UpdateById extends BaseMethod {
         return super.addMappedStatement(mapper);
     }
 
-
     @Override
     protected String getMethodSql(TableInfo table) {
-        return SqlBuilder.instance()
-            .beginScript()
+        SqlBuilder builder = SqlBuilder.instance();
+        return builder.beginScript()
             .update(table.getTableName())
-            .beginSet()
-            .joinEach(table.getFieldList(), this::setFieldValue, SqlBuilder.NEWLINE)
-            .endSet()
-            .beginWhere()
-            .andVariable(table.getKeyColumn(), ENTITY_DOT, table.getKeyProperty())
-            .endWhere()
-            .endScript()
-            .toString();
+            .set(() -> builder.eachJoining(table.getFieldList(), (field) -> updateField(builder, field)))
+            .where(() -> builder.andVariable(table.getKeyColumn(), ENTITY_DOT, table.getKeyProperty()))
+            .endScript();
     }
 
-
-    /**
-     * 获取 set sql 片段
-     *
-     * @param field 字段
-     * @return sql 脚本片段
-     */
-    public String setFieldValue(final TableFieldInfo field) {
+    private void updateField(SqlBuilder builder, TableFieldInfo field) {
         if (MybatisInsertUtil.isUpdateDefaultField(field)) {
-            return SqlBuilder.instance()
-                .setValue(field.getColumn(), field.getUpdate())
-                .toString();
+            builder.setValue(field.getColumn(), field.getUpdate());
         } else {
-            return SqlBuilder.instance()
-                .ifSet(ENTITY_DOT, field.getProperty(), field.getColumn())
-                .toString();
+            builder.ifThen(
+                String.format("et.%s != null", field.getProperty()),
+                String.format("%s=#{et.%s},", field.getColumn(), field.getProperty())
+            );
         }
     }
 }
