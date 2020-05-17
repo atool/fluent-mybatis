@@ -36,9 +36,9 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
             new UpdateById(),
             new UpdateByQuery(),
             new SelectById(),
+            new SelectByIds(),
             //
             // new Update(),
-            new SelectBatchByIds(),
             new SelectByMap(),
             new SelectOne(),
             new SelectCount(),

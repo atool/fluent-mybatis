@@ -46,7 +46,7 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
 
     @Override
     public List<E> selectByIds(Collection<? extends Serializable> ids) {
-        return this.mapper().selectBatchIds(ids);
+        return this.mapper().selectByIds(ids);
     }
 
     @Override

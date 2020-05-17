@@ -79,7 +79,7 @@ public interface BaseMapper<T> {
      * @param idList 主键ID列表(不能为 null 以及 empty)
      * @return
      */
-    List<T> selectBatchIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);
+    List<T> selectByIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);
 
     /**
      * 查询（根据 columnMap 条件）
