@@ -6,15 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
- * 物理删除逻辑
+ * DeleteByIds: 按id列表批量删除
  *
  * @author wudarui
  */
-public class Delete extends BaseMethod {
-
+public class DeleteByIds extends BaseMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
-        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "delete")
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "deleteByIds")
             .setParameterType(modelClass)
             .setResultType(Integer.class)
             .setSql(this.getMethodSql(table));
@@ -26,7 +25,14 @@ public class Delete extends BaseMethod {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
             .delete(table.getTableName())
-            .where(() -> super.whereEntity(table, builder))
+            .where(() -> this.whereIdIn(table, builder))
             .endScript();
+    }
+
+    private SqlBuilder whereIdIn(TableInfo table, SqlBuilder builder) {
+        return builder
+            .value("@property IN (", table.getKeyProperty(), null)
+            .foreach("coll", "item", ",", () -> builder.append("#{item}"))
+            .append(")");
     }
 }

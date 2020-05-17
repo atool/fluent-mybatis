@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.method.Delete;
+import cn.org.atool.fluent.mybatis.method.DeleteById;
 import cn.org.atool.fluent.mybatis.method.Insert;
 import cn.org.atool.fluent.mybatis.method.UpdateById;
 import cn.org.atool.fluent.mybatis.method.*;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 
 /**
  * MybatisPlusSqlInjector
+ *
  * @author wudarui
  */
 public class MybatisPlusSqlInjector extends DefaultSqlInjector {
@@ -25,14 +27,17 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
         return Stream.of(
             // 替换掉Insert默认实现
             new Insert(),
+            new InsertBatch(),
+            new Delete(),
+            new DeleteById(),
+            new DeleteByIds(),
+            // new DeleteBatchByIds(),
+            //
+            new UpdateById(),
             new UpdateByQuery(),
             //
-            new Delete(),
             new DeleteByMap(),
-            new DeleteById(),
-            new DeleteBatchByIds(),
             // new Update(),
-            new UpdateById(),
             new SelectById(),
             new SelectBatchByIds(),
             new SelectByMap(),
@@ -43,8 +48,6 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
             new SelectObjs(),
             new SelectList(),
             new SelectPage(),
-            //
-            new InsertBatch(),
             //
             new SelectListInPartition(),
             new UpdateInPartition(),

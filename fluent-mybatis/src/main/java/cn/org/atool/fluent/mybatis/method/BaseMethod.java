@@ -134,18 +134,6 @@ public abstract class BaseMethod extends AbstractMethod {
     }
 
     /**
-     * 返回不包含主键的其他字段拼接
-     *
-     * @param table
-     * @return
-     */
-    protected String getColumnsWithoutPrimary(TableInfo table) {
-        return table.getFieldList().stream()
-            .map(field -> field.getColumn())
-            .collect(joining(", "));
-    }
-
-    /**
      * 返回包含主键的字段拼接
      *
      * @param table
@@ -161,31 +149,13 @@ public abstract class BaseMethod extends AbstractMethod {
     }
 
     /**
-     * 替换单引号为双引号
-     *
-     * @param withSingleQuotation
-     * @return
-     */
-    protected String replace(String withSingleQuotation) {
-        return withSingleQuotation.replace('\'', '"');
-    }
-
-    /**
-     * 返回方法具体的sql语句
-     *
-     * @param table 表结构信息
-     * @return
-     */
-    protected abstract String getMethodSql(TableInfo table);
-
-    /**
      * where部分
      *
      * @param table
      * @param builder
      * @return
      */
-    protected SqlBuilder where(TableInfo table, SqlBuilder builder) {
+    protected SqlBuilder whereEntity(TableInfo table, SqlBuilder builder) {
         return builder
             .ifThen("ew != null and ew.entity != null", () -> {
                 builder
@@ -198,7 +168,27 @@ public abstract class BaseMethod extends AbstractMethod {
             .ifThen("ew != null and ew.sqlSegment != null and ew.sqlSegment != ''", "AND ${ew.sqlSegment}");
     }
 
+    /**
+     * where id = #{id}
+     *
+     * @param table
+     * @param builder
+     * @return
+     */
+    protected SqlBuilder whereById(TableInfo table, SqlBuilder builder) {
+        return builder.value("@column=#{et.@property}", table.getKeyProperty(), table.getKeyColumn());
+    }
+
     protected SqlBuilder comment(SqlBuilder builder) {
         return builder.ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}");
     }
+
+
+    /**
+     * 返回方法具体的sql语句
+     *
+     * @param table 表结构信息
+     * @return
+     */
+    protected abstract String getMethodSql(TableInfo table);
 }

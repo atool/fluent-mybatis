@@ -55,7 +55,7 @@ public interface BaseMapper<T> {
      * @param idList id列表（值不能为null或者empty）
      * @return
      */
-    int deleteBatchIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);
+    int deleteByIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);
 
     /**
      * 根据id修改

@@ -158,12 +158,12 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
         List<Serializable> ids = entities.stream()
                 .map(IEntity::findPk)
                 .collect(toList());
-        return this.mapper().deleteBatchIds(ids);
+        return this.mapper().deleteByIds(ids);
     }
 
     @Override
     public int deleteByIds(Collection<? extends Serializable> ids) {
-        return this.mapper().deleteBatchIds(ids);
+        return this.mapper().deleteByIds(ids);
     }
 
     @Override

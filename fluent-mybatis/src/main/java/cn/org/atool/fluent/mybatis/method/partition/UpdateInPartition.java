@@ -31,7 +31,7 @@ public class UpdateInPartition extends UpdateByQuery {
             .append(MybatisUtil.getPartitionDatabase())
             .update(MybatisUtil.getPartitionTable(table.getTableName()))
             .set(() -> update(table, builder))
-            .where(() -> where(table, builder))
+            .where(() -> whereEntity(table, builder))
             .ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}")
             .endScript();
     }

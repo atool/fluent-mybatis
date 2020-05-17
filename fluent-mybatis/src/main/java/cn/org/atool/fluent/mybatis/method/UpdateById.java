@@ -27,7 +27,7 @@ public class UpdateById extends BaseMethod {
         return builder.beginScript()
             .update(table.getTableName())
             .set(() -> builder.eachJoining(table.getFieldList(), (field) -> updateField(builder, field)))
-            .where(() -> builder.value("AND @column=#{et.@property}", table.getKeyProperty(), table.getKeyColumn()))
+            .where(() -> super.whereById(table, builder))
             .endScript();
     }
 

@@ -33,7 +33,7 @@ public class UpdateByQuery extends BaseMethod {
         return builder.beginScript()
             .update(table.getTableName())
             .set(() -> update(table, builder))
-            .where(() -> super.where(table, builder))
+            .where(() -> super.whereEntity(table, builder))
             .append(() -> super.comment(builder))
             .endScript();
     }
