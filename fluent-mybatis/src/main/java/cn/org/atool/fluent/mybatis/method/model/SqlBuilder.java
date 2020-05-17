@@ -128,6 +128,17 @@ public class SqlBuilder {
     }
 
     /**
+     * select columns from table
+     *
+     * @param selectColumns
+     * @param tableName
+     * @return
+     */
+    public SqlBuilder select(String selectColumns, String tableName) {
+        return this.newLine().append("SELECT ").append(selectColumns).append(" FROM ").append(tableName).newLine();
+    }
+
+    /**
      * 将list处理完毕后joining起来追加
      *
      * @param list     列表

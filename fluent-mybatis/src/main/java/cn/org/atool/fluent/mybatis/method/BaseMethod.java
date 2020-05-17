@@ -170,13 +170,37 @@ public abstract class BaseMethod extends AbstractMethod {
 
     /**
      * where id = #{id}
+     * 没有主键的表，需要特殊处理，避免扫表
      *
      * @param table
      * @param builder
      * @return
      */
     protected SqlBuilder whereById(TableInfo table, SqlBuilder builder) {
-        return builder.value("@column=#{et.@property}", table.getKeyProperty(), table.getKeyColumn());
+        if (table.getKeyProperty() == null) {
+            return builder.append("1!=1");
+        } else {
+            return builder.value("@column=#{et.@property}", table.getKeyProperty(), table.getKeyColumn());
+        }
+    }
+
+    /**
+     * where id in(?, ?, ?)
+     * 没有主键的表，需要特殊处理，避免扫表
+     *
+     * @param table
+     * @param builder
+     * @return
+     */
+    protected SqlBuilder whereByIds(TableInfo table, SqlBuilder builder) {
+        if (table.getKeyProperty() == null) {
+            return builder.append("1!=1");
+        } else {
+            return builder
+                .value("@property IN (", table.getKeyProperty(), null)
+                .foreach("coll", "item", ",", () -> builder.append("#{item}"))
+                .append(")");
+        }
     }
 
     protected SqlBuilder comment(SqlBuilder builder) {
