@@ -44,6 +44,11 @@ public class SqlBuilder {
         return this;
     }
 
+    public SqlBuilder append(Executor executor) {
+        executor.execute();
+        return this;
+    }
+
     /**
      * 追加字符串, 但把format中单引号替换为双引号
      *
@@ -118,6 +123,10 @@ public class SqlBuilder {
         return this.newLine().append("INSERT INTO ").append(tableName).newLine();
     }
 
+    public SqlBuilder delete(String tableName) {
+        return this.newLine().append("DELETE FROM ").append(tableName).newLine();
+    }
+
     /**
      * 将list处理完毕后joining起来追加
      *
@@ -163,10 +172,8 @@ public class SqlBuilder {
      */
     public SqlBuilder ifThen(String ifCondition, Executor executor) {
         this.newLine().quotas("<if test='%s'>", ifCondition);
-        this.newLine();
         executor.execute();
-        this.newLine();
-        return this.newLine().append("</if>");
+        return this.append("</if>").newLine();
     }
 
     /**
@@ -181,18 +188,20 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder ifThen(String ifCondition, String value) {
-        this.newLine().quotas("<if test='%s'>", ifCondition);
-        this.newLine().append(value).newLine();
-        return this.newLine().append("</if>");
+        return this.newLine()
+            .quotas("<if test='%s'>", ifCondition)
+            .append(value)
+            .append("</if>").newLine();
     }
 
     public SqlBuilder ifThen(String conditionFormat, String valueFormat, String propertyOrDefault, String column) {
         if (propertyOrDefault == null) {
             return this;
         }
-        this.newLine().quotas("<if test='%s'>", replace(conditionFormat, propertyOrDefault, column));
-        this.newLine().append(replace(valueFormat, propertyOrDefault, column)).newLine();
-        return this.newLine().append("</if>");
+        return this.newLine()
+            .quotas("<if test='%s'>", replace(conditionFormat, propertyOrDefault, column))
+            .append(replace(valueFormat, propertyOrDefault, column))
+            .append("</if>").newLine();
     }
 
     private String replace(String format, String propertyOrDefault, String column) {
@@ -225,10 +234,10 @@ public class SqlBuilder {
             return this;
         }
         this.newLine().append("<choose>").newLine()
-            .quotas("<when test='%s'>", replace(conditionFormat, property, column)).newLine()
+            .quotas("<when test='%s'>", replace(conditionFormat, property, column))
             .append(replace(valueFormat, property, column)).newLine()
             .append("</when>").newLine()
-            .append("<otherwise>").newLine()
+            .append("<otherwise>")
             .append(defaultValue).newLine()
             .append("</otherwise>").newLine()
             .append("</choose>").newLine();

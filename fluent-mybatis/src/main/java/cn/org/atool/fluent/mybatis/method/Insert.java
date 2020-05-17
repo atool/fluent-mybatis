@@ -22,9 +22,7 @@ public class Insert extends BaseMethod {
             .setParameterType(modelClass)
             .setResultType(Integer.class)
             .setSql(this.getMethodSql(table));
-        super.setPrimaryKey(mapper, table);
-
-        super.setPrimaryKey(mapper, table);
+        super.setKeyGenerator(mapper, table);
         return super.addMappedStatement(mapper);
     }
 

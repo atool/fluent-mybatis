@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.method.Delete;
 import cn.org.atool.fluent.mybatis.method.Insert;
 import cn.org.atool.fluent.mybatis.method.UpdateById;
 import cn.org.atool.fluent.mybatis.method.*;

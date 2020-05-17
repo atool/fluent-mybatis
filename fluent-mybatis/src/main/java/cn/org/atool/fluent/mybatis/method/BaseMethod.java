@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
+import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
@@ -86,7 +87,7 @@ public abstract class BaseMethod extends AbstractMethod {
      * @param mapper
      * @param table
      */
-    protected void setPrimaryKey(MapperParam mapper, TableInfo table) {
+    protected void setKeyGenerator(MapperParam mapper, TableInfo table) {
         String keyProperty = table.getKeyProperty();
         if (keyProperty == null || "".equals(keyProperty.trim())) {
             return;
@@ -176,4 +177,28 @@ public abstract class BaseMethod extends AbstractMethod {
      * @return
      */
     protected abstract String getMethodSql(TableInfo table);
+
+    /**
+     * where部分
+     *
+     * @param table
+     * @param builder
+     * @return
+     */
+    protected SqlBuilder where(TableInfo table, SqlBuilder builder) {
+        return builder
+            .ifThen("ew != null and ew.entity != null", () -> {
+                builder
+                    .ifThen("ew.entity.@property != null", "@column=#{ew.entity.@column}", table.getKeyProperty(), table.getKeyColumn())
+                    .eachJoining(table.getFieldList(),
+                        (field) -> builder.ifThen(
+                            "ew.entity.@property != null", "AND @column=#{ew.entity.@property}", field.getProperty(), field.getColumn()
+                        ));
+            })
+            .ifThen("ew != null and ew.sqlSegment != null and ew.sqlSegment != ''", "AND ${ew.sqlSegment}");
+    }
+
+    protected SqlBuilder comment(SqlBuilder builder) {
+        return builder.ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}");
+    }
 }

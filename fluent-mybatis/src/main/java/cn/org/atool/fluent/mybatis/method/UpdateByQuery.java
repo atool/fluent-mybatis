@@ -33,8 +33,8 @@ public class UpdateByQuery extends BaseMethod {
         return builder.beginScript()
             .update(table.getTableName())
             .set(() -> update(table, builder))
-            .where(() -> where(table, builder))
-            .ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}")
+            .where(() -> super.where(table, builder))
+            .append(() -> super.comment(builder))
             .endScript();
     }
 
@@ -57,21 +57,5 @@ public class UpdateByQuery extends BaseMethod {
         } else {
             builder.ifThen("ew.updates.containsKey('@property')", "@column=#{ew.updates.@property},", field.getProperty(), field.getColumn());
         }
-    }
-
-    /**
-     * where部分
-     *
-     * @param table
-     * @param builder
-     * @return
-     */
-    protected SqlBuilder where(TableInfo table, SqlBuilder builder) {
-        return builder
-            .ifThen("ew != null and ew.entity != null", () -> builder.eachJoining(table.getFieldList(),
-                (field) -> builder.ifThen(
-                    "ew.entity.@property != null", "AND @column=#{ew.entity.@property}", field.getProperty(), field.getColumn()
-                )))
-            .ifThen("ew != null and ew.sqlSegment != null and ew.sqlSegment != ''", "AND ${ew.sqlSegment}");
     }
 }
