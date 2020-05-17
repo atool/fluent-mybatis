@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
@@ -29,6 +32,7 @@ import static java.util.stream.Collectors.joining;
  */
 @Slf4j
 public abstract class BaseMethod extends AbstractMethod {
+
     /**
      * 添加 MappedStatement 到 Mybatis 容器
      *

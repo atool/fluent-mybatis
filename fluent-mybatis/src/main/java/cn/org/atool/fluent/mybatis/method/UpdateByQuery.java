@@ -53,12 +53,9 @@ public class UpdateByQuery extends BaseMethod {
 
     private void updateField(SqlBuilder builder, TableFieldInfo field) {
         if (isUpdateDefaultField(field)) {
-            builder.append("%s=%s,", field.getColumn(), field.getUpdate());
+            builder.value("@column=@property,", field.getUpdate(), field.getColumn());
         } else {
-            builder.ifThen(
-                format("ew.updates.containsKey('%s')", field.getProperty()),
-                format("%s=#{ew.updates.%s},", field.getColumn(), field.getProperty())
-            );
+            builder.ifThen("ew.updates.containsKey('@property')", "@column=#{ew.updates.@property},", field.getProperty(), field.getColumn());
         }
     }
 
@@ -71,13 +68,10 @@ public class UpdateByQuery extends BaseMethod {
      */
     protected SqlBuilder where(TableInfo table, SqlBuilder builder) {
         return builder
-            .ifThen("ew != null and ew.entity != null",
-                () -> builder.eachJoining(table.getFieldList(), (field) -> builder.ifThen(
-                    format("ew.entity.%s != null", field.getProperty()),
-                    format("AND %s=#{ew.entity.%s}", field.getColumn(), field.getProperty()))
-                ))
-            .ifThen(
-                "ew != null and ew.sqlSegment != null and ew.sqlSegment != ''",
-                "AND ${ew.sqlSegment}");
+            .ifThen("ew != null and ew.entity != null", () -> builder.eachJoining(table.getFieldList(),
+                (field) -> builder.ifThen(
+                    "ew.entity.@property != null", "AND @column=#{ew.entity.@property}", field.getProperty(), field.getColumn()
+                )))
+            .ifThen("ew != null and ew.sqlSegment != null and ew.sqlSegment != ''", "AND ${ew.sqlSegment}");
     }
 }

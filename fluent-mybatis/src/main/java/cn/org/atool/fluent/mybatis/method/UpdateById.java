@@ -27,18 +27,15 @@ public class UpdateById extends BaseMethod {
         return builder.beginScript()
             .update(table.getTableName())
             .set(() -> builder.eachJoining(table.getFieldList(), (field) -> updateField(builder, field)))
-            .where(() -> builder.andVariable(table.getKeyColumn(), ENTITY_DOT, table.getKeyProperty()))
+            .where(() -> builder.value("AND @column=#{et.@property}", table.getKeyProperty(), table.getKeyColumn()))
             .endScript();
     }
 
     private void updateField(SqlBuilder builder, TableFieldInfo field) {
         if (MybatisInsertUtil.isUpdateDefaultField(field)) {
-            builder.setValue(field.getColumn(), field.getUpdate());
+            builder.value("@column=@property,", field.getUpdate(), field.getColumn());
         } else {
-            builder.ifThen(
-                String.format("et.%s != null", field.getProperty()),
-                String.format("%s=#{et.%s},", field.getColumn(), field.getProperty())
-            );
+            builder.ifThen("et.@property != null", "@column=#{et.@property},", field.getProperty(), field.getColumn());
         }
     }
 }

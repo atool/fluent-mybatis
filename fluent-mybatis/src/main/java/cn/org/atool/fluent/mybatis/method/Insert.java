@@ -55,26 +55,26 @@ public class Insert extends BaseMethod {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
             .insert(table.getTableName())
-            .brackets(() -> builder
-                .ifThen(format("%s != null", table.getKeyProperty()), table.getKeyColumn() + COMMA)
-                .eachJoining(table.getFieldList(), (field) -> field(builder, field)))
+            .brackets(() -> {
+                builder
+                    .ifThen("@property != null", "@column,", table.getKeyProperty(), table.getKeyColumn())
+                    .eachJoining(table.getFieldList(), (field) -> field(builder, field));
+            })
             .append("VALUES")
-            .brackets(() -> builder
-                .ifThen(format("%s != null", table.getKeyProperty()), format("#{%s},", table.getKeyProperty()))
-                .eachJoining(table.getFieldList(), (field) -> value(builder, field)))
+            .brackets(() -> {
+                builder
+                    .ifThen("@property != null", "#{@property},", table.getKeyProperty(), table.getKeyColumn())
+                    .eachJoining(table.getFieldList(), (field) -> value(builder, field));
+            })
             .endScript();
     }
 
     private void value(SqlBuilder builder, TableFieldInfo field) {
         if (MybatisInsertUtil.isInsertDefaultField(field)) {
-            builder.choose(
-                format("%s != null", field.getProperty()),
-                format("#{%s},", field.getProperty()),
-                format("%s,", field.getUpdate()));
+            builder.choose("@property != null", "#{@property},", field.getUpdate() + SqlBuilder.COMMA,
+                field.getProperty(), field.getColumn());
         } else {
-            builder.ifThen(
-                format("%s != null", field.getProperty()),
-                format("#{%s},", field.getProperty()));
+            builder.ifThen("@property != null", "#{@property},", field.getProperty(), field.getColumn());
         }
     }
 
@@ -82,7 +82,7 @@ public class Insert extends BaseMethod {
         if (MybatisInsertUtil.isInsertDefaultField(field)) {
             builder.append(field.getColumn() + COMMA);
         } else {
-            builder.ifThen(format("%s != null", field.getProperty()), field.getColumn() + COMMA);
+            builder.ifThen("@property != null", "@column,", field.getProperty(), field.getColumn());
         }
     }
 }

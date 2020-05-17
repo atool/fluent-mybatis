@@ -136,38 +136,18 @@ public class SqlBuilder {
     }
 
     /**
-     * 设置 column_name = #{entity.property}
-     *
-     * @param column
-     * @param prefix
-     * @param property
-     * @return
-     */
-    public SqlBuilder setVariable(String column, String prefix, String property) {
-        return this.append("%s=#{%s},", column, prefix + property);
-    }
-
-    /**
      * 直接设置 column = value
      *
+     * @param format
+     * @param propertyOrDefault
      * @param column
-     * @param value
      * @return
      */
-    public SqlBuilder setValue(String column, String value) {
-        return this.append("%s=%s,", column, value);
-    }
-
-    /**
-     * 设置 column_name = #{entity.property}
-     *
-     * @param column
-     * @param prefix
-     * @param property
-     * @return
-     */
-    public SqlBuilder andVariable(String column, String prefix, String property) {
-        return this.append("AND %s=#{%s} ", column, prefix + property);
+    public SqlBuilder value(String format, String propertyOrDefault, String column) {
+        if (propertyOrDefault != null) {
+            this.append(replace(format, propertyOrDefault, column));
+        }
+        return this;
     }
 
     /**
@@ -206,6 +186,23 @@ public class SqlBuilder {
         return this.newLine().append("</if>");
     }
 
+    public SqlBuilder ifThen(String conditionFormat, String valueFormat, String propertyOrDefault, String column) {
+        if (propertyOrDefault == null) {
+            return this;
+        }
+        this.newLine().quotas("<if test='%s'>", replace(conditionFormat, propertyOrDefault, column));
+        this.newLine().append(replace(valueFormat, propertyOrDefault, column)).newLine();
+        return this.newLine().append("</if>");
+    }
+
+    private String replace(String format, String propertyOrDefault, String column) {
+        String value = format.replaceAll("@property", propertyOrDefault);
+        if (column != null) {
+            value = value.replaceAll("@column", column.trim());
+        }
+        return value;
+    }
+
     /**
      * 当字段不为空时，插入字段值
      * 当字段为空时，插入默认值
@@ -216,15 +213,20 @@ public class SqlBuilder {
      * &lt;/choose>
      * </pre>
      *
-     * @param ifCondition
-     * @param value
+     * @param conditionFormat
+     * @param valueFormat
      * @param defaultValue
+     * @param property
+     * @param column
      * @return
      */
-    public SqlBuilder choose(String ifCondition, String value, String defaultValue) {
+    public SqlBuilder choose(String conditionFormat, String valueFormat, String defaultValue, String property, String column) {
+        if (property == null) {
+            return this;
+        }
         this.newLine().append("<choose>").newLine()
-            .quotas("<when test='%s'>", ifCondition).newLine()
-            .append(value).newLine()
+            .quotas("<when test='%s'>", replace(conditionFormat, property, column)).newLine()
+            .append(replace(valueFormat, property, column)).newLine()
             .append("</when>").newLine()
             .append("<otherwise>").newLine()
             .append(defaultValue).newLine()

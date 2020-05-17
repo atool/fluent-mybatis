@@ -35,8 +35,6 @@ public class InsertBatch extends BaseMethod {
             .endScript();
     }
 
-    final static String prefix = "item.";
-
     /**
      * 构建要插入的值sql片段
      *
@@ -45,17 +43,15 @@ public class InsertBatch extends BaseMethod {
      */
     private String getInsertValues(TableInfo table) {
         SqlBuilder values = SqlBuilder.instance();
-        if (table.getKeyColumn() != null) {
-            values.append(safeParam(prefix + table.getKeyColumn()) + ",");
+        if (table.getKeyProperty() != null) {
+            values.value("#{item.@property},", table.getKeyProperty(), table.getKeyColumn());
         }
         return values.eachJoining(table.getFieldList(), (field) -> {
             if (MybatisInsertUtil.isInsertDefaultField(field)) {
-                values.choose(
-                    format("%s%s != null", prefix, field.getProperty()),
-                    format("#{%s%s},", prefix, field.getProperty()),
-                    format("%s,", field.getUpdate()));
+                values.choose("item.@property != null", "#{item.@property},", field.getUpdate() + SqlBuilder.COMMA,
+                    field.getProperty(), field.getUpdate());
             } else {
-                values.append("#{%s%s},", prefix, field.getProperty());
+                values.value("#{item.@property},", field.getProperty(), field.getColumn());
             }
         }).toString();
     }
