@@ -203,6 +203,20 @@ public abstract class BaseMethod extends AbstractMethod {
         }
     }
 
+    /**
+     * 根据map条件查询
+     *
+     * @param table
+     * @param builder
+     */
+    protected void whereByMap(TableInfo table, SqlBuilder builder) {
+        builder.ifThen("cm != null and !cm.isEmpty", () -> {
+            builder.foreach("cm", "v", "AND ", () -> {
+                builder.choose("v == null", "${k} IS NULL ", "${k} = #{v}");
+            });
+        });
+    }
+
     protected SqlBuilder comment(SqlBuilder builder) {
         return builder.ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}");
     }

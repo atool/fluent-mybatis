@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.method.DeleteById;
 import cn.org.atool.fluent.mybatis.method.DeleteByMap;
 import cn.org.atool.fluent.mybatis.method.Insert;
 import cn.org.atool.fluent.mybatis.method.SelectById;
+import cn.org.atool.fluent.mybatis.method.SelectByMap;
 import cn.org.atool.fluent.mybatis.method.UpdateById;
 import cn.org.atool.fluent.mybatis.method.*;
 import cn.org.atool.fluent.mybatis.method.partition.DeleteInPartition;
@@ -37,9 +38,9 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
             new UpdateByQuery(),
             new SelectById(),
             new SelectByIds(),
+            new SelectByMap(),
             //
             // new Update(),
-            new SelectByMap(),
             new SelectOne(),
             new SelectCount(),
             new SelectMaps(),
