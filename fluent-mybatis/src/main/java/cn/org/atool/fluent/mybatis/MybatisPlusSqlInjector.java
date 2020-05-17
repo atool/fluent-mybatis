@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.method.Delete;
 import cn.org.atool.fluent.mybatis.method.DeleteById;
+import cn.org.atool.fluent.mybatis.method.DeleteByMap;
 import cn.org.atool.fluent.mybatis.method.Insert;
 import cn.org.atool.fluent.mybatis.method.UpdateById;
 import cn.org.atool.fluent.mybatis.method.*;
@@ -25,18 +26,16 @@ public class MybatisPlusSqlInjector extends DefaultSqlInjector {
     @Override
     public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
         return Stream.of(
-            // 替换掉Insert默认实现
             new Insert(),
             new InsertBatch(),
             new Delete(),
             new DeleteById(),
             new DeleteByIds(),
-            // new DeleteBatchByIds(),
+            new DeleteByMap(),
             //
             new UpdateById(),
             new UpdateByQuery(),
             //
-            new DeleteByMap(),
             // new Update(),
             new SelectById(),
             new SelectBatchByIds(),

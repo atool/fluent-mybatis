@@ -235,11 +235,17 @@ public class SqlBuilder {
         }
         this.newLine().append("<choose>").newLine()
             .quotas("<when test='%s'>", replace(conditionFormat, property, column))
-            .append(replace(valueFormat, property, column)).newLine()
+            .append(replace(valueFormat, property, column))
             .append("</when>").newLine()
-            .append("<otherwise>")
-            .append(defaultValue).newLine()
-            .append("</otherwise>").newLine()
+            .append("<otherwise>").append(defaultValue).append("</otherwise>").newLine()
+            .append("</choose>").newLine();
+        return this;
+    }
+
+    public SqlBuilder choose(String condition, String value, String defaultValue) {
+        this.newLine().append("<choose>").newLine()
+            .quotas("<when test='%s'>", condition).append(value).append("</when>").newLine()
+            .append("<otherwise>").append(defaultValue).append("</otherwise>").newLine()
             .append("</choose>").newLine();
         return this;
     }
@@ -297,7 +303,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder foreach(String collection, String item, String separator, Executor executor) {
-        this.quotas("<foreach collection='%s' item='%s' index='index' separator='%s'>", collection, item, separator).newLine();
+        this.quotas("<foreach collection='%s' item='%s' index='k' separator='%s'>", collection, item, separator).newLine();
         executor.execute();
         return this.newLine().append("</foreach>").newLine();
     }
