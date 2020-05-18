@@ -1,50 +1,56 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import cn.org.atool.fluent.mybatis.util.PartitionConst;
 import cn.org.atool.fluent.mybatis.base.IEntityQuery;
 import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+import static cn.org.atool.fluent.mybatis.mapper.MapperConst.*;
+
+/**
+ * PartitionMapper: 分库分表操作
+ *
+ * @param <T>
+ * @author darui.wu
+ */
 public interface PartitionMapper<T> extends IMapper {
     /**
      * 根据IEntityUpdate修改记录
      *
-     * @param update 更新信息
-     * @param pdb    分库
-     * @param ptb    分表
+     * @param update  更新信息
+     * @param comment 分库
+     * @param table   分表
      * @return
      */
-    int updateInPartition(@Param(Constants.WRAPPER) IEntityUpdate update,
-                          @Param(PartitionConst.PARTITION_DATABASE) String pdb,
-                          @Param(PartitionConst.PARTITION_TABLE) String ptb
+    int updateSpecByQuery(@Param(WRAPPER) IEntityUpdate update,
+                          @Param(SPEC_COMMENT) String comment,
+                          @Param(SPEC_TABLE) String table
     );
 
     /**
      * 根据IEntityQuery删除记录
      *
-     * @param query 查询条件
-     * @param pdb   分库
-     * @param ptb   分表
+     * @param query   查询条件
+     * @param comment 分库
+     * @param table   分表
      * @return
      */
-    int deleteInPartition(@Param(Constants.WRAPPER) IEntityQuery query,
-                          @Param(PartitionConst.PARTITION_DATABASE) String pdb,
-                          @Param(PartitionConst.PARTITION_TABLE) String ptb
+    int deleteSpec(@Param(WRAPPER) IEntityQuery query,
+                   @Param(SPEC_COMMENT) String comment,
+                   @Param(SPEC_TABLE) String table
     );
 
     /**
      * 根据IEntityQuery查询记录
      *
-     * @param query 查询条件
-     * @param pdb   分库
-     * @param ptb   分表
+     * @param query   查询条件
+     * @param comment 分库
+     * @param table   分表
      * @return
      */
-    List<T> selectListInPartition(@Param(Constants.WRAPPER) IEntityQuery query,
-                                  @Param(PartitionConst.PARTITION_DATABASE) String pdb,
-                                  @Param(PartitionConst.PARTITION_TABLE) String ptb
+    List<T> selectSpecList(@Param(WRAPPER) IEntityQuery query,
+                           @Param(SPEC_COMMENT) String comment,
+                           @Param(SPEC_TABLE) String table
     );
 }

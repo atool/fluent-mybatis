@@ -5,18 +5,19 @@ import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_SelectById;
+import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_SelectCount;
 
 /**
- * SelectById: 根据ID 查询一条数据
+ * SelectCount: 查询满足条件总记录数
  *
- * @author wudarui
+ * @author darui.wu
+ * @create 2020/5/18 11:42 上午
  */
-public class SelectById extends AbstractMethod {
+public class SelectCount extends AbstractMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        MapperParam mapper = MapperParam.queryMapperParam(mapperClass, Method_SelectById)
-            .setResultType(modelClass)
+        MapperParam mapper = MapperParam.queryMapperParam(mapperClass, Method_SelectCount)
+            .setResultType(Integer.class)
             .setSql(this.getMethodSql(tableInfo));
 
         return super.addMappedStatement(mapper);
@@ -26,8 +27,9 @@ public class SelectById extends AbstractMethod {
     protected String getMethodSql(TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
-            .select(table, false, super.isSpecTable())
-            .where(() -> super.whereById(table, builder))
+            .selectCount(table, super.isSpecTable())
+            .where(() -> super.whereEntity(table, builder))
+            .suffixComment()
             .endScript();
     }
 }

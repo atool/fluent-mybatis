@@ -2,12 +2,12 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import cn.org.atool.fluent.mybatis.util.MybatisInsertUtil;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import static java.lang.String.format;
+import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_Insert;
+import static cn.org.atool.fluent.mybatis.method.model.SqlBuilder.COMMA;
 
 /**
  * InsertSelected 插入非null的字段，忽略null字段
@@ -15,19 +15,15 @@ import static java.lang.String.format;
  * @author darui.wu
  * @create 2020/5/12 8:51 下午
  */
-public class Insert extends BaseMethod {
+public class Insert extends AbstractMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
-        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, this.getMethodId())
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, Method_Insert)
             .setParameterType(modelClass)
             .setResultType(Integer.class)
             .setSql(this.getMethodSql(table));
         super.setKeyGenerator(mapper, table);
         return super.addMappedStatement(mapper);
-    }
-
-    protected String getMethodId() {
-        return "insert";
     }
 
     /**
@@ -52,7 +48,7 @@ public class Insert extends BaseMethod {
     protected String getMethodSql(TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
-            .insert(table.getTableName())
+            .insert(table, super.isSpecTable())
             .brackets(() -> {
                 builder
                     .ifThen("@property != null", "@column,", table.getKeyProperty(), table.getKeyColumn())
@@ -68,8 +64,8 @@ public class Insert extends BaseMethod {
     }
 
     private void value(SqlBuilder builder, TableFieldInfo field) {
-        if (MybatisInsertUtil.isInsertDefaultField(field)) {
-            builder.choose("@property != null", "#{@property},", field.getUpdate() + SqlBuilder.COMMA,
+        if (isInsertDefault(field)) {
+            builder.choose("@property != null", "#{@property},", field.getUpdate() + COMMA,
                 field.getProperty(), field.getColumn());
         } else {
             builder.ifThen("@property != null", "#{@property},", field.getProperty(), field.getColumn());
@@ -77,7 +73,7 @@ public class Insert extends BaseMethod {
     }
 
     private void field(SqlBuilder builder, TableFieldInfo field) {
-        if (MybatisInsertUtil.isInsertDefaultField(field)) {
+        if (isInsertDefault(field)) {
             builder.append(field.getColumn() + COMMA);
         } else {
             builder.ifThen("@property != null", "@column,", field.getProperty(), field.getColumn());

@@ -5,15 +5,17 @@ import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
+import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_DeleteByIds;
+
 /**
  * DeleteByIds: 按id列表批量删除
  *
  * @author wudarui
  */
-public class DeleteByIds extends BaseMethod {
+public class DeleteByIds extends AbstractMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
-        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "deleteByIds")
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, Method_DeleteByIds)
             .setParameterType(modelClass)
             .setResultType(Integer.class)
             .setSql(this.getMethodSql(table));
@@ -24,7 +26,7 @@ public class DeleteByIds extends BaseMethod {
     protected String getMethodSql(TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
-            .delete(table.getTableName())
+            .delete(table, super.isSpecTable())
             .where(() -> this.whereByIds(table, builder))
             .endScript();
     }

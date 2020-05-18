@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
 import cn.org.atool.fluent.mybatis.function.Executor;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -106,36 +107,76 @@ public class SqlBuilder {
     /**
      * update tableName
      *
-     * @param tableName
+     * @param table
      * @return
      */
-    public SqlBuilder update(String tableName) {
-        return this.newLine().append("UPDATE ").append(tableName).newLine();
+    public SqlBuilder update(TableInfo table, boolean isSpec) {
+        this.prefixComment(isSpec);
+        return this.newLine().append("UPDATE ").append(table.getTableName()).newLine();
     }
 
     /**
      * insert into tableName
      *
-     * @param tableName
+     * @param table
      * @return
      */
-    public SqlBuilder insert(String tableName) {
-        return this.newLine().append("INSERT INTO ").append(tableName).newLine();
+    public SqlBuilder insert(TableInfo table, boolean isSpec) {
+        this.prefixComment(isSpec);
+        return this.newLine().append("INSERT INTO ").append(table.getTableName()).newLine();
     }
 
-    public SqlBuilder delete(String tableName) {
-        return this.newLine().append("DELETE FROM ").append(tableName).newLine();
+    /**
+     * delete from table
+     *
+     * @param table
+     * @return
+     */
+    public SqlBuilder delete(TableInfo table, boolean isSpec) {
+        this.prefixComment(isSpec);
+        return this.newLine().append("DELETE FROM ").append(table.getTableName()).newLine();
     }
 
     /**
      * select columns from table
      *
-     * @param selectColumns
-     * @param tableName
+     * @param table
+     * @param isSpec
      * @return
      */
-    public SqlBuilder select(String selectColumns, String tableName) {
-        return this.newLine().append("SELECT ").append(selectColumns).append(" FROM ").append(tableName).newLine();
+    public SqlBuilder select(TableInfo table, boolean isSelected, boolean isSpec) {
+        this.prefixComment(isSpec);
+        this.newLine().append("SELECT ");
+        if (isSelected) {
+            this.choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", this.getSelectColumns(table));
+        } else {
+            this.append(this.getSelectColumns(table));
+        }
+        return this.append(" FROM ")
+            .append(table.getTableName()).newLine();
+    }
+
+    public SqlBuilder selectCount(TableInfo table, boolean isSpec) {
+        this.prefixComment(isSpec);
+        return this.append("SELECT COUNT(")
+            .choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", "1")
+            .append(") FROM ")
+            .append(table.getTableName()).newLine();
+    }
+
+    /**
+     * SQL 查询所有表字段
+     *
+     * @param table 表信息
+     * @return 查询字段列表
+     */
+    protected String getSelectColumns(TableInfo table) {
+        /* 假设存在 resultMap 映射返回 */
+        String selectColumns = "*";
+        if (table.getResultMap() == null || (table.getResultMap() != null && table.isInitResultMap())) {
+            selectColumns = table.getAllSqlSelect();
+        }
+        return selectColumns;
     }
 
     /**
@@ -351,5 +392,28 @@ public class SqlBuilder {
 
     public SqlBuilder brackets(String values) {
         return this.trim("(", ")", ",", () -> this.append(values));
+    }
+
+    /**
+     * 方法前注释
+     *
+     * @param isSpec 是否增加方法注释
+     * @return
+     */
+    private SqlBuilder prefixComment(boolean isSpec) {
+        if (isSpec) {
+            this.newLine().ifThen("SPEC_COMMENT != null and SPEC_COMMENT != ''", "${SPEC_COMMENT}").newLine();
+        }
+        return this;
+    }
+
+
+    /**
+     * 方法后注释
+     *
+     * @return
+     */
+    public SqlBuilder suffixComment() {
+        return this.ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}");
     }
 }

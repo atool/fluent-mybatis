@@ -2,13 +2,15 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
-import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -17,11 +19,11 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.session.Configuration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
@@ -32,7 +34,28 @@ import static java.util.stream.Collectors.joining;
  * @create 2020/5/14 1:35 下午
  */
 @Slf4j
-public abstract class BaseMethod extends AbstractMethod {
+public abstract class AbstractMethod {
+    protected Configuration configuration;
+    protected LanguageDriver languageDriver;
+    protected MapperBuilderAssistant builderAssistant;
+
+    /**
+     * 注入自定义 MappedStatement
+     *
+     * @param mapperClass mapper 接口
+     * @param modelClass  mapper 泛型
+     * @param tableInfo   数据库表反射信息
+     * @return MappedStatement
+     */
+    public abstract MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo);
+
+    /**
+     * 返回方法具体的sql语句
+     *
+     * @param table 表结构信息
+     * @return
+     */
+    protected abstract String getMethodSql(TableInfo table);
 
     /**
      * 添加 MappedStatement 到 Mybatis 容器
@@ -42,7 +65,7 @@ public abstract class BaseMethod extends AbstractMethod {
      */
     protected MappedStatement addMappedStatement(MapperParam param) {
         if (hasMappedStatement(param.getStatementId())) {
-            log.warn(LEFT_SQ_BRACKET + param.getStatementId() + "] Has been loaded, so ignoring this injection for [" + getClass() + RIGHT_SQ_BRACKET);
+            log.warn("[" + param.getStatementId() + "] Has been loaded, so ignoring this injection for [" + getClass() + "]");
             return null;
         } else {
             SqlSource sqlSource = languageDriver.createSqlSource(configuration, param.getSql(), param.getParameterType());
@@ -158,12 +181,12 @@ public abstract class BaseMethod extends AbstractMethod {
     protected SqlBuilder whereEntity(TableInfo table, SqlBuilder builder) {
         return builder
             .ifThen("ew != null and ew.entity != null", () -> {
-                builder
-                    .ifThen("ew.entity.@property != null", "@column=#{ew.entity.@column}", table.getKeyProperty(), table.getKeyColumn())
-                    .eachJoining(table.getFieldList(),
-                        (field) -> builder.ifThen(
-                            "ew.entity.@property != null", "AND @column=#{ew.entity.@property}", field.getProperty(), field.getColumn()
-                        ));
+                if (table.getKeyProperty() != null) {
+                    builder.ifThen("ew.entity.@property != null", "@column=#{ew.entity.@column}", table.getKeyProperty(), table.getKeyColumn());
+                }
+                builder.eachJoining(table.getFieldList(), (field) -> {
+                    builder.ifThen("ew.entity.@property != null", "AND @column=#{ew.entity.@property}", field.getProperty(), field.getColumn());
+                });
             })
             .ifThen("ew != null and ew.sqlSegment != null and ew.sqlSegment != ''", "AND ${ew.sqlSegment}");
     }
@@ -217,16 +240,56 @@ public abstract class BaseMethod extends AbstractMethod {
         });
     }
 
-    protected SqlBuilder comment(SqlBuilder builder) {
-        return builder.ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}");
+    /**
+     * 注入自定义方法
+     *
+     * @param builderAssistant
+     * @param mapperClass
+     * @param modelClass
+     * @param tableInfo
+     */
+    public void inject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+        this.configuration = builderAssistant.getConfiguration();
+        this.builderAssistant = builderAssistant;
+        this.languageDriver = configuration.getDefaultScriptingLanguageInstance();
+        /* 注入自定义方法 */
+        injectMappedStatement(mapperClass, modelClass, tableInfo);
     }
 
-
     /**
-     * 返回方法具体的sql语句
+     * 是否是insert时默认赋值字段
      *
-     * @param table 表结构信息
+     * @param field
      * @return
      */
-    protected abstract String getMethodSql(TableInfo table);
+    public static boolean isInsertDefault(TableFieldInfo field) {
+        if (StringUtils.isEmpty(field.getUpdate())) {
+            return false;
+        } else {
+            return field.getFieldFill() == FieldFill.INSERT || field.getFieldFill() == FieldFill.INSERT_UPDATE;
+        }
+    }
+
+    /**
+     * 是否是insert时默认赋值字段
+     *
+     * @param field
+     * @return
+     */
+    public static boolean isUpdateDefault(TableFieldInfo field) {
+        if (StringUtils.isEmpty(field.getUpdate())) {
+            return false;
+        } else {
+            return field.getFieldFill() == FieldFill.UPDATE || field.getFieldFill() == FieldFill.INSERT_UPDATE;
+        }
+    }
+
+    /**
+     * 指定分库分表?
+     *
+     * @return
+     */
+    protected boolean isSpecTable() {
+        return false;
+    }
 }

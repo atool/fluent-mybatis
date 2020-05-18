@@ -6,21 +6,18 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import static cn.org.atool.fluent.mybatis.util.MybatisInsertUtil.isUpdateDefaultField;
-import static java.lang.String.format;
+import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_UpdateByQuery;
 
 /**
  * UpdateByQuery
  *
  * @author darui.wu
  */
-public class UpdateByQuery extends BaseMethod {
-
-    private final static String MAPPER_METHOD_ID = "updateBy";
+public class UpdateByQuery extends AbstractMethod {
 
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        MapperParam mapper = MapperParam.updateMapperParam(mapperClass, MAPPER_METHOD_ID)
+        MapperParam mapper = MapperParam.updateMapperParam(mapperClass, Method_UpdateByQuery)
             .setParameterType(modelClass)
             .setSql(this.getMethodSql(tableInfo));
 
@@ -31,10 +28,10 @@ public class UpdateByQuery extends BaseMethod {
     protected String getMethodSql(TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
-            .update(table.getTableName())
+            .update(table, super.isSpecTable())
             .set(() -> update(table, builder))
             .where(() -> super.whereEntity(table, builder))
-            .append(() -> super.comment(builder))
+            .suffixComment()
             .endScript();
     }
 
@@ -52,7 +49,7 @@ public class UpdateByQuery extends BaseMethod {
     }
 
     private void updateField(SqlBuilder builder, TableFieldInfo field) {
-        if (isUpdateDefaultField(field)) {
+        if (isUpdateDefault(field)) {
             builder.value("@column=@property,", field.getUpdate(), field.getColumn());
         } else {
             builder.ifThen("ew.updates.containsKey('@property')", "@column=#{ew.updates.@property},", field.getProperty(), field.getColumn());

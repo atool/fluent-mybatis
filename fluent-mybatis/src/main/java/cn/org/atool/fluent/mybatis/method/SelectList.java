@@ -5,17 +5,19 @@ import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_SelectById;
+import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_SelectList;
 
 /**
- * SelectById: 根据ID 查询一条数据
+ * SelectList: 查询满足条件所有数据
  *
- * @author wudarui
+ * @author darui.wu
+ * @create 2020/5/18 12:07 下午
  */
-public class SelectById extends AbstractMethod {
+public class SelectList extends AbstractMethod {
+
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        MapperParam mapper = MapperParam.queryMapperParam(mapperClass, Method_SelectById)
+        MapperParam mapper = MapperParam.queryMapperParam(mapperClass, Method_SelectList)
             .setResultType(modelClass)
             .setSql(this.getMethodSql(tableInfo));
 
@@ -26,8 +28,9 @@ public class SelectById extends AbstractMethod {
     protected String getMethodSql(TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
-            .select(table, false, super.isSpecTable())
-            .where(() -> super.whereById(table, builder))
+            .select(table, true, super.isSpecTable())
+            .where(() -> super.whereEntity(table, builder))
+            .suffixComment()
             .endScript();
     }
 }

@@ -2,22 +2,20 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import cn.org.atool.fluent.mybatis.util.MybatisInsertUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import static cn.org.atool.fluent.mybatis.method.model.SqlBuilder.safeParam;
-import static java.lang.String.format;
+import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_InsertBatch;
 
 /**
  * InsertBatch: 批量插入实现
  *
  * @author darui.wu
  */
-public class InsertBatch extends BaseMethod {
+public class InsertBatch extends AbstractMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo table) {
-        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, "insertBatch")
+        MapperParam mapper = MapperParam.insertMapperParam(mapperClass, Method_InsertBatch)
             .setSql(getMethodSql(table));
 
         return super.addMappedStatement(mapper);
@@ -28,7 +26,7 @@ public class InsertBatch extends BaseMethod {
         String values = this.getInsertValues(table);
         SqlBuilder builder = SqlBuilder.instance();
         return builder.beginScript()
-            .insert(table.getTableName())
+            .insert(table, super.isSpecTable())
             .append("(").append(super.getColumnsWithPrimary(table)).append(")")
             .append("VALUES ")
             .foreach("list", "item", ",", () -> builder.brackets(values))
@@ -47,7 +45,7 @@ public class InsertBatch extends BaseMethod {
             values.value("#{item.@property},", table.getKeyProperty(), table.getKeyColumn());
         }
         return values.eachJoining(table.getFieldList(), (field) -> {
-            if (MybatisInsertUtil.isInsertDefaultField(field)) {
+            if (isInsertDefault(field)) {
                 values.choose("item.@property != null", "#{item.@property},", field.getUpdate() + SqlBuilder.COMMA,
                     field.getProperty(), field.getUpdate());
             } else {

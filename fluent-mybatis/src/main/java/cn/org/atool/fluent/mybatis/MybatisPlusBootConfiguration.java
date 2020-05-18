@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.injector.FluentMybatisSqlInjector;
 import cn.org.atool.fluent.mybatis.mapper.IMapper;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
@@ -36,6 +37,6 @@ public class MybatisPlusBootConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ISqlInjector sqlInjector() {
-        return new MybatisPlusSqlInjector();
+        return new FluentMybatisSqlInjector();
     }
 }
