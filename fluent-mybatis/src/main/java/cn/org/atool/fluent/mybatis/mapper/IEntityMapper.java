@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

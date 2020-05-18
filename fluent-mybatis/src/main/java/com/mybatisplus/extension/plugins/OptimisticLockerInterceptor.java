@@ -16,14 +16,14 @@
 package com.mybatisplus.extension.plugins;
 
 import com.baomidou.mybatisplus.annotation.Version;
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.mybatisplus.core.metadata.TableFieldInfo;
+import com.mybatisplus.core.metadata.TableInfo;
+import com.mybatisplus.core.metadata.TableInfoHelper;
+import com.mybatisplus.core.toolkit.Constants;
+import com.mybatisplus.core.toolkit.ReflectionKit;
+import com.mybatisplus.core.toolkit.StringPool;
 import lombok.Data;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;

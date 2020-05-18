@@ -23,7 +23,7 @@ import java.util.function.Function;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.session.Configuration;
 
-import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.mybatisplus.core.toolkit.Assert;
 
 import lombok.Getter;
 

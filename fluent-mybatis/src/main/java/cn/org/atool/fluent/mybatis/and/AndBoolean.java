@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.AbstractWrapper;
 
 public class AndBoolean<Q extends AbstractWrapper> extends AndObject<Boolean, Q> {
     public AndBoolean(Q wrapper, String column, String property) {

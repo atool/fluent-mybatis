@@ -2,12 +2,12 @@ package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
 import cn.org.atool.fluent.mybatis.base.IProperty2Column;
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.segments.MergeSegments;
+import com.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.mybatisplus.core.toolkit.CollectionUtils;
+import com.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.toolkit.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.injector;
 
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
-import com.baomidou.mybatisplus.core.injector.ISqlInjector;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
+import com.mybatisplus.core.injector.ISqlInjector;
+import com.mybatisplus.core.metadata.TableInfo;
+import com.mybatisplus.core.metadata.TableInfoHelper;
+import com.mybatisplus.core.toolkit.GlobalConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 

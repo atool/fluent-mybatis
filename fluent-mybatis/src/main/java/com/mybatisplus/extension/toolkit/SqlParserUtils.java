@@ -15,8 +15,8 @@
  */
 package com.mybatisplus.extension.toolkit;
 
-import com.baomidou.mybatisplus.core.parser.ISqlParser;
-import com.baomidou.mybatisplus.core.parser.SqlInfo;
+import com.mybatisplus.core.parser.ISqlParser;
+import com.mybatisplus.core.parser.SqlInfo;
 import com.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 
 /**

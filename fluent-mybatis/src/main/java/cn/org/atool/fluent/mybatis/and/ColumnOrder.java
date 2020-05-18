@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.and;
 
 import cn.org.atool.fluent.mybatis.base.BaseWrapperOrder;
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.AbstractWrapper;
 
 public class ColumnOrder<Q extends AbstractWrapper, O extends BaseWrapperOrder> {
     private final Q wrapper;

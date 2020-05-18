@@ -8,18 +8,14 @@ package ${cfg.packEntityQuery};
 import cn.org.atool.fluent.mybatis.base.IEntityQuery;
 import cn.org.atool.fluent.mybatis.base.IProperty2Column;
 import cn.org.atool.fluent.mybatis.util.MybatisUtil;
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
-import com.baomidou.mybatisplus.core.conditions.SharedString;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
+import com.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.SharedString;
+import com.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mybatisplus.core.conditions.segments.MergeSegments;
+import com.mybatisplus.core.metadata.TableFieldInfo;
+import com.mybatisplus.core.metadata.TableInfoHelper;
+import com.mybatisplus.core.toolkit.ArrayUtils;
+import com.mybatisplus.core.toolkit.StringPool;
 
 import ${package.Entity}.${entity};
 import ${cfg.packMP}.${cfg.fileMP};

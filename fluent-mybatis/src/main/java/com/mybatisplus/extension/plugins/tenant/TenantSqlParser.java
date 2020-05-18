@@ -15,10 +15,10 @@
  */
 package com.mybatisplus.extension.plugins.tenant;
 
-import com.baomidou.mybatisplus.core.parser.AbstractJsqlParser;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.parser.AbstractJsqlParser;
+import com.mybatisplus.core.toolkit.Assert;
+import com.mybatisplus.core.toolkit.ExceptionUtils;
+import com.mybatisplus.core.toolkit.StringPool;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

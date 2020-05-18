@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotBlank;
-import static com.baomidou.mybatisplus.core.toolkit.StringUtils.isNotEmpty;
+import static com.mybatisplus.core.toolkit.StringUtils.isNotEmpty;
 
 
 public class AndString<Q extends AbstractWrapper> extends AndObject<String, Q> {

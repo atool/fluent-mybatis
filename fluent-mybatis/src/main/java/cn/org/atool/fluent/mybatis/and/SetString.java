@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.and;
 
 import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
 
-import static com.baomidou.mybatisplus.core.toolkit.StringUtils.isNotEmpty;
+import static com.mybatisplus.core.toolkit.StringUtils.isNotEmpty;
 
 
 public class SetString<U extends IEntityUpdate> extends SetObject<String, U> {

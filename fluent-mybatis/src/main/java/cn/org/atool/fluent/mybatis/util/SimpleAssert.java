@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.util;
 
 import cn.org.atool.fluent.mybatis.exception.NullParameterException;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.mybatisplus.core.toolkit.StringUtils;
 
 import java.util.Collection;
 

@@ -15,7 +15,7 @@
  */
 package com.mybatisplus.extension.plugins.pagination.dialects;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.toolkit.StringPool;
 import com.mybatisplus.extension.plugins.pagination.DialectModel;
 
 /**

@@ -15,9 +15,9 @@
  */
 package com.mybatisplus.extension.plugins.pagination;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.mybatisplus.core.metadata.IPage;
+import com.mybatisplus.core.metadata.OrderItem;
+import com.mybatisplus.core.toolkit.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

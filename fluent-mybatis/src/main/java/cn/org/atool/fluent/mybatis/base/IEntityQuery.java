@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import com.baomidou.mybatisplus.core.conditions.interfaces.Compare;
-import com.baomidou.mybatisplus.core.conditions.query.Query;
+import com.mybatisplus.core.conditions.interfaces.Compare;
+import com.mybatisplus.core.conditions.query.Query;
 
 import java.util.List;
 import java.util.function.Function;

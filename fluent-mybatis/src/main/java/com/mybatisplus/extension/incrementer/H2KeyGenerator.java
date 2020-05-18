@@ -15,7 +15,7 @@
  */
 package com.mybatisplus.extension.incrementer;
 
-import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
+import com.mybatisplus.core.incrementer.IKeyGenerator;
 
 /**
  * H2 Sequence

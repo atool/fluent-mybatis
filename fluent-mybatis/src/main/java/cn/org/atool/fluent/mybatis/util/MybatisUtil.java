@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.util;
 
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.metadata.TableFieldInfo;
+import com.mybatisplus.core.metadata.TableInfoHelper;
+import com.mybatisplus.core.toolkit.StringPool;
 
 import java.util.function.Predicate;
 

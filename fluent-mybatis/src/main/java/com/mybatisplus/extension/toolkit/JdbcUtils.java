@@ -16,8 +16,8 @@
 package com.mybatisplus.extension.toolkit;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.mybatisplus.core.toolkit.Assert;
+import com.mybatisplus.core.toolkit.StringUtils;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;

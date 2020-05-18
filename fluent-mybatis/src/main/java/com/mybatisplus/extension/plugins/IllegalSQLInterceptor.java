@@ -15,11 +15,11 @@
  */
 package com.mybatisplus.extension.plugins;
 
-import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import com.baomidou.mybatisplus.core.parser.SqlParserHelper;
-import com.baomidou.mybatisplus.core.toolkit.EncryptUtils;
-import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.mybatisplus.core.exceptions.MybatisPlusException;
+import com.mybatisplus.core.parser.SqlParserHelper;
+import com.mybatisplus.core.toolkit.EncryptUtils;
+import com.mybatisplus.core.toolkit.PluginUtils;
+import com.mybatisplus.core.toolkit.StringUtils;
 import lombok.Data;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;

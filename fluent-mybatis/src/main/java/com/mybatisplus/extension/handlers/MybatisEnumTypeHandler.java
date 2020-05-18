@@ -16,10 +16,10 @@
 package com.mybatisplus.extension.handlers;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.core.enums.IEnum;
-import com.baomidou.mybatisplus.core.toolkit.EnumUtils;
-import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
+import com.mybatisplus.core.enums.IEnum;
+import com.mybatisplus.core.toolkit.EnumUtils;
+import com.mybatisplus.core.toolkit.ExceptionUtils;
+import com.mybatisplus.core.toolkit.ReflectionKit;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.type.BaseTypeHandler;

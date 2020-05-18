@@ -16,15 +16,15 @@
 package com.mybatisplus.extension.plugins;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.MybatisDefaultParameterHandler;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.core.parser.ISqlParser;
-import com.baomidou.mybatisplus.core.parser.SqlInfo;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
-import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.mybatisplus.core.MybatisDefaultParameterHandler;
+import com.mybatisplus.core.metadata.IPage;
+import com.mybatisplus.core.metadata.OrderItem;
+import com.mybatisplus.core.parser.ISqlParser;
+import com.mybatisplus.core.parser.SqlInfo;
+import com.mybatisplus.core.toolkit.CollectionUtils;
+import com.mybatisplus.core.toolkit.ExceptionUtils;
+import com.mybatisplus.core.toolkit.PluginUtils;
+import com.mybatisplus.core.toolkit.StringUtils;
 import com.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.mybatisplus.extension.plugins.pagination.DialectFactory;
 import com.mybatisplus.extension.plugins.pagination.DialectModel;

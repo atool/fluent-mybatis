@@ -2,9 +2,9 @@ package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.injector.FluentMybatisSqlInjector;
 import cn.org.atool.fluent.mybatis.mapper.IMapper;
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
-import com.baomidou.mybatisplus.core.injector.ISqlInjector;
-import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
+import com.mybatisplus.core.config.GlobalConfig;
+import com.mybatisplus.core.injector.ISqlInjector;
+import com.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.SqlSessionFactory;

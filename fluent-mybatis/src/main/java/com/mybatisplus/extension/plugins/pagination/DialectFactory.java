@@ -16,10 +16,10 @@
 package com.mybatisplus.extension.plugins.pagination;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.mybatisplus.core.metadata.IPage;
+import com.mybatisplus.core.toolkit.Assert;
+import com.mybatisplus.core.toolkit.ExceptionUtils;
+import com.mybatisplus.core.toolkit.StringUtils;
 import com.mybatisplus.extension.plugins.pagination.dialects.*;
 import org.apache.ibatis.session.RowBounds;
 

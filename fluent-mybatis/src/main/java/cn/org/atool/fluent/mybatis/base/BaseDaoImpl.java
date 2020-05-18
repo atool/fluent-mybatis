@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.mybatisplus.core.conditions.Wrapper;
+import com.mybatisplus.core.toolkit.support.SFunction;
 
 import java.io.Serializable;
 import java.util.Collection;

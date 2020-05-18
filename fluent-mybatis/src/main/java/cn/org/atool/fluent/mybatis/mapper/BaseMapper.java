@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.mybatisplus.core.conditions.Wrapper;
+import com.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;

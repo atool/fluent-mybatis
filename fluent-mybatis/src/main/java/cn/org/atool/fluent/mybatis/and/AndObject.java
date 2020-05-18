@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.Collection;
 import java.util.function.Predicate;

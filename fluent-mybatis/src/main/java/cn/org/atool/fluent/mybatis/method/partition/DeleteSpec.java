@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.Delete;
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_DeleteSpec;

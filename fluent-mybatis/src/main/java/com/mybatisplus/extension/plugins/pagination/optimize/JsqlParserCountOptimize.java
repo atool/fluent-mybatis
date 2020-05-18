@@ -15,10 +15,10 @@
  */
 package com.mybatisplus.extension.plugins.pagination.optimize;
 
-import com.baomidou.mybatisplus.core.parser.ISqlParser;
-import com.baomidou.mybatisplus.core.parser.SqlInfo;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.parser.ISqlParser;
+import com.mybatisplus.core.parser.SqlInfo;
+import com.mybatisplus.core.toolkit.CollectionUtils;
+import com.mybatisplus.core.toolkit.StringPool;
 import com.mybatisplus.extension.toolkit.SqlParserUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;

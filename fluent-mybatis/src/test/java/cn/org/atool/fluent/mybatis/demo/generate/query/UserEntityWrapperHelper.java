@@ -7,10 +7,9 @@ import cn.org.atool.fluent.mybatis.base.BaseWrapperOrder;
 import cn.org.atool.fluent.mybatis.base.IProperty2Column;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Property;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Column;
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+import com.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  * <p>

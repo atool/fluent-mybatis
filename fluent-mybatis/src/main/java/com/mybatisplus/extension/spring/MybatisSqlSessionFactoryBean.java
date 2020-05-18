@@ -1,15 +1,15 @@
 package com.mybatisplus.extension.spring;
 
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.MybatisPlusVersion;
-import com.baomidou.mybatisplus.core.MybatisSqlSessionFactoryBuilder;
-import com.baomidou.mybatisplus.core.MybatisXMLConfigBuilder;
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
-import com.baomidou.mybatisplus.core.enums.IEnum;
-import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.mybatisplus.core.MybatisConfiguration;
+import com.mybatisplus.core.MybatisPlusVersion;
+import com.mybatisplus.core.MybatisSqlSessionFactoryBuilder;
+import com.mybatisplus.core.MybatisXMLConfigBuilder;
+import com.mybatisplus.core.config.GlobalConfig;
+import com.mybatisplus.core.enums.IEnum;
+import com.mybatisplus.core.exceptions.MybatisPlusException;
+import com.mybatisplus.core.toolkit.Assert;
+import com.mybatisplus.core.toolkit.GlobalConfigUtils;
+import com.mybatisplus.core.toolkit.StringPool;
 import com.mybatisplus.extension.handlers.MybatisEnumTypeHandler;
 import com.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.Setter;

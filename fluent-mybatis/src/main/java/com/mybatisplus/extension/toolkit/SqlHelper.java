@@ -15,11 +15,11 @@
  */
 package com.mybatisplus.extension.toolkit;
 
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
+import com.mybatisplus.core.metadata.TableInfo;
+import com.mybatisplus.core.metadata.TableInfoHelper;
+import com.mybatisplus.core.toolkit.Assert;
+import com.mybatisplus.core.toolkit.CollectionUtils;
+import com.mybatisplus.core.toolkit.GlobalConfigUtils;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.ExecutorType;
