@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisplus.extension.plugins.pagination.Page;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
