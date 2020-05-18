@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.mapper.IMapper;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -30,6 +31,8 @@ public class MybatisPlusBootConfiguration {
             gc.setSqlInjector(sqlInjector);
             gc.setSuperMapperClass(IMapper.class);
             bean.setGlobalConfig(gc);
+
+            bean.setPlugins(paginationInterceptor());
         }
         return bean;
     }
@@ -38,5 +41,15 @@ public class MybatisPlusBootConfiguration {
     @ConditionalOnMissingBean
     public ISqlInjector sqlInjector() {
         return new FluentMybatisSqlInjector();
+    }
+
+    /**
+     * 分页切面
+     *
+     * @return
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        return new PaginationInterceptor();
     }
 }

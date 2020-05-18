@@ -42,6 +42,13 @@
             <version>28.0-jre</version>
             <scope>test</scope>
         </dependency>
+        <!-- pageHelper-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.11</version>
+            <scope>provided</scope>
+        </dependency>
         <!--test jar -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -74,9 +81,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <groupId>org.test4j</groupId>
+            <artifactId>test4j-db-dep</artifactId>
+            <version>${test4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
