@@ -112,7 +112,19 @@ public class SqlBuilder {
      */
     public SqlBuilder update(TableInfo table, boolean isSpec) {
         this.prefixComment(isSpec);
-        return this.newLine().append("UPDATE ").append(table.getTableName()).newLine();
+        this.newLine().append("UPDATE ");
+        return this.byTable(table, isSpec);
+    }
+
+    private SqlBuilder byTable(TableInfo table, boolean isSpec) {
+        if (isSpec) {
+            this.choose("SPEC_TABLE != null and SPEC_TABLE != ''",
+                "${SPEC_TABLE}",
+                table.getTableName());
+        } else {
+            this.append(table.getTableName());
+        }
+        return this.newLine();
     }
 
     /**
@@ -123,7 +135,8 @@ public class SqlBuilder {
      */
     public SqlBuilder insert(TableInfo table, boolean isSpec) {
         this.prefixComment(isSpec);
-        return this.newLine().append("INSERT INTO ").append(table.getTableName()).newLine();
+        this.newLine().append("INSERT INTO ");
+        return this.byTable(table, isSpec);
     }
 
     /**
@@ -134,7 +147,8 @@ public class SqlBuilder {
      */
     public SqlBuilder delete(TableInfo table, boolean isSpec) {
         this.prefixComment(isSpec);
-        return this.newLine().append("DELETE FROM ").append(table.getTableName()).newLine();
+        this.newLine().append("DELETE FROM ");
+        return this.byTable(table, isSpec);
     }
 
     /**
@@ -152,16 +166,16 @@ public class SqlBuilder {
         } else {
             this.append(this.getSelectColumns(table));
         }
-        return this.append(" FROM ")
-            .append(table.getTableName()).newLine();
+        this.append(" FROM ");
+        return this.byTable(table, isSpec);
     }
 
     public SqlBuilder selectCount(TableInfo table, boolean isSpec) {
         this.prefixComment(isSpec);
-        return this.append("SELECT COUNT(")
+        this.append("SELECT COUNT(")
             .choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", "1")
-            .append(") FROM ")
-            .append(table.getTableName()).newLine();
+            .append(") FROM ");
+        return this.byTable(table, isSpec);
     }
 
     /**
