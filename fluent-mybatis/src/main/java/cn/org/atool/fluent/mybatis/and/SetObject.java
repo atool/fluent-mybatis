@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.and;
 
 import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.util.SimpleAssert;
 import cn.org.atool.fluent.mybatis.util.SqlInject;
 
 import java.util.function.Predicate;
@@ -76,7 +76,7 @@ public class SetObject<T, U extends IEntityUpdate> {
 
     //function
     public U function(String function, Object... args) {
-        MybatisUtil.assertNotBlank("function", function);
+        SimpleAssert.assertNotBlank("function", function);
         if (args == null || args.length == 0) {
             return (U) this.wrapper.setSql(column + "=" + function);
         } else {

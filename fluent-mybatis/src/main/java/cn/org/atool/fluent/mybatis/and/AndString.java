@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotBlank;
 import static com.baomidou.mybatisplus.core.toolkit.StringUtils.isNotEmpty;
 
 
@@ -40,7 +40,7 @@ public class AndString<Q extends AbstractWrapper> extends AndObject<String, Q> {
 
     //like
     public Q like(String value) {
-        MybatisUtil.assertNotBlank(property, value);
+        assertNotBlank(property, value);
         return (Q) wrapper.like(column, value);
     }
 
@@ -66,7 +66,7 @@ public class AndString<Q extends AbstractWrapper> extends AndObject<String, Q> {
 
     //not like
     public Q notLike(String value) {
-        MybatisUtil.assertNotBlank(property, value);
+        assertNotBlank(property, value);
         return (Q) wrapper.notLike(column, value);
     }
 
@@ -89,9 +89,10 @@ public class AndString<Q extends AbstractWrapper> extends AndObject<String, Q> {
     public Q notLike(Predicate<String> predicate, Supplier<String> supplier) {
         return notLike(predicate, supplier.get());
     }
+
     //like left
     public Q likeLeft(String value) {
-        MybatisUtil.assertNotBlank(property, value);
+        assertNotBlank(property, value);
         return (Q) wrapper.likeLeft(column, value);
     }
 
@@ -117,7 +118,7 @@ public class AndString<Q extends AbstractWrapper> extends AndObject<String, Q> {
 
     //like right
     public Q likeRight(String value) {
-        MybatisUtil.assertNotBlank(property, value);
+        assertNotBlank(property, value);
         return (Q) wrapper.likeRight(column, value);
     }
 

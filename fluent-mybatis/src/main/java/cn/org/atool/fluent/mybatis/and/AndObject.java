@@ -1,11 +1,13 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 
 import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotNull;
 
 public class AndObject<T, Q extends AbstractWrapper> {
     protected final String column;
@@ -42,7 +44,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
      * @return
      */
     public Q eq(T value) {
-        MybatisUtil.assertNotNull(property, value);
+        assertNotNull(property, value);
         return (Q) wrapper.eq(column, value);
     }
 
@@ -68,7 +70,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     // ne
     public Q ne(T value) {
-        MybatisUtil.assertNotNull(property, value);
+        assertNotNull(property, value);
         return (Q) wrapper.ne(column, value);
     }
 
@@ -94,7 +96,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //gt
     public Q gt(T value) {
-        MybatisUtil.assertNotNull(property, value);
+        assertNotNull(property, value);
         return (Q) wrapper.gt(column, value);
     }
 
@@ -120,7 +122,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //ge
     public Q ge(T value) {
-        MybatisUtil.assertNotNull(property, value);
+        assertNotNull(property, value);
         return (Q) wrapper.ge(column, value);
     }
 
@@ -146,7 +148,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //lt
     public Q lt(T value) {
-        MybatisUtil.assertNotNull(property, value);
+        assertNotNull(property, value);
         return (Q) wrapper.lt(column, value);
     }
 
@@ -172,7 +174,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //le
     public Q le(T value) {
-        MybatisUtil.assertNotNull(property, value);
+        assertNotNull(property, value);
         return (Q) wrapper.le(column, value);
     }
 
@@ -198,7 +200,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //in
     public Q in(Collection<T> values) {
-        MybatisUtil.assertNotEmpty(property, values);
+        assertNotEmpty(property, values);
         return (Q) wrapper.in(column, values);
     }
 
@@ -223,7 +225,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
     }
 
     public Q in(T... values) {
-        MybatisUtil.assertNotEmpty(property, values);
+        assertNotEmpty(property, values);
         return (Q) wrapper.in(column, values);
     }
 
@@ -237,7 +239,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //not in
     public Q notIn(Collection<T> values) {
-        MybatisUtil.assertNotEmpty(property, values);
+        assertNotEmpty(property, values);
         return (Q) wrapper.notIn(column, values);
     }
 
@@ -262,7 +264,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
     }
 
     public Q notIn(T... values) {
-        MybatisUtil.assertNotEmpty(property, values);
+        assertNotEmpty(property, values);
         return (Q) wrapper.notIn(column, values);
     }
 
@@ -276,7 +278,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //between
     public Q between(T value1, T value2) {
-        MybatisUtil.assertNotNull(property, value1, value2);
+        assertNotNull(property, value1, value2);
         return (Q) wrapper.between(column, value1, value2);
     }
 
@@ -286,7 +288,7 @@ public class AndObject<T, Q extends AbstractWrapper> {
 
     //not between
     public Q notBetween(T value1, T value2) {
-        MybatisUtil.assertNotNull(property, value1, value2);
+        assertNotNull(property, value1, value2);
         return (Q) wrapper.notBetween(column, value1, value2);
     }
 
