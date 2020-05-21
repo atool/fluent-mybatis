@@ -1,16 +1,15 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.base.IEntityQuery;
-import cn.org.atool.fluent.mybatis.base.IProperty2Column;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.util.MybatisUtil;
-import com.mybatisplus.core.conditions.AbstractWrapper;
-import com.mybatisplus.core.conditions.SharedString;
-import com.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.mybatisplus.core.conditions.segments.MergeSegments;
-import com.mybatisplus.core.metadata.TableFieldInfo;
-import com.mybatisplus.core.metadata.TableInfoHelper;
-import com.mybatisplus.core.toolkit.ArrayUtils;
-import com.mybatisplus.core.toolkit.StringPool;
+import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.SharedString;
+import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableHelper;
+import cn.org.atool.fluent.mybatis.util.ArrayUtils;
+import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -69,22 +68,15 @@ public class AddressEntityQuery extends AbstractWrapper<AddressEntity, String, A
     @Override
     public AddressEntityQuery select(String... columns) {
         if (ArrayUtils.isNotEmpty(columns)) {
-            this.sqlSelect.setStringValue(String.join(StringPool.COMMA, columns));
+            this.sqlSelect.setStringValue(String.join(Constants.COMMA, columns));
         }
         return this;
     }
 
     @Override
-    public AddressEntityQuery select(Predicate<TableFieldInfo> predicate) {
+    public AddressEntityQuery select(Predicate<FieldInfo> predicate) {
         this.entityClass = AddressEntity.class;
-        this.sqlSelect.setStringValue(TableInfoHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
-        return this;
-    }
-
-    @Override
-    public AddressEntityQuery select(Class<AddressEntity> entityClass, Predicate<TableFieldInfo> predicate) {
-        this.entityClass = entityClass;
-        this.sqlSelect.setStringValue(TableInfoHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
+        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
         return this;
     }
 
@@ -110,24 +102,16 @@ public class AddressEntityQuery extends AbstractWrapper<AddressEntity, String, A
         return this;
     }
 
-    public AddressEntityQuery distinct(Predicate<TableFieldInfo> predicate) {
+    public AddressEntityQuery distinct(Predicate<FieldInfo> predicate) {
         this.entityClass = AddressEntity.class;
         this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public AddressEntityQuery distinct(Class<AddressEntity> entityClass, Predicate<TableFieldInfo> predicate) {
+    public AddressEntityQuery distinct(Class<AddressEntity> entityClass, Predicate<FieldInfo> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
         return this;
-    }
-
-
-    /**
-     * 暂不支持
-     */
-    public LambdaQueryWrapper<AddressEntity> lambda() {
-        throw new RuntimeException("no support!");
     }
 
     /**

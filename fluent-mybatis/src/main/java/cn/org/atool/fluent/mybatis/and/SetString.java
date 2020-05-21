@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
 
-import static com.mybatisplus.core.toolkit.StringUtils.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.util.StringUtils.isNotEmpty;
 
 
 public class SetString<U extends IEntityUpdate> extends SetObject<String, U> {

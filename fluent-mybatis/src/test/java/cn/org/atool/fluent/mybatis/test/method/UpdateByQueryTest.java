@@ -22,10 +22,11 @@ public class UpdateByQueryTest extends BaseTest {
         );
         UserEntityUpdate update = new UserEntityUpdate()
             .set.userName.is("user name2")
-            .and.id.eq(24L);
+            .and.id.eq(24L)
+            .apply("1=1");
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ?)", StringMode.SameAsSpace);
+            .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ? AND 1=1)", StringMode.SameAsSpace);
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
             .id.values(23L, 24L)
             .user_name.values("user1", "user name2")

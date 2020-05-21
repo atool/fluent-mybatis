@@ -1,10 +1,9 @@
 package cn.org.atool.fluent.mybatis.injector;
 
+import cn.org.atool.fluent.mybatis.metadata.TableHelper;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
-import com.mybatisplus.core.injector.ISqlInjector;
-import com.mybatisplus.core.metadata.TableInfo;
-import com.mybatisplus.core.metadata.TableInfoHelper;
-import com.mybatisplus.core.toolkit.GlobalConfigUtils;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.util.GlobalConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 
@@ -35,7 +34,7 @@ public abstract class AbstractSqlInjector implements ISqlInjector {
                 if (methodList == null || methodList.isEmpty()) {
                     log.debug(mapperClass.toString() + ", No effective injection method was found.");
                 } else {
-                    TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass);
+                    TableInfo tableInfo = TableHelper.initTableInfo(builderAssistant, modelClass);
                     // 循环注入自定义方法
                     methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass, tableInfo));
                 }

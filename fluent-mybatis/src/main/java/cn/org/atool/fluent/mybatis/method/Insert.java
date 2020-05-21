@@ -2,8 +2,9 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import com.mybatisplus.core.metadata.TableFieldInfo;
-import com.mybatisplus.core.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.util.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_Insert;
@@ -63,16 +64,17 @@ public class Insert extends AbstractMethod {
             .endScript();
     }
 
-    private void value(SqlBuilder builder, TableFieldInfo field) {
-        if (isInsertDefault(field)) {
-            builder.choose("@property != null", "#{@property},", field.getUpdate() + COMMA,
-                field.getProperty(), field.getColumn());
-        } else {
+    private void value(SqlBuilder builder, FieldInfo field) {
+        String insert = field.getInsert();
+        if (StringUtils.isEmpty(insert)) {
             builder.ifThen("@property != null", "#{@property},", field.getProperty(), field.getColumn());
+        } else {
+            builder.choose("@property != null", "#{@property},", insert + COMMA,
+                field.getProperty(), field.getColumn());
         }
     }
 
-    private void field(SqlBuilder builder, TableFieldInfo field) {
+    private void field(SqlBuilder builder, FieldInfo field) {
         if (isInsertDefault(field)) {
             builder.append(field.getColumn() + COMMA);
         } else {

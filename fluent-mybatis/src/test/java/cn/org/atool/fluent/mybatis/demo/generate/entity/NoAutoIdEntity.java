@@ -1,10 +1,12 @@
 package cn.org.atool.fluent.mybatis.demo.generate.entity;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdEntityHelper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
-import com.baomidou.mybatisplus.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

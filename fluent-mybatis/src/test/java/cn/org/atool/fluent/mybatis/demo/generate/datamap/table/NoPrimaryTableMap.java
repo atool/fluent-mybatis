@@ -1,24 +1,20 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.table;
 
-import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
-import cn.org.atool.fluent.mybatis.annotation.ColumnDef.PrimaryType;
-import com.baomidou.mybatisplus.annotation.TableName;
-import org.test4j.module.ICore.DataMap;
-import org.test4j.tools.datagen.KeyValue;
-
-import java.util.Date;
-import java.util.function.Consumer;
-
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
+import org.test4j.module.ICore.DataMap;
+import org.test4j.module.database.annotations.ColumnDef;
+import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.tools.datagen.KeyValue;
+
+import java.util.function.Consumer;
 
 /**
+ * @author generate code
  * @ClassName NoPrimaryTableMap
  * @Description NoPrimaryTableMap
- *
- * @author generate code
  */
-@TableName(NoPrimaryMP.Table_Name)
+@ScriptTable(NoPrimaryMP.Table_Name)
 public class NoPrimaryTableMap extends DataMap<NoPrimaryTableMap> {
     /**
      * 设置no_primary对象column_1字段值
@@ -42,7 +38,6 @@ public class NoPrimaryTableMap extends DataMap<NoPrimaryTableMap> {
     /**
      * 创建NoPrimaryTableMap
      * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-     *
      */
     public NoPrimaryTableMap init() {
         return this;

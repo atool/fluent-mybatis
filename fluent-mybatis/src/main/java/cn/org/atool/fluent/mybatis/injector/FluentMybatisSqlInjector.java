@@ -36,8 +36,8 @@ public class FluentMybatisSqlInjector extends AbstractSqlInjector {
             new SelectList(),
             new SelectMaps(),
             new SelectObjs(),
-            new SelectPage(),
-            new SelectMapsPage(),
+//            new SelectPage(),
+//            new SelectMapsPage(),
             //
             // new Update(),
             // partition

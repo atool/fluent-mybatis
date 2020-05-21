@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.util;
 
-import cn.org.atool.fluent.mybatis.exception.NullParameterException;
-import com.mybatisplus.core.toolkit.StringUtils;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.Collection;
 
@@ -19,7 +18,7 @@ public class SimpleAssert {
      */
     public static void assertNotNull(String property, Object value) {
         if (value == null) {
-            throw new NullParameterException("the parameter[" + property + "] can't be null.");
+            throw FluentMybatisException.instance("the parameter[" + property + "] can't be null.", property);
         }
     }
 
@@ -33,7 +32,7 @@ public class SimpleAssert {
      */
     public static <T> void assertNotNull(String property, T value1, T value2) {
         if (value1 == null || value2 == null) {
-            throw new NullParameterException("the parameter[" + property + "] can't be null.");
+            throw FluentMybatisException.instance("the parameter[%s] can't be null.", property);
         }
     }
 
@@ -45,7 +44,7 @@ public class SimpleAssert {
      */
     public static void assertNotBlank(String property, String value) {
         if (StringUtils.isEmpty(value)) {
-            throw new NullParameterException("the parameter[" + property + "] can't be blank.");
+            throw FluentMybatisException.instance("the parameter[%s] can't be blank.", property);
         }
     }
 
@@ -57,7 +56,7 @@ public class SimpleAssert {
      */
     public static void assertNotEmpty(String property, Collection list) {
         if (list == null || list.size() == 0) {
-            throw new NullParameterException("the parameter[" + property + "] can't be empty.");
+            throw FluentMybatisException.instance("the parameter[%s] can't be empty.", property);
         }
     }
 
@@ -69,7 +68,31 @@ public class SimpleAssert {
      */
     public static void assertNotEmpty(String property, Object[] array) {
         if (array == null || array.length == 0) {
-            throw new NullParameterException("the parameter[" + property + "] can't be empty.");
+            throw FluentMybatisException.instance("the parameter[%s] can't be empty.", property);
         }
+    }
+
+    /**
+     * 断言这个 boolean 为 true
+     * <p>为 false 则抛出异常</p>
+     *
+     * @param expression boolean 值
+     * @param message    消息
+     */
+    public static void isTrue(boolean expression, String message, Object... params) {
+        if (!expression) {
+            throw FluentMybatisException.instance(message, params);
+        }
+    }
+
+    /**
+     * 断言这个 object 不为 null
+     * <p>为 null 则抛异常</p>
+     *
+     * @param object  对象
+     * @param message 消息
+     */
+    public static void notNull(Object object, String message, Object... params) {
+        isTrue(object != null, message, params);
     }
 }

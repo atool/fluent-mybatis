@@ -1,16 +1,15 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.base.IEntityQuery;
-import cn.org.atool.fluent.mybatis.base.IProperty2Column;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.util.MybatisUtil;
-import com.mybatisplus.core.conditions.AbstractWrapper;
-import com.mybatisplus.core.conditions.SharedString;
-import com.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.mybatisplus.core.conditions.segments.MergeSegments;
-import com.mybatisplus.core.metadata.TableFieldInfo;
-import com.mybatisplus.core.metadata.TableInfoHelper;
-import com.mybatisplus.core.toolkit.ArrayUtils;
-import com.mybatisplus.core.toolkit.StringPool;
+import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.SharedString;
+import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableHelper;
+import cn.org.atool.fluent.mybatis.util.ArrayUtils;
+import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -69,22 +68,15 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
     @Override
     public UserEntityQuery select(String... columns) {
         if (ArrayUtils.isNotEmpty(columns)) {
-            this.sqlSelect.setStringValue(String.join(StringPool.COMMA, columns));
+            this.sqlSelect.setStringValue(String.join(Constants.COMMA, columns));
         }
         return this;
     }
 
     @Override
-    public UserEntityQuery select(Predicate<TableFieldInfo> predicate) {
+    public UserEntityQuery select(Predicate<FieldInfo> predicate) {
         this.entityClass = UserEntity.class;
-        this.sqlSelect.setStringValue(TableInfoHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
-        return this;
-    }
-
-    @Override
-    public UserEntityQuery select(Class<UserEntity> entityClass, Predicate<TableFieldInfo> predicate) {
-        this.entityClass = entityClass;
-        this.sqlSelect.setStringValue(TableInfoHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
+        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
         return this;
     }
 
@@ -110,25 +102,18 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
         return this;
     }
 
-    public UserEntityQuery distinct(Predicate<TableFieldInfo> predicate) {
+    public UserEntityQuery distinct(Predicate<FieldInfo> predicate) {
         this.entityClass = UserEntity.class;
         this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public UserEntityQuery distinct(Class<UserEntity> entityClass, Predicate<TableFieldInfo> predicate) {
+    public UserEntityQuery distinct(Class<UserEntity> entityClass, Predicate<FieldInfo> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
         return this;
     }
 
-
-    /**
-     * 暂不支持
-     */
-    public LambdaQueryWrapper<UserEntity> lambda() {
-        throw new RuntimeException("no support!");
-    }
 
     /**
     * <p>

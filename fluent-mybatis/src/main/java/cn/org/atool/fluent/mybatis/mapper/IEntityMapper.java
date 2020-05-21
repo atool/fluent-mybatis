@@ -1,10 +1,11 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import com.mybatisplus.core.toolkit.Constants;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+
+import static cn.org.atool.fluent.mybatis.mapper.MapperConst.WRAPPER;
 
 /**
  * @ClassName IEntityMapper
@@ -27,5 +28,5 @@ public interface IEntityMapper<T> extends BaseMapper<T>, IMapper {
      * @param update
      * @return
      */
-    int updateBy(@Param(Constants.WRAPPER) IEntityUpdate update);
+    int updateBy(@Param(WRAPPER) IEntityUpdate update);
 }

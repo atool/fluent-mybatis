@@ -51,7 +51,7 @@
     </properties>
     <modules>
         <module>fluent-mybatis</module>
-        <module>fluent-mybatis-generator</module>
+<!--        <module>fluent-mybatis-generator</module>-->
     </modules>
     <dependencies>
         <dependency>

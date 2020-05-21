@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import com.mybatisplus.core.metadata.TableFieldInfo;
-import com.mybatisplus.core.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_UpdateByQuery;
@@ -48,7 +48,7 @@ public class UpdateByQuery extends AbstractMethod {
             .ifThen("ew != null and ew.sqlSet != null", "${ew.sqlSet}");
     }
 
-    private void updateField(SqlBuilder builder, TableFieldInfo field) {
+    private void updateField(SqlBuilder builder, FieldInfo field) {
         if (isUpdateDefault(field)) {
             builder.value("@column=@property,", field.getUpdate(), field.getColumn());
         } else {

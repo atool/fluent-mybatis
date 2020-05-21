@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.demo;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IEntityQuery;
-import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import cn.org.atool.fluent.mybatis.base.IMapperDao;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IMapperDao;
 
 /**
  * base dao 自定义接口

@@ -2,14 +2,13 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.mybatisplus.core.incrementer.IKeyGenerator;
-import com.mybatisplus.core.metadata.TableFieldInfo;
-import com.mybatisplus.core.metadata.TableInfo;
-import com.mybatisplus.core.toolkit.GlobalConfigUtils;
+import cn.org.atool.fluent.mybatis.annotation.IdType;
+import cn.org.atool.fluent.mybatis.util.GlobalConfigUtils;
+import cn.org.atool.fluent.mybatis.condition.IKeyGenerator;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -262,12 +261,8 @@ public abstract class AbstractMethod {
      * @param field
      * @return
      */
-    public static boolean isInsertDefault(TableFieldInfo field) {
-        if (StringUtils.isEmpty(field.getUpdate())) {
-            return false;
-        } else {
-            return field.getFieldFill() == FieldFill.INSERT || field.getFieldFill() == FieldFill.INSERT_UPDATE;
-        }
+    public static boolean isInsertDefault(FieldInfo field) {
+        return StringUtils.isNotEmpty(field.getInsert());
     }
 
     /**
@@ -276,12 +271,8 @@ public abstract class AbstractMethod {
      * @param field
      * @return
      */
-    public static boolean isUpdateDefault(TableFieldInfo field) {
-        if (StringUtils.isEmpty(field.getUpdate())) {
-            return false;
-        } else {
-            return field.getFieldFill() == FieldFill.UPDATE || field.getFieldFill() == FieldFill.INSERT_UPDATE;
-        }
+    public static boolean isUpdateDefault(FieldInfo field) {
+        return StringUtils.isNotEmpty(field.getUpdate());
     }
 
     /**

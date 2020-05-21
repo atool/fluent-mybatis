@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.and;
 
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
-import cn.org.atool.fluent.mybatis.exception.NullParameterException;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class AndObjectTest_Eq extends BaseTest {
 
     @Test
     public void eq_null() {
-        assertThrows(NullParameterException.class,
+        assertThrows(FluentMybatisException.class,
                 () -> new UserEntityQuery()
                         .and.age.eq(null)
         );
@@ -123,7 +123,7 @@ public class AndObjectTest_Eq extends BaseTest {
 
     @Test
     public void eq_Predicate_true_Supplier_null() {
-        assertThrows(NullParameterException.class,
+        assertThrows(FluentMybatisException.class,
                 () -> new UserEntityQuery()
                         .and.age.eq((age) -> age == null, () -> null)
         );

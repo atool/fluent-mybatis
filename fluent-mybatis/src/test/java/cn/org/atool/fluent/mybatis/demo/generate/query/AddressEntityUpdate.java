@@ -1,13 +1,12 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import cn.org.atool.fluent.mybatis.base.IProperty2Column;
-import com.mybatisplus.core.conditions.AbstractWrapper;
-import com.mybatisplus.core.conditions.segments.MergeSegments;
-import com.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.mybatisplus.core.toolkit.CollectionUtils;
-import com.mybatisplus.core.toolkit.StringPool;
-import com.mybatisplus.core.toolkit.StringUtils;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
+import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.util.ArrayUtils;
+import cn.org.atool.fluent.mybatis.util.Constants;
+import cn.org.atool.fluent.mybatis.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -61,10 +60,10 @@ public class AddressEntityUpdate extends AbstractWrapper<AddressEntity, String, 
 
     @Override
     public String getSqlSet() {
-        if (CollectionUtils.isEmpty(sqlSet)) {
+        if (ArrayUtils.isEmpty(sqlSet)) {
             return null;
         }
-        return String.join(StringPool.COMMA, sqlSet);
+        return String.join(Constants.COMMA, sqlSet);
     }
 
     @Override
@@ -93,9 +92,6 @@ public class AddressEntityUpdate extends AbstractWrapper<AddressEntity, String, 
         return this;
     }
 
-    public LambdaUpdateWrapper<AddressEntity> lambda() {
-        throw new RuntimeException("no support!");
-    }
 
     @Override
     protected AddressEntityUpdate instance() {

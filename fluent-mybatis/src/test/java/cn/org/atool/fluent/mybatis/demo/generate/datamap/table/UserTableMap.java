@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.table;
 
-import cn.org.atool.fluent.mybatis.annotation.ColumnDef;
-import cn.org.atool.fluent.mybatis.annotation.ColumnDef.PrimaryType;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import org.test4j.module.ICore.DataMap;
+import org.test4j.module.database.annotations.ColumnDef;
+import org.test4j.module.database.annotations.ScriptTable;
 import org.test4j.tools.datagen.KeyValue;
 
 import java.util.Date;
@@ -18,12 +18,12 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Column;
  *
  * @author generate code
  */
-@TableName(UserMP.Table_Name)
+@ScriptTable(UserMP.Table_Name)
 public class UserTableMap extends DataMap<UserTableMap> {
     /**
      * 设置t_user对象id字段值
      */
-    @ColumnDef(type = "bigint(21) unsigned", primary = PrimaryType.AutoIncrease)
+    @ColumnDef(type = "bigint(21) unsigned", primary = true, autoIncrease = true)
     public transient final KeyValue<UserTableMap> id = new KeyValue(this, Column.id);
     /**
      * 设置t_user对象gmt_created字段值

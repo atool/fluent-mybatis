@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import com.mybatisplus.core.conditions.Wrapper;
-import com.mybatisplus.core.metadata.IPage;
+import cn.org.atool.fluent.mybatis.condition.Wrapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
@@ -133,25 +132,25 @@ public interface BaseMapper<T> {
      */
     <O> List<O> selectObjs(@Param(WRAPPER) Wrapper<T> query);
 
-    /**
-     * <p>
-     * 根据 query 条件，查询全部记录（并翻页）
-     * </p>
-     *
-     * @param page  分页查询条件（可以为 RowBounds.DEFAULT）
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return
-     */
-    IPage<T> selectPage(IPage<T> page, @Param(WRAPPER) Wrapper query);
-
-    /**
-     * <p>
-     * 根据 query 条件，查询全部记录（并翻页）
-     * </p>
-     *
-     * @param page  分页查询条件
-     * @param query 实体对象封装操作类
-     * @return
-     */
-    IPage<Map<String, Object>> selectMapsPage(IPage<T> page, @Param(WRAPPER) Wrapper<T> query);
+//    /**
+//     * <p>
+//     * 根据 query 条件，查询全部记录（并翻页）
+//     * </p>
+//     *
+//     * @param page  分页查询条件（可以为 RowBounds.DEFAULT）
+//     * @param query 实体对象封装操作类（可以为 null）
+//     * @return
+//     */
+//    IPage<T> selectPage(IPage<T> page, @Param(WRAPPER) Wrapper query);
+//
+//    /**
+//     * <p>
+//     * 根据 query 条件，查询全部记录（并翻页）
+//     * </p>
+//     *
+//     * @param page  分页查询条件
+//     * @param query 实体对象封装操作类
+//     * @return
+//     */
+//    IPage<Map<String, Object>> selectMapsPage(IPage<T> page, @Param(WRAPPER) Wrapper<T> query);
 }

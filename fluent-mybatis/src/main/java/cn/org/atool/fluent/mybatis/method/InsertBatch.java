@@ -2,7 +2,8 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import com.mybatisplus.core.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.util.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_InsertBatch;
@@ -45,11 +46,12 @@ public class InsertBatch extends AbstractMethod {
             values.value("#{item.@property},", table.getKeyProperty(), table.getKeyColumn());
         }
         return values.eachJoining(table.getFieldList(), (field) -> {
-            if (isInsertDefault(field)) {
-                values.choose("item.@property != null", "#{item.@property},", field.getUpdate() + SqlBuilder.COMMA,
-                    field.getProperty(), field.getUpdate());
-            } else {
+            String insert = field.getInsert();
+            if (StringUtils.isEmpty(insert)) {
                 values.value("#{item.@property},", field.getProperty(), field.getColumn());
+            } else {
+                values.choose("item.@property != null", "#{item.@property},", insert + SqlBuilder.COMMA,
+                    field.getProperty(), insert);
             }
         }).toString();
     }

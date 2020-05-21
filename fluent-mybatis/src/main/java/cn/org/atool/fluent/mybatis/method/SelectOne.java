@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.model.MapperParam;
-import com.mybatisplus.core.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import static cn.org.atool.fluent.mybatis.method.model.MethodId.Method_SelectOne;

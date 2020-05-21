@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
 import cn.org.atool.fluent.mybatis.function.Executor;
-import com.mybatisplus.core.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableInfo;
 
 import java.util.List;
 import java.util.function.Consumer;
