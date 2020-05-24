@@ -12,7 +12,7 @@ public interface ITable {
 
     String t_user = UserMP.Table_Name;
 
-    String t_no_auto_id = NoAutoIdMP.Table_Name;
-
     String t_no_primary = NoPrimaryMP.Table_Name;
+
+    String t_no_auto_id = NoAutoIdMP.Table_Name;
 }

@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- *  Mapper接口
+ * address Mapper接口
  * </p>
  *
  * @author generate code

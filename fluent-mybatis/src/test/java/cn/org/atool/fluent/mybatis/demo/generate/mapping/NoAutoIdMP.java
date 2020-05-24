@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * @ClassName NoAutoIdMP
- * @Description NoAutoIdMP
+ * @Description no_auto_id映射定义
  *
  * @author generate code
  */
@@ -15,8 +15,8 @@ public interface NoAutoIdMP {
      */
     Map<String, String> Property2Column = new HashMap<String,String>(){
         {
-            this.put(Property.column1, Column.column_1);
             this.put(Property.id, Column.id);
+            this.put(Property.column1, Column.column_1);
         }
     };
 
@@ -36,11 +36,11 @@ public interface NoAutoIdMP {
         /**
          * 
          */
-        String column_1 = "column_1";
+        String id = "id";
         /**
          * 
          */
-        String id = "id";
+        String column_1 = "column_1";
     }
 
     /**
@@ -50,10 +50,10 @@ public interface NoAutoIdMP {
         /**
          * 
          */
-        String column1 = "column1";
+        String id = "id";
         /**
          * 
          */
-        String id = "id";
+        String column1 = "column1";
     }
 }

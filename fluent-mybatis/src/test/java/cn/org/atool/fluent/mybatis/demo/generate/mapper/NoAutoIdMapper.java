@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * <p>
- *  Mapper接口
+ * no_auto_id Mapper接口
  * </p>
  *
  * @author generate code

@@ -1,13 +1,14 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.and.*;
+import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.BaseQueryAnd;
 import cn.org.atool.fluent.mybatis.condition.BaseUpdateSet;
 import cn.org.atool.fluent.mybatis.condition.BaseWrapperOrder;
 import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Property;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
-import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
+
 
 /**
  * <p>

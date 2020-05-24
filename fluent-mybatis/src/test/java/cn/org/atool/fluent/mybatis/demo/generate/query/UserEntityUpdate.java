@@ -92,12 +92,10 @@ public class UserEntityUpdate extends AbstractWrapper<UserEntity, String, UserEn
         return this;
     }
 
-
     @Override
     protected UserEntityUpdate instance() {
         return new UserEntityUpdate(entity, sqlSet, paramNameSeq, paramNameValuePairs, new MergeSegments());
     }
-
 
     @Override
     public UserEntityUpdate limit(int from, int limit){

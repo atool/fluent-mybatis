@@ -2,14 +2,14 @@ package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
 import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
-import cn.org.atool.fluent.mybatis.metadata.TableHelper;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.SharedString;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
 import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableHelper;
 import cn.org.atool.fluent.mybatis.util.ArrayUtils;
 import cn.org.atool.fluent.mybatis.util.Constants;
+import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityWrapperHelper.And;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityWrapperHelper.QueryOrder;
 

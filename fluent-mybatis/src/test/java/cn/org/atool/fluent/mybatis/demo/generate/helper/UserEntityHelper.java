@@ -3,10 +3,9 @@ package cn.org.atool.fluent.mybatis.demo.generate.helper;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
 
-import java.util.Date;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * <p>

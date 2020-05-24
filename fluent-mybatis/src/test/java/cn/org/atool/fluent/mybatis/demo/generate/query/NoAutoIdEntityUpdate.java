@@ -92,12 +92,10 @@ public class NoAutoIdEntityUpdate extends AbstractWrapper<NoAutoIdEntity, String
         return this;
     }
 
-
     @Override
     protected NoAutoIdEntityUpdate instance() {
         return new NoAutoIdEntityUpdate(entity, sqlSet, paramNameSeq, paramNameValuePairs, new MergeSegments());
     }
-
 
     @Override
     public NoAutoIdEntityUpdate limit(int from, int limit){

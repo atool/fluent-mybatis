@@ -92,12 +92,10 @@ public class AddressEntityUpdate extends AbstractWrapper<AddressEntity, String, 
         return this;
     }
 
-
     @Override
     protected AddressEntityUpdate instance() {
         return new AddressEntityUpdate(entity, sqlSet, paramNameSeq, paramNameValuePairs, new MergeSegments());
     }
-
 
     @Override
     public AddressEntityUpdate limit(int from, int limit){

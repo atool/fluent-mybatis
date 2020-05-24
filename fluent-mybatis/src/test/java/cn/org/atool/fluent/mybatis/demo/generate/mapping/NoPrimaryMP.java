@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * @ClassName NoPrimaryMP
- * @Description NoPrimaryMP
+ * @Description no_primary映射定义
  *
  * @author generate code
  */

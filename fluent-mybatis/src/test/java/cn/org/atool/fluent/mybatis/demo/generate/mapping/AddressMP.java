@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * @ClassName AddressMP
- * @Description AddressMP
+ * @Description address映射定义
  *
  * @author generate code
  */

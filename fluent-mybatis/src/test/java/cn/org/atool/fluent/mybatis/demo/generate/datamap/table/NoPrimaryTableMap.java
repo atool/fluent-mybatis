@@ -1,31 +1,31 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.table;
 
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
-import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
- * @author generate code
  * @ClassName NoPrimaryTableMap
  * @Description NoPrimaryTableMap
+ *
+ * @author generate code
  */
-@ScriptTable(NoPrimaryMP.Table_Name)
+@ScriptTable("no_primary")
 public class NoPrimaryTableMap extends DataMap<NoPrimaryTableMap> {
     /**
      * 设置no_primary对象column_1字段值
      */
     @ColumnDef(type = "int(11)")
-    public transient final KeyValue<NoPrimaryTableMap> column_1 = new KeyValue(this, Column.column_1);
+    public transient final KeyValue<NoPrimaryTableMap> column1 = new KeyValue(this, "column_1");
     /**
      * 设置no_primary对象column_2字段值
      */
     @ColumnDef(type = "varchar(100)")
-    public transient final KeyValue<NoPrimaryTableMap> column_2 = new KeyValue(this, Column.column_2);
+    public transient final KeyValue<NoPrimaryTableMap> column2 = new KeyValue(this, "column_2");
 
     public NoPrimaryTableMap() {
         super();
@@ -38,6 +38,7 @@ public class NoPrimaryTableMap extends DataMap<NoPrimaryTableMap> {
     /**
      * 创建NoPrimaryTableMap
      * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
      */
     public NoPrimaryTableMap init() {
         return this;

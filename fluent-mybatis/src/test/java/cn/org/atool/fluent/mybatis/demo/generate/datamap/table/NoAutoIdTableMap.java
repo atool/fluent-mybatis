@@ -1,16 +1,12 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.table;
 
-
-import cn.org.atool.fluent.mybatis.annotation.TableName;
-import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
+import java.util.Date;
 import java.util.function.Consumer;
-
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
 
 /**
  * @ClassName NoAutoIdTableMap
@@ -18,18 +14,18 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
  *
  * @author generate code
  */
-@ScriptTable(NoAutoIdMP.Table_Name)
+@ScriptTable("no_auto_id")
 public class NoAutoIdTableMap extends DataMap<NoAutoIdTableMap> {
-    /**
-     * 设置no_auto_id对象column_1字段值
-     */
-    @ColumnDef(type = "varchar(20)")
-    public transient final KeyValue<NoAutoIdTableMap> column_1 = new KeyValue(this, Column.column_1);
     /**
      * 设置no_auto_id对象id字段值
      */
     @ColumnDef(type = "varchar(50)", primary = true)
-    public transient final KeyValue<NoAutoIdTableMap> id = new KeyValue(this, Column.id);
+    public transient final KeyValue<NoAutoIdTableMap> id = new KeyValue(this, "id");
+    /**
+     * 设置no_auto_id对象column_1字段值
+     */
+    @ColumnDef(type = "varchar(20)")
+    public transient final KeyValue<NoAutoIdTableMap> column1 = new KeyValue(this, "column_1");
 
     public NoAutoIdTableMap() {
         super();

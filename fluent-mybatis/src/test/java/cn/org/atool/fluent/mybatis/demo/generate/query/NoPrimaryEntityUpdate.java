@@ -92,12 +92,10 @@ public class NoPrimaryEntityUpdate extends AbstractWrapper<NoPrimaryEntity, Stri
         return this;
     }
 
-
     @Override
     protected NoPrimaryEntityUpdate instance() {
         return new NoPrimaryEntityUpdate(entity, sqlSet, paramNameSeq, paramNameValuePairs, new MergeSegments());
     }
-
 
     @Override
     public NoPrimaryEntityUpdate limit(int from, int limit){

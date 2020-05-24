@@ -12,13 +12,13 @@ import org.test4j.tools.datagen.KeyValue;
  */
 public class NoAutoIdEntityMap extends DataMap<NoAutoIdEntityMap> {
     /**
-     * 设置NoAutoIdEntity对象column1字段值
-     */
-    public transient final KeyValue<NoAutoIdEntityMap> column1 = new KeyValue(this, Property.column1);
-    /**
      * 设置NoAutoIdEntity对象id字段值
      */
     public transient final KeyValue<NoAutoIdEntityMap> id = new KeyValue(this, Property.id);
+    /**
+     * 设置NoAutoIdEntity对象column1字段值
+     */
+    public transient final KeyValue<NoAutoIdEntityMap> column1 = new KeyValue(this, Property.column1);
 
     public NoAutoIdEntityMap() {
         super();

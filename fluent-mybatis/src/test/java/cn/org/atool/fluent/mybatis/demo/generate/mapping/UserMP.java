@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * @ClassName UserMP
- * @Description UserMP
+ * @Description t_user映射定义
  *
  * @author generate code
  */
