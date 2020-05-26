@@ -16,8 +16,8 @@ public class DataSourceScript implements IDataSourceScript {
         return list(
                 AddressTableMap.class,
                 UserTableMap.class,
-                NoPrimaryTableMap.class,
-                NoAutoIdTableMap.class
+                NoAutoIdTableMap.class,
+                NoPrimaryTableMap.class
         );
     }
 

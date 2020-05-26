@@ -5,8 +5,8 @@ import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotBlank;
-import static cn.org.atool.fluent.mybatis.util.StringUtils.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.assertNotBlank;
 
 
 public class AndString<Q extends AbstractWrapper> extends AndObject<String, Q> {

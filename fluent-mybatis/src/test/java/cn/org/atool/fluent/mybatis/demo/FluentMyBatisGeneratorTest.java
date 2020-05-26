@@ -3,15 +3,14 @@ package cn.org.atool.fluent.mybatis.demo;
 import org.test4j.generator.mybatis.Generator;
 import org.test4j.generator.mybatis.db.ColumnType;
 
-/**
- * FluentMyBatisGeneratorTest：生成fluent mybatis文件
- * 使用main函数，是避免全量跑test时，误执行生成代码
- *
- * @author wudarui
- */
 public class FluentMyBatisGeneratorTest {
     private static String url = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
 
+    /**
+     * 使用main函数，是避免全量跑test时，误执行生成代码
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         String outputDir = System.getProperty("user.dir") + "/fluent-mybatis/src/test/java";
         Generator.fluentMybatis()

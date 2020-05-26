@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.demo.generate.query.AddressEntityQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.query.AddressEntityUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
-
 /**
 * AddressEntity数据库操作服务类
  *

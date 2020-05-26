@@ -34,7 +34,7 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-                .eq("UPDATE t_user SET gmt_modified=now(), is_deleted=?, user_name=?, age=? WHERE id=?", StringMode.SameAsSpace);
+                .eq("UPDATE t_user SET age=?, gmt_modified=now(), is_deleted=?, user_name=? WHERE id=?", StringMode.SameAsSpace);
 
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
                 .id.values(23L, 24L)
@@ -59,7 +59,7 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_modified=now(), is_deleted=?, gmt_created=?, user_name=?, age=? WHERE id=?", StringMode.SameAsSpace);
+            .eq("UPDATE t_user SET age=?, gmt_created=?, gmt_modified=now(), is_deleted=?, user_name=? WHERE id=?", StringMode.SameAsSpace);
 
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
             .id.values(23L, 24L)
@@ -85,7 +85,7 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-                .eq("UPDATE t_user SET gmt_modified=now(), is_deleted=?, gmt_created=?, user_name=?, age=? WHERE id=?", StringMode.SameAsSpace);
+                .eq("UPDATE t_user SET age=?, gmt_created=?, gmt_modified=now(), is_deleted=?, user_name=? WHERE id=?", StringMode.SameAsSpace);
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
                 .id.values(23L, 24L)
                 .user_name.values("user1", "test name")

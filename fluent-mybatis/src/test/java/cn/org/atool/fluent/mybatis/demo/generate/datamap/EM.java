@@ -11,7 +11,7 @@ public interface EM {
 
     UserEntityMap.Factory user = new UserEntityMap.Factory();
 
-    NoPrimaryEntityMap.Factory noPrimary = new NoPrimaryEntityMap.Factory();
-
     NoAutoIdEntityMap.Factory noAutoId = new NoAutoIdEntityMap.Factory();
+
+    NoPrimaryEntityMap.Factory noPrimary = new NoPrimaryEntityMap.Factory();
 }

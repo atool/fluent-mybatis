@@ -7,11 +7,6 @@ package cn.org.atool.fluent.mybatis.util;
  */
 public interface Constants {
     /**
-     * project name
-     */
-    String FLUENT_MYBATIS = "fluent-mybatis";
-
-    /**
      * wrapper 类
      */
     String WRAPPER = "ew";
@@ -28,10 +23,7 @@ public interface Constants {
     /**
      * 字符串 is
      */
-    String IS = "is";
     String AND = "and";
-    String ASTERISK = "*";
-    String STAR = ASTERISK;
     String COMMA = ",";
     String DOT = ".";
     String EMPTY = "";
@@ -40,7 +32,5 @@ public interface Constants {
     String LEFT_CHEV = "<";
     String RIGHT_BRACKET = ")";
     String RIGHT_CHEV = ">";
-    String SEMICOLON = ";";
     String SPACE = " ";
-    String UNDERSCORE = "_";
 }

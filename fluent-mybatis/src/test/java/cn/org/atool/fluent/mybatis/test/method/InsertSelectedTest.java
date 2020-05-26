@@ -28,7 +28,7 @@ public class InsertSelectedTest extends BaseTest {
             .age.values(23)
             .user_name.values("tom mike")
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO t_user ( gmt_modified, is_deleted, gmt_created, user_name, age ) VALUES ( now(), 0, now(), ?, ? )");
+        db.sqlList().wantFirstSql().eq("INSERT INTO t_user ( age, gmt_created, gmt_modified, is_deleted, user_name ) VALUES ( ?, now(), now(), 0, ? )");
     }
 
     @Test
@@ -44,6 +44,6 @@ public class InsertSelectedTest extends BaseTest {
             .user_name.values("tom mike")
             .address_id.values(200)
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO t_user ( id, gmt_modified, is_deleted, gmt_created, user_name, address_id ) VALUES ( ?, now(), 0, now(), ?, ? )");
+        db.sqlList().wantFirstSql().eq("INSERT INTO t_user ( id, address_id, gmt_created, gmt_modified, is_deleted, user_name ) VALUES ( ?, ?, now(), now(), 0, ? )");
     }
 }

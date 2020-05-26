@@ -14,60 +14,52 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql", "MySql数据库"),
+    MYSQL("mysql"),
     /**
      * MARIADB
      */
-    MARIADB("mariadb", "MariaDB数据库"),
+    MARIADB("mariadb"),
     /**
      * ORACLE
      */
-    ORACLE("oracle", "Oracle数据库"),
+    ORACLE("oracle"),
     /**
      * DB2
      */
-    DB2("db2", "DB2数据库"),
+    DB2("db2"),
     /**
      * H2
      */
-    H2("h2", "H2数据库"),
+    H2("h2"),
     /**
      * HSQL
      */
-    HSQL("hsql", "HSQL数据库"),
+    HSQL("hsql"),
     /**
      * SQLITE
      */
-    SQLITE("sqlite", "SQLite数据库"),
+    SQLITE("sqlite"),
     /**
      * POSTGRE
      */
-    POSTGRE_SQL("postgresql", "Postgre数据库"),
+    POSTGRE_SQL("postgresql"),
     /**
      * SQLSERVER2005
      */
-    SQL_SERVER2005("sqlserver2005", "SQLServer2005数据库"),
+    SQL_SERVER2005("sqlserver2005"),
     /**
      * SQLSERVER
      */
-    SQL_SERVER("sqlserver", "SQLServer数据库"),
-    /**
-     * DM
-     */
-    DM("dm", "达梦数据库"),
+    SQL_SERVER("sqlserver"),
     /**
      * UNKONWN DB
      */
-    OTHER("other", "其他数据库");
+    OTHER("other");
 
     /**
      * 数据库名称
      */
     private final String db;
-    /**
-     * 描述
-     */
-    private final String desc;
 
     /**
      * 获取数据库类型（默认 MySql）

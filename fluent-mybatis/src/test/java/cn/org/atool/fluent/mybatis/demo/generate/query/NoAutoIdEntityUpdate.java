@@ -4,9 +4,7 @@ import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
 import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
-import cn.org.atool.fluent.mybatis.util.ArrayUtils;
 import cn.org.atool.fluent.mybatis.util.Constants;
-import cn.org.atool.fluent.mybatis.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,6 +14,9 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.And;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.Set;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.UpdateOrder;
+
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isEmpty;
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
 
 /**
  * @ClassName NoAutoIdEntityUpdate
@@ -60,7 +61,7 @@ public class NoAutoIdEntityUpdate extends AbstractWrapper<NoAutoIdEntity, String
 
     @Override
     public String getSqlSet() {
-        if (ArrayUtils.isEmpty(sqlSet)) {
+        if (isEmpty(sqlSet)) {
             return null;
         }
         return String.join(Constants.COMMA, sqlSet);
@@ -86,7 +87,7 @@ public class NoAutoIdEntityUpdate extends AbstractWrapper<NoAutoIdEntity, String
 
     @Override
     public NoAutoIdEntityUpdate setSql(boolean condition, String sql) {
-        if (condition && StringUtils.isNotEmpty(sql)) {
+        if (condition && isNotEmpty(sql)) {
             sqlSet.add(sql);
         }
         return this;

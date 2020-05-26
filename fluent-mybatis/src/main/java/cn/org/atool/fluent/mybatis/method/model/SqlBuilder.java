@@ -57,11 +57,11 @@ public class SqlBuilder {
      * @param args
      * @return
      */
-    private SqlBuilder quotas(String format, Object... args) {
+    public SqlBuilder quotas(String format, Object... args) {
         if (args == null || args.length == 0) {
-            buff.append(format.replace('\'', '"'));
+            buff.append(replace(format));
         } else {
-            buff.append(String.format(format.replace('\'', '"'), args));
+            buff.append(String.format(replace(format), args));
         }
         this.endNewLine = false;
         return this;
@@ -86,25 +86,6 @@ public class SqlBuilder {
     }
 
     /**
-     * 标签: &lt;script>
-     *
-     * @return
-     */
-    public SqlBuilder beginScript() {
-        return this.append("<script>").newLine();
-    }
-
-    /**
-     * 标签: &lt;/script>
-     *
-     * @return
-     */
-    public String endScript() {
-        return this.append("</script>").toString();
-    }
-
-
-    /**
      * update tableName
      *
      * @param table
@@ -125,6 +106,33 @@ public class SqlBuilder {
             this.append(table.getTableName());
         }
         return this.newLine();
+    }
+
+    public SqlBuilder begin(StatementType statementType, String statementId, Class parameterType) {
+        return this.begin(statementType, statementId, parameterType, null);
+    }
+
+    public SqlBuilder begin(StatementType statementType, String statementId, Class parameterType, Class resultType) {
+        switch (statementType) {
+            case delete:
+            case insert:
+            case update:
+                return this.quotas("<%s id='%s' parameterType='%s'>", statementType.name(), statementId, parameterType.getName())
+                    .newLine();
+            case select:
+            default:
+                if (resultType == null) {
+                    return this.quotas("<%s id='%s' parameterType='%s' resultMap='BaseResultMap'>", statementType.name(), statementId, parameterType.getName())
+                        .newLine();
+                } else {
+                    return this.quotas("<%s id='%s' parameterType='%s' resultType='%s'>", statementType.name(), statementId, parameterType.getName(), resultType.getName())
+                        .newLine();
+                }
+        }
+    }
+
+    public SqlBuilder end(StatementType statementType) {
+        return this.newLine().append("</%s>", statementType.name());
     }
 
     /**
@@ -162,9 +170,9 @@ public class SqlBuilder {
         this.prefixComment(isSpec);
         this.newLine().append("SELECT ");
         if (isSelected) {
-            this.choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", this.getSelectColumns(table));
+            this.choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", replace("<include refid='SELECT_COLUMNS'/>"));
         } else {
-            this.append(this.getSelectColumns(table));
+            this.quotas("<include refid='SELECT_COLUMNS'/>");
         }
         this.append(" FROM ");
         return this.byTable(table, isSpec);
@@ -179,18 +187,13 @@ public class SqlBuilder {
     }
 
     /**
-     * SQL 查询所有表字段
+     * 替换单引号为双引号
      *
-     * @param table 表信息
-     * @return 查询字段列表
+     * @param input
+     * @return
      */
-    protected String getSelectColumns(TableInfo table) {
-        /* 假设存在 resultMap 映射返回 */
-        String selectColumns = "*";
-        if (table.getResultMap() == null || (table.getResultMap() != null && table.isInitResultMap())) {
-            selectColumns = table.getAllSqlSelect();
-        }
-        return selectColumns;
+    private static String replace(String input) {
+        return input.replace('\'', '"');
     }
 
     /**

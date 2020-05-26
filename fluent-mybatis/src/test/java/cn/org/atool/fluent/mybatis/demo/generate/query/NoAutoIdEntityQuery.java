@@ -7,9 +7,7 @@ import cn.org.atool.fluent.mybatis.condition.SharedString;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
 import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
 import cn.org.atool.fluent.mybatis.metadata.TableHelper;
-import cn.org.atool.fluent.mybatis.util.ArrayUtils;
 import cn.org.atool.fluent.mybatis.util.Constants;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +18,8 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.And;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityWrapperHelper.QueryOrder;
+
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
 
 /**
  * @ClassName NoAutoIdEntityQuery
@@ -67,7 +67,7 @@ public class NoAutoIdEntityQuery extends AbstractWrapper<NoAutoIdEntity, String,
 
     @Override
     public NoAutoIdEntityQuery select(String... columns) {
-        if (ArrayUtils.isNotEmpty(columns)) {
+        if (isNotEmpty(columns)) {
             this.sqlSelect.setStringValue(String.join(Constants.COMMA, columns));
         }
         return this;
@@ -96,21 +96,21 @@ public class NoAutoIdEntityQuery extends AbstractWrapper<NoAutoIdEntity, String,
 
     @Override
     public NoAutoIdEntityQuery distinct(String... columns){
-        if(ArrayUtils.isNotEmpty(columns)){
-            this.sqlSelect.setStringValue(MybatisUtil.distinct(columns));
+        if(isNotEmpty(columns)){
+            this.sqlSelect.setStringValue(super.distinctSelect(columns));
         }
         return this;
     }
 
     public NoAutoIdEntityQuery distinct(Predicate<FieldInfo> predicate) {
         this.entityClass = NoAutoIdEntity.class;
-        this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
+        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
     public NoAutoIdEntityQuery distinct(Class<NoAutoIdEntity> entityClass, Predicate<FieldInfo> predicate) {
         this.entityClass = entityClass;
-        this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
+        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 

@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotEmpty;
-import static cn.org.atool.fluent.mybatis.util.SimpleAssert.assertNotNull;
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.assertNotNull;
 
 public class AndObject<T, Q extends AbstractWrapper> {
     protected final String column;

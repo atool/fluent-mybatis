@@ -1,16 +1,11 @@
 package cn.org.atool.fluent.mybatis.condition;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.util.ArrayUtils;
-import cn.org.atool.fluent.mybatis.util.Constants;
-import cn.org.atool.fluent.mybatis.util.SimpleAssert;
-import cn.org.atool.fluent.mybatis.util.StringUtils;
-import cn.org.atool.fluent.mybatis.condition.interfaces.Compare;
-import cn.org.atool.fluent.mybatis.condition.interfaces.Func;
-import cn.org.atool.fluent.mybatis.condition.interfaces.Join;
-import cn.org.atool.fluent.mybatis.condition.interfaces.Nested;
+import cn.org.atool.fluent.mybatis.condition.interfaces.*;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableHelper;
+import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,9 +14,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.condition.SqlKeyword.*;
 import static cn.org.atool.fluent.mybatis.condition.WrapperKeyword.*;
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.*;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -74,15 +71,15 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     }
 
     protected Class<T> getCheckEntityClass() {
-        SimpleAssert.notNull(entityClass, "entityClass must not null,please set entity before use this method!");
+        notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         return entityClass;
     }
 
     @Override
     public <V> Children allEq(boolean condition, Map<R, V> params, boolean null2IsNull) {
-        if (condition && ArrayUtils.isNotEmpty(params)) {
+        if (condition && isNotEmpty(params)) {
             params.forEach((k, v) -> {
-                if (StringUtils.checkValNotNull(v)) {
+                if (checkValNotNull(v)) {
                     eq(k, v);
                 } else {
                     if (null2IsNull) {
@@ -96,10 +93,10 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
 
     @Override
     public <V> Children allEq(boolean condition, BiPredicate<R, V> filter, Map<R, V> params, boolean null2IsNull) {
-        if (condition && ArrayUtils.isNotEmpty(params)) {
+        if (condition && isNotEmpty(params)) {
             params.forEach((k, v) -> {
                 if (filter.test(k, v)) {
-                    if (StringUtils.checkValNotNull(v)) {
+                    if (checkValNotNull(v)) {
                         eq(k, v);
                     } else {
                         if (null2IsNull) {
@@ -256,7 +253,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
 
     @Override
     public Children groupBy(boolean condition, R... columns) {
-        if (ArrayUtils.isEmpty(columns)) {
+        if (isEmpty(columns)) {
             return typedThis;
         }
         return doIt(condition, GROUP_BY,
@@ -265,7 +262,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
 
     @Override
     public Children orderBy(boolean condition, boolean isAsc, R... columns) {
-        if (ArrayUtils.isEmpty(columns)) {
+        if (isEmpty(columns)) {
             return typedThis;
         }
         SqlKeyword mode = isAsc ? ASC : DESC;
@@ -362,10 +359,10 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
      * @return sql
      */
     protected final String formatSqlIfNeed(boolean need, String sqlStr, Object... params) {
-        if (!need || StringUtils.isEmpty(sqlStr)) {
+        if (!need || isEmpty(sqlStr)) {
             return null;
         }
-        if (ArrayUtils.isNotEmpty(params)) {
+        if (isNotEmpty(params)) {
             for (int i = 0; i < params.length; ++i) {
                 String genParamName = Constants.WRAPPER_PARAM + paramNameSeq.incrementAndGet();
                 sqlStr = sqlStr.replace(String.format("{%s}", i),
@@ -414,10 +411,10 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     @Override
     public String getSqlSegment() {
         String sqlSegment = expression.getSqlSegment();
-        if (StringUtils.isNotEmpty(sqlSegment)) {
+        if (isNotEmpty(sqlSegment)) {
             return sqlSegment + lastSql.getStringValue();
         }
-        if (StringUtils.isNotEmpty(lastSql.getStringValue())) {
+        if (isNotEmpty(lastSql.getStringValue())) {
             return lastSql.getStringValue();
         }
         return null;
@@ -425,8 +422,8 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
 
     @Override
     public String getSqlComment() {
-        if (StringUtils.isNotEmpty(sqlComment.getStringValue())) {
-            return "/*" + StringUtils.escapeRawString(sqlComment.getStringValue()) + "*/";
+        if (isNotEmpty(sqlComment.getStringValue())) {
+            return "/*" + escapeRawString(sqlComment.getStringValue()) + "*/";
         }
         return null;
     }
@@ -453,5 +450,15 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
      */
     protected String columnsToString(R... columns) {
         return Arrays.stream(columns).map(this::columnToString).collect(joining(Constants.COMMA));
+    }
+
+    public final static String DISTINCT = " distinct ";
+
+    protected String distinctSelect(String... columns) {
+        return DISTINCT + String.join(Constants.COMMA, columns);
+    }
+
+    protected String distinctSelect(Class entityClass, Predicate<FieldInfo> predicate) {
+        return DISTINCT + TableHelper.getTableInfo(entityClass).chooseSelect(predicate);
     }
 }

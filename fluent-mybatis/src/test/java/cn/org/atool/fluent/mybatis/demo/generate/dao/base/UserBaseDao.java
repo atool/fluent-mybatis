@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
-
 /**
 * UserEntity数据库操作服务类
  *

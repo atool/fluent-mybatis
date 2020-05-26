@@ -1,11 +1,12 @@
 package cn.org.atool.fluent.mybatis.and;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
-import cn.org.atool.fluent.mybatis.util.SimpleAssert;
 import cn.org.atool.fluent.mybatis.util.SqlInject;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.assertNotBlank;
 
 public class SetObject<T, U extends IEntityUpdate> {
     protected final String column;
@@ -76,7 +77,7 @@ public class SetObject<T, U extends IEntityUpdate> {
 
     //function
     public U function(String function, Object... args) {
-        SimpleAssert.assertNotBlank("function", function);
+        assertNotBlank("function", function);
         if (args == null || args.length == 0) {
             return (U) this.wrapper.setSql(column + "=" + function);
         } else {

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.exception;
 
-import cn.org.atool.fluent.mybatis.util.StringUtils;
+import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 
 /**
  * FluentMybatisException 异常类
@@ -27,7 +27,7 @@ public class FluentMybatisException extends RuntimeException {
      * @return 返回异常
      */
     public static FluentMybatisException instance(String msg, Throwable t, Object... params) {
-        return new FluentMybatisException(StringUtils.format(msg, params), t);
+        return new FluentMybatisException(MybatisUtil.format(msg, params), t);
     }
 
     /**
@@ -37,6 +37,6 @@ public class FluentMybatisException extends RuntimeException {
      * @return 返回异常
      */
     public static FluentMybatisException instance(String msg, Object... params) {
-        return new FluentMybatisException(StringUtils.format(msg, params));
+        return new FluentMybatisException(MybatisUtil.format(msg, params));
     }
 }

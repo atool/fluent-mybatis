@@ -7,9 +7,7 @@ import cn.org.atool.fluent.mybatis.condition.SharedString;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
 import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
 import cn.org.atool.fluent.mybatis.metadata.TableHelper;
-import cn.org.atool.fluent.mybatis.util.ArrayUtils;
 import cn.org.atool.fluent.mybatis.util.Constants;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +18,8 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Column;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityWrapperHelper.And;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityWrapperHelper.QueryOrder;
+
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
 
 /**
  * @ClassName UserEntityQuery
@@ -67,7 +67,7 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
 
     @Override
     public UserEntityQuery select(String... columns) {
-        if (ArrayUtils.isNotEmpty(columns)) {
+        if (isNotEmpty(columns)) {
             this.sqlSelect.setStringValue(String.join(Constants.COMMA, columns));
         }
         return this;
@@ -96,21 +96,21 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
 
     @Override
     public UserEntityQuery distinct(String... columns){
-        if(ArrayUtils.isNotEmpty(columns)){
-            this.sqlSelect.setStringValue(MybatisUtil.distinct(columns));
+        if(isNotEmpty(columns)){
+            this.sqlSelect.setStringValue(super.distinctSelect(columns));
         }
         return this;
     }
 
     public UserEntityQuery distinct(Predicate<FieldInfo> predicate) {
         this.entityClass = UserEntity.class;
-        this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
+        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
     public UserEntityQuery distinct(Class<UserEntity> entityClass, Predicate<FieldInfo> predicate) {
         this.entityClass = entityClass;
-        this.sqlSelect.setStringValue(MybatisUtil.distinct(getCheckEntityClass(), predicate));
+        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
