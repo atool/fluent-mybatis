@@ -85,6 +85,12 @@
             <artifactId>test4j-db-dep</artifactId>
             <version>${test4j.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fluent-mybatis</artifactId>
+                    <groupId>com.github.atool</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
