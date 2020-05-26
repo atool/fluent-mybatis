@@ -1,0 +1,48 @@
+package ${entityHelper.package};
+
+import ${entity.package}.${entity.name};
+import ${mapping.package}.${mapping.name};
+
+import java.util.HashMap;
+import java.util.Map;
+$!{importTypes}
+
+/**
+ * <p>
+ * $!{comment}
+ * </p>
+ *
+ * @author ${author}
+ */
+public class ${entityHelper.name} implements ${mapping.name}{
+
+    public static Map<String, Object> map(${entity.name} entity){
+        Map<String, Object> map = new HashMap<>();
+        {
+        #foreach($field in ${fields})
+            map.put(Property.${field.name}, entity.get${field.capitalName}());
+        #end
+        }
+        return map;
+    }
+
+    public static ${entity.name} entity(Map<String, Object> map){
+        ${entity.name} entity = new ${entity.name}();
+        {
+        #foreach($field in ${fields})
+            entity.set${field.capitalName}((${field.type})map.get(Property.${field.name}));
+        #end
+        }
+        return entity;
+    }
+
+    public static ${entity.name} copy(${entity.name} entity) {
+        ${entity.name} copy = new ${entity.name}();
+        {
+        #foreach($field in ${fields})
+            copy.set${field.capitalName}(entity.get${field.capitalName}());
+        #end
+        }
+        return copy;
+    }
+}

@@ -1,0 +1,51 @@
+package ${baseDao.package};
+
+import cn.org.atool.fluent.mybatis.condition.BaseDaoImpl;
+import ${entity.package}.${entity.name};
+import ${mapper.package}.${mapper.name};
+import ${mapping.package}.${mapping.name};
+import ${entityQuery.package}.${entityQuery.name};
+import ${entityUpdate.package}.${entityUpdate.name};
+import org.springframework.beans.factory.annotation.Autowired;
+$!{baseDao.interfaceImports}
+
+/**
+* ${entity.name}数据库操作服务类
+ *
+ * @author ${author}
+*/
+public abstract class ${baseDao.name} extends BaseDaoImpl<${entity.name}, ${entityQuery.name}, ${entityUpdate.name}>
+        implements ${mapping.name}$!{baseDao.interface} {
+
+    @Autowired
+    protected ${mapper.name} mapper;
+
+    @Override
+    public ${mapper.name} mapper() {
+        return mapper;
+    }
+
+    @Override
+    public ${entityQuery.name} query(){
+        return new ${entityQuery.name}();
+    }
+
+    @Override
+    public ${entityUpdate.name} update(){
+        return new ${entityUpdate.name}();
+    }
+
+    @Override
+    public String findPkColumn() {
+#foreach($field in ${fields})
+    #if(${field.primary})
+        #set($primaryKey=${field.name})
+    #end
+#end
+    #if(${primaryKey})
+        return ${mapping.name}.Column.${primaryKey};
+    #else
+        throw new RuntimeException("undefine primary key");
+    #end
+    }
+}

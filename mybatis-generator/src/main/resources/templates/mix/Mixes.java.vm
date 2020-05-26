@@ -1,0 +1,24 @@
+package ${basePackage};
+
+import ${basePackage}.mix.*;
+import org.test4j.module.spec.annotations.Mix;
+import org.test4j.module.spec.annotations.Mixes;
+
+/**
+ * Table Mix工具聚合
+ *
+ * @author generate code
+ */
+@Mixes
+public class TableMixes {
+    #foreach(${config} in ${configs})
+    @Mix
+    public ${config.tableMix.name} ${config.tableMix.instance};
+
+    #end
+    public void cleanAllTable() {
+    #foreach(${config} in ${configs})
+        this.${config.tableMix.instance}.${config.tableMix.cleanMethod}();
+    #end
+    }
+}

@@ -1,0 +1,148 @@
+package ${entityQuery.package};
+
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
+import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.SharedString;
+import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.TableHelper;
+import cn.org.atool.fluent.mybatis.util.Constants;
+
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+
+import ${entity.package}.${entity.name};
+import ${mapping.package}.${mapping.name};
+import ${mapping.package}.${mapping.name}.Column;
+import ${entityQuery.package}.${entity.name}WrapperHelper.And;
+import ${entityQuery.package}.${entity.name}WrapperHelper.QueryOrder;
+
+import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
+
+/**
+ * @ClassName ${entityQuery.name}
+ * @Description ${entity.name}查询（删除）条件
+ *
+ * @author ${author}
+ */
+public class ${entityQuery.name} extends AbstractWrapper<${entity.name}, String, ${entityQuery.name}>
+    implements IEntityQuery<${entityQuery.name}, ${entity.name}>, IProperty2Column {
+    /**
+     * 查询字段
+     */
+    private SharedString sqlSelect = new SharedString();
+
+    public final And<${entityQuery.name}> and = new And<>(this);
+
+    public final QueryOrder orderBy = new QueryOrder(this);
+
+    public ${entityQuery.name}(){
+        this(null);
+    }
+
+    public ${entityQuery.name}(${entity.name} entity){
+        super.setEntity(entity);
+        super.initNeed();
+    }
+
+    public ${entityQuery.name}(${entity.name} entity, String... columns){
+        super.setEntity(entity);
+        super.initNeed();
+        this.select(columns);
+    }
+
+    /**
+     * 非对外公开的构造方法,只用于生产嵌套 sql
+     */
+    private ${entityQuery.name}(${entity.name} entity, AtomicInteger paramNameSeq,
+        Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments) {
+        super.setEntity(entity);
+        this.entityClass = ${entity.name}.class;
+        this.paramNameSeq = paramNameSeq;
+        this.paramNameValuePairs = paramNameValuePairs;
+        this.expression = mergeSegments;
+    }
+
+    @Override
+    public ${entityQuery.name} select(String... columns) {
+        if (isNotEmpty(columns)) {
+            this.sqlSelect.setStringValue(String.join(Constants.COMMA, columns));
+        }
+        return this;
+    }
+
+    @Override
+    public ${entityQuery.name} select(Predicate<FieldInfo> predicate) {
+        this.entityClass = ${entity.name}.class;
+        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
+        return this;
+    }
+
+    @Override
+    public String getSqlSelect() {
+        return sqlSelect.getStringValue();
+    }
+
+    /**
+     * 只查询主键字段
+     *
+     * @return
+     */
+    public ${entityQuery.name} selectId(){
+        #if(${primaryColumnName})
+        return this.select(Column.${primaryColumnName});
+        #else
+        throw new RuntimeException("table primary undefined!");
+        #end
+    }
+
+    @Override
+    public ${entityQuery.name} distinct(String... columns){
+        if(isNotEmpty(columns)){
+            this.sqlSelect.setStringValue(super.distinctSelect(columns));
+        }
+        return this;
+    }
+
+    public ${entityQuery.name} distinct(Predicate<FieldInfo> predicate) {
+        this.entityClass = ${entity.name}.class;
+        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
+        return this;
+    }
+
+    public ${entityQuery.name} distinct(Class<${entity.name}> entityClass, Predicate<FieldInfo> predicate) {
+        this.entityClass = entityClass;
+        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
+        return this;
+    }
+
+    /**
+    * <p>
+    * 用于生成嵌套 sql
+    * 故 sqlSelect 不向下传递
+    * </p>
+    */
+    @Override
+    protected ${entityQuery.name} instance() {
+        return new ${entityQuery.name}(entity, paramNameSeq, paramNameValuePairs, new MergeSegments());
+    }
+
+    @Override
+    public Map<String, String> getProperty2Column(){
+        return ${mapping.name}.Property2Column;
+    }
+
+    @Override
+    public ${entityQuery.name} limit(int from, int limit){
+        super.last(String.format("limit %d, %d", from, limit));
+        return this;
+    }
+
+    @Override
+    public ${entityQuery.name} limit(int limit){
+        super.last(String.format("limit %d", limit));
+        return this;
+    }
+}

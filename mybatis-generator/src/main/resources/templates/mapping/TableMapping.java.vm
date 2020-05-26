@@ -1,0 +1,56 @@
+package ${mapping.package};
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @ClassName ${mapping.name}
+ * @Description ${table}映射定义
+ *
+ * @author ${author}
+ */
+public interface ${mapping.name} {
+    /**
+     * 实例属性和数据库字段对应表
+     */
+    Map<String, String> Property2Column = new HashMap<String,String>(){
+        {
+        #foreach($field in ${fields})
+            this.put(Property.${field.name}, Column.${field.columnName});
+        #end
+        }
+    };
+
+    /**
+     * 表名称
+     */
+    String Table_Name = "${table}";
+    /**
+    * 实体名称
+    */
+    String Entity_NAME = "${entity.name}";
+
+    /**
+     * 表${table}字段定义
+     */
+    interface Column{
+        #foreach($field in ${fields})
+        /**
+         * ${field.comment}
+         */
+        String ${field.columnName} = "${field.columnName}";
+        #end
+    }
+
+    /**
+     * 对象${entity.name}属性字段
+     */
+    interface Property{
+        #foreach($field in ${fields})
+        /**
+         * ${field.comment}
+         */
+        String ${field.name} = "${field.name}";
+        #end
+    }
+}

@@ -1,0 +1,79 @@
+package ${entity.package};
+
+import cn.org.atool.fluent.mybatis.annotation.IdType;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.TableName;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import java.util.Map;
+import java.io.Serializable;
+
+import ${entityHelper.package}.${entityHelper.name};
+import ${mapping.package}.${mapping.name};
+import ${mapping.package}.${mapping.name}.Column;
+
+$!{importTypes}
+#if(${entity.interface})import ${entity.interfaceName};#end
+
+/**
+ * <p>
+ * $!{table.comment}
+ * </p>
+ *
+ * @author ${author}
+ */
+@Getter
+@Setter
+@Accessors(chain = true)
+@TableName(${mapping.name}.Table_Name)
+public class ${entity.name} implements IEntity #if(${entity.interfaceName}), ${entity.interfaceName}#end{
+    private static final long serialVersionUID = 1L;
+
+## ---------- for each 字段循环开始 -----------
+#foreach($field in ${fields})
+    /**
+     * ${field.comment}
+     */
+#if(${field.primary})## 主键
+    #set($primaryKey=${field.name})
+    #if(${field.category} == 'PrimaryId')
+@TableId(value = Column.${field.columnName}, type = IdType.AUTO)
+    #else
+@TableId(value = Column.${field.columnName})
+    #end
+#else
+    #if(${field.category} == 'GmtModified')
+    @TableField(value = Column.${field.columnName}, update = "now()", insert = "now()")
+    #elseif(${field.category} == 'GmtCreate')
+    @TableField(value = Column.${field.columnName}, insert = "now()")
+    #elseif(${field.category} == 'IsDeleted')## 逻辑删除字段
+    @TableField(value = Column.${field.columnName}, insert = "0")
+    #else
+    @TableField(value = Column.${field.columnName})
+    #end
+#end
+    private ${field.type} ${field.name};
+    #end
+
+## ---------- for each 字段循环结束 -----------
+    @Override
+    public Serializable findPk() {
+    #if(${primaryKey})
+        return this.${primaryKey};
+    #else
+        return null;
+    #end
+    }
+
+    /**
+     * 将实体对象转换为map
+     */
+    @Override
+    public Map<String, Object> toMap() {
+        return ${entityHelper.name}.map(this);
+    }
+}

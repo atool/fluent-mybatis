@@ -1,0 +1,14 @@
+package ${partition.package};
+
+import ${entity.package}.${entity.name};
+import cn.org.atool.fluent.mybatis.mapper.PartitionMapper;
+
+/**
+ * <p>
+ * $!{comment} 分库分表Mapper接口
+ * </p>
+ *
+ * @author ${author}
+ */
+public interface ${partition.name} extends PartitionMapper<${entity.name}>{
+}

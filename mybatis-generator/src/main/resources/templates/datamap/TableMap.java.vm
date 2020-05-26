@@ -1,0 +1,88 @@
+package ${tableMap.package};
+
+import org.test4j.module.database.annotations.ColumnDef;
+import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.module.ICore.DataMap;
+import org.test4j.tools.datagen.KeyValue;
+
+import java.util.Date;
+import java.util.function.Consumer;
+
+/**
+ * @ClassName ${tableMap.name}
+ * @Description ${tableMap.name}
+ *
+ * @author ${author}
+ */
+@ScriptTable("${table}")
+public class ${tableMap.name} extends DataMap<${tableMap.name}> {
+#foreach($field in ${fields})
+    #if(${field.primary})
+        #if(${field.primaryId})#set($primary=", primary = true, autoIncrease = true")#else#set($primary=", primary = true")#end
+    #else
+        #set($primary="")
+    #end
+    /**
+     * 设置${table}对象${field.columnName}字段值
+     */
+    @ColumnDef(type = "${field.columnType}"${primary})
+    public transient final KeyValue<${tableMap.name}> ${field.name} = new KeyValue(this, "${field.columnName}");
+#end
+
+    public ${tableMap.name}() {
+        super();
+    }
+
+    public ${tableMap.name}(int size) {
+        super(size);
+    }
+
+    /**
+     * 创建${tableMap.name}
+     * 并初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+     *
+     */
+    public ${tableMap.name} init() {
+#foreach($field in ${fields})
+    #if(${field.primaryId})
+        this.${field.name}.autoIncrease();
+    #elseif(${field.gmt})
+        this.${field.name}.values(new Date());
+    #elseif(${field.deleted} && ${field.type} == 'Boolean')
+        this.${field.name}.values(false);
+    #end
+#end
+        return this;
+    }
+
+    public ${tableMap.name} with(Consumer<${tableMap.name}> init) {
+        init.accept(this);
+        return this;
+    }
+
+    public static ${tableMap.name} create() {
+        return new ${tableMap.name}(1);
+    }
+
+    public static ${tableMap.name} create(int size) {
+        return new ${tableMap.name}(size);
+    }
+
+    public static class Factory {
+        public ${tableMap.name} create() {
+            return ${tableMap.name}.create();
+        }
+
+        public ${tableMap.name} create(int size) {
+            return ${tableMap.name}.create(size);
+        }
+
+        public ${tableMap.name} createWithInit() {
+            return ${tableMap.name}.create(1).init();
+        }
+
+        public ${tableMap.name} createWithInit(int size) {
+            return ${tableMap.name}.create(size).init();
+        }
+    }
+}

@@ -1,0 +1,46 @@
+package ${entityMap.package};
+
+import ${mapping.package}.${mapping.name}.Property;
+import org.test4j.module.ICore.DataMap;
+import org.test4j.tools.datagen.KeyValue;
+
+/**
+ * @ClassName ${entityMap.name}
+ * @Description ${entityMap.name}
+ *
+ * @author ${author}
+ */
+public class ${entityMap.name} extends DataMap<${entityMap.name}> {
+#foreach($field in ${fields})
+    /**
+     * 设置${entity.name}对象${field.name}字段值
+     */
+    public transient final KeyValue<${entityMap.name}> ${field.name} = new KeyValue(this, Property.${field.name});
+#end
+
+    public ${entityMap.name}() {
+        super();
+    }
+
+    public ${entityMap.name}(int size) {
+        super(size);
+    }
+
+    public static ${entityMap.name} create() {
+        return new ${entityMap.name}();
+    }
+
+    public static ${entityMap.name} create(int size) {
+        return new ${entityMap.name}(size);
+    }
+
+    public static class Factory {
+        public ${entityMap.name} create() {
+            return ${entityMap.name}.create();
+        }
+
+        public ${entityMap.name} create(int size) {
+            return ${entityMap.name}.create(size);
+        }
+    }
+}

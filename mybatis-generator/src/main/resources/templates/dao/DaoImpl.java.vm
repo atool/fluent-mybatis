@@ -1,0 +1,16 @@
+package ${daoImpl.package};
+
+import ${baseDao.package}.${baseDao.name};
+import ${daoIntf.package}.${daoIntf.name};
+import org.springframework.stereotype.Repository;
+
+
+/**
+ * @ClassName ${daoImpl.name}
+ * @Description ${entity.name}数据操作实现类
+ *
+ * @author ${author}
+ */
+@Repository
+public class ${daoImpl.name} extends ${baseDao.name} implements ${daoIntf.name} {
+}

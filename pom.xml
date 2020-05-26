@@ -38,7 +38,6 @@
     </developers>
     <properties>
         <spring.version>4.3.14.RELEASE</spring.version>
-        <mybatis.plus.version>3.2.0</mybatis.plus.version>
         <mybatis.version>3.5.2</mybatis.version>
         <jmockit.version>1.48</jmockit.version>
         <test4j.version>2.6.4</test4j.version>
@@ -51,6 +50,7 @@
     </properties>
     <modules>
         <module>fluent-mybatis</module>
+        <module>mybatis-generator</module>
     </modules>
     <dependencies>
         <dependency>

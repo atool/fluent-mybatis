@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.atool.fluent.mybatis.demo.generate.mapper.NoAutoIdMapper">
+    <!-- base result map -->
+    <resultMap id="BaseResultMap" type="cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity">
+        <id column="id" property="id"/>
+        <result column="column_1" property="column1"/>
+    </resultMap>
+    <sql id="SELECT_COLUMNS">
+        <![CDATA[
+        id,column_1
+        ]]>
+    </sql>
+    <delete id="delete" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity">
+        DELETE FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+    </delete>
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM no_auto_id
+        <where>
+            id=#{et.id}
+        </where>
+    </delete>
+    <delete id="deleteByIds" parameterType="java.util.Collection">
+        DELETE FROM no_auto_id
+        <where>
+            id IN (
+            <foreach collection="coll" item="item" index="k" separator=",">
+                #{item}
+            </foreach>
+            )
+        </where>
+    </delete>
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        DELETE FROM no_auto_id
+        <where>
+            <if test="cm != null and !cm.isEmpty">
+                <foreach collection="cm" item="v" index="k" separator="AND ">
+                    <choose>
+                        <when test="v == null">${k} IS NULL</when>
+                        <otherwise>${k} = #{v}</otherwise>
+                    </choose>
+                </foreach>
+            </if>
+        </where>
+    </delete>
+    <insert id="insert" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO no_auto_id
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="column1 != null">column_1,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="column1 != null">#{column1},</if>
+        </trim>
+    </insert>
+    <insert id="insertBatch" parameterType="java.util.Collection">
+        INSERT INTO no_auto_id
+        (id, column_1)VALUES
+        <foreach collection="list" item="item" index="k" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id},
+                #{item.column1},
+            </trim>
+        </foreach>
+    </insert>
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT id,column_1 FROM no_auto_id
+        <where>
+            id=#{et.id}
+        </where>
+    </select>
+    <select id="selectByIds" parameterType="java.util.Collection" resultMap="BaseResultMap">
+        SELECT id,column_1 FROM no_auto_id
+        <where>
+            id IN (
+            <foreach collection="coll" item="item" index="k" separator=",">
+                #{item}
+            </foreach>
+            )
+        </where>
+    </select>
+    <select id="selectByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT id,column_1 FROM no_auto_id
+        <where>
+            <if test="cm != null and !cm.isEmpty">
+                <foreach collection="cm" item="v" index="k" separator="AND ">
+                    <choose>
+                        <when test="v == null">${k} IS NULL</when>
+                        <otherwise>${k} = #{v}</otherwise>
+                    </choose>
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="selectCount" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <otherwise>1</otherwise>
+        </choose>
+        ) FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </select>
+    <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <otherwise>id,column_1</otherwise>
+        </choose>
+        FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </select>
+    <select id="selectMaps" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <otherwise>id,column_1</otherwise>
+        </choose>
+        FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </select>
+    <select id="selectObjs" parameterType="java.util.Map" resultType="java.lang.Object">
+        SELECT
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <otherwise>id,column_1</otherwise>
+        </choose>
+        FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <otherwise>id,column_1</otherwise>
+        </choose>
+        FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </select>
+    <update id="updateById" parameterType="java.util.Map">
+        UPDATE no_auto_id
+        <set>
+            <if test="et.column1 != null">column_1=#{et.column1},</if>
+        </set>
+        <where>
+            id=#{et.id}
+        </where>
+    </update>
+    <update id="updateBy" parameterType="java.util.Map">
+        UPDATE no_auto_id
+        <set>
+            <if test="ew != null and ew.updates != null">
+                <if test="ew.updates.containsKey('column1')">column_1=#{ew.updates.column1},</if>
+            </if>
+            <if test="ew != null and ew.sqlSet != null">${ew.sqlSet}</if>
+        </set>
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </update>
+    <delete id="deleteSpec" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity">
+        DELETE FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+    </delete>
+    <select id="selectSpecList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <otherwise>id,column_1</otherwise>
+        </choose>
+        FROM no_auto_id
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </select>
+    <update id="updateSpecByQuery" parameterType="java.util.Map">
+        UPDATE no_auto_id
+        <set>
+            <if test="ew != null and ew.updates != null">
+                <if test="ew.updates.containsKey('column1')">column_1=#{ew.updates.column1},</if>
+            </if>
+            <if test="ew != null and ew.sqlSet != null">${ew.sqlSet}</if>
+        </set>
+        <where>
+            <if test="ew != null and ew.entity != null">
+                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
+                <if test="ew.entity.column1 != null">AND column_1=#{ew.entity.column1}</if>
+            </if>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+        </where>
+        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+    </update>
+</mapper>

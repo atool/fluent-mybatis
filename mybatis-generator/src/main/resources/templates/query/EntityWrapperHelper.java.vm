@@ -1,0 +1,99 @@
+package ${wrapperHelper.package};
+
+import cn.org.atool.fluent.mybatis.and.*;
+import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.BaseQueryAnd;
+import cn.org.atool.fluent.mybatis.condition.BaseUpdateSet;
+import cn.org.atool.fluent.mybatis.condition.BaseWrapperOrder;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
+import ${mapping.package}.${mapping.name}.Property;
+import ${mapping.package}.${mapping.name}.Column;
+${importTypes}
+
+/**
+ * <p>
+ * ${wrapperHelper.name}
+ * ${entity.name} 查询更新帮助类
+ * </p>
+ *
+ * @author ${author}
+ */
+class ${wrapperHelper.name} {
+    public static class And<Q extends AbstractWrapper & IProperty2Column> extends BaseQueryAnd<Q> {
+#foreach($field in ${fields})
+    #if(${field.type}=="String")
+        public final AndString<Q> ${field.name};
+    #elseif((${field.type}=="Boolean"))
+        public final AndBoolean<Q> ${field.name};
+    #else
+        public final AndObject<${field.type}, Q> ${field.name};
+    #end
+#end
+
+        And(Q query) {
+            super(query);
+    #foreach($field in ${fields})
+        #if(${field.type}=="String")
+            this.${field.name} = new AndString<>(query, Column.${field.columnName}, Property.${field.name});
+        #elseif((${field.type}=="Boolean"))
+            this.${field.name} = new AndBoolean<>(query, Column.${field.columnName}, Property.${field.name});
+        #else
+            this.${field.name} = new AndObject<>(query, Column.${field.columnName}, Property.${field.name});
+        #end
+    #end
+        }
+    }
+
+    public static abstract class BaseOrder<Q extends AbstractWrapper & IProperty2Column, O extends BaseOrder>
+            extends BaseWrapperOrder<Q> {
+#foreach($field in ${fields})
+        public final ColumnOrder<Q, O> ${field.name};
+#end
+
+        public BaseOrder(Q query) {
+            super(query);
+        #foreach($field in ${fields})
+            this.${field.name} = new ColumnOrder(query, Column.${field.columnName}, this);
+        #end
+        }
+    }
+
+    public static class QueryOrder extends BaseOrder<${entityQuery.name}, QueryOrder> {
+
+        public QueryOrder(${entityQuery.name} query) {
+            super(query);
+        }
+    }
+
+    public static class UpdateOrder extends BaseOrder<${entityUpdate.name}, UpdateOrder> {
+
+        public UpdateOrder(${entityUpdate.name} update) {
+            super(update);
+        }
+    }
+
+    public static class Set extends BaseUpdateSet<${entityUpdate.name}> {
+#foreach($field in ${fields})
+    #if(${field.type}=="String")
+        public final SetString<${entityUpdate.name}> ${field.name};
+    #elseif((${field.type}=="Boolean"))
+        public final SetBoolean<${entityUpdate.name}> ${field.name};
+    #else
+        public final SetObject<${field.type}, ${entityUpdate.name}> ${field.name};
+    #end
+#end
+
+        public Set(${entityUpdate.name} update) {
+            super(update);
+    #foreach($field in ${fields})
+        #if(${field.type}=="String")
+            this.${field.name} = new SetString<>(update, Column.${field.columnName}, Property.${field.name});
+        #elseif((${field.type}=="Boolean"))
+            this.${field.name} = new SetBoolean<>(update, Column.${field.columnName}, Property.${field.name});
+        #else
+            this.${field.name} = new SetObject<>(update, Column.${field.columnName}, Property.${field.name});
+        #end
+    #end
+        }
+    }
+}
