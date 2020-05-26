@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.entity;
 
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Property;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
@@ -14,11 +13,11 @@ public class NoPrimaryEntityMap extends DataMap<NoPrimaryEntityMap> {
     /**
      * 设置NoPrimaryEntity对象column1字段值
      */
-    public transient final KeyValue<NoPrimaryEntityMap> column1 = new KeyValue(this, Property.column1);
+    public transient final KeyValue<NoPrimaryEntityMap> column1 = new KeyValue(this, "column1");
     /**
      * 设置NoPrimaryEntity对象column2字段值
      */
-    public transient final KeyValue<NoPrimaryEntityMap> column2 = new KeyValue(this, Property.column2);
+    public transient final KeyValue<NoPrimaryEntityMap> column2 = new KeyValue(this, "column2");
 
     public NoPrimaryEntityMap() {
         super();

@@ -25,22 +25,22 @@ public class UserTableMap extends DataMap<UserTableMap> {
      * 设置t_user对象gmt_created字段值
      */
     @ColumnDef(type = "datetime")
-    public transient final KeyValue<UserTableMap> gmt_created = new KeyValue(this, "gmt_created");
+    public transient final KeyValue<UserTableMap> gmtCreated = new KeyValue(this, "gmt_created");
     /**
      * 设置t_user对象gmt_modified字段值
      */
     @ColumnDef(type = "datetime")
-    public transient final KeyValue<UserTableMap> gmt_modified = new KeyValue(this, "gmt_modified");
+    public transient final KeyValue<UserTableMap> gmtModified = new KeyValue(this, "gmt_modified");
     /**
      * 设置t_user对象is_deleted字段值
      */
     @ColumnDef(type = "tinyint(2)")
-    public transient final KeyValue<UserTableMap> is_deleted = new KeyValue(this, "is_deleted");
+    public transient final KeyValue<UserTableMap> isDeleted = new KeyValue(this, "is_deleted");
     /**
      * 设置t_user对象address_id字段值
      */
     @ColumnDef(type = "bigint(21)")
-    public transient final KeyValue<UserTableMap> address_id = new KeyValue(this, "address_id");
+    public transient final KeyValue<UserTableMap> addressId = new KeyValue(this, "address_id");
     /**
      * 设置t_user对象age字段值
      */
@@ -50,7 +50,7 @@ public class UserTableMap extends DataMap<UserTableMap> {
      * 设置t_user对象user_name字段值
      */
     @ColumnDef(type = "varchar(45)")
-    public transient final KeyValue<UserTableMap> user_name = new KeyValue(this, "user_name");
+    public transient final KeyValue<UserTableMap> userName = new KeyValue(this, "user_name");
     /**
      * 设置t_user对象version字段值
      */
@@ -72,9 +72,9 @@ public class UserTableMap extends DataMap<UserTableMap> {
      */
     public UserTableMap init() {
         this.id.autoIncrease();
-        this.gmt_created.values(new Date());
-        this.gmt_modified.values(new Date());
-        this.is_deleted.values(false);
+        this.gmtCreated.values(new Date());
+        this.gmtModified.values(new Date());
+        this.isDeleted.values(false);
         return this;
     }
 

@@ -14,10 +14,10 @@ public class DataSourceScript implements IDataSourceScript {
     @Override
     public List<Class> getTableKlass() {
         return list(
-                AddressTableMap.class,
-                UserTableMap.class,
-                NoAutoIdTableMap.class,
-                NoPrimaryTableMap.class
+            AddressTableMap.class,
+            UserTableMap.class,
+            NoPrimaryTableMap.class,
+            NoAutoIdTableMap.class
         );
     }
 

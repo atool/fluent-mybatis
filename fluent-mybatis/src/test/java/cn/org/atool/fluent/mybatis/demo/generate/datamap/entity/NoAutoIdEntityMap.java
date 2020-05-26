@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.entity;
 
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Property;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
@@ -14,11 +13,11 @@ public class NoAutoIdEntityMap extends DataMap<NoAutoIdEntityMap> {
     /**
      * 设置NoAutoIdEntity对象id字段值
      */
-    public transient final KeyValue<NoAutoIdEntityMap> id = new KeyValue(this, Property.id);
+    public transient final KeyValue<NoAutoIdEntityMap> id = new KeyValue(this, "id");
     /**
      * 设置NoAutoIdEntity对象column1字段值
      */
-    public transient final KeyValue<NoAutoIdEntityMap> column1 = new KeyValue(this, Property.column1);
+    public transient final KeyValue<NoAutoIdEntityMap> column1 = new KeyValue(this, "column1");
 
     public NoAutoIdEntityMap() {
         super();

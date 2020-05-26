@@ -13,8 +13,6 @@ import java.util.Map;
 import java.io.Serializable;
 
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdEntityHelper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
 
 
 
@@ -28,19 +26,19 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP.Column;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName(NoAutoIdMP.Table_Name)
+@TableName("no_auto_id")
 public class NoAutoIdEntity implements IEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 
      */
-    @TableId(value = Column.id)
+    @TableId(value = "id")
     private String id;
     /**
      * 
      */
-    @TableField(value = Column.column_1)
+    @TableField(value = "column_1")
     private String column1;
 
     @Override

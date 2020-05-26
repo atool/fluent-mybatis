@@ -20,12 +20,12 @@ public class NoPrimaryTableMap extends DataMap<NoPrimaryTableMap> {
      * 设置no_primary对象column_1字段值
      */
     @ColumnDef(type = "int(11)")
-    public transient final KeyValue<NoPrimaryTableMap> column_1 = new KeyValue(this, "column_1");
+    public transient final KeyValue<NoPrimaryTableMap> column1 = new KeyValue(this, "column_1");
     /**
      * 设置no_primary对象column_2字段值
      */
     @ColumnDef(type = "varchar(100)")
-    public transient final KeyValue<NoPrimaryTableMap> column_2 = new KeyValue(this, "column_2");
+    public transient final KeyValue<NoPrimaryTableMap> column2 = new KeyValue(this, "column_2");
 
     public NoPrimaryTableMap() {
         super();

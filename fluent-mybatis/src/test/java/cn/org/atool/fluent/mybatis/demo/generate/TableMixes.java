@@ -18,15 +18,15 @@ public class TableMixes {
     public UserTableMix userTableMix;
 
     @Mix
-    public NoAutoIdTableMix noAutoIdTableMix;
+    public NoPrimaryTableMix noPrimaryTableMix;
 
     @Mix
-    public NoPrimaryTableMix noPrimaryTableMix;
+    public NoAutoIdTableMix noAutoIdTableMix;
 
     public void cleanAllTable() {
         this.addressTableMix.cleanAddressTable();
         this.userTableMix.cleanUserTable();
-        this.noAutoIdTableMix.cleanNoAutoIdTable();
         this.noPrimaryTableMix.cleanNoPrimaryTable();
+        this.noAutoIdTableMix.cleanNoAutoIdTable();
     }
 }

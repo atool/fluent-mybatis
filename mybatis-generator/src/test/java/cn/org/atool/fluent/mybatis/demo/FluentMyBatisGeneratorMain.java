@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo;
 
 import cn.org.atool.fluent.mybatis.generator.MybatisGenerator;
-import org.test4j.generator.mybatis.Generator;
 import org.test4j.generator.mybatis.db.ColumnType;
 
 public class FluentMyBatisGeneratorMain {
@@ -17,7 +16,7 @@ public class FluentMyBatisGeneratorMain {
     public static void main(String[] args) {
         String outputDir = System.getProperty("user.dir") + "/fluent-mybatis/src/test/java";
         MybatisGenerator.build()
-            .globalConfig(config -> config.setOutputDir(outputDir, outputDir, outputDir)
+            .globalConfig(config -> config.setOutputDir(outputDir)
                 .setDataSource(url, "root", "password")
                 .setBasePackage("cn.org.atool.fluent.mybatis.demo.generate"))
             .tables(config -> config

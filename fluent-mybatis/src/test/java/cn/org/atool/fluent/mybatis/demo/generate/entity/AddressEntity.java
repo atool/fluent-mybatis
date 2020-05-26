@@ -13,8 +13,6 @@ import java.util.Map;
 import java.io.Serializable;
 
 import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressEntityHelper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Column;
 
 import java.util.Date;
 
@@ -28,34 +26,34 @@ import java.util.Date;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName(AddressMP.Table_Name)
+@TableName("address")
 public class AddressEntity implements IEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 
      */
-    @TableId(value = Column.id, type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
      * 
      */
-    @TableField(value = Column.gmt_created, insert = "now()")
+    @TableField(value = "gmt_created", insert = "now()")
     private Date gmtCreated;
     /**
      * 
      */
-    @TableField(value = Column.gmt_modified, update = "now()", insert = "now()")
+    @TableField(value = "gmt_modified", update = "now()", insert = "now()")
     private Date gmtModified;
     /**
      * 
      */
-    @TableField(value = Column.is_deleted, insert = "0")
+    @TableField(value = "is_deleted", insert = "0")
     private Boolean isDeleted;
     /**
      * 
      */
-    @TableField(value = Column.address)
+    @TableField(value = "address")
     private String address;
 
     @Override

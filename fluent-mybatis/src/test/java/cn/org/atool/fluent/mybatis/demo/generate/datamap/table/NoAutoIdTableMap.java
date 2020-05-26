@@ -25,7 +25,7 @@ public class NoAutoIdTableMap extends DataMap<NoAutoIdTableMap> {
      * 设置no_auto_id对象column_1字段值
      */
     @ColumnDef(type = "varchar(20)")
-    public transient final KeyValue<NoAutoIdTableMap> column_1 = new KeyValue(this, "column_1");
+    public transient final KeyValue<NoAutoIdTableMap> column1 = new KeyValue(this, "column_1");
 
     public NoAutoIdTableMap() {
         super();

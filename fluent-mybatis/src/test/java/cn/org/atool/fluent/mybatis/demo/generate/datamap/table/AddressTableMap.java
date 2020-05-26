@@ -25,17 +25,17 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
      * 设置address对象gmt_created字段值
      */
     @ColumnDef(type = "datetime")
-    public transient final KeyValue<AddressTableMap> gmt_created = new KeyValue(this, "gmt_created");
+    public transient final KeyValue<AddressTableMap> gmtCreated = new KeyValue(this, "gmt_created");
     /**
      * 设置address对象gmt_modified字段值
      */
     @ColumnDef(type = "datetime")
-    public transient final KeyValue<AddressTableMap> gmt_modified = new KeyValue(this, "gmt_modified");
+    public transient final KeyValue<AddressTableMap> gmtModified = new KeyValue(this, "gmt_modified");
     /**
      * 设置address对象is_deleted字段值
      */
     @ColumnDef(type = "tinyint(2)")
-    public transient final KeyValue<AddressTableMap> is_deleted = new KeyValue(this, "is_deleted");
+    public transient final KeyValue<AddressTableMap> isDeleted = new KeyValue(this, "is_deleted");
     /**
      * 设置address对象address字段值
      */
@@ -57,9 +57,9 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
      */
     public AddressTableMap init() {
         this.id.autoIncrease();
-        this.gmt_created.values(new Date());
-        this.gmt_modified.values(new Date());
-        this.is_deleted.values(false);
+        this.gmtCreated.values(new Date());
+        this.gmtModified.values(new Date());
+        this.isDeleted.values(false);
         return this;
     }
 

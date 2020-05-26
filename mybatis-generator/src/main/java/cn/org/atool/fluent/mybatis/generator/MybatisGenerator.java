@@ -1,32 +1,26 @@
 package cn.org.atool.fluent.mybatis.generator;
 
-
+import cn.org.atool.fluent.mybatis.generator.template.dao.BaseDaoTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.dao.DaoImplTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.dao.DaoIntfTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.entity.EntityHelperTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.entity.EntityTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.mapper.MapperTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.mapper.PartitionMapperTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.mapping.MappingTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.query.EntityQueryTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.query.EntityUpdateTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.query.EntityWrapperHelperTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.test4j.generator.mybatis.BaseGenerator;
-import org.test4j.generator.mybatis.Generator;
-import org.test4j.generator.mybatis.MyBatisGenerator;
+
+import org.test4j.generator.mybatis.DataMapGenerator;
+import org.test4j.generator.mybatis.TemplateGenerator;
 import org.test4j.generator.mybatis.template.BaseTemplate;
-import org.test4j.generator.mybatis.template.TemplateList;
-import org.test4j.generator.mybatis.template.dao.BaseDaoTemplate;
-import org.test4j.generator.mybatis.template.dao.DaoImplTemplate;
-import org.test4j.generator.mybatis.template.dao.DaoIntfTemplate;
-import org.test4j.generator.mybatis.template.datamap.EntityMapTemplate;
-import org.test4j.generator.mybatis.template.datamap.TableMapTemplate;
-import org.test4j.generator.mybatis.template.entity.EntityHelperTemplate;
-import org.test4j.generator.mybatis.template.entity.EntityTemplate;
-import org.test4j.generator.mybatis.template.mapper.MapperTemplate;
-import org.test4j.generator.mybatis.template.mapper.PartitionMapperTemplate;
-import org.test4j.generator.mybatis.template.mapping.MappingTemplate;
-import org.test4j.generator.mybatis.template.mix.TableMixTemplate;
-import org.test4j.generator.mybatis.template.query.EntityQueryTemplate;
-import org.test4j.generator.mybatis.template.query.EntityUpdateTemplate;
-import org.test4j.generator.mybatis.template.query.EntityWrapperHelperTemplate;
+
+import org.test4j.generator.mybatis.template.DataMapTemplateList;
 import org.test4j.generator.mybatis.template.summary.SummaryTemplate;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 数据库表列表
@@ -34,7 +28,7 @@ import java.util.Map;
  * @author wudarui
  */
 @Slf4j
-public class MybatisGenerator extends BaseGenerator<MyBatisGenerator> {
+public class MybatisGenerator extends DataMapGenerator {
     private MybatisGenerator() {
     }
 
@@ -43,13 +37,14 @@ public class MybatisGenerator extends BaseGenerator<MyBatisGenerator> {
      *
      * @return
      */
-    public static Generator build() {
-        return new MyBatisGenerator();
+    public static TemplateGenerator build() {
+        return new MybatisGenerator();
     }
 
-    @Override
-    protected List<BaseTemplate> getAllTemplates() {
-        return Arrays.asList(
+    static List<BaseTemplate> list = new ArrayList<>();
+
+    static {
+        list.addAll(Arrays.asList(
             new MappingTemplate(),
             new EntityTemplate(),
             new EntityHelperTemplate(),
@@ -60,28 +55,13 @@ public class MybatisGenerator extends BaseGenerator<MyBatisGenerator> {
             new EntityUpdateTemplate(),
             new BaseDaoTemplate(),
             new DaoIntfTemplate(),
-            new DaoImplTemplate(),
-            new EntityMapTemplate(),
-            new TableMapTemplate(),
-            new TableMixTemplate()
-        );
+            new DaoImplTemplate()
+        ));
+        list.addAll(DataMapTemplateList.datamap_list);
     }
 
-    /**
-     * 生成汇总文件
-     *
-     * @param allContext
-     */
     @Override
-    protected void generateSummary(List<Map<String, Object>> allContext) {
-        Map<String, Object> wrapper = new HashMap<>();
-        {
-            wrapper.put("configs", allContext);
-            wrapper.put("basePackage", this.globalConfig.getBasePackage());
-        }
-        for (SummaryTemplate summary : TemplateList.summaries) {
-            summary.setGlobalConfig(this.globalConfig);
-            templateEngine.output(summary.getTemplateId(), wrapper, summary.getFilePath());
-        }
+    protected List<BaseTemplate> getAllTemplates() {
+        return list;
     }
 }

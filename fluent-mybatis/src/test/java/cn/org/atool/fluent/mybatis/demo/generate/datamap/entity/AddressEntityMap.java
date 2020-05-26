@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.demo.generate.datamap.entity;
 
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Property;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
@@ -14,23 +13,23 @@ public class AddressEntityMap extends DataMap<AddressEntityMap> {
     /**
      * 设置AddressEntity对象id字段值
      */
-    public transient final KeyValue<AddressEntityMap> id = new KeyValue(this, Property.id);
+    public transient final KeyValue<AddressEntityMap> id = new KeyValue(this, "id");
     /**
      * 设置AddressEntity对象gmtCreated字段值
      */
-    public transient final KeyValue<AddressEntityMap> gmtCreated = new KeyValue(this, Property.gmtCreated);
+    public transient final KeyValue<AddressEntityMap> gmtCreated = new KeyValue(this, "gmtCreated");
     /**
      * 设置AddressEntity对象gmtModified字段值
      */
-    public transient final KeyValue<AddressEntityMap> gmtModified = new KeyValue(this, Property.gmtModified);
+    public transient final KeyValue<AddressEntityMap> gmtModified = new KeyValue(this, "gmtModified");
     /**
      * 设置AddressEntity对象isDeleted字段值
      */
-    public transient final KeyValue<AddressEntityMap> isDeleted = new KeyValue(this, Property.isDeleted);
+    public transient final KeyValue<AddressEntityMap> isDeleted = new KeyValue(this, "isDeleted");
     /**
      * 设置AddressEntity对象address字段值
      */
-    public transient final KeyValue<AddressEntityMap> address = new KeyValue(this, Property.address);
+    public transient final KeyValue<AddressEntityMap> address = new KeyValue(this, "address");
 
     public AddressEntityMap() {
         super();

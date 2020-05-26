@@ -13,8 +13,6 @@ import java.util.Map;
 import java.io.Serializable;
 
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryEntityHelper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 
 
 
@@ -28,19 +26,19 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName(NoPrimaryMP.Table_Name)
+@TableName("no_primary")
 public class NoPrimaryEntity implements IEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 
      */
-    @TableField(value = Column.column_1)
+    @TableField(value = "column_1")
     private Integer column1;
     /**
      * 
      */
-    @TableField(value = Column.column_2)
+    @TableField(value = "column_2")
     private String column2;
 
     @Override
