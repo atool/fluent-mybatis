@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 
 /**
  * MyXmlMethod
@@ -22,5 +22,5 @@ public interface InjectMethod {
      * @param table  表信息
      * @return sql语句片段
      */
-    String getMethodSql(Class entity, TableInfo table);
+    String getMethodSql(Class entity, TableMeta table);
 }

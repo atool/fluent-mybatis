@@ -5,8 +5,8 @@ import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.SharedString;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
-import cn.org.atool.fluent.mybatis.metadata.BaseField;
-import cn.org.atool.fluent.mybatis.metadata.TableHelper;
+import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.Map;
@@ -74,9 +74,9 @@ public class NoAutoIdEntityQuery extends AbstractWrapper<NoAutoIdEntity, String,
     }
 
     @Override
-    public NoAutoIdEntityQuery select(Predicate<BaseField> predicate) {
+    public NoAutoIdEntityQuery select(Predicate<BaseFieldMeta> predicate) {
         this.entityClass = NoAutoIdEntity.class;
-        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).filter(predicate));
+        this.sqlSelect.setStringValue(TableMetaHelper.getTableInfo(getCheckEntityClass()).filter(predicate));
         return this;
     }
 
@@ -102,13 +102,13 @@ public class NoAutoIdEntityQuery extends AbstractWrapper<NoAutoIdEntity, String,
         return this;
     }
 
-    public NoAutoIdEntityQuery distinct(Predicate<BaseField> predicate) {
+    public NoAutoIdEntityQuery distinct(Predicate<BaseFieldMeta> predicate) {
         this.entityClass = NoAutoIdEntity.class;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public NoAutoIdEntityQuery distinct(Class<NoAutoIdEntity> entityClass, Predicate<BaseField> predicate) {
+    public NoAutoIdEntityQuery distinct(Class<NoAutoIdEntity> entityClass, Predicate<BaseFieldMeta> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;

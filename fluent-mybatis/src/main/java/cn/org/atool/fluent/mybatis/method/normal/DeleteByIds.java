@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
@@ -22,7 +22,7 @@ public class DeleteByIds extends AbstractMethod {
     }
 
     @Override
-    public String getMethodSql(Class entity, TableInfo table) {
+    public String getMethodSql(Class entity, TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
         String xml = builder
             .begin(StatementType.delete, statementId(), Collection.class)

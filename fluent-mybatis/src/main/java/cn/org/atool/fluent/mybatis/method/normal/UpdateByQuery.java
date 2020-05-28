@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
@@ -23,7 +23,7 @@ public class UpdateByQuery extends AbstractMethod {
     }
 
     @Override
-    public String getMethodSql(Class entity, TableInfo table) {
+    public String getMethodSql(Class entity, TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
         String xml = builder
             .begin(StatementType.update, statementId(), Map.class)
@@ -43,13 +43,13 @@ public class UpdateByQuery extends AbstractMethod {
      * @param builder
      * @return
      */
-    protected SqlBuilder update(TableInfo table, SqlBuilder builder) {
+    protected SqlBuilder update(TableMeta table, SqlBuilder builder) {
         return builder
             .ifThen("ew != null and ew.updates != null", () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
             .ifThen("ew != null and ew.sqlSet != null", "${ew.sqlSet}");
     }
 
-    private void updateField(SqlBuilder builder, FieldInfo field) {
+    private void updateField(SqlBuilder builder, FieldMeta field) {
         if (isUpdateDefault(field)) {
             builder.value("@column=@property,", field.getUpdate(), field.getColumn());
         } else {

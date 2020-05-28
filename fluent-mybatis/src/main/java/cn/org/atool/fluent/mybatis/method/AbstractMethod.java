@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param builder
      * @return
      */
-    protected SqlBuilder whereEntity(TableInfo table, SqlBuilder builder) {
+    protected SqlBuilder whereEntity(TableMeta table, SqlBuilder builder) {
         return builder
             .ifThen("ew != null and ew.entity != null", () -> {
                 if (table.getPrimary() != null) {
@@ -45,7 +45,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param builder
      * @return
      */
-    protected SqlBuilder whereById(TableInfo table, SqlBuilder builder) {
+    protected SqlBuilder whereById(TableMeta table, SqlBuilder builder) {
         if (table.getPrimary() == null) {
             return builder.append("1!=1");
         } else {
@@ -61,7 +61,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param builder
      * @return
      */
-    protected SqlBuilder whereByIds(TableInfo table, SqlBuilder builder) {
+    protected SqlBuilder whereByIds(TableMeta table, SqlBuilder builder) {
         if (table.getPrimary() == null) {
             return builder.append("1!=1");
         } else {
@@ -79,7 +79,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param table
      * @param builder
      */
-    protected SqlBuilder whereByMap(TableInfo table, SqlBuilder builder) {
+    protected SqlBuilder whereByMap(TableMeta table, SqlBuilder builder) {
         return builder.ifThen("cm != null and !cm.isEmpty", () -> {
             builder.foreach("cm", "v", "AND ", () -> {
                 builder.choose("v == null", "${k} IS NULL ", "${k} = #{v}");
@@ -93,7 +93,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param table
      * @return
      */
-    protected String getColumnsWithPrimary(TableInfo table) {
+    protected String getColumnsWithPrimary(TableMeta table) {
         List<String> list = new ArrayList<>();
         if (table.getKeyColumn() != null) {
             list.add(table.getKeyColumn());
@@ -108,7 +108,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param field
      * @return
      */
-    public static boolean isUpdateDefault(FieldInfo field) {
+    public static boolean isUpdateDefault(FieldMeta field) {
         return isNotEmpty(field.getUpdate());
     }
 
@@ -127,7 +127,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @param field
      * @return
      */
-    protected boolean isInsertDefault(FieldInfo field) {
+    protected boolean isInsertDefault(FieldMeta field) {
         return isNotEmpty(field.getInsert());
     }
 }

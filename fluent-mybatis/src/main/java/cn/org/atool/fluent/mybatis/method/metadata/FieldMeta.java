@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.metadata;
+package cn.org.atool.fluent.mybatis.method.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import lombok.EqualsAndHashCode;
@@ -19,8 +19,8 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  */
 @Getter
 @ToString
-@EqualsAndHashCode
-public class FieldInfo extends BaseField {
+@EqualsAndHashCode(callSuper = false)
+public class FieldMeta extends BaseFieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */
@@ -50,7 +50,7 @@ public class FieldInfo extends BaseField {
     /**
      * 全新的 存在 TableField 注解时使用的构造函数
      */
-    public FieldInfo(Field field, TableField tableField) {
+    public FieldMeta(Field field, TableField tableField) {
         super(tableField.value(), field);
         this.setJdbcType(tableField.jdbcType());
         this.numericScale = tableField.numericScale();

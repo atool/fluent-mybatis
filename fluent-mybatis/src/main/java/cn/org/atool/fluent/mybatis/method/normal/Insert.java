@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
-import cn.org.atool.fluent.mybatis.metadata.PrimaryInfo;
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.PrimaryMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
@@ -43,7 +43,7 @@ public class Insert extends AbstractMethod {
      * @return
      */
     @Override
-    public String getMethodSql(Class entity, TableInfo table) {
+    public String getMethodSql(Class entity, TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
         if (table.getPrimary() == null) {
             this.insertNotPrimary(builder, entity);
@@ -84,7 +84,7 @@ public class Insert extends AbstractMethod {
      * @param entity
      * @param primary
      */
-    private void insertHasPrimary(SqlBuilder builder, Class entity, PrimaryInfo primary) {
+    private void insertHasPrimary(SqlBuilder builder, Class entity, PrimaryMeta primary) {
         if (primary.isAutoIncrease()) {
             builder.quotas("<insert id='%s' keyColumn='%s' keyProperty='%s' parameterType='%s' useGeneratedKeys='true'>",
                 statementId(), primary.getColumn(), primary.getProperty(), entity.getName()
@@ -106,7 +106,7 @@ public class Insert extends AbstractMethod {
     }
 
 
-    private void value(SqlBuilder builder, FieldInfo field) {
+    private void value(SqlBuilder builder, FieldMeta field) {
         String insert = field.getInsert();
         if (MybatisUtil.isEmpty(insert)) {
             builder.ifThen("@property != null", "#{@property},", field.getProperty(), field.getColumn());
@@ -116,7 +116,7 @@ public class Insert extends AbstractMethod {
         }
     }
 
-    private void field(SqlBuilder builder, FieldInfo field) {
+    private void field(SqlBuilder builder, FieldMeta field) {
         if (isInsertDefault(field)) {
             builder.append(field.getColumn() + COMMA);
         } else {

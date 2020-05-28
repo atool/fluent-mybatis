@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.metadata;
+package cn.org.atool.fluent.mybatis.method.metadata;
 
 import lombok.Getter;
 import org.apache.ibatis.type.JdbcType;
@@ -14,7 +14,7 @@ import static cn.org.atool.fluent.mybatis.util.Constants.COMMA;
  * @create 2020/5/27 6:46 下午
  */
 @Getter
-public abstract class BaseField implements Comparable<FieldInfo> {
+public abstract class BaseFieldMeta implements Comparable<BaseFieldMeta> {
     /**
      * 字段名
      */
@@ -32,7 +32,7 @@ public abstract class BaseField implements Comparable<FieldInfo> {
      */
     private JdbcType jdbcType;
 
-    public BaseField(String column, Field field) {
+    public BaseFieldMeta(String column, Field field) {
         this.column = column;
         this.property = field.getName();
         this.propertyType = field.getType();
@@ -59,7 +59,7 @@ public abstract class BaseField implements Comparable<FieldInfo> {
     }
 
     @Override
-    public int compareTo(FieldInfo info) {
+    public int compareTo(BaseFieldMeta info) {
         return this.column.compareTo(info == null ? null : info.getColumn());
     }
 }

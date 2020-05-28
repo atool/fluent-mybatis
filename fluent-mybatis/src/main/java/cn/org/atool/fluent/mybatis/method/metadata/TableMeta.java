@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.metadata;
+package cn.org.atool.fluent.mybatis.method.metadata;
 
 import cn.org.atool.fluent.mybatis.util.Constants;
 import lombok.AccessLevel;
@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.joining;
  */
 @Data
 @Accessors(chain = true)
-public class TableInfo implements Constants {
+public class TableMeta implements Constants {
     /**
      * 表名称
      */
@@ -32,11 +32,11 @@ public class TableInfo implements Constants {
     /**
      * 主键
      */
-    private PrimaryInfo primary;
+    private PrimaryMeta primary;
     /**
      * 表字段信息列表
      */
-    private List<FieldInfo> fields;
+    private List<FieldMeta> fields;
     /**
      * 缓存包含主键及字段的 sql select
      */
@@ -44,7 +44,7 @@ public class TableInfo implements Constants {
     @Getter(AccessLevel.NONE)
     private String allSqlSelect;
 
-    public TableInfo(Class<?> entityType) {
+    public TableMeta(Class<?> entityType) {
         this.entityType = entityType;
     }
 
@@ -66,7 +66,7 @@ public class TableInfo implements Constants {
      * @param predicate 过滤条件
      * @return sql 片段
      */
-    public String filter(Predicate<BaseField> predicate) {
+    public String filter(Predicate<BaseFieldMeta> predicate) {
         List<String> columns = new ArrayList<>();
         if (primary != null && predicate.test(primary)) {
             columns.add(primary.getColumn());

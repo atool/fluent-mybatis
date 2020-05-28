@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
 import cn.org.atool.fluent.mybatis.function.Executor;
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -91,13 +91,13 @@ public class SqlBuilder {
      * @param table
      * @return
      */
-    public SqlBuilder update(TableInfo table, boolean isSpec) {
+    public SqlBuilder update(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.newLine().append("UPDATE ");
         return this.byTable(table, isSpec);
     }
 
-    private SqlBuilder byTable(TableInfo table, boolean isSpec) {
+    private SqlBuilder byTable(TableMeta table, boolean isSpec) {
         if (isSpec) {
             this.choose("SPEC_TABLE != null and SPEC_TABLE != ''",
                 "${SPEC_TABLE}",
@@ -141,7 +141,7 @@ public class SqlBuilder {
      * @param table
      * @return
      */
-    public SqlBuilder insert(TableInfo table, boolean isSpec) {
+    public SqlBuilder insert(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.newLine().append("INSERT INTO ");
         return this.byTable(table, isSpec);
@@ -153,7 +153,7 @@ public class SqlBuilder {
      * @param table
      * @return
      */
-    public SqlBuilder delete(TableInfo table, boolean isSpec) {
+    public SqlBuilder delete(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.newLine().append("DELETE FROM ");
         return this.byTable(table, isSpec);
@@ -166,7 +166,7 @@ public class SqlBuilder {
      * @param isSpec
      * @return
      */
-    public SqlBuilder select(TableInfo table, boolean isSelected, boolean isSpec) {
+    public SqlBuilder select(TableMeta table, boolean isSelected, boolean isSpec) {
         this.prefixComment(isSpec);
         this.newLine().append("SELECT ");
         if (isSelected) {
@@ -178,7 +178,7 @@ public class SqlBuilder {
         return this.byTable(table, isSpec);
     }
 
-    public SqlBuilder selectCount(TableInfo table, boolean isSpec) {
+    public SqlBuilder selectCount(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.append("SELECT COUNT(")
             .choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", "1")

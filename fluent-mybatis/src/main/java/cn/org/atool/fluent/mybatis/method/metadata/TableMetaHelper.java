@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.metadata;
+package cn.org.atool.fluent.mybatis.method.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
@@ -24,12 +24,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author darui.wu
  */
 @Slf4j
-public class TableHelper {
+public class TableMetaHelper {
     /**
      * 储存反射类表信息
      * Key: entity class
      */
-    private static final Map<Class, TableInfo> TABLE_INFO_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Class, TableMeta> TABLE_INFO_CACHE = new ConcurrentHashMap<>();
 
     /**
      * <p>
@@ -39,7 +39,7 @@ public class TableHelper {
      * @param clazz 反射实体类
      * @return 数据库表反射信息
      */
-    public static TableInfo getTableInfo(Class<?> clazz) {
+    public static TableMeta getTableInfo(Class<?> clazz) {
         if (!IEntity.class.isAssignableFrom(clazz)) {
             return null;
         }
@@ -60,12 +60,12 @@ public class TableHelper {
      */
     synchronized static void initTableInfo(Class<?> clazz) {
         if (!TABLE_INFO_CACHE.containsKey(clazz)) {
-            TableInfo tableInfo = new TableInfo(clazz);
+            TableMeta tableMeta = new TableMeta(clazz);
             /* 初始化表名相关 */
-            initTableName(clazz, tableInfo);
+            initTableName(clazz, tableMeta);
             /* 初始化字段相关 */
-            initTableFields(clazz, tableInfo);
-            TABLE_INFO_CACHE.put(clazz, tableInfo);
+            initTableFields(clazz, tableMeta);
+            TABLE_INFO_CACHE.put(clazz, tableMeta);
         }
     }
 
@@ -75,9 +75,9 @@ public class TableHelper {
      * </p>
      *
      * @param clazz     实体类
-     * @param tableInfo 数据库表反射信息
+     * @param tableMeta 数据库表反射信息
      */
-    private static void initTableName(Class<?> clazz, TableInfo tableInfo) {
+    private static void initTableName(Class<?> clazz, TableMeta tableMeta) {
         /* 数据库全局配置 */
         TableName table = clazz.getAnnotation(TableName.class);
 
@@ -85,7 +85,7 @@ public class TableHelper {
         if (MybatisUtil.isNotEmpty(table.schema())) {
             tableName = table.schema() + Constants.DOT + tableName;
         }
-        tableInfo.setTableName(tableName);
+        tableMeta.setTableName(tableName);
     }
 
     /**
@@ -95,24 +95,24 @@ public class TableHelper {
      * </p>
      *
      * @param clazz     实体类
-     * @param tableInfo 数据库表反射信息
+     * @param tableMeta 数据库表反射信息
      */
-    private static void initTableFields(Class<?> clazz, TableInfo tableInfo) {
+    private static void initTableFields(Class<?> clazz, TableMeta tableMeta) {
         List<Field> fields = MybatisUtil.getFieldList(clazz);
 
-        List<FieldInfo> fieldList = new ArrayList<>();
+        List<FieldMeta> fieldList = new ArrayList<>();
         for (Field field : fields) {
             TableField tableField = field.getAnnotation(TableField.class);
             if (tableField != null) {
-                fieldList.add(new FieldInfo(field, tableField));
+                fieldList.add(new FieldMeta(field, tableField));
                 continue;
             }
             TableId tableId = field.getAnnotation(TableId.class);
             if (tableId == null) {
                 continue;
             }
-            if (tableInfo.getPrimary() == null) {
-                tableInfo.setPrimary(new PrimaryInfo(field, tableId));
+            if (tableMeta.getPrimary() == null) {
+                tableMeta.setPrimary(new PrimaryMeta(field, tableId));
             } else {
                 throw FluentMybatisException.instance("There must be only one, Discover multiple @TableId annotation in %s", clazz.getName());
             }
@@ -120,10 +120,10 @@ public class TableHelper {
 
         /* 字段列表,不可变集合 */
         Collections.sort(fieldList);
-        tableInfo.setFields(Collections.unmodifiableList(fieldList));
+        tableMeta.setFields(Collections.unmodifiableList(fieldList));
 
         /* 未发现主键注解，提示警告信息 */
-        if (tableInfo.getPrimary() == null) {
+        if (tableMeta.getPrimary() == null) {
             log.warn(String.format("Warn: Could not find @TableId in Class: %s.", clazz.getName()));
         }
     }

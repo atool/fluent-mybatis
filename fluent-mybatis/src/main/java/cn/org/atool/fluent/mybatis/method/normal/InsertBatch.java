@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
-import cn.org.atool.fluent.mybatis.metadata.TableInfo;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
@@ -23,7 +23,7 @@ public class InsertBatch extends AbstractMethod {
     }
 
     @Override
-    public String getMethodSql(Class entity, TableInfo table) {
+    public String getMethodSql(Class entity, TableMeta table) {
         String values = this.getInsertValues(table);
         SqlBuilder builder = SqlBuilder.instance();
         String xml = builder.begin(StatementType.insert, statementId(), Collection.class, int.class)
@@ -42,7 +42,7 @@ public class InsertBatch extends AbstractMethod {
      * @param table
      * @return
      */
-    private String getInsertValues(TableInfo table) {
+    private String getInsertValues(TableMeta table) {
         SqlBuilder values = SqlBuilder.instance();
         if (table.getPrimary() != null) {
             values.value("#{item.@property},", table.getKeyProperty(), table.getKeyColumn());
