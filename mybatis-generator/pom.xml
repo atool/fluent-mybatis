@@ -5,7 +5,8 @@
     <parent>
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
-        <version>1.0.5</version>
+        <version>1.0.6-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,8 +14,15 @@
     <dependencies>
         <dependency>
             <groupId>org.test4j</groupId>
+            <artifactId>test4j-core</artifactId>
+            <version>${test4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.test4j</groupId>
             <artifactId>test4j-generator</artifactId>
             <version>${test4j.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.test4j</groupId>

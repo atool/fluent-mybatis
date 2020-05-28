@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.SharedString;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.BaseField;
 import cn.org.atool.fluent.mybatis.metadata.TableHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
@@ -74,9 +74,9 @@ public class AddressEntityQuery extends AbstractWrapper<AddressEntity, String, A
     }
 
     @Override
-    public AddressEntityQuery select(Predicate<FieldInfo> predicate) {
+    public AddressEntityQuery select(Predicate<BaseField> predicate) {
         this.entityClass = AddressEntity.class;
-        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
+        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).filter(predicate));
         return this;
     }
 
@@ -102,13 +102,13 @@ public class AddressEntityQuery extends AbstractWrapper<AddressEntity, String, A
         return this;
     }
 
-    public AddressEntityQuery distinct(Predicate<FieldInfo> predicate) {
+    public AddressEntityQuery distinct(Predicate<BaseField> predicate) {
         this.entityClass = AddressEntity.class;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public AddressEntityQuery distinct(Class<AddressEntity> entityClass, Predicate<FieldInfo> predicate) {
+    public AddressEntityQuery distinct(Class<AddressEntity> entityClass, Predicate<BaseField> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;

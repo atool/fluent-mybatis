@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.condition;
 import cn.org.atool.fluent.mybatis.condition.interfaces.*;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.BaseField;
 import cn.org.atool.fluent.mybatis.metadata.TableHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
@@ -458,7 +458,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         return DISTINCT + String.join(Constants.COMMA, columns);
     }
 
-    protected String distinctSelect(Class entityClass, Predicate<FieldInfo> predicate) {
-        return DISTINCT + TableHelper.getTableInfo(entityClass).chooseSelect(predicate);
+    protected String distinctSelect(Class entityClass, Predicate<BaseField> predicate) {
+        return DISTINCT + TableHelper.getTableInfo(entityClass).filter(predicate);
     }
 }

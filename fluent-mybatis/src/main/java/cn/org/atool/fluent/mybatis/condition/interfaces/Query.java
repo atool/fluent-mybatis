@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.condition.interfaces;
 
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.BaseField;
 
 import java.io.Serializable;
 import java.util.function.Predicate;
@@ -30,7 +30,7 @@ public interface Query<Children, T, R> extends Serializable {
      * @param predicate 过滤方式
      * @return children
      */
-    Children select(Predicate<FieldInfo> predicate);
+    Children select(Predicate<BaseField> predicate);
 
     /**
      * 查询条件 SQL 片段

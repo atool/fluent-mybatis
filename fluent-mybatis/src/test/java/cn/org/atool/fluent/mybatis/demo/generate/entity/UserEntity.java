@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.demo.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.IdType;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
@@ -12,9 +11,7 @@ import lombok.experimental.Accessors;
 import java.util.Map;
 import java.io.Serializable;
 
-import cn.org.atool.fluent.mybatis.demo.generate.helper.UserEntityHelper;
-
-import java.util.Date;
+import java.util.Date;import cn.org.atool.fluent.mybatis.demo.generate.helper.UserEntityHelper;
 
 /**
  * <p>
@@ -33,7 +30,7 @@ public class UserEntity implements IEntity {
     /**
      * 
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id")
     private Long id;
     /**
      * 
@@ -43,7 +40,7 @@ public class UserEntity implements IEntity {
     /**
      * 
      */
-    @TableField(value = "gmt_modified", update = "now()", insert = "now()")
+    @TableField(value = "gmt_modified", insert = "now()", update = "now()")
     private Date gmtModified;
     /**
      * 
@@ -73,7 +70,7 @@ public class UserEntity implements IEntity {
 
     @Override
     public Serializable findPk() {
-        return this.id;
+        return id;
     }
 
     /**

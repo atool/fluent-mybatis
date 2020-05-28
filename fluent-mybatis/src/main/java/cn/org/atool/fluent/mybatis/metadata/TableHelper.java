@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.util.Constants;
@@ -84,7 +86,6 @@ public class TableHelper {
             tableName = table.schema() + Constants.DOT + tableName;
         }
         tableInfo.setTableName(tableName);
-        tableInfo.setSequence(clazz.getAnnotation(KeySequence.class));
     }
 
     /**
@@ -111,10 +112,7 @@ public class TableHelper {
                 continue;
             }
             if (tableInfo.getPrimary() == null) {
-                if (IdType.NONE != tableId.type()) {
-                    tableInfo.setIdType(tableId.type());
-                }
-                tableInfo.setPrimary(new FieldInfo(field, tableId));
+                tableInfo.setPrimary(new PrimaryInfo(field, tableId));
             } else {
                 throw FluentMybatisException.instance("There must be only one, Discover multiple @TableId annotation in %s", clazz.getName());
             }

@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.SharedString;
 import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
-import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.BaseField;
 import cn.org.atool.fluent.mybatis.metadata.TableHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
@@ -74,9 +74,9 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
     }
 
     @Override
-    public UserEntityQuery select(Predicate<FieldInfo> predicate) {
+    public UserEntityQuery select(Predicate<BaseField> predicate) {
         this.entityClass = UserEntity.class;
-        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).chooseSelect(predicate));
+        this.sqlSelect.setStringValue(TableHelper.getTableInfo(getCheckEntityClass()).filter(predicate));
         return this;
     }
 
@@ -102,13 +102,13 @@ public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEnt
         return this;
     }
 
-    public UserEntityQuery distinct(Predicate<FieldInfo> predicate) {
+    public UserEntityQuery distinct(Predicate<BaseField> predicate) {
         this.entityClass = UserEntity.class;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public UserEntityQuery distinct(Class<UserEntity> entityClass, Predicate<FieldInfo> predicate) {
+    public UserEntityQuery distinct(Class<UserEntity> entityClass, Predicate<BaseField> predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;

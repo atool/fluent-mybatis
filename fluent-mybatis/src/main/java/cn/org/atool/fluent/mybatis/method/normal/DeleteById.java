@@ -24,7 +24,7 @@ public class DeleteById extends AbstractMethod {
 
         SqlBuilder builder = SqlBuilder.instance();
         String xml = builder
-            .begin(StatementType.delete, statementId(), table.getPropertyType())
+            .begin(StatementType.delete, statementId(), table.getKeyType())
             .delete(table, super.isSpecTable())
             .where(() -> super.whereById(table, builder))
             .end(StatementType.delete)

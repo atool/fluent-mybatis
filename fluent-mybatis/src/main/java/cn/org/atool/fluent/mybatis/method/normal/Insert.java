@@ -1,10 +1,11 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
 import cn.org.atool.fluent.mybatis.metadata.FieldInfo;
+import cn.org.atool.fluent.mybatis.metadata.PrimaryInfo;
 import cn.org.atool.fluent.mybatis.metadata.TableInfo;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
-import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
+import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert;
@@ -45,14 +46,9 @@ public class Insert extends AbstractMethod {
     public String getMethodSql(Class entity, TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         if (table.getPrimary() == null) {
-            builder.quotas("<insert id='%s' parameterType='%s'>",
-                statementId(),
-                entity.getName());
+            this.insertNotPrimary(builder, entity);
         } else {
-            builder.quotas("<insert id='%s' parameterType='%s' useGeneratedKeys='true' keyProperty='%s'>",
-                statementId(),
-                entity.getName(),
-                table.getKeyProperty());
+            this.insertHasPrimary(builder, entity, table.getPrimary());
         }
         builder.insert(table, this.isSpecTable())
             .brackets(() -> {
@@ -67,8 +63,48 @@ public class Insert extends AbstractMethod {
                     .eachJoining(table.getFields(), (field) -> value(builder, field));
             })
             .end(StatementType.insert);
-        return builder.toString();
+        String text = builder.toString();
+        return text;
     }
+
+    /**
+     * 无主键的表插入
+     *
+     * @param builder
+     * @param entity
+     */
+    private void insertNotPrimary(SqlBuilder builder, Class entity) {
+        builder.quotas("<insert id='%s' parameterType='%s'>", statementId(), entity.getName());
+    }
+
+    /**
+     * 有主键的表插入
+     *
+     * @param builder
+     * @param entity
+     * @param primary
+     */
+    private void insertHasPrimary(SqlBuilder builder, Class entity, PrimaryInfo primary) {
+        if (primary.isAutoIncrease()) {
+            builder.quotas("<insert id='%s' keyColumn='%s' keyProperty='%s' parameterType='%s' useGeneratedKeys='true'>",
+                statementId(), primary.getColumn(), primary.getProperty(), entity.getName()
+            );
+        } else {
+//            if (primary.getSeqName().isEmpty()) {
+            builder.quotas("<insert id='%s' keyProperty='%s' parameterType='%s'>",
+                statementId(), primary.getProperty(), entity.getName()
+            );
+            //        else {
+//            builder
+//                .quotas("<insert id='%s' parameterType='%s'>", statementId(), entity.getName()).newLine()
+//                .quotas("<selectKey keyColumn='%s' keyProperty='%s' resultType='%s' order='BEFORE'>", primary.getColumn(), primary.getProperty(), primary.getProperty()).newLine()
+//                .append("select SEQ_ID.nextval from %s", primary.getSeqName()).newLine()
+//                .append("</selectKey>").newLine();
+//        }
+        }
+
+    }
+
 
     private void value(SqlBuilder builder, FieldInfo field) {
         String insert = field.getInsert();

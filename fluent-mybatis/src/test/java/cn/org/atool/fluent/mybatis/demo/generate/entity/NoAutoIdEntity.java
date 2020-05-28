@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.demo.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.IdType;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
@@ -13,8 +12,6 @@ import java.util.Map;
 import java.io.Serializable;
 
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdEntityHelper;
-
-
 
 /**
  * <p>
@@ -33,7 +30,7 @@ public class NoAutoIdEntity implements IEntity {
     /**
      * 
      */
-    @TableId(value = "id")
+    @TableId(value = "id", auto = false, seqName="test")
     private String id;
     /**
      * 
@@ -43,7 +40,7 @@ public class NoAutoIdEntity implements IEntity {
 
     @Override
     public Serializable findPk() {
-        return this.id;
+        return id;
     }
 
     /**

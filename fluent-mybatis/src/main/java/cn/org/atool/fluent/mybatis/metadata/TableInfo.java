@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
-import cn.org.atool.fluent.mybatis.annotation.IdType;
-import cn.org.atool.fluent.mybatis.annotation.KeySequence;
 import cn.org.atool.fluent.mybatis.util.Constants;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,32 +25,18 @@ public class TableInfo implements Constants {
      * 表名称
      */
     private String tableName;
-
     /**
      * 实体类型
      */
     private Class<?> entityType;
-
     /**
      * 主键
      */
-    private FieldInfo primary;
-
-    /**
-     * 表主键ID Sequence
-     */
-    private KeySequence sequence;
-
-    /**
-     * 表主键ID 类型
-     */
-    private IdType idType = IdType.AUTO;
-
+    private PrimaryInfo primary;
     /**
      * 表字段信息列表
      */
     private List<FieldInfo> fields;
-
     /**
      * 缓存包含主键及字段的 sql select
      */
@@ -71,7 +55,7 @@ public class TableInfo implements Constants {
      */
     public String getAllSqlSelect() {
         if (allSqlSelect == null) {
-            allSqlSelect = chooseSelect(f -> true);
+            allSqlSelect = filter(f -> true);
         }
         return allSqlSelect;
     }
@@ -82,7 +66,7 @@ public class TableInfo implements Constants {
      * @param predicate 过滤条件
      * @return sql 片段
      */
-    public String chooseSelect(Predicate<FieldInfo> predicate) {
+    public String filter(Predicate<BaseField> predicate) {
         List<String> columns = new ArrayList<>();
         if (primary != null && predicate.test(primary)) {
             columns.add(primary.getColumn());
@@ -104,7 +88,7 @@ public class TableInfo implements Constants {
      *
      * @return
      */
-    public Class getPropertyType() {
+    public Class getKeyType() {
         return this.primary == null ? Long.class : this.primary.getPropertyType();
     }
 }

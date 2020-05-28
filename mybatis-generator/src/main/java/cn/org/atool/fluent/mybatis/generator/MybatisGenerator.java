@@ -14,11 +14,10 @@ import cn.org.atool.fluent.mybatis.generator.template.query.EntityWrapperHelperT
 import lombok.extern.slf4j.Slf4j;
 
 import org.test4j.generator.mybatis.DataMapGenerator;
-import org.test4j.generator.mybatis.TemplateGenerator;
+import org.test4j.generator.mybatis.IGlobalConfig;
 import org.test4j.generator.mybatis.template.BaseTemplate;
 
 import org.test4j.generator.mybatis.template.DataMapTemplateList;
-import org.test4j.generator.mybatis.template.summary.SummaryTemplate;
 
 import java.util.*;
 
@@ -37,7 +36,7 @@ public class MybatisGenerator extends DataMapGenerator {
      *
      * @return
      */
-    public static TemplateGenerator build() {
+    public static IGlobalConfig build() {
         return new MybatisGenerator();
     }
 

@@ -14,8 +14,14 @@ import java.util.List;
  * @create 2020/5/25 8:53 下午
  */
 public class InjectMapperXml {
-
-    public static String buildMapperXml(Class mapperKlass) {
+    /**
+     * 生成mapperClass对应的mybatis配置文件
+     *
+     * @param mapperKlass mapper类
+     * @param methods     注入的方法列表
+     * @return
+     */
+    public static String buildMapperXml(Class mapperKlass, List<InjectMethod> methods) {
         Class entityKlass = TableHelper.extractEntity(mapperKlass);
         TableInfo tableInfo = TableHelper.getTableInfo(entityKlass);
         SqlBuilder xml = SqlBuilder.instance()
@@ -25,7 +31,7 @@ public class InjectMapperXml {
 
         resultMap(xml, entityKlass, tableInfo);
         selectSql(xml, tableInfo);
-        for (InjectMethod xmlMethod : list()) {
+        for (InjectMethod xmlMethod : methods) {
             xml.newLine();
             xmlMethod(xml, entityKlass, tableInfo, xmlMethod);
             xml.newLine();
@@ -77,14 +83,5 @@ public class InjectMapperXml {
             xml.quotas("<result column='%s' property='%s' />", field.getColumn(), field.getProperty()).newLine();
         }
         xml.append("</resultMap>").newLine();
-    }
-
-    /**
-     * 注入的方法列表
-     *
-     * @return
-     */
-    public static List<InjectMethod> list() {
-        return InjectMethod.injectMethods();
     }
 }

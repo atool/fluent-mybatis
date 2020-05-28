@@ -26,13 +26,17 @@ public class InsertTest extends BaseTest {
     @Test
     public void testInsert() {
         db.table(t_user).clean();
-        userMapper.insert(new UserEntity()
-                .setAge(23)
-                .setUserName("tom mike")
-        );
-        db.table(t_user).query().eqDataMap(TM.user.create(1)
-                .age.values(23)
-                .user_name.values("tom mike")
+        UserEntity user = new UserEntity()
+            .setAge(23)
+            .setUserName("tom mike");
+        userMapper.insert(user);
+        user.setId(null);
+        userMapper.insert(user);
+
+        want.number(user.getId()).isGt(1L);
+        db.table(t_user).query().eqDataMap(TM.user.create(2)
+            .age.values(23)
+            .user_name.values("tom mike")
         );
     }
 
@@ -40,28 +44,28 @@ public class InsertTest extends BaseTest {
     public void testInsert_NoAutoId() {
         db.table(t_no_auto_id).clean();
         idMapper.insert(new NoAutoIdEntity()
-                .setId("test-id-1")
-                .setColumn1("test")
+            .setId("test-id-1")
+            .setColumn1("test")
         );
         idMapper.insert(new NoAutoIdEntity()
-                .setId("test-id-2")
-                .setColumn1("test")
+            .setId("test-id-2")
+            .setColumn1("test")
         );
         db.table(t_no_auto_id).query().eqDataMap(TM.no_auto_id.create(2)
-                .id.values("test-id-1", "test-id-2")
+            .id.values("test-id-1", "test-id-2")
         );
     }
 
     @Test
     public void testInsert_NoAutoId_conflict() {
         db.table(t_no_auto_id).clean().insert(TM.no_auto_id.createWithInit(1)
-                .id.values("test-id-1")
-                .column_1.values("test")
+            .id.values("test-id-1")
+            .column_1.values("test")
         );
         Assertions.assertThrows(DuplicateKeyException.class, () -> {
             idMapper.insert(new NoAutoIdEntity()
-                    .setId("test-id-1")
-                    .setColumn1("test")
+                .setId("test-id-1")
+                .setColumn1("test")
             );
         });
     }
@@ -71,12 +75,12 @@ public class InsertTest extends BaseTest {
     public void test_insert_noPrimary() {
         db.table(t_no_primary).clean();
         noPrimaryMapper.insert(new NoPrimaryEntity()
-                .setColumn1(23)
-                .setColumn2("test")
+            .setColumn1(23)
+            .setColumn2("test")
         );
         db.table(t_no_primary).query().eqDataMap(TM.no_primary.create(1)
-                .column_1.values(23)
-                .column_2.values("test")
+            .column_1.values(23)
+            .column_2.values("test")
         );
     }
 }

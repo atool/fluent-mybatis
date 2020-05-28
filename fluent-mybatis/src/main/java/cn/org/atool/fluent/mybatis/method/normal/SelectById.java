@@ -23,7 +23,7 @@ public class SelectById extends AbstractMethod {
     public String getMethodSql(Class entity, TableInfo table) {
         SqlBuilder builder = SqlBuilder.instance();
         String xml = builder
-            .begin(StatementType.select, statementId(), table.getPropertyType())
+            .begin(StatementType.select, statementId(), table.getKeyType())
             .select(table, false, super.isSpecTable())
             .where(() -> super.whereById(table, builder))
             .end(StatementType.select)

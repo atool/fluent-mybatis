@@ -1,13 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.metadata.TableInfo;
-import cn.org.atool.fluent.mybatis.method.normal.*;
-import cn.org.atool.fluent.mybatis.method.partition.DeleteSpec;
-import cn.org.atool.fluent.mybatis.method.partition.SelectSpec;
-import cn.org.atool.fluent.mybatis.method.partition.UpdateSpecByQuery;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * MyXmlMethod
@@ -30,39 +23,4 @@ public interface InjectMethod {
      * @return sql语句片段
      */
     String getMethodSql(Class entity, TableInfo table);
-
-    /**
-     * fluent mybatis内置方法
-     *
-     * @return
-     */
-    static List<InjectMethod> injectMethods() {
-        return Arrays.asList(
-            // delete
-            new Delete(),
-            new DeleteById(),
-            new DeleteByIds(),
-            new DeleteByMap(),
-            // insert
-            new Insert(),
-            new InsertBatch(),
-            // select
-            new SelectById(),
-            new SelectByIds(),
-            new SelectByMap(),
-            new SelectCount(),
-            new SelectList(),
-            new SelectMaps(),
-            new SelectObjs(),
-            new SelectOne(),
-            // update
-            new UpdateById(),
-            new UpdateByQuery(),
-
-            // partition
-            new DeleteSpec(),
-            new SelectSpec(),
-            new UpdateSpecByQuery()
-        );
-    }
 }

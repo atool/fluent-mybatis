@@ -1,6 +1,5 @@
 package ${entity.package};
 
-import cn.org.atool.fluent.mybatis.annotation.IdType;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
@@ -12,10 +11,8 @@ import lombok.experimental.Accessors;
 import java.util.Map;
 import java.io.Serializable;
 
+$!{importTypes}#if(${entity.interface})import ${entity.interfaceName};#end
 import ${entityHelper.package}.${entityHelper.name};
-
-$!{importTypes}
-#if(${entity.interface})import ${entity.interfaceName};#end
 
 /**
  * <p>
@@ -36,35 +33,14 @@ public class ${entity.name} implements IEntity #if(${entity.interfaceName}), ${e
     /**
      * ${field.comment}
      */
-#if(${field.primary})## 主键
-    #set($primaryKey=${field.name})
-    #if(${field.category} == 'PrimaryId')
-@TableId(value = "${field.columnName}", type = IdType.AUTO)
-    #else
-@TableId(value = "${field.columnName}")
-    #end
-#else
-    #if(${field.category} == 'GmtModified')
-    @TableField(value = "${field.columnName}", update = "now()", insert = "now()")
-    #elseif(${field.category} == 'GmtCreate')
-    @TableField(value = "${field.columnName}", insert = "now()")
-    #elseif(${field.category} == 'IsDeleted')## 逻辑删除字段
-    @TableField(value = "${field.columnName}", insert = "0")
-    #else
-    @TableField(value = "${field.columnName}")
-    #end
-#end
+    ${entity.annotation.get(${field.name})}
     private ${field.type} ${field.name};
     #end
 
 ## ---------- for each 字段循环结束 -----------
     @Override
     public Serializable findPk() {
-    #if(${primaryKey})
-        return this.${primaryKey};
-    #else
-        return null;
-    #end
+        return ${entity.primaryKey};
     }
 
     /**

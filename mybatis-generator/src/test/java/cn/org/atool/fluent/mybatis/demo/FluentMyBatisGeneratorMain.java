@@ -22,7 +22,7 @@ public class FluentMyBatisGeneratorMain {
             .tables(config -> config
                 .setTablePrefix("t_")
                 .addTable("address")
-                .addTable("t_user", true)
+                .addTable("t_user", t -> t.setPartition(true))
                 .allTable(table -> {
                     table.setColumn("gmt_created", "gmt_modified", "is_deleted")
                         .column("is_deleted", ColumnType.BOOLEAN)
@@ -31,7 +31,7 @@ public class FluentMyBatisGeneratorMain {
                 })
             )
             .tables(config -> config
-                .addTable("no_auto_id")
+                .addTable("no_auto_id", t -> t.setSeqName("test"))
                 .addTable("no_primary")
                 .allTable(table -> table.setMapperPrefix("new"))
             )
