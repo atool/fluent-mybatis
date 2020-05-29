@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
+import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.PrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
-import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.util.MybatisUtil;
@@ -45,11 +45,8 @@ public class Insert extends AbstractMethod {
     @Override
     public String getMethodSql(Class entity, TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
-        if (table.getPrimary() == null) {
-            this.insertNotPrimary(builder, entity);
-        } else {
-            this.insertHasPrimary(builder, entity, table.getPrimary());
-        }
+
+        this.insertStatement(builder, entity, table.getPrimary());
         builder.insert(table, this.isSpecTable())
             .brackets(() -> {
                 builder
@@ -68,23 +65,20 @@ public class Insert extends AbstractMethod {
     }
 
     /**
-     * 无主键的表插入
-     *
-     * @param builder
-     * @param entity
-     */
-    private void insertNotPrimary(SqlBuilder builder, Class entity) {
-        builder.quotas("<insert id='%s' parameterType='%s'>", statementId(), entity.getName());
-    }
-
-    /**
-     * 有主键的表插入
+     * <pre>
+     *     <insert id="insert" keyColumn="id" keyProperty="id"
+     *             parameterType="...entity.XyzEntity" useGeneratedKeys="true">
+     * </pre>
      *
      * @param builder
      * @param entity
      * @param primary
      */
-    private void insertHasPrimary(SqlBuilder builder, Class entity, PrimaryMeta primary) {
+    protected void insertStatement(SqlBuilder builder, Class entity, PrimaryMeta primary) {
+        if (primary == null) {
+            builder.quotas("<insert id='%s' parameterType='%s'>", statementId(), entity.getName());
+            return;
+        }
         if (primary.isAutoIncrease()) {
             builder.quotas("<insert id='%s' keyColumn='%s' keyProperty='%s' parameterType='%s' useGeneratedKeys='true'>",
                 statementId(), primary.getColumn(), primary.getProperty(), entity.getName()
@@ -102,9 +96,7 @@ public class Insert extends AbstractMethod {
 //                .append("</selectKey>").newLine();
 //        }
         }
-
     }
-
 
     private void value(SqlBuilder builder, FieldMeta field) {
         String insert = field.getInsert();

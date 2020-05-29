@@ -1,22 +1,21 @@
 package cn.org.atool.fluent.mybatis.condition;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.*;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * @param <E>
  * @author darui.wu
  */
 public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E>, U extends IEntityUpdate<U>>
-        implements IBaseDao<E>, IMapperDao<E, Q, U> {
+    implements IBaseDao<E>, IMapperDao<E, Q, U> {
     @Override
     public <PK extends Serializable> PK save(E entity) {
         this.mapper().insert(entity);
@@ -24,7 +23,11 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
     }
 
     @Override
-    public int saveWithPk(List<E> list) {
+    public int save(List<E> list) {
+        Set pks = list.stream().map(E::findPk).filter(pk -> pk != null).collect(toSet());
+        if (!pks.isEmpty() && pks.size() != list.size()) {
+            throw FluentMybatisException.instance("The primary key of the list instance must be assigned to all or none");
+        }
         return this.mapper().insertBatch(list);
     }
 
@@ -90,8 +93,8 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
      */
     public <F> List<F> selectFields(IEntityQuery query, Function<E, F> function) {
         return this.mapper().selectList((Wrapper<E>) query).stream()
-                .map(function::apply)
-                .collect(toList());
+            .map(function::apply)
+            .collect(toList());
     }
 
     /**
@@ -105,10 +108,10 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
     public <F> List<F> selectObjs(IEntityQuery query, Function<Map<String, Object>, F> function) {
         List<Map<String, Object>> list = this.mapper().selectMaps((Wrapper<E>) query);
         return list.stream()
-                // mybatis有个bug，当所有字段值为null时, 不会返回Map对象, 而是返回一个null
-                .map(map -> map == null ? new HashMap<String, Object>() : map)
-                .map(function::apply)
-                .collect(toList());
+            // mybatis有个bug，当所有字段值为null时, 不会返回Map对象, 而是返回一个null
+            .map(map -> map == null ? new HashMap<String, Object>() : map)
+            .map(function::apply)
+            .collect(toList());
     }
 
     /**
@@ -156,8 +159,8 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IEntityQuery<Q, E
     @Override
     public int deleteByEntityIds(Collection<E> entities) {
         List<Serializable> ids = entities.stream()
-                .map(IEntity::findPk)
-                .collect(toList());
+            .map(IEntity::findPk)
+            .collect(toList());
         return this.mapper().deleteByIds(ids);
     }
 

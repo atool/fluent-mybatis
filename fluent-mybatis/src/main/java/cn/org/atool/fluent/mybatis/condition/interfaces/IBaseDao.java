@@ -24,11 +24,12 @@ public interface IBaseDao<E extends IEntity> {
 
     /**
      * 批量插入
+     * 列表实例的主键必须全赋值，或者全不赋值
      *
      * @param list
      * @return 插入记录数
      */
-    int saveWithPk(List<E> list);
+    int save(List<E> list);
 
     /**
      * <p>
