@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.condition;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
-import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
 
 /**
  * 条件构造抽象类

@@ -3,7 +3,7 @@ package ${entity.package};
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,8 @@ import lombok.experimental.Accessors;
 import java.util.Map;
 import java.io.Serializable;
 
-$!{importTypes}#if(${entity.interface})import ${entity.interfaceName};#end
+$!{importTypes}
+$!{entity.interface}
 import ${entityHelper.package}.${entityHelper.name};
 
 /**
@@ -25,7 +26,7 @@ import ${entityHelper.package}.${entityHelper.name};
 @Setter
 @Accessors(chain = true)
 @TableName("${table}")
-public class ${entity.name} implements IEntity #if(${entity.interfaceName}), ${entity.interfaceName}#end{
+public class ${entity.name} implements IEntity$!{entity.interfaceName}{
     private static final long serialVersionUID = 1L;
 
 ## ---------- for each 字段循环开始 -----------

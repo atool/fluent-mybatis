@@ -1,13 +1,13 @@
 package ${baseDao.package};
 
-import cn.org.atool.fluent.mybatis.condition.BaseDaoImpl;
+import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
 import ${entity.package}.${entity.name};
 import ${mapper.package}.${mapper.name};
 import ${mapping.package}.${mapping.name};
 import ${entityQuery.package}.${entityQuery.name};
 import ${entityUpdate.package}.${entityUpdate.name};
 import org.springframework.beans.factory.annotation.Autowired;
-$!{baseDao.interfaceImports}
+$!{baseDao.interfaces}
 
 /**
 * ${entity.name}数据库操作服务类
@@ -15,7 +15,7 @@ $!{baseDao.interfaceImports}
  * @author ${author}
 */
 public abstract class ${baseDao.name} extends BaseDaoImpl<${entity.name}, ${entityQuery.name}, ${entityUpdate.name}>
-        implements ${mapping.name}$!{baseDao.interface} {
+        implements ${mapping.name}$!{baseDao.interfaceName} {
 
     @Autowired
     protected ${mapper.name} mapper;

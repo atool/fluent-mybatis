@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.mybatis.condition;
 
+import cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword;
+import cn.org.atool.fluent.mybatis.condition.helper.SqlLike;
 import cn.org.atool.fluent.mybatis.condition.interfaces.*;
-import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
@@ -16,8 +17,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static cn.org.atool.fluent.mybatis.condition.SqlKeyword.*;
-import static cn.org.atool.fluent.mybatis.condition.WrapperKeyword.*;
+import static cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword.*;
+import static cn.org.atool.fluent.mybatis.condition.helper.WrapperKeyword.*;
 import static cn.org.atool.fluent.mybatis.util.MybatisUtil.*;
 import static java.util.stream.Collectors.joining;
 

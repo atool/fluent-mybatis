@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface InjectMethods {
     /**
-     * 注入的方法列表
+     * 内置方法列表（不包含分库分表）
      * fluent mybatis内置方法
      *
      * @return
@@ -41,8 +41,17 @@ public interface InjectMethods {
             new DeleteByMap(),
             // update
             new UpdateById(),
-            new UpdateByQuery(),
-            // partition
+            new UpdateByQuery()
+        );
+    }
+
+    /**
+     * 分库分表的方法
+     *
+     * @return
+     */
+    default List<InjectMethod> partitionMethods() {
+        return Arrays.asList(
             new DeleteSpec(),
             new SelectSpec(),
             new UpdateSpecByQuery()

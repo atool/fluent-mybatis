@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.condition.segments;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
-import cn.org.atool.fluent.mybatis.condition.SqlKeyword;
+import cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword;
 
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.util.Constants.EMPTY;
 import static cn.org.atool.fluent.mybatis.util.Constants.SPACE;
-import static cn.org.atool.fluent.mybatis.condition.SqlKeyword.HAVING;
+import static cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword.HAVING;
 import static java.util.stream.Collectors.joining;
 
 /**

@@ -1,6 +1,7 @@
-package cn.org.atool.fluent.mybatis.condition.segments;
+package cn.org.atool.fluent.mybatis.condition;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
+import cn.org.atool.fluent.mybatis.condition.segments.*;
 import cn.org.atool.fluent.mybatis.util.Constants;
 import lombok.AccessLevel;
 import lombok.Getter;

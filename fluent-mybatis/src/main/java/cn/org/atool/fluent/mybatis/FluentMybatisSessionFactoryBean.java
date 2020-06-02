@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.mapper.IMapper;
+import cn.org.atool.fluent.mybatis.mapper.PartitionMapper;
 import cn.org.atool.fluent.mybatis.method.InjectMethod;
 import cn.org.atool.fluent.mybatis.method.InjectMethods;
 import cn.org.atool.fluent.mybatis.method.model.InjectMapperXml;
@@ -9,13 +10,19 @@ import cn.org.atool.fluent.mybatis.util.MybatisUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -27,7 +34,7 @@ import java.util.stream.Stream;
 @Accessors(chain = true)
 public class FluentMybatisSessionFactoryBean extends SqlSessionFactoryBean {
     @Autowired
-    private ListableBeanFactory beanFactory;
+    private ConfigurableListableBeanFactory beanFactory;
 
     private Resource[] mapperLocations;
 
@@ -66,20 +73,52 @@ public class FluentMybatisSessionFactoryBean extends SqlSessionFactoryBean {
             Stream.of(this.mapperLocations).forEach(mappers::add);
         }
 
-        String[] mapperBeans = beanFactory.getBeanNamesForType(IMapper.class);
-        for (String mapper : mapperBeans) {
-            Class type = beanFactory.getType(mapper);
-            String xml = InjectMapperXml.buildMapperXml(type, this.fluentMethods());
-            Resource resource1 = new InjectMethodResource(type, xml);
-            mappers.add(resource1);
+        List<Class> mapperKlass = this.findMapperClass();
+        for (Class klass : mapperKlass) {
+            boolean isPartition = PartitionMapper.class.isAssignableFrom(klass);
+            String xml = InjectMapperXml.buildMapperXml(klass, this.fluentMethods(isPartition));
+            if (xml == null) {
+                continue;
+            }
+            Resource resource = new InjectMethodResource(klass, xml);
+            mappers.add(resource);
         }
         this.setMapperLocations(mappers.toArray(new Resource[0]));
     }
 
-    private List<InjectMethod> fluentMethods() {
+    private List<Class> findMapperClass() {
+        List<Class> classes = new ArrayList<>();
+        String[] beans = beanFactory.getBeanDefinitionNames();
+        for (String bean : beans) {
+            BeanDefinition bd = beanFactory.getBeanDefinition(bean);
+            if (!(bd instanceof AnnotatedBeanDefinition)) {
+                continue;
+            }
+            AnnotationMetadata metadata = ((AnnotatedBeanDefinition) bd).getMetadata();
+            Set<String> annotations = metadata.getAnnotationTypes();
+            if (!annotations.contains(Mapper.class.getName())) {
+                continue;
+            }
+            Class klass = this.findMapperClass(metadata.getClassName());
+            if (IMapper.class.isAssignableFrom(klass)) {
+                classes.add(klass);
+            }
+        }
+        return classes;
+    }
+
+    private Class findMapperClass(String mapperKlassName) {
+        try {
+            return ClassUtils.forName(mapperKlassName, ClassUtils.getDefaultClassLoader());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<InjectMethod> fluentMethods(boolean isPartition) {
         if (this.injectMethods == null) {
             this.injectMethods = new InjectMethods.DefaultInjectMethods();
         }
-        return this.injectMethods.methods();
+        return isPartition ? this.injectMethods.partitionMethods() : this.injectMethods.methods();
     }
 }

@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.util.Constants.*;
-import static cn.org.atool.fluent.mybatis.condition.SqlKeyword.ORDER_BY;
+import static cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword.ORDER_BY;
 import static java.util.stream.Collectors.joining;
 
 /**

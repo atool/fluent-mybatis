@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.condition;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
-
 import java.util.Map;
 
 public class BaseQueryAnd<W extends AbstractWrapper & IProperty2Column> {

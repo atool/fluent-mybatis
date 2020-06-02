@@ -1,10 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
-import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
-import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
-import cn.org.atool.fluent.mybatis.condition.SharedString;
-import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.base.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.*;
 import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;

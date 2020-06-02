@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.base.IEntityQuery;
+import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

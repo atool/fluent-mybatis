@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.method.metadata;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.util.Constants;
 import cn.org.atool.fluent.mybatis.util.MybatisUtil;

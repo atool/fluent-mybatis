@@ -1,6 +1,6 @@
 package ${daoIntf.package};
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import ${entity.package}.${entity.name};
 import org.springframework.stereotype.Repository;
 

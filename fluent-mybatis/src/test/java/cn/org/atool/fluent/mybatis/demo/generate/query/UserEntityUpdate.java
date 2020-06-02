@@ -1,9 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
-import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
-import cn.org.atool.fluent.mybatis.condition.AbstractWrapper;
-import cn.org.atool.fluent.mybatis.condition.segments.MergeSegments;
+import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.condition.*;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.*;

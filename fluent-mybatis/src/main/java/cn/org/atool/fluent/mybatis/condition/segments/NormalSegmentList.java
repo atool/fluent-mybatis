@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.condition.segments;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
-import cn.org.atool.fluent.mybatis.condition.SqlKeyword;
+import cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public class NormalSegmentList extends AbstractISegmentList {
      */
     private boolean executeNot = true;
 
-    NormalSegmentList() {
+    public NormalSegmentList() {
         this.flushLastValue = true;
     }
 

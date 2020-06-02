@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.condition.segments;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
-import cn.org.atool.fluent.mybatis.condition.SqlKeyword;
-import cn.org.atool.fluent.mybatis.condition.WrapperKeyword;
+import cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword;
+import cn.org.atool.fluent.mybatis.condition.helper.WrapperKeyword;
 
 import java.util.function.Predicate;
 

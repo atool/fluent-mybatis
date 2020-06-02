@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.condition.interfaces;
+package cn.org.atool.fluent.mybatis.condition;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo;
 
 import cn.org.atool.fluent.mybatis.generator.MybatisGenerator;
-import org.test4j.generator.mybatis.db.ColumnType;
+import org.test4j.generator.mybatis.db.ColumnJavaType;
 
 public class FluentMyBatisGeneratorMain {
     static String url = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
@@ -20,20 +20,22 @@ public class FluentMyBatisGeneratorMain {
                 .setDataSource(url, "root", "password")
                 .setBasePackage("cn.org.atool.fluent.mybatis.demo.generate"))
             .tables(config -> config
-                .setTablePrefix("t_")
-                .addTable("address")
-                .addTable("t_user", t -> t.setPartition(true))
-                .allTable(table -> {
-                    table.setColumn("gmt_created", "gmt_modified", "is_deleted")
-                        .column("is_deleted", ColumnType.BOOLEAN)
-                        .addBaseDaoInterface("MyCustomerInterface<${entity}, ${query}, ${update}>", dao_interface)
-                    ;
-                })
+                .table("address")
+                .table("t_user", t -> t.enablePartition())
+                .foreach(t -> t
+                    .setColumn("gmt_created", "gmt_modified", "is_deleted")
+                    .setColumnType("is_deleted", ColumnJavaType.BOOLEAN)
+                    .addBaseDaoInterface(dao_interface, "${entity}", "${query}", "${update}")
+                    .setTablePrefix("t_")
+                    .addEntityInterface("cn.org.atool.fluent.mybatis.demo.IBaseEntity", "${entity}")
+                )
             )
             .tables(config -> config
-                .addTable("no_auto_id", t -> t.setSeqName("test"))
-                .addTable("no_primary")
-                .allTable(table -> table.setMapperPrefix("new"))
+                .table("no_auto_id", t -> t.setSeqName("test"))
+                .table("no_primary")
+                .foreach(t -> t
+                    .setMapperPrefix("new")
+                )
             )
             .execute();
     }

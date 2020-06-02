@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.condition;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IProperty2Column;
 import cn.org.atool.fluent.mybatis.condition.interfaces.Update;
 
 import java.util.Map;

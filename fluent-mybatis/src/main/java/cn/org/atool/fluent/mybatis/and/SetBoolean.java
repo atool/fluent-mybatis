@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
 
 
 public class SetBoolean<U extends IEntityUpdate> extends SetObject<Boolean, U> {

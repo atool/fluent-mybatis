@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.and;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityUpdate;
+import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
 
 import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
 

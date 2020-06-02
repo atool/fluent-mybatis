@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
-import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.method.InjectMethod;
+import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 
 import java.util.List;
 
@@ -23,11 +25,22 @@ public class InjectMapperXml {
      */
     public static String buildMapperXml(Class mapperKlass, List<InjectMethod> methods) {
         Class entityKlass = TableMetaHelper.extractEntity(mapperKlass);
+        if (entityKlass != null && IEntity.class.isAssignableFrom(entityKlass)) {
+            return buildMapperXml(mapperKlass.getName(), entityKlass, methods);
+        } else {
+            return null;
+        }
+    }
+
+    public static String buildMapperXml(String mapperNameSpace, Class entityKlass, List<InjectMethod> methods) {
+        if (!IEntity.class.isAssignableFrom(entityKlass)) {
+            throw FluentMybatisException.instance("The class[%s] does not inherit interface[%s].", entityKlass.getName(), IEntity.class.getName());
+        }
         TableMeta tableMeta = TableMetaHelper.getTableInfo(entityKlass);
         SqlBuilder xml = SqlBuilder.instance()
             .quotas("<?xml version='1.0' encoding='UTF-8'?>\n")
             .quotas("<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>\n")
-            .quotas("<mapper namespace='%s'>\n", mapperKlass.getName());
+            .quotas("<mapper namespace='%s'>\n", mapperNameSpace);
 
         resultMap(xml, entityKlass, tableMeta);
         selectSql(xml, tableMeta);
