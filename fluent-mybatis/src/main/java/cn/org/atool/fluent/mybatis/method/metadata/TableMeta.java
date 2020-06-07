@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.joining;
 
@@ -44,6 +45,9 @@ public class TableMeta implements Constants {
     @Getter(AccessLevel.NONE)
     private String allSqlSelect;
 
+    public TableMeta() {
+    }
+
     public TableMeta(Class<?> entityType) {
         this.entityType = entityType;
     }
@@ -66,7 +70,7 @@ public class TableMeta implements Constants {
      * @param predicate 过滤条件
      * @return sql 片段
      */
-    public String filter(PredicateField predicate) {
+    public String filter(Predicate<BaseFieldMeta> predicate) {
         List<String> columns = new ArrayList<>();
         if (primary != null && predicate.test(primary)) {
             columns.add(primary.getColumn());

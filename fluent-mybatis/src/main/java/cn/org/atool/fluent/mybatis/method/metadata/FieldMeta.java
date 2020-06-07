@@ -24,28 +24,32 @@ public class FieldMeta extends BaseFieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */
-    private final String el;
+    protected String el;
     /**
      * 类型处理器
      */
-    private Class<? extends TypeHandler<?>> typeHandler;
+    protected Class<? extends TypeHandler<?>> typeHandler;
     /**
      * numericScale
      */
-    private String numericScale;
+    protected String numericScale;
     /**
      * 是否进行 select 查询
      * <p>大字段可设置为 false 不加入 select 查询范围</p>
      */
-    private boolean selected = true;
+    protected boolean selected = true;
     /**
      * 字段 update set 部分注入
      */
-    private String update;
+    protected String update;
     /**
      * 字段填充策略
      */
-    private String insert;
+    protected String insert;
+
+    public FieldMeta(String column, Field field) {
+        super(column, field);
+    }
 
     /**
      * 全新的 存在 TableField 注解时使用的构造函数
@@ -64,7 +68,7 @@ public class FieldMeta extends BaseFieldMeta {
     }
 
     @Override
-    protected String el() {
+    public String el() {
         String el = super.el();
         if (typeHandler != null) {
             el += (COMMA + "typeHandler=" + typeHandler.getName());

@@ -1,9 +1,7 @@
 package com.baomidou.mybatisplus.core.metadata;
 
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
+import cn.org.atool.fluent.mybatis.condition.base.PredicateField;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
-
-import java.util.function.Predicate;
 
 /**
  * TableInfo
@@ -20,7 +18,7 @@ public class TableInfo extends TableMeta {
         super(entityType);
     }
 
-    public String chooseSelect(Predicate<? extends BaseFieldMeta> predicate) {
-        return super.filter((PredicateField) predicate);
+    public String chooseSelect(PredicateField predicate) {
+        return super.filter(predicate);
     }
 }

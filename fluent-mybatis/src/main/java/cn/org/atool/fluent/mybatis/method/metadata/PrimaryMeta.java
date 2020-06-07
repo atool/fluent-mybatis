@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.method.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Field;
 
@@ -16,15 +17,20 @@ public class PrimaryMeta extends BaseFieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */
-    private final String el;
+    private String el;
     /**
      * 主键ID是否自增
      */
+    @Setter
     private boolean autoIncrease;
     /**
      * 表主键ID Sequence
      */
     private String seqName;
+
+    public PrimaryMeta(String column, Field field) {
+        super(column, field);
+    }
 
     public PrimaryMeta(Field field, TableId tableId) {
         super(tableId.value(), field);

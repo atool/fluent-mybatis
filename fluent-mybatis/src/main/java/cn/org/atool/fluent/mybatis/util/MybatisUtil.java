@@ -1,10 +1,13 @@
 package cn.org.atool.fluent.mybatis.util;
 
+import cn.org.atool.fluent.mybatis.condition.base.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * MybatisUtil
@@ -346,5 +349,16 @@ public class MybatisUtil {
             .append("         |___)                            \n")
             .append(version == null ? "" : version + " \n");
         return buff.toString();
+    }
+
+    //
+    @Deprecated
+    public static String distinct(Class entityClass, Predicate<? extends BaseFieldMeta> predicate) {
+        return AbstractWrapper.distinctSelect(entityClass, (Predicate<BaseFieldMeta>) predicate);
+    }
+
+    @Deprecated
+    public static String distinct(String... columns) {
+        return AbstractWrapper.distinctSelect(columns);
     }
 }

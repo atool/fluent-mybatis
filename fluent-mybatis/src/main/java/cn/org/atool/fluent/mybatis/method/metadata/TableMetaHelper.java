@@ -62,9 +62,13 @@ public class TableMetaHelper {
         if (!TABLE_INFO_CACHE.containsKey(clazz)) {
             TableMeta tableMeta = new TableMeta(clazz);
             /* 初始化表名相关 */
-            initTableName(clazz, tableMeta);
-            /* 初始化字段相关 */
-            initTableFields(clazz, tableMeta);
+            if (initTableName(clazz, tableMeta)) {
+                /* 初始化字段相关 */
+                initTableFields(clazz, tableMeta);
+            } else {
+                TableInfoCompatible.instance().initTableName(clazz, tableMeta);
+                TableInfoCompatible.instance().initTableFields(clazz, tableMeta);
+            }
             TABLE_INFO_CACHE.put(clazz, tableMeta);
         }
     }
@@ -77,15 +81,19 @@ public class TableMetaHelper {
      * @param clazz     实体类
      * @param tableMeta 数据库表反射信息
      */
-    private static void initTableName(Class<?> clazz, TableMeta tableMeta) {
+    private static boolean initTableName(Class<?> clazz, TableMeta tableMeta) {
         /* 数据库全局配置 */
         TableName table = clazz.getAnnotation(TableName.class);
+        if (table == null) {
+            return false;
+        }
 
         String tableName = table.value();
         if (MybatisUtil.isNotEmpty(table.schema())) {
             tableName = table.schema() + Constants.DOT + tableName;
         }
         tableMeta.setTableName(tableName);
+        return true;
     }
 
     /**
