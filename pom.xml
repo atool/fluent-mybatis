@@ -50,7 +50,8 @@
     </properties>
     <modules>
         <module>fluent-mybatis</module>
-        <module>mybatis-generator</module>
+        <module>fluent-mybatis-generator</module>
+        <module>mybatis-plus-compatible</module>
     </modules>
     <dependencies>
         <dependency>
