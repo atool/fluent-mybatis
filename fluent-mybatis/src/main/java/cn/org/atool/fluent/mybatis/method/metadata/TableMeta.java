@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
+import cn.org.atool.fluent.mybatis.condition.base.PredicateField;
 import cn.org.atool.fluent.mybatis.util.Constants;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -9,7 +10,6 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.joining;
 
@@ -66,7 +66,7 @@ public class TableMeta implements Constants {
      * @param predicate 过滤条件
      * @return sql 片段
      */
-    public String filter(Predicate<BaseFieldMeta> predicate) {
+    public String filter(PredicateField predicate) {
         List<String> columns = new ArrayList<>();
         if (primary != null && predicate.test(primary)) {
             columns.add(primary.getColumn());

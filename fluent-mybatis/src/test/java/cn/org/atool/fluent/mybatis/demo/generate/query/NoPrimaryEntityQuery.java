@@ -1,16 +1,15 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.base.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
 import cn.org.atool.fluent.mybatis.condition.base.AbstractWrapper;
 import cn.org.atool.fluent.mybatis.condition.base.MergeSegments;
+import cn.org.atool.fluent.mybatis.condition.base.PredicateField;
 import cn.org.atool.fluent.mybatis.condition.base.SharedString;
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
@@ -72,7 +71,7 @@ public class NoPrimaryEntityQuery extends AbstractWrapper<NoPrimaryEntity, Strin
     }
 
     @Override
-    public NoPrimaryEntityQuery select(Predicate<BaseFieldMeta> predicate) {
+    public NoPrimaryEntityQuery select(PredicateField predicate) {
         this.entityClass = NoPrimaryEntity.class;
         this.sqlSelect.setStringValue(TableMetaHelper.getTableInfo(getCheckEntityClass()).filter(predicate));
         return this;
@@ -100,13 +99,13 @@ public class NoPrimaryEntityQuery extends AbstractWrapper<NoPrimaryEntity, Strin
         return this;
     }
 
-    public NoPrimaryEntityQuery distinct(Predicate<BaseFieldMeta> predicate) {
+    public NoPrimaryEntityQuery distinct(PredicateField predicate) {
         this.entityClass = NoPrimaryEntity.class;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
-    public NoPrimaryEntityQuery distinct(Class<NoPrimaryEntity> entityClass, Predicate<BaseFieldMeta> predicate) {
+    public NoPrimaryEntityQuery distinct(Class<NoPrimaryEntity> entityClass, PredicateField predicate) {
         this.entityClass = entityClass;
         this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
         return this;

@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.condition.helper.SqlKeyword;
 import cn.org.atool.fluent.mybatis.condition.helper.SqlLike;
 import cn.org.atool.fluent.mybatis.condition.interfaces.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
@@ -459,7 +458,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         return DISTINCT + String.join(Constants.COMMA, columns);
     }
 
-    protected String distinctSelect(Class entityClass, Predicate<BaseFieldMeta> predicate) {
+    protected String distinctSelect(Class entityClass, PredicateField predicate) {
         return DISTINCT + TableMetaHelper.getTableInfo(entityClass).filter(predicate);
     }
 }

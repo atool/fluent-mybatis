@@ -1,7 +1,4 @@
-package cn.org.atool.fluent.mybatis.base;
-
-import cn.org.atool.fluent.mybatis.condition.interfaces.Compare;
-import cn.org.atool.fluent.mybatis.condition.interfaces.Update;
+package cn.org.atool.fluent.mybatis.condition.interfaces;
 
 import java.util.function.Function;
 

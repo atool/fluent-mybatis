@@ -1,6 +1,6 @@
 package ${entityQuery.package};
 
-import cn.org.atool.fluent.mybatis.base.IEntityQuery;
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
 import cn.org.atool.fluent.mybatis.condition.*;
 import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;

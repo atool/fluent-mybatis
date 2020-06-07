@@ -1,4 +1,6 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.condition.interfaces;
+
+import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
 
 import java.io.Serializable;
 import java.util.Collection;

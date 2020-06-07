@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis.condition.interfaces;
 
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
+import cn.org.atool.fluent.mybatis.condition.base.PredicateField;
 
 import java.io.Serializable;
-import java.util.function.Predicate;
 
 /**
  * @author darui.wu
@@ -30,7 +29,7 @@ public interface Query<Children, T, R> extends Serializable {
      * @param predicate 过滤方式
      * @return children
      */
-    Children select(Predicate<BaseFieldMeta> predicate);
+    Children select(PredicateField predicate);
 
     /**
      * 查询条件 SQL 片段

@@ -21,6 +21,6 @@ public class TableInfo extends TableMeta {
     }
 
     public String chooseSelect(Predicate<? extends BaseFieldMeta> predicate) {
-        return super.filter((Predicate<BaseFieldMeta>) predicate);
+        return super.filter((PredicateField) predicate);
     }
 }
