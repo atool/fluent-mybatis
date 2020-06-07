@@ -1,10 +1,10 @@
-package cn.org.atool.fluent.mybatis.condition;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.Update;
 
 import java.util.Map;
 
-public class BaseUpdateSet<U extends Update & IProperty2Column> {
+public class BaseUpdateSet<U extends Update> {
     private U wrapper;
 
     protected BaseUpdateSet(U wrapper) {

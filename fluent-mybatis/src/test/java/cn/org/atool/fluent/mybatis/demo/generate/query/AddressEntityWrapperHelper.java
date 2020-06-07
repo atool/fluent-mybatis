@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.and.*;
-import cn.org.atool.fluent.mybatis.condition.*;
+import cn.org.atool.fluent.mybatis.condition.base.*;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Property;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP.Column;
 import java.util.Date;
@@ -15,7 +15,7 @@ import java.util.Date;
  * @author generate code
  */
 class AddressEntityWrapperHelper {
-    public static class And<Q extends AbstractWrapper & IProperty2Column> extends BaseQueryAnd<Q> {
+    public static class And<Q extends AbstractWrapper> extends BaseQueryAnd<Q> {
         public final AndObject<Long, Q> id;
         public final AndObject<Date, Q> gmtCreated;
         public final AndObject<Date, Q> gmtModified;
@@ -32,7 +32,7 @@ class AddressEntityWrapperHelper {
         }
     }
 
-    public static abstract class BaseOrder<Q extends AbstractWrapper & IProperty2Column, O extends BaseOrder>
+    public static abstract class BaseOrder<Q extends AbstractWrapper, O extends BaseOrder>
             extends BaseWrapperOrder<Q> {
         public final ColumnOrder<Q, O> id;
         public final ColumnOrder<Q, O> gmtCreated;

@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.base.IEntityQuery;
-import cn.org.atool.fluent.mybatis.condition.*;
+import cn.org.atool.fluent.mybatis.condition.base.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.base.MergeSegments;
+import cn.org.atool.fluent.mybatis.condition.base.SharedString;
 import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
@@ -25,7 +27,7 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  * @author generate code
  */
 public class UserEntityQuery extends AbstractWrapper<UserEntity, String, UserEntityQuery>
-    implements IEntityQuery<UserEntityQuery, UserEntity>, IProperty2Column {
+    implements IEntityQuery<UserEntityQuery, UserEntity> {
     /**
      * 查询字段
      */

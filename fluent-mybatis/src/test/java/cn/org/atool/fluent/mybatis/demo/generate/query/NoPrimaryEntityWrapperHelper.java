@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.and.*;
-import cn.org.atool.fluent.mybatis.condition.*;
+import cn.org.atool.fluent.mybatis.condition.base.*;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Property;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 
@@ -15,7 +15,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
  * @author generate code
  */
 class NoPrimaryEntityWrapperHelper {
-    public static class And<Q extends AbstractWrapper & IProperty2Column> extends BaseQueryAnd<Q> {
+    public static class And<Q extends AbstractWrapper> extends BaseQueryAnd<Q> {
         public final AndObject<Integer, Q> column1;
         public final AndString<Q> column2;
 
@@ -26,7 +26,7 @@ class NoPrimaryEntityWrapperHelper {
         }
     }
 
-    public static abstract class BaseOrder<Q extends AbstractWrapper & IProperty2Column, O extends BaseOrder>
+    public static abstract class BaseOrder<Q extends AbstractWrapper, O extends BaseOrder>
             extends BaseWrapperOrder<Q> {
         public final ColumnOrder<Q, O> column1;
         public final ColumnOrder<Q, O> column2;

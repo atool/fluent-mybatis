@@ -23,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  * @author ${author}
  */
 public class ${entityUpdate.name} extends AbstractWrapper<${entity.name}, String, ${entityUpdate.name}>
-    implements IEntityUpdate<${entityUpdate.name}>, IProperty2Column {
+    implements IEntityUpdate<${entityUpdate.name}> {
     /**
     * SQL 更新字段内容，例如：name='1',age=2
     */

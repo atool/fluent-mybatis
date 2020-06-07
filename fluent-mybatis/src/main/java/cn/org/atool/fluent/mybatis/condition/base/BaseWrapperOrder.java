@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.condition;
+package cn.org.atool.fluent.mybatis.condition.base;
 
-public abstract class BaseWrapperOrder<Q extends AbstractWrapper & IProperty2Column> {
+public abstract class BaseWrapperOrder<Q extends AbstractWrapper> {
     private final Q query;
 
     protected BaseWrapperOrder(Q query) {

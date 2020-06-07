@@ -25,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  * @author ${author}
  */
 public class ${entityQuery.name} extends AbstractWrapper<${entity.name}, String, ${entityQuery.name}>
-    implements IEntityQuery<${entityQuery.name}, ${entity.name}>, IProperty2Column {
+    implements IEntityQuery<${entityQuery.name}, ${entity.name}> {
     /**
      * 查询字段
      */

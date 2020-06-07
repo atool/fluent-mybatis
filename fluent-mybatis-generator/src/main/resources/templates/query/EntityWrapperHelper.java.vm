@@ -15,7 +15,7 @@ ${importTypes}
  * @author ${author}
  */
 class ${wrapperHelper.name} {
-    public static class And<Q extends AbstractWrapper & IProperty2Column> extends BaseQueryAnd<Q> {
+    public static class And<Q extends AbstractWrapper> extends BaseQueryAnd<Q> {
 #foreach($field in ${fields})
     #if(${field.type}=="String")
         public final AndString<Q> ${field.name};

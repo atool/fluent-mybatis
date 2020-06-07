@@ -1,5 +1,6 @@
-package cn.org.atool.fluent.mybatis.condition;
+package cn.org.atool.fluent.mybatis.condition.base;
 
+import cn.org.atool.fluent.mybatis.condition.base.MergeSegments;
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
 
 /**
@@ -7,7 +8,7 @@ import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
  *
  * @author darui.wu
  */
-public abstract class Wrapper<T> implements ISqlSegment {
+public abstract class Wrapper<T> implements ISqlSegment, IProperty2Column {
 
     /**
      * 实体对象（子类实现）

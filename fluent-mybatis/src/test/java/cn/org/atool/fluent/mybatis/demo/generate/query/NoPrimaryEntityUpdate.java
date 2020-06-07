@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.base.IEntityUpdate;
-import cn.org.atool.fluent.mybatis.condition.*;
+import cn.org.atool.fluent.mybatis.condition.base.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.base.MergeSegments;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.*;
@@ -23,7 +24,7 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  * @author generate code
  */
 public class NoPrimaryEntityUpdate extends AbstractWrapper<NoPrimaryEntity, String, NoPrimaryEntityUpdate>
-    implements IEntityUpdate<NoPrimaryEntityUpdate>, IProperty2Column {
+    implements IEntityUpdate<NoPrimaryEntityUpdate> {
     /**
     * SQL 更新字段内容，例如：name='1',age=2
     */

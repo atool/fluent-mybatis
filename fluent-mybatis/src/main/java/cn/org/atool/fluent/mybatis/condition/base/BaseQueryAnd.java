@@ -1,8 +1,8 @@
-package cn.org.atool.fluent.mybatis.condition;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import java.util.Map;
 
-public class BaseQueryAnd<W extends AbstractWrapper & IProperty2Column> {
+public class BaseQueryAnd<W extends AbstractWrapper> {
     private final W wrapper;
 
     protected BaseQueryAnd(W wrapper) {

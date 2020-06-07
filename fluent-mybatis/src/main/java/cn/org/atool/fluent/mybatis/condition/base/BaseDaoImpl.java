@@ -1,7 +1,6 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import cn.org.atool.fluent.mybatis.base.*;
-import cn.org.atool.fluent.mybatis.condition.Wrapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.condition;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import cn.org.atool.fluent.mybatis.condition.interfaces.ISqlSegment;
 import cn.org.atool.fluent.mybatis.condition.segments.*;

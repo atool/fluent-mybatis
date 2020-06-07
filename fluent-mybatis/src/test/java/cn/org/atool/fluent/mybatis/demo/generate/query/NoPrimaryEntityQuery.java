@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.base.IEntityQuery;
-import cn.org.atool.fluent.mybatis.condition.*;
+import cn.org.atool.fluent.mybatis.condition.base.AbstractWrapper;
+import cn.org.atool.fluent.mybatis.condition.base.MergeSegments;
+import cn.org.atool.fluent.mybatis.condition.base.SharedString;
 import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
@@ -12,7 +14,6 @@ import java.util.function.Predicate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityWrapperHelper.And;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityWrapperHelper.QueryOrder;
 
@@ -25,7 +26,7 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  * @author generate code
  */
 public class NoPrimaryEntityQuery extends AbstractWrapper<NoPrimaryEntity, String, NoPrimaryEntityQuery>
-    implements IEntityQuery<NoPrimaryEntityQuery, NoPrimaryEntity>, IProperty2Column {
+    implements IEntityQuery<NoPrimaryEntityQuery, NoPrimaryEntity> {
     /**
      * 查询字段
      */
