@@ -1,7 +1,8 @@
 package ${wrapperHelper.package};
 
 import cn.org.atool.fluent.mybatis.and.*;
-import cn.org.atool.fluent.mybatis.condition.*;
+import cn.org.atool.fluent.mybatis.condition.base.*;
+import cn.org.atool.fluent.mybatis.condition.interfaces.*;
 import ${mapping.package}.${mapping.name}.Property;
 import ${mapping.package}.${mapping.name}.Column;
 ${importTypes}
@@ -40,7 +41,7 @@ class ${wrapperHelper.name} {
         }
     }
 
-    public static abstract class BaseOrder<Q extends AbstractWrapper & IProperty2Column, O extends BaseOrder>
+    public static abstract class BaseOrder<Q extends AbstractWrapper, O extends BaseOrder>
             extends BaseWrapperOrder<Q> {
 #foreach($field in ${fields})
         public final ColumnOrder<Q, O> ${field.name};

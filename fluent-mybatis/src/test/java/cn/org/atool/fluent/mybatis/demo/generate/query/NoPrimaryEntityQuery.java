@@ -1,18 +1,18 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntityQuery;
-import cn.org.atool.fluent.mybatis.condition.base.AbstractWrapper;
-import cn.org.atool.fluent.mybatis.condition.base.MergeSegments;
-import cn.org.atool.fluent.mybatis.condition.base.PredicateField;
-import cn.org.atool.fluent.mybatis.condition.base.SharedString;
+import cn.org.atool.fluent.mybatis.condition.base.*;
+import cn.org.atool.fluent.mybatis.condition.interfaces.*;
+import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.util.Constants;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityWrapperHelper.And;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityWrapperHelper.QueryOrder;
 
@@ -101,13 +101,13 @@ public class NoPrimaryEntityQuery extends AbstractWrapper<NoPrimaryEntity, Strin
 
     public NoPrimaryEntityQuery distinct(PredicateField predicate) {
         this.entityClass = NoPrimaryEntity.class;
-        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
+        this.sqlSelect.setStringValue(distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 
     public NoPrimaryEntityQuery distinct(Class<NoPrimaryEntity> entityClass, PredicateField predicate) {
         this.entityClass = entityClass;
-        this.sqlSelect.setStringValue(super.distinctSelect(getCheckEntityClass(), predicate));
+        this.sqlSelect.setStringValue(distinctSelect(getCheckEntityClass(), predicate));
         return this;
     }
 

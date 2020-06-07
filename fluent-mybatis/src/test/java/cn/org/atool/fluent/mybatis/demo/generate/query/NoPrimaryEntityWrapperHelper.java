@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.demo.generate.query;
 
 import cn.org.atool.fluent.mybatis.and.*;
 import cn.org.atool.fluent.mybatis.condition.base.*;
+import cn.org.atool.fluent.mybatis.condition.interfaces.*;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Property;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
 
