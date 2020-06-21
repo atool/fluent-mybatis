@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.exception;
 
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 /**
  * FluentMybatisException 异常类

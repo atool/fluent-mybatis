@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
-import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
-import cn.org.atool.fluent.mybatis.method.model.StatementType;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
+import cn.org.atool.fluent.mybatis.method.model.StatementType;
 
 import java.util.Collection;
 
@@ -15,6 +16,10 @@ import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Select
  * @author darui.wu
  */
 public class SelectByIds extends AbstractMethod {
+    public SelectByIds(DbType dbType) {
+        super(dbType);
+    }
+
     @Override
     public String statementId() {
         return Method_SelectByIds;

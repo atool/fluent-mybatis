@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.condition.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.NoAutoIdMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdEntityUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author generate code
 */
-public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAutoIdEntityQuery, NoAutoIdEntityUpdate>
+public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAutoIdQuery, NoAutoIdUpdate>
         implements NoAutoIdMP {
 
     @Autowired
@@ -26,13 +26,13 @@ public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAuto
     }
 
     @Override
-    public NoAutoIdEntityQuery query(){
-        return new NoAutoIdEntityQuery();
+    public NoAutoIdQuery query(){
+        return new NoAutoIdQuery();
     }
 
     @Override
-    public NoAutoIdEntityUpdate update(){
-        return new NoAutoIdEntityUpdate();
+    public NoAutoIdUpdate update(){
+        return new NoAutoIdUpdate();
     }
 
     @Override

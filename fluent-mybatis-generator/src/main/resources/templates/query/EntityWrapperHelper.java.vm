@@ -1,8 +1,8 @@
 package ${wrapperHelper.package};
 
-import cn.org.atool.fluent.mybatis.and.*;
+import cn.org.atool.fluent.mybatis.condition.apply.*;
 import cn.org.atool.fluent.mybatis.condition.base.*;
-import cn.org.atool.fluent.mybatis.condition.interfaces.*;
+import ${entity.package}.${entity.name};
 import ${mapping.package}.${mapping.name}.Property;
 import ${mapping.package}.${mapping.name}.Column;
 ${importTypes}
@@ -15,82 +15,99 @@ ${importTypes}
  *
  * @author ${author}
  */
-class ${wrapperHelper.name} {
-    public static class And<Q extends AbstractWrapper> extends BaseQueryAnd<Q> {
+public class ${wrapperHelper.name} {
+    /**
+     * select字段设置
+     */
+    public static final class Selector extends BaseSelector<Selector>{
+#foreach($field in ${fields})
+        public final ColumnSelector<Selector> ${field.name} = new ColumnSelector<>(this, Column.${field.columnName});
+#end
+
+        Selector(${entityQuery.name} query) {
+            super(query);
+        }
+    }
+
+    /**
+     * where条件设置
+     * @param <W> 更新器或查询器
+     */
+    public static final class WrapperWhere<W extends Wrapper<${entity.name}, W, ${entityQuery.name}>>
+        extends BaseWhere<${entity.name}, W, ${entityQuery.name}> {
 #foreach($field in ${fields})
     #if(${field.type}=="String")
-        public final AndString<Q> ${field.name};
+        public final WhereString<${entity.name}, W, ${entityQuery.name}> ${field.name} = new WhereString<>(this, Column.${field.columnName}, Property.${field.name});
     #elseif((${field.type}=="Boolean"))
-        public final AndBoolean<Q> ${field.name};
+        public final WhereBoolean<${entity.name}, W, ${entityQuery.name}> ${field.name} = new WhereBoolean<>(this, Column.${field.columnName}, Property.${field.name});
     #else
-        public final AndObject<${field.type}, Q> ${field.name};
+        public final WhereObject<${entity.name}, ${field.type}, W, ${entityQuery.name}> ${field.name} = new WhereObject<>(this, Column.${field.columnName}, Property.${field.name});
     #end
 #end
 
-        And(Q query) {
-            super(query);
-    #foreach($field in ${fields})
-        #if(${field.type}=="String")
-            this.${field.name} = new AndString<>(query, Column.${field.columnName}, Property.${field.name});
-        #elseif((${field.type}=="Boolean"))
-            this.${field.name} = new AndBoolean<>(query, Column.${field.columnName}, Property.${field.name});
-        #else
-            this.${field.name} = new AndObject<>(query, Column.${field.columnName}, Property.${field.name});
-        #end
-    #end
+        WrapperWhere(W wrapper) {
+            this(wrapper, true);
+        }
+        WrapperWhere(W wrapper, boolean and) {
+            super(wrapper, and);
         }
     }
 
-    public static abstract class BaseOrder<Q extends AbstractWrapper, O extends BaseOrder>
-            extends BaseWrapperOrder<Q> {
+    /**
+     * 分组设置
+     */
+    public static final class QueryGroup extends BaseGroup<QueryGroup> {
 #foreach($field in ${fields})
-        public final ColumnOrder<Q, O> ${field.name};
+        public final GroupBy<QueryGroup> ${field.name} = new GroupBy<>(this, Column.${field.columnName});
 #end
 
-        public BaseOrder(Q query) {
-            super(query);
-        #foreach($field in ${fields})
-            this.${field.name} = new ColumnOrder(query, Column.${field.columnName}, this);
-        #end
-        }
-    }
-
-    public static class QueryOrder extends BaseOrder<${entityQuery.name}, QueryOrder> {
-
-        public QueryOrder(${entityQuery.name} query) {
+        QueryGroup(${entityQuery.name} query) {
             super(query);
         }
     }
 
-    public static class UpdateOrder extends BaseOrder<${entityUpdate.name}, UpdateOrder> {
+    /**
+     * 分组Having条件设置
+     */
+    public static final class Having extends BaseHaving<Having> {
+#foreach($field in ${fields})
+        public final HavingBy<Having> ${field.name} = new HavingBy<>(this, Column.${field.columnName});
+#end
 
-        public UpdateOrder(${entityUpdate.name} update) {
-            super(update);
+        Having(${entityQuery.name} query) {
+            super(query);
         }
     }
 
-    public static class Set extends BaseUpdateSet<${entityUpdate.name}> {
+    /**
+     * OrderBy设置
+     */
+    public static final class QueryOrder extends BaseOrder<QueryOrder> {
+#foreach($field in ${fields})
+        public final OrderBy<QueryOrder> ${field.name} = new OrderBy<>(this, Column.${field.columnName});
+#end
+
+        QueryOrder(${entityQuery.name} query) {
+            super(query);
+        }
+    }
+
+    /**
+     * 字段更新设置
+     */
+    public static final class UpdateSetter extends BaseSetter<${entity.name}, ${entityUpdate.name}> {
 #foreach($field in ${fields})
     #if(${field.type}=="String")
-        public final SetString<${entityUpdate.name}> ${field.name};
+        public final SetString<${entityUpdate.name}> ${field.name} = new SetString<>(this, Column.${field.columnName}, Property.${field.name});
     #elseif((${field.type}=="Boolean"))
-        public final SetBoolean<${entityUpdate.name}> ${field.name};
+        public final SetBoolean<${entityUpdate.name}> ${field.name} = new SetBoolean<>(this, Column.${field.columnName}, Property.${field.name});
     #else
-        public final SetObject<${field.type}, ${entityUpdate.name}> ${field.name};
+        public final SetObject<${field.type}, ${entityUpdate.name}> ${field.name} = new SetObject<>(this, Column.${field.columnName}, Property.${field.name});
     #end
 #end
 
-        public Set(${entityUpdate.name} update) {
+        UpdateSetter(${entityUpdate.name} update) {
             super(update);
-    #foreach($field in ${fields})
-        #if(${field.type}=="String")
-            this.${field.name} = new SetString<>(update, Column.${field.columnName}, Property.${field.name});
-        #elseif((${field.type}=="Boolean"))
-            this.${field.name} = new SetBoolean<>(update, Column.${field.columnName}, Property.${field.name});
-        #else
-            this.${field.name} = new SetObject<>(update, Column.${field.columnName}, Property.${field.name});
-        #end
-    #end
         }
     }
 }

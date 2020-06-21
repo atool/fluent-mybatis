@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.partition;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.normal.SelectList;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_SelectListFromSpec;
@@ -10,6 +11,10 @@ import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Select
  * @author darui.wu
  */
 public class SelectSpec extends SelectList {
+    public SelectSpec(DbType dbType) {
+        super(dbType);
+    }
+
     @Override
     public String statementId() {
         return Method_SelectListFromSpec;

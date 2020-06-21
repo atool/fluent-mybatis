@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
-import cn.org.atool.fluent.mybatis.condition.base.PredicateField;
-import cn.org.atool.fluent.mybatis.util.Constants;
+import cn.org.atool.fluent.mybatis.condition.model.Constants;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -76,7 +75,7 @@ public class TableMeta implements Constants {
             columns.add(primary.getColumn());
         }
         fields.stream().filter(predicate).forEach(f -> columns.add(f.getColumn()));
-        return columns.stream().collect(joining(COMMA));
+        return columns.stream().collect(joining(COMMA_SPACE));
     }
 
     public String getKeyProperty() {

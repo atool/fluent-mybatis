@@ -22,7 +22,7 @@ public class CountTest extends BaseTest {
                 .user_name.values("test1", "test12", "test3", "test12", "tess2")
         );
         int count = dao.count("test12");
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (user_name = ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE user_name = ?", StringMode.SameAsSpace);
         want.number(count).eq(2);
     }
 }

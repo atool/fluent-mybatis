@@ -1,10 +1,11 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
+import cn.org.atool.fluent.mybatis.method.AbstractMethod;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
-import cn.org.atool.fluent.mybatis.method.AbstractMethod;
-import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
+import cn.org.atool.fluent.mybatis.method.model.StatementType;
 
 import java.util.Map;
 
@@ -16,6 +17,9 @@ import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Update
  * @author darui.wu
  */
 public class UpdateByQuery extends AbstractMethod {
+    public UpdateByQuery(DbType dbType) {
+        super(dbType);
+    }
 
     @Override
     public String statementId() {
@@ -27,10 +31,10 @@ public class UpdateByQuery extends AbstractMethod {
         SqlBuilder builder = SqlBuilder.instance();
         String xml = builder
             .begin(StatementType.update, statementId(), Map.class)
+            .checkWrapper()
             .update(table, super.isSpecTable())
             .set(() -> update(table, builder))
-            .where(() -> super.whereEntity(table, builder))
-            .suffixComment()
+            .where(() -> super.whereByWrapper(builder))
             .end(StatementType.update)
             .toString();
         return xml;
@@ -45,8 +49,8 @@ public class UpdateByQuery extends AbstractMethod {
      */
     protected SqlBuilder update(TableMeta table, SqlBuilder builder) {
         return builder
-            .ifThen("ew != null and ew.updates != null", () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
-            .ifThen("ew != null and ew.sqlSet != null", "${ew.sqlSet}");
+            .ifThen("ew.updates != null", () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
+            .ifThen("ew.sqlSet != null", "${ew.sqlSet}");
     }
 
     private void updateField(SqlBuilder builder, FieldMeta field) {

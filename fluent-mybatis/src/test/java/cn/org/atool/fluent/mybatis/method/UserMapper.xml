@@ -3,22 +3,19 @@
 <mapper namespace="cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper">
     <!-- base result map -->
     <resultMap id="BaseResultMap" type="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity">
-        <id column="id" property="id"/>
-        <result column="address_id" property="addressId"/>
-        <result column="age" property="age"/>
-        <result column="gmt_created" property="gmtCreated"/>
-        <result column="gmt_modified" property="gmtModified"/>
-        <result column="is_deleted" property="isDeleted"/>
-        <result column="user_name" property="userName"/>
-        <result column="version" property="version"/>
+        <id column="id" property="id" />
+        <result column="address_id" property="addressId" />
+        <result column="age" property="age" />
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="user_name" property="userName" />
+        <result column="version" property="version" />
     </resultMap>
     <sql id="SELECT_COLUMNS">
-<![CDATA[
-        id,address_id,age,gmt_created,gmt_modified,is_deleted,user_name,version
-        ]]>
+<![CDATA[id, address_id, age, gmt_created, gmt_modified, is_deleted, user_name, version]]>
 </sql>
-    <insert id="insert" keyColumn="id" keyProperty="id"
-            parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity" useGeneratedKeys="true">
         INSERT INTO t_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -30,220 +27,228 @@
             <if test="userName != null">user_name,</if>
             <if test="version != null">version,</if>
         </trim>
-        VALUES
+        VALUES<trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="id != null">#{id},</if>
+        <if test="addressId != null">#{addressId},</if>
+        <if test="age != null">#{age},</if>
+        <choose>
+            <when test="gmtCreated != null">#{gmtCreated},</when>
+            <otherwise>now(),</otherwise>
+        </choose>
+        <choose>
+            <when test="gmtModified != null">#{gmtModified},</when>
+            <otherwise>now(),</otherwise>
+        </choose>
+        <choose>
+            <when test="isDeleted != null">#{isDeleted},</when>
+            <otherwise>0,</otherwise>
+        </choose>
+        <if test="userName != null">#{userName},</if>
+        <if test="version != null">#{version},</if>
+    </trim>
+    </insert>
+    <insert id="insertBatch" keyColumn="id" keyProperty="id" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity" useGeneratedKeys="true">
+        INSERT INTO t_user
+        (id, address_id, age, gmt_created, gmt_modified, is_deleted, user_name, version)VALUES <foreach collection="list" item="item" index="k" separator=",">
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="addressId != null">#{addressId},</if>
-            <if test="age != null">#{age},</if>
+            #{item.id},
+            #{item.addressId},
+            #{item.age},
             <choose>
-                <when test="gmtCreated != null">#{gmtCreated},</when>
+                <when test="item.gmtCreated != null">#{item.gmtCreated},</when>
                 <otherwise>now(),</otherwise>
             </choose>
             <choose>
-                <when test="gmtModified != null">#{gmtModified},</when>
+                <when test="item.gmtModified != null">#{item.gmtModified},</when>
                 <otherwise>now(),</otherwise>
             </choose>
             <choose>
-                <when test="isDeleted != null">#{isDeleted},</when>
+                <when test="item.isDeleted != null">#{item.isDeleted},</when>
                 <otherwise>0,</otherwise>
             </choose>
-            <if test="userName != null">#{userName},</if>
-            <if test="version != null">#{version},</if>
+            #{item.userName},
+            #{item.version},
         </trim>
-    </insert>
-    <insert id="insertBatch" keyColumn="id" keyProperty="id"
-            parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity" useGeneratedKeys="true">
-        INSERT INTO t_user
-        (id, address_id, age, gmt_created, gmt_modified, is_deleted, user_name, version)VALUES
-        <foreach collection="list" item="item" index="k" separator=",">
-            <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.id},
-                #{item.addressId},
-                #{item.age},
-                <choose>
-                    <when test="item.gmtCreated != null">#{item.gmtCreated},</when>
-                    <otherwise>now(),</otherwise>
-                </choose>
-                <choose>
-                    <when test="item.gmtModified != null">#{item.gmtModified},</when>
-                    <otherwise>now(),</otherwise>
-                </choose>
-                <choose>
-                    <when test="item.isDeleted != null">#{item.isDeleted},</when>
-                    <otherwise>0,</otherwise>
-                </choose>
-                #{item.userName},
-                #{item.version},
-            </trim>
-        </foreach>
+    </foreach>
     </insert>
     <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT
-        <include refid="SELECT_COLUMNS"/>
-        FROM t_user
+        SELECT <include refid="SELECT_COLUMNS"/> FROM t_user
         <where>
             id=#{et.id}
         </where>
     </select>
     <select id="selectByIds" parameterType="java.util.Collection" resultMap="BaseResultMap">
-        SELECT
-        <include refid="SELECT_COLUMNS"/>
-        FROM t_user
+        SELECT <include refid="SELECT_COLUMNS"/> FROM t_user
         <where>
-            id IN (
-            <foreach collection="coll" item="item" index="k" separator=",">
-                #{item}
-            </foreach>
+            id IN (<foreach collection="coll" item="item" index="k" separator=",">
+            #{item}
+        </foreach>
             )
         </where>
     </select>
     <select id="selectByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
-        SELECT
-        <include refid="SELECT_COLUMNS"/>
-        FROM t_user
+        SELECT <include refid="SELECT_COLUMNS"/> FROM t_user
         <where>
-            <if test="cm != null and !cm.isEmpty">
-                <foreach collection="cm" item="v" index="k" separator="AND ">
-                    <choose>
-                        <when test="v == null">${k} IS NULL</when>
-                        <otherwise>${k} = #{v}</otherwise>
-                    </choose>
-                </foreach>
+            <if test="cm != null and !cm.isEmpty"><foreach collection="cm" item="v" index="k" separator="AND ">
+                <choose>
+                    <when test="v == null">${k} IS NULL </when>
+                    <otherwise>${k} = #{v}</otherwise>
+                </choose>
+            </foreach>
             </if>
         </where>
     </select>
+    <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        <if test="ew.entityClass != null"></if>
+        <choose>
+            <when test="ew.paged == null">
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+            </when>
+            <otherwise>
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+        </choose>
+    </select>
+    <select id="selectMaps" parameterType="java.util.Map" resultType="java.util.Map">
+        <if test="ew.entityClass != null"></if>
+        <choose>
+            <when test="ew.paged == null">
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+            </when>
+            <otherwise>
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+        </choose>
+    </select>
+    <select id="selectObjs" parameterType="java.util.Map" resultType="java.lang.Object">
+        <if test="ew.entityClass != null"></if>
+        <choose>
+            <when test="ew.paged == null">
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+            </when>
+            <otherwise>
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+        </choose>
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        <if test="ew.entityClass != null"></if>
+        <choose>
+            <when test="ew.paged == null">
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+            </when>
+            <otherwise>
+                SELECT
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+                </choose>
+                FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+        </choose>
+    </select>
     <select id="selectCount" parameterType="java.util.Map" resultType="int">
+        <if test="ew.entityClass != null"></if>
+        <choose>
+            <when test="ew.paged == null">SELECT COUNT(
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise>1</otherwise>
+                </choose>
+                ) FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+            </when>
+            <otherwise>SELECT COUNT(
+                <choose>
+                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <otherwise>1</otherwise>
+                </choose>
+                ) FROM t_user
+                <where>
+                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                </where>
+                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+        </choose>
+    </select>
+    <select id="countNoLimit" parameterType="java.util.Map" resultType="int">
+        <if test="ew.entityClass != null"></if>
         SELECT COUNT(
         <choose>
-            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
+            <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
             <otherwise>1</otherwise>
         </choose>
         ) FROM t_user
         <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+            <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
         </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
-    </select>
-    <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
-        SELECT
-        <choose>
-            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
-            <otherwise>
-                <include refid="SELECT_COLUMNS"/>
-            </otherwise>
-        </choose>
-        FROM t_user
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
-    </select>
-    <select id="selectMaps" parameterType="java.util.Map" resultType="java.util.Map">
-        SELECT
-        <choose>
-            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
-            <otherwise>
-                <include refid="SELECT_COLUMNS"/>
-            </otherwise>
-        </choose>
-        FROM t_user
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
-    </select>
-    <select id="selectObjs" parameterType="java.util.Map" resultType="java.lang.Object">
-        SELECT
-        <choose>
-            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
-            <otherwise>
-                <include refid="SELECT_COLUMNS"/>
-            </otherwise>
-        </choose>
-        FROM t_user
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
-    </select>
-    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
-        SELECT
-        <choose>
-            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
-            <otherwise>
-                <include refid="SELECT_COLUMNS"/>
-            </otherwise>
-        </choose>
-        FROM t_user
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
+
     </select>
     <delete id="delete" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity">
+        <if test="ew.entityClass != null"></if>
         DELETE FROM t_user
         <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+            <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
         </where>
     </delete>
     <delete id="deleteById" parameterType="java.lang.Long">
@@ -255,23 +260,21 @@
     <delete id="deleteByIds" parameterType="java.util.Collection">
         DELETE FROM t_user
         <where>
-            id IN (
-            <foreach collection="coll" item="item" index="k" separator=",">
-                #{item}
-            </foreach>
+            id IN (<foreach collection="coll" item="item" index="k" separator=",">
+            #{item}
+        </foreach>
             )
         </where>
     </delete>
     <delete id="deleteByMap" parameterType="java.util.Map">
         DELETE FROM t_user
         <where>
-            <if test="cm != null and !cm.isEmpty">
-                <foreach collection="cm" item="v" index="k" separator="AND ">
-                    <choose>
-                        <when test="v == null">${k} IS NULL</when>
-                        <otherwise>${k} = #{v}</otherwise>
-                    </choose>
-                </foreach>
+            <if test="cm != null and !cm.isEmpty"><foreach collection="cm" item="v" index="k" separator="AND ">
+                <choose>
+                    <when test="v == null">${k} IS NULL </when>
+                    <otherwise>${k} = #{v}</otherwise>
+                </choose>
+            </foreach>
             </if>
         </where>
     </delete>
@@ -291,9 +294,10 @@
         </where>
     </update>
     <update id="updateBy" parameterType="java.util.Map">
+        <if test="ew.entityClass != null"></if>
         UPDATE t_user
         <set>
-            <if test="ew != null and ew.updates != null">
+            <if test="ew.updates != null">
                 <if test="ew.updates.containsKey('addressId')">address_id=#{ew.updates.addressId},</if>
                 <if test="ew.updates.containsKey('age')">age=#{ew.updates.age},</if>
                 <if test="ew.updates.containsKey('gmtCreated')">gmt_created=#{ew.updates.gmtCreated},</if>
@@ -302,90 +306,10 @@
                 <if test="ew.updates.containsKey('userName')">user_name=#{ew.updates.userName},</if>
                 <if test="ew.updates.containsKey('version')">version=#{ew.updates.version},</if>
             </if>
-            <if test="ew != null and ew.sqlSet != null">${ew.sqlSet}</if>
+            <if test="ew.sqlSet != null">${ew.sqlSet}</if>
         </set>
         <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
+            <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
         </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
-    </update>
-    <delete id="deleteSpec" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity">
-        DELETE FROM t_user
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-    </delete>
-    <select id="selectSpecList" parameterType="java.util.Map" resultMap="BaseResultMap">
-        SELECT
-        <choose>
-            <when test="ew != null and ew.sqlSelect != null">${ew.sqlSelect}</when>
-            <otherwise>
-                <include refid="SELECT_COLUMNS"/>
-            </otherwise>
-        </choose>
-        FROM t_user
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
-    </select>
-    <update id="updateSpecByQuery" parameterType="java.util.Map">
-        UPDATE t_user
-        <set>
-            <if test="ew != null and ew.updates != null">
-                <if test="ew.updates.containsKey('addressId')">address_id=#{ew.updates.addressId},</if>
-                <if test="ew.updates.containsKey('age')">age=#{ew.updates.age},</if>
-                <if test="ew.updates.containsKey('gmtCreated')">gmt_created=#{ew.updates.gmtCreated},</if>
-                gmt_modified=now(),
-                <if test="ew.updates.containsKey('isDeleted')">is_deleted=#{ew.updates.isDeleted},</if>
-                <if test="ew.updates.containsKey('userName')">user_name=#{ew.updates.userName},</if>
-                <if test="ew.updates.containsKey('version')">version=#{ew.updates.version},</if>
-            </if>
-            <if test="ew != null and ew.sqlSet != null">${ew.sqlSet}</if>
-        </set>
-        <where>
-            <if test="ew != null and ew.entity != null">
-                <if test="ew.entity.id != null">id=#{ew.entity.id}</if>
-                <if test="ew.entity.addressId != null">AND address_id=#{ew.entity.addressId}</if>
-                <if test="ew.entity.age != null">AND age=#{ew.entity.age}</if>
-                <if test="ew.entity.gmtCreated != null">AND gmt_created=#{ew.entity.gmtCreated}</if>
-                <if test="ew.entity.gmtModified != null">AND gmt_modified=#{ew.entity.gmtModified}</if>
-                <if test="ew.entity.isDeleted != null">AND is_deleted=#{ew.entity.isDeleted}</if>
-                <if test="ew.entity.userName != null">AND user_name=#{ew.entity.userName}</if>
-                <if test="ew.entity.version != null">AND version=#{ew.entity.version}</if>
-            </if>
-            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">AND ${ew.sqlSegment}</if>
-        </where>
-        <if test="ew != null and ew.sqlComment != null">${ew.sqlComment}</if>
     </update>
 </mapper>

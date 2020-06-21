@@ -170,7 +170,7 @@ public class SqlBuilder {
         this.prefixComment(isSpec);
         this.newLine().append("SELECT ");
         if (isSelected) {
-            this.choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", replace("<include refid='SELECT_COLUMNS'/>"));
+            this.choose("ew.sqlSelect != null", "${ew.sqlSelect}", replace("<include refid='SELECT_COLUMNS'/>"));
         } else {
             this.quotas("<include refid='SELECT_COLUMNS'/>");
         }
@@ -181,7 +181,7 @@ public class SqlBuilder {
     public SqlBuilder selectCount(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.append("SELECT COUNT(")
-            .choose("ew != null and ew.sqlSelect != null", "${ew.sqlSelect}", "1")
+            .choose("ew.sqlSelect != null", "${ew.sqlSelect}", "1")
             .append(") FROM ");
         return this.byTable(table, isSpec);
     }
@@ -243,6 +243,17 @@ public class SqlBuilder {
         this.newLine().quotas("<if test='%s'>", ifCondition);
         executor.execute();
         return this.append("</if>").newLine();
+    }
+
+    /**
+     * 强制检查wrapper对象不空, 否则报错
+     *
+     * @return
+     */
+    public SqlBuilder checkWrapper() {
+        this.ifThen("ew.entityClass != null", () -> {
+        });
+        return this;
     }
 
     /**
@@ -424,13 +435,15 @@ public class SqlBuilder {
         return this;
     }
 
-
     /**
-     * 方法后注释
+     * 有分页和无分页处理分开
      *
+     * @param noPagedXml   无分页语句
+     * @param withPagedXml 有分页语句
      * @return
      */
-    public SqlBuilder suffixComment() {
-        return this.ifThen("ew != null and ew.sqlComment != null", "${ew.sqlComment}");
+    public SqlBuilder choosePaged(String noPagedXml, String withPagedXml) {
+        this.choose("ew.paged == null", noPagedXml, withPagedXml);
+        return this;
     }
 }

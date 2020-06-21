@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.generator.template.dao.DaoIntfTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.entity.EntityHelperTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.entity.EntityTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.mapper.MapperTemplate;
-import cn.org.atool.fluent.mybatis.generator.template.mapper.PartitionMapperTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.mapper.SharingTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.mapping.MappingTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.query.EntityQueryTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.query.EntityUpdateTemplate;
@@ -48,7 +48,7 @@ public class MybatisGenerator extends DataMapGenerator {
             new EntityTemplate(),
             new EntityHelperTemplate(),
             new MapperTemplate(),
-            new PartitionMapperTemplate(),
+            new SharingTemplate(),
             new EntityWrapperHelperTemplate(),
             new EntityQueryTemplate(),
             new EntityUpdateTemplate(),

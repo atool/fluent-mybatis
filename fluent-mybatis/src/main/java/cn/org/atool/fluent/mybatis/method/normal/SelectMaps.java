@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_SelectMaps;
@@ -11,6 +13,10 @@ import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Select
  * @create 2020/5/18 1:45 下午
  */
 public class SelectMaps extends SelectList {
+    public SelectMaps(DbType dbType) {
+        super(dbType);
+    }
+
     @Override
     public String statementId() {
         return Method_SelectMaps;

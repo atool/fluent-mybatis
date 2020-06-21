@@ -3,10 +3,9 @@ package cn.org.atool.fluent.mybatis.method.metadata;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
-import cn.org.atool.fluent.mybatis.condition.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.util.Constants;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.interfaces.IEntity;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.*;
@@ -62,13 +61,10 @@ public class TableMetaHelper {
         if (!TABLE_INFO_CACHE.containsKey(clazz)) {
             TableMeta tableMeta = new TableMeta(clazz);
             /* 初始化表名相关 */
-            if (initTableName(clazz, tableMeta)) {
-                /* 初始化字段相关 */
-                initTableFields(clazz, tableMeta);
-            } else {
-                TableInfoCompatible.instance().initTableName(clazz, tableMeta);
-                TableInfoCompatible.instance().initTableFields(clazz, tableMeta);
-            }
+            initTableName(clazz, tableMeta);
+            /* 初始化字段相关 */
+            initTableFields(clazz, tableMeta);
+
             TABLE_INFO_CACHE.put(clazz, tableMeta);
         }
     }
@@ -90,7 +86,7 @@ public class TableMetaHelper {
 
         String tableName = table.value();
         if (MybatisUtil.isNotEmpty(table.schema())) {
-            tableName = table.schema() + Constants.DOT + tableName;
+            tableName = table.schema() + "." + tableName;
         }
         tableMeta.setTableName(tableName);
         return true;

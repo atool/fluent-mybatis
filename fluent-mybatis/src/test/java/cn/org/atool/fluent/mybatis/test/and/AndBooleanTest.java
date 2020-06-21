@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +13,19 @@ public class AndBooleanTest extends BaseTest {
 
     @Test
     public void isTrue() {
-        UserEntityQuery query = new UserEntityQuery()
+        UserQuery query = new UserQuery()
                 .and.isDeleted.isTrue();
         mapper.selectList(query);
-        db.sqlList().wantFirstSql().where().eq("(is_deleted = ?)");
+        db.sqlList().wantFirstSql().where().eq("is_deleted = ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{true});
     }
 
     @Test
     public void isFalse() {
-        UserEntityQuery query = new UserEntityQuery()
+        UserQuery query = new UserQuery()
                 .and.isDeleted.isFalse();
         mapper.selectList(query);
-        db.sqlList().wantFirstSql().where().eq("(is_deleted = ?)");
+        db.sqlList().wantFirstSql().where().eq("is_deleted = ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{false});
     }
 }

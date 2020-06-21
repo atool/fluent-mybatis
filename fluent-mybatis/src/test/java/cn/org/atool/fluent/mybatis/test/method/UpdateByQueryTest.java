@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.ITable;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.table.UserTableMap;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ public class UpdateByQueryTest extends BaseTest {
             .id.values(23L, 24L)
             .user_name.values("user1", "user2")
         );
-        UserEntityUpdate update = new UserEntityUpdate()
+        UserUpdate update = new UserUpdate()
             .set.userName.is("user name2")
             .and.id.eq(24L)
-            .apply("1=1");
+            .and("1=1");
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ? AND 1=1)", StringMode.SameAsSpace);
+            .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE id = ? AND 1=1", StringMode.SameAsSpace);
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
             .id.values(23L, 24L)
             .user_name.values("user1", "user name2")
@@ -39,13 +39,13 @@ public class UpdateByQueryTest extends BaseTest {
             .id.values(23L, 24L)
             .user_name.values("user1", "user2")
         );
-        UserEntityUpdate update = new UserEntityUpdate()
+        UserUpdate update = new UserUpdate()
             .set.userName.is("user name2")
             .and.id.eq(24L)
-            .apply("user_name='user2'");
+            .and("user_name='user2'");
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE (id = ? AND user_name='user2')", StringMode.SameAsSpace);
+            .eq("UPDATE t_user SET gmt_modified=now(), user_name=? WHERE id = ? AND user_name='user2'", StringMode.SameAsSpace);
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
             .id.values(23L, 24L)
             .user_name.values("user1", "user name2")

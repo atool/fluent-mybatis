@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.method;
 
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ public class SelectMapsTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .user_name.values("u1", "u2", "u3", "u2")
             );
-        UserEntityQuery query = new UserEntityQuery()
+        UserQuery query = new UserQuery()
             .and.id.eq(24L);
         List<Map<String, Object>> users = mapper.selectMaps(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE (id = ?)");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
         want.list(users).eqDataMap(TM.user.create(1)
             .user_name.values("u2"));
     }
@@ -40,10 +40,10 @@ public class SelectMapsTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .user_name.values("u1", "u2", "u3", "u2")
             );
-        UserEntityQuery query = new UserEntityQuery()
+        UserQuery query = new UserQuery()
             .and.userName.eq("u2");
         List<Map<String, Object>> users = mapper.selectMaps(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE (user_name = ?)");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
         want.list(users).eqDataMap(TM.user.create(2)
             .user_name.values("u2"));
     }

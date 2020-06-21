@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_SelectOne;
 
 /**
@@ -9,6 +11,10 @@ import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Select
  * @create 2020/5/18 11:18 上午
  */
 public class SelectOne extends SelectList {
+    public SelectOne(DbType dbType) {
+        super(dbType);
+    }
+
     @Override
     public String statementId() {
         return Method_SelectOne;

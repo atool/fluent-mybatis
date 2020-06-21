@@ -15,24 +15,51 @@ $!{importTypes}
  * @author ${author}
  */
 public class ${entityHelper.name} implements ${mapping.name}{
-
+    /**
+     * ${entity.name}对象转换为HashMap，key值是对象属性
+     *
+     * @param entity
+     * @return
+     */
     public static Map<String, Object> map(${entity.name} entity){
         Map<String, Object> map = new HashMap<>();
-        {
         #foreach($field in ${fields})
-            map.put(Property.${field.name}, entity.get${field.capitalName}());
-        #end
+        if(entity.get${field.capitalName}() != null){
+            map.put(Property.${field.name},entity.get${field.capitalName}());
         }
+        #end
         return map;
     }
 
+    /**
+     * ${entity.name}对象转换为HashMap，key值是数据库字段
+     *
+     * @param entity
+     * @return
+     */
+    public static Map<String, Object> column(${entity.name} entity){
+        Map<String, Object> map = new HashMap<>();
+        #foreach($field in ${fields})
+        if(entity.get${field.capitalName}() != null){
+            map.put(Column.${field.columnName},entity.get${field.capitalName}());
+        }
+        #end
+        return map;
+    }
+
+    /**
+     * map对应属性值设置到${entity.name}对象中
+     *
+     * @param map
+     * @return
+     */
     public static ${entity.name} entity(Map<String, Object> map){
         ${entity.name} entity = new ${entity.name}();
-        {
         #foreach($field in ${fields})
+        if(map.containsKey(Property.${field.name})){
             entity.set${field.capitalName}((${field.type})map.get(Property.${field.name}));
-        #end
         }
+        #end
         return entity;
     }
 

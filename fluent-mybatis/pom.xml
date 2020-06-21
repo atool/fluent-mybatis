@@ -37,13 +37,7 @@
             <version>28.0-jre</version>
             <scope>test</scope>
         </dependency>
-        <!-- pageHelper-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.pagehelper</groupId>-->
-        <!--            <artifactId>pagehelper</artifactId>-->
-        <!--            <version>5.1.11</version>-->
-        <!--            <scope>provided</scope>-->
-        <!--        </dependency>-->
+
         <!--test jar -->
         <dependency>
             <groupId>org.apache.commons</groupId>

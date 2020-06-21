@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.condition.interfaces.IBaseDao;
+import cn.org.atool.fluent.mybatis.interfaces.IDao;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * @author generate code
  */
 @Repository
-public interface UserDao extends IBaseDao<UserEntity>  {
+public interface UserDao extends IDao<UserEntity>  {
 }

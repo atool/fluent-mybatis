@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EntityWrapperHelperTemplate extends BaseTemplate {
     public EntityWrapperHelperTemplate() {
-        super("templates/query/EntityWrapperHelper.java.vm", "query/*EntityWrapperHelper.java");
+        super("templates/query/EntityWrapperHelper.java.vm", "query/*WrapperHelper.java");
     }
 
     @Override

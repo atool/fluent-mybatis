@@ -19,6 +19,6 @@ public class DeleteByQueryTest extends BaseTest {
         dao.deleteByQuery("username_4", "username_5", "username_7");
         db.table(t_user).count().eq(7);
         db.sqlList().wantFirstSql()
-                .eq("DELETE FROM t_user WHERE (user_name IN (?,?,?))", StringMode.SameAsSpace);
+                .eq("DELETE FROM t_user WHERE user_name IN (?, ?, ?)", StringMode.SameAsSpace);
     }
 }

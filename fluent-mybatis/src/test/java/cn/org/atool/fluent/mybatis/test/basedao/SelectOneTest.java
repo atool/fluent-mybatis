@@ -25,7 +25,7 @@ public class SelectOneTest extends BaseTest {
         UserEntity user = dao.selectOne("username");
         want.object(user).notNull();
         db.sqlList().wantFirstSql().start("SELECT")
-                .end("FROM t_user WHERE (user_name LIKE ?) limit 1", StringMode.SameAsSpace);
+                .end("FROM t_user WHERE user_name LIKE ? LIMIT ?, ?", StringMode.SameAsSpace);
     }
 
     @Test
@@ -36,6 +36,6 @@ public class SelectOneTest extends BaseTest {
         String username = dao.selectOne(5);
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
-                .end("FROM t_user WHERE (id = ?) limit 1", StringMode.SameAsSpace);
+                .end("FROM t_user WHERE id = ? LIMIT ?, ?", StringMode.SameAsSpace);
     }
 }

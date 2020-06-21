@@ -1,12 +1,13 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
+import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_InsertBatch;
-import static cn.org.atool.fluent.mybatis.util.Constants.COMMA;
 
 /**
  * InsertBatch: 批量插入实现
@@ -14,6 +15,10 @@ import static cn.org.atool.fluent.mybatis.util.Constants.COMMA;
  * @author darui.wu
  */
 public class InsertBatch extends Insert {
+    public InsertBatch(DbType dbType) {
+        super(dbType);
+    }
+
     @Override
     public String statementId() {
         return Method_InsertBatch;

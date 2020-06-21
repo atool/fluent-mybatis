@@ -1,0 +1,17 @@
+package ${sharing.package};
+
+import ${entity.package}.${entity.name};
+import cn.org.atool.fluent.mybatis.interfaces.ISharing;
+
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * <p>
+ * $!{comment} 分库分表Mapper接口
+ * </p>
+ *
+ * @author ${author}
+ */
+@Mapper
+public interface ${sharing.name} extends ISharing<${entity.name}>{
+}

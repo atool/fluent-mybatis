@@ -1,12 +1,13 @@
 package cn.org.atool.fluent.mybatis;
 
-import cn.org.atool.fluent.mybatis.mapper.IMapper;
-import cn.org.atool.fluent.mybatis.mapper.PartitionMapper;
+import cn.org.atool.fluent.mybatis.interfaces.IMapper;
+import cn.org.atool.fluent.mybatis.interfaces.ISharing;
 import cn.org.atool.fluent.mybatis.method.InjectMethod;
 import cn.org.atool.fluent.mybatis.method.InjectMethods;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.model.InjectMapperXml;
 import cn.org.atool.fluent.mybatis.method.model.InjectMethodResource;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,8 @@ public class FluentMybatisSessionFactoryBean extends SqlSessionFactoryBean {
     @Setter
     private InjectMethods injectMethods = new InjectMethods.DefaultInjectMethods();
 
+    private DbType dbType;
+
     @Override
     public void setConfigLocation(Resource configLocation) {
         super.setConfigLocation(configLocation);
@@ -72,11 +75,13 @@ public class FluentMybatisSessionFactoryBean extends SqlSessionFactoryBean {
         if (this.mapperLocations != null) {
             Stream.of(this.mapperLocations).forEach(mappers::add);
         }
-
+        if (dbType == null) {
+            dbType = DbType.MYSQL;
+        }
         List<Class> mapperKlass = this.findMapperClass();
         for (Class klass : mapperKlass) {
-            boolean isPartition = PartitionMapper.class.isAssignableFrom(klass);
-            String xml = InjectMapperXml.buildMapperXml(klass, this.fluentMethods(isPartition));
+            boolean isSharing = ISharing.class.isAssignableFrom(klass);
+            String xml = InjectMapperXml.buildMapperXml(klass, this.fluentMethods(isSharing, this.dbType));
             if (xml == null) {
                 continue;
             }
@@ -115,10 +120,17 @@ public class FluentMybatisSessionFactoryBean extends SqlSessionFactoryBean {
         }
     }
 
-    private List<InjectMethod> fluentMethods(boolean isPartition) {
+    /**
+     * 返回方法列表
+     *
+     * @param isSharing 是否分表分库方法列表
+     * @param dbType    数据库类型
+     * @return 返回方法列表
+     */
+    private List<InjectMethod> fluentMethods(boolean isSharing, DbType dbType) {
         if (this.injectMethods == null) {
             this.injectMethods = new InjectMethods.DefaultInjectMethods();
         }
-        return isPartition ? this.injectMethods.partitionMethods() : this.injectMethods.methods();
+        return isSharing ? this.injectMethods.sharingMethods(dbType) : this.injectMethods.methods(dbType);
     }
 }

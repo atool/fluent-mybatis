@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.util;
 
-import cn.org.atool.fluent.mybatis.util.SqlInject;
+import cn.org.atool.fluent.mybatis.utility.SqlInject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

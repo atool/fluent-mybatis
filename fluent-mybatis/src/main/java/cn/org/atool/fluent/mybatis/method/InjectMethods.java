@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.normal.*;
 import cn.org.atool.fluent.mybatis.method.partition.DeleteSpec;
 import cn.org.atool.fluent.mybatis.method.partition.SelectSpec;
@@ -18,43 +19,46 @@ public interface InjectMethods {
      * 内置方法列表（不包含分库分表）
      * fluent mybatis内置方法
      *
+     * @param dbType 数据库类型
      * @return
      */
-    default List<InjectMethod> methods() {
+    default List<InjectMethod> methods(DbType dbType) {
         return Arrays.asList(
             // insert
-            new Insert(),
-            new InsertBatch(),
+            new Insert(dbType),
+            new InsertBatch(dbType),
             // select
-            new SelectById(),
-            new SelectByIds(),
-            new SelectByMap(),
-            new SelectCount(),
-            new SelectList(),
-            new SelectMaps(),
-            new SelectObjs(),
-            new SelectOne(),
+            new SelectById(dbType),
+            new SelectByIds(dbType),
+            new SelectByMap(dbType),
+            new SelectList(dbType),
+            new SelectMaps(dbType),
+            new SelectObjs(dbType),
+            new SelectOne(dbType),
+            new SelectCount(dbType),
+            new CountNoLimit(dbType),
             // delete
-            new Delete(),
-            new DeleteById(),
-            new DeleteByIds(),
-            new DeleteByMap(),
+            new Delete(dbType),
+            new DeleteById(dbType),
+            new DeleteByIds(dbType),
+            new DeleteByMap(dbType),
             // update
-            new UpdateById(),
-            new UpdateByQuery()
+            new UpdateById(dbType),
+            new UpdateByQuery(dbType)
         );
     }
 
     /**
      * 分库分表的方法
      *
+     * @param dbType 数据库类型
      * @return
      */
-    default List<InjectMethod> partitionMethods() {
+    default List<InjectMethod> sharingMethods(DbType dbType) {
         return Arrays.asList(
-            new DeleteSpec(),
-            new SelectSpec(),
-            new UpdateSpecByQuery()
+            new DeleteSpec(dbType),
+            new SelectSpec(dbType),
+            new UpdateSpecByQuery(dbType)
         );
     }
 

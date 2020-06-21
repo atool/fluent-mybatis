@@ -1,22 +1,16 @@
 package ${entityQuery.package};
 
 import cn.org.atool.fluent.mybatis.condition.base.*;
-import cn.org.atool.fluent.mybatis.condition.interfaces.*;
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
-import cn.org.atool.fluent.mybatis.util.Constants;
+import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 import ${entity.package}.${entity.name};
 import ${mapping.package}.${mapping.name};
 import ${mapping.package}.${mapping.name}.Column;
-import ${entityQuery.package}.${entity.name}WrapperHelper.And;
-import ${entityQuery.package}.${entity.name}WrapperHelper.QueryOrder;
-
-import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
+import ${entityHelper.package}.${entityHelper.name};
+import ${wrapperHelper.package}.${wrapperHelper.name}.*;
 
 /**
  * @ClassName ${entityQuery.name}
@@ -24,122 +18,96 @@ import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
  *
  * @author ${author}
  */
-public class ${entityQuery.name} extends AbstractWrapper<${entity.name}, String, ${entityQuery.name}>
-    implements IEntityQuery<${entityQuery.name}, ${entity.name}> {
-    /**
-     * 查询字段
-     */
-    private SharedString sqlSelect = new SharedString();
+public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery.name}> {
+    private final Selector selector = new Selector(this);
 
-    public final And<${entityQuery.name}> and = new And<>(this);
+    private final QueryGroup groupBy = new QueryGroup(this);
 
-    public final QueryOrder orderBy = new QueryOrder(this);
+    private final Having having = new Having(this);
+
+    private final QueryOrder orderBy = new QueryOrder(this);
+
+    public final WrapperWhere<${entityQuery.name}> and = new WrapperWhere<>(this);
+
+    public final WrapperWhere<${entityQuery.name}> or = new WrapperWhere<>(this, false);
 
     public ${entityQuery.name}(){
-        this(null);
+        super(${entity.name}.class);
     }
 
-    public ${entityQuery.name}(${entity.name} entity){
-        super.setEntity(entity);
-        super.initNeed();
-    }
-
-    public ${entityQuery.name}(${entity.name} entity, String... columns){
-        super.setEntity(entity);
-        super.initNeed();
-        this.select(columns);
+    public ${entityQuery.name}(ParameterPair parameters) {
+        super(${entity.name}.class, parameters);
     }
 
     /**
-     * 非对外公开的构造方法,只用于生产嵌套 sql
-     */
-    private ${entityQuery.name}(${entity.name} entity, AtomicInteger paramNameSeq,
-        Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments) {
-        super.setEntity(entity);
-        this.entityClass = ${entity.name}.class;
-        this.paramNameSeq = paramNameSeq;
-        this.paramNameValuePairs = paramNameValuePairs;
-        this.expression = mergeSegments;
-    }
-
-    @Override
-    public ${entityQuery.name} select(String... columns) {
-        if (isNotEmpty(columns)) {
-            this.sqlSelect.setStringValue(String.join(Constants.COMMA, columns));
-        }
-        return this;
-    }
-
-    @Override
-    public ${entityQuery.name} select(PredicateField predicate) {
-        this.entityClass = ${entity.name}.class;
-        this.sqlSelect.setStringValue(TableMetaHelper.getTableInfo(getCheckEntityClass()).filter(predicate));
-        return this;
-    }
-
-    @Override
-    public String getSqlSelect() {
-        return sqlSelect.getStringValue();
-    }
-
-    /**
-     * 只查询主键字段
+     * 查询字段设置
      *
-     * @return
+     * @param by 查询字段设置器
+     * @return 查询器${entityQuery.name}
      */
-    public ${entityQuery.name} selectId(){
-        #if(${primaryColumnName})
-        return this.select(Column.${primaryColumnName});
-        #else
-        throw new RuntimeException("table primary undefined!");
-        #end
-    }
-
-    @Override
-    public ${entityQuery.name} distinct(String... columns){
-        if(isNotEmpty(columns)){
-            this.sqlSelect.setStringValue(super.distinctSelect(columns));
-        }
+    public ${entityQuery.name} select(Consumer<Selector> by){
+        by.accept(selector);
         return this;
     }
-
-    public ${entityQuery.name} distinct(PredicateField predicate) {
-        this.entityClass = ${entity.name}.class;
-        this.sqlSelect.setStringValue(distinctSelect(getCheckEntityClass(), predicate));
-        return this;
-    }
-
-    public ${entityQuery.name} distinct(Class<${entity.name}> entityClass, PredicateField predicate) {
-        this.entityClass = entityClass;
-        this.sqlSelect.setStringValue(distinctSelect(getCheckEntityClass(), predicate));
+    /**
+     * 分组：GROUP BY 字段, ...
+     * <p>例: groupBy("id", "name")</p>
+     *
+     * @param by 设置分组字段
+     * @return 查询器${entityQuery.name}
+     */
+    public ${entityQuery.name} groupBy(Consumer<QueryGroup> by) {
+        by.accept(this.groupBy);
         return this;
     }
 
     /**
-    * <p>
-    * 用于生成嵌套 sql
-    * 故 sqlSelect 不向下传递
-    * </p>
+     * having 函数设置
+     *
+     * @param by having函数设置器
+     * @return 查询器${entityQuery.name}
+     */
+    public ${entityQuery.name} having(Consumer<Having> by){
+        by.accept(having);
+        return this;
+    }
+
+    /**
+    * order by设置
+    *
+    * @param by 设置排序字段和升降序
+    * @return 查询器${entityQuery.name}
     */
-    @Override
-    protected ${entityQuery.name} instance() {
-        return new ${entityQuery.name}(entity, paramNameSeq, paramNameValuePairs, new MergeSegments());
+    public ${entityQuery.name} orderBy(Consumer<QueryOrder> by){
+        by.accept(this.orderBy);
+        return this;
     }
 
     @Override
-    public Map<String, String> getProperty2Column(){
+    public ${entityQuery.name} eqByNotNull(${entity.name} entity) {
+        super.eqByNotNull(${entityHelper.name}.column(entity));
+        return this;
+    }
+
+#if(${primaryColumnName})
+    @Override
+    protected String primaryName(){
+        return Column.${primaryColumnName};
+    }
+#end
+
+    @Override
+    public Class<${entityQuery.name}> queryClass() {
+        return ${entityQuery.name}.class;
+    }
+
+    @Override
+    protected Map<String, String> property2Column(){
         return ${mapping.name}.Property2Column;
     }
 
     @Override
-    public ${entityQuery.name} limit(int from, int limit){
-        super.last(String.format("limit %d, %d", from, limit));
-        return this;
-    }
-
-    @Override
-    public ${entityQuery.name} limit(int limit){
-        super.last(String.format("limit %d", limit));
-        return this;
+    protected String table(){
+        return ${mapping.name}.Table_Name;
     }
 }

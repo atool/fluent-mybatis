@@ -9,8 +9,8 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.util.Constants.COMMA;
-import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * 数据库表字段反射信息

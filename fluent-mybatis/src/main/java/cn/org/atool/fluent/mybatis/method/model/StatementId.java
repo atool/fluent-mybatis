@@ -26,6 +26,8 @@ public interface StatementId {
 
     String Method_SelectCount = "selectCount";
 
+    String Method_Count_NoLimit = "countNoLimit";
+
     String Method_SelectList = "selectList";
 
     String Method_SelectMaps = "selectMaps";

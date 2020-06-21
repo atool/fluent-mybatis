@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.datamap.EM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +26,10 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .user_name.values("u1", "u2", "u3", "u2")
             );
-        UserEntityQuery query = new UserEntityQuery()
+        UserQuery query = new UserQuery()
             .and.id.eq(24L);
         List<UserEntity> users = mapper.selectList(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE (id = ?)");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
         want.list(users).eqDataMap(EM.user.create(1)
             .userName.values("u2"));
     }
@@ -41,11 +41,27 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .user_name.values("u1", "u2", "u3", "u2")
             );
-        UserEntityQuery query = new UserEntityQuery()
+        UserQuery query = new UserQuery()
             .and.userName.eq("u2");
         List<UserEntity> users = mapper.selectList(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE (user_name = ?)");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
         want.list(users).eqDataMap(EM.user.create(2)
             .userName.values("u2"));
+    }
+
+    @Test
+    public void test_selectList_limit() throws Exception {
+        db.table(t_user).clean()
+            .insert(TM.user.createWithInit(4)
+                .id.values(23, 24, 25, 26)
+                .user_name.values("u1", "u2", "u3", "u2")
+            );
+        UserQuery query = new UserQuery()
+            .and.userName.eq("u2")
+            .limit(2);
+        List<UserEntity> users = mapper.selectList(query);
+        want.list(users).eqDataMap(EM.user.create(2)
+            .userName.values("u2"));
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ? LIMIT ?, ?");
     }
 }

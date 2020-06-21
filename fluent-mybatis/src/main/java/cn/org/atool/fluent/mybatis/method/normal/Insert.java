@@ -1,15 +1,16 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.PrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
-import cn.org.atool.fluent.mybatis.util.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
+import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert;
-import static cn.org.atool.fluent.mybatis.util.Constants.COMMA;
 
 /**
  * InsertSelected 插入非null的字段，忽略null字段
@@ -18,6 +19,9 @@ import static cn.org.atool.fluent.mybatis.util.Constants.COMMA;
  * @create 2020/5/12 8:51 下午
  */
 public class Insert extends AbstractMethod {
+    public Insert(DbType dbType) {
+        super(dbType);
+    }
 
     @Override
     public String statementId() {

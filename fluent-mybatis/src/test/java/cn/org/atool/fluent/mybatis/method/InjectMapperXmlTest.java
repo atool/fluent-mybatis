@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.model.InjectMapperXml;
 import org.junit.jupiter.api.Test;
 import org.test4j.hamcrest.matcher.string.StringMode;
@@ -18,7 +19,7 @@ class InjectMapperXmlTest extends Test4J {
 
     @Test
     void buildMapperXml() throws Exception {
-        String result = InjectMapperXml.buildMapperXml(UserMapper.class, new InjectMethods.DefaultInjectMethods().methods());
+        String result = InjectMapperXml.buildMapperXml(UserMapper.class, new InjectMethods.DefaultInjectMethods().methods(DbType.MYSQL));
         String xml = ResourceHelper.readFromFile(new File(System.getProperty("user.dir") + "/src/test/java/cn/org/atool/fluent/mybatis/method/UserMapper.xml"));
         want.string(result).eq(xml, StringMode.IgnoreSpace);
     }

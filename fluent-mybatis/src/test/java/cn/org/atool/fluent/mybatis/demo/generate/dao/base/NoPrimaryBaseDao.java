@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.condition.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryEntityUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author generate code
 */
-public abstract class NoPrimaryBaseDao extends BaseDaoImpl<NoPrimaryEntity, NoPrimaryEntityQuery, NoPrimaryEntityUpdate>
+public abstract class NoPrimaryBaseDao extends BaseDaoImpl<NoPrimaryEntity, NoPrimaryQuery, NoPrimaryUpdate>
         implements NoPrimaryMP {
 
     @Autowired
@@ -26,13 +26,13 @@ public abstract class NoPrimaryBaseDao extends BaseDaoImpl<NoPrimaryEntity, NoPr
     }
 
     @Override
-    public NoPrimaryEntityQuery query(){
-        return new NoPrimaryEntityQuery();
+    public NoPrimaryQuery query(){
+        return new NoPrimaryQuery();
     }
 
     @Override
-    public NoPrimaryEntityUpdate update(){
-        return new NoPrimaryEntityUpdate();
+    public NoPrimaryUpdate update(){
+        return new NoPrimaryUpdate();
     }
 
     @Override

@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.condition.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserEntityUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.UserUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
 
@@ -14,8 +14,8 @@ import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
  *
  * @author generate code
 */
-public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserEntityQuery, UserEntityUpdate>
-        implements UserMP, MyCustomerInterface<UserEntity, UserEntityQuery, UserEntityUpdate> {
+public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, UserUpdate>
+        implements UserMP, MyCustomerInterface<UserEntity, UserQuery, UserUpdate> {
 
     @Autowired
     protected UserMapper mapper;
@@ -26,13 +26,13 @@ public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserEntityQuer
     }
 
     @Override
-    public UserEntityQuery query(){
-        return new UserEntityQuery();
+    public UserQuery query(){
+        return new UserQuery();
     }
 
     @Override
-    public UserEntityUpdate update(){
-        return new UserEntityUpdate();
+    public UserUpdate update(){
+        return new UserUpdate();
     }
 
     @Override

@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.condition.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.AddressEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.AddressMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.AddressEntityQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.AddressEntityUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.query.AddressQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.query.AddressUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
 
@@ -14,8 +14,8 @@ import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
  *
  * @author generate code
 */
-public abstract class AddressBaseDao extends BaseDaoImpl<AddressEntity, AddressEntityQuery, AddressEntityUpdate>
-        implements AddressMP, MyCustomerInterface<AddressEntity, AddressEntityQuery, AddressEntityUpdate> {
+public abstract class AddressBaseDao extends BaseDaoImpl<AddressEntity, AddressQuery, AddressUpdate>
+        implements AddressMP, MyCustomerInterface<AddressEntity, AddressQuery, AddressUpdate> {
 
     @Autowired
     protected AddressMapper mapper;
@@ -26,13 +26,13 @@ public abstract class AddressBaseDao extends BaseDaoImpl<AddressEntity, AddressE
     }
 
     @Override
-    public AddressEntityQuery query(){
-        return new AddressEntityQuery();
+    public AddressQuery query(){
+        return new AddressQuery();
     }
 
     @Override
-    public AddressEntityUpdate update(){
-        return new AddressEntityUpdate();
+    public AddressUpdate update(){
+        return new AddressUpdate();
     }
 
     @Override

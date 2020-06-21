@@ -20,7 +20,7 @@ public class SaveOrUpdateTest extends BaseTest {
     public void test_saveOrUpdate() throws Exception {
         db.table(t_user).clean().insert(TM.user.createWithInit(3));
         dao.saveOrUpdate(new UserEntity().setId(3L).setUserName("test_111").setAge(30));
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE id = ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).eq("UPDATE t_user SET age=?, gmt_modified=now(), user_name=? WHERE id=?");
         db.table(t_user).queryWhere("id=3")
                 .eqDataMap(TM.user.create(1)
@@ -33,7 +33,7 @@ public class SaveOrUpdateTest extends BaseTest {
     public void test_saveOrUpdate_2() throws Exception {
         db.table(t_user).clean().insert(TM.user.createWithInit(3));
         dao.saveOrUpdate(new UserEntity().setId(4L).setUserName("test_111").setAge(30));
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( 1 ) FROM t_user WHERE (id = ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE id = ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).contains("INSERT INTO t_user");
         db.table(t_user).count().eq(4);
         db.table(t_user).queryWhere("id=4")

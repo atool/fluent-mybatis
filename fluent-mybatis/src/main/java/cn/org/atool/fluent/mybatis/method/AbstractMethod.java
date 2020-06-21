@@ -1,13 +1,16 @@
 package cn.org.atool.fluent.mybatis.method;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.util.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -17,24 +20,23 @@ import static java.util.stream.Collectors.joining;
  * @create 2020/5/26 11:25 上午
  */
 public abstract class AbstractMethod implements InjectMethod {
+    @Getter
+    private DbType dbType;
+
+    protected AbstractMethod(DbType dbType) {
+        MybatisUtil.assertNotNull("dbType", dbType);
+        this.dbType = dbType;
+    }
+
     /**
      * where部分
      *
-     * @param table
      * @param builder
      * @return
      */
-    protected SqlBuilder whereEntity(TableMeta table, SqlBuilder builder) {
+    protected SqlBuilder whereByWrapper(SqlBuilder builder) {
         return builder
-            .ifThen("ew != null and ew.entity != null", () -> {
-                if (table.getPrimary() != null) {
-                    builder.ifThen("ew.entity.@property != null", "@column=#{ew.entity.@column}", table.getKeyProperty(), table.getKeyColumn());
-                }
-                builder.eachJoining(table.getFields(), (field) -> {
-                    builder.ifThen("ew.entity.@property != null", "AND @column=#{ew.entity.@property}", field.getProperty(), field.getColumn());
-                });
-            })
-            .ifThen("ew != null and ew.sqlSegment != null and ew.sqlSegment != ''", "AND ${ew.sqlSegment}");
+            .ifThen("ew.whereSql != null and ew.whereSql != ''", "AND ${ew.whereSql}");
     }
 
     /**

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EntityUpdateTemplate extends BaseTemplate {
     public EntityUpdateTemplate() {
-        super("templates/query/EntityUpdate.java.vm", "query/*EntityUpdate.java");
+        super("templates/query/EntityUpdate.java.vm", "query/*Update.java");
     }
 
     @Override

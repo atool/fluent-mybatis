@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EntityQueryTemplate extends BaseTemplate {
     public EntityQueryTemplate() {
-        super("templates/query/EntityQuery.java.vm", "query/*EntityQuery.java");
+        super("templates/query/EntityQuery.java.vm", "query/*Query.java");
     }
 
     @Override

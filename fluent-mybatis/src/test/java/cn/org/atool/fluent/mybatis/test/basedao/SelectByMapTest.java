@@ -34,7 +34,7 @@ public class SelectByMapTest extends BaseTest {
                 this.put(UserMP.Column.user_name, "username_4");
             }
         });
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE (user_name = ?)");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
         want.list(users).eqDataMap(EM.user.create(1)
                 .userName.values("username_4"));
     }

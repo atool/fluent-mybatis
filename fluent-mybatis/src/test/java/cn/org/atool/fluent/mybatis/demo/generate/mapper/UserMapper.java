@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.mapper;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.interfaces.IEntityMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
