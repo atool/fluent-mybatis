@@ -27,8 +27,8 @@ public class InsertBatchTest extends BaseTest {
                 .age.values(23, 24)
                 .user_name.values("name1", "name2")
             );
-        want.number(list.get(0).getId()).isGt(0L);
-        want.number(list.get(1).getId()).isGt(1L);
+        want.number(list.get(0).getId()).isNull();
+        want.number(list.get(1).getId()).isNull();
     }
 
     @Test
@@ -44,10 +44,11 @@ public class InsertBatchTest extends BaseTest {
                 .age.values(23, 24)
                 .user_name.values("name1", "name2")
             );
-        want.array(list.stream().map(UserEntity::getId).toArray()).eqReflect(new long[]{23, 24});
+        want.array(list.stream().map(UserEntity::getId).toArray())
+            .eqReflect(new long[]{23, 24});
     }
 
-    @DisplayName("部分id有值，导致严重的后果，实体id被篡改")
+    @DisplayName("部分id有值，实体id不会回写")
     @Test
     public void testInsertBatch() {
         db.table(t_user).clean();
@@ -62,7 +63,5 @@ public class InsertBatchTest extends BaseTest {
                 .user_name.values("name1", "name2")
             );
         want.number(list.get(1).getId()).isNull();
-        want.exception(() ->
-            want.number(list.get(0).getId()).eq(101L), AssertionError.class);
     }
 }

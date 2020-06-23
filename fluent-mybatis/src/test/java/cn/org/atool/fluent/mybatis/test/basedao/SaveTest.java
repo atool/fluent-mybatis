@@ -79,7 +79,7 @@ public class SaveTest extends BaseTest {
             .user_name.values("test name1", "test name2")
             .age.values(43)
         );
-        want.number(list.get(0).getId()).isGt(0L);
-        want.number(list.get(1).getId()).isGt(1L);
+        want.number(list.get(0).getId()).isNull();
+        want.number(list.get(1).getId()).isNull();
     }
 }

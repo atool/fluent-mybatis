@@ -21,6 +21,9 @@ import static java.util.stream.Collectors.joining;
  */
 @Getter
 public class WrapperData {
+    /**
+     * select 前面是否加 DISTINCT 关键字
+     */
     @Setter
     private boolean isDistinct = false;
     /**
@@ -109,7 +112,7 @@ public class WrapperData {
      *
      * @return where sql
      */
-    public String getWhereNoOrder() {
+    public String getWhereNoLimit() {
         String sql = mergeSegments.sqlNoOrderBy();
         return isEmpty(sql) ? null : sql.trim();
     }

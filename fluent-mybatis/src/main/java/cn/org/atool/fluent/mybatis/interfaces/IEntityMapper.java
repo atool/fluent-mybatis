@@ -25,7 +25,7 @@ public interface IEntityMapper<T> extends IMapper {
     int insert(T entity);
 
     /**
-     * 批量插入数据，实例的主键必须全部赋值或全部未赋值
+     * 批量插入数据，实例的主键必须全部赋值
      *
      * @param entities
      * @return
@@ -126,7 +126,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    Integer selectCountNoLimit(@Param(WRAPPER) IQuery query);
+    Integer countNoLimit(@Param(WRAPPER) IQuery query);
 
     /**
      * 根据 query 条件，查询全部记录

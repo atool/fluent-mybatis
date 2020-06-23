@@ -9,8 +9,8 @@ import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Count_NoLimit;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_NoOrder_Not_Null;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_NoOrder_Var;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_NoLimit_NotNull;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_NoLimit_Var;
 
 /**
  * SelectCountNoLimit: 忽略order by 和 limit 语句 查询总数
@@ -46,7 +46,7 @@ public class CountNoLimit extends AbstractMethod {
     private String noPagedXml(TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.selectCount(table, super.isSpecTable())
-            .where(() -> builder.ifThen(Wrapper_Where_NoOrder_Not_Null, Wrapper_Where_NoOrder_Var))
+            .where(() -> builder.ifThen(Wrapper_Where_NoLimit_NotNull, Wrapper_Where_NoLimit_Var))
             .toString();
     }
 }

@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.method.normal;
 
+import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TablePrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -14,7 +16,7 @@ import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert
  *
  * @author darui.wu
  */
-public class InsertBatch extends Insert {
+public class InsertBatch extends AbstractMethod {
     public InsertBatch(DbType dbType) {
         super(dbType);
     }
@@ -27,7 +29,7 @@ public class InsertBatch extends Insert {
     @Override
     public String getMethodSql(Class entity, TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
-        super.insertStatement(builder, entity, table.getPrimary());
+        this.insertStatement(builder, entity, table.getPrimary());
         String values = this.getInsertValues(table);
         builder
             .insert(table, super.isSpecTable())
@@ -37,6 +39,10 @@ public class InsertBatch extends Insert {
 
         String xml = builder.end(StatementType.insert).toString();
         return xml;
+    }
+
+    protected void insertStatement(SqlBuilder builder, Class entity, TablePrimaryMeta primary) {
+        builder.quotas("<insert id='%s' parameterType='%s'>", statementId(), entity.getName());
     }
 
     /**

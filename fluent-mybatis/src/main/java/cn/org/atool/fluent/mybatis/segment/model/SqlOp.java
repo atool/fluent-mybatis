@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-
 import java.util.Collection;
 import java.util.stream.Stream;
 

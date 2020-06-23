@@ -47,7 +47,7 @@
         <if test="version != null">#{version},</if>
     </trim>
     </insert>
-    <insert id="insertBatch" keyColumn="id" keyProperty="id" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity" useGeneratedKeys="true">
+    <insert id="insertBatch" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity">
         INSERT INTO t_user
         (id, address_id, age, gmt_created, gmt_modified, is_deleted, user_name, version)VALUES <foreach collection="list" item="item" index="k" separator=",">
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -248,7 +248,7 @@
         </choose>
         ) FROM t_user
         <where>
-            <if test="ew.wrapperData.whereSqlNoOrder != null">${ew.wrapperData.whereSqlNoOrder}</if>
+            <if test="ew.wrapperData.whereNoLimit != null">${ew.wrapperData.whereNoLimit}</if>
         </where>
 
     </select>

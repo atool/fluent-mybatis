@@ -34,9 +34,15 @@ public enum KeyWordSegment implements ISqlSegment {
      */
     OR("OR", true);
 
+    /**
+     * 代码片段
+     */
     @Getter
     private String sqlSegment;
 
+    /**
+     * 该操作是否是AND或者OR
+     */
     @Getter
     private boolean isAndOr;
 

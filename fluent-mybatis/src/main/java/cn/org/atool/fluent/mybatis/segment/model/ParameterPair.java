@@ -85,7 +85,5 @@ public class ParameterPair extends HashMap<String, Object> {
     /**
      * 变量名称格式, 前缀+序号
      */
-    static final String WRAPPER_PARAM = "variable_" ;
-
-
+    private static final String WRAPPER_PARAM = "variable_";
 }

@@ -9,35 +9,35 @@ public interface XmlConstant {
     /**
      * wrapper 类
      */
-    String WRAPPER = "ew" ;
+    String WRAPPER = "ew";
     /**
      * columnMap
      */
-    String COLUMN_MAP = "cm" ;
+    String COLUMN_MAP = "cm";
 
     /**
      * collection
      */
-    String COLLECTION = "coll" ;
+    String COLLECTION = "coll";
     /**
      * 实体类
      */
-    String ENTITY = "et" ;
+    String ENTITY = "et";
     /**
      * 分库
      */
-    String SPEC_COMMENT = "SPEC_COMMENT" ;
+    String SPEC_COMMENT = "SPEC_COMMENT";
     /**
      * 分表
      */
-    String SPEC_TABLE = "SPEC_TABLE" ;
+    String SPEC_TABLE = "SPEC_TABLE";
     /**
      * 变量在xml文件中的占位符全路径表达式
      * 例子: #{ew.wrapperData.parameters.variable_1}
      */
-    String WRAPPER_PARAM_FORMAT = "#{%s.parameters.%s}" ;
+    String WRAPPER_PARAM_FORMAT = "#{%s.parameters.%s}";
 
-    String Spec_Comment_Not_Null = "SPEC_COMMENT != null and SPEC_COMMENT != ''" ;
+    String Spec_Comment_Not_Null = "SPEC_COMMENT != null and SPEC_COMMENT != ''";
 
     String Wrapper_Data = String.format("%s.wrapperData", WRAPPER);
 
@@ -61,9 +61,9 @@ public interface XmlConstant {
 
     String Wrapper_Where_Var = String.format("${%s.whereSql}", Wrapper_Data);
 
-    String Wrapper_Where_NoOrder_Not_Null = String.format("%s.whereSqlNoOrder != null", Wrapper_Data, Wrapper_Data);
+    String Wrapper_Where_NoLimit_NotNull = String.format("%s.whereNoLimit != null", Wrapper_Data, Wrapper_Data);
 
-    String Wrapper_Where_NoOrder_Var = String.format("${%s.whereSqlNoOrder}", Wrapper_Data);
+    String Wrapper_Where_NoLimit_Var = String.format("${%s.whereNoLimit}", Wrapper_Data);
 
     String Wrapper_Paged_Offset = String.format("#{%s.paged.offset}", Wrapper_Data);
 
