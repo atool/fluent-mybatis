@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
-import cn.org.atool.fluent.mybatis.condition.model.SqlOp;
+import cn.org.atool.fluent.mybatis.segment.model.SqlOp;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;

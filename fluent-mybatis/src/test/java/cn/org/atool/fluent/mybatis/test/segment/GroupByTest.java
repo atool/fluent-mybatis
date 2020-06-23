@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cn.org.atool.fluent.mybatis.condition.model.SqlOp.GT;
+import static cn.org.atool.fluent.mybatis.segment.model.SqlOp.GT;
 
 /**
  * GroupByTest

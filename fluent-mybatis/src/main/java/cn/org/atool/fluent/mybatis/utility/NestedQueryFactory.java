@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
-import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 

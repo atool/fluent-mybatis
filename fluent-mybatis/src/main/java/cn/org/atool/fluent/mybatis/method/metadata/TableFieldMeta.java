@@ -9,7 +9,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.COMMA;
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**

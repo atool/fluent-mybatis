@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
-import cn.org.atool.fluent.mybatis.condition.model.StrConstant;
+import cn.org.atool.fluent.mybatis.segment.model.StrConstant;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;

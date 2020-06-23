@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
 
 /**

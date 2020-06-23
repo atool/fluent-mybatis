@@ -9,8 +9,8 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.COMMA;
-import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.DISTINCT;
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.DISTINCT;
 
 /**
  * MybatisUtil
