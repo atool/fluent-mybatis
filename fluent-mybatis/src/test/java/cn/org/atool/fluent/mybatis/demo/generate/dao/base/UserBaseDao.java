@@ -31,12 +31,12 @@ public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, Use
     }
 
     @Override
-    public UserUpdate update(){
+    public UserUpdate updater(){
         return new UserUpdate();
     }
 
     @Override
     public String findPkColumn() {
-        return UserMP.Column.id;
+        return UserMP.id.column;
     }
 }

@@ -1,11 +1,8 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.apply.*;
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.condition.base.*;
-import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Property;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
-
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
 
 /**
  * <p>
@@ -16,12 +13,22 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
  * @author generate code
  */
 public class NoPrimaryWrapperHelper {
+    public interface ISegment<R> {
+        R set(FieldMeta fieldMeta);
+
+        default R column1() {
+            return this.set(NoPrimaryMP.column1);
+        }
+
+        default R column2() {
+            return this.set(NoPrimaryMP.column2);
+        }
+    }
     /**
      * select字段设置
      */
-    public static final class Selector extends BaseSelector<Selector>{
-        public final ColumnSelector<Selector> column1 = new ColumnSelector<>(this, Column.column_1);
-        public final ColumnSelector<Selector> column2 = new ColumnSelector<>(this, Column.column_2);
+    public static final class Selector extends SelectorBase<Selector, NoPrimaryQuery>
+        implements ISegment<SelectorApply<Selector, NoPrimaryQuery>> {
 
         Selector(NoPrimaryQuery query) {
             super(query);
@@ -30,29 +37,33 @@ public class NoPrimaryWrapperHelper {
 
     /**
      * where条件设置
-     * @param <W> 更新器或查询器
      */
-    public static final class WrapperWhere<W extends Wrapper<NoPrimaryEntity, W, NoPrimaryQuery>>
-        extends BaseWhere<NoPrimaryEntity, W, NoPrimaryQuery> {
-        public final WhereObject<NoPrimaryEntity, Integer, W, NoPrimaryQuery> column1 = new WhereObject<>(this, Column.column_1, Property.column1);
-        public final WhereString<NoPrimaryEntity, W, NoPrimaryQuery> column2 = new WhereString<>(this, Column.column_2, Property.column2);
+    public static class QueryWhere extends WhereBase<QueryWhere, NoPrimaryQuery, NoPrimaryQuery>
+        implements ISegment<WhereApply<QueryWhere, NoPrimaryQuery>> {
 
-        WrapperWhere(W wrapper) {
-            this(wrapper, true);
+        QueryWhere(NoPrimaryQuery query) {
+            super(query);
         }
-        WrapperWhere(W wrapper, boolean and) {
-            super(wrapper, and);
+    }
+
+    /**
+     * where条件设置
+     */
+    public static class UpdateWhere extends WhereBase<UpdateWhere, NoPrimaryUpdate, NoPrimaryQuery>
+        implements ISegment<WhereApply<UpdateWhere, NoPrimaryQuery>> {
+
+        UpdateWhere(NoPrimaryUpdate update) {
+            super(update);
         }
     }
 
     /**
      * 分组设置
      */
-    public static final class QueryGroup extends BaseGroup<QueryGroup> {
-        public final GroupBy<QueryGroup> column1 = new GroupBy<>(this, Column.column_1);
-        public final GroupBy<QueryGroup> column2 = new GroupBy<>(this, Column.column_2);
+    public static final class GroupBy extends GroupByBase<GroupBy, NoPrimaryQuery>
+        implements ISegment<GroupBy> {
 
-        QueryGroup(NoPrimaryQuery query) {
+        GroupBy(NoPrimaryQuery query) {
             super(query);
         }
     }
@@ -60,9 +71,8 @@ public class NoPrimaryWrapperHelper {
     /**
      * 分组Having条件设置
      */
-    public static final class Having extends BaseHaving<Having> {
-        public final HavingBy<Having> column1 = new HavingBy<>(this, Column.column_1);
-        public final HavingBy<Having> column2 = new HavingBy<>(this, Column.column_2);
+    public static final class Having extends HavingBase<Having, NoPrimaryQuery>
+        implements ISegment<HavingApply<Having, NoPrimaryQuery>> {
 
         Having(NoPrimaryQuery query) {
             super(query);
@@ -72,11 +82,10 @@ public class NoPrimaryWrapperHelper {
     /**
      * OrderBy设置
      */
-    public static final class QueryOrder extends BaseOrder<QueryOrder> {
-        public final OrderBy<QueryOrder> column1 = new OrderBy<>(this, Column.column_1);
-        public final OrderBy<QueryOrder> column2 = new OrderBy<>(this, Column.column_2);
+    public static final class OrderBy extends OrderByBase<OrderBy, NoPrimaryQuery>
+        implements ISegment<OrderBy> {
 
-        QueryOrder(NoPrimaryQuery query) {
+        OrderBy(NoPrimaryQuery query) {
             super(query);
         }
     }
@@ -84,9 +93,8 @@ public class NoPrimaryWrapperHelper {
     /**
      * 字段更新设置
      */
-    public static final class UpdateSetter extends BaseSetter<NoPrimaryEntity, NoPrimaryUpdate> {
-        public final SetObject<Integer, NoPrimaryUpdate> column1 = new SetObject<>(this, Column.column_1, Property.column1);
-        public final SetString<NoPrimaryUpdate> column2 = new SetString<>(this, Column.column_2, Property.column2);
+    public static final class UpdateSetter extends UpdateBase<UpdateSetter, NoPrimaryUpdate>
+        implements ISegment<UpdateApply<UpdateSetter, NoPrimaryUpdate>> {
 
         UpdateSetter(NoPrimaryUpdate update) {
             super(update);

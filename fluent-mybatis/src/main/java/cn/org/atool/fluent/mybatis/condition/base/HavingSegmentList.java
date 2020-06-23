@@ -1,20 +1,20 @@
-package cn.org.atool.fluent.mybatis.condition.model.segments;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.SPACE;
 import static cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment.HAVING;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.SPACE;
 
 /**
  * Having SQL 片段
  *
  * @author darui.wu
  */
-public class HavingSegmentList extends AbstractSegmentList {
+public class HavingSegmentList extends BaseSegmentList {
 
     @Override
-    public AbstractSegmentList add(ISqlSegment first, ISqlSegment... sqlSegments) {
+    public BaseSegmentList add(ISqlSegment first, ISqlSegment... sqlSegments) {
         if (!this.segments.isEmpty()) {
             this.segments.add(AND);
         }

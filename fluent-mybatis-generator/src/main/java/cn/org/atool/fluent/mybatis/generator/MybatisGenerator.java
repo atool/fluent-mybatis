@@ -12,14 +12,14 @@ import cn.org.atool.fluent.mybatis.generator.template.query.EntityQueryTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.query.EntityUpdateTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.query.EntityWrapperHelperTemplate;
 import lombok.extern.slf4j.Slf4j;
-
 import org.test4j.generator.mybatis.DataMapGenerator;
 import org.test4j.generator.mybatis.config.IGlobalConfig;
 import org.test4j.generator.mybatis.template.BaseTemplate;
-
 import org.test4j.generator.mybatis.template.DataMapTemplateList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 数据库表列表

@@ -25,7 +25,7 @@ public interface IBaseDao<E extends IEntity, Q extends IQuery<E, Q>, U extends I
      *
      * @return
      */
-    U update();
+    U updater();
 
     /**
      * 返回主键字段名称

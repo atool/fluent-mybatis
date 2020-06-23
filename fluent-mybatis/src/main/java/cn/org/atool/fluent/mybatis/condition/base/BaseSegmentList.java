@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.condition.model.segments;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 import lombok.AccessLevel;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.EMPTY;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.EMPTY;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -16,7 +16,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @author darui.wu
  */
-public abstract class AbstractSegmentList {
+public abstract class BaseSegmentList {
     /**
      * sql片段列表
      */
@@ -29,7 +29,7 @@ public abstract class AbstractSegmentList {
      * @param sqlSegments sql片段列表
      * @return self
      */
-    public abstract AbstractSegmentList add(ISqlSegment first, ISqlSegment... sqlSegments);
+    public abstract BaseSegmentList add(ISqlSegment first, ISqlSegment... sqlSegments);
 
     /**
      * 添加sql片段
@@ -37,7 +37,7 @@ public abstract class AbstractSegmentList {
      * @param sqlSegments 元素集合
      * @return self
      */
-    protected final AbstractSegmentList addAll(ISqlSegment... sqlSegments) {
+    protected final BaseSegmentList addAll(ISqlSegment... sqlSegments) {
         Stream.of(sqlSegments).forEach(this.segments::add);
         cache = null;
         return this;

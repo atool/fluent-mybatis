@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.test.method;
 
 import cn.org.atool.fluent.mybatis.demo.generate.ITable;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
-import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;

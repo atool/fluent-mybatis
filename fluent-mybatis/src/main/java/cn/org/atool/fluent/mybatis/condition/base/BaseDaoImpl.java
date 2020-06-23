@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.condition.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -56,7 +55,7 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
 
     @Override
     public List<E> selectByMap(Map<String, Object> where) {
-        IQuery query = this.query().eqByNotNull((Map) where);
+        IQuery query = (IQuery) this.query().where().eqByNotNull((Map) where).end();
         return this.mapper().selectList(query);
     }
 
@@ -138,7 +137,7 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
 
     @Override
     public boolean existPk(Serializable id) {
-        Q query = this.query().apply(AND, this.findPkColumn(), EQ, id);
+        Q query = this.query().where().and(this.findPkColumn(), EQ, id).end();
         Integer count = this.mapper().selectCount(query);
         return count != null && count > 0;
     }
@@ -188,7 +187,7 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
 
     @Override
     public int deleteByMap(Map<String, Object> map) {
-        IQuery query = this.query().eqByNotNull((Map) map);
+        IQuery query = (IQuery) this.query().where().eqByNotNull((Map) map).end();
         return this.mapper().delete(query);
     }
 }

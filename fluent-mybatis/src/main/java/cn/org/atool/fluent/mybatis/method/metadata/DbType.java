@@ -2,6 +2,8 @@ package cn.org.atool.fluent.mybatis.method.metadata;
 
 import lombok.Getter;
 
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+
 /**
  * DbType 数据库类型
  *
@@ -73,26 +75,27 @@ public enum DbType {
                     .append(" SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( ")
                     .append(noPagedXml)
                     .append(" ) TMP_PAGE)")
-                    .append(" WHERE ROW_ID > #{ew.paged.offset} AND ROW_ID <= #{ew.paged.endOffset} ")
+                    .append(String.format(" WHERE ROW_ID > %s AND ROW_ID <= %s ", Wrapper_Paged_Offset, Wrapper_Paged_End_Offset))
                     .toString();
             case DB2:
                 return new StringBuilder(noPagedXml.length() + 200)
                     .append("SELECT * FROM (SELECT TMP_PAGE.*,ROWNUMBER() OVER() AS ROW_ID FROM ( ")
                     .append(noPagedXml)
-                    .append(" ) AS TMP_PAGE) TMP_PAGE WHERE ROW_ID BETWEEN #{ew.paged.offset} AND #{ew.paged.pageSize}")
+                    .append(" ) AS TMP_PAGE) TMP_PAGE WHERE ROW_ID")
+                    .append(String.format(" BETWEEN %s AND %s", Wrapper_Paged_Offset, Wrapper_Paged_Size))
                     .toString();
             case SQL_SERVER:
             case SQL_SERVER2005:
                 throw new RuntimeException("not support");
             case HSQL:
-                return noPagedXml + " LIMIT #{ew.paged.pageSize} OFFSET #{ew.paged.offset}";
+                return noPagedXml + String.format(" LIMIT %s OFFSET %s", Wrapper_Paged_Size, Wrapper_Paged_Offset);
             case MYSQL:
             case MARIADB:
             case SQLITE:
             case POSTGRE_SQL:
             case H2:
             default:
-                return noPagedXml + " LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} ";
+                return noPagedXml + String.format(" LIMIT %s, %s ", Wrapper_Paged_Offset, Wrapper_Paged_Size);
         }
     }
 

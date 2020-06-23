@@ -32,8 +32,8 @@ public class DistinctTest extends BaseTest {
             );
         UserQuery query = new UserQuery()
             .distinct()
-            .select(UserMP.Column.user_name)
-            .and.age.eq(30);
+            .select(UserMP.userName)
+            .where.age().eq(30).end();
 
         List<UserEntity> users = mapper.selectList(query);
         db.sqlList().wantFirstSql().eq("SELECT DISTINCT user_name FROM t_user WHERE age = ?", StringMode.SameAsSpace);

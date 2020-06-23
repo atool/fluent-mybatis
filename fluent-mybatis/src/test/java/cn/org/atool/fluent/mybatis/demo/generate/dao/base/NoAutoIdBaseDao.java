@@ -31,12 +31,12 @@ public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAuto
     }
 
     @Override
-    public NoAutoIdUpdate update(){
+    public NoAutoIdUpdate updater(){
         return new NoAutoIdUpdate();
     }
 
     @Override
     public String findPkColumn() {
-        return NoAutoIdMP.Column.id;
+        return NoAutoIdMP.id.column;
     }
 }

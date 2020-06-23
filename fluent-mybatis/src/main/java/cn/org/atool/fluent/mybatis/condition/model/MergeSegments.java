@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.condition.model;
 
-import cn.org.atool.fluent.mybatis.condition.model.segments.*;
+import cn.org.atool.fluent.mybatis.condition.base.*;
 import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 import lombok.AccessLevel;
 import lombok.Setter;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.EMPTY;
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.SPACE;
 import static cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment.*;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isEmpty;
 
 /**
@@ -15,7 +15,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isEmpty;
  *
  * @author darui.wu
  */
-public class MergeSegments extends AbstractSegmentList {
+public class MergeSegments extends BaseSegmentList {
 
     private final WhereSegmentList where = new WhereSegmentList();
 
@@ -73,6 +73,16 @@ public class MergeSegments extends AbstractSegmentList {
     @Override
     protected String build() {
         String sql = where.sql() + groupBy.sql() + having.sql() + orderBy.sql();
+        return sql.trim() + (isEmpty(lastSql) ? EMPTY : SPACE + lastSql.trim());
+    }
+
+    /**
+     * 去掉orderBy部分
+     *
+     * @return
+     */
+    public String sqlNoOrderBy() {
+        String sql = where.sql() + groupBy.sql() + having.sql();
         return sql.trim() + (isEmpty(lastSql) ? EMPTY : SPACE + lastSql.trim());
     }
 }

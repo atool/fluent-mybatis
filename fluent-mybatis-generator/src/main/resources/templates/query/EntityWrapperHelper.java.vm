@@ -1,11 +1,8 @@
 package ${wrapperHelper.package};
 
-import cn.org.atool.fluent.mybatis.condition.apply.*;
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.condition.base.*;
-import ${entity.package}.${entity.name};
-import ${mapping.package}.${mapping.name}.Property;
-import ${mapping.package}.${mapping.name}.Column;
-${importTypes}
+import ${mapping.package}.${mapping.name};
 
 /**
  * <p>
@@ -16,13 +13,20 @@ ${importTypes}
  * @author ${author}
  */
 public class ${wrapperHelper.name} {
+    public interface ISegment<R> {
+        R set(FieldMeta fieldMeta);
+        #foreach($field in ${fields})
+
+        default R ${field.name}() {
+            return this.set(${mapping.name}.${field.name});
+        }
+        #end
+    }
     /**
      * select字段设置
      */
-    public static final class Selector extends BaseSelector<Selector>{
-#foreach($field in ${fields})
-        public final ColumnSelector<Selector> ${field.name} = new ColumnSelector<>(this, Column.${field.columnName});
-#end
+    public static final class Selector extends SelectorBase<Selector, ${entityQuery.name}>
+        implements ISegment<SelectorApply<Selector, ${entityQuery.name}>> {
 
         Selector(${entityQuery.name} query) {
             super(query);
@@ -31,37 +35,33 @@ public class ${wrapperHelper.name} {
 
     /**
      * where条件设置
-     * @param <W> 更新器或查询器
      */
-    public static final class WrapperWhere<W extends Wrapper<${entity.name}, W, ${entityQuery.name}>>
-        extends BaseWhere<${entity.name}, W, ${entityQuery.name}> {
-#foreach($field in ${fields})
-    #if(${field.type}=="String")
-        public final WhereString<${entity.name}, W, ${entityQuery.name}> ${field.name} = new WhereString<>(this, Column.${field.columnName}, Property.${field.name});
-    #elseif((${field.type}=="Boolean"))
-        public final WhereBoolean<${entity.name}, W, ${entityQuery.name}> ${field.name} = new WhereBoolean<>(this, Column.${field.columnName}, Property.${field.name});
-    #else
-        public final WhereObject<${entity.name}, ${field.type}, W, ${entityQuery.name}> ${field.name} = new WhereObject<>(this, Column.${field.columnName}, Property.${field.name});
-    #end
-#end
+    public static class QueryWhere extends WhereBase<QueryWhere, ${entityQuery.name}, ${entityQuery.name}>
+        implements ISegment<WhereApply<QueryWhere, ${entityQuery.name}>> {
 
-        WrapperWhere(W wrapper) {
-            this(wrapper, true);
+        QueryWhere(${entityQuery.name} query) {
+            super(query);
         }
-        WrapperWhere(W wrapper, boolean and) {
-            super(wrapper, and);
+    }
+
+    /**
+     * where条件设置
+     */
+    public static class UpdateWhere extends WhereBase<UpdateWhere, ${entityUpdate.name}, ${entityQuery.name}>
+        implements ISegment<WhereApply<UpdateWhere, ${entityQuery.name}>> {
+
+        UpdateWhere(${entityUpdate.name} update) {
+            super(update);
         }
     }
 
     /**
      * 分组设置
      */
-    public static final class QueryGroup extends BaseGroup<QueryGroup> {
-#foreach($field in ${fields})
-        public final GroupBy<QueryGroup> ${field.name} = new GroupBy<>(this, Column.${field.columnName});
-#end
+    public static final class GroupBy extends GroupByBase<GroupBy, ${entityQuery.name}>
+        implements ISegment<GroupBy> {
 
-        QueryGroup(${entityQuery.name} query) {
+        GroupBy(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -69,10 +69,8 @@ public class ${wrapperHelper.name} {
     /**
      * 分组Having条件设置
      */
-    public static final class Having extends BaseHaving<Having> {
-#foreach($field in ${fields})
-        public final HavingBy<Having> ${field.name} = new HavingBy<>(this, Column.${field.columnName});
-#end
+    public static final class Having extends HavingBase<Having, ${entityQuery.name}>
+        implements ISegment<HavingApply<Having, ${entityQuery.name}>> {
 
         Having(${entityQuery.name} query) {
             super(query);
@@ -82,12 +80,10 @@ public class ${wrapperHelper.name} {
     /**
      * OrderBy设置
      */
-    public static final class QueryOrder extends BaseOrder<QueryOrder> {
-#foreach($field in ${fields})
-        public final OrderBy<QueryOrder> ${field.name} = new OrderBy<>(this, Column.${field.columnName});
-#end
+    public static final class OrderBy extends OrderByBase<OrderBy, ${entityQuery.name}>
+        implements ISegment<OrderBy> {
 
-        QueryOrder(${entityQuery.name} query) {
+        OrderBy(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -95,16 +91,8 @@ public class ${wrapperHelper.name} {
     /**
      * 字段更新设置
      */
-    public static final class UpdateSetter extends BaseSetter<${entity.name}, ${entityUpdate.name}> {
-#foreach($field in ${fields})
-    #if(${field.type}=="String")
-        public final SetString<${entityUpdate.name}> ${field.name} = new SetString<>(this, Column.${field.columnName}, Property.${field.name});
-    #elseif((${field.type}=="Boolean"))
-        public final SetBoolean<${entityUpdate.name}> ${field.name} = new SetBoolean<>(this, Column.${field.columnName}, Property.${field.name});
-    #else
-        public final SetObject<${field.type}, ${entityUpdate.name}> ${field.name} = new SetObject<>(this, Column.${field.columnName}, Property.${field.name});
-    #end
-#end
+    public static final class UpdateSetter extends UpdateBase<UpdateSetter, ${entityUpdate.name}>
+        implements ISegment<UpdateApply<UpdateSetter, ${entityUpdate.name}>> {
 
         UpdateSetter(${entityUpdate.name} update) {
             super(update);

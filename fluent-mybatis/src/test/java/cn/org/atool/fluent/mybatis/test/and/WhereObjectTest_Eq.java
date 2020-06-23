@@ -17,7 +17,7 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq() {
         UserQuery query = new UserQuery()
-            .and.age.eq(34);
+            .where.age().eq(34).end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
@@ -27,14 +27,15 @@ public class WhereObjectTest_Eq extends BaseTest {
     public void eq_null() {
         assertThrows(FluentMybatisException.class,
             () -> new UserQuery()
-                .and.age.eq(null)
+                .where.age().eq(null)
         );
     }
 
     @Test
     public void eq_condition_true() {
         UserQuery query = new UserQuery()
-            .and.age.eq(true, 34);
+            .where.age().eq(true, 34)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
@@ -43,7 +44,8 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_condition_false() {
         UserQuery query = new UserQuery()
-            .and.age.eq(false, 34);
+            .where.age().eq(false, 34)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
         db.sqlList().wantFirstPara().sizeEq(0);
@@ -52,7 +54,8 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_IfNotNull() {
         UserQuery query = new UserQuery()
-            .and.userName.eq_IfNotNull("name");
+            .where.userName().eq_IfNotNull("name")
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE user_name = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"name"});
@@ -61,7 +64,8 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_IfNull() {
         UserQuery query = new UserQuery()
-            .and.userName.eq_IfNotNull(null);
+            .where.userName().eq_IfNotNull(null)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
         db.sqlList().wantFirstPara().sizeEq(0);

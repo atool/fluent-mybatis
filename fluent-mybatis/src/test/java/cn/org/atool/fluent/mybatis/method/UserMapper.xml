@@ -99,156 +99,164 @@
         </where>
     </select>
     <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         <choose>
-            <when test="ew.paged == null">
+            <when test="ew.wrapperData.paged == null">
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
             </when>
             <otherwise>
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
-                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.pageSize} </otherwise>
         </choose>
     </select>
     <select id="selectMaps" parameterType="java.util.Map" resultType="java.util.Map">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         <choose>
-            <when test="ew.paged == null">
+            <when test="ew.wrapperData.paged == null">
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
             </when>
             <otherwise>
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
-                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.pageSize} </otherwise>
         </choose>
     </select>
     <select id="selectObjs" parameterType="java.util.Map" resultType="java.lang.Object">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         <choose>
-            <when test="ew.paged == null">
+            <when test="ew.wrapperData.paged == null">
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
             </when>
             <otherwise>
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
-                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.pageSize} </otherwise>
         </choose>
     </select>
     <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         <choose>
-            <when test="ew.paged == null">
+            <when test="ew.wrapperData.paged == null">
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
             </when>
             <otherwise>
                 SELECT
+                <if test="ew.wrapperData.distinct"> DISTINCT </if>
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
                 </choose>
                 FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
-                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.pageSize} </otherwise>
         </choose>
     </select>
     <select id="selectCount" parameterType="java.util.Map" resultType="int">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         <choose>
-            <when test="ew.paged == null">SELECT COUNT(
+            <when test="ew.wrapperData.paged == null">SELECT COUNT(
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
-                    <otherwise>1</otherwise>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+                    <otherwise>*</otherwise>
                 </choose>
                 ) FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
             </when>
             <otherwise>SELECT COUNT(
                 <choose>
-                    <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
-                    <otherwise>1</otherwise>
+                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+                    <otherwise>*</otherwise>
                 </choose>
                 ) FROM t_user
                 <where>
-                    <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
-                LIMIT #{ew.paged.offset}, #{ew.paged.pageSize} </otherwise>
+                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.pageSize} </otherwise>
         </choose>
     </select>
     <select id="countNoLimit" parameterType="java.util.Map" resultType="int">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         SELECT COUNT(
         <choose>
-            <when test="ew.sqlSelect != null">${ew.sqlSelect}</when>
-            <otherwise>1</otherwise>
+            <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+            <otherwise>*</otherwise>
         </choose>
         ) FROM t_user
         <where>
-            <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+            <if test="ew.wrapperData.whereSqlNoOrder != null">${ew.wrapperData.whereSqlNoOrder}</if>
         </where>
 
     </select>
     <delete id="delete" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         DELETE FROM t_user
         <where>
-            <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
     </delete>
     <delete id="deleteById" parameterType="java.lang.Long">
@@ -294,22 +302,16 @@
         </where>
     </update>
     <update id="updateBy" parameterType="java.util.Map">
-        <if test="ew.entityClass != null"></if>
+        <if test="ew.wrapperData != null"></if>
         UPDATE t_user
         <set>
-            <if test="ew.updates != null">
-                <if test="ew.updates.containsKey('addressId')">address_id=#{ew.updates.addressId},</if>
-                <if test="ew.updates.containsKey('age')">age=#{ew.updates.age},</if>
-                <if test="ew.updates.containsKey('gmtCreated')">gmt_created=#{ew.updates.gmtCreated},</if>
-                gmt_modified=now(),
-                <if test="ew.updates.containsKey('isDeleted')">is_deleted=#{ew.updates.isDeleted},</if>
-                <if test="ew.updates.containsKey('userName')">user_name=#{ew.updates.userName},</if>
-                <if test="ew.updates.containsKey('version')">version=#{ew.updates.version},</if>
+            <if test="ew.wrapperData.updateStr != null">
+                <if test="ew.wrapperData.updates.containsKey('gmt_modified') == false">gmt_modified = now(),</if>
             </if>
-            <if test="ew.sqlSet != null">${ew.sqlSet}</if>
+            <if test="ew.wrapperData.updateStr != null">${ew.wrapperData.updateStr}</if>
         </set>
         <where>
-            <if test="ew.whereSql != null and ew.whereSql != ''">AND ${ew.whereSql}</if>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
     </update>
 </mapper>

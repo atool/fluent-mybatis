@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.condition.base;
 
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 import cn.org.atool.fluent.mybatis.interfaces.PredicateField;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
@@ -12,11 +13,16 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
  * @author darui.wu
  * @create 2020/6/21 3:13 下午
  */
-public abstract class BaseSelector<S extends BaseSelector<S>> {
-    private IQuery query;
+public abstract class SelectorBase<
+    S extends SelectorBase<S, Q>,
+    Q extends IQuery<?, Q>
+    >
+    extends BaseSegment<SelectorApply<S, Q>, Q> {
 
-    protected BaseSelector(IQuery query) {
-        this.query = query;
+    private final SelectorApply<S, Q> apply = new SelectorApply(this);
+
+    protected SelectorBase(Q query) {
+        super(query);
     }
 
     /**
@@ -30,7 +36,7 @@ public abstract class BaseSelector<S extends BaseSelector<S>> {
      * @return 字段选择器
      */
     public S apply(PredicateField predicate) {
-        String selected = TableMetaHelper.getTableInfo(this.query.getEntityClass()).filter(predicate);
+        String selected = TableMetaHelper.getTableInfo(this.wrapper.getWrapperData().getEntityClass()).filter(predicate);
         return this.apply(selected);
     }
 
@@ -42,8 +48,17 @@ public abstract class BaseSelector<S extends BaseSelector<S>> {
      */
     public S apply(String... columns) {
         if (isNotEmpty(columns)) {
-            query.select(columns);
+            this.getQuery().select(columns);
         }
         return (S) this;
+    }
+
+    @Override
+    public SelectorApply<S, Q> set(FieldMeta field) {
+        return this.apply.setCurrentField(field);
+    }
+
+    private BaseQuery getQuery() {
+        return (BaseQuery) this.wrapper;
     }
 }

@@ -1,11 +1,8 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.apply.*;
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.condition.base.*;
-import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Property;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP.Column;
-import java.util.Date;
+import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
 
 /**
  * <p>
@@ -16,18 +13,46 @@ import java.util.Date;
  * @author generate code
  */
 public class UserWrapperHelper {
+    public interface ISegment<R> {
+        R set(FieldMeta fieldMeta);
+
+        default R id() {
+            return this.set(UserMP.id);
+        }
+
+        default R gmtCreated() {
+            return this.set(UserMP.gmtCreated);
+        }
+
+        default R gmtModified() {
+            return this.set(UserMP.gmtModified);
+        }
+
+        default R isDeleted() {
+            return this.set(UserMP.isDeleted);
+        }
+
+        default R addressId() {
+            return this.set(UserMP.addressId);
+        }
+
+        default R age() {
+            return this.set(UserMP.age);
+        }
+
+        default R userName() {
+            return this.set(UserMP.userName);
+        }
+
+        default R version() {
+            return this.set(UserMP.version);
+        }
+    }
     /**
      * select字段设置
      */
-    public static final class Selector extends BaseSelector<Selector>{
-        public final ColumnSelector<Selector> id = new ColumnSelector<>(this, Column.id);
-        public final ColumnSelector<Selector> gmtCreated = new ColumnSelector<>(this, Column.gmt_created);
-        public final ColumnSelector<Selector> gmtModified = new ColumnSelector<>(this, Column.gmt_modified);
-        public final ColumnSelector<Selector> isDeleted = new ColumnSelector<>(this, Column.is_deleted);
-        public final ColumnSelector<Selector> addressId = new ColumnSelector<>(this, Column.address_id);
-        public final ColumnSelector<Selector> age = new ColumnSelector<>(this, Column.age);
-        public final ColumnSelector<Selector> userName = new ColumnSelector<>(this, Column.user_name);
-        public final ColumnSelector<Selector> version = new ColumnSelector<>(this, Column.version);
+    public static final class Selector extends SelectorBase<Selector, UserQuery>
+        implements ISegment<SelectorApply<Selector, UserQuery>> {
 
         Selector(UserQuery query) {
             super(query);
@@ -36,41 +61,33 @@ public class UserWrapperHelper {
 
     /**
      * where条件设置
-     * @param <W> 更新器或查询器
      */
-    public static final class WrapperWhere<W extends Wrapper<UserEntity, W, UserQuery>>
-        extends BaseWhere<UserEntity, W, UserQuery> {
-        public final WhereObject<UserEntity, Long, W, UserQuery> id = new WhereObject<>(this, Column.id, Property.id);
-        public final WhereObject<UserEntity, Date, W, UserQuery> gmtCreated = new WhereObject<>(this, Column.gmt_created, Property.gmtCreated);
-        public final WhereObject<UserEntity, Date, W, UserQuery> gmtModified = new WhereObject<>(this, Column.gmt_modified, Property.gmtModified);
-        public final WhereBoolean<UserEntity, W, UserQuery> isDeleted = new WhereBoolean<>(this, Column.is_deleted, Property.isDeleted);
-        public final WhereObject<UserEntity, Long, W, UserQuery> addressId = new WhereObject<>(this, Column.address_id, Property.addressId);
-        public final WhereObject<UserEntity, Integer, W, UserQuery> age = new WhereObject<>(this, Column.age, Property.age);
-        public final WhereString<UserEntity, W, UserQuery> userName = new WhereString<>(this, Column.user_name, Property.userName);
-        public final WhereString<UserEntity, W, UserQuery> version = new WhereString<>(this, Column.version, Property.version);
+    public static class QueryWhere extends WhereBase<QueryWhere, UserQuery, UserQuery>
+        implements ISegment<WhereApply<QueryWhere, UserQuery>> {
 
-        WrapperWhere(W wrapper) {
-            this(wrapper, true);
+        QueryWhere(UserQuery query) {
+            super(query);
         }
-        WrapperWhere(W wrapper, boolean and) {
-            super(wrapper, and);
+    }
+
+    /**
+     * where条件设置
+     */
+    public static class UpdateWhere extends WhereBase<UpdateWhere, UserUpdate, UserQuery>
+        implements ISegment<WhereApply<UpdateWhere, UserQuery>> {
+
+        UpdateWhere(UserUpdate update) {
+            super(update);
         }
     }
 
     /**
      * 分组设置
      */
-    public static final class QueryGroup extends BaseGroup<QueryGroup> {
-        public final GroupBy<QueryGroup> id = new GroupBy<>(this, Column.id);
-        public final GroupBy<QueryGroup> gmtCreated = new GroupBy<>(this, Column.gmt_created);
-        public final GroupBy<QueryGroup> gmtModified = new GroupBy<>(this, Column.gmt_modified);
-        public final GroupBy<QueryGroup> isDeleted = new GroupBy<>(this, Column.is_deleted);
-        public final GroupBy<QueryGroup> addressId = new GroupBy<>(this, Column.address_id);
-        public final GroupBy<QueryGroup> age = new GroupBy<>(this, Column.age);
-        public final GroupBy<QueryGroup> userName = new GroupBy<>(this, Column.user_name);
-        public final GroupBy<QueryGroup> version = new GroupBy<>(this, Column.version);
+    public static final class GroupBy extends GroupByBase<GroupBy, UserQuery>
+        implements ISegment<GroupBy> {
 
-        QueryGroup(UserQuery query) {
+        GroupBy(UserQuery query) {
             super(query);
         }
     }
@@ -78,15 +95,8 @@ public class UserWrapperHelper {
     /**
      * 分组Having条件设置
      */
-    public static final class Having extends BaseHaving<Having> {
-        public final HavingBy<Having> id = new HavingBy<>(this, Column.id);
-        public final HavingBy<Having> gmtCreated = new HavingBy<>(this, Column.gmt_created);
-        public final HavingBy<Having> gmtModified = new HavingBy<>(this, Column.gmt_modified);
-        public final HavingBy<Having> isDeleted = new HavingBy<>(this, Column.is_deleted);
-        public final HavingBy<Having> addressId = new HavingBy<>(this, Column.address_id);
-        public final HavingBy<Having> age = new HavingBy<>(this, Column.age);
-        public final HavingBy<Having> userName = new HavingBy<>(this, Column.user_name);
-        public final HavingBy<Having> version = new HavingBy<>(this, Column.version);
+    public static final class Having extends HavingBase<Having, UserQuery>
+        implements ISegment<HavingApply<Having, UserQuery>> {
 
         Having(UserQuery query) {
             super(query);
@@ -96,17 +106,10 @@ public class UserWrapperHelper {
     /**
      * OrderBy设置
      */
-    public static final class QueryOrder extends BaseOrder<QueryOrder> {
-        public final OrderBy<QueryOrder> id = new OrderBy<>(this, Column.id);
-        public final OrderBy<QueryOrder> gmtCreated = new OrderBy<>(this, Column.gmt_created);
-        public final OrderBy<QueryOrder> gmtModified = new OrderBy<>(this, Column.gmt_modified);
-        public final OrderBy<QueryOrder> isDeleted = new OrderBy<>(this, Column.is_deleted);
-        public final OrderBy<QueryOrder> addressId = new OrderBy<>(this, Column.address_id);
-        public final OrderBy<QueryOrder> age = new OrderBy<>(this, Column.age);
-        public final OrderBy<QueryOrder> userName = new OrderBy<>(this, Column.user_name);
-        public final OrderBy<QueryOrder> version = new OrderBy<>(this, Column.version);
+    public static final class OrderBy extends OrderByBase<OrderBy, UserQuery>
+        implements ISegment<OrderBy> {
 
-        QueryOrder(UserQuery query) {
+        OrderBy(UserQuery query) {
             super(query);
         }
     }
@@ -114,15 +117,8 @@ public class UserWrapperHelper {
     /**
      * 字段更新设置
      */
-    public static final class UpdateSetter extends BaseSetter<UserEntity, UserUpdate> {
-        public final SetObject<Long, UserUpdate> id = new SetObject<>(this, Column.id, Property.id);
-        public final SetObject<Date, UserUpdate> gmtCreated = new SetObject<>(this, Column.gmt_created, Property.gmtCreated);
-        public final SetObject<Date, UserUpdate> gmtModified = new SetObject<>(this, Column.gmt_modified, Property.gmtModified);
-        public final SetBoolean<UserUpdate> isDeleted = new SetBoolean<>(this, Column.is_deleted, Property.isDeleted);
-        public final SetObject<Long, UserUpdate> addressId = new SetObject<>(this, Column.address_id, Property.addressId);
-        public final SetObject<Integer, UserUpdate> age = new SetObject<>(this, Column.age, Property.age);
-        public final SetString<UserUpdate> userName = new SetString<>(this, Column.user_name, Property.userName);
-        public final SetString<UserUpdate> version = new SetString<>(this, Column.version, Property.version);
+    public static final class UpdateSetter extends UpdateBase<UpdateSetter, UserUpdate>
+        implements ISegment<UpdateApply<UpdateSetter, UserUpdate>> {
 
         UpdateSetter(UserUpdate update) {
             super(update);

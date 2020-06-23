@@ -21,10 +21,11 @@ public class NestedQueryTest extends BaseTest {
     void test_or_nested() {
         UserQuery query = new UserQuery()
             .selectId()
-            .and.exists(AddressQuery.class, q -> q
-                .and.address.like("u")
-                .and.id.apply("=t_user.address_id")
-            );
+            .where.exists(AddressQuery.class, q -> q.where
+                .address().like("u")
+                .id().apply("=t_user.address_id")
+                .end()
+            ).end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE EXISTS (SELECT * FROM address WHERE address LIKE ? AND id =t_user.address_id)");
@@ -35,9 +36,8 @@ public class NestedQueryTest extends BaseTest {
     void test_exist() {
         UserQuery query = new UserQuery()
             .selectId()
-            .and.exists(q -> q.selectId()
-                .and.id.eq(34L)
-            );
+            .where.exists(q -> q.selectId().where.id().eq(34L).end())
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE EXISTS (SELECT id FROM t_user WHERE id = ?)");
@@ -48,12 +48,12 @@ public class NestedQueryTest extends BaseTest {
     void test_not_exist() {
         UserQuery query = new UserQuery()
             .selectId()
-            .and.notExists(q -> q.selectId()
-                .and.id.eq(34L)
-            );
+            .where.notExists(q -> q
+                .selectId()
+                .where.id().eq(34L).end()
+            ).end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE NOT EXISTS (SELECT id FROM t_user WHERE id = ?)");
-
     }
 }

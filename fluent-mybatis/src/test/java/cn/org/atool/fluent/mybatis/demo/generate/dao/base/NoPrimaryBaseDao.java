@@ -31,7 +31,7 @@ public abstract class NoPrimaryBaseDao extends BaseDaoImpl<NoPrimaryEntity, NoPr
     }
 
     @Override
-    public NoPrimaryUpdate update(){
+    public NoPrimaryUpdate updater(){
         return new NoPrimaryUpdate();
     }
 

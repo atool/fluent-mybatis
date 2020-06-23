@@ -1,12 +1,13 @@
 package cn.org.atool.fluent.mybatis.condition.base;
 
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.condition.model.SqlOp;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.EMPTY;
 import static cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment.HAVING;
 import static cn.org.atool.fluent.mybatis.condition.model.SqlOp.RETAIN;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.EMPTY;
 
 /**
  * BaseHaving: having设置
@@ -14,12 +15,16 @@ import static cn.org.atool.fluent.mybatis.condition.model.SqlOp.RETAIN;
  * @author darui.wu
  * @create 2020/6/21 6:22 下午
  */
-public abstract class BaseHaving<H extends BaseHaving<H>> {
+public abstract class HavingBase<
+    H extends HavingBase<H, Q>,
+    Q extends IQuery<?, Q>
+    >
+    extends BaseSegment<HavingApply<H, Q>, Q> {
 
-    private IQuery query;
+    private final HavingApply<H, Q> apply = new HavingApply<>((H) this);
 
-    protected BaseHaving(IQuery query) {
-        this.query = query;
+    protected HavingBase(Q query) {
+        super(query);
     }
 
     /**
@@ -31,7 +36,7 @@ public abstract class BaseHaving<H extends BaseHaving<H>> {
      * @return Having设置器
      */
     public H apply(String function, SqlOp op, Object... args) {
-        this.query.apply(KeyWordSegment.HAVING, function, op, args);
+        this.wrapper.getWrapperData().apply(KeyWordSegment.HAVING, function, op, args);
         return (H) this;
     }
 
@@ -45,7 +50,12 @@ public abstract class BaseHaving<H extends BaseHaving<H>> {
      * @return Having设置器
      */
     public H apply(String function, Object... args) {
-        this.query.apply(HAVING, EMPTY, this.query.getParameters().paramSql(function, args), RETAIN);
+        this.wrapper.getWrapperData().apply(HAVING, EMPTY, this.wrapper.getWrapperData().paramSql(function, args), RETAIN);
         return (H) this;
+    }
+
+    @Override
+    public HavingApply<H, Q> set(FieldMeta field) {
+        return this.apply.setCurrentField(field);
     }
 }

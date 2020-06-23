@@ -1,14 +1,14 @@
 package ${entityUpdate.package};
 
-import cn.org.atool.fluent.mybatis.condition.base.*;
-
-import java.util.*;
+import cn.org.atool.fluent.mybatis.condition.base.BaseUpdate;
 
 import ${entity.package}.${entity.name};
 import ${mapping.package}.${mapping.name};
-import ${entityHelper.package}.${entityHelper.name};
-import ${wrapperHelper.package}.${wrapperHelper.name}.WrapperWhere;
 import ${wrapperHelper.package}.${wrapperHelper.name}.UpdateSetter;
+import ${wrapperHelper.package}.${wrapperHelper.name}.UpdateWhere;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * ${entityUpdate.name}: ${entity.name}更新设置
@@ -16,30 +16,28 @@ import ${wrapperHelper.package}.${wrapperHelper.name}.UpdateSetter;
  * @author ${author}
  */
 public class ${entityUpdate.name} extends BaseUpdate<${entity.name}, ${entityUpdate.name}, ${entityQuery.name}> {
-
-    public final WrapperWhere<${entityUpdate.name}> and = new WrapperWhere<>(this);
-
-    public final WrapperWhere<${entityUpdate.name}> or = new WrapperWhere<>(this, false);
-
+    /**
+     * 更新条件设置
+     */
+    public final UpdateWhere where = new UpdateWhere(this);
+    /**
+     * 更新值设置
+     */
     public final UpdateSetter set = new UpdateSetter(this);
 
     public ${entityUpdate.name}(){
-        super(${entity.name}.class);
+        super(${mapping.name}.Table_Name, ${entity.name}.class, ${entityQuery.name}.class);
     }
 
     @Override
-    public ${entityUpdate.name} eqByNotNull(${entity.name} entity) {
-        super.eqByNotNull(${entityHelper.name}.column(entity));
-        return this;
+    public UpdateWhere where() {
+        return this.where;
     }
 
     @Override
-    protected Map<String, String> property2Column() {
-        return ${mapping.name}.Property2Column;
-    }
-
-    @Override
-    public Class<${entityQuery.name}> queryClass() {
-        return ${entityQuery.name}.class ;
+    protected void validateColumn(String column) throws FluentMybatisException {
+        if (isNotEmpty(column) && !${mapping.name}.ALL_COLUMNS.contains(column)) {
+            throw new FluentMybatisException("the column[" + column + "] was not found in table[" + ${mapping.name}.Table_Name + "].");
+        }
     }
 }

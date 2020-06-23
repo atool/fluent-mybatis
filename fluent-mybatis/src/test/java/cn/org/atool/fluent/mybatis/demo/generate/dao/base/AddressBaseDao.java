@@ -31,12 +31,12 @@ public abstract class AddressBaseDao extends BaseDaoImpl<AddressEntity, AddressQ
     }
 
     @Override
-    public AddressUpdate update(){
+    public AddressUpdate updater(){
         return new AddressUpdate();
     }
 
     @Override
     public String findPkColumn() {
-        return AddressMP.Column.id;
+        return AddressMP.id.column;
     }
 }

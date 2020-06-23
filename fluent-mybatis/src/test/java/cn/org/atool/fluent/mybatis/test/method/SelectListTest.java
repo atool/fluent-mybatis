@@ -27,7 +27,7 @@ public class SelectListTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .and.id.eq(24L);
+            .where.id().eq(24L).end();
         List<UserEntity> users = mapper.selectList(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
         want.list(users).eqDataMap(EM.user.create(1)
@@ -42,7 +42,7 @@ public class SelectListTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .and.userName.eq("u2");
+            .where.userName().eq("u2").end();
         List<UserEntity> users = mapper.selectList(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
         want.list(users).eqDataMap(EM.user.create(2)
@@ -57,7 +57,7 @@ public class SelectListTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .and.userName.eq("u2")
+            .where.userName().eq("u2").end()
             .limit(2);
         List<UserEntity> users = mapper.selectList(query);
         want.list(users).eqDataMap(EM.user.create(2)

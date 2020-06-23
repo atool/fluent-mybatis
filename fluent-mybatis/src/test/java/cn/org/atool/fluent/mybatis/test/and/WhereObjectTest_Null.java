@@ -13,7 +13,9 @@ public class WhereObjectTest_Null extends BaseTest {
     @Test
     public void isNull() {
         UserQuery query = new UserQuery()
-                .and.age.isNull();
+            .where
+            .age().isNull()
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NULL");
     }
@@ -21,7 +23,9 @@ public class WhereObjectTest_Null extends BaseTest {
     @Test
     public void isNull_condition_true() {
         UserQuery query = new UserQuery()
-                .and.age.isNull(true);
+            .where
+            .age().isNull(true)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NULL");
     }
@@ -29,7 +33,9 @@ public class WhereObjectTest_Null extends BaseTest {
     @Test
     public void isNull_condition_false() {
         UserQuery query = new UserQuery()
-                .and.age.isNull(false);
+            .where
+            .age().isNull(false)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
     }
@@ -37,7 +43,9 @@ public class WhereObjectTest_Null extends BaseTest {
     @Test
     public void isNotNull() {
         UserQuery query = new UserQuery()
-                .and.age.isNotNull();
+            .where
+            .age().isNotNull()
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NOT NULL");
     }
@@ -45,7 +53,9 @@ public class WhereObjectTest_Null extends BaseTest {
     @Test
     public void isNotNull_condition_true() {
         UserQuery query = new UserQuery()
-                .and.age.isNotNull(true);
+            .where
+            .age().isNotNull(true)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NOT NULL");
     }
@@ -53,7 +63,9 @@ public class WhereObjectTest_Null extends BaseTest {
     @Test
     public void isNotNull_condition_false() {
         UserQuery query = new UserQuery()
-                .and.age.isNotNull(false);
+            .where
+            .age().isNotNull(false)
+            .end();
         mapper.selectCount(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
     }

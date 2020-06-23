@@ -14,7 +14,7 @@ $!{importTypes}
  *
  * @author ${author}
  */
-public class ${entityHelper.name} implements ${mapping.name}{
+public class ${entityHelper.name} {
     /**
      * ${entity.name}对象转换为HashMap，key值是对象属性
      *
@@ -24,8 +24,8 @@ public class ${entityHelper.name} implements ${mapping.name}{
     public static Map<String, Object> map(${entity.name} entity){
         Map<String, Object> map = new HashMap<>();
         #foreach($field in ${fields})
-        if(entity.get${field.capitalName}() != null){
-            map.put(Property.${field.name},entity.get${field.capitalName}());
+        if (entity.get${field.capitalName}() != null) {
+            map.put(${mapping.name}.${field.name}.name, entity.get${field.capitalName}());
         }
         #end
         return map;
@@ -40,8 +40,8 @@ public class ${entityHelper.name} implements ${mapping.name}{
     public static Map<String, Object> column(${entity.name} entity){
         Map<String, Object> map = new HashMap<>();
         #foreach($field in ${fields})
-        if(entity.get${field.capitalName}() != null){
-            map.put(Column.${field.columnName},entity.get${field.capitalName}());
+        if (entity.get${field.capitalName}() != null) {
+            map.put(${mapping.name}.${field.name}.column, entity.get${field.capitalName}());
         }
         #end
         return map;
@@ -56,8 +56,8 @@ public class ${entityHelper.name} implements ${mapping.name}{
     public static ${entity.name} entity(Map<String, Object> map){
         ${entity.name} entity = new ${entity.name}();
         #foreach($field in ${fields})
-        if(map.containsKey(Property.${field.name})){
-            entity.set${field.capitalName}((${field.type})map.get(Property.${field.name}));
+        if (map.containsKey(${mapping.name}.${field.name}.name)) {
+            entity.set${field.capitalName}((${field.type}) map.get(${mapping.name}.${field.name}.name));
         }
         #end
         return entity;

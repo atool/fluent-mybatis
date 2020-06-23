@@ -5,7 +5,7 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.COMMA;
 
 /**
  * BaseFieldInfo

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
-import cn.org.atool.fluent.mybatis.condition.model.Constants;
+import cn.org.atool.fluent.mybatis.condition.model.StrConstant;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.joining;
  */
 @Data
 @Accessors(chain = true)
-public class TableMeta implements Constants {
+public class TableMeta implements StrConstant {
     /**
      * 表名称
      */
@@ -32,11 +32,11 @@ public class TableMeta implements Constants {
     /**
      * 主键
      */
-    private PrimaryMeta primary;
+    private TablePrimaryMeta primary;
     /**
      * 表字段信息列表
      */
-    private List<FieldMeta> fields;
+    private List<TableFieldMeta> fields;
     /**
      * 缓存包含主键及字段的 sql select
      */

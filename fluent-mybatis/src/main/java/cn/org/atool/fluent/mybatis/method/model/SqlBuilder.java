@@ -6,6 +6,9 @@ import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+
 /**
  * Script
  *
@@ -13,10 +16,6 @@ import java.util.function.Consumer;
  * @create 2020/5/14 3:39 下午
  */
 public class SqlBuilder {
-    public static final String COMMA = ",";
-
-    public static final String NEWLINE = "\n";
-
     private final StringBuilder buff = new StringBuilder();
 
     private boolean endNewLine = false;
@@ -138,8 +137,9 @@ public class SqlBuilder {
     /**
      * insert into tableName
      *
-     * @param table
-     * @return
+     * @param table  表结构
+     * @param isSpec 是否指定表名
+     * @return SqlBuilder
      */
     public SqlBuilder insert(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
@@ -150,8 +150,9 @@ public class SqlBuilder {
     /**
      * delete from table
      *
-     * @param table
-     * @return
+     * @param table  表结构
+     * @param isSpec 是否指定表名
+     * @return SqlBuilder
      */
     public SqlBuilder delete(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
@@ -162,15 +163,17 @@ public class SqlBuilder {
     /**
      * select columns from table
      *
-     * @param table
-     * @param isSpec
-     * @return
+     * @param table     表结构
+     * @param isWrapper 是否是自定义的wrapper参数
+     * @param isSpec    是否指定表名
+     * @return SqlBuilder
      */
-    public SqlBuilder select(TableMeta table, boolean isSelected, boolean isSpec) {
+    public SqlBuilder select(TableMeta table, boolean isWrapper, boolean isSpec) {
         this.prefixComment(isSpec);
         this.newLine().append("SELECT ");
-        if (isSelected) {
-            this.choose("ew.sqlSelect != null", "${ew.sqlSelect}", replace("<include refid='SELECT_COLUMNS'/>"));
+        if (isWrapper) {
+            this.ifThen(Wrapper_Distinct_True, DISTINCT);
+            this.choose(Wrapper_Select_Not_Null, Wrapper_Select_Var, replace("<include refid='SELECT_COLUMNS'/>"));
         } else {
             this.quotas("<include refid='SELECT_COLUMNS'/>");
         }
@@ -178,10 +181,17 @@ public class SqlBuilder {
         return this.byTable(table, isSpec);
     }
 
+    /**
+     * select count(*)
+     *
+     * @param table  表结构
+     * @param isSpec 是否指定表名
+     * @return SqlBuilder
+     */
     public SqlBuilder selectCount(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.append("SELECT COUNT(")
-            .choose("ew.sqlSelect != null", "${ew.sqlSelect}", "1")
+            .choose(Wrapper_Select_Not_Null, Wrapper_Select_Var, ASTERISK)
             .append(") FROM ");
         return this.byTable(table, isSpec);
     }
@@ -251,7 +261,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder checkWrapper() {
-        this.ifThen("ew.entityClass != null", () -> {
+        this.ifThen(Wrapper_Exists, () -> {
         });
         return this;
     }
@@ -337,7 +347,7 @@ public class SqlBuilder {
      * @return
      */
     public static String safeParam(final String param) {
-        return "#{" + param + "}";
+        return "#{" + param + "}" ;
     }
 
     /**
@@ -430,7 +440,7 @@ public class SqlBuilder {
      */
     private SqlBuilder prefixComment(boolean isSpec) {
         if (isSpec) {
-            this.newLine().ifThen("SPEC_COMMENT != null and SPEC_COMMENT != ''", "${SPEC_COMMENT}").newLine();
+            this.newLine().ifThen(Spec_Comment_Not_Null, "${SPEC_COMMENT}").newLine();
         }
         return this;
     }
@@ -443,7 +453,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder choosePaged(String noPagedXml, String withPagedXml) {
-        this.choose("ew.paged == null", noPagedXml, withPagedXml);
+        this.choose(Wrapper_Page_Is_Null, noPagedXml, withPagedXml);
         return this;
     }
 }

@@ -20,13 +20,16 @@ public class HavingTest extends BaseTest {
     @Test
     public void test_groupBy_having() throws Exception {
         UserQuery query = new UserQuery()
-            .select(by -> by.id.select().age.sum("avg"))
-            .and.id.eq(24L)
-            .groupBy(by -> by.id.apply())
-            .having(by -> by
-                .age.sum(SqlOp.BETWEEN, 2, 10)
-                .apply("avg > ?", 10)
-            );
+            .select(by -> by
+                .id().get()
+                .age().sum("avg"))
+            .where.id().eq(24L).end()
+            .groupBy.id()
+            .end()
+            .having
+            .age().sum(SqlOp.BETWEEN, 2, 10)
+            .apply("avg > ?", 10)
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age) AS avg FROM t_user WHERE id = ? " +

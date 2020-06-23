@@ -26,7 +26,7 @@ public class SelectOneTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .and.id.eq(24L);
+            .where.id().eq(24L).end();
         UserEntity user = mapper.selectOne(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
         want.object(user).eqDataMap(EM.user.create(1)
@@ -41,7 +41,7 @@ public class SelectOneTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .and.userName.eq("u2");
+            .where.userName().eq("u2").end();
         want.exception(() -> mapper.selectOne(query), MyBatisSystemException.class)
             .contains("Expected one result (or null) to be returned by selectOne(), but found: 2");
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");

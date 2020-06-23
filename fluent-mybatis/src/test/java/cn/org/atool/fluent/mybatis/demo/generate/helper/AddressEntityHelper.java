@@ -14,7 +14,7 @@ import java.util.Date;
  *
  * @author generate code
  */
-public class AddressEntityHelper implements AddressMP{
+public class AddressEntityHelper {
     /**
      * AddressEntity对象转换为HashMap，key值是对象属性
      *
@@ -23,20 +23,20 @@ public class AddressEntityHelper implements AddressMP{
      */
     public static Map<String, Object> map(AddressEntity entity){
         Map<String, Object> map = new HashMap<>();
-        if(entity.getId() != null){
-            map.put(Property.id,entity.getId());
+        if (entity.getId() != null) {
+            map.put(AddressMP.id.name, entity.getId());
         }
-        if(entity.getGmtCreated() != null){
-            map.put(Property.gmtCreated,entity.getGmtCreated());
+        if (entity.getGmtCreated() != null) {
+            map.put(AddressMP.gmtCreated.name, entity.getGmtCreated());
         }
-        if(entity.getGmtModified() != null){
-            map.put(Property.gmtModified,entity.getGmtModified());
+        if (entity.getGmtModified() != null) {
+            map.put(AddressMP.gmtModified.name, entity.getGmtModified());
         }
-        if(entity.getIsDeleted() != null){
-            map.put(Property.isDeleted,entity.getIsDeleted());
+        if (entity.getIsDeleted() != null) {
+            map.put(AddressMP.isDeleted.name, entity.getIsDeleted());
         }
-        if(entity.getAddress() != null){
-            map.put(Property.address,entity.getAddress());
+        if (entity.getAddress() != null) {
+            map.put(AddressMP.address.name, entity.getAddress());
         }
         return map;
     }
@@ -49,20 +49,20 @@ public class AddressEntityHelper implements AddressMP{
      */
     public static Map<String, Object> column(AddressEntity entity){
         Map<String, Object> map = new HashMap<>();
-        if(entity.getId() != null){
-            map.put(Column.id,entity.getId());
+        if (entity.getId() != null) {
+            map.put(AddressMP.id.column, entity.getId());
         }
-        if(entity.getGmtCreated() != null){
-            map.put(Column.gmt_created,entity.getGmtCreated());
+        if (entity.getGmtCreated() != null) {
+            map.put(AddressMP.gmtCreated.column, entity.getGmtCreated());
         }
-        if(entity.getGmtModified() != null){
-            map.put(Column.gmt_modified,entity.getGmtModified());
+        if (entity.getGmtModified() != null) {
+            map.put(AddressMP.gmtModified.column, entity.getGmtModified());
         }
-        if(entity.getIsDeleted() != null){
-            map.put(Column.is_deleted,entity.getIsDeleted());
+        if (entity.getIsDeleted() != null) {
+            map.put(AddressMP.isDeleted.column, entity.getIsDeleted());
         }
-        if(entity.getAddress() != null){
-            map.put(Column.address,entity.getAddress());
+        if (entity.getAddress() != null) {
+            map.put(AddressMP.address.column, entity.getAddress());
         }
         return map;
     }
@@ -75,20 +75,20 @@ public class AddressEntityHelper implements AddressMP{
      */
     public static AddressEntity entity(Map<String, Object> map){
         AddressEntity entity = new AddressEntity();
-        if(map.containsKey(Property.id)){
-            entity.setId((Long)map.get(Property.id));
+        if (map.containsKey(AddressMP.id.name)) {
+            entity.setId((Long) map.get(AddressMP.id.name));
         }
-        if(map.containsKey(Property.gmtCreated)){
-            entity.setGmtCreated((Date)map.get(Property.gmtCreated));
+        if (map.containsKey(AddressMP.gmtCreated.name)) {
+            entity.setGmtCreated((Date) map.get(AddressMP.gmtCreated.name));
         }
-        if(map.containsKey(Property.gmtModified)){
-            entity.setGmtModified((Date)map.get(Property.gmtModified));
+        if (map.containsKey(AddressMP.gmtModified.name)) {
+            entity.setGmtModified((Date) map.get(AddressMP.gmtModified.name));
         }
-        if(map.containsKey(Property.isDeleted)){
-            entity.setIsDeleted((Boolean)map.get(Property.isDeleted));
+        if (map.containsKey(AddressMP.isDeleted.name)) {
+            entity.setIsDeleted((Boolean) map.get(AddressMP.isDeleted.name));
         }
-        if(map.containsKey(Property.address)){
-            entity.setAddress((String)map.get(Property.address));
+        if (map.containsKey(AddressMP.address.name)) {
+            entity.setAddress((String) map.get(AddressMP.address.name));
         }
         return entity;
     }

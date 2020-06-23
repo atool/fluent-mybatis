@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.condition.model;
 import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.SPACE;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.SPACE;
 
 /**
  * KeyWordSegment

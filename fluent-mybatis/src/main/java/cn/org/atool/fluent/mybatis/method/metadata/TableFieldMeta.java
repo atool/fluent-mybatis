@@ -9,7 +9,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
@@ -20,7 +20,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class FieldMeta extends BaseFieldMeta {
+public class TableFieldMeta extends BaseFieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */
@@ -47,14 +47,14 @@ public class FieldMeta extends BaseFieldMeta {
      */
     protected String insert;
 
-    public FieldMeta(String column, Field field) {
+    public TableFieldMeta(String column, Field field) {
         super(column, field);
     }
 
     /**
      * 全新的 存在 TableField 注解时使用的构造函数
      */
-    public FieldMeta(Field field, TableField tableField) {
+    public TableFieldMeta(Field field, TableField tableField) {
         super(tableField.value(), field);
         this.setJdbcType(tableField.jdbcType());
         this.numericScale = tableField.numericScale();

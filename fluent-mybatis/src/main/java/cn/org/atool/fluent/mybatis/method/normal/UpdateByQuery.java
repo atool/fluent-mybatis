@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method.normal;
 
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_UpdateByQuery;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
 
 /**
  * UpdateByQuery
@@ -49,15 +50,13 @@ public class UpdateByQuery extends AbstractMethod {
      */
     protected SqlBuilder update(TableMeta table, SqlBuilder builder) {
         return builder
-            .ifThen("ew.updates != null", () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
-            .ifThen("ew.sqlSet != null", "${ew.sqlSet}");
+            .ifThen(Wrapper_UpdateStr_Not_Null, () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
+            .ifThen(Wrapper_UpdateStr_Not_Null, Wrapper_UpdateStr_Var);
     }
 
-    private void updateField(SqlBuilder builder, FieldMeta field) {
+    private void updateField(SqlBuilder builder, TableFieldMeta field) {
         if (isUpdateDefault(field)) {
-            builder.value("@column=@property,", field.getUpdate(), field.getColumn());
-        } else {
-            builder.ifThen("ew.updates.containsKey('@property')", "@column=#{ew.updates.@property},", field.getProperty(), field.getColumn());
+            builder.ifThen(Wrapper_Update_Contain_Key, "@column = @property,", field.getUpdate(), field.getColumn());
         }
     }
 }

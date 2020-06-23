@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author generate code
  */
-public class NoPrimaryEntityHelper implements NoPrimaryMP{
+public class NoPrimaryEntityHelper {
     /**
      * NoPrimaryEntity对象转换为HashMap，key值是对象属性
      *
@@ -23,11 +23,11 @@ public class NoPrimaryEntityHelper implements NoPrimaryMP{
      */
     public static Map<String, Object> map(NoPrimaryEntity entity){
         Map<String, Object> map = new HashMap<>();
-        if(entity.getColumn1() != null){
-            map.put(Property.column1,entity.getColumn1());
+        if (entity.getColumn1() != null) {
+            map.put(NoPrimaryMP.column1.name, entity.getColumn1());
         }
-        if(entity.getColumn2() != null){
-            map.put(Property.column2,entity.getColumn2());
+        if (entity.getColumn2() != null) {
+            map.put(NoPrimaryMP.column2.name, entity.getColumn2());
         }
         return map;
     }
@@ -40,11 +40,11 @@ public class NoPrimaryEntityHelper implements NoPrimaryMP{
      */
     public static Map<String, Object> column(NoPrimaryEntity entity){
         Map<String, Object> map = new HashMap<>();
-        if(entity.getColumn1() != null){
-            map.put(Column.column_1,entity.getColumn1());
+        if (entity.getColumn1() != null) {
+            map.put(NoPrimaryMP.column1.column, entity.getColumn1());
         }
-        if(entity.getColumn2() != null){
-            map.put(Column.column_2,entity.getColumn2());
+        if (entity.getColumn2() != null) {
+            map.put(NoPrimaryMP.column2.column, entity.getColumn2());
         }
         return map;
     }
@@ -57,11 +57,11 @@ public class NoPrimaryEntityHelper implements NoPrimaryMP{
      */
     public static NoPrimaryEntity entity(Map<String, Object> map){
         NoPrimaryEntity entity = new NoPrimaryEntity();
-        if(map.containsKey(Property.column1)){
-            entity.setColumn1((Integer)map.get(Property.column1));
+        if (map.containsKey(NoPrimaryMP.column1.name)) {
+            entity.setColumn1((Integer) map.get(NoPrimaryMP.column1.name));
         }
-        if(map.containsKey(Property.column2)){
-            entity.setColumn2((String)map.get(Property.column2));
+        if (map.containsKey(NoPrimaryMP.column2.name)) {
+            entity.setColumn2((String) map.get(NoPrimaryMP.column2.name));
         }
         return entity;
     }

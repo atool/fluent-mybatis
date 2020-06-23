@@ -6,7 +6,9 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.WRAPPER;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.WRAPPER_PARAM_FORMAT;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Data;
+
 
 /**
  * ParameterPair: 自定义参数列表
@@ -73,7 +75,7 @@ public class ParameterPair extends HashMap<String, Object> {
      */
     private String parseParameter(Object para) {
         String paramName = WRAPPER_PARAM + this.sequence.incrementAndGet();
-        String placeholder = String.format(WRAPPER_PARAM_FORMAT, WRAPPER, paramName);
+        String placeholder = String.format(WRAPPER_PARAM_FORMAT, Wrapper_Data, paramName);
         this.put(paramName, para);
         return placeholder;
     }
@@ -83,11 +85,7 @@ public class ParameterPair extends HashMap<String, Object> {
     /**
      * 变量名称格式, 前缀+序号
      */
-    static final String WRAPPER_PARAM = "variable_";
+    static final String WRAPPER_PARAM = "variable_" ;
 
-    /**
-     * 变量在xml文件中的占位符全路径表达式
-     * 例子: #{ew.parameters.variable_1}
-     */
-    static final String WRAPPER_PARAM_FORMAT = "#{%s.parameters.%s}";
+
 }

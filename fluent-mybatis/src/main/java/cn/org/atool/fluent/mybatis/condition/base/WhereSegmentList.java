@@ -1,18 +1,18 @@
-package cn.org.atool.fluent.mybatis.condition.model.segments;
+package cn.org.atool.fluent.mybatis.condition.base;
 
 import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.EMPTY;
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.SPACE;
 import static cn.org.atool.fluent.mybatis.condition.model.KeyWordSegment.AND;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.SPACE;
 
 /**
  * 普通片段
  *
  * @author darui.wu
  */
-public class WhereSegmentList extends AbstractSegmentList {
+public class WhereSegmentList extends BaseSegmentList {
 
     @Override
     public WhereSegmentList add(ISqlSegment first, ISqlSegment... segments) {

@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_InsertBatch;
 
 /**

@@ -26,8 +26,8 @@ public class SelectObjsTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .select(UserMP.Column.user_name)
-            .and.id.eq(24L);
+            .select(UserMP.userName)
+            .where.id().eq(24L).end();
         List<String> users = mapper.selectObjs(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
         want.list(users).eqReflect(new String[]{"u2"});
@@ -41,8 +41,8 @@ public class SelectObjsTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .select(UserMP.Column.user_name)
-            .and.userName.eq("u2");
+            .select(UserMP.userName)
+            .where.userName().eq("u2").end();
         List<String> users = mapper.selectObjs(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
         want.list(users).eqReflect(new String[]{"u2", "u2"});

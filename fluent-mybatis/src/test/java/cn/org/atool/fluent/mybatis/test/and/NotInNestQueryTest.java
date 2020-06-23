@@ -1,8 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.AddressMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.query.AddressQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -23,7 +21,8 @@ public class NotInNestQueryTest extends BaseTest {
     void test_and_not_in_nested() {
         AddressQuery query = new AddressQuery()
             .selectId()
-            .and.id.notIn(q -> q.selectId().and.id.eq(3L));
+            .where.id().notIn(q -> q.selectId().where.id().eq(3L).end())
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM address WHERE id NOT IN (SELECT id FROM address WHERE id = ?)");
@@ -33,7 +32,13 @@ public class NotInNestQueryTest extends BaseTest {
     void test_and_in_nested2() {
         AddressQuery query = new AddressQuery()
             .selectId()
-            .and.id.notIn(UserQuery.class, q -> q.select("address_id").and.age.eq(24));
+            .where
+            .id().notIn(UserQuery.class, q -> q
+                .select("address_id")
+                .where
+                .age().eq(24)
+                .end())
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM address WHERE id NOT IN (SELECT address_id FROM t_user WHERE age = ?)");

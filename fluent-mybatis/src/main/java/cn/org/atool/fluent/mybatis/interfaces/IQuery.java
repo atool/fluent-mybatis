@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.interfaces;
 
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,7 +13,11 @@ import java.util.stream.Collectors;
  * @param <Q> 查询器
  * @author darui.wu
  */
-public interface IQuery<E extends IEntity, Q extends IQuery<E, Q>> extends IWrapper<E, Q, Q> {
+public interface IQuery<
+    E extends IEntity,
+    Q extends IQuery<E, Q>
+    >
+    extends IWrapper<E, Q, Q> {
     /**
      * distinct 查询
      *
@@ -29,10 +35,18 @@ public interface IQuery<E extends IEntity, Q extends IQuery<E, Q>> extends IWrap
     /**
      * 设置查询字段
      *
-     * @param columns 字段数组
+     * @param columns 字段列表
      * @return children
      */
     Q select(String... columns);
+
+    /**
+     * 设置查询字段
+     *
+     * @param fields 字段列表
+     * @return children
+     */
+    Q select(FieldMeta... fields);
 
     /**
      * 设置limit值
@@ -75,18 +89,4 @@ public interface IQuery<E extends IEntity, Q extends IQuery<E, Q>> extends IWrap
         List<R> list = executor.apply((Q) this);
         return list.stream().map(extractor::apply).collect(Collectors.toList());
     }
-
-    /**
-     * 嵌套条件语句
-     *
-     * @return 嵌套语句
-     */
-    String getQuerySql();
-
-    /**
-     * 获取 normal where + group by + having by + order by + lastSql 组合语句
-     *
-     * @return
-     */
-    String getWhereSql();
 }

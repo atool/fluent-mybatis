@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class DeleteByMapTest extends BaseTest {

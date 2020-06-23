@@ -1,7 +1,11 @@
 package ${mapping.package};
 
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @ClassName ${mapping.name}
@@ -11,17 +15,6 @@ import java.util.Map;
  */
 public interface ${mapping.name} {
     /**
-     * 实例属性和数据库字段对应表
-     */
-    Map<String, String> Property2Column = new HashMap<String,String>(){
-        {
-        #foreach($field in ${fields})
-            this.put(Property.${field.name}, Column.${field.columnName});
-        #end
-        }
-    };
-
-    /**
      * 表名称
      */
     String Table_Name = "${table}";
@@ -30,27 +23,33 @@ public interface ${mapping.name} {
     */
     String Entity_NAME = "${entity.name}";
 
+#foreach($field in ${fields})
     /**
-     * 表${table}字段定义
+     * ${field.name}字段映射
+     * <p>${field.comment}</p>
      */
-    interface Column{
-        #foreach($field in ${fields})
-        /**
-         * ${field.comment}
-         */
-        String ${field.columnName} = "${field.columnName}";
-        #end
-    }
+    FieldMeta ${field.name} = new FieldMeta("${field.name}", "${field.columnName}");
+#end
 
     /**
-     * 对象${entity.name}属性字段
+     * 实例属性和数据库字段对应表
      */
-    interface Property{
-        #foreach($field in ${fields})
-        /**
-         * ${field.comment}
-         */
-        String ${field.name} = "${field.name}";
-        #end
-    }
+    Map<String, String> Property2Column = new HashMap<String,String>(){
+        {
+#foreach($field in ${fields})
+            this.put(${field.name}.name, ${field.name}.column);
+#end
+        }
+    };
+
+    /**
+     * 数据库所有字段列表
+     */
+    Set<String> ALL_COLUMNS = new HashSet<String>() {
+        {
+#foreach($field in ${fields})
+            this.add(${field.name}.column);
+#end
+        }
+    };
 }

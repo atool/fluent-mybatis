@@ -1,16 +1,15 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.base.*;
+import cn.org.atool.fluent.mybatis.condition.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP.Column;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryEntityHelper;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryWrapperHelper.*;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+
+import java.util.function.Function;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * @ClassName NoPrimaryQuery
@@ -20,88 +19,57 @@ import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryWrapperHelper.*;
  */
 public class NoPrimaryQuery extends BaseQuery<NoPrimaryEntity, NoPrimaryQuery> {
     private final Selector selector = new Selector(this);
-
-    private final QueryGroup groupBy = new QueryGroup(this);
-
-    private final Having having = new Having(this);
-
-    private final QueryOrder orderBy = new QueryOrder(this);
-
-    public final WrapperWhere<NoPrimaryQuery> and = new WrapperWhere<>(this);
-
-    public final WrapperWhere<NoPrimaryQuery> or = new WrapperWhere<>(this, false);
+    /**
+     * 分组：GROUP BY 字段, ...
+     * 例: groupBy("id", "name")
+     */
+    public final GroupBy groupBy = new GroupBy(this);
+    /**
+     * 分组条件设置 having...
+     */
+    public final Having having = new Having(this);
+    /**
+     * 排序设置 order by ...
+     */
+    public final OrderBy orderBy = new OrderBy(this);
+    /**
+     * 条件设置 where ...
+     */
+    public final QueryWhere where = new QueryWhere(this);
 
     public NoPrimaryQuery(){
-        super(NoPrimaryEntity.class);
+        super(NoPrimaryMP.Table_Name, NoPrimaryEntity.class, NoPrimaryQuery.class);
     }
 
     public NoPrimaryQuery(ParameterPair parameters) {
-        super(NoPrimaryEntity.class, parameters);
+        super(NoPrimaryMP.Table_Name, parameters, NoPrimaryEntity.class, NoPrimaryQuery.class);
     }
 
-    /**
+    @Override
+    public NoPrimaryQuery selectId() {
+        throw new FluentMybatisException("The primary key of in table[" + NoPrimaryMP.Table_Name + "] was not found.");
+    }
+
+/**
      * 查询字段设置
      *
      * @param by 查询字段设置器
      * @return 查询器NoPrimaryQuery
      */
-    public NoPrimaryQuery select(Consumer<Selector> by){
-        by.accept(selector);
-        return this;
-    }
-    /**
-     * 分组：GROUP BY 字段, ...
-     * <p>例: groupBy("id", "name")</p>
-     *
-     * @param by 设置分组字段
-     * @return 查询器NoPrimaryQuery
-     */
-    public NoPrimaryQuery groupBy(Consumer<QueryGroup> by) {
-        by.accept(this.groupBy);
-        return this;
-    }
-
-    /**
-     * having 函数设置
-     *
-     * @param by having函数设置器
-     * @return 查询器NoPrimaryQuery
-     */
-    public NoPrimaryQuery having(Consumer<Having> by){
-        by.accept(having);
-        return this;
-    }
-
-    /**
-    * order by设置
-    *
-    * @param by 设置排序字段和升降序
-    * @return 查询器NoPrimaryQuery
-    */
-    public NoPrimaryQuery orderBy(Consumer<QueryOrder> by){
-        by.accept(this.orderBy);
+    public NoPrimaryQuery select(Function<Selector, Selector> by){
+        by.apply(this.selector).toString();
         return this;
     }
 
     @Override
-    public NoPrimaryQuery eqByNotNull(NoPrimaryEntity entity) {
-        super.eqByNotNull(NoPrimaryEntityHelper.column(entity));
-        return this;
-    }
-
-
-    @Override
-    public Class<NoPrimaryQuery> queryClass() {
-        return NoPrimaryQuery.class;
+    public QueryWhere where() {
+        return this.where;
     }
 
     @Override
-    protected Map<String, String> property2Column(){
-        return NoPrimaryMP.Property2Column;
-    }
-
-    @Override
-    protected String table(){
-        return NoPrimaryMP.Table_Name;
+    protected void validateColumn(String column) throws FluentMybatisException {
+        if (isNotEmpty(column) && !NoPrimaryMP.ALL_COLUMNS.contains(column)) {
+            throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoPrimaryMP.Table_Name + "].");
+        }
     }
 }

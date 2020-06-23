@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author generate code
  */
-public class NoAutoIdEntityHelper implements NoAutoIdMP{
+public class NoAutoIdEntityHelper {
     /**
      * NoAutoIdEntity对象转换为HashMap，key值是对象属性
      *
@@ -23,11 +23,11 @@ public class NoAutoIdEntityHelper implements NoAutoIdMP{
      */
     public static Map<String, Object> map(NoAutoIdEntity entity){
         Map<String, Object> map = new HashMap<>();
-        if(entity.getId() != null){
-            map.put(Property.id,entity.getId());
+        if (entity.getId() != null) {
+            map.put(NoAutoIdMP.id.name, entity.getId());
         }
-        if(entity.getColumn1() != null){
-            map.put(Property.column1,entity.getColumn1());
+        if (entity.getColumn1() != null) {
+            map.put(NoAutoIdMP.column1.name, entity.getColumn1());
         }
         return map;
     }
@@ -40,11 +40,11 @@ public class NoAutoIdEntityHelper implements NoAutoIdMP{
      */
     public static Map<String, Object> column(NoAutoIdEntity entity){
         Map<String, Object> map = new HashMap<>();
-        if(entity.getId() != null){
-            map.put(Column.id,entity.getId());
+        if (entity.getId() != null) {
+            map.put(NoAutoIdMP.id.column, entity.getId());
         }
-        if(entity.getColumn1() != null){
-            map.put(Column.column_1,entity.getColumn1());
+        if (entity.getColumn1() != null) {
+            map.put(NoAutoIdMP.column1.column, entity.getColumn1());
         }
         return map;
     }
@@ -57,11 +57,11 @@ public class NoAutoIdEntityHelper implements NoAutoIdMP{
      */
     public static NoAutoIdEntity entity(Map<String, Object> map){
         NoAutoIdEntity entity = new NoAutoIdEntity();
-        if(map.containsKey(Property.id)){
-            entity.setId((String)map.get(Property.id));
+        if (map.containsKey(NoAutoIdMP.id.name)) {
+            entity.setId((String) map.get(NoAutoIdMP.id.name));
         }
-        if(map.containsKey(Property.column1)){
-            entity.setColumn1((String)map.get(Property.column1));
+        if (map.containsKey(NoAutoIdMP.column1.name)) {
+            entity.setColumn1((String) map.get(NoAutoIdMP.column1.name));
         }
         return entity;
     }

@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.demo.generate.ITable;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class DeleteTest extends BaseTest {
             .user_name.values("user1", "user2")
         );
         UserQuery update = new UserQuery()
-            .and.id.eq(24L);
+            .where.id().eq(24L).end();
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE id = ?", StringMode.SameAsSpace);
@@ -38,7 +37,7 @@ public class DeleteTest extends BaseTest {
             .user_name.values("user1", "user2")
         );
         UserQuery update = new UserQuery()
-            .and("user_name=?", "user2");
+            .where.and("user_name=?", "user2").end();
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE user_name=?", StringMode.SameAsSpace);

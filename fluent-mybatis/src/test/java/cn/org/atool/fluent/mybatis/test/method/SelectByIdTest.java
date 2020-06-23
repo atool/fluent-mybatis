@@ -6,13 +6,9 @@ import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author darui.wu

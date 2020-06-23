@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.condition.apply;
+package cn.org.atool.fluent.mybatis.condition.base;
 
-import cn.org.atool.fluent.mybatis.condition.base.BaseSelector;
+import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 
 /**
  * ColumnSelector: 字段查询
@@ -8,14 +8,13 @@ import cn.org.atool.fluent.mybatis.condition.base.BaseSelector;
  * @author darui.wu
  * @create 2020/6/21 3:26 下午
  */
-public class ColumnSelector<S extends BaseSelector<S>> {
-    private S selector;
+public class SelectorApply<
+    S extends SelectorBase<S, Q>,
+    Q extends IQuery<?, Q>
+    > extends BaseApply<S, Q> {
 
-    private String column;
-
-    public ColumnSelector(S selector, String column) {
-        this.selector = selector;
-        this.column = column;
+    public SelectorApply(S selector) {
+        super(selector);
     }
 
     /**
@@ -23,8 +22,8 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      *
      * @return 返回字段选择器
      */
-    public S select() {
-        return this.selector.apply(column);
+    public S get() {
+        return this.segment.apply(this.current.column);
     }
 
     /**
@@ -33,8 +32,8 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @param alias as 别名
      * @return 返回字段选择器
      */
-    public S select(String alias) {
-        return this.selector.apply(String.format("%s AS %s", column, alias));
+    public S alias(String alias) {
+        return this.segment.apply(String.format("%s AS %s", this.current.column, alias));
     }
 
     /**
@@ -43,7 +42,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S sum() {
-        return this.selector.apply(String.format("SUM(%s)", column));
+        return this.segment.apply(String.format("SUM(%s)", this.current.column));
     }
 
     /**
@@ -53,7 +52,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S sum(String alias) {
-        return this.selector.apply(String.format("SUM(%s) AS %s", column, alias));
+        return this.segment.apply(String.format("SUM(%s) AS %s", this.current.column, alias));
     }
 
     /**
@@ -62,7 +61,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S count() {
-        return this.selector.apply(String.format("COUNT(%s)", column));
+        return this.segment.apply(String.format("COUNT(%s)", this.current.column));
     }
 
     /**
@@ -72,7 +71,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S count(String alias) {
-        return this.selector.apply(String.format("COUNT(%s) AS %s", column, alias));
+        return this.segment.apply(String.format("COUNT(%s) AS %s", this.current.column, alias));
     }
 
 
@@ -82,7 +81,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S max() {
-        return this.selector.apply(String.format("MAX(%s)", column));
+        return this.segment.apply(String.format("MAX(%s)", this.current.column));
     }
 
     /**
@@ -92,7 +91,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S max(String alias) {
-        return this.selector.apply(String.format("MAX(%s) AS %s", column, alias));
+        return this.segment.apply(String.format("MAX(%s) AS %s", this.current.column, alias));
     }
 
     /**
@@ -101,7 +100,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S min() {
-        return this.selector.apply(String.format("MIN(%s)", column));
+        return this.segment.apply(String.format("MIN(%s)", this.current.column));
     }
 
     /**
@@ -111,7 +110,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S min(String alias) {
-        return this.selector.apply(String.format("MIN(%s) AS %s", column, alias));
+        return this.segment.apply(String.format("MIN(%s) AS %s", this.current.column, alias));
     }
 
     /**
@@ -120,7 +119,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S avg() {
-        return this.selector.apply(String.format("AVG(%s)", column));
+        return this.segment.apply(String.format("AVG(%s)", this.current.column));
     }
 
     /**
@@ -130,7 +129,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S avg(String alias) {
-        return this.selector.apply(String.format("AVG(%s) AS %s", column, alias));
+        return this.segment.apply(String.format("AVG(%s) AS %s", this.current.column, alias));
     }
 
     /**
@@ -139,7 +138,7 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S group_concat() {
-        return this.selector.apply(String.format("GROUP_CONCAT(%s)", column));
+        return this.segment.apply(String.format("GROUP_CONCAT(%s)", this.current.column));
     }
 
     /**
@@ -149,6 +148,6 @@ public class ColumnSelector<S extends BaseSelector<S>> {
      * @return 返回字段选择器
      */
     public S group_concat(String alias) {
-        return this.selector.apply(String.format("GROUP_CONCAT(%s) AS %s", column, alias));
+        return this.segment.apply(String.format("GROUP_CONCAT(%s) AS %s", this.current.column, alias));
     }
 }

@@ -10,7 +10,12 @@ import java.util.function.Function;
  * @param <Q> 对应的嵌套查询器
  * @author darui.wu
  */
-public interface IUpdate<E extends IEntity, U, Q extends IQuery<E, Q>> extends IWrapper<E, U, Q> {
+public interface IUpdate<
+    E extends IEntity,
+    U extends IWrapper<E, U, Q>,
+    Q extends IQuery<E, Q>
+    >
+    extends IWrapper<E, U, Q> {
     /**
      * 设置limit值
      *
@@ -28,23 +33,4 @@ public interface IUpdate<E extends IEntity, U, Q extends IQuery<E, Q>> extends I
     default int execute(Function<U, Integer> executor) {
         return executor.apply((U) this);
     }
-
-    /**
-     * 更新column字段值
-     *
-     * @param column 字段
-     * @param val    更新值
-     * @return self
-     */
-    U set(String column, Object val);
-
-    /**
-     * 设置更新（自定义SQL）
-     *
-     * @param column      更新的字段
-     * @param functionSql set function sql
-     * @param values      对应的参数
-     * @return self
-     */
-    U setSql(String column, String functionSql, Object... values);
 }

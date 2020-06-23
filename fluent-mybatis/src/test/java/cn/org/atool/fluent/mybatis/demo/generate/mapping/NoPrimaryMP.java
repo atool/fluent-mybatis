@@ -1,7 +1,11 @@
 package cn.org.atool.fluent.mybatis.demo.generate.mapping;
 
+import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @ClassName NoPrimaryMP
@@ -10,16 +14,6 @@ import java.util.Map;
  * @author generate code
  */
 public interface NoPrimaryMP {
-    /**
-     * 实例属性和数据库字段对应表
-     */
-    Map<String, String> Property2Column = new HashMap<String,String>(){
-        {
-            this.put(Property.column1, Column.column_1);
-            this.put(Property.column2, Column.column_2);
-        }
-    };
-
     /**
      * 表名称
      */
@@ -30,30 +24,33 @@ public interface NoPrimaryMP {
     String Entity_NAME = "NoPrimaryEntity";
 
     /**
-     * 表no_primary字段定义
+     * column1字段映射
+     * <p></p>
      */
-    interface Column{
-        /**
-         * 
-         */
-        String column_1 = "column_1";
-        /**
-         * 
-         */
-        String column_2 = "column_2";
-    }
+    FieldMeta column1 = new FieldMeta("column1", "column_1");
+    /**
+     * column2字段映射
+     * <p></p>
+     */
+    FieldMeta column2 = new FieldMeta("column2", "column_2");
 
     /**
-     * 对象NoPrimaryEntity属性字段
+     * 实例属性和数据库字段对应表
      */
-    interface Property{
-        /**
-         * 
-         */
-        String column1 = "column1";
-        /**
-         * 
-         */
-        String column2 = "column2";
-    }
+    Map<String, String> Property2Column = new HashMap<String,String>(){
+        {
+            this.put(column1.name, column1.column);
+            this.put(column2.name, column2.column);
+        }
+    };
+
+    /**
+     * 数据库所有字段列表
+     */
+    Set<String> ALL_COLUMNS = new HashSet<String>() {
+        {
+            this.add(column1.column);
+            this.add(column2.column);
+        }
+    };
 }

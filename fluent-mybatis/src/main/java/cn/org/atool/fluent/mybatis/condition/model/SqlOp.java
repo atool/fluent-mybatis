@@ -4,8 +4,8 @@ package cn.org.atool.fluent.mybatis.condition.model;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.QUESTION_MARK;
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.STR_FORMAT;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.QUESTION_MARK;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.STR_FORMAT;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isEmpty;
 import static java.util.stream.Collectors.joining;
 

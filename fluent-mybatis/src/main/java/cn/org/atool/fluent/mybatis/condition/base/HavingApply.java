@@ -1,22 +1,23 @@
-package cn.org.atool.fluent.mybatis.condition.apply;
+package cn.org.atool.fluent.mybatis.condition.base;
 
-import cn.org.atool.fluent.mybatis.condition.base.BaseHaving;
 import cn.org.atool.fluent.mybatis.condition.model.SqlOp;
+import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 
 /**
  * HavingBy 设置
  *
+ * @param <H>
+ * @param <Q>
  * @author darui.wu
  * @create 2020/6/21 6:18 下午
  */
-public class HavingBy<H extends BaseHaving<H>> {
-    private H having;
+public class HavingApply<
+    H extends HavingBase<H, Q>,
+    Q extends IQuery<?, Q>
+    > extends BaseApply<H, Q> {
 
-    private String column;
-
-    public HavingBy(H having, String column) {
-        this.having = having;
-        this.column = column;
+    public HavingApply(H having) {
+        super(having);
     }
 
     /**
@@ -27,7 +28,7 @@ public class HavingBy<H extends BaseHaving<H>> {
      * @return 返回字段选择器
      */
     public H sum(SqlOp op, Object... args) {
-        return this.having.apply("SUM(" + column + ")", op, args);
+        return this.segment.apply("SUM(" + this.current.column + ")", op, args);
     }
 
     /**
@@ -38,7 +39,7 @@ public class HavingBy<H extends BaseHaving<H>> {
      * @return 返回字段选择器
      */
     public H count(SqlOp op, Object... args) {
-        return this.having.apply("COUNT(" + column + ")", op, args);
+        return this.segment.apply("COUNT(" + this.current.column + ")", op, args);
     }
 
     /**
@@ -49,7 +50,7 @@ public class HavingBy<H extends BaseHaving<H>> {
      * @return 返回字段选择器
      */
     public H max(SqlOp op, Object... args) {
-        return this.having.apply("MAX(" + column + ")", op, args);
+        return this.segment.apply("MAX(" + this.current.column + ")", op, args);
     }
 
     /**
@@ -60,7 +61,7 @@ public class HavingBy<H extends BaseHaving<H>> {
      * @return 返回字段选择器
      */
     public H min(SqlOp op, Object... args) {
-        return this.having.apply("MIN(" + column + ")", op, args);
+        return this.segment.apply("MIN(" + this.current.column + ")", op, args);
     }
 
     /**
@@ -71,6 +72,6 @@ public class HavingBy<H extends BaseHaving<H>> {
      * @return 返回字段选择器
      */
     public H avg(SqlOp op, Object... args) {
-        return this.having.apply("AVG(" + column + ")", op, args);
+        return this.segment.apply("AVG(" + this.current.column + ")", op, args);
     }
 }

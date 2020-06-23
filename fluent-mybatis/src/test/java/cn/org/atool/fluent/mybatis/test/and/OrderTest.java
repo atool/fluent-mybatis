@@ -13,18 +13,23 @@ public class OrderTest extends BaseTest {
     @Test
     public void order() {
         UserQuery query = new UserQuery()
-            .and.userName.like("user")
-            .orderBy(by -> by.id.asc().addressId.asc().userName.desc().desc("id+0"));
+            .where.userName().like("user").end()
+            .orderBy.id().asc().addressId().desc("user_name", "id+0").end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql().where().eq("user_name LIKE ?");
-        db.sqlList().wantFirstSql().end("ORDER BY id ASC, address_id ASC, user_name DESC, id+0 DESC");
+        db.sqlList().wantFirstSql().end("ORDER BY id ASC, address_id, user_name DESC, id+0 DESC");
     }
 
     @Test
     public void order2() {
         UserQuery query = new UserQuery()
-            .and.userName.like("user")
-            .orderBy(by -> by.id.asc().asc("address_id").userName.desc().asc("id+0"));
+            .where.userName().like("user").end()
+            .orderBy
+            .id().asc()
+            .asc("address_id")
+            .userName().desc()
+            .asc("id+0")
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql().where().eq("user_name LIKE ?");
         db.sqlList().wantFirstSql().end("ORDER BY id ASC, address_id ASC, user_name DESC, id+0 ASC");

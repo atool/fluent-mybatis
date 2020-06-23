@@ -31,21 +31,16 @@ public abstract class ${baseDao.name} extends BaseDaoImpl<${entity.name}, ${enti
     }
 
     @Override
-    public ${entityUpdate.name} update(){
+    public ${entityUpdate.name} updater(){
         return new ${entityUpdate.name}();
     }
 
     @Override
     public String findPkColumn() {
-#foreach($field in ${fields})
-    #if(${field.primary})
-        #set($primaryKey=${field.name})
-    #end
-#end
-    #if(${primaryKey})
-        return ${mapping.name}.Column.${primaryKey};
-    #else
+#if(${primaryColumnName})
+        return ${mapping.name}.${primaryFieldName}.column;
+#else
         throw new RuntimeException("undefine primary key");
-    #end
+#end
     }
 }

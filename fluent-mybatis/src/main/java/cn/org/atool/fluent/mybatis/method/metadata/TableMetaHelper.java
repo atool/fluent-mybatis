@@ -104,11 +104,11 @@ public class TableMetaHelper {
     private static void initTableFields(Class<?> clazz, TableMeta tableMeta) {
         List<Field> fields = MybatisUtil.getFieldList(clazz);
 
-        List<FieldMeta> fieldList = new ArrayList<>();
+        List<TableFieldMeta> fieldList = new ArrayList<>();
         for (Field field : fields) {
             TableField tableField = field.getAnnotation(TableField.class);
             if (tableField != null) {
-                fieldList.add(new FieldMeta(field, tableField));
+                fieldList.add(new TableFieldMeta(field, tableField));
                 continue;
             }
             TableId tableId = field.getAnnotation(TableId.class);
@@ -116,7 +116,7 @@ public class TableMetaHelper {
                 continue;
             }
             if (tableMeta.getPrimary() == null) {
-                tableMeta.setPrimary(new PrimaryMeta(field, tableId));
+                tableMeta.setPrimary(new TablePrimaryMeta(field, tableId));
             } else {
                 throw FluentMybatisException.instance("There must be only one, Discover multiple @TableId annotation in %s", clazz.getName());
             }

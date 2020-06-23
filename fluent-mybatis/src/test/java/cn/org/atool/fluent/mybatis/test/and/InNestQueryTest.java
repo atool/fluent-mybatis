@@ -21,7 +21,8 @@ public class InNestQueryTest extends BaseTest {
     void test_and_in_nested() {
         UserQuery query = new UserQuery()
             .selectId()
-            .and.id.in(q -> q.selectId().and.id.eq(3L));
+            .where.id().in(q -> q.selectId().where.id().eq(3L).end())
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
@@ -31,7 +32,8 @@ public class InNestQueryTest extends BaseTest {
     void test_and_in_nested2() {
         UserQuery query = new UserQuery()
             .selectId()
-            .and.addressId.in(AddressQuery.class, q -> q.selectId().and.id.in(1L, 2L));
+            .where.addressId().in(AddressQuery.class, q -> q.selectId().where.id().in(new Integer[]{1, 2}).end())
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE address_id IN (SELECT id FROM address WHERE id IN (?, ?))");

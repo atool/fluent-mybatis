@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  * @create 2020/5/27 6:45 下午
  */
 @Getter
-public class PrimaryMeta extends BaseFieldMeta {
+public class TablePrimaryMeta extends BaseFieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */
@@ -28,11 +28,11 @@ public class PrimaryMeta extends BaseFieldMeta {
      */
     private String seqName;
 
-    public PrimaryMeta(String column, Field field) {
+    public TablePrimaryMeta(String column, Field field) {
         super(column, field);
     }
 
-    public PrimaryMeta(Field field, TableId tableId) {
+    public TablePrimaryMeta(Field field, TableId tableId) {
         super(tableId.value(), field);
         this.setJdbcType(tableId.jdbcType());
         this.el = el();

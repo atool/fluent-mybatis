@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.base.*;
-
-import java.util.*;
+import cn.org.atool.fluent.mybatis.condition.base.BaseUpdate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryEntityHelper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryWrapperHelper.WrapperWhere;
 import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryWrapperHelper.UpdateSetter;
+import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryWrapperHelper.UpdateWhere;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * NoPrimaryUpdate: NoPrimaryEntity更新设置
@@ -16,30 +16,28 @@ import cn.org.atool.fluent.mybatis.demo.generate.query.NoPrimaryWrapperHelper.Up
  * @author generate code
  */
 public class NoPrimaryUpdate extends BaseUpdate<NoPrimaryEntity, NoPrimaryUpdate, NoPrimaryQuery> {
-
-    public final WrapperWhere<NoPrimaryUpdate> and = new WrapperWhere<>(this);
-
-    public final WrapperWhere<NoPrimaryUpdate> or = new WrapperWhere<>(this, false);
-
+    /**
+     * 更新条件设置
+     */
+    public final UpdateWhere where = new UpdateWhere(this);
+    /**
+     * 更新值设置
+     */
     public final UpdateSetter set = new UpdateSetter(this);
 
     public NoPrimaryUpdate(){
-        super(NoPrimaryEntity.class);
+        super(NoPrimaryMP.Table_Name, NoPrimaryEntity.class, NoPrimaryQuery.class);
     }
 
     @Override
-    public NoPrimaryUpdate eqByNotNull(NoPrimaryEntity entity) {
-        super.eqByNotNull(NoPrimaryEntityHelper.column(entity));
-        return this;
+    public UpdateWhere where() {
+        return this.where;
     }
 
     @Override
-    protected Map<String, String> property2Column() {
-        return NoPrimaryMP.Property2Column;
-    }
-
-    @Override
-    public Class<NoPrimaryQuery> queryClass() {
-        return NoPrimaryQuery.class ;
+    protected void validateColumn(String column) throws FluentMybatisException {
+        if (isNotEmpty(column) && !NoPrimaryMP.ALL_COLUMNS.contains(column)) {
+            throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoPrimaryMP.Table_Name + "].");
+        }
     }
 }

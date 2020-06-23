@@ -5,7 +5,6 @@ import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class SelectByMapTest extends BaseTest {
 
         List<UserEntity> users = mapper.selectByMap(new HashMap<String, Object>() {
             {
-                this.put(UserMP.Column.user_name, "u2");
+                this.put(UserMP.userName.column, "u2");
             }
         });
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");

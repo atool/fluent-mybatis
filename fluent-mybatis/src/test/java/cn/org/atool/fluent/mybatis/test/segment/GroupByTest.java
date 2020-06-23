@@ -22,8 +22,8 @@ public class GroupByTest extends BaseTest {
     public void test_groupBy() throws Exception {
         UserQuery query = new UserQuery()
             .selectId()
-            .and.id.eq(24L)
-            .groupBy(by -> by.apply("user_name", "age"))
+            .where.id().eq(24L).end()
+            .groupBy.apply("user_name", "age").end()
             .last("/** comment **/");
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
@@ -34,12 +34,14 @@ public class GroupByTest extends BaseTest {
     public void test_groupBy_having() throws Exception {
         UserQuery query = new UserQuery()
             .select("count(1)", "sum(1)")
-            .and.id.eq(24L)
-            .groupBy(by -> by.userName.apply().age.apply())
-            .having(by -> by
-                .apply("count(1)", GT, 2)
-                .apply("sum(1) > ?", 3)
-            );
+            .where
+            .id().eq(24L).end()
+            .groupBy
+            .userName().age().end()
+            .having
+            .apply("count(1)", GT, 2)
+            .apply("sum(1) > ?", 3)
+            .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT count(1), sum(1) FROM t_user WHERE id = ? GROUP BY user_name, age HAVING count(1) > ? AND sum(1) > ?");

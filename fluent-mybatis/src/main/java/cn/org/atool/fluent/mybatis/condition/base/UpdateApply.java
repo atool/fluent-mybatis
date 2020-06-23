@@ -1,28 +1,23 @@
-package cn.org.atool.fluent.mybatis.condition.apply;
+package cn.org.atool.fluent.mybatis.condition.base;
 
-import cn.org.atool.fluent.mybatis.condition.base.BaseSetter;
 import cn.org.atool.fluent.mybatis.interfaces.IUpdate;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * SetObject 更新字段值
  *
- * @param <T> 字段类型
- * @param <U> 更新器
+ * @param <S> 更新器
  * @author darui.wu
  */
-public class SetObject<T, U extends IUpdate> {
-    protected final BaseSetter setter;
+public class UpdateApply<
+    S extends UpdateBase<S, U>,
+    U extends IUpdate<?, U, ?>
+    > extends BaseApply<S, U> {
 
-    protected final String column;
-
-    protected final String property;
-
-    public SetObject(BaseSetter setter, String column, String property) {
-        this.setter = setter;
-        this.column = column;
-        this.property = property;
+    public UpdateApply(S setter) {
+        super(setter);
     }
 
     /**
@@ -34,8 +29,9 @@ public class SetObject<T, U extends IUpdate> {
      * @param value 更新值
      * @return 更新器
      */
-    public U is(T value) {
-        return (U) this.updater().set(property, value);
+    public S is(Object value) {
+        this.segment.wrapperData().updateSet(this.current.column, value);
+        return segment;
     }
 
     /**
@@ -43,7 +39,7 @@ public class SetObject<T, U extends IUpdate> {
      *
      * @return 更新器
      */
-    public U isNull() {
+    public S isNull() {
         return this.is(null);
     }
 
@@ -54,8 +50,8 @@ public class SetObject<T, U extends IUpdate> {
      * @param value     更新值
      * @return 更新器
      */
-    public U is_If(boolean condition, T value) {
-        return condition ? this.is(value) : this.updater();
+    public S is_If(boolean condition, Object value) {
+        return condition ? this.is(value) : this.segment;
     }
 
     /**
@@ -64,8 +60,18 @@ public class SetObject<T, U extends IUpdate> {
      * @param value 更新值
      * @return 更新器
      */
-    public U is_IfNotNull(T value) {
+    public S is_IfNotNull(Object value) {
         return this.is_If(value != null, value);
+    }
+
+    /**
+     * 当value为非空字符串时，更新记录值等于value
+     *
+     * @param value 更新值
+     * @return 更新器
+     */
+    public S is_IfNotBlank(String value) {
+        return this.is_If(isNotEmpty(value), value);
     }
 
     //function
@@ -78,13 +84,14 @@ public class SetObject<T, U extends IUpdate> {
      * @param args     函数参数列表
      * @return 更新器
      */
-    public U apply(String function, Object... args) {
+    public S apply(String function, Object... args) {
         assertNotBlank("function", function);
         if (args == null || args.length == 0) {
-            return (U) this.updater().setSql(column, function, args);
+            this.segment.wrapperData().updateSql(this.current.column, function, args);
         } else {
-            return (U) this.updater().setSql(column, function, args);
+            this.segment.wrapperData().updateSql(this.current.column, function, args);
         }
+        return this.segment;
     }
 
     /**
@@ -96,16 +103,10 @@ public class SetObject<T, U extends IUpdate> {
      * @param args      函数参数列表
      * @return 更新器
      */
-    public U apply_If(boolean condition, String function, Object... args) {
-        return condition ? this.apply(function, args) : this.updater();
-    }
-
-    /**
-     * 返回更新器
-     *
-     * @return 更新器
-     */
-    protected U updater() {
-        return (U) this.setter.getUpdater();
+    public S apply_If(boolean condition, String function, Object... args) {
+        if (condition) {
+            this.apply(function, args);
+        }
+        return this.segment;
     }
 }

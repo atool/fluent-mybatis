@@ -2,14 +2,14 @@ package cn.org.atool.fluent.mybatis.method.normal;
 
 import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
-import cn.org.atool.fluent.mybatis.method.metadata.PrimaryMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TablePrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
-import static cn.org.atool.fluent.mybatis.condition.model.Constants.COMMA;
+import static cn.org.atool.fluent.mybatis.condition.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert;
 
 /**
@@ -29,19 +29,7 @@ public class Insert extends AbstractMethod {
     }
 
     /**
-     * <pre>
-     *      INSERT INTO table_name
-     * 		<trim prefix="(" suffix=")" suffixOverrides=",">
-     * 			<if test="ew.field != null">
-     * 				field,
-     * 			</if>
-     * 		</trim>
-     * 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-     * 			<if test="ew.field != null">
-     * 				#{field},
-     * 			</if>
-     * 		</trim>
-     * 	</pre>
+     * 插入语句
      *
      * @param table 表结构
      * @return
@@ -78,7 +66,7 @@ public class Insert extends AbstractMethod {
      * @param entity
      * @param primary
      */
-    protected void insertStatement(SqlBuilder builder, Class entity, PrimaryMeta primary) {
+    protected void insertStatement(SqlBuilder builder, Class entity, TablePrimaryMeta primary) {
         if (primary == null) {
             builder.quotas("<insert id='%s' parameterType='%s'>", statementId(), entity.getName());
             return;
@@ -102,7 +90,7 @@ public class Insert extends AbstractMethod {
         }
     }
 
-    private void value(SqlBuilder builder, FieldMeta field) {
+    private void value(SqlBuilder builder, TableFieldMeta field) {
         String insert = field.getInsert();
         if (MybatisUtil.isEmpty(insert)) {
             builder.ifThen("@property != null", "#{@property},", field.getProperty(), field.getColumn());
@@ -112,7 +100,7 @@ public class Insert extends AbstractMethod {
         }
     }
 
-    private void field(SqlBuilder builder, FieldMeta field) {
+    private void field(SqlBuilder builder, TableFieldMeta field) {
         if (isInsertDefault(field)) {
             builder.append(field.getColumn() + COMMA);
         } else {

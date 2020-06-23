@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.method.model;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.method.InjectMethod;
-import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 
@@ -92,7 +92,7 @@ public class InjectMapperXml {
         if (table.getPrimary() != null) {
             xml.quotas("<id column='%s' property='%s' />", table.getKeyColumn(), table.getKeyProperty()).newLine();
         }
-        for (FieldMeta field : table.getFields()) {
+        for (TableFieldMeta field : table.getFields()) {
             xml.quotas("<result column='%s' property='%s' />", field.getColumn(), field.getProperty()).newLine();
         }
         xml.append("</resultMap>").newLine();

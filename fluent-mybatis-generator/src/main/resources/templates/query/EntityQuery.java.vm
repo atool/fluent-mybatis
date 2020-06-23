@@ -1,16 +1,15 @@
 package ${entityQuery.package};
 
-import cn.org.atool.fluent.mybatis.condition.base.*;
+import cn.org.atool.fluent.mybatis.condition.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 import ${entity.package}.${entity.name};
 import ${mapping.package}.${mapping.name};
-import ${mapping.package}.${mapping.name}.Column;
-import ${entityHelper.package}.${entityHelper.name};
 import ${wrapperHelper.package}.${wrapperHelper.name}.*;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+
+import java.util.function.Function;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * @ClassName ${entityQuery.name}
@@ -20,94 +19,61 @@ import ${wrapperHelper.package}.${wrapperHelper.name}.*;
  */
 public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery.name}> {
     private final Selector selector = new Selector(this);
-
-    private final QueryGroup groupBy = new QueryGroup(this);
-
-    private final Having having = new Having(this);
-
-    private final QueryOrder orderBy = new QueryOrder(this);
-
-    public final WrapperWhere<${entityQuery.name}> and = new WrapperWhere<>(this);
-
-    public final WrapperWhere<${entityQuery.name}> or = new WrapperWhere<>(this, false);
+    /**
+     * 分组：GROUP BY 字段, ...
+     * 例: groupBy("id", "name")
+     */
+    public final GroupBy groupBy = new GroupBy(this);
+    /**
+     * 分组条件设置 having...
+     */
+    public final Having having = new Having(this);
+    /**
+     * 排序设置 order by ...
+     */
+    public final OrderBy orderBy = new OrderBy(this);
+    /**
+     * 条件设置 where ...
+     */
+    public final QueryWhere where = new QueryWhere(this);
 
     public ${entityQuery.name}(){
-        super(${entity.name}.class);
+        super(${mapping.name}.Table_Name, ${entity.name}.class, ${entityQuery.name}.class);
     }
 
     public ${entityQuery.name}(ParameterPair parameters) {
-        super(${entity.name}.class, parameters);
+        super(${mapping.name}.Table_Name, parameters, ${entity.name}.class, ${entityQuery.name}.class);
     }
 
-    /**
+    @Override
+    public ${entityQuery.name} selectId() {
+#if(${primaryColumnName})
+        return this.select(${mapping.name}.${primaryFieldName}.column);
+#else
+        throw new FluentMybatisException("The primary key of in table[" + NoPrimaryMP.Table_Name + "] was not found.");
+#end
+    }
+
+/**
      * 查询字段设置
      *
      * @param by 查询字段设置器
      * @return 查询器${entityQuery.name}
      */
-    public ${entityQuery.name} select(Consumer<Selector> by){
-        by.accept(selector);
-        return this;
-    }
-    /**
-     * 分组：GROUP BY 字段, ...
-     * <p>例: groupBy("id", "name")</p>
-     *
-     * @param by 设置分组字段
-     * @return 查询器${entityQuery.name}
-     */
-    public ${entityQuery.name} groupBy(Consumer<QueryGroup> by) {
-        by.accept(this.groupBy);
-        return this;
-    }
-
-    /**
-     * having 函数设置
-     *
-     * @param by having函数设置器
-     * @return 查询器${entityQuery.name}
-     */
-    public ${entityQuery.name} having(Consumer<Having> by){
-        by.accept(having);
-        return this;
-    }
-
-    /**
-    * order by设置
-    *
-    * @param by 设置排序字段和升降序
-    * @return 查询器${entityQuery.name}
-    */
-    public ${entityQuery.name} orderBy(Consumer<QueryOrder> by){
-        by.accept(this.orderBy);
+    public ${entityQuery.name} select(Function<Selector, Selector> by){
+        by.apply(this.selector).toString();
         return this;
     }
 
     @Override
-    public ${entityQuery.name} eqByNotNull(${entity.name} entity) {
-        super.eqByNotNull(${entityHelper.name}.column(entity));
-        return this;
-    }
-
-#if(${primaryColumnName})
-    @Override
-    protected String primaryName(){
-        return Column.${primaryColumnName};
-    }
-#end
-
-    @Override
-    public Class<${entityQuery.name}> queryClass() {
-        return ${entityQuery.name}.class;
+    public QueryWhere where() {
+        return this.where;
     }
 
     @Override
-    protected Map<String, String> property2Column(){
-        return ${mapping.name}.Property2Column;
-    }
-
-    @Override
-    protected String table(){
-        return ${mapping.name}.Table_Name;
+    protected void validateColumn(String column) throws FluentMybatisException {
+        if (isNotEmpty(column) && !${mapping.name}.ALL_COLUMNS.contains(column)) {
+            throw new FluentMybatisException("the column[" + column + "] was not found in table[" + ${mapping.name}.Table_Name + "].");
+        }
     }
 }
