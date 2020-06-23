@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.interfaces.base;
 
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.interfaces.*;
+import cn.org.atool.fluent.mybatis.interfaces.model.PagedList;
 
 import java.io.Serializable;
 import java.util.*;
@@ -123,6 +124,18 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
      */
     public List<E> selectList(IQuery query) {
         return this.mapper().selectList(query);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param query 查询条件
+     * @return 分页查询结果
+     */
+    public PagedList<E> selectPaged(IQuery query) {
+        int total = this.mapper().countNoLimit(query);
+        List<E> list = this.mapper().selectList(query);
+        return new PagedList<>(total, list);
     }
 
     /**

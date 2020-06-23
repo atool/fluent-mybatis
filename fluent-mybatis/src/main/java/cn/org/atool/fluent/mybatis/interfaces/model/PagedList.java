@@ -25,4 +25,12 @@ public class PagedList<E extends IEntity> {
      * 本次查询结果集
      */
     private List<E> data;
+
+    public PagedList() {
+    }
+
+    public PagedList(int total, List<E> data) {
+        this.total = total;
+        this.data = data;
+    }
 }
