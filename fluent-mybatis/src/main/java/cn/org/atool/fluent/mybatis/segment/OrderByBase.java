@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
-import static cn.org.atool.fluent.mybatis.segment.model.SqlOp.RETAIN;
+import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 import static java.util.stream.Collectors.joining;

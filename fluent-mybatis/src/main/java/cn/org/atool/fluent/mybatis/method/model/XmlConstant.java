@@ -67,7 +67,7 @@ public interface XmlConstant {
 
     String Wrapper_Paged_Offset = String.format("#{%s.paged.offset}", Wrapper_Data);
 
-    String Wrapper_Paged_Size = String.format("#{%s.paged.pageSize}", Wrapper_Data);
+    String Wrapper_Paged_Size = String.format("#{%s.paged.limit}", Wrapper_Data);
 
     String Wrapper_Paged_End_Offset = String.format("#{%s.paged.endOffset}", Wrapper_Data);
 }

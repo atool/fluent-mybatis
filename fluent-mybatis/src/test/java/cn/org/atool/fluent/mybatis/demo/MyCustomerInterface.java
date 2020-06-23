@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 import cn.org.atool.fluent.mybatis.interfaces.IUpdate;
 
-import static cn.org.atool.fluent.mybatis.segment.model.SqlOp.EQ;
+import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.EQ;
 
 /**
  * base dao 自定义接口

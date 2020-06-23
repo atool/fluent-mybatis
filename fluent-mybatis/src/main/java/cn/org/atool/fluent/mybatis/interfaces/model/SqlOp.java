@@ -1,4 +1,6 @@
-package cn.org.atool.fluent.mybatis.segment.model;
+package cn.org.atool.fluent.mybatis.interfaces.model;
+
+import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import java.util.Collection;
 import java.util.stream.Stream;

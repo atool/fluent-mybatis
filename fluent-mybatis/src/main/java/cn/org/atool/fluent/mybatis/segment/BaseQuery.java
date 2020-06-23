@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
-import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
+import cn.org.atool.fluent.mybatis.interfaces.model.Paged;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
@@ -57,13 +57,13 @@ public abstract class BaseQuery<
 
     @Override
     public Q limit(int limit) {
-        this.wrapperData.setPaged(new PagedOffset(0, limit));
+        this.wrapperData.setPaged(new Paged(0, limit));
         return (Q) this;
     }
 
     @Override
     public Q limit(int from, int limit) {
-        this.wrapperData.setPaged(new PagedOffset(from, limit));
+        this.wrapperData.setPaged(new Paged(from, limit));
         return (Q) this;
     }
 }

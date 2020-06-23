@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.interfaces.model.Paged;
+import cn.org.atool.fluent.mybatis.interfaces.model.SqlOp;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,7 +60,7 @@ public class WrapperData {
      * 分页参数
      */
     @Setter
-    private PagedOffset paged;
+    private Paged paged;
 
     public WrapperData(String table, ParameterPair parameters, Class entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");

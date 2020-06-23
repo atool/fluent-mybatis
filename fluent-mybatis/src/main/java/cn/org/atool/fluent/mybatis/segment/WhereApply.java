@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import java.util.Collection;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.segment.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**

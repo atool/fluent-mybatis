@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.segment.model.SqlOp.EQ;
+import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
