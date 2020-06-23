@@ -1,6 +1,6 @@
 package ${entityUpdate.package};
 
-import cn.org.atool.fluent.mybatis.condition.base.BaseUpdate;
+import cn.org.atool.fluent.mybatis.condition.BaseUpdate;
 
 import ${entity.package}.${entity.name};
 import ${mapping.package}.${mapping.name};

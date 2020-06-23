@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.condition.model;
 
-import cn.org.atool.fluent.mybatis.condition.base.*;
+import cn.org.atool.fluent.mybatis.condition.*;
 import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 import lombok.AccessLevel;
 import lombok.Setter;

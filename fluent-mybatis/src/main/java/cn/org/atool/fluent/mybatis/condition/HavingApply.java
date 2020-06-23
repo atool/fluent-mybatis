@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.condition.base;
+package cn.org.atool.fluent.mybatis.condition;
 
 import cn.org.atool.fluent.mybatis.condition.model.SqlOp;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;

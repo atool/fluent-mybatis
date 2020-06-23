@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.interfaces;
 
-import cn.org.atool.fluent.mybatis.condition.base.WhereBase;
+import cn.org.atool.fluent.mybatis.condition.WhereBase;
 import cn.org.atool.fluent.mybatis.condition.model.WrapperData;
 
 import java.io.Serializable;

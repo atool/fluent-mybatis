@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.condition.base.BaseQuery;
+import cn.org.atool.fluent.mybatis.condition.BaseQuery;
 import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;

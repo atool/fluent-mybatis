@@ -1,6 +1,6 @@
 package ${entityQuery.package};
 
-import cn.org.atool.fluent.mybatis.condition.base.BaseQuery;
+import cn.org.atool.fluent.mybatis.condition.BaseQuery;
 import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
 
 import ${entity.package}.${entity.name};

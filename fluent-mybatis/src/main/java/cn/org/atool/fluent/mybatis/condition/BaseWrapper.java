@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.condition.base;
+package cn.org.atool.fluent.mybatis.condition;
 
 import cn.org.atool.fluent.mybatis.condition.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.condition.model.WrapperData;
