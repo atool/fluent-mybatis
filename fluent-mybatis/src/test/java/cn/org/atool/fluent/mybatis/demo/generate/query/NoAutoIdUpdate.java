@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.segment.BaseUpdate;
+import cn.org.atool.fluent.mybatis.interfaces.base.BaseUpdate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;

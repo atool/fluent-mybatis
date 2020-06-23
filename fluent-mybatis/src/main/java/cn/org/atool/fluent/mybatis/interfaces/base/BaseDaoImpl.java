@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.segment;
+package cn.org.atool.fluent.mybatis.interfaces.base;
 
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.interfaces.*;

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 import cn.org.atool.fluent.mybatis.interfaces.PredicateField;
+import cn.org.atool.fluent.mybatis.interfaces.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;

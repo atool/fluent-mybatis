@@ -1,6 +1,6 @@
 package ${entityQuery.package};
 
-import cn.org.atool.fluent.mybatis.segment.BaseQuery;
+import cn.org.atool.fluent.mybatis.interfaces.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import ${entity.package}.${entity.name};

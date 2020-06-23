@@ -1,7 +1,8 @@
-package cn.org.atool.fluent.mybatis.segment;
+package cn.org.atool.fluent.mybatis.interfaces.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
 import cn.org.atool.fluent.mybatis.interfaces.model.Paged;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;

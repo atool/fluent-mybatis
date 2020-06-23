@@ -1,9 +1,10 @@
-package cn.org.atool.fluent.mybatis.segment;
+package cn.org.atool.fluent.mybatis.interfaces.base;
 
 import cn.org.atool.fluent.mybatis.interfaces.model.Paged;
 import cn.org.atool.fluent.mybatis.interfaces.IEntity;
 import cn.org.atool.fluent.mybatis.interfaces.IQuery;
 import cn.org.atool.fluent.mybatis.interfaces.IUpdate;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
 /**
  * AbstractUpdateWrapper
