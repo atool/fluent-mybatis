@@ -1,6 +1,6 @@
 package ${wrapperHelper.package};
 
-import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 import cn.org.atool.fluent.mybatis.segment.*;
 import ${mapping.package}.${mapping.name};
 

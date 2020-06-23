@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.annotation;
+package cn.org.atool.fluent.mybatis.base.model;
 
 /**
  * FieldMeta: 实体字段和数据库字段映射信息

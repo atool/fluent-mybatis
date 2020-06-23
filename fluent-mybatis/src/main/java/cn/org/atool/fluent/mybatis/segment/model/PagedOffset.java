@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.interfaces.model;
+package cn.org.atool.fluent.mybatis.segment.model;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Accessors(chain = true)
-public class Paged {
+public class PagedOffset {
     /**
      * 查询其实位移
      */
@@ -21,20 +21,20 @@ public class Paged {
      */
     private long limit = 1;
 
-    public Paged() {
+    public PagedOffset() {
     }
 
-    public Paged(long offset, long limit) {
+    public PagedOffset(long offset, long limit) {
         this.setOffset(offset);
         this.setLimit(limit);
     }
 
-    public Paged setOffset(long offset) {
+    public PagedOffset setOffset(long offset) {
         this.offset = offset < 0 ? 0 : offset;
         return this;
     }
 
-    public Paged setLimit(long limit) {
+    public PagedOffset setLimit(long limit) {
         this.limit = limit < 1 ? 1 : limit;
         return this;
     }

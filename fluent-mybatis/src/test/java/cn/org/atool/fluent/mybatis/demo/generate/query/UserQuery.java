@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.query;
 
-import cn.org.atool.fluent.mybatis.interfaces.base.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;

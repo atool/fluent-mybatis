@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.dao.base;
 
-import cn.org.atool.fluent.mybatis.interfaces.base.BaseDaoImpl;
+import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;

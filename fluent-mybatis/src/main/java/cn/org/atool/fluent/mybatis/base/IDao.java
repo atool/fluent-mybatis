@@ -1,6 +1,4 @@
-package cn.org.atool.fluent.mybatis.interfaces;
-
-import cn.org.atool.fluent.mybatis.interfaces.model.PagedList;
+package cn.org.atool.fluent.mybatis.base;
 
 import java.io.Serializable;
 import java.util.Collection;

@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
-import cn.org.atool.fluent.mybatis.interfaces.model.SqlOp;
-import cn.org.atool.fluent.mybatis.interfaces.IQuery;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.IQuery;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
-import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.RETAIN;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 
 /**

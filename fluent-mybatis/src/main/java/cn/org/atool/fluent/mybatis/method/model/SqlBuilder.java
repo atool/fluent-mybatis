@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
-import cn.org.atool.fluent.mybatis.function.Executor;
+import cn.org.atool.fluent.mybatis.base.Executor;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 
 import java.util.List;

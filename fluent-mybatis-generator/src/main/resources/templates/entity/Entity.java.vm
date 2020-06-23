@@ -3,15 +3,13 @@ package ${entity.package};
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
-import cn.org.atool.fluent.mybatis.interfaces.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import java.util.Map;
-import java.io.Serializable;
 
-$!{importTypes}
+    $!{importTypes}
 $!{entity.interface}
 import ${entityHelper.package}.${entityHelper.name};
 

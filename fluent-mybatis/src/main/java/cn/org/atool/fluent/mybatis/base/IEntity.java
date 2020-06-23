@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.interfaces;
+package cn.org.atool.fluent.mybatis.base;
 
 import java.io.Serializable;
 import java.util.Map;

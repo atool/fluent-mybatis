@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.interfaces.ISqlSegment;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;

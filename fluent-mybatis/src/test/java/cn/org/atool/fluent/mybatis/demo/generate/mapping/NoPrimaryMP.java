@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.mapping;
 
-import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 
 import java.util.HashMap;
 import java.util.HashSet;

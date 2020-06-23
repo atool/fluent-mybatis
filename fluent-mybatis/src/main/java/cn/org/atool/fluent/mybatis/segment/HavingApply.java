@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.interfaces.model.SqlOp;
-import cn.org.atool.fluent.mybatis.interfaces.IQuery;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.IQuery;
 
 /**
  * HavingBy 设置

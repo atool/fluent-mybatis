@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.function;
+package cn.org.atool.fluent.mybatis.base;
 
 /**
  * Executor

@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
-import cn.org.atool.fluent.mybatis.interfaces.model.SqlOp;
-import cn.org.atool.fluent.mybatis.interfaces.IEntity;
-import cn.org.atool.fluent.mybatis.interfaces.IQuery;
-import cn.org.atool.fluent.mybatis.interfaces.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
-import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotNull;
 

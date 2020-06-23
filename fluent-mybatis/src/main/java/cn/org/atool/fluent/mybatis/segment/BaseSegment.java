@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-import cn.org.atool.fluent.mybatis.interfaces.IWrapper;
+import cn.org.atool.fluent.mybatis.base.IWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 

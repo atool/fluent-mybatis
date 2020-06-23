@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.interfaces.IDao;
+import cn.org.atool.fluent.mybatis.base.IDao;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
 import org.springframework.stereotype.Repository;
 

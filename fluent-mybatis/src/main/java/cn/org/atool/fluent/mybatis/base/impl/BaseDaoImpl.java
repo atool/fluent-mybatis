@@ -1,14 +1,14 @@
-package cn.org.atool.fluent.mybatis.interfaces.base;
+package cn.org.atool.fluent.mybatis.base.impl;
 
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.interfaces.*;
-import cn.org.atool.fluent.mybatis.interfaces.model.PagedList;
+import cn.org.atool.fluent.mybatis.base.*;
+import cn.org.atool.fluent.mybatis.base.model.PagedList;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.EQ;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 

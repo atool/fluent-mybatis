@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.interfaces.model;
+package cn.org.atool.fluent.mybatis.base.model;
 
-import cn.org.atool.fluent.mybatis.interfaces.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

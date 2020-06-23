@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.annotation.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 import cn.org.atool.fluent.mybatis.segment.model.SharedString;
-import cn.org.atool.fluent.mybatis.interfaces.IWrapper;
+import cn.org.atool.fluent.mybatis.base.IWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
-import static cn.org.atool.fluent.mybatis.interfaces.model.SqlOp.RETAIN;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 import static java.util.stream.Collectors.joining;

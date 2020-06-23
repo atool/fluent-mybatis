@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.interfaces.IQuery;
+import cn.org.atool.fluent.mybatis.base.IQuery;
 
 /**
  * ColumnSelector: 字段查询

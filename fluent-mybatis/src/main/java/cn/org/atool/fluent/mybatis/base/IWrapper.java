@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.interfaces;
+package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;

@@ -1,6 +1,6 @@
 package ${entityQuery.package};
 
-import cn.org.atool.fluent.mybatis.interfaces.base.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import ${entity.package}.${entity.name};
@@ -8,7 +8,6 @@ import ${mapping.package}.${mapping.name};
 import ${wrapperHelper.package}.${wrapperHelper.name}.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import java.util.function.Function;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.interfaces.model;
+package cn.org.atool.fluent.mybatis.base.model;
 
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 

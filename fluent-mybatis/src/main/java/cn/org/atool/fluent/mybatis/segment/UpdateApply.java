@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.interfaces.IUpdate;
+import cn.org.atool.fluent.mybatis.base.IUpdate;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;

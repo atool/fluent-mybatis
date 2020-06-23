@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.interfaces.IQuery;
+import cn.org.atool.fluent.mybatis.base.IQuery;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;

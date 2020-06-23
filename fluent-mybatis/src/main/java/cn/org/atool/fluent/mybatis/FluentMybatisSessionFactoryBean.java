@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis;
 
-import cn.org.atool.fluent.mybatis.interfaces.IMapper;
-import cn.org.atool.fluent.mybatis.interfaces.ISharing;
+import cn.org.atool.fluent.mybatis.base.IMapper;
+import cn.org.atool.fluent.mybatis.base.ISharing;
 import cn.org.atool.fluent.mybatis.method.InjectMethod;
 import cn.org.atool.fluent.mybatis.method.InjectMethods;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;

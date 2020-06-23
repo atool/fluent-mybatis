@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.mybatis.interfaces.base;
+package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.interfaces.model.Paged;
-import cn.org.atool.fluent.mybatis.interfaces.IEntity;
-import cn.org.atool.fluent.mybatis.interfaces.IQuery;
-import cn.org.atool.fluent.mybatis.interfaces.IUpdate;
+import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.IUpdate;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
 /**
@@ -29,7 +29,7 @@ public abstract class BaseUpdate<
 
     @Override
     public U limit(int limit) {
-        this.wrapperData.setPaged(new Paged(0, limit));
+        this.wrapperData.setPaged(new PagedOffset(0, limit));
         return (U) this;
     }
 }
