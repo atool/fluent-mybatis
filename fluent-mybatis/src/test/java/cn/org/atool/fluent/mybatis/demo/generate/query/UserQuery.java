@@ -18,7 +18,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
  * @author generate code
  */
 public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
-    private final Selector selector = new Selector(this);
+    public final Selector select = new Selector(this);
     /**
      * 分组：GROUP BY 字段, ...
      * 例: groupBy("id", "name")
@@ -57,7 +57,7 @@ public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
      * @return 查询器UserQuery
      */
     public UserQuery select(Function<Selector, Selector> by){
-        by.apply(this.selector).toString();
+        by.apply(this.select).toString();
         return this;
     }
 

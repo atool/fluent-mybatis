@@ -3,6 +3,9 @@ package cn.org.atool.fluent.mybatis.base;
 /**
  * IMapperDao
  *
+ * @param <E> 实体类
+ * @param <Q> 查询器
+ * @param <U> 更新器
  * @author:darui.wu Created by darui.wu on 2019/10/29.
  */
 public interface IBaseDao<E extends IEntity, Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>> {

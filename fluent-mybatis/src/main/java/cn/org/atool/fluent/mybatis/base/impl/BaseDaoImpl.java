@@ -1,23 +1,32 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
+import cn.org.atool.fluent.mybatis.base.IDao;
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.IUpdate;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.base.*;
-import cn.org.atool.fluent.mybatis.base.model.PagedList;
 
 import java.io.Serializable;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * @param <E>
+ * BaseDaoImpl
+ *
+ * @param <E> 实体类
+ * @param <Q> 查询器
+ * @param <U> 更新器
  * @author darui.wu
  */
 public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>>
-    implements IDao<E>, IBaseDao<E, Q, U> {
+    extends DaoProtectedImpl<E, Q, U>
+    implements IDao<E> {
     @Override
     public <PK extends Serializable> PK save(E entity) {
         this.mapper().insert(entity);
@@ -60,94 +69,6 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
         return this.mapper().selectList(query);
     }
 
-    /**
-     * 根据query查询满足条件的第一条记录
-     *
-     * @param query
-     * @return
-     */
-    public E selectOne(IQuery query) {
-        query.limit(1);
-        return (E) this.mapper().selectOne(query);
-    }
-
-    /**
-     * 根据query查询满足条件的第一条记录，并根据function解析出对应字段
-     *
-     * @param query
-     * @param function 获取entity字段值函数
-     * @param <F>
-     * @return
-     */
-    public <F> F selectOne(IQuery query, Function<E, F> function) {
-        query.limit(1);
-        E obj = (E) this.mapper().selectOne(query);
-        return obj == null ? null : (F) function.apply(obj);
-    }
-
-    /**
-     * 根据query查询记录列表，并根据function解析出对应字段
-     *
-     * @param query
-     * @param function 获取entity字段值函数
-     * @param <F>
-     * @return
-     */
-    public <F> List<F> selectFields(IQuery query, Function<E, F> function) {
-        return this.mapper().selectList(query).stream()
-            .map(function::apply)
-            .collect(toList());
-    }
-
-    /**
-     * 根据query查询记录列表，并根据function将记录转换成需要的对象F
-     *
-     * @param query
-     * @param function 从Map记录对实体F的转换函数
-     * @param <F>
-     * @return
-     */
-    public <F> List<F> selectObjs(IQuery query, Function<Map<String, Object>, F> function) {
-        List<Map<String, Object>> list = this.mapper().selectMaps(query);
-        return list.stream()
-            // mybatis有个bug，当所有字段值为null时, 不会返回Map对象, 而是返回一个null
-            .map(map -> map == null ? new HashMap<String, Object>() : map)
-            .map(function::apply)
-            .collect(toList());
-    }
-
-    /**
-     * 根据query查询记录
-     *
-     * @param query
-     * @return
-     */
-    public List<E> selectList(IQuery query) {
-        return this.mapper().selectList(query);
-    }
-
-    /**
-     * 分页查询
-     *
-     * @param query 查询条件
-     * @return 分页查询结果
-     */
-    public PagedList<E> selectPaged(IQuery query) {
-        int total = this.mapper().countNoLimit(query);
-        List<E> list = this.mapper().selectList(query);
-        return new PagedList<>(total, list);
-    }
-
-    /**
-     * 返回符合条件的记录数
-     *
-     * @param query
-     * @return
-     */
-    public int count(IQuery query) {
-        return this.mapper().selectCount(query);
-    }
-
     @Override
     public boolean existPk(Serializable id) {
         Q query = this.query().where().and(this.findPkColumn(), EQ, id).end();
@@ -158,16 +79,6 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
     @Override
     public boolean updateById(E entity) {
         return this.mapper().updateById(entity) > 0;
-    }
-
-    /**
-     * 根据update设置更新记录
-     *
-     * @param update
-     * @return
-     */
-    public int update(IUpdate update) {
-        return this.mapper().updateBy(update);
     }
 
     @Override
@@ -186,16 +97,6 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
     @Override
     public boolean deleteById(Serializable id) {
         return this.mapper().deleteById(id) > 0;
-    }
-
-    /**
-     * 根据条件query删除记录
-     *
-     * @param query
-     * @return
-     */
-    public int deleteByQuery(IQuery query) {
-        return this.mapper().delete(query);
     }
 
     @Override

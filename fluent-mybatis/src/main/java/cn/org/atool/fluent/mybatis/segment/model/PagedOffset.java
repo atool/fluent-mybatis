@@ -15,31 +15,31 @@ public class PagedOffset {
     /**
      * 查询其实位移
      */
-    private long offset = 0;
+    private int offset = 0;
     /**
      * 查询最大数量
      */
-    private long limit = 1;
+    private int limit = 1;
 
     public PagedOffset() {
     }
 
-    public PagedOffset(long offset, long limit) {
+    public PagedOffset(int offset, int limit) {
         this.setOffset(offset);
         this.setLimit(limit);
     }
 
-    public PagedOffset setOffset(long offset) {
+    public PagedOffset setOffset(int offset) {
         this.offset = offset < 0 ? 0 : offset;
         return this;
     }
 
-    public PagedOffset setLimit(long limit) {
+    public PagedOffset setLimit(int limit) {
         this.limit = limit < 1 ? 1 : limit;
         return this;
     }
 
-    public long getEndOffset() {
+    public int getEndOffset() {
         return this.offset + this.limit;
     }
 }

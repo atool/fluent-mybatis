@@ -21,9 +21,10 @@ public class NestedQueryTest extends BaseTest {
     void test_or_nested() {
         UserQuery query = new UserQuery()
             .selectId()
-            .where.exists(AddressQuery.class, q -> q.where
-                .address().like("u")
-                .id().apply("=t_user.address_id")
+            .where.exists(AddressQuery.class, q -> q
+                .where.
+                    address().like("u").
+                    id().apply("=t_user.address_id")
                 .end()
             ).end();
         mapper.selectList(query);

@@ -8,6 +8,7 @@ import ${mapping.package}.${mapping.name};
 import ${wrapperHelper.package}.${wrapperHelper.name}.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
+import java.util.function.Function;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
@@ -17,7 +18,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
  * @author ${author}
  */
 public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery.name}> {
-    private final Selector selector = new Selector(this);
+    public final Selector select = new Selector(this);
     /**
      * 分组：GROUP BY 字段, ...
      * 例: groupBy("id", "name")
@@ -60,7 +61,7 @@ public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery
      * @return 查询器${entityQuery.name}
      */
     public ${entityQuery.name} select(Function<Selector, Selector> by){
-        by.apply(this.selector).toString();
+        by.apply(this.select).toString();
         return this;
     }
 

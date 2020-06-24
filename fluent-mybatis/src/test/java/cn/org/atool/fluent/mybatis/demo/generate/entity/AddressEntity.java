@@ -4,16 +4,15 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import java.util.Date;
+import cn.org.atool.fluent.mybatis.demo.IBaseEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressEntityHelper;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import java.util.Map;
 import java.io.Serializable;
-
-import java.util.Date;
-import cn.org.atool.fluent.mybatis.demo.IBaseEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressEntityHelper;
+import java.util.Map;
 
 /**
  * <p>

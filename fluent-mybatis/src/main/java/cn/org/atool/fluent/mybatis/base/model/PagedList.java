@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class PagedList<E extends IEntity> {
+public class PagedList<E> {
     /**
      * 总记录数
      */

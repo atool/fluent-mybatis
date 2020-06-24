@@ -1,11 +1,14 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.query.AddressQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * InNestQueryTest
@@ -20,12 +23,28 @@ public class InNestQueryTest extends BaseTest {
     @Test
     void test_and_in_nested() {
         UserQuery query = new UserQuery()
-            .selectId()
-            .where.id().in(q -> q.selectId().where.id().eq(3L).end())
-            .end();
-        mapper.selectList(query);
+            .select.id().get().age().sum().end()
+            .where
+            .id().in(q -> q
+                .selectId()
+                .where
+                .id().eq(3L).end())
+            .userName().like("user")
+            .age().gt(23).end()
+            .groupBy
+            .id().end()
+            .having
+            .age().sum(SqlOp.GT, 2).end();
+
+        List list = mapper.selectList(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
+            .eq("SELECT id, SUM(age) FROM t_user " +
+                "WHERE " +
+                "id IN (SELECT id FROM t_user WHERE id = ?) " +
+                "AND user_name LIKE ? " +
+                "AND age > ? " +
+                "GROUP BY id " +
+                "HAVING SUM(age) > ?");
     }
 
     @Test

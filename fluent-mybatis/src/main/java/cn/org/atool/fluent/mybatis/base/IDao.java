@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * IBaseDao Dao基本操作方法
  *
+ * @param <E> 实体类
  * @Author darui.wu
  * @Date 2019-06-25 12:00
  */
