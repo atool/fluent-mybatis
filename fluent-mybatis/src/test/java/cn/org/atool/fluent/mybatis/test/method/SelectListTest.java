@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.datamap.EM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
