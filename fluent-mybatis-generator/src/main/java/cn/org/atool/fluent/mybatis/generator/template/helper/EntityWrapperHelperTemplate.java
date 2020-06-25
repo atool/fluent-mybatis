@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.generator.template.query;
+package cn.org.atool.fluent.mybatis.generator.template.helper;
 
 import org.test4j.generator.mybatis.config.impl.TableInfoSet;
 import org.test4j.generator.mybatis.template.BaseTemplate;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EntityWrapperHelperTemplate extends BaseTemplate {
     public EntityWrapperHelperTemplate() {
-        super("templates/query/EntityWrapperHelper.java.vm", "query/*WrapperHelper.java");
+        super("templates/helper/EntityWrapperHelper.java.vm", "helper/*WrapperHelper.java");
     }
 
     @Override
