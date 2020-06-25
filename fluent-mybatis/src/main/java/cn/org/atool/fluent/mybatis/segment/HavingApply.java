@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.segment.model.Aggregate;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
@@ -39,7 +38,7 @@ public class HavingApply<
          * @param aggregate 聚合函数
          * @return 操作器
          */
-        HavingOperator expression(Aggregate aggregate) {
+        HavingOperator expression(IAggregate aggregate) {
             this.expression = aggregate.expression(current.column);
             return this;
         }
@@ -55,7 +54,7 @@ public class HavingApply<
      * @return 返回比较操作
      */
     public HavingOperator sum() {
-        return this.operator.expression(Aggregate.SUM);
+        return this.operator.expression(IAggregate.SUM);
     }
 
     /**
@@ -64,7 +63,7 @@ public class HavingApply<
      * @return 返回比较操作
      */
     public HavingOperator count() {
-        return this.operator.expression(Aggregate.COUNT);
+        return this.operator.expression(IAggregate.COUNT);
     }
 
     /**
@@ -73,7 +72,7 @@ public class HavingApply<
      * @return 返回比较操作
      */
     public HavingOperator max() {
-        return this.operator.expression(Aggregate.MAX);
+        return this.operator.expression(IAggregate.MAX);
     }
 
     /**
@@ -82,7 +81,7 @@ public class HavingApply<
      * @return 返回比较操作
      */
     public HavingOperator min() {
-        return this.operator.expression(Aggregate.MIN);
+        return this.operator.expression(IAggregate.MIN);
     }
 
     /**
@@ -91,6 +90,6 @@ public class HavingApply<
      * @return 返回字段选择器
      */
     public HavingOperator avg() {
-        return this.operator.expression(Aggregate.AVG);
+        return this.operator.expression(IAggregate.AVG);
     }
 }
