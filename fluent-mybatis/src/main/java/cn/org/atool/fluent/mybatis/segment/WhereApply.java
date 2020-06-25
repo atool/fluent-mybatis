@@ -316,7 +316,7 @@ public class WhereApply<
     public WHERE notIn_IfNotEmpty(Collection<Object> values) {
         return this.notIn(values != null && !values.isEmpty(), values);
     }
-    
+
     /**
      * not in (values)
      *
