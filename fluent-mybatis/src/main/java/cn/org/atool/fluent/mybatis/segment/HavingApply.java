@@ -2,6 +2,9 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.segment.model.Aggregate;
+
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**
  * HavingBy 设置
@@ -16,6 +19,32 @@ public class HavingApply<
     Q extends IQuery<?, Q>
     > extends BaseApply<H, Q> {
 
+    private HavingOperator operator = new HavingOperator();
+
+    public class HavingOperator implements IOperator<H> {
+        /**
+         * 表达式
+         */
+        private String expression;
+
+        @Override
+        public H apply(SqlOp op, Object... args) {
+            assertNotBlank("expression", expression);
+            return segment.apply(expression, op, args);
+        }
+
+        /**
+         * 设置聚合函数表达式
+         *
+         * @param aggregate 聚合函数
+         * @return 操作器
+         */
+        HavingOperator expression(Aggregate aggregate) {
+            this.expression = aggregate.expression(current.column);
+            return this;
+        }
+    }
+
     public HavingApply(H having) {
         super(having);
     }
@@ -23,55 +52,45 @@ public class HavingApply<
     /**
      * 字段之和 符合 分组条件
      *
-     * @param op   比较操作
-     * @param args 比较参数
-     * @return 返回字段选择器
+     * @return 返回比较操作
      */
-    public H sum(SqlOp op, Object... args) {
-        return this.segment.apply("SUM(" + this.current.column + ")", op, args);
+    public HavingOperator sum() {
+        return this.operator.expression(Aggregate.SUM);
     }
 
     /**
      * 非空字段总数 符合 分组条件
      *
-     * @param op   比较操作
-     * @param args 比较参数
-     * @return 返回字段选择器
+     * @return 返回比较操作
      */
-    public H count(SqlOp op, Object... args) {
-        return this.segment.apply("COUNT(" + this.current.column + ")", op, args);
+    public HavingOperator count() {
+        return this.operator.expression(Aggregate.COUNT);
     }
 
     /**
      * 字段最大值 符合 分组条件
      *
-     * @param op   比较操作
-     * @param args 比较参数
-     * @return 返回字段选择器
+     * @return 返回比较操作
      */
-    public H max(SqlOp op, Object... args) {
-        return this.segment.apply("MAX(" + this.current.column + ")", op, args);
+    public HavingOperator max() {
+        return this.operator.expression(Aggregate.MAX);
     }
 
     /**
      * 字段最小值 符合 分组条件
      *
-     * @param op   比较操作
-     * @param args 比较参数
-     * @return 返回字段选择器
+     * @return 返回比较操作
      */
-    public H min(SqlOp op, Object... args) {
-        return this.segment.apply("MIN(" + this.current.column + ")", op, args);
+    public HavingOperator min() {
+        return this.operator.expression(Aggregate.MIN);
     }
 
     /**
      * 字段平均值 符合 分组条件
      *
-     * @param op   比较操作
-     * @param args 比较参数
      * @return 返回字段选择器
      */
-    public H avg(SqlOp op, Object... args) {
-        return this.segment.apply("AVG(" + this.current.column + ")", op, args);
+    public HavingOperator avg() {
+        return this.operator.expression(Aggregate.AVG);
     }
 }

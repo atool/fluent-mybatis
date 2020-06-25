@@ -34,7 +34,7 @@ public class InNestQueryTest extends BaseTest {
             .groupBy
             .id().end()
             .having
-            .age().sum(SqlOp.GT, 2).end();
+            .age().sum().gt(2).end();
 
         List list = mapper.selectList(query);
         db.sqlList().wantFirstSql()

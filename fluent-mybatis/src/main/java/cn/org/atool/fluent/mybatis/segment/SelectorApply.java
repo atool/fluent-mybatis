@@ -5,6 +5,8 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 /**
  * ColumnSelector: 字段查询
  *
+ * @param <S> 字段选择器
+ * @param <Q> 查询器
  * @author darui.wu
  * @create 2020/6/21 3:26 下午
  */

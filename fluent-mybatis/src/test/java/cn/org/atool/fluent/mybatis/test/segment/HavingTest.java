@@ -27,12 +27,22 @@ public class HavingTest extends BaseTest {
             .groupBy.id()
             .end()
             .having
-            .age().sum(SqlOp.BETWEEN, 2, 10)
+            .age().sum().between(2, 10)
+            .id().count().gt(2)
+            .age().avg().in(2, 3)
+            .age().min().gt(10)
+            .age().max().lt(20)
             .apply("avg > ?", 10)
             .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age) AS avg FROM t_user WHERE id = ? " +
-                "GROUP BY id HAVING SUM(age) BETWEEN ? AND ? AND avg > ?");
+                "GROUP BY id " +
+                "HAVING SUM(age) BETWEEN ? AND ? " +
+                "AND COUNT(id) > ? " +
+                "AND AVG(age) IN (?, ?) " +
+                "AND MIN(age) > ? " +
+                "AND MAX(age) < ? " +
+                "AND avg > ?");
     }
 }
