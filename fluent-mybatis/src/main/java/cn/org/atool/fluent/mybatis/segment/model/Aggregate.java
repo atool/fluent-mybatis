@@ -2,8 +2,6 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
-
 /**
  * 聚合函数枚举
  *
@@ -43,13 +41,5 @@ public enum Aggregate implements IAggregate {
 
     public String aggregate(String column) {
         return String.format(expression, column);
-    }
-
-    public String aggregate(String column, String alias) {
-        if (isNotEmpty(alias)) {
-            return aggregate(column) + " AS " + alias;
-        } else {
-            return aggregate(column);
-        }
     }
 }

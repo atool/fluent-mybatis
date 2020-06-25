@@ -10,6 +10,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_BETWEEN;
 /**
  * 比较操作
  *
+ * @param <R> 
  * @author wudarui
  */
 public interface IOperator<R> {

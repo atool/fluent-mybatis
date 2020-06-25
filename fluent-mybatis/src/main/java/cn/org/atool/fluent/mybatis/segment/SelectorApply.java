@@ -1,8 +1,10 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * ColumnSelector: 字段查询
@@ -41,12 +43,37 @@ public class SelectorApply<
     }
 
     /**
+     * 执行聚合函数
+     *
+     * @param aggregate 聚合函数
+     * @return 返回字段选择器
+     */
+    public S apply(IAggregate aggregate) {
+        return this.apply(aggregate, null);
+    }
+
+    /**
+     * 执行聚合函数
+     *
+     * @param aggregate 聚合函数
+     * @param alias     as别名
+     * @return 返回字段选择器
+     */
+    public S apply(IAggregate aggregate, String alias) {
+        String expression = aggregate.aggregate(this.current.column);
+        if (isNotEmpty(alias)) {
+            expression = expression + " AS " + alias;
+        }
+        return this.segment.apply(expression);
+    }
+
+    /**
      * 返回参数字段之和
      *
      * @return 返回字段选择器
      */
     public S sum() {
-        return this.sum(null);
+        return this.apply(SUM);
     }
 
     /**
@@ -56,7 +83,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S sum(String alias) {
-        return this.segment.apply(SUM.aggregate(this.current.column, alias));
+        return this.apply(SUM, alias);
     }
 
     /**
@@ -65,7 +92,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S count() {
-        return this.count(null);
+        return this.apply(COUNT);
     }
 
     /**
@@ -75,9 +102,8 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S count(String alias) {
-        return this.segment.apply(COUNT.aggregate(this.current.column, alias));
+        return this.apply(COUNT, alias);
     }
-
 
     /**
      * 返回参数字段的最大值
@@ -85,7 +111,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S max() {
-        return this.max(null);
+        return this.apply(MAX);
     }
 
     /**
@@ -95,7 +121,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S max(String alias) {
-        return this.segment.apply(MAX.aggregate(this.current.column, alias));
+        return this.apply(MAX, alias);
     }
 
     /**
@@ -104,7 +130,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S min() {
-        return this.min(null);
+        return this.apply(MIN);
     }
 
     /**
@@ -114,7 +140,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S min(String alias) {
-        return this.segment.apply(MIN.aggregate(this.current.column, alias));
+        return this.apply(MIN, alias);
     }
 
     /**
@@ -123,7 +149,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S avg() {
-        return this.avg(null);
+        return this.apply(AVG);
     }
 
     /**
@@ -133,7 +159,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S avg(String alias) {
-        return this.segment.apply(AVG.aggregate(this.current.column, alias));
+        return this.apply(AVG, alias);
     }
 
     /**
@@ -142,7 +168,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S group_concat() {
-        return this.group_concat(null);
+        return this.apply(GROUP_CONCAT);
     }
 
     /**
@@ -152,6 +178,6 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S group_concat(String alias) {
-        return this.segment.apply(GROUP_CONCAT.aggregate(this.current.column, alias));
+        return this.apply(GROUP_CONCAT, alias);
     }
 }

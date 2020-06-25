@@ -55,7 +55,7 @@ public abstract class HavingBase<
     /**
      * 执行聚合操作
      *
-     * @param aggregate 聚合操作, 比如 sum(column)
+     * @param aggregate 聚合操作, 比如 sum(column) 或者 select中聚合操作的别名
      * @return Having条件判断
      */
     public HavingOperator<H> apply(String aggregate) {
