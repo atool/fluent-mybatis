@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.base.IDaoProtected;
 import cn.org.atool.fluent.mybatis.base.model.MarkerList;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class SelectMakerListTest extends BaseTest {
             .user_name.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
         );
-        Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMP.id.column)).intValue();
+        Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMapping.id.column)).intValue();
         MarkerList<Map> list = daoProtected.selectMarkerMaps(new UserQuery()
             .selectId()
             .where.

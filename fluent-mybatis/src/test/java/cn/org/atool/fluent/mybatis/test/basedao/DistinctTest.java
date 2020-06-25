@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.EM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class DistinctTest extends BaseTest {
             );
         UserQuery query = new UserQuery()
             .distinct()
-            .select(UserMP.userName)
+            .select(UserMapping.userName)
             .where.age().eq(30).end();
 
         List<UserEntity> users = mapper.selectList(query);

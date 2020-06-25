@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.demo.notgen;
 
 import cn.org.atool.fluent.mybatis.demo.generate.dao.impl.UserDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -37,18 +37,18 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     @Override
     public List<String> selectObjs(Long... ids) {
         return super.selectObjs(
-            super.query().select(UserMP.userName)
+            super.query().select(UserMapping.userName)
                 .where.id().in(ids).end(),
-            (map) -> (String) map.get(UserMP.userName.column)
+            (map) -> (String) map.get(UserMapping.userName.column)
         );
     }
 
     @Override
     public List<String> selectObjs2(Long... ids) {
         return super.selectObjs(
-            super.query().select(UserMP.userName, UserMP.age)
+            super.query().select(UserMapping.userName, UserMapping.age)
                 .where.id().in(ids).end(),
-            (map) -> (String) map.get(UserMP.userName.column)
+            (map) -> (String) map.get(UserMapping.userName.column)
         );
     }
 

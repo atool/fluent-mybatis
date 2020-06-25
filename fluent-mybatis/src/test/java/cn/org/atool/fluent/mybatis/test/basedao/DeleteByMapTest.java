@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class DeleteByMapTest extends BaseTest {
         );
         dao.deleteByMap(new HashMap<String, Object>() {
             {
-                this.put(UserMP.userName.column, "test12");
+                this.put(UserMapping.userName.column, "test12");
             }
         });
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE user_name = ?", StringMode.SameAsSpace);

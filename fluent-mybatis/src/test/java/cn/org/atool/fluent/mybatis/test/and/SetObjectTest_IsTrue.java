@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

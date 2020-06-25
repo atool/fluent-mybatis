@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.EM;
 import cn.org.atool.fluent.mybatis.demo.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.notgen.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class SelectByMapTest extends BaseTest {
 
         List<UserEntity> users = dao.selectByMap(new HashMap<String, Object>() {
             {
-                this.put(UserMP.userName.column, "username_4");
+                this.put(UserMapping.userName.column, "username_4");
             }
         });
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
