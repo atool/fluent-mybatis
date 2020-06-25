@@ -23,4 +23,5 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     可以选择h2,速度快，但有少量语法和mysql不一致；也可以选择mariadb数据库，语法和mysql高度一致。
     
 ## 使用fluent-mybatis
-    [使用fluent-mybatis](./fluent-mybatis-tutorial/index.md)
+
+   [使用fluent-mybatis](./fluent-mybatis-tutorial/index.md)
