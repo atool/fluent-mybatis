@@ -59,11 +59,13 @@ public class AddressEntity implements IEntity, IBaseEntity<AddressEntity>{
         return id;
     }
 
-    /**
-     * 将实体对象转换为map
-     */
     @Override
     public Map<String, Object> toMap() {
         return AddressEntityHelper.map(this);
+    }
+
+    @Override
+    public Map<String, Object> columnMap() {
+        return AddressEntityHelper.columnMap(this);
     }
 }

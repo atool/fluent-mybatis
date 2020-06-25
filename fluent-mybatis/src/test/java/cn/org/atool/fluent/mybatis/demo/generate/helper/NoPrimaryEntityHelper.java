@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoPrimaryMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +24,10 @@ public class NoPrimaryEntityHelper {
     public static Map<String, Object> map(NoPrimaryEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getColumn1() != null) {
-            map.put(NoPrimaryMP.column1.name, entity.getColumn1());
+            map.put(NoPrimaryMapping.column1.name, entity.getColumn1());
         }
         if (entity.getColumn2() != null) {
-            map.put(NoPrimaryMP.column2.name, entity.getColumn2());
+            map.put(NoPrimaryMapping.column2.name, entity.getColumn2());
         }
         return map;
     }
@@ -38,13 +38,13 @@ public class NoPrimaryEntityHelper {
      * @param entity
      * @return
      */
-    public static Map<String, Object> column(NoPrimaryEntity entity){
+    public static Map<String, Object> columnMap(NoPrimaryEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getColumn1() != null) {
-            map.put(NoPrimaryMP.column1.column, entity.getColumn1());
+            map.put(NoPrimaryMapping.column1.column, entity.getColumn1());
         }
         if (entity.getColumn2() != null) {
-            map.put(NoPrimaryMP.column2.column, entity.getColumn2());
+            map.put(NoPrimaryMapping.column2.column, entity.getColumn2());
         }
         return map;
     }
@@ -57,11 +57,11 @@ public class NoPrimaryEntityHelper {
      */
     public static NoPrimaryEntity entity(Map<String, Object> map){
         NoPrimaryEntity entity = new NoPrimaryEntity();
-        if (map.containsKey(NoPrimaryMP.column1.name)) {
-            entity.setColumn1((Integer) map.get(NoPrimaryMP.column1.name));
+        if (map.containsKey(NoPrimaryMapping.column1.name)) {
+            entity.setColumn1((Integer) map.get(NoPrimaryMapping.column1.name));
         }
-        if (map.containsKey(NoPrimaryMP.column2.name)) {
-            entity.setColumn2((String) map.get(NoPrimaryMP.column2.name));
+        if (map.containsKey(NoPrimaryMapping.column2.name)) {
+            entity.setColumn2((String) map.get(NoPrimaryMapping.column2.name));
         }
         return entity;
     }

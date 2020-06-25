@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.demo.generate.dao.base;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.NoAutoIdMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.NoAutoIdUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdMapping;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoAutoIdQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoAutoIdUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author generate code
 */
 public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAutoIdQuery, NoAutoIdUpdate>
-        implements NoAutoIdMP {
+        implements NoAutoIdMapping {
 
     @Autowired
     protected NoAutoIdMapper mapper;
@@ -37,6 +37,6 @@ public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAuto
 
     @Override
     public String findPkColumn() {
-        return NoAutoIdMP.id.column;
+        return NoAutoIdMapping.id.column;
     }
 }

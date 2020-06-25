@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.demo.generate.dao.base;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserQuery;
-import cn.org.atool.fluent.mybatis.demo.generate.query.UserUpdate;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
 
@@ -15,7 +15,7 @@ import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
  * @author generate code
 */
 public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, UserUpdate>
-        implements UserMP, MyCustomerInterface<UserEntity, UserQuery, UserUpdate> {
+        implements UserMapping, MyCustomerInterface<UserEntity, UserQuery, UserUpdate> {
 
     @Autowired
     protected UserMapper mapper;
@@ -37,6 +37,6 @@ public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, Use
 
     @Override
     public String findPkColumn() {
-        return UserMP.id.column;
+        return UserMapping.id.column;
     }
 }

@@ -22,4 +22,11 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     Map<String, Object> toMap();
+
+    /**
+     * 将实体对象转换为数据库字段为key的map对象
+     *
+     * @return map对象
+     */
+    Map<String, Object> columnMap();
 }

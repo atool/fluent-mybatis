@@ -44,11 +44,13 @@ public class NoAutoIdEntity implements IEntity{
         return id;
     }
 
-    /**
-     * 将实体对象转换为map
-     */
     @Override
     public Map<String, Object> toMap() {
         return NoAutoIdEntityHelper.map(this);
+    }
+
+    @Override
+    public Map<String, Object> columnMap() {
+        return NoAutoIdEntityHelper.columnMap(this);
     }
 }

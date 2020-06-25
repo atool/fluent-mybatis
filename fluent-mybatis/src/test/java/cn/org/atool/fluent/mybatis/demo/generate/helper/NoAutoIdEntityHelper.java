@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.NoAutoIdMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +24,10 @@ public class NoAutoIdEntityHelper {
     public static Map<String, Object> map(NoAutoIdEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getId() != null) {
-            map.put(NoAutoIdMP.id.name, entity.getId());
+            map.put(NoAutoIdMapping.id.name, entity.getId());
         }
         if (entity.getColumn1() != null) {
-            map.put(NoAutoIdMP.column1.name, entity.getColumn1());
+            map.put(NoAutoIdMapping.column1.name, entity.getColumn1());
         }
         return map;
     }
@@ -38,13 +38,13 @@ public class NoAutoIdEntityHelper {
      * @param entity
      * @return
      */
-    public static Map<String, Object> column(NoAutoIdEntity entity){
+    public static Map<String, Object> columnMap(NoAutoIdEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getId() != null) {
-            map.put(NoAutoIdMP.id.column, entity.getId());
+            map.put(NoAutoIdMapping.id.column, entity.getId());
         }
         if (entity.getColumn1() != null) {
-            map.put(NoAutoIdMP.column1.column, entity.getColumn1());
+            map.put(NoAutoIdMapping.column1.column, entity.getColumn1());
         }
         return map;
     }
@@ -57,11 +57,11 @@ public class NoAutoIdEntityHelper {
      */
     public static NoAutoIdEntity entity(Map<String, Object> map){
         NoAutoIdEntity entity = new NoAutoIdEntity();
-        if (map.containsKey(NoAutoIdMP.id.name)) {
-            entity.setId((String) map.get(NoAutoIdMP.id.name));
+        if (map.containsKey(NoAutoIdMapping.id.name)) {
+            entity.setId((String) map.get(NoAutoIdMapping.id.name));
         }
-        if (map.containsKey(NoAutoIdMP.column1.name)) {
-            entity.setColumn1((String) map.get(NoAutoIdMP.column1.name));
+        if (map.containsKey(NoAutoIdMapping.column1.name)) {
+            entity.setColumn1((String) map.get(NoAutoIdMapping.column1.name));
         }
         return entity;
     }

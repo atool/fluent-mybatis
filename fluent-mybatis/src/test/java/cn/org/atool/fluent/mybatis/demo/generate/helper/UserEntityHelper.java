@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.UserMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,28 +24,28 @@ public class UserEntityHelper {
     public static Map<String, Object> map(UserEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getId() != null) {
-            map.put(UserMP.id.name, entity.getId());
+            map.put(UserMapping.id.name, entity.getId());
         }
         if (entity.getGmtCreated() != null) {
-            map.put(UserMP.gmtCreated.name, entity.getGmtCreated());
+            map.put(UserMapping.gmtCreated.name, entity.getGmtCreated());
         }
         if (entity.getGmtModified() != null) {
-            map.put(UserMP.gmtModified.name, entity.getGmtModified());
+            map.put(UserMapping.gmtModified.name, entity.getGmtModified());
         }
         if (entity.getIsDeleted() != null) {
-            map.put(UserMP.isDeleted.name, entity.getIsDeleted());
+            map.put(UserMapping.isDeleted.name, entity.getIsDeleted());
         }
         if (entity.getAddressId() != null) {
-            map.put(UserMP.addressId.name, entity.getAddressId());
+            map.put(UserMapping.addressId.name, entity.getAddressId());
         }
         if (entity.getAge() != null) {
-            map.put(UserMP.age.name, entity.getAge());
+            map.put(UserMapping.age.name, entity.getAge());
         }
         if (entity.getUserName() != null) {
-            map.put(UserMP.userName.name, entity.getUserName());
+            map.put(UserMapping.userName.name, entity.getUserName());
         }
         if (entity.getVersion() != null) {
-            map.put(UserMP.version.name, entity.getVersion());
+            map.put(UserMapping.version.name, entity.getVersion());
         }
         return map;
     }
@@ -56,31 +56,31 @@ public class UserEntityHelper {
      * @param entity
      * @return
      */
-    public static Map<String, Object> column(UserEntity entity){
+    public static Map<String, Object> columnMap(UserEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getId() != null) {
-            map.put(UserMP.id.column, entity.getId());
+            map.put(UserMapping.id.column, entity.getId());
         }
         if (entity.getGmtCreated() != null) {
-            map.put(UserMP.gmtCreated.column, entity.getGmtCreated());
+            map.put(UserMapping.gmtCreated.column, entity.getGmtCreated());
         }
         if (entity.getGmtModified() != null) {
-            map.put(UserMP.gmtModified.column, entity.getGmtModified());
+            map.put(UserMapping.gmtModified.column, entity.getGmtModified());
         }
         if (entity.getIsDeleted() != null) {
-            map.put(UserMP.isDeleted.column, entity.getIsDeleted());
+            map.put(UserMapping.isDeleted.column, entity.getIsDeleted());
         }
         if (entity.getAddressId() != null) {
-            map.put(UserMP.addressId.column, entity.getAddressId());
+            map.put(UserMapping.addressId.column, entity.getAddressId());
         }
         if (entity.getAge() != null) {
-            map.put(UserMP.age.column, entity.getAge());
+            map.put(UserMapping.age.column, entity.getAge());
         }
         if (entity.getUserName() != null) {
-            map.put(UserMP.userName.column, entity.getUserName());
+            map.put(UserMapping.userName.column, entity.getUserName());
         }
         if (entity.getVersion() != null) {
-            map.put(UserMP.version.column, entity.getVersion());
+            map.put(UserMapping.version.column, entity.getVersion());
         }
         return map;
     }
@@ -93,29 +93,29 @@ public class UserEntityHelper {
      */
     public static UserEntity entity(Map<String, Object> map){
         UserEntity entity = new UserEntity();
-        if (map.containsKey(UserMP.id.name)) {
-            entity.setId((Long) map.get(UserMP.id.name));
+        if (map.containsKey(UserMapping.id.name)) {
+            entity.setId((Long) map.get(UserMapping.id.name));
         }
-        if (map.containsKey(UserMP.gmtCreated.name)) {
-            entity.setGmtCreated((Date) map.get(UserMP.gmtCreated.name));
+        if (map.containsKey(UserMapping.gmtCreated.name)) {
+            entity.setGmtCreated((Date) map.get(UserMapping.gmtCreated.name));
         }
-        if (map.containsKey(UserMP.gmtModified.name)) {
-            entity.setGmtModified((Date) map.get(UserMP.gmtModified.name));
+        if (map.containsKey(UserMapping.gmtModified.name)) {
+            entity.setGmtModified((Date) map.get(UserMapping.gmtModified.name));
         }
-        if (map.containsKey(UserMP.isDeleted.name)) {
-            entity.setIsDeleted((Boolean) map.get(UserMP.isDeleted.name));
+        if (map.containsKey(UserMapping.isDeleted.name)) {
+            entity.setIsDeleted((Boolean) map.get(UserMapping.isDeleted.name));
         }
-        if (map.containsKey(UserMP.addressId.name)) {
-            entity.setAddressId((Long) map.get(UserMP.addressId.name));
+        if (map.containsKey(UserMapping.addressId.name)) {
+            entity.setAddressId((Long) map.get(UserMapping.addressId.name));
         }
-        if (map.containsKey(UserMP.age.name)) {
-            entity.setAge((Integer) map.get(UserMP.age.name));
+        if (map.containsKey(UserMapping.age.name)) {
+            entity.setAge((Integer) map.get(UserMapping.age.name));
         }
-        if (map.containsKey(UserMP.userName.name)) {
-            entity.setUserName((String) map.get(UserMP.userName.name));
+        if (map.containsKey(UserMapping.userName.name)) {
+            entity.setUserName((String) map.get(UserMapping.userName.name));
         }
-        if (map.containsKey(UserMP.version.name)) {
-            entity.setVersion((String) map.get(UserMP.version.name));
+        if (map.containsKey(UserMapping.version.name)) {
+            entity.setVersion((String) map.get(UserMapping.version.name));
         }
         return entity;
     }

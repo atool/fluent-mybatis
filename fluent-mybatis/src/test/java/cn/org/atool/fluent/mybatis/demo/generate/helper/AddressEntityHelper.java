@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.AddressEntity;
-import cn.org.atool.fluent.mybatis.demo.generate.mapping.AddressMP;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,19 +24,19 @@ public class AddressEntityHelper {
     public static Map<String, Object> map(AddressEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getId() != null) {
-            map.put(AddressMP.id.name, entity.getId());
+            map.put(AddressMapping.id.name, entity.getId());
         }
         if (entity.getGmtCreated() != null) {
-            map.put(AddressMP.gmtCreated.name, entity.getGmtCreated());
+            map.put(AddressMapping.gmtCreated.name, entity.getGmtCreated());
         }
         if (entity.getGmtModified() != null) {
-            map.put(AddressMP.gmtModified.name, entity.getGmtModified());
+            map.put(AddressMapping.gmtModified.name, entity.getGmtModified());
         }
         if (entity.getIsDeleted() != null) {
-            map.put(AddressMP.isDeleted.name, entity.getIsDeleted());
+            map.put(AddressMapping.isDeleted.name, entity.getIsDeleted());
         }
         if (entity.getAddress() != null) {
-            map.put(AddressMP.address.name, entity.getAddress());
+            map.put(AddressMapping.address.name, entity.getAddress());
         }
         return map;
     }
@@ -47,22 +47,22 @@ public class AddressEntityHelper {
      * @param entity
      * @return
      */
-    public static Map<String, Object> column(AddressEntity entity){
+    public static Map<String, Object> columnMap(AddressEntity entity){
         Map<String, Object> map = new HashMap<>();
         if (entity.getId() != null) {
-            map.put(AddressMP.id.column, entity.getId());
+            map.put(AddressMapping.id.column, entity.getId());
         }
         if (entity.getGmtCreated() != null) {
-            map.put(AddressMP.gmtCreated.column, entity.getGmtCreated());
+            map.put(AddressMapping.gmtCreated.column, entity.getGmtCreated());
         }
         if (entity.getGmtModified() != null) {
-            map.put(AddressMP.gmtModified.column, entity.getGmtModified());
+            map.put(AddressMapping.gmtModified.column, entity.getGmtModified());
         }
         if (entity.getIsDeleted() != null) {
-            map.put(AddressMP.isDeleted.column, entity.getIsDeleted());
+            map.put(AddressMapping.isDeleted.column, entity.getIsDeleted());
         }
         if (entity.getAddress() != null) {
-            map.put(AddressMP.address.column, entity.getAddress());
+            map.put(AddressMapping.address.column, entity.getAddress());
         }
         return map;
     }
@@ -75,20 +75,20 @@ public class AddressEntityHelper {
      */
     public static AddressEntity entity(Map<String, Object> map){
         AddressEntity entity = new AddressEntity();
-        if (map.containsKey(AddressMP.id.name)) {
-            entity.setId((Long) map.get(AddressMP.id.name));
+        if (map.containsKey(AddressMapping.id.name)) {
+            entity.setId((Long) map.get(AddressMapping.id.name));
         }
-        if (map.containsKey(AddressMP.gmtCreated.name)) {
-            entity.setGmtCreated((Date) map.get(AddressMP.gmtCreated.name));
+        if (map.containsKey(AddressMapping.gmtCreated.name)) {
+            entity.setGmtCreated((Date) map.get(AddressMapping.gmtCreated.name));
         }
-        if (map.containsKey(AddressMP.gmtModified.name)) {
-            entity.setGmtModified((Date) map.get(AddressMP.gmtModified.name));
+        if (map.containsKey(AddressMapping.gmtModified.name)) {
+            entity.setGmtModified((Date) map.get(AddressMapping.gmtModified.name));
         }
-        if (map.containsKey(AddressMP.isDeleted.name)) {
-            entity.setIsDeleted((Boolean) map.get(AddressMP.isDeleted.name));
+        if (map.containsKey(AddressMapping.isDeleted.name)) {
+            entity.setIsDeleted((Boolean) map.get(AddressMapping.isDeleted.name));
         }
-        if (map.containsKey(AddressMP.address.name)) {
-            entity.setAddress((String) map.get(AddressMP.address.name));
+        if (map.containsKey(AddressMapping.address.name)) {
+            entity.setAddress((String) map.get(AddressMapping.address.name));
         }
         return entity;
     }

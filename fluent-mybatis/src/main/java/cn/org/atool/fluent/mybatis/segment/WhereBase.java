@@ -51,7 +51,7 @@ public abstract class WhereBase<
      * @return 查询器UserQuery
      */
     public WHERE eqByNotNull(IEntity entity) {
-        return this.eqByNotNull(entity.toMap());
+        return this.eqByNotNull(entity.columnMap());
     }
 
     /**
@@ -78,6 +78,7 @@ public abstract class WhereBase<
      */
     public <V> WHERE eqByMap(Map<String, V> params, boolean ignoreNull) {
         params.forEach((k, v) -> {
+            this.wrapper.validateColumn(k);
             if (isNotNull(v)) {
                 this.wrapper.getWrapperData().apply(AND, k, EQ, v);
             } else if (!ignoreNull) {
