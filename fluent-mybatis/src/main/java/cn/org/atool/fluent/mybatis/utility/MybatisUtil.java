@@ -1,16 +1,10 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.function.Predicate;
-
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.DISTINCT;
 
 /**
  * MybatisUtil
@@ -109,7 +103,6 @@ public class MybatisUtil {
         return !isEmpty(cs);
     }
 
-
     /**
      * 判断对象是否为空
      *
@@ -139,17 +132,6 @@ public class MybatisUtil {
         }
     }
 
-
-    /**
-     * 是否为CharSequence类型
-     *
-     * @param clazz class
-     * @return true 为是 CharSequence 类型
-     */
-    public static boolean isCharSequence(Class<?> clazz) {
-        return clazz != null && CharSequence.class.isAssignableFrom(clazz);
-    }
-
     static Map<Character, String> Escape_Char = new HashMap<>();
 
     static {
@@ -160,24 +142,6 @@ public class MybatisUtil {
         Escape_Char.put('\'', "\\\'");
         Escape_Char.put('"', "\\\"");
         Escape_Char.put('\032', "\\Z");
-    }
-
-    /**
-     * 转义字符串。纯转义，不添加单引号。
-     *
-     * @param escapeStr 被转义的字符串
-     * @return 转义后的字符串
-     */
-    public static String escapeRawString(String escapeStr) {
-        StringBuilder buf = new StringBuilder((int) (escapeStr.length() * 1.1));
-        for (char c : escapeStr.toCharArray()) {
-            if (Escape_Char.containsKey(c)) {
-                buf.append(Escape_Char.get(c));
-            } else {
-                buf.append(c);
-            }
-        }
-        return buf.toString();
     }
 
     /**
@@ -352,26 +316,5 @@ public class MybatisUtil {
             .append("         |___)                            \n")
             .append(version == null ? "" : version + " \n");
         return buff.toString();
-    }
-
-    /**
-     * distinct ....
-     *
-     * @param columns select column
-     * @return distinct select
-     */
-    public static String distinct(String... columns) {
-        return DISTINCT + String.join(COMMA, columns);
-    }
-
-    /**
-     * distinct selected
-     *
-     * @param entityClass 实例类
-     * @param predicate   判断字段是否被select
-     * @return distinct select
-     */
-    public static String distinct(Class entityClass, Predicate<BaseFieldMeta> predicate) {
-        return DISTINCT + TableMetaHelper.getTableInfo(entityClass).filter(predicate);
     }
 }

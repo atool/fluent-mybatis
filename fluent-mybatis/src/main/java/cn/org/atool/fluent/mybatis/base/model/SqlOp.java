@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -19,80 +20,88 @@ public enum SqlOp {
     /**
      * is null
      */
-    IS_NULL("IS NULL"),
+    IS_NULL("IS NULL", 0),
     /**
      * is not null
      */
-    IS_NOT_NULL("IS NOT NULL"),
+    IS_NOT_NULL("IS NOT NULL", 0),
     /**
      * 等于
      */
-    EQ("= ?"),
+    EQ("= ?", 1),
     /**
      * 不等于
      */
-    NE("<> ?"),
+    NE("<> ?", 1),
     /**
      * 大于
      */
-    GT("> ?"),
+    GT("> ?", 1),
     /**
      * 大于等于
      */
-    GE(">= ?"),
+    GE(">= ?", 1),
     /**
      * 小于
      */
-    LT("< ?"),
+    LT("< ?", 1),
     /**
      * 小于等于
      */
-    LE("<= ?"),
+    LE("<= ?", 1),
     /**
      * 在...之间
      */
-    BETWEEN("BETWEEN ? AND ?"),
+    BETWEEN("BETWEEN ? AND ?", 2),
     /**
      * 不在...之间
      */
-    NOT_BETWEEN("NOT BETWEEN ? AND ?"),
+    NOT_BETWEEN("NOT BETWEEN ? AND ?", 2),
     /**
      * like
      */
-    LIKE("LIKE ?"),
+    LIKE("LIKE ?", 1),
     /**
      * not like
      */
-    NOT_LIKE("NOT LIKE ?"),
+    NOT_LIKE("NOT LIKE ?", 1),
     /**
      * 在...之中
      */
-    IN("IN (%s)"),
+    IN("IN (%s)", -1),
     /**
      * 不在...之中
      */
-    NOT_IN("NOT IN (%s)"),
+    NOT_IN("NOT IN (%s)", -1),
     /**
      * 存在子查询有值
      */
-    EXISTS("EXISTS (%s)"),
+    EXISTS("EXISTS (%s)", -1),
     /**
      * 不存在子查询有值
      */
-    NOT_EXISTS("NOT EXISTS (%s)"),
+    NOT_EXISTS("NOT EXISTS (%s)", -1),
     /**
      * 子查询
      */
-    BRACKET("( %s )"),
+    BRACKET("( %s )", -1),
     /**
      * 保留不动
      */
-    RETAIN("%s");
+    RETAIN("%s", -1);
 
     private final String keyWord;
+    /**
+     * 参数个数
+     * 0: 无can
+     * -1: 不限定
+     */
+    @Getter
+    private final int argSize;
 
-    SqlOp(final String keyWord) {
+    SqlOp(final String keyWord, int argSize) {
         this.keyWord = keyWord;
+        this.argSize = argSize;
     }
 
     /**

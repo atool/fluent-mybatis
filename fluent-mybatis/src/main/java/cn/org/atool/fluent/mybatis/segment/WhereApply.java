@@ -1,14 +1,19 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 import cn.org.atool.fluent.mybatis.segment.model.SqlLike;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * AndObject
@@ -20,10 +25,26 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 public class WhereApply<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IQuery<?, NQ>
-    > extends BaseApply<WHERE, NQ> {
+    > extends BaseApply<WHERE, NQ> implements IOperator<WHERE> {
 
     public WhereApply(WHERE where) {
         super(where);
+    }
+
+    @Override
+    public WHERE apply(SqlOp op, Object... args) {
+        if (op.getArgSize() > 0) {
+            assertNotEmpty(current.name, args);
+            if (args.length != op.getArgSize()) {
+                throw new FluentMybatisException(op.getArgSize() + " parameters are required, but " + args.length + " is passed in");
+            }
+            Stream.of(args).forEach(arg -> assertNotNull(current.name, arg));
+        }
+        return this.segment.apply(current.column, op, args);
+    }
+
+    private WHERE apply(boolean condition, SqlOp op, Object... args) {
+        return condition ? this.apply(op, args) : segment;
     }
 
     /**
@@ -32,7 +53,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE isNull() {
-        return this.segment.apply(current.column, IS_NULL);
+        return this.apply(IS_NULL);
     }
 
     /**
@@ -42,7 +63,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE isNull(boolean condition) {
-        return condition ? this.isNull() : segment;
+        return this.apply(condition, IS_NULL);
     }
 
     /**
@@ -51,7 +72,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE isNotNull() {
-        return this.segment.apply(current.column, IS_NOT_NULL);
+        return this.apply(IS_NOT_NULL);
     }
 
     /**
@@ -61,21 +82,10 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE isNotNull(boolean condition) {
-        return condition ? this.isNotNull() : segment;
+        return this.apply(condition, IS_NOT_NULL);
     }
 
     // eq
-
-    /**
-     * 等于 =
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE eq(Object value) {
-        assertNotNull(current.name, value);
-        return this.segment.apply(current.column, EQ, value);
-    }
 
     /**
      * 等于 =
@@ -85,9 +95,8 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE eq(boolean condition, Object value) {
-        return condition ? this.eq(value) : segment;
+        return this.apply(condition, EQ, value);
     }
-
 
     /**
      * 等于 =, 值不为空时成立
@@ -96,21 +105,10 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE eq_IfNotNull(Object value) {
-        return this.eq(value != null, value);
+        return this.apply(value != null, EQ, value);
     }
 
     // ne
-
-    /**
-     * 不等于 !=
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE ne(Object value) {
-        assertNotNull(current.name, value);
-        return this.segment.apply(current.column, NE, value);
-    }
 
     /**
      * 不等于 !=
@@ -120,7 +118,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE ne(boolean condition, Object value) {
-        return condition ? this.ne(value) : segment;
+        return this.apply(condition, NE, value);
     }
 
 
@@ -131,22 +129,11 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE ne_IfNotNull(Object value) {
-        return this.ne(value != null, value);
+        return this.apply(value != null, NE, value);
     }
 
 
     //gt
-
-    /**
-     * 大于
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE gt(Object value) {
-        assertNotNull(current.name, value);
-        return this.segment.apply(current.column, GT, value);
-    }
 
     /**
      * 大于
@@ -156,7 +143,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE gt(boolean condition, Object value) {
-        return condition ? this.gt(value) : segment;
+        return this.apply(condition, GT, value);
     }
 
     /**
@@ -166,21 +153,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE gt_IfNotNull(Object value) {
-        return this.gt(value != null, value);
-    }
-
-
-    //ge
-
-    /**
-     * 大于等于
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE ge(Object value) {
-        assertNotNull(current.name, value);
-        return this.segment.apply(current.column, GE, value);
+        return this.apply(value != null, GT, value);
     }
 
     /**
@@ -191,9 +164,8 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE ge(boolean condition, Object value) {
-        return condition ? this.ge(value) : segment;
+        return this.apply(condition, GE, value);
     }
-
 
     /**
      * 大于等于
@@ -202,21 +174,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE ge_IfNotNull(Object value) {
-        return this.ge(value != null, value);
-    }
-
-
-    //lt
-
-    /**
-     * 小于
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE lt(Object value) {
-        assertNotNull(current.name, value);
-        return this.segment.apply(current.column, LT, value);
+        return this.apply(value != null, GE, value);
     }
 
     /**
@@ -227,9 +185,8 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE lt(boolean condition, Object value) {
-        return condition ? this.lt(value) : segment;
+        return this.apply(condition, LT, value);
     }
-
 
     /**
      * 小于
@@ -238,21 +195,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE lt_IfNotNull(Object value) {
-        return this.lt(value != null, value);
-    }
-
-
-    //le
-
-    /**
-     * 小于等于
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE le(Object value) {
-        assertNotNull(current.name, value);
-        return this.segment.apply(current.column, LE, value);
+        return this.apply(value != null, LT, value);
     }
 
     /**
@@ -263,9 +206,8 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE le(boolean condition, Object value) {
-        return condition ? this.le(value) : segment;
+        return this.apply(condition, LE, value);
     }
-
 
     /**
      * 小于等于
@@ -274,19 +216,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE le_IfNotNull(Object value) {
-        return this.le(value != null, value);
-    }
-
-
-    //in
-
-    /**
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in(Collection<Object> values) {
-        assertNotEmpty(current.name, values);
-        return this.segment.apply(current.column, IN, values.toArray());
+        return this.apply(value != null, LE, value);
     }
 
     /**
@@ -295,9 +225,12 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE in(boolean condition, Collection<Object> values) {
-        return condition ? this.in(values) : segment;
+        if (condition) {
+            return this.apply(IN, values.toArray());
+        } else {
+            return this.segment;
+        }
     }
-
 
     /**
      * @param values 条件值
@@ -305,18 +238,6 @@ public class WhereApply<
      */
     public WHERE in_IfNotEmpty(Collection<Object> values) {
         return this.in(values != null && !values.isEmpty(), values);
-    }
-
-
-    /**
-     * in (values)
-     *
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in(Object[] values) {
-        assertNotEmpty(current.name, values);
-        return this.segment.apply(current.column, IN, values);
     }
 
     /**
@@ -327,8 +248,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE in(boolean condition, Object[] values) {
-        return condition ?
-            this.in(values) : segment;
+        return this.apply(condition, IN, values);
     }
 
     /**
@@ -376,19 +296,6 @@ public class WhereApply<
         return this.in(values != null && values.length > 0, values);
     }
 
-    //not in
-
-    /**
-     * not in (values)
-     *
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notIn(Collection<Object> values) {
-        assertNotEmpty(current.name, values);
-        return this.segment.apply(current.column, NOT_IN, values.toArray());
-    }
-
     /**
      * not in (values)
      *
@@ -400,7 +307,6 @@ public class WhereApply<
         return condition ? this.notIn(values) : segment;
     }
 
-
     /**
      * not in (values)
      *
@@ -410,18 +316,7 @@ public class WhereApply<
     public WHERE notIn_IfNotEmpty(Collection<Object> values) {
         return this.notIn(values != null && !values.isEmpty(), values);
     }
-
-    /**
-     * not in (values)
-     *
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notIn(Object[] values) {
-        assertNotEmpty(current.name, values);
-        return this.segment.apply(current.column, NOT_IN, values);
-    }
-
+    
     /**
      * not in (values)
      *
@@ -430,7 +325,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE notIn(boolean condition, Object[] values) {
-        return condition ? this.notIn(values) : segment;
+        return this.apply(condition, NOT_IN, values);
     }
 
     /**
@@ -466,17 +361,6 @@ public class WhereApply<
         query.apply(nested);
         return this.segment.apply(current.column, nested.getWrapperData().getQuerySql(), NOT_IN);
     }
-    //between
-
-    /**
-     * @param value1 条件值
-     * @param value2 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE between(Object value1, Object value2) {
-        assertNotNull(current.name, value1, value2);
-        return this.segment.apply(current.column, BETWEEN, value1, value2);
-    }
 
     /**
      * @param condition 为真时成立
@@ -485,19 +369,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE between(boolean condition, Object value1, Object value2) {
-        return condition ? this.between(value1, value2) : segment;
-    }
-
-    //not between
-
-    /**
-     * @param value1 条件值
-     * @param value2 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notBetween(Object value1, Object value2) {
-        assertNotNull(current.name, value1, value2);
-        return this.segment.apply(current.column, NOT_BETWEEN, value1, value2);
+        return this.apply(condition, BETWEEN, value1, value2);
     }
 
     /**
@@ -507,10 +379,14 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public WHERE notBetween(boolean condition, Object value1, Object value2) {
-        return condition ? this.notBetween(value1, value2) : segment;
+        return this.apply(condition, NOT_BETWEEN, value1, value2);
     }
 
-    //////
+    /**
+     * ==================================================
+     *                   以下针对字符串操作
+     * ==================================================
+     */
 
     /**
      * eq_IfNotBlank
@@ -519,7 +395,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE eq_IfNotBlank(String value) {
-        return this.eq(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), EQ, value);
     }
 
     /**
@@ -529,7 +405,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE ne_IfNotBlank(String value) {
-        return this.ne(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), NE, value);
     }
 
     /**
@@ -539,7 +415,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE gt_IfNotBlank(String value) {
-        return this.gt(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), GT, value);
     }
 
     /**
@@ -549,7 +425,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE ge_IfNotBlank(String value) {
-        return this.ge(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), GE, value);
     }
 
     /**
@@ -559,7 +435,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE lt_IfNotBlank(String value) {
-        return this.lt(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), LT, value);
     }
 
     /**
@@ -569,10 +445,8 @@ public class WhereApply<
      * @return self
      */
     public WHERE le_IfNotBlank(String value) {
-        return this.le(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), LE, value);
     }
-
-    //like
 
     /**
      * like '%value%'
@@ -581,8 +455,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE like(String value) {
-        assertNotBlank(current.name, value);
-        return this.segment.apply(current.column, LIKE, SqlLike.like(value));
+        return this.apply(LIKE, SqlLike.like(value));
     }
 
     /**
@@ -593,9 +466,8 @@ public class WhereApply<
      * @return self
      */
     public WHERE like(boolean condition, String value) {
-        return condition ? this.like(value) : segment;
+        return this.apply(condition, LIKE, SqlLike.like(value));
     }
-
 
     /**
      * value不为空时, 执行 like '%value%'
@@ -604,10 +476,8 @@ public class WhereApply<
      * @return self
      */
     public WHERE like_IfNotBlank(String value) {
-        return this.like(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), LIKE, SqlLike.like(value));
     }
-
-    //not like
 
     /**
      * not like '%value%'
@@ -616,8 +486,7 @@ public class WhereApply<
      * @return self
      */
     public WHERE notLike(String value) {
-        assertNotBlank(current.name, value);
-        return this.segment.apply(current.column, NOT_LIKE, SqlLike.like(value));
+        return this.apply(NOT_LIKE, SqlLike.like(value));
     }
 
     /**
@@ -628,62 +497,80 @@ public class WhereApply<
      * @return self
      */
     public WHERE notLike(boolean condition, String value) {
-        return condition ? this.notLike(value) : segment;
+        return this.apply(condition, NOT_LIKE, SqlLike.like(value));
     }
 
     /**
      * not like '%value%'
      *
      * @param value 条件值
-     * @return self
+     * @return where
      */
     public WHERE notLike_IfNotBlank(String value) {
-        return this.notLike(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), NOT_LIKE, SqlLike.like(value));
     }
-
-    //like left
 
     /**
      * like '%value'
      *
-     * @param value
-     * @return
+     * @param value left like value
+     * @return where
      */
     public WHERE likeLeft(String value) {
-        assertNotBlank(current.name, value);
-        return this.segment.apply(current.column, LIKE, SqlLike.left(value));
+        return this.apply(LIKE, SqlLike.left(value));
     }
 
+    /**
+     * like '%value'
+     *
+     * @param condition 执行条件
+     * @param value     left like value
+     * @return where
+     */
     public WHERE likeLeft(boolean condition, String value) {
-        return condition ? this.likeLeft(value) : segment;
+        return this.apply(condition, LIKE, SqlLike.left(value));
     }
 
-
+    /**
+     * like '%value'
+     *
+     * @param value left like value
+     * @return where
+     */
     public WHERE likeLeft_IfNotBlank(String value) {
-        return this.likeLeft(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), LIKE, SqlLike.left(value));
     }
-
-    //like right
 
     /**
      * like 'value%'
      *
-     * @param value
-     * @return
+     * @param value right like value
+     * @return where
      */
     public WHERE likeRight(String value) {
-        assertNotBlank(current.name, value);
-        return this.segment.apply(current.column, LIKE, SqlLike.right(value));
+        return this.apply(LIKE, SqlLike.right(value));
     }
 
+    /**
+     * like 'value%'
+     *
+     * @param condition 执行条件
+     * @param value     right like value
+     * @return where
+     */
     public WHERE likeRight(boolean condition, String value) {
-        return condition ? this.likeRight(value) : segment;
+        return this.apply(condition, LIKE, SqlLike.right(value));
     }
 
+    /**
+     * like 'value%'
+     *
+     * @param value right like value
+     * @return where
+     */
     public WHERE likeRight_IfNotBlank(String value) {
-        return this.likeRight(isNotEmpty(value), value);
+        return this.apply(isNotBlank(value), LIKE, SqlLike.right(value));
     }
-    //////////
 
     /**
      * set 自定义

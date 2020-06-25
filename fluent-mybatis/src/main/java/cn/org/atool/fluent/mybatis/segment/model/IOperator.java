@@ -6,16 +6,23 @@ import java.util.Collection;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_BETWEEN;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 
 /**
  * 比较操作
  *
- * @param <R> 
+ * @param <R>
  * @author wudarui
  */
 public interface IOperator<R> {
+    /**
+     * 执行比较操作
+     *
+     * @param op
+     * @param args
+     * @return
+     */
     R apply(SqlOp op, Object... args);
-    // eq
 
     /**
      * 等于 =
@@ -27,8 +34,6 @@ public interface IOperator<R> {
         return this.apply(EQ, value);
     }
 
-    // ne
-
     /**
      * 不等于 !=
      *
@@ -38,9 +43,6 @@ public interface IOperator<R> {
     default R ne(Object value) {
         return this.apply(NE, value);
     }
-
-
-    //gt
 
     /**
      * 大于
@@ -52,8 +54,6 @@ public interface IOperator<R> {
         return this.apply(GT, value);
     }
 
-    //ge
-
     /**
      * 大于等于
      *
@@ -63,9 +63,6 @@ public interface IOperator<R> {
     default R ge(Object value) {
         return this.apply(GE, value);
     }
-
-
-    //lt
 
     /**
      * 小于
@@ -77,8 +74,6 @@ public interface IOperator<R> {
         return this.apply(LT, value);
     }
 
-    //le
-
     /**
      * 小于等于
      *
@@ -89,9 +84,6 @@ public interface IOperator<R> {
         return this.apply(LE, value);
     }
 
-
-    //in
-
     /**
      * @param values 条件值
      * @return 查询器或更新器
@@ -99,7 +91,6 @@ public interface IOperator<R> {
     default R in(Collection<Object> values) {
         return this.apply(IN, values.toArray());
     }
-
 
     /**
      * in (values)
@@ -111,8 +102,6 @@ public interface IOperator<R> {
         return this.apply(IN, values);
     }
 
-    //not in
-
     /**
      * not in (values)
      *
@@ -123,7 +112,15 @@ public interface IOperator<R> {
         return this.apply(NOT_IN, values.toArray());
     }
 
-    //between
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R notIn(Object... values) {
+        return this.apply(NOT_IN, values);
+    }
 
     /**
      * @param value1 条件值
@@ -133,9 +130,6 @@ public interface IOperator<R> {
     default R between(Object value1, Object value2) {
         return this.apply(BETWEEN, value1, value2);
     }
-
-
-    //not between
 
     /**
      * @param value1 条件值
