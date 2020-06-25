@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.tutorial.dao.base;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.tutorial.entity.ReceivingAddressEntity;
 import cn.org.atool.fluent.mybatis.tutorial.mapper.ReceivingAddressMapper;
-import cn.org.atool.fluent.mybatis.tutorial.mapping.ReceivingAddressMP;
-import cn.org.atool.fluent.mybatis.tutorial.query.ReceivingAddressQuery;
-import cn.org.atool.fluent.mybatis.tutorial.query.ReceivingAddressUpdate;
+import cn.org.atool.fluent.mybatis.tutorial.helper.ReceivingAddressMapping;
+import cn.org.atool.fluent.mybatis.tutorial.wrapper.ReceivingAddressQuery;
+import cn.org.atool.fluent.mybatis.tutorial.wrapper.ReceivingAddressUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author generate code
 */
 public abstract class ReceivingAddressBaseDao extends BaseDaoImpl<ReceivingAddressEntity, ReceivingAddressQuery, ReceivingAddressUpdate>
-        implements ReceivingAddressMP {
+        implements ReceivingAddressMapping {
 
     @Autowired
     protected ReceivingAddressMapper mapper;
@@ -37,6 +37,6 @@ public abstract class ReceivingAddressBaseDao extends BaseDaoImpl<ReceivingAddre
 
     @Override
     public String findPkColumn() {
-        return ReceivingAddressMP.id.column;
+        return ReceivingAddressMapping.id.column;
     }
 }

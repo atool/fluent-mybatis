@@ -7,9 +7,9 @@ import cn.org.atool.fluent.mybatis.generator.template.helper.EntityHelperTemplat
 import cn.org.atool.fluent.mybatis.generator.template.entity.EntityTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.mapper.MapperTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.mapper.SharingTemplate;
-import cn.org.atool.fluent.mybatis.generator.template.mapping.MappingTemplate;
-import cn.org.atool.fluent.mybatis.generator.template.query.EntityQueryTemplate;
-import cn.org.atool.fluent.mybatis.generator.template.query.EntityUpdateTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.helper.MappingTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.wrapper.EntityQueryTemplate;
+import cn.org.atool.fluent.mybatis.generator.template.wrapper.EntityUpdateTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.helper.EntityWrapperHelperTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.test4j.generator.mybatis.DataMapGenerator;

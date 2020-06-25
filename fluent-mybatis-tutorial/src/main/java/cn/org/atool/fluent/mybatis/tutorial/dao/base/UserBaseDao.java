@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.tutorial.dao.base;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.tutorial.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.tutorial.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.tutorial.mapping.UserMP;
-import cn.org.atool.fluent.mybatis.tutorial.query.UserQuery;
-import cn.org.atool.fluent.mybatis.tutorial.query.UserUpdate;
+import cn.org.atool.fluent.mybatis.tutorial.helper.UserMapping;
+import cn.org.atool.fluent.mybatis.tutorial.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.tutorial.wrapper.UserUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author generate code
 */
 public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, UserUpdate>
-        implements UserMP {
+        implements UserMapping {
 
     @Autowired
     protected UserMapper mapper;
@@ -37,6 +37,6 @@ public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, Use
 
     @Override
     public String findPkColumn() {
-        return UserMP.id.column;
+        return UserMapping.id.column;
     }
 }

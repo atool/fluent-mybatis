@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.generator.template.query;
+package cn.org.atool.fluent.mybatis.generator.template.wrapper;
 
 import org.test4j.generator.mybatis.config.impl.TableInfoSet;
 import org.test4j.generator.mybatis.template.BaseTemplate;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EntityUpdateTemplate extends BaseTemplate {
     public EntityUpdateTemplate() {
-        super("templates/query/EntityUpdate.java.vm", "query/*Update.java");
+        super("templates/wrapper/EntityUpdate.java.vm", "wrapper/*Update.java");
     }
 
     @Override

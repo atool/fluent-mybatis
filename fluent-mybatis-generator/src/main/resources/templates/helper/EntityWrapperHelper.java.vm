@@ -3,6 +3,8 @@ package ${wrapperHelper.package};
 import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
 import cn.org.atool.fluent.mybatis.segment.*;
 import ${mapping.package}.${mapping.name};
+import ${entityQuery.package}.${entityQuery.name};
+import ${entityUpdate.package}.${entityUpdate.name};
 
 /**
  * <p>
@@ -28,7 +30,7 @@ public class ${wrapperHelper.name} {
     public static final class Selector extends SelectorBase<Selector, ${entityQuery.name}>
         implements ISegment<SelectorApply<Selector, ${entityQuery.name}>> {
 
-        Selector(${entityQuery.name} query) {
+        public Selector(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -39,7 +41,7 @@ public class ${wrapperHelper.name} {
     public static class QueryWhere extends WhereBase<QueryWhere, ${entityQuery.name}, ${entityQuery.name}>
         implements ISegment<WhereApply<QueryWhere, ${entityQuery.name}>> {
 
-        QueryWhere(${entityQuery.name} query) {
+        public QueryWhere(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -50,7 +52,7 @@ public class ${wrapperHelper.name} {
     public static class UpdateWhere extends WhereBase<UpdateWhere, ${entityUpdate.name}, ${entityQuery.name}>
         implements ISegment<WhereApply<UpdateWhere, ${entityQuery.name}>> {
 
-        UpdateWhere(${entityUpdate.name} update) {
+        public UpdateWhere(${entityUpdate.name} update) {
             super(update);
         }
     }
@@ -61,7 +63,7 @@ public class ${wrapperHelper.name} {
     public static final class GroupBy extends GroupByBase<GroupBy, ${entityQuery.name}>
         implements ISegment<GroupBy> {
 
-        GroupBy(${entityQuery.name} query) {
+        public GroupBy(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -72,7 +74,7 @@ public class ${wrapperHelper.name} {
     public static final class Having extends HavingBase<Having, ${entityQuery.name}>
         implements ISegment<HavingApply<Having, ${entityQuery.name}>> {
 
-        Having(${entityQuery.name} query) {
+        public Having(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -83,7 +85,7 @@ public class ${wrapperHelper.name} {
     public static final class OrderBy extends OrderByBase<OrderBy, ${entityQuery.name}>
         implements ISegment<OrderBy> {
 
-        OrderBy(${entityQuery.name} query) {
+        public OrderBy(${entityQuery.name} query) {
             super(query);
         }
     }
@@ -94,7 +96,7 @@ public class ${wrapperHelper.name} {
     public static final class UpdateSetter extends UpdateBase<UpdateSetter, ${entityUpdate.name}>
         implements ISegment<UpdateApply<UpdateSetter, ${entityUpdate.name}>> {
 
-        UpdateSetter(${entityUpdate.name} update) {
+        public UpdateSetter(${entityUpdate.name} update) {
             super(update);
         }
     }

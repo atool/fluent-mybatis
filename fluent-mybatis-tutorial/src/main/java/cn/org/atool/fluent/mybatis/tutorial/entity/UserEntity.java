@@ -94,11 +94,13 @@ public class UserEntity implements IEntity{
         return id;
     }
 
-    /**
-     * 将实体对象转换为map
-     */
     @Override
     public Map<String, Object> toMap() {
         return UserEntityHelper.map(this);
+    }
+
+    @Override
+    public Map<String, Object> columnMap() {
+        return UserEntityHelper.columnMap(this);
     }
 }

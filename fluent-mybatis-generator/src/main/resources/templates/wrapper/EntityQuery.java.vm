@@ -50,7 +50,7 @@ public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery
 #if(${primaryColumnName})
         return this.select(${mapping.name}.${primaryFieldName}.column);
 #else
-        throw new FluentMybatisException("The primary key of in table[" + NoPrimaryMP.Table_Name + "] was not found.");
+        throw new FluentMybatisException("The primary key of in table[" + ${mapping.name}.Table_Name + "] was not found.");
 #end
     }
 

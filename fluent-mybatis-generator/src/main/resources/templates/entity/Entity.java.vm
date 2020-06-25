@@ -43,11 +43,13 @@ public class ${entity.name} implements IEntity$!{entity.interfaceName}{
         return ${entity.primaryKey};
     }
 
-    /**
-     * 将实体对象转换为map
-     */
     @Override
     public Map<String, Object> toMap() {
         return ${entityHelper.name}.map(this);
+    }
+
+    @Override
+    public Map<String, Object> columnMap() {
+        return ${entityHelper.name}.columnMap(this);
     }
 }

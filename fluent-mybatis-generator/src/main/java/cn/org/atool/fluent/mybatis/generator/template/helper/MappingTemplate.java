@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.generator.template.mapping;
+package cn.org.atool.fluent.mybatis.generator.template.helper;
 
 import org.test4j.generator.mybatis.config.impl.TableInfoSet;
 import org.test4j.generator.mybatis.template.BaseTemplate;
@@ -9,7 +9,7 @@ import static org.test4j.generator.mybatis.config.constant.ConfigKey.KEY_MAPPING
 
 public class MappingTemplate extends BaseTemplate {
     public MappingTemplate() {
-        super("templates/mapping/TableMapping.java.vm", "mapping/*MP.java");
+        super("templates/helper/TableMapping.java.vm", "helper/*Mapping.java");
     }
 
     @Override

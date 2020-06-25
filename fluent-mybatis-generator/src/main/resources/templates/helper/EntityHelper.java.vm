@@ -37,7 +37,7 @@ public class ${entityHelper.name} {
      * @param entity
      * @return
      */
-    public static Map<String, Object> column(${entity.name} entity){
+    public static Map<String, Object> columnMap(${entity.name} entity){
         Map<String, Object> map = new HashMap<>();
         #foreach($field in ${fields})
         if (entity.get${field.capitalName}() != null) {
