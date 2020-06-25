@@ -1,12 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
-import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
-import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 
 /**
@@ -21,6 +20,8 @@ public abstract class HavingBase<
     >
     extends BaseSegment<HavingApply<H, Q>, Q> {
 
+    private final HavingOperator<H> operator = new HavingOperator<>((H) this);
+
     private final HavingApply<H, Q> apply = new HavingApply<>((H) this);
 
     protected HavingBase(Q query) {
@@ -30,28 +31,35 @@ public abstract class HavingBase<
     /**
      * 设置having条件
      *
-     * @param function having函数
-     * @param op       比较操作
-     * @param args     参数列表
+     * @param aggregate having 聚合函数
+     * @param op        比较操作
+     * @param args      参数列表
      * @return Having设置器
      */
-    public H apply(String function, SqlOp op, Object... args) {
-        this.wrapper.getWrapperData().apply(KeyWordSegment.HAVING, function, op, args);
+    H aggregate(String aggregate, SqlOp op, Object... args) {
+        this.wrapper.getWrapperData().apply(HAVING, aggregate, op, args);
         return (H) this;
     }
 
     /**
-     * HAVING ( sql语句 )
-     * <p>例1: having("sum(age) &gt; 10")</p>
-     * <p>例2: having("sum(age) &gt; ?", 10)</p>
+     * 执行聚合操作
      *
-     * @param function having sql 语句
-     * @param args     函数参数列表
-     * @return Having设置器
+     * @param column    聚合字段
+     * @param aggregate 聚合函数
+     * @return Having条件判断
      */
-    public H apply(String function, Object... args) {
-        this.wrapper.getWrapperData().apply(HAVING, EMPTY, this.wrapper.getWrapperData().paramSql(function, args), RETAIN);
-        return (H) this;
+    HavingOperator<H> apply(String column, IAggregate aggregate) {
+        return this.operator.aggregate(column, aggregate);
+    }
+
+    /**
+     * 执行聚合操作
+     *
+     * @param aggregate 聚合操作, 比如 sum(column)
+     * @return Having条件判断
+     */
+    public HavingOperator<H> apply(String aggregate) {
+        return this.operator.aggregate(null, (c) -> aggregate);
     }
 
     @Override

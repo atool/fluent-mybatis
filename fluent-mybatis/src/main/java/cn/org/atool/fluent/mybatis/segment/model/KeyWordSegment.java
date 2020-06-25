@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.segment.ISqlSegment;
 import lombok.Getter;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;

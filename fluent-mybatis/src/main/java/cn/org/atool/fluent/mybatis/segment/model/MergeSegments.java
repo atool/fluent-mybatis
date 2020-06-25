@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.segment.ISqlSegment;
 import cn.org.atool.fluent.mybatis.segment.*;
 import lombok.AccessLevel;
 import lombok.Setter;

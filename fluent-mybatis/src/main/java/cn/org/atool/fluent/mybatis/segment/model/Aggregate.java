@@ -1,4 +1,6 @@
-package cn.org.atool.fluent.mybatis.segment;
+package cn.org.atool.fluent.mybatis.segment.model;
+
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
@@ -7,7 +9,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
  *
  * @author wudarui
  */
-public enum IAggregate {
+public enum Aggregate implements IAggregate {
     /**
      * 求总和
      */
@@ -35,19 +37,19 @@ public enum IAggregate {
 
     private String expression;
 
-    IAggregate(String expression) {
+    Aggregate(String expression) {
         this.expression = expression;
     }
 
-    public String expression(String column) {
+    public String aggregate(String column) {
         return String.format(expression, column);
     }
 
-    public String expression(String column, String alias) {
+    public String aggregate(String column, String alias) {
         if (isNotEmpty(alias)) {
-            return expression(column) + " AS " + alias;
+            return aggregate(column) + " AS " + alias;
         } else {
-            return expression(column);
+            return aggregate(column);
         }
     }
 }

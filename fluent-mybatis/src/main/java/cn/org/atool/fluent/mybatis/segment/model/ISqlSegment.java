@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.segment;
+package cn.org.atool.fluent.mybatis.segment.model;
 
 
 import java.io.Serializable;

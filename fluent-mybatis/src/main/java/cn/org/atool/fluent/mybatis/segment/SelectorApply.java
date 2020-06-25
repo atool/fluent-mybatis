@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
 
-import static cn.org.atool.fluent.mybatis.segment.IAggregate.*;
+import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
 
 /**
  * ColumnSelector: 字段查询
@@ -56,7 +56,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S sum(String alias) {
-        return this.segment.apply(SUM.expression(this.current.column, alias));
+        return this.segment.apply(SUM.aggregate(this.current.column, alias));
     }
 
     /**
@@ -75,7 +75,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S count(String alias) {
-        return this.segment.apply(COUNT.expression(this.current.column, alias));
+        return this.segment.apply(COUNT.aggregate(this.current.column, alias));
     }
 
 
@@ -95,7 +95,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S max(String alias) {
-        return this.segment.apply(MAX.expression(this.current.column, alias));
+        return this.segment.apply(MAX.aggregate(this.current.column, alias));
     }
 
     /**
@@ -114,7 +114,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S min(String alias) {
-        return this.segment.apply(MIN.expression(this.current.column, alias));
+        return this.segment.apply(MIN.aggregate(this.current.column, alias));
     }
 
     /**
@@ -133,7 +133,7 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S avg(String alias) {
-        return this.segment.apply(AVG.expression(this.current.column, alias));
+        return this.segment.apply(AVG.aggregate(this.current.column, alias));
     }
 
     /**
@@ -152,6 +152,6 @@ public class SelectorApply<
      * @return 返回字段选择器
      */
     public S group_concat(String alias) {
-        return this.segment.apply(GROUP_CONCAT.expression(this.current.column, alias));
+        return this.segment.apply(GROUP_CONCAT.aggregate(this.current.column, alias));
     }
 }

@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
 
 /**
  * HavingBy 设置
@@ -18,34 +18,18 @@ public class HavingApply<
     Q extends IQuery<?, Q>
     > extends BaseApply<H, Q> {
 
-    private HavingOperator operator = new HavingOperator();
-
-    public class HavingOperator implements IOperator<H> {
-        /**
-         * 表达式
-         */
-        private String expression;
-
-        @Override
-        public H apply(SqlOp op, Object... args) {
-            assertNotBlank("expression", expression);
-            return segment.apply(expression, op, args);
-        }
-
-        /**
-         * 设置聚合函数表达式
-         *
-         * @param aggregate 聚合函数
-         * @return 操作器
-         */
-        HavingOperator expression(IAggregate aggregate) {
-            this.expression = aggregate.expression(current.column);
-            return this;
-        }
-    }
-
     public HavingApply(H having) {
         super(having);
+    }
+
+    /**
+     * 进行聚合操作
+     *
+     * @param aggregate 具体聚合操作
+     * @return 返回比较操作
+     */
+    public HavingOperator<H> apply(IAggregate aggregate) {
+        return this.segment.apply(current.column, aggregate);
     }
 
     /**
@@ -53,8 +37,8 @@ public class HavingApply<
      *
      * @return 返回比较操作
      */
-    public HavingOperator sum() {
-        return this.operator.expression(IAggregate.SUM);
+    public HavingOperator<H> sum() {
+        return this.apply(SUM);
     }
 
     /**
@@ -62,8 +46,8 @@ public class HavingApply<
      *
      * @return 返回比较操作
      */
-    public HavingOperator count() {
-        return this.operator.expression(IAggregate.COUNT);
+    public HavingOperator<H> count() {
+        return this.apply(COUNT);
     }
 
     /**
@@ -71,8 +55,8 @@ public class HavingApply<
      *
      * @return 返回比较操作
      */
-    public HavingOperator max() {
-        return this.operator.expression(IAggregate.MAX);
+    public HavingOperator<H> max() {
+        return this.apply(MAX);
     }
 
     /**
@@ -80,8 +64,8 @@ public class HavingApply<
      *
      * @return 返回比较操作
      */
-    public HavingOperator min() {
-        return this.operator.expression(IAggregate.MIN);
+    public HavingOperator<H> min() {
+        return this.apply(MIN);
     }
 
     /**
@@ -89,7 +73,7 @@ public class HavingApply<
      *
      * @return 返回字段选择器
      */
-    public HavingOperator avg() {
-        return this.operator.expression(IAggregate.AVG);
+    public HavingOperator<H> avg() {
+        return this.apply(AVG);
     }
 }

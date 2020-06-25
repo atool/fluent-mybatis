@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
+
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA_SPACE;
 

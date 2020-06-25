@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -31,8 +30,8 @@ public class HavingTest extends BaseTest {
             .id().count().gt(2)
             .age().avg().in(2, 3)
             .age().min().gt(10)
+            .apply("avg").gt(10)
             .age().max().lt(20)
-            .apply("avg > ?", 10)
             .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
@@ -42,7 +41,27 @@ public class HavingTest extends BaseTest {
                 "AND COUNT(id) > ? " +
                 "AND AVG(age) IN (?, ?) " +
                 "AND MIN(age) > ? " +
-                "AND MAX(age) < ? " +
-                "AND avg > ?");
+                "AND avg > ? " +
+                "AND MAX(age) < ?");
+    }
+
+    @Test
+    public void test_groupBy_having2() throws Exception {
+        UserQuery query = new UserQuery()
+            .select(by -> by
+                .id().get()
+                .age().sum("avg"))
+            .where.id().eq(24L).end()
+            .groupBy.id()
+            .end()
+            .having
+            .age().max().lt(20)
+            .age().apply(c -> String.format("SUM(%s)", c)).lt(20)
+            .end();
+        mapper.selectList(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT id, SUM(age) AS avg FROM t_user WHERE id = ? " +
+                "GROUP BY id " +
+                "HAVING MAX(age) < ? AND SUM(age) < ?");
     }
 }

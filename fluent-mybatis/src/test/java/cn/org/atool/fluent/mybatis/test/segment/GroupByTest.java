@@ -39,11 +39,13 @@ public class GroupByTest extends BaseTest {
             .groupBy
             .userName().age().end()
             .having
-            .apply("count(1)", GT, 2)
-            .apply("sum(1) > ?", 3)
+            .apply("count(1)").gt(10)
+            .apply("sum(age)").gt(3)
             .end();
         mapper.selectList(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT count(1), sum(1) FROM t_user WHERE id = ? GROUP BY user_name, age HAVING count(1) > ? AND sum(1) > ?");
+            .eq("SELECT count(1), sum(1) FROM t_user " +
+                "WHERE id = ? GROUP BY user_name, age " +
+                "HAVING count(1) > ? AND sum(age) > ?");
     }
 }
