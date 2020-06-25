@@ -1,4 +1,4 @@
-package cn.org.github.fluent.mybatis.tutorial;
+package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.generator.MybatisGenerator;
 import org.test4j.generator.mybatis.db.ColumnJavaType;
