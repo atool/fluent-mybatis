@@ -213,4 +213,47 @@ public class SpringMainDemo {
 ```
 第一个例子运行成功
 
-[具体示例](https://github.com/atool/fluent-mybatis-tutorial/tree/master/03-hello-world)
+#### 换种姿势验证，使用test4j进行测试
+首先配置test4j.properties文件
+
+```properties
+db.dataSource.list=dataSource
+db.dataSource.script.factory=cn.org.atool.fluent.mybatis.tutorial.DataSourceScript
+db.dataSource.type=mysql
+db.dataSource.driver=com.mysql.jdbc.Driver
+db.dataSource.url=jdbc:mysql://localhost:3306/fluent_mybatis_tutorial?characterEncoding=utf8
+db.dataSource.userName=root
+db.dataSource.password=password
+db.dataSource.schemaName=fluent_mybatis_tutorial
+```
+
+编写测试代码
+```java
+@ContextConfiguration(classes = {DataSourceConfig.class})
+public class QuickStartTest extends Test4J {
+    @Autowired
+    private UserDao userDao;
+
+    @Test
+    void test_quick_start() {
+        db.table(t_user).clean();
+        /**
+         * 插入一条记录
+         */
+        userDao.save(new UserEntity().setId(1L).setAccount("account"));
+        /**
+         * 获取刚插入的记录
+         */
+        UserEntity user = userDao.selectById(1L);
+        /**
+         * 对查询结果进行验证
+         */
+        want.object(user).eqDataMap(EM.user.create(1)
+            .id.values(1)
+            .account.values("account"));
+    }
+}
+```
+执行通过, 完美通关
+
+[具体代码](https://github.com/atool/fluent-mybatis-tutorial/tree/master/03-hello-world)
