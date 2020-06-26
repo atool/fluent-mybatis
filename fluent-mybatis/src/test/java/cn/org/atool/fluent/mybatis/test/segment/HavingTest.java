@@ -33,7 +33,7 @@ public class HavingTest extends BaseTest {
             .apply("avg").gt(10)
             .age().max().lt(20)
             .end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age) AS avg FROM t_user WHERE id = ? " +
                 "GROUP BY id " +
@@ -58,7 +58,7 @@ public class HavingTest extends BaseTest {
             .age().max().lt(20)
             .age().apply(c -> String.format("SUM(%s)", c)).lt(20)
             .end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age) AS avg FROM t_user WHERE id = ? " +
                 "GROUP BY id " +

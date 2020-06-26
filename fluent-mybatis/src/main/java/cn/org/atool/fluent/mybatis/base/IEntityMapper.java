@@ -86,23 +86,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param id 主键ID
      * @return
      */
-    T selectById(Serializable id);
-
-    /**
-     * 查询（根据ID 批量查询）
-     *
-     * @param idList 主键ID列表(不能为 null 以及 empty)
-     * @return
-     */
-    List<T> selectByIds(@Param(COLLECTION) Collection<? extends Serializable> idList);
-
-    /**
-     * 查询（根据 columnMap 条件）
-     *
-     * @param columnMap 表字段 map 对象
-     * @return
-     */
-    List<T> selectByMap(@Param(COLUMN_MAP) Map<String, Object> columnMap);
+    T findById(Serializable id);
 
     /**
      * 根据 query 条件，查询一条记录
@@ -110,31 +94,23 @@ public interface IEntityMapper<T> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    T selectOne(@Param(WRAPPER) IQuery query);
+    T findOne(@Param(WRAPPER) IQuery query);
 
     /**
-     * 根据 query 条件，查询总记录数
+     * 查询（根据ID 批量查询）
      *
-     * @param query 实体对象封装操作类（可以为 null）
+     * @param ids 主键ID列表(不能为 null 以及 empty)
      * @return
      */
-    Integer selectCount(@Param(WRAPPER) IQuery query);
+    List<T> listByIds(@Param(COLLECTION) Collection ids);
 
     /**
-     * 根据 query 条件(如果有pageOffset, 去掉pageOffset限制部分)，查询总记录数
+     * 查询（根据 columnMap 条件）
      *
-     * @param query 实体对象封装操作类（可以为 null）
+     * @param columnMap 表字段 map 对象
      * @return
      */
-    Integer countNoLimit(@Param(WRAPPER) IQuery query);
-
-    /**
-     * 根据 query 条件，查询全部记录
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return
-     */
-    List<T> selectList(@Param(WRAPPER) IQuery query);
+    List<T> listByMap(@Param(COLUMN_MAP) Map<String, Object> columnMap);
 
     /**
      * 根据 query 条件，查询全部记录
@@ -142,7 +118,15 @@ public interface IEntityMapper<T> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    List<Map<String, Object>> selectMaps(@Param(WRAPPER) IQuery query);
+    List<T> listEntity(@Param(WRAPPER) IQuery query);
+
+    /**
+     * 根据 query 条件，查询全部记录
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return
+     */
+    List<Map<String, Object>> list(@Param(WRAPPER) IQuery query);
 
     /**
      * <p>
@@ -153,5 +137,21 @@ public interface IEntityMapper<T> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    <O> List<O> selectObjs(@Param(WRAPPER) IQuery query);
+    <O> List<O> listObjs(@Param(WRAPPER) IQuery query);
+
+    /**
+     * 根据 query 条件，查询总记录数
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return
+     */
+    Integer count(@Param(WRAPPER) IQuery query);
+
+    /**
+     * 根据 query 条件(如果有pageOffset, 去掉pageOffset限制部分)，查询总记录数
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return
+     */
+    Integer countNoLimit(@Param(WRAPPER) IQuery query);
 }

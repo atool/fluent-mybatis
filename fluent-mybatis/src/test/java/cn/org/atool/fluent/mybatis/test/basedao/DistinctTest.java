@@ -35,7 +35,7 @@ public class DistinctTest extends BaseTest {
             .select(UserMapping.userName)
             .where.age().eq(30).end();
 
-        List<UserEntity> users = mapper.selectList(query);
+        List<UserEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("SELECT DISTINCT user_name FROM t_user WHERE age = ?", StringMode.SameAsSpace);
         want.list(users).eqDataMap(EM.user.create(2)
             .userName.values("user1", "user2")

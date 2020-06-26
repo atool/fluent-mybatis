@@ -16,7 +16,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where
             .age().isNull()
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NULL");
     }
 
@@ -26,7 +26,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where
             .age().isNull(true)
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NULL");
     }
 
@@ -36,7 +36,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where
             .age().isNull(false)
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
     }
 
@@ -46,7 +46,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where
             .age().isNotNull()
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NOT NULL");
     }
 
@@ -56,7 +56,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where
             .age().isNotNull(true)
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NOT NULL");
     }
 
@@ -66,7 +66,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where
             .age().isNotNull(false)
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
     }
 }

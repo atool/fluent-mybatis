@@ -29,7 +29,7 @@ public class WhereTest_EqMap extends BaseTest {
                     this.put(UserMapping.userName.column, "user1");
                 }
             }).end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE user_name = ?");
     }
@@ -41,7 +41,7 @@ public class WhereTest_EqMap extends BaseTest {
             .where
             .eqByNotNull(new UserEntity().setUserName("u2"))
             .end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE user_name = ?");
     }

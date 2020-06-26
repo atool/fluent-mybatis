@@ -55,24 +55,24 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
 
     @Override
     public E selectById(Serializable id) {
-        return this.mapper().selectById(id);
+        return this.mapper().findById(id);
     }
 
     @Override
     public List<E> selectByIds(Collection<? extends Serializable> ids) {
-        return this.mapper().selectByIds(ids);
+        return this.mapper().listByIds(ids);
     }
 
     @Override
     public List<E> selectByMap(Map<String, Object> where) {
         IQuery query = (IQuery) this.query().where().eqByNotNull((Map) where).end();
-        return this.mapper().selectList(query);
+        return this.mapper().listEntity(query);
     }
 
     @Override
     public boolean existPk(Serializable id) {
         Q query = this.query().where().and(this.findPkColumn(), EQ, id).end();
-        Integer count = this.mapper().selectCount(query);
+        Integer count = this.mapper().count(query);
         return count != null && count > 0;
     }
 

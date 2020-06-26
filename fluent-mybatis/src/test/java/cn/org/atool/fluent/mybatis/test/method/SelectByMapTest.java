@@ -27,7 +27,7 @@ public class SelectByMapTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
 
-        List<UserEntity> users = mapper.selectByMap(new HashMap<String, Object>() {
+        List<UserEntity> users = mapper.listByMap(new HashMap<String, Object>() {
             {
                 this.put(UserMapping.userName.column, "u2");
             }

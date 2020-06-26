@@ -22,7 +22,7 @@ public class OrderByTest extends BaseTest {
             .selectId()
             .where.id().eq(24L).end()
             .orderBy.id().asc().age().desc().end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE id = ? ORDER BY id ASC, age DESC");
     }

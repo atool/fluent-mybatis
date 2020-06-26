@@ -43,7 +43,7 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
 
     @Override
     public int count(IQuery query) {
-        return this.mapper().selectCount(query);
+        return this.mapper().count(query);
     }
 
     @Override
@@ -53,7 +53,7 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
 
     @Override
     public <F> List<F> selectObjs(IQuery query, Function<Map<String, Object>, F> function) {
-        List<Map<String, Object>> list = this.mapper().selectMaps(query);
+        List<Map<String, Object>> list = this.mapper().list(query);
         if (function == null) {
             return (List<F>) list;
         } else {
@@ -68,13 +68,13 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
     @Override
     public <F> F selectOne(IQuery query, Function<E, F> function) {
         query.limit(1);
-        E obj = (E) this.mapper().selectOne(query);
+        E obj = (E) this.mapper().findOne(query);
         return obj == null ? null : (F) function.apply(obj);
     }
 
     @Override
     public <F> List<F> selectFields(IQuery query, Function<E, F> function) {
-        return this.mapper().selectList(query).stream()
+        return this.mapper().listEntity(query).stream()
             .map(function::apply)
             .collect(toList());
     }
@@ -82,13 +82,13 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
     @Override
     public E selectOne(IQuery query) {
         query.limit(1);
-        return (E) this.mapper().selectOne(query);
+        return (E) this.mapper().findOne(query);
     }
 
     @Override
     public PagedList<E> selectPagedList(IQuery query) {
         int total = this.mapper().countNoLimit(query);
-        List<E> list = this.mapper().selectList(query);
+        List<E> list = this.mapper().listEntity(query);
         return new PagedList<>(total, list);
     }
 
@@ -96,7 +96,7 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
     public MarkerList<E> selectMarkerList(IQuery query) {
         int size = this.validateMarkerPaged(query);
         query.limit(size + 1);
-        List<E> list = this.mapper().selectList(query);
+        List<E> list = this.mapper().listEntity(query);
         E next = null;
         if (list.size() > size) {
             next = list.remove(size);
@@ -106,13 +106,13 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
 
     @Override
     public List<E> selectList(IQuery query) {
-        return this.mapper().selectList(query);
+        return this.mapper().listEntity(query);
     }
 
     @Override
     public PagedList<Map> selectPagedMaps(IQuery query) {
         int total = this.mapper().countNoLimit(query);
-        List list = this.mapper().selectMaps(query);
+        List list = this.mapper().list(query);
         return new PagedList<Map>(total, list);
     }
 
@@ -120,7 +120,7 @@ public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>
     public MarkerList<Map> selectMarkerMaps(IQuery query) {
         int size = this.validateMarkerPaged(query);
         query.limit(size + 1);
-        List list = this.mapper().selectMaps(query);
+        List list = this.mapper().list(query);
         Map next = null;
         if (list.size() > size) {
             next = (Map) list.remove(size);

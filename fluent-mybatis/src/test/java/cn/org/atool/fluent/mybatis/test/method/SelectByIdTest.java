@@ -25,7 +25,7 @@ public class SelectByIdTest extends BaseTest {
     public void test_selectById() throws Exception {
         db.table(t_user).clean().insert(TM.user.createWithInit(3)
             .user_name.values(DataGenerator.increase("username_%d")));
-        UserEntity user = mapper.selectById(3L);
+        UserEntity user = mapper.findById(3L);
         db.sqlList().wantFirstSql()
             .where().eq("id=?");
         want.object(user)
@@ -40,7 +40,7 @@ public class SelectByIdTest extends BaseTest {
             .column_1.values(1, 2, 3)
             .column_2.values("c1", "c2", "c3")
         );
-        NoPrimaryEntity entity = noPrimaryMapper.selectById(3L);
+        NoPrimaryEntity entity = noPrimaryMapper.findById(3L);
         db.sqlList().wantFirstSql()
             .where().eq("1!=1");
         want.object(entity).isNull();

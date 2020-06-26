@@ -25,7 +25,7 @@ public class CountNoLimitTest extends BaseTest {
             .orderBy.userName().end()
             .limit(10);
 
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT( * )")
             .end("FROM t_user WHERE id = ? ORDER BY user_name LIMIT ?, ?");
@@ -54,7 +54,7 @@ public class CountNoLimitTest extends BaseTest {
             .end("FROM t_user WHERE age = ?");
         want.number(count).eq(100);
 
-        List<UserEntity> list = mapper.selectList(query);
+        List<UserEntity> list = mapper.listEntity(query);
         db.sqlList().wantSql(1)
             .start("SELECT id,")
             .end("WHERE age = ? ORDER BY user_name LIMIT ?, ?");

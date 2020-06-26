@@ -18,27 +18,27 @@ public interface StatementId {
 
     String Method_DeleteByMap = "deleteByMap";
 
-    String Method_SelectById = "selectById";
-
-    String Method_SelectByIds = "selectByIds";
-
-    String Method_SelectByMap = "selectByMap";
-
-    String Method_SelectCount = "selectCount";
-
-    String Method_Count_NoLimit = "countNoLimit";
-
-    String Method_SelectList = "selectList";
-
-    String Method_SelectMaps = "selectMaps";
-
-    String Method_SelectOne = "selectOne";
-
-    String Method_SelectObjs = "selectObjs";
-
     String Method_UpdateById = "updateById";
 
     String Method_UpdateByQuery = "updateBy";
+
+    String Method_SelectById = "findById";
+
+    String Method_SelectOne = "findOne";
+
+    String Method_SelectByIds = "listByIds";
+
+    String Method_SelectByMap = "listByMap";
+
+    String Method_SelectList = "listEntity";
+
+    String Method_SelectMaps = "list";
+
+    String Method_SelectObjs = "listObjs";
+
+    String Method_SelectCount = "count";
+
+    String Method_Count_NoLimit = "countNoLimit";
     /**
      * 更新指定表（分表）
      */

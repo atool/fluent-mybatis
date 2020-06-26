@@ -24,7 +24,7 @@ public class GroupByTest extends BaseTest {
             .where.id().eq(24L).end()
             .groupBy.apply("user_name", "age").end()
             .last("/** comment **/");
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name, age /** comment **/");
     }
@@ -41,7 +41,7 @@ public class GroupByTest extends BaseTest {
             .apply("count(1)").gt(10)
             .apply("sum(age)").gt(3)
             .end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT count(1), sum(1) FROM t_user " +
                 "WHERE id = ? GROUP BY user_name, age " +
@@ -60,7 +60,7 @@ public class GroupByTest extends BaseTest {
             .having
             .id().count().gt(10)
             .end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT grade, COUNT(id), MAX(age), MIN(age), AVG(age) " +
                 "FROM t_user " +

@@ -28,7 +28,7 @@ public class AndNestedTest extends BaseTest {
                 .end()
             )
             .end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?) AND ( age = ? AND id = ? )");
 
@@ -49,7 +49,7 @@ public class AndNestedTest extends BaseTest {
                 )
                 .and(q1 -> q1.where.id().eq(2L).end()
                 ).end()).end();
-        mapper.selectCount(query);
+        mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT( * ) FROM t_user " +
                 "WHERE id IN (SELECT id FROM t_user WHERE id = ?) " +

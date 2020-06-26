@@ -28,7 +28,7 @@ public class SelectByIdsTest extends BaseTest {
     public void test_selectById() throws Exception {
         db.table(t_user).clean().insert(TM.user.createWithInit(3)
             .user_name.values(DataGenerator.increase("username_%d")));
-        List<UserEntity> users = mapper.selectByIds(Arrays.asList(3L, 1L));
+        List<UserEntity> users = mapper.listByIds(Arrays.asList(3L, 1L));
         db.sqlList().wantFirstSql()
             .where().eq("id IN ( ? , ? )");
         want.list(users)
@@ -43,7 +43,7 @@ public class SelectByIdsTest extends BaseTest {
             .column_1.values(1, 2, 3)
             .column_2.values("c1", "c2", "c3")
         );
-        List<NoPrimaryEntity> entities = noPrimaryMapper.selectByIds(Arrays.asList(3L));
+        List<NoPrimaryEntity> entities = noPrimaryMapper.listByIds(Arrays.asList(3L));
         db.sqlList().wantFirstSql()
             .where().eq("1!=1");
         want.list(entities).sizeEq(0);

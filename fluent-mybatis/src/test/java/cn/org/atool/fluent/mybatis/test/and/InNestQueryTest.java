@@ -35,7 +35,7 @@ public class InNestQueryTest extends BaseTest {
             .having
             .age().sum().gt(2).end();
 
-        List list = mapper.selectList(query);
+        List list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age) FROM t_user " +
                 "WHERE " +
@@ -52,7 +52,7 @@ public class InNestQueryTest extends BaseTest {
             .selectId()
             .where.addressId().in(AddressQuery.class, q -> q.selectId().where.id().in(new Integer[]{1, 2}).end())
             .end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE address_id IN (SELECT id FROM address WHERE id IN (?, ?))");
     }

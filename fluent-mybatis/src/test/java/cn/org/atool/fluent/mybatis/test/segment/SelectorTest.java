@@ -25,7 +25,7 @@ public class SelectorTest extends BaseTest {
                 .apply("address_id", "1"))
             .where.id().eq(24L).end()
             .groupBy.id().end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age), address_id, 1 FROM t_user WHERE id = ? GROUP BY id");
     }
@@ -44,7 +44,7 @@ public class SelectorTest extends BaseTest {
             )
             .where.id().eq(24L).end()
             .groupBy.id().end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id AS pk, SUM(age) AS sum, MAX(age) AS max, MIN(age) AS min, AVG(age) AS avg, COUNT(age) AS count, GROUP_CONCAT(age) AS concat " +
                 "FROM t_user WHERE id = ? GROUP BY id");
@@ -63,7 +63,7 @@ public class SelectorTest extends BaseTest {
                 .age().group_concat())
             .where.id().eq(24L).end()
             .groupBy.id().end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age) " +
                 "FROM t_user WHERE id = ? GROUP BY id");
@@ -74,7 +74,7 @@ public class SelectorTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select(selector -> selector.apply(f -> f.getProperty().startsWith("gmt")))
             .where.id().eq(24L).end();
-        mapper.selectList(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT gmt_created, gmt_modified FROM t_user WHERE id = ?");
     }
