@@ -133,4 +133,4 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     
 ## 使用fluent-mybatis
 
-   [使用fluent-mybatis](./fluent-mybatis-tutorial/index.md)
+   [使用fluent-mybatis](docs/quick_start.md)

@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
+import java.util.List;
 import java.util.function.Function;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
