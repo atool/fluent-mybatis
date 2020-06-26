@@ -19,7 +19,7 @@
         <scope>test</scope>
     </dependency>
 
-    <!-- 其它必要依赖, 比如spring, lombok, mysql等-->
+    <!-- 其它必要依赖, 比如spring, lombok, mysql, 数据库连接池等-->
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -32,8 +32,19 @@
         <version>5.1.6</version>
     </dependency>
     <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>2.5.0</version>
+    </dependency>
+    <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
+        <version>4.3.14.RELEASE</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
         <version>4.3.14.RELEASE</version>
         <scope>provided</scope>
     </dependency>
@@ -141,3 +152,39 @@ public class TutorialGeneratorMain {
 稍等片刻，基础脚手架代码就生成完毕
 
 ### 开始运行第一个例子
+#### 定义spring相关配置
+```java
+@Configuration
+public class DataSourceConfig {
+    /**
+     * 设置dataSource属性
+     *
+     * @return
+     */
+    @Bean
+    public DataSource dataSource() {
+        BasicDataSource dataSource = new BasicDataSource();
+
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/fluent_mybatis_tutorial?useUnicode=true&characterEncoding=utf8");
+        dataSource.setUsername("root");
+        dataSource.setPassword("password");
+
+        return dataSource;
+    }
+
+    /**
+     * 设置FluentMybatisSessionFactoryBean bean
+     * 替换掉Mybatis提供的 SqlSessionFactoryBean
+     *
+     * @param dataSource
+     * @return
+     */
+    @Bean
+    public FluentMybatisSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
+        FluentMybatisSessionFactoryBean bean = new FluentMybatisSessionFactoryBean();
+        bean.setDataSource(dataSource);
+        return bean;
+    }
+}
+```
