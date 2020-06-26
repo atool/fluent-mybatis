@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +31,7 @@ public class SelectPagedListTest extends BaseTest {
     @Qualifier("userDaoImpl")
     private IDaoProtected daoProtected;
 
+    @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
     @Test
     public void test_select_paged_list() throws Exception {
         db.table(t_user).clean().insert(TM.user.createWithInit(100)
@@ -40,17 +42,25 @@ public class SelectPagedListTest extends BaseTest {
 
         PagedList<UserEntity> list = daoProtected.selectPagedList(new UserQuery()
             .where.
-                id().gt(20).
                 userName().like("user")
             .end()
             .orderBy.
                 id()
             .end()
-            .limit(10)
+            .limit(20, 10)
         );
-        want.number(list.getTotal()).eq(80);
-        List<Integer> ids = list.getData().stream().map(e -> (int) (long) e.getId()).collect(Collectors.toList());
+        want.number(list.getTotal()).eq(100);
+        List<Integer> ids = list.getData().stream()
+            .map(e -> (int) (long) e.getId()).collect(Collectors.toList());
+
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
+        db.sqlList().wantSql(0)
+            .eq("SELECT COUNT( * ) FROM t_user " +
+                "WHERE user_name LIKE ?");
+        db.sqlList().wantSql(1).end("FROM t_user " +
+            "WHERE user_name LIKE ? " +
+            "ORDER BY id " +
+            "LIMIT ?, ?");
     }
 
     @Test

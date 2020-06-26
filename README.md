@@ -61,6 +61,39 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
 - 增强功能
     1. 可以自动帮忙进行传统的分页操作, 只需要传入一个查询条件, 自动完成count查询
     总数，和limit查询分页列表的操作。并且在查询总数的时候，自动去除了order by的部分，大大简化了分页查询
+```java
+
+    @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
+    @Test
+    public void test_select_paged_list() throws Exception {
+        db.table(t_user).clean().insert(TM.user.createWithInit(100)
+            .id.autoIncrease()
+            .user_name.formatAutoIncrease("user_%d")
+            .age.generate((index) -> new Random().nextInt(100))
+        );
+
+        PagedList<UserEntity> list = daoProtected.selectPagedList(new UserQuery()
+            .where.
+                userName().like("user")
+            .end()
+            .orderBy.
+                id()
+            .end()
+            .limit(20, 10)
+        );
+        want.number(list.getTotal()).eq(100);
+        List<Integer> ids = list.getData().stream().map(e -> (int) (long) e.getId()).collect(Collectors.toList());
+        want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
+        db.sqlList().wantSql(0)
+            .eq("SELECT COUNT( * ) FROM t_user " +
+                "WHERE user_name LIKE ?");
+        db.sqlList().wantSql(1).end("FROM t_user " +
+            "WHERE user_name LIKE ? " +
+            "ORDER BY id " +
+            "LIMIT ?, ?");
+    }
+```
+    
     2. 支持按标识进行分页的操作，每次查询会自动多查一条数据作为下一次查询的marker标识
     3. 结合test4j单元测试工具，可以自动化的进行内存数据库方式测试，
     并且无需提供脚本，框架会根据实体类自动生成数据库脚本，真正做到实时随地跑测试。
