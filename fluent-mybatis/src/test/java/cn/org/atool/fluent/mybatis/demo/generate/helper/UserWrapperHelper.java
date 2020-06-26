@@ -42,6 +42,10 @@ public class UserWrapperHelper {
             return this.set(UserMapping.age);
         }
 
+        default R grade() {
+            return this.set(UserMapping.grade);
+        }
+
         default R userName() {
             return this.set(UserMapping.userName);
         }

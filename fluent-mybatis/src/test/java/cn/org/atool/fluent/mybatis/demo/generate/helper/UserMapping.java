@@ -54,6 +54,11 @@ public interface UserMapping {
      */
     FieldMeta age = new FieldMeta("age", "age");
     /**
+     * grade字段映射
+     * <p></p>
+     */
+    FieldMeta grade = new FieldMeta("grade", "grade");
+    /**
      * userName字段映射
      * <p></p>
      */
@@ -75,6 +80,7 @@ public interface UserMapping {
             this.put(isDeleted.name, isDeleted.column);
             this.put(addressId.name, addressId.column);
             this.put(age.name, age.column);
+            this.put(grade.name, grade.column);
             this.put(userName.name, userName.column);
             this.put(version.name, version.column);
         }
@@ -91,6 +97,7 @@ public interface UserMapping {
             this.add(isDeleted.column);
             this.add(addressId.column);
             this.add(age.column);
+            this.add(grade.column);
             this.add(userName.column);
             this.add(version.column);
         }

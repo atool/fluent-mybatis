@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 import static java.util.stream.Collectors.joining;
 
@@ -75,7 +76,7 @@ public abstract class OrderByBase<
      * @return self
      */
     private O apply(String column) {
-        if (isNotEmpty(column)) {
+        if (isNotBlank(column)) {
             this.last = SharedString.str(column);
             this.apply.add(this.last);
         }

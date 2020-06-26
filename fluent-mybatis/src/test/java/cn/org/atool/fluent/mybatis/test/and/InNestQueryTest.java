@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.AddressQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
@@ -23,7 +22,7 @@ public class InNestQueryTest extends BaseTest {
     @Test
     void test_and_in_nested() {
         UserQuery query = new UserQuery()
-            .select.id().get().age().sum().end()
+            .select.id().as().age().sum().end()
             .where
             .id().in(q -> q
                 .selectId()

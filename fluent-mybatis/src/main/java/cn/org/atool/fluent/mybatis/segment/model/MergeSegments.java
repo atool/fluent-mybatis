@@ -7,7 +7,7 @@ import lombok.Setter;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.*;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**
  * 合并 SQL 片段
@@ -72,7 +72,7 @@ public class MergeSegments extends BaseSegmentList {
     @Override
     protected String build() {
         String sql = where.sql() + groupBy.sql() + having.sql() + orderBy.sql();
-        return sql.trim() + (isEmpty(lastSql) ? EMPTY : SPACE + lastSql.trim());
+        return sql.trim() + (isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim());
     }
 
     /**
@@ -82,6 +82,6 @@ public class MergeSegments extends BaseSegmentList {
      */
     public String sqlNoOrderBy() {
         String sql = where.sql() + groupBy.sql() + having.sql();
-        return sql.trim() + (isEmpty(lastSql) ? EMPTY : SPACE + lastSql.trim());
+        return sql.trim() + (isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim());
     }
 }

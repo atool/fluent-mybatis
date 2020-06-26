@@ -61,6 +61,11 @@ public class UserEntity implements IEntity, IBaseEntity<UserEntity>{
     /**
      * 
      */
+    @TableField(value = "grade")
+    private Integer grade;
+    /**
+     * 
+     */
     @TableField(value = "user_name")
     private String userName;
     /**

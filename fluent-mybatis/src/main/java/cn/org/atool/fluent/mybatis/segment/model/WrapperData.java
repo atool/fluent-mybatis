@@ -81,7 +81,7 @@ public class WrapperData {
             return null;
         } else {
             String sql = sqlSelect.stream().collect(joining(COMMA_SPACE));
-            return isEmpty(sql) ? null : sql.trim();
+            return isBlank(sql) ? null : sql.trim();
         }
     }
 
@@ -95,7 +95,7 @@ public class WrapperData {
      */
     public String getUpdateStr() {
         String sql = this.updates.entrySet().stream().map(i -> i.getKey() + " = " + i.getValue()).collect(joining(COMMA_SPACE));
-        return isEmpty(sql) ? null : sql.trim();
+        return isBlank(sql) ? null : sql.trim();
     }
 
     /**
@@ -105,7 +105,7 @@ public class WrapperData {
      */
     public String getWhereSql() {
         String sql = mergeSegments.sql();
-        return isEmpty(sql) ? null : sql.trim();
+        return isBlank(sql) ? null : sql.trim();
     }
 
     /**
@@ -115,7 +115,7 @@ public class WrapperData {
      */
     public String getWhereNoLimit() {
         String sql = mergeSegments.sqlNoOrderBy();
-        return isEmpty(sql) ? null : sql.trim();
+        return isBlank(sql) ? null : sql.trim();
     }
 
     /**
@@ -126,7 +126,7 @@ public class WrapperData {
     public String getQuerySql() {
         String select = this.getSqlSelect();
         String sql = String.format(SELECT_FROM_WHERE, select == null ? ASTERISK : select, this.table, this.getWhereSql());
-        return isEmpty(sql) ? null : sql.trim();
+        return isBlank(sql) ? null : sql.trim();
     }
 
     /**
@@ -211,7 +211,7 @@ public class WrapperData {
      * @param values      对应的参数
      */
     public void updateSql(String column, String functionSql, Object... values) {
-        if (isNotEmpty(functionSql)) {
+        if (isNotBlank(functionSql)) {
             updates.put(column, this.paramSql(functionSql, values));
         }
     }

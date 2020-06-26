@@ -31,7 +31,6 @@ import java.util.stream.Stream;
  *
  * @author darui.wu
  */
-@Slf4j
 @Accessors(chain = true)
 public class FluentMybatisSessionFactoryBean extends SqlSessionFactoryBean {
     @Autowired

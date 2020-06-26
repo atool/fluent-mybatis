@@ -35,6 +35,10 @@ public class UserEntityMap extends DataMap<UserEntityMap> {
      */
     public transient final KeyValue<UserEntityMap> age = new KeyValue(this, "age");
     /**
+     * 设置UserEntity对象grade字段值
+     */
+    public transient final KeyValue<UserEntityMap> grade = new KeyValue(this, "grade");
+    /**
      * 设置UserEntity对象userName字段值
      */
     public transient final KeyValue<UserEntityMap> userName = new KeyValue(this, "userName");

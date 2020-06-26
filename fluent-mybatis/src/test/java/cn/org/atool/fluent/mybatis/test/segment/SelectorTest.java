@@ -20,7 +20,7 @@ public class SelectorTest extends BaseTest {
     public void test_select() throws Exception {
         UserQuery query = new UserQuery()
             .select(selector -> selector
-                .id().get()
+                .id().as()
                 .age().sum()
                 .apply("address_id", "1"))
             .where.id().eq(24L).end()
@@ -34,7 +34,7 @@ public class SelectorTest extends BaseTest {
     public void test_select_alias() throws Exception {
         UserQuery query = new UserQuery()
             .select(selector -> selector
-                .id().alias("pk")
+                .id().as("pk")
                 .age().sum("sum")
                 .age().max("max")
                 .age().min("min")
@@ -54,7 +54,7 @@ public class SelectorTest extends BaseTest {
     public void test_select_no_alias() throws Exception {
         UserQuery query = new UserQuery()
             .select(selector -> selector
-                .id().get()
+                .id().as()
                 .age().sum()
                 .age().max()
                 .age().min()

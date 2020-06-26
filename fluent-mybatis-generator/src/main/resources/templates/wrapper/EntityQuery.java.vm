@@ -9,7 +9,7 @@ import ${wrapperHelper.package}.${wrapperHelper.name}.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.function.Function;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * @ClassName ${entityQuery.name}
@@ -72,7 +72,7 @@ public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !${mapping.name}.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !${mapping.name}.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + ${mapping.name}.Table_Name + "].");
         }
     }

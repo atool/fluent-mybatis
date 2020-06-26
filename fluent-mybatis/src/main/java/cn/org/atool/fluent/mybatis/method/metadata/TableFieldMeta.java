@@ -10,7 +10,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 import java.lang.reflect.Field;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * 数据库表字段反射信息
@@ -73,7 +73,7 @@ public class TableFieldMeta extends BaseFieldMeta {
         if (typeHandler != null) {
             el += (COMMA + "typeHandler=" + typeHandler.getName());
         }
-        if (isNotEmpty(numericScale)) {
+        if (isNotBlank(numericScale)) {
             el += (COMMA + "numericScale=" + numericScale);
         }
         return el;

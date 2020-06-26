@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+
 /**
  * <p>
  * 实体类反射表辅助类
@@ -85,7 +87,7 @@ public class TableMetaHelper {
         }
 
         String tableName = table.value();
-        if (MybatisUtil.isNotEmpty(table.schema())) {
+        if (isNotBlank(table.schema())) {
             tableName = table.schema() + "." + tableName;
         }
         tableMeta.setTableName(tableName);

@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdWrapperHelper.Up
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdWrapperHelper.UpdateWhere;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * NoAutoIdUpdate: NoAutoIdEntity更新设置
@@ -36,7 +36,7 @@ public class NoAutoIdUpdate extends BaseUpdate<NoAutoIdEntity, NoAutoIdUpdate, N
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !NoAutoIdMapping.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !NoAutoIdMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoAutoIdMapping.Table_Name + "].");
         }
     }

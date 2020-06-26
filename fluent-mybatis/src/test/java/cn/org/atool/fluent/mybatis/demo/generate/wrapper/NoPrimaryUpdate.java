@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryWrapperHelper.U
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryWrapperHelper.UpdateWhere;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * NoPrimaryUpdate: NoPrimaryEntity更新设置
@@ -36,7 +36,7 @@ public class NoPrimaryUpdate extends BaseUpdate<NoPrimaryEntity, NoPrimaryUpdate
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !NoPrimaryMapping.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !NoPrimaryMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoPrimaryMapping.Table_Name + "].");
         }
     }

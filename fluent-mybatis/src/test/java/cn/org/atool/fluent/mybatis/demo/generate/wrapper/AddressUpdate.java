@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressWrapperHelper.Upd
 import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressWrapperHelper.UpdateWhere;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * AddressUpdate: AddressEntity更新设置
@@ -36,7 +36,7 @@ public class AddressUpdate extends BaseUpdate<AddressEntity, AddressUpdate, Addr
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !AddressMapping.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !AddressMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + AddressMapping.Table_Name + "].");
         }
     }

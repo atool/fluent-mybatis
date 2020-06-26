@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * AbstractQueryWrapper
@@ -46,7 +46,7 @@ public abstract class BaseQuery<
 
     @Override
     public Q select(String... columns) {
-        Stream.of(columns).filter(s -> isNotEmpty(s)).forEach(this.wrapperData::addSelectColumn);
+        Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
         return (Q) this;
     }
 

@@ -80,7 +80,7 @@ public class MybatisUtil {
      * @param cs 需要判断字符串
      * @return 判断结果
      */
-    public static boolean isEmpty(final CharSequence cs) {
+    public static boolean isBlank(final CharSequence cs) {
         int strLen;
         if (cs == null || (strLen = cs.length()) == 0) {
             return true;
@@ -99,8 +99,8 @@ public class MybatisUtil {
      * @param cs 需要判断字符串
      * @return 判断结果
      */
-    public static boolean isNotEmpty(final CharSequence cs) {
-        return !isEmpty(cs);
+    public static boolean isNotBlank(final CharSequence cs) {
+        return !isBlank(cs);
     }
 
     /**
@@ -111,7 +111,7 @@ public class MybatisUtil {
      */
     public static boolean isNotNull(Object object) {
         if (object instanceof CharSequence) {
-            return isNotEmpty((CharSequence) object);
+            return isNotBlank((CharSequence) object);
         } else {
             return object != null;
         }
@@ -241,7 +241,7 @@ public class MybatisUtil {
      * @param value
      */
     public static void assertNotBlank(String property, String value) {
-        if (MybatisUtil.isEmpty(value)) {
+        if (MybatisUtil.isBlank(value)) {
             throw FluentMybatisException.instance("the parameter[%s] can't be blank.", property);
         }
     }

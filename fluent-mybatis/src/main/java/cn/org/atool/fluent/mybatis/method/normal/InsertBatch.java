@@ -6,10 +6,10 @@ import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TablePrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_InsertBatch;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**
  * InsertBatch: 批量插入实现
@@ -58,7 +58,7 @@ public class InsertBatch extends AbstractMethod {
         }
         values.eachJoining(table.getFields(), (field) -> {
             String insert = field.getInsert();
-            if (MybatisUtil.isEmpty(insert)) {
+            if (isBlank(insert)) {
                 values.value("#{item.@property},", field.getProperty(), field.getColumn());
             } else {
                 values.choose("item.@property != null", "#{item.@property},", insert + COMMA,

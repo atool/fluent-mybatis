@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_Not_Null;
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_Var;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -26,7 +25,7 @@ public abstract class AbstractMethod implements InjectMethod {
     private DbType dbType;
 
     protected AbstractMethod(DbType dbType) {
-        MybatisUtil.assertNotNull("dbType", dbType);
+        assertNotNull("dbType", dbType);
         this.dbType = dbType;
     }
 
@@ -113,7 +112,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @return
      */
     public static boolean isUpdateDefault(TableFieldMeta field) {
-        return isNotEmpty(field.getUpdate());
+        return isNotBlank(field.getUpdate());
     }
 
     /**
@@ -132,6 +131,6 @@ public abstract class AbstractMethod implements InjectMethod {
      * @return
      */
     protected boolean isInsertDefault(TableFieldMeta field) {
-        return isNotEmpty(field.getInsert());
+        return isNotBlank(field.getInsert());
     }
 }

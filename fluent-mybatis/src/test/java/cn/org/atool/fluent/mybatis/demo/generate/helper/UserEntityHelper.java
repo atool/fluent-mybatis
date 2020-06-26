@@ -41,6 +41,9 @@ public class UserEntityHelper {
         if (entity.getAge() != null) {
             map.put(UserMapping.age.name, entity.getAge());
         }
+        if (entity.getGrade() != null) {
+            map.put(UserMapping.grade.name, entity.getGrade());
+        }
         if (entity.getUserName() != null) {
             map.put(UserMapping.userName.name, entity.getUserName());
         }
@@ -75,6 +78,9 @@ public class UserEntityHelper {
         }
         if (entity.getAge() != null) {
             map.put(UserMapping.age.column, entity.getAge());
+        }
+        if (entity.getGrade() != null) {
+            map.put(UserMapping.grade.column, entity.getGrade());
         }
         if (entity.getUserName() != null) {
             map.put(UserMapping.userName.column, entity.getUserName());
@@ -111,6 +117,9 @@ public class UserEntityHelper {
         if (map.containsKey(UserMapping.age.name)) {
             entity.setAge((Integer) map.get(UserMapping.age.name));
         }
+        if (map.containsKey(UserMapping.grade.name)) {
+            entity.setGrade((Integer) map.get(UserMapping.grade.name));
+        }
         if (map.containsKey(UserMapping.userName.name)) {
             entity.setUserName((String) map.get(UserMapping.userName.name));
         }
@@ -129,6 +138,7 @@ public class UserEntityHelper {
             copy.setIsDeleted(entity.getIsDeleted());
             copy.setAddressId(entity.getAddressId());
             copy.setAge(entity.getAge());
+            copy.setGrade(entity.getGrade());
             copy.setUserName(entity.getUserName());
             copy.setVersion(entity.getVersion());
         }

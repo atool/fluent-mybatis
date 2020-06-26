@@ -7,10 +7,10 @@ import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TablePrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**
  * InsertSelected 插入非null的字段，忽略null字段
@@ -92,7 +92,7 @@ public class Insert extends AbstractMethod {
 
     private void value(SqlBuilder builder, TableFieldMeta field) {
         String insert = field.getInsert();
-        if (MybatisUtil.isEmpty(insert)) {
+        if (isBlank(insert)) {
             builder.ifThen("@property != null", "#{@property},", field.getProperty(), field.getColumn());
         } else {
             builder.choose("@property != null", "#{@property},", insert + COMMA,

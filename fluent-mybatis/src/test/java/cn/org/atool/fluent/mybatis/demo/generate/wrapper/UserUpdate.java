@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.Update
 import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.UpdateWhere;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * UserUpdate: UserEntity更新设置
@@ -36,7 +36,7 @@ public class UserUpdate extends BaseUpdate<UserEntity, UserUpdate, UserQuery> {
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !UserMapping.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !UserMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + UserMapping.Table_Name + "].");
         }
     }

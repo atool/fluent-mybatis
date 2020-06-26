@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdWrapperHelper.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.function.Function;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * @ClassName NoAutoIdQuery
@@ -68,7 +68,7 @@ public class NoAutoIdQuery extends BaseQuery<NoAutoIdEntity, NoAutoIdQuery> {
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !NoAutoIdMapping.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !NoAutoIdMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoAutoIdMapping.Table_Name + "].");
         }
     }

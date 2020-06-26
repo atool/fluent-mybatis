@@ -34,7 +34,7 @@ public class ParameterPair extends HashMap<String, Object> {
      * @return 参数化的sql语句
      */
     public String paramSql(String sqlStr, Object... params) {
-        if (MybatisUtil.isEmpty(sqlStr)) {
+        if (MybatisUtil.isBlank(sqlStr)) {
             throw new FluentMybatisException("sql parameter can't be null.");
         }
 

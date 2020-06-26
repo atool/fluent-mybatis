@@ -42,7 +42,7 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(String... columns) {
-        Stream.of(columns).filter(MybatisUtil::isNotEmpty).forEach(apply::add);
+        Stream.of(columns).filter(MybatisUtil::isNotBlank).forEach(apply::add);
         return (G) this;
     }
 

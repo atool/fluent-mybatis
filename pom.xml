@@ -59,6 +59,12 @@
             <version>1.18.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+            <scope>provided</scope>
+        </dependency>
         <!--test jar-->
         <dependency>
             <groupId>org.jmockit</groupId>

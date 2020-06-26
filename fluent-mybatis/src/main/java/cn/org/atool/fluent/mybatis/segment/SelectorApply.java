@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * ColumnSelector: 字段查询
@@ -28,7 +28,7 @@ public class SelectorApply<
      *
      * @return 返回字段选择器
      */
-    public S get() {
+    public S as() {
         return this.segment.apply(this.current.column);
     }
 
@@ -38,7 +38,7 @@ public class SelectorApply<
      * @param alias as 别名
      * @return 返回字段选择器
      */
-    public S alias(String alias) {
+    public S as(String alias) {
         return this.segment.apply(String.format("%s AS %s", this.current.column, alias));
     }
 
@@ -61,7 +61,7 @@ public class SelectorApply<
      */
     public S apply(IAggregate aggregate, String alias) {
         String expression = aggregate.aggregate(this.current.column);
-        if (isNotEmpty(alias)) {
+        if (isNotBlank(alias)) {
             expression = expression + " AS " + alias;
         }
         return this.segment.apply(expression);

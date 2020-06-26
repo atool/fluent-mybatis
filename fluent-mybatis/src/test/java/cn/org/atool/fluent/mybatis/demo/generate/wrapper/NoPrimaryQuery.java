@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryWrapperHelper.*
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.function.Function;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * @ClassName NoPrimaryQuery
@@ -68,7 +68,7 @@ public class NoPrimaryQuery extends BaseQuery<NoPrimaryEntity, NoPrimaryQuery> {
 
     @Override
     protected void validateColumn(String column) throws FluentMybatisException {
-        if (isNotEmpty(column) && !NoPrimaryMapping.ALL_COLUMNS.contains(column)) {
+        if (isNotBlank(column) && !NoPrimaryMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoPrimaryMapping.Table_Name + "].");
         }
     }

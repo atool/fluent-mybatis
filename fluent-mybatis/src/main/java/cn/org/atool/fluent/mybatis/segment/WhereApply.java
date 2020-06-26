@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * AndObject

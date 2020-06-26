@@ -47,6 +47,11 @@ public class UserTableMap extends DataMap<UserTableMap> {
     @ColumnDef(type = "int(11)")
     public transient final KeyValue<UserTableMap> age = new KeyValue(this, "age");
     /**
+     * 设置t_user对象grade字段值
+     */
+    @ColumnDef(type = "int(11)")
+    public transient final KeyValue<UserTableMap> grade = new KeyValue(this, "grade");
+    /**
      * 设置t_user对象user_name字段值
      */
     @ColumnDef(type = "varchar(45)")
