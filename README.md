@@ -17,7 +17,8 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     3. 支持嵌套查询，99%的单表操作使用fluent-mybatis语法就可以直接完成，无需再自定义mapper操作
     4. 对聚合函数的支持，包括select 聚合函数 和 having 聚合函数判断
     
-```java
+``` java
+
     @DisplayName("按级别grade统计年龄在15和25之间的人数在10人以上，该条件内最大、最小和平均年龄")
     @Test
     public void test_count_gt_10_groupByGrade() throws Exception {
@@ -28,8 +29,7 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
             .groupBy
             .grade().end()
             .having
-            .id().count().gt(10)
-            .end();
+            .id().count().gt(10).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT grade, COUNT(id), MAX(age), MIN(age), AVG(age) " +
