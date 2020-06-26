@@ -52,7 +52,7 @@ public class NestedQueryTest extends BaseTest {
         UserQuery query = new UserQuery()
             .where
             .id().in(AddressQuery.class,
-                q -> q.select("user_id")
+                q -> q.select(by -> by.userId().as())
                     .where.address().like("杭州滨江").end())
             .end();
         mapper.listEntity(query);

@@ -23,7 +23,7 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
         UserQuery query = new UserQuery()
             .where
             .id().in(AddressQuery.class,
-                q -> q.select("user_id")
+                q -> q.select(by -> by.userId().as())
                     .where.address().like("杭州滨江").end())
             .end();
         mapper.listEntity(query);
