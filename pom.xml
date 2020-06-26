@@ -51,15 +51,8 @@
     <modules>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-generator</module>
-        <module>fluent-mybatis-tutorial</module>
     </modules>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
