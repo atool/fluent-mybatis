@@ -16,6 +16,29 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     2. 对不可空的参数会自动判断，避免粗心的程序员没有做前置检验导致的错误结果
     3. 支持嵌套查询，99%的单表操作使用fluent-mybatis语法就可以直接完成，无需再自定义mapper操作
     4. 对聚合函数的支持，包括select 聚合函数 和 having 聚合函数判断
+    
+```java
+    @DisplayName("按级别grade统计年龄在15和25之间的人数在10人以上，该条件内最大、最小和平均年龄")
+    @Test
+    public void test_count_gt_10_groupByGrade() throws Exception {
+        UserQuery query = new UserQuery()
+            .select.grade().as().id().count().age().max().age().min().age().avg().end()
+            .where
+            .age().between(15, 25).end()
+            .groupBy
+            .grade().end()
+            .having
+            .id().count().gt(10)
+            .end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT grade, COUNT(id), MAX(age), MIN(age), AVG(age) " +
+                "FROM t_user " +
+                "WHERE age BETWEEN ? AND ? " +
+                "GROUP BY grade " +
+                "HAVING COUNT(id) > ?");
+    }
+```
   
 - 增强功能
     1. 可以自动帮忙进行传统的分页操作, 只需要传入一个查询条件, 自动完成count查询
