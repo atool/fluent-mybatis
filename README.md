@@ -95,7 +95,37 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
 ```
     
     2. 支持按标识进行分页的操作，每次查询会自动多查一条数据作为下一次查询的marker标识
-    3. 结合test4j单元测试工具，可以自动化的进行内存数据库方式测试，
+    
+```java
+
+    @DisplayName("准备100条数据，按条件>分页开始标识方式查询，自动获取下一页的标识")
+    @Test
+    public void test_select_paged_list() throws Exception {
+        db.table(t_user).clean().insert(TM.user.createWithInit(100)
+            .id.autoIncrease()
+            .user_name.formatAutoIncrease("user_%d")
+            .age.generate((index) -> new Random().nextInt(100))
+        );
+
+        MarkerList<UserEntity> list = dao.selectMarkerList(new UserQuery()
+            .where.
+                id().gt(20).
+                userName().like("user").end()
+            .orderBy.
+                id().end()
+            .limit(10)
+        );
+
+        List<Integer> ids = list.getData().stream()
+            .map(e -> (int) (long) e.getId()).collect(Collectors.toList());
+        want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
+        long next = list.parseMarker((UserEntity e) -> e.getId());
+        want.number(next).eq(31L);
+    }
+```
+    
+    3. 按需查询，可以灵活指定需要查询的数据，减少数据传输
+    4. 结合test4j单元测试工具，可以自动化的进行内存数据库方式测试，
     并且无需提供脚本，框架会根据实体类自动生成数据库脚本，真正做到实时随地跑测试。
     可以选择h2,速度快，但有少量语法和mysql不一致；也可以选择mariadb数据库，语法和mysql高度一致;
     当然更可以支持实体数据库，方便查看测试过程中的数据。
