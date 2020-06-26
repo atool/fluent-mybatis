@@ -13,6 +13,7 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     2. 对不可空的参数会自动判断，避免粗心的程序员没有做前置检验导致的错误结果
     3. 支持嵌套查询，99%的单表操作使用fluent-mybatis语法就可以直接完成，无需再自定义mapper操作
     4. 对聚合函数的支持，包括select 聚合函数 和 having 聚合函数判断
+    ![-w930](docs/00-introduce/test_count_gt_10_groupByGrade.png)
     
 - 增强功能
     1. 可以自动帮忙进行传统的分页操作, 只需要传入一个查询条件, 自动完成count查询
