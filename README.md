@@ -16,12 +16,11 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     2. 对不可空的参数会自动判断，避免粗心的程序员没有做前置检验导致的错误结果
     3. 支持嵌套查询，99%的单表操作使用fluent-mybatis语法就可以直接完成，无需再自定义mapper操作
     ``` java
-  
+
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
     @Test
-    void test_exist_address_like() {
+    void test_nested_query_address_like() {
         UserQuery query = new UserQuery()
-            .selectId()
             .where
             .id().in(AddressQuery.class,
                 q -> q.select("user_id")
@@ -29,7 +28,8 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user " +
+            .eq("SELECT id, address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version " +
+                "FROM t_user " +
                 "WHERE id IN (SELECT user_id FROM address WHERE address LIKE ?)");
     }
 ```
