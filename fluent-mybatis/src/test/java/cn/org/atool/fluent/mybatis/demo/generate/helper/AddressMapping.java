@@ -48,6 +48,11 @@ public interface AddressMapping {
      * <p></p>
      */
     FieldMeta address = new FieldMeta("address", "address");
+    /**
+     * userId字段映射
+     * <p></p>
+     */
+    FieldMeta userId = new FieldMeta("userId", "user_id");
 
     /**
      * 实例属性和数据库字段对应表
@@ -59,6 +64,7 @@ public interface AddressMapping {
             this.put(gmtModified.name, gmtModified.column);
             this.put(isDeleted.name, isDeleted.column);
             this.put(address.name, address.column);
+            this.put(userId.name, userId.column);
         }
     };
 
@@ -72,6 +78,7 @@ public interface AddressMapping {
             this.add(gmtModified.column);
             this.add(isDeleted.column);
             this.add(address.column);
+            this.add(userId.column);
         }
     };
 }

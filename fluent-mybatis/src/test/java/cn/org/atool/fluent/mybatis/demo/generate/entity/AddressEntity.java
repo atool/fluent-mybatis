@@ -53,6 +53,11 @@ public class AddressEntity implements IEntity, IBaseEntity<AddressEntity>{
      */
     @TableField(value = "address")
     private String address;
+    /**
+     * 
+     */
+    @TableField(value = "user_id")
+    private Long userId;
 
     @Override
     public Serializable findPk() {

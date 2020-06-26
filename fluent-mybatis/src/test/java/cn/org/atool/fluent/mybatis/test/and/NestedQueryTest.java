@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.AddressQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,16 +46,19 @@ public class NestedQueryTest extends BaseTest {
 
     }
 
+    @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
     @Test
-    void test_not_exist() {
+    void test_exist_address_like() {
         UserQuery query = new UserQuery()
             .selectId()
-            .where.notExists(q -> q
-                .selectId()
-                .where.id().eq(34L).end()
-            ).end();
+            .where
+            .id().in(AddressQuery.class,
+                q -> q.select("user_id")
+                    .where.address().like("杭州滨江").end())
+            .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE NOT EXISTS (SELECT id FROM t_user WHERE id = ?)");
+            .eq("SELECT id FROM t_user " +
+                "WHERE id IN (SELECT user_id FROM address WHERE address LIKE ?)");
     }
 }

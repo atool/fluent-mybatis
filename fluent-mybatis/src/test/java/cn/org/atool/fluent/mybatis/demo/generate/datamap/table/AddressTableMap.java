@@ -41,6 +41,11 @@ public class AddressTableMap extends DataMap<AddressTableMap> {
      */
     @ColumnDef(type = "varchar(45)")
     public transient final KeyValue<AddressTableMap> address = new KeyValue(this, "address");
+    /**
+     * 设置address对象user_id字段值
+     */
+    @ColumnDef(type = "bigint(20)")
+    public transient final KeyValue<AddressTableMap> user_id = new KeyValue(this, "user_id");
 
     public AddressTableMap() {
         super();

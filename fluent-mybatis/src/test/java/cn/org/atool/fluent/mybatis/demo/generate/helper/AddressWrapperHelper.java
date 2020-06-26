@@ -37,6 +37,10 @@ public class AddressWrapperHelper {
         default R address() {
             return this.set(AddressMapping.address);
         }
+
+        default R userId() {
+            return this.set(AddressMapping.userId);
+        }
     }
     /**
      * select字段设置

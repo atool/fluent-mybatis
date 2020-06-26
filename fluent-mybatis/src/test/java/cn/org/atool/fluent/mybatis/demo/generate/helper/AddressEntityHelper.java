@@ -38,6 +38,9 @@ public class AddressEntityHelper {
         if (entity.getAddress() != null) {
             map.put(AddressMapping.address.name, entity.getAddress());
         }
+        if (entity.getUserId() != null) {
+            map.put(AddressMapping.userId.name, entity.getUserId());
+        }
         return map;
     }
 
@@ -63,6 +66,9 @@ public class AddressEntityHelper {
         }
         if (entity.getAddress() != null) {
             map.put(AddressMapping.address.column, entity.getAddress());
+        }
+        if (entity.getUserId() != null) {
+            map.put(AddressMapping.userId.column, entity.getUserId());
         }
         return map;
     }
@@ -90,6 +96,9 @@ public class AddressEntityHelper {
         if (map.containsKey(AddressMapping.address.name)) {
             entity.setAddress((String) map.get(AddressMapping.address.name));
         }
+        if (map.containsKey(AddressMapping.userId.name)) {
+            entity.setUserId((Long) map.get(AddressMapping.userId.name));
+        }
         return entity;
     }
 
@@ -101,6 +110,7 @@ public class AddressEntityHelper {
             copy.setGmtModified(entity.getGmtModified());
             copy.setIsDeleted(entity.getIsDeleted());
             copy.setAddress(entity.getAddress());
+            copy.setUserId(entity.getUserId());
         }
         return copy;
     }

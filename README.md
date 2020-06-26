@@ -15,6 +15,24 @@ fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开�
     1. 流式动态接口，结合IDE的智能提示，最大限度的避免书写错误
     2. 对不可空的参数会自动判断，避免粗心的程序员没有做前置检验导致的错误结果
     3. 支持嵌套查询，99%的单表操作使用fluent-mybatis语法就可以直接完成，无需再自定义mapper操作
+    ``` java
+  
+    @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
+    @Test
+    void test_exist_address_like() {
+        UserQuery query = new UserQuery()
+            .selectId()
+            .where
+            .id().in(AddressQuery.class,
+                q -> q.select("user_id")
+                    .where.address().like("杭州滨江").end())
+            .end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT id FROM t_user " +
+                "WHERE id IN (SELECT user_id FROM address WHERE address LIKE ?)");
+    }
+```
     4. 对聚合函数的支持，包括select 聚合函数 和 having 聚合函数判断
     
 ``` java

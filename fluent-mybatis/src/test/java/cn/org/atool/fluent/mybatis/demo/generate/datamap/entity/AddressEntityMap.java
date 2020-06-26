@@ -30,6 +30,10 @@ public class AddressEntityMap extends DataMap<AddressEntityMap> {
      * 设置AddressEntity对象address字段值
      */
     public transient final KeyValue<AddressEntityMap> address = new KeyValue(this, "address");
+    /**
+     * 设置AddressEntity对象userId字段值
+     */
+    public transient final KeyValue<AddressEntityMap> userId = new KeyValue(this, "userId");
 
     public AddressEntityMap() {
         super();
