@@ -154,6 +154,8 @@ public class TutorialGeneratorMain {
 ### 开始运行第一个例子
 #### 定义spring相关配置
 ```java
+@ComponentScan(basePackages = "cn.org.atool.fluent.mybatis.tutorial")
+@MapperScan("cn.org.atool.fluent.mybatis.tutorial.mapper")
 @Configuration
 public class DataSourceConfig {
     /**
@@ -188,3 +190,27 @@ public class DataSourceConfig {
     }
 }
 ```
+
+使用Main函数启动测试
+```java
+public class SpringMainDemo {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+        ctx.register(DataSourceConfig.class);
+        ctx.refresh();
+
+        UserDao userDao = ctx.getBean(UserDao.class);
+        userDao.save(new UserEntity().setId(1L).setAccount("account"));
+        UserEntity user = userDao.selectById(1L);
+        System.out.print(user.toMap());
+        ctx.close();
+    }
+}
+```
+控制台输出
+```text
+{bonusPoints=0, gmtModified=Fri Jun 26 22:23:35 CST 2020, isDeleted=false, id=1, account=account}
+```
+第一个例子运行成功
+
+[具体示例](https://github.com/atool/fluent-mybatis-tutorial/tree/master/03-hello-world)
