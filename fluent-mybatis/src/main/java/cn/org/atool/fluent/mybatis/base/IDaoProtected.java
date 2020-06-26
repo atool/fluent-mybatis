@@ -19,26 +19,36 @@ public interface IDaoProtected<E extends IEntity, Q extends IQuery<E, Q>, U exte
     /**
      * 根据条件query删除记录
      *
-     * @param query
-     * @return
+     * @param query 条件
+     * @return 删除记录数
      */
-    int deleteByQuery(IQuery query);
+    int deleteBy(IQuery query);
 
     /**
      * 根据update设置更新记录
      *
-     * @param update
-     * @return
+     * @param update 更新条件
+     * @return 更新成功记录数
      */
-    int update(IUpdate update);
+    int updateBy(IUpdate update);
 
     /**
-     * 返回符合条件的记录数
+     * 根据query查询对应实例列表
      *
-     * @param query
-     * @return
+     * @param query 查询条件
+     * @return 实例列表
      */
-    int count(IQuery query);
+    List<E> listEntity(IQuery query);
+
+    /**
+     * 根据query查询对应实例列表
+     *
+     * @param query     查询条件
+     * @param converter 从Entity对象转换为POJO对象
+     * @param <POJO>    POJO实体类型
+     * @return POJO list
+     */
+    <POJO> List<POJO> listObjs(IQuery query, Function<E, POJO> converter);
 
     /**
      * 根据query查询记录列表, 返回Map对象列表
@@ -46,71 +56,94 @@ public interface IDaoProtected<E extends IEntity, Q extends IQuery<E, Q>, U exte
      * @param query 查询条件
      * @return map list
      */
-    List<Map> selectObjs(IQuery query);
+    List<Map<String, Object>> listMaps(IQuery query);
 
     /**
      * 根据query查询记录列表，并根据function将记录转换成需要的对象F
      *
-     * @param query    查询条件
-     * @param function 从Map记录对实体F的转换函数
-     * @param <F>
-     * @return object list
+     * @param query     查询条件
+     * @param converter 从Map记录对实体POJO的转换函数
+     * @param <POJO>    POJO实体类型
+     * @return POJO list
      */
-    <F> List<F> selectObjs(IQuery query, Function<Map<String, Object>, F> function);
+    <POJO> List<POJO> listPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+
+    /**
+     * 分页查询实例
+     *
+     * @param query 查询条件
+     * @return 分页查询结果
+     */
+    PagedList<E> pagedEntity(IQuery query);
+
+    /**
+     * 分页查询数据（结果集为Map对象）
+     *
+     * @param query 查询条件
+     * @return 分页查询结果
+     */
+    PagedList<Map<String, Object>> pagedMaps(IQuery query);
+
+    /**
+     * 分页查询数据（结果集为PoJo对象）
+     *
+     * @param query     查询条件
+     * @param converter 从Map记录对实体POJO的转换函数
+     * @param <POJO>    POJO实体类型
+     * @return 分页查询结果
+     */
+    <POJO> PagedList<POJO> pagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+
+    /**
+     * 按Marker标识分页查询
+     *
+     * @param query 查询条件
+     * @return 分页查询结果
+     */
+    MarkerList<E> markerPagedEntity(IQuery query);
+
+    /**
+     * 按Marker标识分页查询（结果集为Map对象）
+     *
+     * @param query 查询条件
+     * @return 分页查询结果
+     */
+    MarkerList<Map<String, Object>> markerPagedMaps(IQuery query);
+
+    /**
+     * 按Marker标识分页查询（结果集为PoJo对象）
+     *
+     * @param query     查询条件
+     * @param converter 从Map记录对实体POJO的转换函数
+     * @param <POJO>    POJO实体类型
+     * @return 分页查询结果
+     */
+    <POJO> MarkerList<POJO> markerPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+
+    /**
+     * 根据query查询满足条件的第一条记录
+     * 当有多条记录符合条件时，只取第一条记录
+     *
+     * @param query 查询条件
+     * @return 满足条件的一条记录
+     */
+    E findOne(IQuery query);
 
     /**
      * 根据query查询满足条件的第一条记录，并根据function解析出对应字段
      *
-     * @param query
-     * @param function 获取entity字段值函数
+     * @param query     查询条件
+     * @param converter 获取entity字段值函数
      * @param <F>
      * @return
      */
-    <F> F selectOne(IQuery query, Function<E, F> function);
+    <F> F findOne(IQuery query, Function<E, F> converter);
 
     /**
-     * 根据query查询记录列表，并根据function解析出对应字段
-     *
-     * @param query
-     * @param function 获取entity字段值函数
-     * @param <F>
-     * @return
-     */
-    <F> List<F> selectFields(IQuery query, Function<E, F> function);
-
-    /**
-     * 根据query查询满足条件的第一条记录
-     *
-     * @param query
-     * @return
-     */
-    E selectOne(IQuery query);
-
-    /**
-     * 分页查询
+     * 返回符合条件的记录数
      *
      * @param query 查询条件
-     * @return 分页查询结果
+     * @return 符合条件的记录数
      */
-    PagedList<E> selectPagedList(IQuery query);
-
-    /**
-     * 分页查询
-     *
-     * @param query 查询条件
-     * @return 分页查询结果
-     */
-    MarkerList<E> selectMarkerList(IQuery query);
-
-    /**
-     * 根据query查询记录
-     *
-     * @param query
-     * @return
-     */
-    List<E> selectList(IQuery query);
-
-    PagedList<Map> selectPagedMaps(IQuery query);
-
-    MarkerList<Map> selectMarkerMaps(IQuery query);
+    int count(IQuery query);
 }

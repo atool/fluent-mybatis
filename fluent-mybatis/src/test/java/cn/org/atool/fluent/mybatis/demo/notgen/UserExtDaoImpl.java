@@ -19,7 +19,7 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
 
     @Override
     public List<String> selectFields(Long... ids) {
-        return super.selectFields(
+        return super.listObjs(
             super.query()
                 .where.id().in(ids)
                 .end(),
@@ -31,12 +31,12 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     public List<UserEntity> selectList(Long... ids) {
         return super.query()
             .where.id().in(ids).end()
-            .execute(super::selectList);
+            .execute(super::listEntity);
     }
 
     @Override
     public List<String> selectObjs(Long... ids) {
-        return super.selectObjs(
+        return super.listPoJos(
             super.query().select(UserMapping.userName)
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(UserMapping.userName.column)
@@ -45,7 +45,7 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
 
     @Override
     public List<String> selectObjs2(Long... ids) {
-        return super.selectObjs(
+        return super.listPoJos(
             super.query().select(UserMapping.userName, UserMapping.age)
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(UserMapping.userName.column)
@@ -54,12 +54,12 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
 
     @Override
     public UserEntity selectOne(String likeName) {
-        return super.query().where.userName().like(likeName).end().execute(super::selectOne);
+        return super.query().where.userName().like(likeName).end().execute(super::findOne);
     }
 
     @Override
     public String selectOne(long id) {
-        return super.selectOne(super.query()
+        return super.findOne(super.query()
                 .where.id().eq(id).end(),
             UserEntity::getUserName);
     }
@@ -68,14 +68,14 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     public void deleteByQuery(String username) {
         super.query()
             .where.userName().eq(username).end()
-            .execute(super::deleteByQuery);
+            .execute(super::deleteBy);
     }
 
     @Override
     public void deleteByQuery(String... userNames) {
         super.query()
             .where.userName().in(userNames).end()
-            .execute(super::deleteByQuery);
+            .execute(super::deleteBy);
     }
 
     @Override
@@ -84,6 +84,6 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
             .set.userName().is(newUserName)
             .end()
             .where.id().eq(id).end()
-            .execute(super::update);
+            .execute(super::updateBy);
     }
 }

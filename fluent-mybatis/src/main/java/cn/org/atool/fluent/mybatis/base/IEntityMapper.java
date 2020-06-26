@@ -124,9 +124,9 @@ public interface IEntityMapper<T> extends IMapper {
      * 根据 query 条件，查询全部记录
      *
      * @param query 实体对象封装操作类（可以为 null）
-     * @return
+     * @return map列表
      */
-    List<Map<String, Object>> list(@Param(WRAPPER) IQuery query);
+    List<Map<String, Object>> listMaps(@Param(WRAPPER) IQuery query);
 
     /**
      * <p>

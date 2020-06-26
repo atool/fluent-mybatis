@@ -40,7 +40,7 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
         );
 
-        MarkerList<UserEntity> list = dao.selectMarkerList(new UserQuery()
+        MarkerList<UserEntity> list = dao.markerPagedEntity(new UserQuery()
             .where.
                 id().gt(20).
                 userName().like("user").end()
@@ -64,7 +64,7 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
         );
         Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMapping.id.column)).intValue();
-        MarkerList<Map> list = dao.selectMarkerMaps(new UserQuery()
+        MarkerList<Map> list = dao.markerPagedMaps(new UserQuery()
             .selectId()
             .where.
                 id().gt(20).

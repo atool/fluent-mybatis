@@ -40,7 +40,7 @@ public class SelectPagedListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
         );
 
-        PagedList<UserEntity> list = daoProtected.selectPagedList(new UserQuery()
+        PagedList<UserEntity> list = daoProtected.pagedEntity(new UserQuery()
             .where.
                 userName().like("user")
             .end()
@@ -72,7 +72,7 @@ public class SelectPagedListTest extends BaseTest {
         );
 
         Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMapping.id.column)).intValue();
-        PagedList<Map> list = daoProtected.selectPagedMaps(new UserQuery()
+        PagedList<Map> list = daoProtected.pagedMaps(new UserQuery()
             .where.
                 id().gt(20).
                 userName().like("user")

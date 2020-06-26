@@ -32,7 +32,7 @@ public interface StatementId {
 
     String Method_SelectList = "listEntity";
 
-    String Method_SelectMaps = "list";
+    String Method_SelectMaps = "listMaps";
 
     String Method_SelectObjs = "listObjs";
 
