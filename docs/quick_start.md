@@ -40,7 +40,7 @@
 </dependencies>
 ```
 
-###新建演示用的数据库结构
+### 新建演示用的数据库结构
 ```mysql
 create schema fluent_mybatis_tutorial;
 use fluent_mybatis_tutorial;
@@ -140,3 +140,4 @@ public class TutorialGeneratorMain {
 ```
 稍等片刻，基础脚手架代码就生成完毕
 
+### 开始运行第一个例子
