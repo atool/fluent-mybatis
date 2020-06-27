@@ -254,6 +254,8 @@ public class QuickStartTest extends Test4J {
     }
 }
 ```
-执行通过, 完美通关
+如果你执行通过, 恭喜你通过第一关
 
 [具体代码](https://github.com/atool/fluent-mybatis-tutorial/tree/master/03-hello-world)
+
+下面我们对生成的脚手架代码进行介绍
