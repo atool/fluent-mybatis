@@ -1,7 +1,7 @@
 # Fluent-Mybatis介绍
 
    因为github图片显示的问题，详细介绍请移步 
-   [gitee/fluent-mybatis-docs](https://gitee.com/tryternity/fluent-mybatis-docs)
+   [gitee/fluent-mybatis-docs](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
     
 ## Fluent-Mybatis能干吗
 fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开发、提高效率。
