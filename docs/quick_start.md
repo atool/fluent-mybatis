@@ -89,7 +89,6 @@ CREATE TABLE receiving_address  (
     
 ### 根据表结构生成fluent-mybatis基础代码
 ``` java
-
 public class TutorialGeneratorMain {
     /**
      * 需要生成代码的数据库链接, 这里为演示方便, 设置为本机数据库
@@ -111,19 +110,20 @@ public class TutorialGeneratorMain {
      * 各个表对应的Dao类, DaoImpl空实现类, 放在应用下
      * 本部分代码没有实际实现，仅仅是减少手工创建这些类的工作量
      */
-    static String daoJavaDir = srcDir + "/03-hello-world/src/main/java";
+    static String daoJavaDir = srcDir + "/03-quick-start/src/main/java";
 
     public static void main(String[] args) {
         MybatisGenerator.build()
+
             .globalConfig(config -> config
-                /**
-                 * 设置代码生成路径
-                 */
-                .setOutputDir(mapperJavaDir, testJavaDir, daoJavaDir)
                 /**
                  * 设置数据库连接属性
                  */
                 .setDataSource(url, "root", "password")
+                /**
+                 * 设置代码生成路径
+                 */
+                .setOutputDir(mapperJavaDir, testJavaDir, daoJavaDir)
                 /**
                  * 设置生成的代码基础package路径
                  */
@@ -139,7 +139,7 @@ public class TutorialGeneratorMain {
                      * 设置表通用字段, gmt_create是记录创建时间字段, gmt_modified是记录最后修改字段, is_deleted是表逻辑删除标识字段
                      * 这里按照一般规范, 设置了这3个字段,如果你的表没有这些约定, 也可以不用设置
                      */
-                    .setColumn("gmt_created", "gmt_modified", "is_deleted")
+                    .setColumn("gmt_create", "gmt_modified", "is_deleted")
                 )
             )
             /**
@@ -200,8 +200,22 @@ public class SpringMainDemo {
         ctx.refresh();
 
         UserDao userDao = ctx.getBean(UserDao.class);
+        /**
+         * 为了保证后续操作成功，先执行删除操作
+         */
+        userDao.deleteById(1L);
         userDao.save(new UserEntity().setId(1L).setAccount("account"));
+        /**
+         * 插入一条记录
+         */
+        userDao.save(new UserEntity().setId(1L).setAccount("account"));
+        /**
+         * 获取刚插入的记录
+         */
         UserEntity user = userDao.selectById(1L);
+        /**
+         * 打印出来
+         */
         System.out.print(user.toMap());
         ctx.close();
     }
@@ -209,7 +223,7 @@ public class SpringMainDemo {
 ```
 控制台输出
 ```text
-{bonusPoints=0, gmtModified=Fri Jun 26 22:23:35 CST 2020, isDeleted=false, id=1, account=account}
+{gmtModified=Sat Jun 27 11:12:20 CST 2020, isDeleted=false, id=1, gmtCreate=Sat Jun 27 11:12:20 CST 2020, account=account}
 ```
 第一个例子运行成功
 
