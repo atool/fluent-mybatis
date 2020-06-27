@@ -7,7 +7,7 @@ import java.util.function.Function;
  *
  * @param <E> 对应的实体类
  * @param <U> 更新器
- * @param <Q> 对应的嵌套查询器
+ * @param <NQ> 对应的嵌套查询器
  * @author darui.wu
  */
 public interface IUpdate<

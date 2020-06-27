@@ -19,14 +19,14 @@ public interface IMapperDao<E extends IEntity> {
      *
      * @return
      */
-    <Q extends IQuery<?, Q>> Q query();
+    <Q extends IQuery<E, Q>> Q query();
 
     /**
      * 构造空白更新条件
      *
      * @return
      */
-    <U extends IUpdate<?, U, ?>> U updater();
+    <U extends IUpdate<E, U, ?>> U updater();
 
     /**
      * 返回主键字段名称

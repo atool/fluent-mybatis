@@ -11,8 +11,6 @@ import java.util.function.Function;
  * IDaoProtected: 被限制在Dao基类中使用的方法
  *
  * @param <E> 实体类
- * @param <Q> 查询器
- * @param <U> 更新器
  * @author:darui.wu Created by darui.wu on 2020/6/24.
  */
 public interface IDaoProtected<E extends IEntity> {
