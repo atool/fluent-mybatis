@@ -7,6 +7,7 @@ import java.util.Collection;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_BETWEEN;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isCollection;
 
 /**
  * 比较操作
@@ -85,31 +86,17 @@ public interface IOperator<R> {
     }
 
     /**
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    default R in(Collection<Object> values) {
-        return this.apply(IN, values.toArray());
-    }
-
-    /**
      * in (values)
      *
      * @param values 条件值
      * @return 查询器或更新器
      */
     default <O> R in(O... values) {
-        return this.apply(IN, values);
-    }
-
-    /**
-     * not in (values)
-     *
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    default R notIn(Collection<Object> values) {
-        return this.apply(NOT_IN, values.toArray());
+        if (isCollection(values)) {
+            return this.apply(IN, ((Collection) values[0]).toArray());
+        } else {
+            return this.apply(IN, values);
+        }
     }
 
     /**
@@ -119,7 +106,11 @@ public interface IOperator<R> {
      * @return 查询器或更新器
      */
     default <O> R notIn(O... values) {
-        return this.apply(NOT_IN, values);
+        if (isCollection(values)) {
+            return this.apply(NOT_IN, ((Collection) values[0]).toArray());
+        } else {
+            return this.apply(NOT_IN, values);
+        }
     }
 
     /**

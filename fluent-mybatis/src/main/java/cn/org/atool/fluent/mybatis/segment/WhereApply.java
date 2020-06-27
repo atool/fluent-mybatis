@@ -39,6 +39,9 @@ public class WhereApply<
             }
             Stream.of(args).forEach(arg -> assertNotNull(current.name, arg));
         }
+        if (op.getArgSize() == -1) {
+            assertNotEmpty(current.name, args);
+        }
         return this.segment.apply(current.column, op, args);
     }
 
@@ -226,29 +229,28 @@ public class WhereApply<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    public <O> WHERE in(boolean condition, O... values) {
-        return this.apply(condition, IN, values);
-    }
-
-    /**
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in(boolean condition, Collection<Object> values) {
-        if (condition) {
-            return this.apply(IN, values.toArray());
+    public <O> WHERE in_If(boolean condition, O... values) {
+        if (!condition) {
+            return segment;
         } else {
-            return this.segment;
+            return this.in(values);
         }
     }
 
     /**
+     * in (values)
+     *
      * @param values 条件值
      * @return 查询器或更新器
      */
-    public WHERE in_IfNotEmpty(Collection<Object> values) {
-        return this.in(values != null && !values.isEmpty(), values);
+    public <O> WHERE in_IfNotEmpty(O... values) {
+        if (isCollection(values)) {
+            return this.in_IfNotEmpty(((Collection) values[0]).toArray());
+        } else if (values == null || values.length == 0) {
+            return this.segment;
+        } else {
+            return this.in(values);
+        }
     }
 
     /**
@@ -259,7 +261,11 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     public <O> WHERE inSql(String select, O... values) {
-        return this.segment.apply(current.column, select, IN, values);
+        if (isCollection(values)) {
+            return this.segment.apply(current.column, select, IN, ((Collection) values[0]).toArray());
+        } else {
+            return this.segment.apply(current.column, select, IN, values);
+        }
     }
 
     /**
@@ -287,24 +293,21 @@ public class WhereApply<
     }
 
     /**
-     * in (values)
-     *
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in_IfNotEmpty(Object[] values) {
-        return this.in(values != null && values.length > 0, values);
-    }
-
-    /**
      * not in (values)
      *
      * @param condition 为真时成立
      * @param values    条件值
      * @return 查询器或更新器
      */
-    public WHERE notIn(boolean condition, Collection<Object> values) {
-        return condition ? this.notIn(values) : segment;
+    public <O> WHERE notIn_If(boolean condition, O... values) {
+        if (!condition) {
+            return this.segment;
+        }
+        if (isCollection(values)) {
+            return this.apply(NOT_IN, ((Collection) values[0]).toArray());
+        } else {
+            return this.apply(NOT_IN, values);
+        }
     }
 
     /**
@@ -313,29 +316,14 @@ public class WhereApply<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    public WHERE notIn_IfNotEmpty(Collection<Object> values) {
-        return this.notIn(values != null && !values.isEmpty(), values);
-    }
-
-    /**
-     * not in (values)
-     *
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notIn(boolean condition, Object[] values) {
-        return this.apply(condition, NOT_IN, values);
-    }
-
-    /**
-     * not in (values)
-     *
-     * @param values 条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notIn_IfNotEmpty(Object[] values) {
-        return this.notIn(values != null && values.length > 0, values);
+    public <O> WHERE notIn_IfNotEmpty(O... values) {
+        if (isCollection(values)) {
+            return this.notIn_IfNotEmpty(((Collection) values[0]).toArray());
+        } else if (values == null || values.length == 0) {
+            return this.segment;
+        } else {
+            return this.notIn(values);
+        }
     }
 
     /**

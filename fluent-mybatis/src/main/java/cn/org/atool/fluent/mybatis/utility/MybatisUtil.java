@@ -294,6 +294,14 @@ public class MybatisUtil {
         isTrue(object != null, message, params);
     }
 
+    public static <O> boolean isCollection(O... args) {
+        if (args != null && args.length == 1 && args[0] instanceof Collection) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * fluent mybatis version
      *
