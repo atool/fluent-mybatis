@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author generate code
 */
-public abstract class NoPrimaryBaseDao extends BaseDaoImpl<NoPrimaryEntity, NoPrimaryQuery, NoPrimaryUpdate>
+public abstract class NoPrimaryBaseDao extends BaseDaoImpl<NoPrimaryEntity>
         implements NoPrimaryMapping {
 
     @Autowired

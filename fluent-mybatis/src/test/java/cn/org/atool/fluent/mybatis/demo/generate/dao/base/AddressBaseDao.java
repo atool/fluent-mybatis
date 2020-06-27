@@ -14,8 +14,8 @@ import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
  *
  * @author generate code
 */
-public abstract class AddressBaseDao extends BaseDaoImpl<AddressEntity, AddressQuery, AddressUpdate>
-        implements AddressMapping, MyCustomerInterface<AddressEntity, AddressQuery, AddressUpdate> {
+public abstract class AddressBaseDao extends BaseDaoImpl<AddressEntity>
+        implements AddressMapping, MyCustomerInterface<AddressEntity> {
 
     @Autowired
     protected AddressMapper mapper;

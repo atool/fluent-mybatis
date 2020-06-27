@@ -22,13 +22,11 @@ import static java.util.stream.Collectors.toList;
  * ！！！！！！！！！！！！
  *
  * @param <E> 实体类
- * @param <Q> 查询器
- * @param <U> 更新器
  * @author darui.wu
  * @create 2020/6/24 10:23 上午
  */
-public abstract class DaoProtectedImpl<E extends IEntity, Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>>
-    implements IBaseDao<E, Q, U>, IDaoProtected<E, Q, U> {
+public abstract class DaoProtectedImpl<E extends IEntity>
+    implements IMapperDao<E>, IDaoProtected<E> {
 
     @Override
     public int deleteBy(IQuery query) {

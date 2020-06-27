@@ -12,10 +12,10 @@ import java.util.function.Function;
  */
 public interface IUpdate<
     E extends IEntity,
-    U extends IWrapper<E, U, Q>,
-    Q extends IQuery<E, Q>
+    U extends IWrapper<E, U, NQ>,
+    NQ extends IQuery<E, NQ>
     >
-    extends IWrapper<E, U, Q> {
+    extends IWrapper<E, U, NQ> {
     /**
      * 设置limit值
      *

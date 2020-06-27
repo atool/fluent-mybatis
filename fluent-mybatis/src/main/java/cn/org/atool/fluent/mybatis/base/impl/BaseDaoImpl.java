@@ -17,13 +17,11 @@ import static java.util.stream.Collectors.toSet;
  * BaseDaoImpl
  *
  * @param <E> 实体类
- * @param <Q> 查询器
- * @param <U> 更新器
  * @author darui.wu
  */
-public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>>
-    extends DaoProtectedImpl<E, Q, U>
-    implements IDao<E> {
+public abstract class BaseDaoImpl<E extends IEntity>
+    extends DaoProtectedImpl<E> implements IBaseDao<E> {
+
     @Override
     public <PK extends Serializable> PK save(E entity) {
         this.mapper().insert(entity);
@@ -62,13 +60,13 @@ public abstract class BaseDaoImpl<E extends IEntity, Q extends IQuery<E, Q>, U e
 
     @Override
     public List<E> selectByMap(Map<String, Object> where) {
-        IQuery query = (IQuery) this.query().where().eqByNotNull((Map) where).end();
+        IQuery query = this.query().where().eqByNotNull(where).end();
         return this.mapper().listEntity(query);
     }
 
     @Override
     public boolean existPk(Serializable id) {
-        Q query = this.query().where().and(this.findPkColumn(), EQ, id).end();
+        IQuery query = this.query().where().and(this.findPkColumn(), EQ, id).end();
         Integer count = this.mapper().count(query);
         return count != null && count > 0;
     }

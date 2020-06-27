@@ -14,8 +14,8 @@ import cn.org.atool.fluent.mybatis.demo.MyCustomerInterface;
  *
  * @author generate code
 */
-public abstract class UserBaseDao extends BaseDaoImpl<UserEntity, UserQuery, UserUpdate>
-        implements UserMapping, MyCustomerInterface<UserEntity, UserQuery, UserUpdate> {
+public abstract class UserBaseDao extends BaseDaoImpl<UserEntity>
+        implements UserMapping, MyCustomerInterface<UserEntity> {
 
     @Autowired
     protected UserMapper mapper;

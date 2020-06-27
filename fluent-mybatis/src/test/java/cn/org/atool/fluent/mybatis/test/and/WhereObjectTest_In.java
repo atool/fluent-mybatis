@@ -50,7 +50,7 @@ public class WhereObjectTest_In extends BaseTest {
     public void in_array() {
         UserQuery query = new UserQuery()
             .where
-            .age().in(new Integer[]{34, 35})
+            .age().in(34, 35)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);

@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @param <U> 更新器
  * @author:darui.wu Created by darui.wu on 2020/6/24.
  */
-public interface IDaoProtected<E extends IEntity, Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>> {
+public interface IDaoProtected<E extends IEntity> {
     /**
      * 根据条件query删除记录
      *

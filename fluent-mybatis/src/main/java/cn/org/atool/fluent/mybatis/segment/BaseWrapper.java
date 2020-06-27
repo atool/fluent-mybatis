@@ -13,17 +13,17 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
 /**
  * 查询条件封装
  *
- * @param <E> 对应的实体类
- * @param <W> 更新器或查询器
- * @param <Q> 对应的嵌套查询器
+ * @param <E>  对应的实体类
+ * @param <W>  更新器或查询器
+ * @param <NQ> 对应的嵌套查询器
  * @author darui.wu
  */
 public abstract class BaseWrapper<
     E extends IEntity,
-    W extends IWrapper<E, W, Q>,
-    Q extends IQuery<E, Q>
+    W extends IWrapper<E, W, NQ>,
+    NQ extends IQuery<E, NQ>
     >
-    implements IWrapper<E, W, Q> {
+    implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
 
     @Getter

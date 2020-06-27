@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author generate code
 */
-public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity, NoAutoIdQuery, NoAutoIdUpdate>
+public abstract class NoAutoIdBaseDao extends BaseDaoImpl<NoAutoIdEntity>
         implements NoAutoIdMapping {
 
     @Autowired

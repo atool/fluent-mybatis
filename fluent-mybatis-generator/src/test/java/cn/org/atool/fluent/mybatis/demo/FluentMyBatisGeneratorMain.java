@@ -24,8 +24,7 @@ public class FluentMyBatisGeneratorMain {
                 .table("t_user", t -> t.enablePartition())
                 .foreach(t -> t
                     .setColumn("gmt_created", "gmt_modified", "is_deleted")
-                    .setColumnType("is_deleted", ColumnJavaType.BOOLEAN)
-                    .addBaseDaoInterface(dao_interface, "${entity}", "${query}", "${update}")
+                    .addBaseDaoInterface(dao_interface, "${entity}")
                     .setTablePrefix("t_")
                     .addEntityInterface("cn.org.atool.fluent.mybatis.demo.IBaseEntity", "${entity}")
                 )

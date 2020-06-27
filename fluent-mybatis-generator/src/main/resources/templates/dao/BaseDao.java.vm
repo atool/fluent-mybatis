@@ -14,7 +14,7 @@ $!{baseDao.interfaces}
  *
  * @author ${author}
 */
-public abstract class ${baseDao.name} extends BaseDaoImpl<${entity.name}, ${entityQuery.name}, ${entityUpdate.name}>
+public abstract class ${baseDao.name} extends BaseDaoImpl<${entity.name}>
         implements ${mapping.name}$!{baseDao.interfaceName} {
 
     @Autowired

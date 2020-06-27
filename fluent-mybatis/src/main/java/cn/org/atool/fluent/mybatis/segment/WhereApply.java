@@ -31,7 +31,7 @@ public class WhereApply<
     }
 
     @Override
-    public WHERE apply(SqlOp op, Object... args) {
+    public <O> WHERE apply(SqlOp op, O... args) {
         if (op.getArgSize() > 0) {
             assertNotEmpty(current.name, args);
             if (args.length != op.getArgSize()) {
@@ -42,7 +42,7 @@ public class WhereApply<
         return this.segment.apply(current.column, op, args);
     }
 
-    private WHERE apply(boolean condition, SqlOp op, Object... args) {
+    private <O> WHERE apply(boolean condition, SqlOp op, O... args) {
         return condition ? this.apply(op, args) : segment;
     }
 
@@ -218,6 +218,18 @@ public class WhereApply<
         return this.apply(value != null, LE, value);
     }
 
+
+    /**
+     * in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public <O> WHERE in(boolean condition, O... values) {
+        return this.apply(condition, IN, values);
+    }
+
     /**
      * @param condition 为真时成立
      * @param values    条件值
@@ -240,24 +252,13 @@ public class WhereApply<
     }
 
     /**
-     * in (values)
-     *
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in(boolean condition, Object[] values) {
-        return this.apply(condition, IN, values);
-    }
-
-    /**
      * where column IN (select ... )
      *
      * @param select 子查询语句
      * @param values 子查询语句参数，对应select语句里面的 "?" 占位符
      * @return 查询器或更新器
      */
-    public WHERE inSql(String select, Object... values) {
+    public <O> WHERE inSql(String select, O... values) {
         return this.segment.apply(current.column, select, IN, values);
     }
 

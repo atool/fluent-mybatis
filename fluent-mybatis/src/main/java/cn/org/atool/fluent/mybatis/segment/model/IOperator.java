@@ -22,7 +22,7 @@ public interface IOperator<R> {
      * @param args
      * @return
      */
-    R apply(SqlOp op, Object... args);
+    <O> R apply(SqlOp op, O... args);
 
     /**
      * 等于 =
@@ -98,7 +98,7 @@ public interface IOperator<R> {
      * @param values 条件值
      * @return 查询器或更新器
      */
-    default R in(Object... values) {
+    default <O> R in(O... values) {
         return this.apply(IN, values);
     }
 
@@ -118,7 +118,7 @@ public interface IOperator<R> {
      * @param values 条件值
      * @return 查询器或更新器
      */
-    default R notIn(Object... values) {
+    default <O> R notIn(O... values) {
         return this.apply(NOT_IN, values);
     }
 
