@@ -10,7 +10,6 @@ import cn.org.atool.fluent.mybatis.method.model.InjectMethodResource;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
