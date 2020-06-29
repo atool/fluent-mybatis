@@ -104,119 +104,67 @@
     </select>
     <select id="listEntity" parameterType="java.util.Map" resultMap="BaseResultMap">
         <if test="ew.wrapperData != null"></if>
+
+        SELECT
+        <if test="ew.wrapperData.distinct"> DISTINCT </if>
         <choose>
-            <when test="ew.wrapperData.paged == null">
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-            </when>
-            <otherwise>
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </otherwise>
+            <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
+        FROM t_user
+        <where>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
+        </where>
+
+        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
     <select id="listMaps" parameterType="java.util.Map" resultType="java.util.Map">
         <if test="ew.wrapperData != null"></if>
+
+        SELECT
+        <if test="ew.wrapperData.distinct"> DISTINCT </if>
         <choose>
-            <when test="ew.wrapperData.paged == null">
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-            </when>
-            <otherwise>
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </otherwise>
+            <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
+        FROM t_user
+        <where>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
+        </where>
+
+        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
     <select id="listObjs" parameterType="java.util.Map" resultType="java.lang.Object">
         <if test="ew.wrapperData != null"></if>
+
+        SELECT
+        <if test="ew.wrapperData.distinct"> DISTINCT </if>
         <choose>
-            <when test="ew.wrapperData.paged == null">
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-            </when>
-            <otherwise>
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </otherwise>
+            <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
+        FROM t_user
+        <where>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
+        </where>
+
+        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
     <select id="findOne" parameterType="java.util.Map" resultMap="BaseResultMap">
         <if test="ew.wrapperData != null"></if>
+
+        SELECT
+        <if test="ew.wrapperData.distinct"> DISTINCT </if>
         <choose>
-            <when test="ew.wrapperData.paged == null">
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-            </when>
-            <otherwise>
-                SELECT
-                <if test="ew.wrapperData.distinct"> DISTINCT </if>
-                <choose>
-                    <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-                    <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
-                </choose>
-                FROM t_user
-                <where>
-                    <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
-                </where>
-                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </otherwise>
+            <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
+            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
+        FROM t_user
+        <where>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
+        </where>
+
+        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
     <select id="count" parameterType="java.util.Map" resultType="int">
         <if test="ew.wrapperData != null"></if>
@@ -318,5 +266,6 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.limit} </if>
     </update>
 </mapper>
