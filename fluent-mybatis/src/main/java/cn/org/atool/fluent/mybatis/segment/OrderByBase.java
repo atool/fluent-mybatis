@@ -61,7 +61,7 @@ public abstract class OrderByBase<
      * @param columns 排序字段列表
      * @return 排序对象
      */
-    public W asc(FieldMeta column, FieldMeta... columns) {
+    public O asc(FieldMeta column, FieldMeta... columns) {
         return orderBy(column, columns, ASC);
     }
 
@@ -88,17 +88,17 @@ public abstract class OrderByBase<
      * @param columns 排序字段列表
      * @return 排序对象
      */
-    public W desc(FieldMeta column, FieldMeta... columns) {
+    public O desc(FieldMeta column, FieldMeta... columns) {
         return orderBy(column, columns, DESC);
     }
 
-    private W orderBy(FieldMeta column, FieldMeta[] columns, String asc) {
+    private O orderBy(FieldMeta column, FieldMeta[] columns, String asc) {
         String segment = column.column + SPACE + asc;
         if (isNotEmpty(columns)) {
             segment = segment + COMMA_SPACE + Stream.of(columns).map(f -> f.column + SPACE + asc).collect(joining(COMMA_SPACE));
         }
         this.apply(segment);
-        return (W) this;
+        return (O) this;
     }
 
     /**

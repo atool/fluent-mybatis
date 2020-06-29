@@ -42,10 +42,14 @@ public class WhereApply<
         if (op.getArgSize() == -1) {
             assertNotEmpty(current.name, args);
         }
-        return this.segment.apply(current.column, op, args);
+        if (op == IN && args.length == 1) {
+            return this.segment.apply(current.column, EQ, args[0]);
+        } else {
+            return this.segment.apply(current.column, op, args);
+        }
     }
 
-    private <O> WHERE apply(boolean condition, SqlOp op, O... args) {
+    public <O> WHERE apply(boolean condition, SqlOp op, O... args) {
         return condition ? this.apply(op, args) : segment;
     }
 
@@ -665,7 +669,9 @@ public class WhereApply<
     }
 
     /**
-     * set 自定义
+     * set 自定义(包括操作符在内）
+     * 比如 where.age().apply("=34").end()
+     * <p>
      * ！！！慎用！！！！
      * 有sql注入风险
      *
