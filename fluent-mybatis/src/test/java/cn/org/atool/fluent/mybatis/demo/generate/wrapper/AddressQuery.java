@@ -31,7 +31,7 @@ public class AddressQuery extends BaseQuery<AddressEntity, AddressQuery> {
     /**
      * 排序设置 order by ...
      */
-    public final OrderBy orderBy = new OrderBy(this);
+    public final QueryOrderBy orderBy = new QueryOrderBy(this);
     /**
      * 条件设置 where ...
      */

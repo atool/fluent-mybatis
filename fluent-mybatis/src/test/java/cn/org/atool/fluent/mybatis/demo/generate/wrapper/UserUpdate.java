@@ -4,8 +4,7 @@ import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.UpdateSetter;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.UpdateWhere;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
@@ -17,13 +16,17 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
  */
 public class UserUpdate extends BaseUpdate<UserEntity, UserUpdate, UserQuery> {
     /**
-     * 更新条件设置
-     */
-    public final UpdateWhere where = new UpdateWhere(this);
-    /**
      * 更新值设置
      */
     public final UpdateSetter set = new UpdateSetter(this);
+    /**
+    * 更新条件设置
+    */
+    public final UpdateWhere where = new UpdateWhere(this);
+    /**
+    *  order by
+    */
+    public final UpdateOrderBy orderBy = new UpdateOrderBy(this);
 
     public UserUpdate(){
         super(UserMapping.Table_Name, UserEntity.class, UserQuery.class);

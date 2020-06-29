@@ -84,11 +84,22 @@ public class NoPrimaryWrapperHelper {
     /**
      * OrderBy设置
      */
-    public static final class OrderBy extends OrderByBase<OrderBy, NoPrimaryQuery>
-        implements ISegment<OrderBy> {
+    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, NoPrimaryQuery>
+        implements ISegment<QueryOrderBy> {
 
-        public OrderBy(NoPrimaryQuery query) {
+        public QueryOrderBy(NoPrimaryQuery query) {
             super(query);
+        }
+    }
+
+    /**
+     * OrderBy设置
+     */
+    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, NoPrimaryUpdate>
+        implements ISegment<UpdateOrderBy> {
+
+        public UpdateOrderBy(NoPrimaryUpdate updator) {
+            super(updator);
         }
     }
 

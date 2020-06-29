@@ -31,7 +31,7 @@ public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
     /**
      * 排序设置 order by ...
      */
-    public final OrderBy orderBy = new OrderBy(this);
+    public final QueryOrderBy orderBy = new QueryOrderBy(this);
     /**
      * 条件设置 where ...
      */

@@ -84,11 +84,22 @@ public class NoAutoIdWrapperHelper {
     /**
      * OrderBy设置
      */
-    public static final class OrderBy extends OrderByBase<OrderBy, NoAutoIdQuery>
-        implements ISegment<OrderBy> {
+    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, NoAutoIdQuery>
+        implements ISegment<QueryOrderBy> {
 
-        public OrderBy(NoAutoIdQuery query) {
+        public QueryOrderBy(NoAutoIdQuery query) {
             super(query);
+        }
+    }
+
+    /**
+     * OrderBy设置
+     */
+    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, NoAutoIdUpdate>
+        implements ISegment<UpdateOrderBy> {
+
+        public UpdateOrderBy(NoAutoIdUpdate updator) {
+            super(updator);
         }
     }
 

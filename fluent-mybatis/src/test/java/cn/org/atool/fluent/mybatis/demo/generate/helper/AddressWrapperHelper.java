@@ -100,11 +100,22 @@ public class AddressWrapperHelper {
     /**
      * OrderBy设置
      */
-    public static final class OrderBy extends OrderByBase<OrderBy, AddressQuery>
-        implements ISegment<OrderBy> {
+    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, AddressQuery>
+        implements ISegment<QueryOrderBy> {
 
-        public OrderBy(AddressQuery query) {
+        public QueryOrderBy(AddressQuery query) {
             super(query);
+        }
+    }
+
+    /**
+     * OrderBy设置
+     */
+    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, AddressUpdate>
+        implements ISegment<UpdateOrderBy> {
+
+        public UpdateOrderBy(AddressUpdate updator) {
+            super(updator);
         }
     }
 

@@ -31,7 +31,7 @@ public class NoPrimaryQuery extends BaseQuery<NoPrimaryEntity, NoPrimaryQuery> {
     /**
      * 排序设置 order by ...
      */
-    public final OrderBy orderBy = new OrderBy(this);
+    public final QueryOrderBy orderBy = new QueryOrderBy(this);
     /**
      * 条件设置 where ...
      */

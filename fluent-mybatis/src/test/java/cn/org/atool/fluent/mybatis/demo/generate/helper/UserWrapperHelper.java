@@ -112,11 +112,22 @@ public class UserWrapperHelper {
     /**
      * OrderBy设置
      */
-    public static final class OrderBy extends OrderByBase<OrderBy, UserQuery>
-        implements ISegment<OrderBy> {
+    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, UserQuery>
+        implements ISegment<QueryOrderBy> {
 
-        public OrderBy(UserQuery query) {
+        public QueryOrderBy(UserQuery query) {
             super(query);
+        }
+    }
+
+    /**
+     * OrderBy设置
+     */
+    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, UserUpdate>
+        implements ISegment<UpdateOrderBy> {
+
+        public UpdateOrderBy(UserUpdate updator) {
+            super(updator);
         }
     }
 

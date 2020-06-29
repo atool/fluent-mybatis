@@ -4,8 +4,7 @@ import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.AddressEntity;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressMapping;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressWrapperHelper.UpdateSetter;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressWrapperHelper.UpdateWhere;
+import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressWrapperHelper.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
@@ -17,13 +16,17 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
  */
 public class AddressUpdate extends BaseUpdate<AddressEntity, AddressUpdate, AddressQuery> {
     /**
-     * 更新条件设置
-     */
-    public final UpdateWhere where = new UpdateWhere(this);
-    /**
      * 更新值设置
      */
     public final UpdateSetter set = new UpdateSetter(this);
+    /**
+    * 更新条件设置
+    */
+    public final UpdateWhere where = new UpdateWhere(this);
+    /**
+    *  order by
+    */
+    public final UpdateOrderBy orderBy = new UpdateOrderBy(this);
 
     public AddressUpdate(){
         super(AddressMapping.Table_Name, AddressEntity.class, AddressQuery.class);
