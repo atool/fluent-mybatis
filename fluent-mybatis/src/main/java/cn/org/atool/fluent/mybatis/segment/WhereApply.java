@@ -229,12 +229,42 @@ public class WhereApply<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    public <O> WHERE in_If(boolean condition, O... values) {
-        if (!condition) {
-            return segment;
-        } else {
-            return this.in(values);
-        }
+    public WHERE in(boolean condition, Object[] values) {
+        return condition ? this.in(values) : this.segment;
+    }
+
+    /**
+     * in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public WHERE in(boolean condition, int[] values) {
+        return this.in(condition, toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public WHERE in(boolean condition, long[] values) {
+        return this.in(condition, toArray(values));
+    }
+
+
+    /**
+     * in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public WHERE in(boolean condition, Collection values) {
+        return condition ? this.in(values) : this.segment;
     }
 
     /**
@@ -243,28 +273,52 @@ public class WhereApply<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    public <O> WHERE in_IfNotEmpty(O... values) {
-        if (isCollection(values)) {
-            return this.in_IfNotEmpty(((Collection) values[0]).toArray());
-        } else if (values == null || values.length == 0) {
-            return this.segment;
-        } else {
-            return this.in(values);
-        }
+    public WHERE in_IfNotEmpty(Object[] values) {
+        return this.in(isNotEmpty(values), values);
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    public WHERE in_IfNotEmpty(int[] values) {
+        return this.in_IfNotEmpty(toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    public WHERE in_IfNotEmpty(long[] values) {
+        return this.in_IfNotEmpty(toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    public WHERE in_IfNotEmpty(Collection values) {
+        return this.in(isNotEmpty(values), values);
     }
 
     /**
      * where column IN (select ... )
      *
      * @param select 子查询语句
-     * @param values 子查询语句参数，对应select语句里面的 "?" 占位符
+     * @param args   子查询语句参数，对应select语句里面的 "?" 占位符
      * @return 查询器或更新器
      */
-    public <O> WHERE inSql(String select, O... values) {
-        if (isCollection(values)) {
-            return this.segment.apply(current.column, select, IN, ((Collection) values[0]).toArray());
+    public <O> WHERE inSql(String select, O... args) {
+        if (isCollection(args)) {
+            return this.segment.apply(current.column, select, IN, ((Collection) args[0]).toArray());
         } else {
-            return this.segment.apply(current.column, select, IN, values);
+            return this.segment.apply(current.column, select, IN, args);
         }
     }
 
@@ -299,15 +353,41 @@ public class WhereApply<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    public <O> WHERE notIn_If(boolean condition, O... values) {
-        if (!condition) {
-            return this.segment;
-        }
-        if (isCollection(values)) {
-            return this.apply(NOT_IN, ((Collection) values[0]).toArray());
-        } else {
-            return this.apply(NOT_IN, values);
-        }
+    public WHERE notIn(boolean condition, Object[] values) {
+        return condition ? this.notIn(values) : this.segment;
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public WHERE notIn(boolean condition, int[] values) {
+        return this.notIn(condition, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public WHERE notIn(boolean condition, long[] values) {
+        return this.notIn(condition, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param condition 为真时成立
+     * @param values    条件值
+     * @return 查询器或更新器
+     */
+    public WHERE notIn(boolean condition, Collection values) {
+        return condition ? this.notIn(values) : this.segment;
     }
 
     /**
@@ -316,14 +396,38 @@ public class WhereApply<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    public <O> WHERE notIn_IfNotEmpty(O... values) {
-        if (isCollection(values)) {
-            return this.notIn_IfNotEmpty(((Collection) values[0]).toArray());
-        } else if (values == null || values.length == 0) {
-            return this.segment;
-        } else {
-            return this.notIn(values);
-        }
+    public WHERE notIn_IfNotEmpty(Object[] values) {
+        return this.notIn(isNotEmpty(values), values);
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    public WHERE notIn_IfNotEmpty(int[] values) {
+        return this.notIn_IfNotEmpty(toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    public WHERE notIn_IfNotEmpty(long[] values) {
+        return this.notIn_IfNotEmpty(toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    public WHERE notIn_IfNotEmpty(Collection values) {
+        return this.notIn(isNotEmpty(values), values);
     }
 
     /**

@@ -46,6 +46,16 @@ public abstract class GroupByBase<
         return (G) this;
     }
 
+    /**
+     * 添加group by字段列表
+     *
+     * @param columns 字段列表
+     * @return groupBy选择器
+     */
+    public G apply(FieldMeta... columns) {
+        Stream.of(columns).filter(c -> c != null).map(c -> c.column).forEach(apply::add);
+        return (G) this;
+    }
 
     @Override
     public G set(FieldMeta field) {

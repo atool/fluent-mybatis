@@ -27,7 +27,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
     public void notIn_condition() {
         UserQuery query = new UserQuery()
             .where
-            .age().notIn_If(true, Arrays.asList(34, 35))
+            .age().notIn(true, Arrays.asList(34, 35))
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age NOT IN (?, ?)");
@@ -60,7 +60,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
     public void notIn_array_condition() {
         UserQuery query = new UserQuery()
             .where
-            .age().notIn_If(true, new Integer[]{34, 35})
+            .age().notIn(true, new Integer[]{34, 35})
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age NOT IN (?, ?)");
@@ -71,7 +71,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
     public void notIn_array2_condition() {
         UserQuery query = new UserQuery()
             .where
-            .age().notIn_If(true, new Integer[]{34, 35})
+            .age().notIn(true, new Integer[]{34, 35})
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age NOT IN (?, ?)");

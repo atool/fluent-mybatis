@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_SelectList;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
 
 /**
  * SelectList: 查询满足条件所有数据
@@ -31,11 +32,15 @@ public class SelectList extends AbstractMethod {
         String noPageXml = this.noPageXml(table);
 
         SqlBuilder builder = SqlBuilder.instance();
-        String xml = builder
+        builder
             .begin(StatementType.select, statementId(), Map.class, resultType())
-            .checkWrapper()
-            .choosePaged(noPageXml, super.getDbType().selectByPaged(noPageXml))
-            .end(StatementType.select)
+            .checkWrapper();
+        if (super.getDbType().isCanDirectLimit()) {
+            builder.append(noPageXml).limitDirectly();
+        } else {
+            builder.choosePaged(noPageXml, super.getDbType().selectByPaged(noPageXml));
+        }
+        String xml = builder.end(StatementType.select)
             .toString();
         return xml;
     }

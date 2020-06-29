@@ -28,7 +28,7 @@ public class HavingTest extends BaseTest {
             .having
             .age().sum().between(2, 10)
             .id().count().gt(2)
-            .age().avg().in(2, 3)
+            .age().avg().in(new int[]{2, 3})
             .age().min().gt(10)
             .apply("avg").gt(10)
             .age().max().lt(20)

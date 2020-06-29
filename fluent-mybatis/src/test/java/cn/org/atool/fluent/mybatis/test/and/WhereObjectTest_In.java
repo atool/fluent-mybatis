@@ -28,7 +28,7 @@ public class WhereObjectTest_In extends BaseTest {
     public void in_condition() {
         UserQuery query = new UserQuery()
             .where
-            .age().in_If(true, Arrays.asList(34, 35))
+            .age().in(true, Arrays.asList(34, 35))
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -50,7 +50,7 @@ public class WhereObjectTest_In extends BaseTest {
     public void in_array() {
         UserQuery query = new UserQuery()
             .where
-            .age().in(34, 35)
+            .age().in(new int[]{34, 35})
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -61,7 +61,7 @@ public class WhereObjectTest_In extends BaseTest {
     public void in_array_condition() {
         UserQuery query = new UserQuery()
             .where
-            .age().in_If(true, new Integer[]{34, 35})
+            .age().in(true, new Integer[]{34, 35})
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -72,7 +72,7 @@ public class WhereObjectTest_In extends BaseTest {
     public void in_array2_condition() {
         UserQuery query = new UserQuery()
             .where
-            .age().in_If(true, new Integer[]{34, 35})
+            .age().in(true, new Integer[]{34, 35})
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);

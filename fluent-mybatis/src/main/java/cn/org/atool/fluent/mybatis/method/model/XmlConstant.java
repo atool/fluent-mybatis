@@ -45,6 +45,8 @@ public interface XmlConstant {
 
     String Wrapper_Page_Is_Null = String.format("%s.paged == null", Wrapper_Data);
 
+    String Wrapper_Page_Not_Null = String.format("%s.paged != null", Wrapper_Data);
+
     String Wrapper_Distinct_True = String.format("%s.distinct", Wrapper_Data);
 
     String Wrapper_Select_Not_Null = String.format("%s.sqlSelect != null", Wrapper_Data);

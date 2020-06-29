@@ -54,6 +54,18 @@ public abstract class OrderByBase<
     }
 
     /**
+     * 按升序排：ORDER BY 字段, ... ASC
+     * <p>例: asc("id", "name")</p>
+     *
+     * @param column  排序字段
+     * @param columns 排序字段列表
+     * @return 排序对象
+     */
+    public W asc(FieldMeta column, FieldMeta... columns) {
+        return orderBy(column, columns, ASC);
+    }
+
+    /**
      * 按降序排：ORDER BY 字段, ... DESC
      * <p>例: desc("id", "name")</p>
      *
@@ -67,6 +79,26 @@ public abstract class OrderByBase<
             last.append(SPACE + DESC);
         }
         return (O) this;
+    }
+
+    /**
+     * 按降序排：ORDER BY 字段, ... DESC
+     * <p>例: desc("id", "name")</p>
+     *
+     * @param columns 排序字段列表
+     * @return 排序对象
+     */
+    public W desc(FieldMeta column, FieldMeta... columns) {
+        return orderBy(column, columns, DESC);
+    }
+
+    private W orderBy(FieldMeta column, FieldMeta[] columns, String asc) {
+        String segment = column.column + SPACE + asc;
+        if (isNotEmpty(columns)) {
+            segment = segment + COMMA_SPACE + Stream.of(columns).map(f -> f.column + SPACE + asc).collect(joining(COMMA_SPACE));
+        }
+        this.apply(segment);
+        return (W) this;
     }
 
     /**

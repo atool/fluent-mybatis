@@ -13,19 +13,19 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql"),
+    MYSQL("mysql", true),
     /**
      * MARIADB
      */
-    MARIADB("mariadb"),
+    MARIADB("mariadb", true),
     /**
      * H2
      */
-    H2("h2"),
+    H2("h2", true),
     /**
      * SQLITE
      */
-    SQLITE("sqlite"),
+    SQLITE("sqlite", true),
     /**
      * ORACLE
      */
@@ -41,7 +41,7 @@ public enum DbType {
     /**
      * POSTGRE
      */
-    POSTGRE_SQL("postgresql"),
+    POSTGRE_SQL("postgresql", true),
     /**
      * SQLSERVER2005
      */
@@ -99,7 +99,18 @@ public enum DbType {
         }
     }
 
+    /**
+     * 是否可以直接limit
+     */
+    @Getter
+    private final boolean canDirectLimit;
+
     DbType(String alias) {
+        this(alias, false);
+    }
+
+    DbType(String alias, boolean canDirectLimit) {
         this.alias = alias;
+        this.canDirectLimit = canDirectLimit;
     }
 }

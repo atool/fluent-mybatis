@@ -347,7 +347,7 @@ public class SqlBuilder {
      * @return
      */
     public static String safeParam(final String param) {
-        return "#{" + param + "}" ;
+        return "#{" + param + "}";
     }
 
     /**
@@ -455,5 +455,15 @@ public class SqlBuilder {
     public SqlBuilder choosePaged(String noPagedXml, String withPagedXml) {
         this.choose(Wrapper_Page_Is_Null, noPagedXml, withPagedXml);
         return this;
+    }
+
+    /**
+     * 直接在sql中添加 limit x, y 语句
+     *
+     * @return
+     */
+    public SqlBuilder limitDirectly() {
+        return this.ifThen(Wrapper_Page_Not_Null,
+            () -> this.append(" LIMIT %s, %s ", Wrapper_Paged_Offset, Wrapper_Paged_Size));
     }
 }

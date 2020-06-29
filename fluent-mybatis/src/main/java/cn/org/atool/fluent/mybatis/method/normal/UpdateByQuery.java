@@ -30,13 +30,16 @@ public class UpdateByQuery extends AbstractMethod {
     @Override
     public String getMethodSql(Class entity, TableMeta table) {
         SqlBuilder builder = SqlBuilder.instance();
-        String xml = builder
+        builder
             .begin(StatementType.update, statementId(), Map.class)
             .checkWrapper()
             .update(table, super.isSpecTable())
             .set(() -> update(table, builder))
-            .where(() -> super.whereByWrapper(builder))
-            .end(StatementType.update)
+            .where(() -> super.whereByWrapper(builder));
+        if (super.getDbType().isCanDirectLimit()) {
+            builder.ifThen(Wrapper_Page_Not_Null, () -> builder.append(" LIMIT %s ", Wrapper_Paged_Size));
+        }
+        String xml = builder.end(StatementType.update)
             .toString();
         return xml;
     }

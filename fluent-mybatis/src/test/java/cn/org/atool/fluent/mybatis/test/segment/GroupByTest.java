@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -55,8 +56,7 @@ public class GroupByTest extends BaseTest {
             .select.grade().as().id().count().age().max().age().min().age().avg().end()
             .where
             .age().between(15, 25).end()
-            .groupBy
-            .grade().end()
+            .groupBy.apply(UserMapping.grade).end()
             .having
             .id().count().gt(10)
             .end();

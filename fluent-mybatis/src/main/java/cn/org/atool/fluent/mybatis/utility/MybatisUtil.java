@@ -294,6 +294,22 @@ public class MybatisUtil {
         isTrue(object != null, message, params);
     }
 
+    public static Integer[] toArray(int[] nums) {
+        if (nums == null) {
+            return null;
+        } else {
+            return Arrays.stream(nums).boxed().toArray(Integer[]::new);
+        }
+    }
+
+    public static Long[] toArray(long[] nums) {
+        if (nums == null) {
+            return null;
+        } else {
+            return Arrays.stream(nums).boxed().toArray(Long[]::new);
+        }
+    }
+
     public static <O> boolean isCollection(O... args) {
         if (args != null && args.length == 1 && args[0] instanceof Collection) {
             return true;

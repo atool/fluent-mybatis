@@ -6,8 +6,7 @@ import java.util.Collection;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_BETWEEN;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isCollection;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**
  * 比较操作
@@ -91,12 +90,38 @@ public interface IOperator<R> {
      * @param values 条件值
      * @return 查询器或更新器
      */
-    default <O> R in(O... values) {
-        if (isCollection(values)) {
-            return this.apply(IN, ((Collection) values[0]).toArray());
-        } else {
-            return this.apply(IN, values);
-        }
+    default R in(Object[] values) {
+        return this.apply(IN, values);
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R in(int[] values) {
+        return this.apply(IN, toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R in(long[] values) {
+        return this.apply(IN, toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R in(Collection values) {
+        return this.apply(IN, values == null ? new Object[0] : values.toArray());
     }
 
     /**
@@ -105,12 +130,38 @@ public interface IOperator<R> {
      * @param values 条件值
      * @return 查询器或更新器
      */
-    default <O> R notIn(O... values) {
-        if (isCollection(values)) {
-            return this.apply(NOT_IN, ((Collection) values[0]).toArray());
-        } else {
-            return this.apply(NOT_IN, values);
-        }
+    default R notIn(Object[] values) {
+        return this.apply(NOT_IN, values);
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R notIn(int[] values) {
+        return this.apply(NOT_IN, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R notIn(long[] values) {
+        return this.apply(NOT_IN, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default R notIn(Collection values) {
+        return this.apply(NOT_IN, values == null ? new Object[0] : values.toArray());
     }
 
     /**

@@ -4,8 +4,7 @@ import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
 
 import ${entity.package}.${entity.name};
 import ${mapping.package}.${mapping.name};
-import ${wrapperHelper.package}.${wrapperHelper.name}.UpdateSetter;
-import ${wrapperHelper.package}.${wrapperHelper.name}.UpdateWhere;
+import ${wrapperHelper.package}.${wrapperHelper.name}.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
@@ -17,13 +16,17 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
  */
 public class ${entityUpdate.name} extends BaseUpdate<${entity.name}, ${entityUpdate.name}, ${entityQuery.name}> {
     /**
-     * 更新条件设置
-     */
-    public final UpdateWhere where = new UpdateWhere(this);
-    /**
      * 更新值设置
      */
     public final UpdateSetter set = new UpdateSetter(this);
+    /**
+    * 更新条件设置
+    */
+    public final UpdateWhere where = new UpdateWhere(this);
+    /**
+    *  order by
+    */
+    public final UpdateOrderBy orderBy = new UpdateOrderBy(this);
 
     public ${entityUpdate.name}(){
         super(${mapping.name}.Table_Name, ${entity.name}.class, ${entityQuery.name}.class);

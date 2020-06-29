@@ -82,11 +82,22 @@ public class ${wrapperHelper.name} {
     /**
      * OrderBy设置
      */
-    public static final class OrderBy extends OrderByBase<OrderBy, ${entityQuery.name}>
-        implements ISegment<OrderBy> {
+    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, ${entityQuery.name}>
+        implements ISegment<QueryOrderBy> {
 
-        public OrderBy(${entityQuery.name} query) {
+        public QueryOrderBy(${entityQuery.name} query) {
             super(query);
+        }
+    }
+
+    /**
+     * OrderBy设置
+     */
+    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, ${entityUpdate.name}>
+        implements ISegment<UpdateOrderBy> {
+
+        public UpdateOrderBy(${entityUpdate.name} updator) {
+            super(updator);
         }
     }
 

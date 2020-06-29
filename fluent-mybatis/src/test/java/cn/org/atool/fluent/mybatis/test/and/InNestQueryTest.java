@@ -50,7 +50,7 @@ public class InNestQueryTest extends BaseTest {
     void test_and_in_nested2() {
         UserQuery query = new UserQuery()
             .selectId()
-            .where.addressId().in(AddressQuery.class, q -> q.selectId().where.id().in(1, 2).end())
+            .where.addressId().in(AddressQuery.class, q -> q.selectId().where.id().in(new int[]{1, 2}).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
