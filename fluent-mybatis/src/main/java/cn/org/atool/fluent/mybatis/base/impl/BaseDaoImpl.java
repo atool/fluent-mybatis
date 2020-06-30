@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.toSet;
  * @author darui.wu
  */
 public abstract class BaseDaoImpl<E extends IEntity>
-    extends DaoProtectedImpl<E> implements IBaseDao<E> {
+    extends DaoProtectedImpl<E> implements IDao<E> {
 
     @Override
     public <PK extends Serializable> PK save(E entity) {

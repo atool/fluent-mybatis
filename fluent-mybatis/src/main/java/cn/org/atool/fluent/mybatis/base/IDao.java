@@ -12,7 +12,7 @@ import java.util.Map;
  * @Author darui.wu
  * @Date 2019-06-25 12:00
  */
-public interface IBaseDao<E extends IEntity> {
+public interface IDao<E extends IEntity> {
     /**
      * 插入一条记录
      *
