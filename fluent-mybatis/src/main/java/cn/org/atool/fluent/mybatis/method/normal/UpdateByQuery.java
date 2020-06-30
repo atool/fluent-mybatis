@@ -35,9 +35,12 @@ public class UpdateByQuery extends AbstractMethod {
             .checkWrapper()
             .update(table, super.isSpecTable())
             .set(() -> update(table, builder))
-            .where(() -> super.whereByWrapper(builder));
+            .where(() -> super.whereByWrapper(builder))
+            .append(() -> lastByWrapper(builder, true));
         if (super.getDbType().isCanDirectLimit()) {
             builder.ifThen(Wrapper_Page_Not_Null, () -> builder.append(" LIMIT %s ", Wrapper_Paged_Size));
+        } else {
+            // TODO
         }
         String xml = builder.end(StatementType.update)
             .toString();

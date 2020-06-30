@@ -23,6 +23,6 @@ class OrderByBaseTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE 1 = 1 ORDER BY id ASC, user_name DESC");
+            .end("FROM t_user ORDER BY id ASC, user_name DESC");
     }
 }

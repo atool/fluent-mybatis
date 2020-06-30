@@ -1,11 +1,8 @@
 package cn.org.atool.fluent.mybatis.test;
 
-import cn.org.atool.fluent.mybatis.FluentMybatisBootConfiguration;
 import cn.org.atool.fluent.mybatis.FluentMybatisSessionFactoryBean;
 import cn.org.atool.fluent.mybatis.demo.generate.ITable;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

@@ -45,6 +45,7 @@ public class SelectCount extends AbstractMethod {
         SqlBuilder builder = SqlBuilder.instance();
         return builder.selectCount(table, super.isSpecTable())
             .where(() -> super.whereByWrapper(builder))
+            .append(() -> lastByWrapper(builder, true))
             .toString();
     }
 }

@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.joining;
  * @create 2020/6/23 5:15 下午
  */
 @Getter
-public class WrapperData {
+public class WrapperData implements IWrapperData {
     /**
      * select 前面是否加 DISTINCT 关键字
      */
@@ -70,12 +70,7 @@ public class WrapperData {
         this.queryClass = queryClass;
     }
 
-
-    /**
-     * 查询条件 SQL 片段
-     *
-     * @return 查询字段列表
-     */
+    @Override
     public String getSqlSelect() {
         if (this.sqlSelect.isEmpty()) {
             return null;
@@ -85,48 +80,43 @@ public class WrapperData {
         }
     }
 
-    /**
-     * (update)
-     * set
-     * column1 = value1,
-     * column2 = value2
-     *
-     * @return 更新语句
-     */
+    @Override
+    public String getQuerySql() {
+        String select = this.getSqlSelect();
+        String sql = String.format(SELECT_FROM_WHERE, select == null ? ASTERISK : select, this.table, this.getMergeSql());
+        return isBlank(sql) ? null : sql.trim();
+    }
+
+    @Override
     public String getUpdateStr() {
         String sql = this.updates.entrySet().stream().map(i -> i.getKey() + " = " + i.getValue()).collect(joining(COMMA_SPACE));
         return isBlank(sql) ? null : sql.trim();
     }
 
-    /**
-     * where 语句部分
-     *
-     * @return where sql
-     */
-    public String getWhereSql() {
+    @Override
+    public String getMergeSql() {
         String sql = mergeSegments.sql();
         return isBlank(sql) ? null : sql.trim();
     }
 
-    /**
-     * 返回where部分（去掉order by和limit)
-     *
-     * @return where sql
-     */
-    public String getWhereNoLimit() {
-        String sql = mergeSegments.sqlNoOrderBy();
-        return isBlank(sql) ? null : sql.trim();
+    @Override
+    public String getWhereSql() {
+        return this.mergeSegments.whereSql();
     }
 
-    /**
-     * select ... from table where ...
-     *
-     * @return select ... from table where ...
-     */
-    public String getQuerySql() {
-        String select = this.getSqlSelect();
-        String sql = String.format(SELECT_FROM_WHERE, select == null ? ASTERISK : select, this.table, this.getWhereSql());
-        return isBlank(sql) ? null : sql.trim();
+    @Override
+    public String getGroupBy() {
+        return this.mergeSegments.groupBy();
+    }
+
+    @Override
+    public String getOrderBy() {
+        return this.mergeSegments.orderBy();
+    }
+
+    @Override
+    public String getLastSql() {
+        return this.mergeSegments.last();
     }
 
     /**

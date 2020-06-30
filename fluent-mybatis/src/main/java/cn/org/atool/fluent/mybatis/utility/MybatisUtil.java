@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
+
 /**
  * MybatisUtil
  * 工具类
@@ -316,6 +318,10 @@ public class MybatisUtil {
         } else {
             return false;
         }
+    }
+
+    public static String trim(String str) {
+        return isBlank(str) ? EMPTY : str.trim();
     }
 
     /**

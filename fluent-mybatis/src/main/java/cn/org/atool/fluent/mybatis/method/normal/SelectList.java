@@ -50,6 +50,7 @@ public class SelectList extends AbstractMethod {
         return builder
             .select(table, true, super.isSpecTable())
             .where(() -> super.whereByWrapper(builder))
+            .append(() -> lastByWrapper(builder, true))
             .toString();
     }
 

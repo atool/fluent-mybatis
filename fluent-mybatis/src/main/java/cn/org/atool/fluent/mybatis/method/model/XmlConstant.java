@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
+import static java.lang.String.format;
+
 /**
  * SqlBuilderConst: SqlBuilder中使用的表达式常量
  *
@@ -39,37 +41,45 @@ public interface XmlConstant {
 
     String Spec_Comment_Not_Null = "SPEC_COMMENT != null and SPEC_COMMENT != ''";
 
-    String Wrapper_Data = String.format("%s.wrapperData", WRAPPER);
+    String Wrapper_Data = format("%s.wrapperData", WRAPPER);
 
-    String Wrapper_Exists = String.format("%s != null", Wrapper_Data);
+    String Wrapper_Exists = format("%s != null", Wrapper_Data);
 
-    String Wrapper_Page_Is_Null = String.format("%s.paged == null", Wrapper_Data);
+    String Wrapper_Page_Is_Null = format("%s.paged == null", Wrapper_Data);
 
-    String Wrapper_Page_Not_Null = String.format("%s.paged != null", Wrapper_Data);
+    String Wrapper_Page_Not_Null = format("%s.paged != null", Wrapper_Data);
 
-    String Wrapper_Distinct_True = String.format("%s.distinct", Wrapper_Data);
+    String Wrapper_Distinct_True = format("%s.distinct", Wrapper_Data);
 
-    String Wrapper_Select_Not_Null = String.format("%s.sqlSelect != null", Wrapper_Data);
+    String Wrapper_Select_Not_Null = format("%s.sqlSelect != null", Wrapper_Data);
 
-    String Wrapper_Select_Var = String.format("${%s.sqlSelect}", Wrapper_Data);
+    String Wrapper_Select_Var = format("${%s.sqlSelect}", Wrapper_Data);
 
-    String Wrapper_UpdateStr_Not_Null = String.format("%s.updateStr != null", Wrapper_Data);
+    String Wrapper_UpdateStr_Not_Null = format("%s.updateStr != null", Wrapper_Data);
 
-    String Wrapper_UpdateStr_Var = String.format("${%s.updateStr}", Wrapper_Data);
+    String Wrapper_UpdateStr_Var = format("${%s.updateStr}", Wrapper_Data);
 
-    String Wrapper_Update_Contain_Key = String.format("%s.updates.containsKey('@column') == false", Wrapper_Data);
+    String Wrapper_Update_Contain_Key = format("%s.updates.containsKey('@column') == false", Wrapper_Data);
 
-    String Wrapper_Where_Not_Null = String.format("%s.whereSql != null", Wrapper_Data, Wrapper_Data);
+    String Wrapper_Where_NotNull = format("%s.whereSql != null", Wrapper_Data);
 
-    String Wrapper_Where_Var = String.format("${%s.whereSql}", Wrapper_Data);
+    String Wrapper_Where_Var = format("${%s.whereSql}", Wrapper_Data);
 
-    String Wrapper_Where_NoLimit_NotNull = String.format("%s.whereNoLimit != null", Wrapper_Data, Wrapper_Data);
+    String Wrapper_GroupBy_NotNull = format("%s.groupBy != null", Wrapper_Data);
 
-    String Wrapper_Where_NoLimit_Var = String.format("${%s.whereNoLimit}", Wrapper_Data);
+    String Wrapper_GroupBy_Var = format("${%s.groupBy}", Wrapper_Data);
 
-    String Wrapper_Paged_Offset = String.format("#{%s.paged.offset}", Wrapper_Data);
+    String Wrapper_OrderBy_NotNull = format("%s.orderBy != null", Wrapper_Data);
 
-    String Wrapper_Paged_Size = String.format("#{%s.paged.limit}", Wrapper_Data);
+    String Wrapper_OrderBy_Var = format("${%s.orderBy}", Wrapper_Data);
 
-    String Wrapper_Paged_End_Offset = String.format("#{%s.paged.endOffset}", Wrapper_Data);
+    String Wrapper_LastSql_NotNull = format("%s.lastSql != null", Wrapper_Data);
+
+    String Wrapper_LastSql_Var = format("${%s.lastSql}", Wrapper_Data);
+
+    String Wrapper_Paged_Offset = format("#{%s.paged.offset}", Wrapper_Data);
+
+    String Wrapper_Paged_Size = format("#{%s.paged.limit}", Wrapper_Data);
+
+    String Wrapper_Paged_End_Offset = format("#{%s.paged.endOffset}", Wrapper_Data);
 }

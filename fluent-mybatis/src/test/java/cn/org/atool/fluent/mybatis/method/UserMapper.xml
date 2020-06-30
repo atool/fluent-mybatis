@@ -115,6 +115,9 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
         <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
@@ -131,6 +134,9 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
         <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
@@ -147,6 +153,9 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
         <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
@@ -163,6 +172,9 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
         <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
     </select>
@@ -178,6 +190,9 @@
                 <where>
                     <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
+                <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+                <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+                <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
             </when>
             <otherwise>SELECT COUNT(
                 <choose>
@@ -188,6 +203,9 @@
                 <where>
                     <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
+                <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+                <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+                <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
                 LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </otherwise>
         </choose>
     </select>
@@ -200,8 +218,10 @@
         </choose>
         ) FROM t_user
         <where>
-            <if test="ew.wrapperData.whereNoLimit != null">${ew.wrapperData.whereNoLimit}</if>
+            <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
     </select>
     <delete id="delete" parameterType="cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity">
@@ -210,6 +230,9 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
     </delete>
     <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM t_user
@@ -266,6 +289,9 @@
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
+        <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
+        <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
+        <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
         <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.limit} </if>
     </update>
 </mapper>

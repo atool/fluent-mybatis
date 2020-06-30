@@ -216,7 +216,7 @@ public abstract class WhereBase<
     public WHERE and(Function<WRAPPER, WRAPPER> query) {
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         query.apply(nested);
-        wrapper.getWrapperData().apply(AND, EMPTY, nested.getWrapperData().getWhereSql(), BRACKET);
+        wrapper.getWrapperData().apply(AND, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
         return this.and();
     }
 
@@ -262,7 +262,7 @@ public abstract class WhereBase<
     public WHERE or(Function<WRAPPER, WRAPPER> apply) {
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         apply.apply(nested);
-        wrapper.getWrapperData().apply(OR, EMPTY, nested.getWrapperData().getWhereSql(), BRACKET);
+        wrapper.getWrapperData().apply(OR, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
         return this.and();
     }
 

@@ -7,7 +7,7 @@ import lombok.Setter;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.*;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**
  * 合并 SQL 片段
@@ -72,16 +72,37 @@ public class MergeSegments extends BaseSegmentList {
     @Override
     protected String build() {
         String sql = where.sql() + groupBy.sql() + having.sql() + orderBy.sql();
-        return sql.trim() + (isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim());
+        return sql.trim() + last();
+    }
+
+    public String last() {
+        return isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim();
     }
 
     /**
-     * 去掉orderBy部分
+     * 返回where语句
      *
      * @return
      */
-    public String sqlNoOrderBy() {
-        String sql = where.sql() + groupBy.sql() + having.sql();
-        return sql.trim() + (isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim());
+    public String whereSql() {
+        return trim(where.sql());
+    }
+
+    /**
+     * groupBy... having... 部分
+     *
+     * @return
+     */
+    public String groupBy() {
+        return trim(groupBy.sql() + having.sql());
+    }
+
+    /**
+     * orderBy... 部分
+     *
+     * @return
+     */
+    public String orderBy() {
+        return trim(orderBy.sql());
     }
 }

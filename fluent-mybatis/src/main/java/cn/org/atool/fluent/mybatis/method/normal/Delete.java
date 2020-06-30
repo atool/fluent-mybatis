@@ -31,6 +31,7 @@ public class Delete extends AbstractMethod {
             .checkWrapper()
             .delete(table, super.isSpecTable())
             .where(() -> super.whereByWrapper(builder))
+            .append(() -> lastByWrapper(builder, true))
             .end(StatementType.delete)
             .toString();
     }

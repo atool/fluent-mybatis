@@ -24,9 +24,7 @@ public class FluentMybatisBootConfiguration {
     @ConditionalOnMissingBean({FluentMybatisSessionFactoryBean.class, SqlSessionFactory.class})
     public FluentMybatisSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws Exception {
         FluentMybatisSessionFactoryBean bean = new FluentMybatisSessionFactoryBean();
-        {
-            bean.setDataSource(dataSource);
-        }
+        bean.setDataSource(dataSource);
         return bean;
     }
 }

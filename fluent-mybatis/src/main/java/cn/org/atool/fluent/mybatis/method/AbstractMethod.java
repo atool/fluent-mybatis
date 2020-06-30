@@ -9,8 +9,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_Not_Null;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_Var;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.joining;
 
@@ -37,7 +36,23 @@ public abstract class AbstractMethod implements InjectMethod {
      */
     protected SqlBuilder whereByWrapper(SqlBuilder builder) {
         return builder
-            .ifThen(Wrapper_Where_Not_Null, Wrapper_Where_Var);
+            .ifThen(Wrapper_Where_NotNull, Wrapper_Where_Var);
+    }
+
+    /**
+     * last 部分
+     *
+     * @param builder
+     * @param withOrder 是否加order by
+     * @return
+     */
+    protected SqlBuilder lastByWrapper(SqlBuilder builder, boolean withOrder) {
+        builder.ifThen(Wrapper_GroupBy_NotNull, Wrapper_GroupBy_Var);
+        if (withOrder) {
+            builder.ifThen(Wrapper_OrderBy_NotNull, Wrapper_OrderBy_Var);
+        }
+        builder.ifThen(Wrapper_LastSql_NotNull, Wrapper_LastSql_Var);
+        return builder;
     }
 
     /**
