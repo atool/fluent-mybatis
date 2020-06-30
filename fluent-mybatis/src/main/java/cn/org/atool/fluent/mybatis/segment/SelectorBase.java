@@ -55,7 +55,7 @@ public abstract class SelectorBase<
     }
 
     @Override
-    public SelectorApply<S, Q> set(FieldMeta field) {
+    public SelectorApply<S, Q> process(FieldMeta field) {
         return this.apply.setCurrentField(field);
     }
 

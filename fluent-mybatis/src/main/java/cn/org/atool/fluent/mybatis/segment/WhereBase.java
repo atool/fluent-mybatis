@@ -295,7 +295,7 @@ public abstract class WhereBase<
     }
 
     @Override
-    public WhereApply set(FieldMeta field) {
+    public WhereApply process(FieldMeta field) {
         return this.apply.setCurrentField(field);
     }
 }

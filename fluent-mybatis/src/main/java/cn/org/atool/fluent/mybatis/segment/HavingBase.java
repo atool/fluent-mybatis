@@ -63,7 +63,7 @@ public abstract class HavingBase<
     }
 
     @Override
-    public HavingApply<H, Q> set(FieldMeta field) {
+    public HavingApply<H, Q> process(FieldMeta field) {
         return this.apply.setCurrentField(field);
     }
 }

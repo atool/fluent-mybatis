@@ -116,7 +116,7 @@ public abstract class OrderByBase<
     }
 
     @Override
-    public O set(FieldMeta field) {
+    public O process(FieldMeta field) {
         return this.apply(field.column);
     }
 

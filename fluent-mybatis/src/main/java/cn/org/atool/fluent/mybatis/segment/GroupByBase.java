@@ -49,6 +49,17 @@ public abstract class GroupByBase<
     /**
      * 添加group by字段列表
      *
+     * @param condition 成立条件
+     * @param columns   字段列表
+     * @return groupBy选择器
+     */
+    public G apply(boolean condition, String... columns) {
+        return condition ? this.apply(columns) : (G) this;
+    }
+
+    /**
+     * 添加group by字段列表
+     *
      * @param columns 字段列表
      * @return groupBy选择器
      */
@@ -57,8 +68,19 @@ public abstract class GroupByBase<
         return (G) this;
     }
 
+    /**
+     * 添加group by字段列表
+     *
+     * @param condition 成立条件
+     * @param columns   字段列表
+     * @return groupBy选择器
+     */
+    public G apply(boolean condition, FieldMeta... columns) {
+        return condition ? this.apply(columns) : (G) this;
+    }
+
     @Override
-    public G set(FieldMeta field) {
+    public G process(FieldMeta field) {
         return this.apply(field.column);
     }
 

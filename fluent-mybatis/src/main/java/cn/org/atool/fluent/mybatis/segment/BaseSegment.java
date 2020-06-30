@@ -15,9 +15,15 @@ import lombok.Getter;
  * @create 2020/6/22 10:47 上午
  */
 public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
+    /**
+     * 当前查询（更新）器
+     */
     @Getter(AccessLevel.PACKAGE)
-
     protected final BaseWrapper wrapper;
+    /**
+     * 当前处理字段
+     */
+    protected FieldMeta currField;
 
     protected BaseSegment(W wrapper) {
         this.wrapper = (BaseWrapper) wrapper;
@@ -29,7 +35,12 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * @param field 字段信息
      * @return BaseSegment子类或者操作器
      */
-    public abstract R set(FieldMeta field);
+    public R set(FieldMeta field) {
+        this.currField = field;
+        return this.process(this.currField);
+    }
+
+    protected abstract R process(FieldMeta currField);
 
     /**
      * 结束本段操作，返回查询（更新）器对象
