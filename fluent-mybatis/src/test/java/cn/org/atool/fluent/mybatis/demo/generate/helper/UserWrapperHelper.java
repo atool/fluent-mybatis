@@ -54,6 +54,7 @@ public class UserWrapperHelper {
             return this.set(UserMapping.version);
         }
     }
+
     /**
      * select字段设置
      */
@@ -113,7 +114,7 @@ public class UserWrapperHelper {
      * OrderBy设置
      */
     public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, UserQuery>
-        implements ISegment<QueryOrderBy> {
+        implements ISegment<OrderByApply<QueryOrderBy, UserQuery>> {
 
         public QueryOrderBy(UserQuery query) {
             super(query);
@@ -124,7 +125,7 @@ public class UserWrapperHelper {
      * OrderBy设置
      */
     public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, UserUpdate>
-        implements ISegment<UpdateOrderBy> {
+        implements ISegment<OrderByApply<UpdateOrderBy, UserUpdate>> {
 
         public UpdateOrderBy(UserUpdate updator) {
             super(updator);

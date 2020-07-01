@@ -44,8 +44,7 @@ public class SelectMakerListTest extends BaseTest {
             .where.
                 id().gt(20).
                 userName().like("user").end()
-            .orderBy.
-                id().end()
+            .orderBy.id().asc().end()
             .limit(10)
         );
 
@@ -70,8 +69,7 @@ public class SelectMakerListTest extends BaseTest {
                 id().gt(20).
                 userName().like("user")
             .end()
-            .orderBy.
-                id()
+            .orderBy.id().asc()
             .end()
             .limit(10)
         );

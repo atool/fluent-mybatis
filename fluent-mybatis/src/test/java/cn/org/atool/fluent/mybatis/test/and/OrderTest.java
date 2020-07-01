@@ -14,10 +14,10 @@ public class OrderTest extends BaseTest {
     public void order() {
         UserQuery query = new UserQuery()
             .where.userName().like("user").end()
-            .orderBy.id().asc().addressId().desc("user_name", "id+0").end();
+            .orderBy.id().asc().addressId().desc().desc("user_name", "id+0").end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().where().eq("user_name LIKE ?");
-        db.sqlList().wantFirstSql().end("ORDER BY id ASC, address_id, user_name DESC, id+0 DESC");
+        db.sqlList().wantFirstSql().end("ORDER BY id ASC, address_id DESC, user_name DESC, id+0 DESC");
     }
 
     @Test

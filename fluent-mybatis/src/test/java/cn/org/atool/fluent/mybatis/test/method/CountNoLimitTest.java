@@ -22,13 +22,13 @@ public class CountNoLimitTest extends BaseTest {
     public void test_count_no_limit() throws Exception {
         UserQuery query = new UserQuery()
             .where.id().eq(24L).end()
-            .orderBy.userName().end()
+            .orderBy.userName().asc().end()
             .limit(10);
 
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT( * )")
-            .end("FROM t_user WHERE id = ? ORDER BY user_name LIMIT ?, ?");
+            .end("FROM t_user WHERE id = ? ORDER BY user_name ASC LIMIT ?, ?");
 
         mapper.countNoLimit(query);
         db.sqlList().wantSql(1).end("WHERE id = ?");
@@ -45,8 +45,8 @@ public class CountNoLimitTest extends BaseTest {
             .where
             .age().eq(10)
             .end()
-            .orderBy.userName()
-            .end()
+            .orderBy
+            .userName().asc().end()
             .limit(10, 20);
         int count = mapper.countNoLimit(query);
         db.sqlList().wantFirstSql()
@@ -57,7 +57,7 @@ public class CountNoLimitTest extends BaseTest {
         List<UserEntity> list = mapper.listEntity(query);
         db.sqlList().wantSql(1)
             .start("SELECT id,")
-            .end("WHERE age = ? ORDER BY user_name LIMIT ?, ?");
+            .end("WHERE age = ? ORDER BY user_name ASC LIMIT ?, ?");
         want.list(list).sizeEq(20);
     }
 }

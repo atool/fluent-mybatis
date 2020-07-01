@@ -42,6 +42,7 @@ public class AddressWrapperHelper {
             return this.set(AddressMapping.userId);
         }
     }
+
     /**
      * select字段设置
      */
@@ -101,7 +102,7 @@ public class AddressWrapperHelper {
      * OrderBy设置
      */
     public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, AddressQuery>
-        implements ISegment<QueryOrderBy> {
+        implements ISegment<OrderByApply<QueryOrderBy, AddressQuery>> {
 
         public QueryOrderBy(AddressQuery query) {
             super(query);
@@ -112,7 +113,7 @@ public class AddressWrapperHelper {
      * OrderBy设置
      */
     public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, AddressUpdate>
-        implements ISegment<UpdateOrderBy> {
+        implements ISegment<OrderByApply<UpdateOrderBy, AddressUpdate>> {
 
         public UpdateOrderBy(AddressUpdate updator) {
             super(updator);

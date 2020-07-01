@@ -80,7 +80,7 @@ public abstract class GroupByBase<
     }
 
     @Override
-    public G process(FieldMeta field) {
+    protected G process(FieldMeta field) {
         return this.apply(field.column);
     }
 

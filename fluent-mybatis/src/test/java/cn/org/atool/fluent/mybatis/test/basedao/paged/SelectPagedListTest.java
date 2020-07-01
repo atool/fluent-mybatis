@@ -45,8 +45,7 @@ public class SelectPagedListTest extends BaseTest {
                 userName().like("user")
             .end()
             .orderBy.
-                id()
-            .end()
+                id().asc().end()
             .limit(20, 10)
         );
         want.number(list.getTotal()).eq(100);
@@ -59,7 +58,7 @@ public class SelectPagedListTest extends BaseTest {
                 "WHERE user_name LIKE ?");
         db.sqlList().wantSql(1).end("FROM t_user " +
             "WHERE user_name LIKE ? " +
-            "ORDER BY id " +
+            "ORDER BY id ASC " +
             "LIMIT ?, ?");
     }
 
@@ -78,8 +77,7 @@ public class SelectPagedListTest extends BaseTest {
                 userName().like("user")
             .end()
             .orderBy.
-                id()
-            .end()
+                id().asc().end()
             .limit(10)
         );
         want.number(list.getTotal()).eq(80);

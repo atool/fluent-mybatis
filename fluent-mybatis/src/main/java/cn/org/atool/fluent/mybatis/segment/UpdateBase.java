@@ -38,7 +38,7 @@ public abstract class UpdateBase<
 
 
     @Override
-    public UpdateApply<S, U> process(FieldMeta field) {
+    protected UpdateApply<S, U> process(FieldMeta field) {
         return apply.setCurrentField(field);
     }
 }

@@ -26,6 +26,7 @@ public class NoAutoIdWrapperHelper {
             return this.set(NoAutoIdMapping.column1);
         }
     }
+
     /**
      * select字段设置
      */
@@ -85,7 +86,7 @@ public class NoAutoIdWrapperHelper {
      * OrderBy设置
      */
     public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, NoAutoIdQuery>
-        implements ISegment<QueryOrderBy> {
+        implements ISegment<OrderByApply<QueryOrderBy, NoAutoIdQuery>> {
 
         public QueryOrderBy(NoAutoIdQuery query) {
             super(query);
@@ -96,7 +97,7 @@ public class NoAutoIdWrapperHelper {
      * OrderBy设置
      */
     public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, NoAutoIdUpdate>
-        implements ISegment<UpdateOrderBy> {
+        implements ISegment<OrderByApply<UpdateOrderBy, NoAutoIdUpdate>> {
 
         public UpdateOrderBy(NoAutoIdUpdate updator) {
             super(updator);

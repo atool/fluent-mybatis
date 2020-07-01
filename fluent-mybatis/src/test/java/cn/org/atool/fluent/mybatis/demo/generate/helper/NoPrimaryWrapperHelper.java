@@ -26,6 +26,7 @@ public class NoPrimaryWrapperHelper {
             return this.set(NoPrimaryMapping.column2);
         }
     }
+
     /**
      * select字段设置
      */
@@ -85,7 +86,7 @@ public class NoPrimaryWrapperHelper {
      * OrderBy设置
      */
     public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, NoPrimaryQuery>
-        implements ISegment<QueryOrderBy> {
+        implements ISegment<OrderByApply<QueryOrderBy, NoPrimaryQuery>> {
 
         public QueryOrderBy(NoPrimaryQuery query) {
             super(query);
@@ -96,7 +97,7 @@ public class NoPrimaryWrapperHelper {
      * OrderBy设置
      */
     public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, NoPrimaryUpdate>
-        implements ISegment<UpdateOrderBy> {
+        implements ISegment<OrderByApply<UpdateOrderBy, NoPrimaryUpdate>> {
 
         public UpdateOrderBy(NoPrimaryUpdate updator) {
             super(updator);
