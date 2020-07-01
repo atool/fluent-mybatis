@@ -24,7 +24,7 @@ public class ${wrapperHelper.name} {
         }
         #end
     }
-    
+
     /**
      * select字段设置
      */
