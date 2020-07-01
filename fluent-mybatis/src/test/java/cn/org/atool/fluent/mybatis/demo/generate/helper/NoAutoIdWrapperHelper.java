@@ -26,7 +26,7 @@ public class NoAutoIdWrapperHelper {
             return this.set(NoAutoIdMapping.column1);
         }
     }
-
+    
     /**
      * select字段设置
      */

@@ -24,6 +24,7 @@ public class ${wrapperHelper.name} {
         }
         #end
     }
+    
     /**
      * select字段设置
      */
@@ -83,7 +84,7 @@ public class ${wrapperHelper.name} {
      * OrderBy设置
      */
     public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, ${entityQuery.name}>
-        implements ISegment<QueryOrderBy> {
+        implements ISegment<OrderByApply<QueryOrderBy, ${entityQuery.name}>> {
 
         public QueryOrderBy(${entityQuery.name} query) {
             super(query);
@@ -94,7 +95,7 @@ public class ${wrapperHelper.name} {
      * OrderBy设置
      */
     public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, ${entityUpdate.name}>
-        implements ISegment<UpdateOrderBy> {
+        implements ISegment<OrderByApply<UpdateOrderBy, ${entityUpdate.name}>> {
 
         public UpdateOrderBy(${entityUpdate.name} updator) {
             super(updator);

@@ -42,7 +42,7 @@ public class AddressWrapperHelper {
             return this.set(AddressMapping.userId);
         }
     }
-
+    
     /**
      * select字段设置
      */

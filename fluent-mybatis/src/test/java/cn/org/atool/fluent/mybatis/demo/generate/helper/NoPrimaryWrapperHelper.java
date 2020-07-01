@@ -26,7 +26,7 @@ public class NoPrimaryWrapperHelper {
             return this.set(NoPrimaryMapping.column2);
         }
     }
-
+    
     /**
      * select字段设置
      */

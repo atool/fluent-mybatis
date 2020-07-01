@@ -54,7 +54,7 @@ public class UserWrapperHelper {
             return this.set(UserMapping.version);
         }
     }
-
+    
     /**
      * select字段设置
      */
