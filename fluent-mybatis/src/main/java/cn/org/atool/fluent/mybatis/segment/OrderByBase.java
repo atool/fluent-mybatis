@@ -121,6 +121,38 @@ public abstract class OrderByBase<
     }
 
     /**
+     * 自定义排序条件
+     *
+     * @param condition 执行条件
+     * @param isAsc     是否正序
+     * @param columns   排序字段
+     * @return 排序对象
+     */
+    public O apply(boolean condition, boolean isAsc, FieldMeta... columns) {
+        if (condition && isNotEmpty(columns)) {
+            return isAsc ? this.asc(columns) : this.desc(columns);
+        } else {
+            return (O) this;
+        }
+    }
+
+    /**
+     * 自定义排序条件
+     *
+     * @param condition 执行条件
+     * @param isAsc     是否正序
+     * @param columns   排序字段
+     * @return 排序对象
+     */
+    public O apply(boolean condition, boolean isAsc, String... columns) {
+        if (condition && isNotEmpty(columns)) {
+            return isAsc ? this.asc(columns) : this.desc(columns);
+        } else {
+            return (O) this;
+        }
+    }
+
+    /**
      * 增加字段排序
      *
      * @param isAsc 是否顺序

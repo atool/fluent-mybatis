@@ -50,7 +50,7 @@ public class NoPrimaryQuery extends BaseQuery<NoPrimaryEntity, NoPrimaryQuery> {
         throw new FluentMybatisException("The primary key of in table[" + NoPrimaryMapping.Table_Name + "] was not found.");
     }
 
-/**
+    /**
      * 查询字段设置
      *
      * @param by 查询字段设置器

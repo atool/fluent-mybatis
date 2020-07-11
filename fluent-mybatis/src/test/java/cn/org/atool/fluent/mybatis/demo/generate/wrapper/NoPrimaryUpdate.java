@@ -39,7 +39,7 @@ public class NoPrimaryUpdate extends BaseUpdate<NoPrimaryEntity, NoPrimaryUpdate
 
     @Override
     protected boolean hasPrimary() {
-        return false;    
+        return false;
     }
 
     @Override

@@ -58,7 +58,7 @@ public class TableMeta implements StrConstant {
      */
     public String getAllSqlSelect() {
         if (allSqlSelect == null) {
-            allSqlSelect = filter(f -> true);
+            allSqlSelect = filter(true, f -> true);
         }
         return allSqlSelect;
     }
@@ -66,12 +66,13 @@ public class TableMeta implements StrConstant {
     /**
      * 获取需要进行查询的 select sql 片段
      *
-     * @param predicate 过滤条件
+     * @param includePrimary 包含主键
+     * @param predicate      过滤条件
      * @return sql 片段
      */
-    public String filter(Predicate<BaseFieldMeta> predicate) {
+    public String filter(boolean includePrimary, Predicate<BaseFieldMeta> predicate) {
         List<String> columns = new ArrayList<>();
-        if (primary != null && predicate.test(primary)) {
+        if (primary != null && (includePrimary || predicate.test(primary))) {
             columns.add(primary.getColumn());
         }
         fields.stream().filter(predicate).forEach(f -> columns.add(f.getColumn()));

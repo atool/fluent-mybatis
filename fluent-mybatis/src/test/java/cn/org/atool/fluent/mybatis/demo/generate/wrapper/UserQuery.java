@@ -50,7 +50,7 @@ public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
         return this.select(UserMapping.id.column);
     }
 
-/**
+    /**
      * 查询字段设置
      *
      * @param by 查询字段设置器

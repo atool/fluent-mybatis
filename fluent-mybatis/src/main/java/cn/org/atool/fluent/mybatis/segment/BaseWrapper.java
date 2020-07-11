@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -61,4 +63,8 @@ public abstract class BaseWrapper<
      * @throws FluentMybatisException 字段校验异常
      */
     protected abstract void validateColumn(String column) throws FluentMybatisException;
+
+    protected TableMeta getTableMeta(){
+        return TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass());
+    }
 }

@@ -50,7 +50,7 @@ public class NoAutoIdQuery extends BaseQuery<NoAutoIdEntity, NoAutoIdQuery> {
         return this.select(NoAutoIdMapping.id.column);
     }
 
-/**
+    /**
      * 查询字段设置
      *
      * @param by 查询字段设置器

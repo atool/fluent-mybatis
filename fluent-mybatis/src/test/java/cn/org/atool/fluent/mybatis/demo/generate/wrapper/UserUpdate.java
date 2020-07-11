@@ -39,7 +39,7 @@ public class UserUpdate extends BaseUpdate<UserEntity, UserUpdate, UserQuery> {
 
     @Override
     protected boolean hasPrimary() {
-        return true;    
+        return true;
     }
 
     @Override

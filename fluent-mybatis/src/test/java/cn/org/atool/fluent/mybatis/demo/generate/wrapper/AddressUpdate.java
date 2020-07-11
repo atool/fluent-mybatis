@@ -39,7 +39,7 @@ public class AddressUpdate extends BaseUpdate<AddressEntity, AddressUpdate, Addr
 
     @Override
     protected boolean hasPrimary() {
-        return true;    
+        return true;
     }
 
     @Override

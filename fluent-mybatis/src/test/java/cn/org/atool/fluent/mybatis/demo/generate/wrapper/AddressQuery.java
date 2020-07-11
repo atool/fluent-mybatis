@@ -50,7 +50,7 @@ public class AddressQuery extends BaseQuery<AddressEntity, AddressQuery> {
         return this.select(AddressMapping.id.column);
     }
 
-/**
+    /**
      * 查询字段设置
      *
      * @param by 查询字段设置器

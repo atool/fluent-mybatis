@@ -60,10 +60,7 @@ public abstract class BaseQuery<
 
     @Override
     public Q select(boolean includePrimary, FieldPredicate predicate) {
-        if (includePrimary && hasPrimary()) {
-            this.selectId();
-        }
-        String selected = TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass()).filter(predicate);
+        String selected = this.getTableMeta().filter(includePrimary, predicate);
         return this.select(selected);
     }
 

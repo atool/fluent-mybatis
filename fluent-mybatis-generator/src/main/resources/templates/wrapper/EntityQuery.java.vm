@@ -54,7 +54,7 @@ public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery
 #end
     }
 
-/**
+    /**
      * 查询字段设置
      *
      * @param by 查询字段设置器
