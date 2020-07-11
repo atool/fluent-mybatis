@@ -34,10 +34,10 @@ public @interface TableField {
     String insert() default "";
 
     /**
-     * 是否进行显式的 select 查询
-     * <p>大字段可设置为 false 使用 select(BaseFieldMeta::select)不加入 select 查询范围</p>
+     * 非大字段
+     * <p>大字段可设置为 false 使用 select(BaseFieldMeta::notLarge)不加入 select 查询范围</p>
      */
-    boolean select() default true;
+    boolean notLarge() default true;
 
     /**
      * JDBC类型 (该默认值不代表会按照该值生效)

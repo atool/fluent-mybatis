@@ -34,10 +34,10 @@ public class TableFieldMeta extends BaseFieldMeta {
      */
     protected String numericScale;
     /**
-     * 是否进行 select 查询
+     * 是否非大字段查询
      * <p>大字段可设置为 false 不加入 select 查询范围</p>
      */
-    protected boolean selected = true;
+    protected boolean notLarge = true;
     /**
      * 字段 update set 部分注入
      */
@@ -60,7 +60,7 @@ public class TableFieldMeta extends BaseFieldMeta {
         this.numericScale = tableField.numericScale();
         this.typeHandler = UnknownTypeHandler.class == tableField.typeHandler() ? null : (Class<? extends TypeHandler<?>>) tableField.typeHandler();
 
-        this.selected = tableField.select();
+        this.notLarge = tableField.notLarge();
         this.insert = tableField.insert();
         this.update = tableField.update();
 

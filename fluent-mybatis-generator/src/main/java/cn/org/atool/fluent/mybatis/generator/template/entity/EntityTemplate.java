@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.generator.template.entity;
 
 import org.test4j.generator.mybatis.config.impl.TableField;
-import org.test4j.generator.mybatis.config.impl.TableInfoSet;
+import org.test4j.generator.mybatis.config.impl.TableSetter;
 import org.test4j.generator.mybatis.template.BaseTemplate;
 import org.test4j.tools.commons.StringHelper;
 import org.test4j.tools.commons.TextBuilder;
@@ -29,7 +29,7 @@ public class EntityTemplate extends BaseTemplate {
     }
 
     @Override
-    protected void templateConfigs(TableInfoSet table, Map<String, Object> templateContext) {
+    protected void templateConfigs(TableSetter table, Map<String, Object> templateContext) {
         this.putInterfaces(templateContext, table, table.getEntityInterfaces());
 
         templateContext.put("primaryKey", this.findPrimaryKey(table));
@@ -41,7 +41,7 @@ public class EntityTemplate extends BaseTemplate {
         templateContext.put("annotation", annotation);
     }
 
-    private String findPrimaryKey(TableInfoSet table) {
+    private String findPrimaryKey(TableSetter table) {
         for (TableField field : table.getFields()) {
             if (field.isPrimary()) {
                 return field.getName();
@@ -50,7 +50,7 @@ public class EntityTemplate extends BaseTemplate {
         return "null";
     }
 
-    private void putInterfaces(Map<String, Object> templateContext, TableInfoSet table, Map<String, String> interfaces) {
+    private void putInterfaces(Map<String, Object> templateContext, TableSetter table, Map<String, String> interfaces) {
         if (interfaces == null || interfaces.size() == 0) {
             return;
         }
@@ -60,7 +60,7 @@ public class EntityTemplate extends BaseTemplate {
         );
     }
 
-    private String fieldAnnotation(TableInfoSet table, TableField field) {
+    private String fieldAnnotation(TableSetter table, TableField field) {
         TextBuilder text = TextBuilder.build();
         if (field.isPrimary()) {
             text.quotas("@TableId(value = '%s'", field.getColumnName());

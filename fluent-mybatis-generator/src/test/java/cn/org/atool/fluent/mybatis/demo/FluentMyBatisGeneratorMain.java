@@ -21,7 +21,8 @@ public class FluentMyBatisGeneratorMain {
                 .setBasePackage("cn.org.atool.fluent.mybatis.demo.generate"))
             .tables(config -> config
                 .table("address")
-                .table("t_user", t -> t.enablePartition())
+                .table("t_user", t -> t.enablePartition()
+                    .setColumn("version", f->f.setLarge()))
                 .foreach(t -> t
                     .setColumn("gmt_created", "gmt_modified", "is_deleted")
                     .addBaseDaoInterface(dao_interface, "${entity}")
