@@ -45,6 +45,15 @@ public abstract class BaseWrapper<
     }
 
     /**
+     * 是否有主键字段
+     *
+     * @return true: 有主键字段
+     */
+    protected boolean hasPrimary() {
+        return true;
+    }
+
+    /**
      * 判断字段是否在范围内
      *
      * @param column 字段

@@ -38,6 +38,12 @@ public class ${entityUpdate.name} extends BaseUpdate<${entity.name}, ${entityUpd
     }
 
     @Override
+    protected boolean hasPrimary() {
+        return#if(${primaryColumnName}) true;#else false;#end
+
+    }
+
+    @Override
     protected void validateColumn(String column) throws FluentMybatisException {
         if (isNotBlank(column) && !${mapping.name}.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + ${mapping.name}.Table_Name + "].");

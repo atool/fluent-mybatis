@@ -38,6 +38,11 @@ public class AddressUpdate extends BaseUpdate<AddressEntity, AddressUpdate, Addr
     }
 
     @Override
+    protected boolean hasPrimary() {
+        return true;    
+    }
+
+    @Override
     protected void validateColumn(String column) throws FluentMybatisException {
         if (isNotBlank(column) && !AddressMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + AddressMapping.Table_Name + "].");

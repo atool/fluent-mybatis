@@ -38,6 +38,11 @@ public class UserUpdate extends BaseUpdate<UserEntity, UserUpdate, UserQuery> {
     }
 
     @Override
+    protected boolean hasPrimary() {
+        return true;    
+    }
+
+    @Override
     protected void validateColumn(String column) throws FluentMybatisException {
         if (isNotBlank(column) && !UserMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + UserMapping.Table_Name + "].");

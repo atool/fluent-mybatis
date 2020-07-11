@@ -71,6 +71,12 @@ public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery
     }
 
     @Override
+    protected boolean hasPrimary() {
+        return#if(${primaryColumnName}) true;#else false;#end
+
+    }
+
+    @Override
     protected void validateColumn(String column) throws FluentMybatisException {
         if (isNotBlank(column) && !${mapping.name}.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + ${mapping.name}.Table_Name + "].");

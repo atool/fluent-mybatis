@@ -67,6 +67,11 @@ public class NoPrimaryQuery extends BaseQuery<NoPrimaryEntity, NoPrimaryQuery> {
     }
 
     @Override
+    protected boolean hasPrimary() {
+        return false;
+    }
+
+    @Override
     protected void validateColumn(String column) throws FluentMybatisException {
         if (isNotBlank(column) && !NoPrimaryMapping.ALL_COLUMNS.contains(column)) {
             throw new FluentMybatisException("the column[" + column + "] was not found in table[" + NoPrimaryMapping.Table_Name + "].");

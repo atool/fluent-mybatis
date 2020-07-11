@@ -49,6 +49,19 @@ public interface IQuery<
     Q select(FieldMeta... fields);
 
     /**
+     * 过滤查询的字段信息
+     *
+     * <p>例1: 只要 java 字段名以 "test" 开头的   -> select(i -> i.getProperty().startsWith("test"))</p>
+     * <p>例2: 要全部字段                        -> select(i -> true)</p>
+     * <p>例3: 只要字符串类型字段                 -> select(i -> i.getPropertyType instance String)</p>
+     *
+     * @param includePrimary 包含主键?
+     * @param predicate 过滤方式 (主键除外!)
+     * @return 字段选择器
+     */
+    Q select(boolean includePrimary, FieldPredicate predicate);
+
+    /**
      * 设置limit值
      *
      * @param limit 最大查询数量

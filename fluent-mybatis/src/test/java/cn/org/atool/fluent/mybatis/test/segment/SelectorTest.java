@@ -72,10 +72,10 @@ public class SelectorTest extends BaseTest {
     @Test
     public void test_select2() throws Exception {
         UserQuery query = new UserQuery()
-            .select(selector -> selector.apply(f -> f.getProperty().startsWith("gmt")))
+            .select(true, f -> f.getProperty().startsWith("gmt"))
             .where.id().eq(24L).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT gmt_created, gmt_modified FROM t_user WHERE id = ?");
+            .eq("SELECT id, gmt_created, gmt_modified FROM t_user WHERE id = ?");
     }
 }

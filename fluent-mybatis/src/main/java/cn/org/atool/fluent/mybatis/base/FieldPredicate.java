@@ -5,10 +5,10 @@ import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
 import java.util.function.Predicate;
 
 /**
- * PredicateField
+ * FieldPredicate: 对判断字段是否符合条件
  *
  * @author wudarui
  */
 @FunctionalInterface
-public interface PredicateField extends Predicate<BaseFieldMeta> {
+public interface FieldPredicate extends Predicate<BaseFieldMeta> {
 }
