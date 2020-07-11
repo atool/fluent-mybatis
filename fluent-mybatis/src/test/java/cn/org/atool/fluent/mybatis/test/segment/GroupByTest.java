@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping.grade;
+
 /**
  * GroupByTest
  *
@@ -53,10 +55,11 @@ public class GroupByTest extends BaseTest {
     @Test
     public void test_count_gt_10_groupByGrade() throws Exception {
         UserQuery query = new UserQuery()
-            .select.grade().as().id().count().age().max().age().min().age().avg().end()
+            .select(grade)
+            .select.id().count().age().max().age().min().age().avg().end()
             .where
             .age().between(15, 25).end()
-            .groupBy.apply(UserMapping.grade).end()
+            .groupBy.apply(grade).end()
             .having
             .id().count().gt(10)
             .end();

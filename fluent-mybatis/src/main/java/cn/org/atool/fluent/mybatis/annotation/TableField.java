@@ -34,8 +34,8 @@ public @interface TableField {
     String insert() default "";
 
     /**
-     * 是否进行 select 查询
-     * <p>大字段可设置为 false 不加入 select 查询范围</p>
+     * 是否进行显式的 select 查询
+     * <p>大字段可设置为 false 使用 select(BaseFieldMeta::select)不加入 select 查询范围</p>
      */
     boolean select() default true;
 
