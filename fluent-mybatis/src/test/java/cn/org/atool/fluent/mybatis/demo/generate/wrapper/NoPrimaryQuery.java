@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.wrapper;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoPrimaryEntity;
@@ -54,10 +55,25 @@ public class NoPrimaryQuery extends BaseQuery<NoPrimaryEntity, NoPrimaryQuery> {
      * 查询字段设置
      *
      * @param by 查询字段设置器
+     * @param columns 查询字段列表
      * @return 查询器NoPrimaryQuery
      */
-    public NoPrimaryQuery select(Function<Selector, Selector> by){
-        by.apply(this.select).toString();
+    public NoPrimaryQuery select(Function<Selector, Selector> by, String... columns){
+        by.apply(this.select);
+        this.select(columns);
+        return this;
+    }
+
+    /**
+     * 查询字段设置
+     *
+     * @param by      查询字段设置器
+     * @param columns 查询字段列表
+     * @return 查询器NoPrimaryQuery
+     */
+    public NoPrimaryQuery select(Function<Selector, Selector> by, FieldMapping column, FieldMapping... columns) {
+        by.apply(this.select);
+        this.select(column, columns);
         return this;
     }
 
