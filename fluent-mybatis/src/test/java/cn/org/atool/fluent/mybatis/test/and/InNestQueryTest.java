@@ -49,6 +49,21 @@ public class InNestQueryTest extends BaseTest {
     }
 
     @Test
+    void test_and_in_nested_1() {
+        UserQuery query = new UserQuery()
+            .where
+            .id().in(q -> q
+                .selectId()
+                .where
+                .id().eq(3L).end())
+            .userName().like("user").end();
+
+        List list = mapper.listEntity(query);
+        db.sqlList().wantFirstSql()
+            .end("WHERE id IN (SELECT id FROM t_user WHERE id = ?) AND user_name LIKE ?");
+    }
+
+    @Test
     void test_and_in_nested2() {
         UserQuery query = new UserQuery()
             .selectId()

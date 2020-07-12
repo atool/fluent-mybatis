@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -29,6 +30,30 @@ public class GroupByTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name, age /** comment **/");
+    }
+
+    @Test
+    public void test_groupBy2() throws Exception {
+        UserQuery query = new UserQuery()
+            .selectId()
+            .where.id().eq(24L).end()
+            .groupBy.apply(UserMapping.userName, UserMapping.age).end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name, age");
+    }
+
+    @Test
+    public void test_groupBy_condition() throws Exception {
+        UserQuery query = new UserQuery()
+            .selectId()
+            .where.id().eq(24L).end()
+            .groupBy
+            .apply(true, UserMapping.userName)
+            .apply(false, UserMapping.age).end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name");
     }
 
     @Test
