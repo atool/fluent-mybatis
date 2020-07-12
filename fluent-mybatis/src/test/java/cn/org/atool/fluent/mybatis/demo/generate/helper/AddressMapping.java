@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,32 +27,32 @@ public interface AddressMapping {
      * id字段映射
      * <p></p>
      */
-    FieldMeta id = new FieldMeta("id", "id");
+    FieldMapping id = new FieldMapping("id", "id");
     /**
      * gmtCreated字段映射
      * <p></p>
      */
-    FieldMeta gmtCreated = new FieldMeta("gmtCreated", "gmt_created");
+    FieldMapping gmtCreated = new FieldMapping("gmtCreated", "gmt_created");
     /**
      * gmtModified字段映射
      * <p></p>
      */
-    FieldMeta gmtModified = new FieldMeta("gmtModified", "gmt_modified");
+    FieldMapping gmtModified = new FieldMapping("gmtModified", "gmt_modified");
     /**
      * isDeleted字段映射
      * <p></p>
      */
-    FieldMeta isDeleted = new FieldMeta("isDeleted", "is_deleted");
+    FieldMapping isDeleted = new FieldMapping("isDeleted", "is_deleted");
     /**
      * address字段映射
      * <p></p>
      */
-    FieldMeta address = new FieldMeta("address", "address");
+    FieldMapping address = new FieldMapping("address", "address");
     /**
      * userId字段映射
      * <p></p>
      */
-    FieldMeta userId = new FieldMeta("userId", "user_id");
+    FieldMapping userId = new FieldMapping("userId", "user_id");
 
     /**
      * 实例属性和数据库字段对应表

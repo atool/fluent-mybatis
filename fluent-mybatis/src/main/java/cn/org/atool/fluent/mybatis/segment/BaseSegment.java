@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
 import lombok.AccessLevel;
@@ -23,7 +23,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 当前处理字段
      */
-    protected FieldMeta currField;
+    protected FieldMapping currField;
 
     protected BaseSegment(W wrapper) {
         this.wrapper = (BaseWrapper) wrapper;
@@ -35,12 +35,12 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * @param field 字段信息
      * @return BaseSegment子类或者操作器
      */
-    public R set(FieldMeta field) {
+    public R set(FieldMapping field) {
         this.currField = field;
         return this.process(this.currField);
     }
 
-    protected abstract R process(FieldMeta currField);
+    protected abstract R process(FieldMapping currField);
 
     /**
      * 结束本段操作，返回查询（更新）器对象

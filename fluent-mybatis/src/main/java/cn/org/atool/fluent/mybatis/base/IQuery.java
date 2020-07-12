@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.List;
 import java.util.function.Function;
@@ -46,7 +46,7 @@ public interface IQuery<
      * @param fields 字段列表
      * @return children
      */
-    Q select(FieldMeta... fields);
+    Q select(FieldMapping... fields);
 
     /**
      * 过滤查询的字段信息

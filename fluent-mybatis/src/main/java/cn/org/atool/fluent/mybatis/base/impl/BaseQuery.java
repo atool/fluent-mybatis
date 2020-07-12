@@ -1,8 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
 import cn.org.atool.fluent.mybatis.base.FieldPredicate;
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
@@ -53,7 +52,7 @@ public abstract class BaseQuery<
     }
 
     @Override
-    public Q select(FieldMeta... fields) {
+    public Q select(FieldMapping... fields) {
         Stream.of(fields).filter(field -> field != null).map(field -> field.column).forEach(this.wrapperData::addSelectColumn);
         return (Q) this;
     }

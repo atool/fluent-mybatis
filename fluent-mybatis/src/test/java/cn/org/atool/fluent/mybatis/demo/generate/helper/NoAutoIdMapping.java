@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,12 +27,12 @@ public interface NoAutoIdMapping {
      * id字段映射
      * <p></p>
      */
-    FieldMeta id = new FieldMeta("id", "id");
+    FieldMapping id = new FieldMapping("id", "id");
     /**
      * column1字段映射
      * <p></p>
      */
-    FieldMeta column1 = new FieldMeta("column1", "column_1");
+    FieldMapping column1 = new FieldMapping("column1", "column_1");
 
     /**
      * 实例属性和数据库字段对应表

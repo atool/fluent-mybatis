@@ -1,11 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
-import cn.org.atool.fluent.mybatis.segment.model.SharedString;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
@@ -70,7 +67,7 @@ public abstract class OrderByBase<
      * @param columns 排序字段列表
      * @return 排序对象
      */
-    public O asc(FieldMeta... columns) {
+    public O asc(FieldMapping... columns) {
         if (isNotEmpty(columns)) {
             Stream.of(columns).forEach(field -> this.applyField(field, true));
         }
@@ -113,7 +110,7 @@ public abstract class OrderByBase<
      * @param columns 排序字段列表
      * @return 排序对象
      */
-    public O desc(FieldMeta... columns) {
+    public O desc(FieldMapping... columns) {
         if (isNotEmpty(columns)) {
             Stream.of(columns).forEach(field -> this.applyField(field, false));
         }
@@ -128,7 +125,7 @@ public abstract class OrderByBase<
      * @param columns   排序字段
      * @return 排序对象
      */
-    public O apply(boolean condition, boolean isAsc, FieldMeta... columns) {
+    public O apply(boolean condition, boolean isAsc, FieldMapping... columns) {
         if (condition && isNotEmpty(columns)) {
             return isAsc ? this.asc(columns) : this.desc(columns);
         } else {
@@ -169,14 +166,14 @@ public abstract class OrderByBase<
      *
      * @param isAsc 是否顺序
      */
-    void applyField(FieldMeta column, boolean isAsc) {
+    void applyField(FieldMapping column, boolean isAsc) {
         if (column != null) {
             this.applyField(column.column, isAsc);
         }
     }
 
     @Override
-    protected OrderByApply<O, W> process(FieldMeta field) {
+    protected OrderByApply<O, W> process(FieldMapping field) {
         this.apply.setCurrentField(field);
         return this.apply;
     }

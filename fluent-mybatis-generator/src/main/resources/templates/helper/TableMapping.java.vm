@@ -1,6 +1,6 @@
 package ${mapping.package};
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +28,7 @@ public interface ${mapping.name} {
      * ${field.name}字段映射
      * <p>${field.comment}</p>
      */
-    FieldMeta ${field.name} = new FieldMeta("${field.name}", "${field.columnName}");
+    FieldMapping ${field.name} = new FieldMapping("${field.name}", "${field.columnName}");
 #end
 
     /**

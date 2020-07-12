@@ -9,7 +9,6 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
@@ -20,7 +19,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class TableFieldMeta extends BaseFieldMeta {
+public class TableFieldMeta extends FieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */

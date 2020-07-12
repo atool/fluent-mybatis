@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,47 +27,47 @@ public interface UserMapping {
      * id字段映射
      * <p></p>
      */
-    FieldMeta id = new FieldMeta("id", "id");
+    FieldMapping id = new FieldMapping("id", "id");
     /**
      * gmtCreated字段映射
      * <p></p>
      */
-    FieldMeta gmtCreated = new FieldMeta("gmtCreated", "gmt_created");
+    FieldMapping gmtCreated = new FieldMapping("gmtCreated", "gmt_created");
     /**
      * gmtModified字段映射
      * <p></p>
      */
-    FieldMeta gmtModified = new FieldMeta("gmtModified", "gmt_modified");
+    FieldMapping gmtModified = new FieldMapping("gmtModified", "gmt_modified");
     /**
      * isDeleted字段映射
      * <p></p>
      */
-    FieldMeta isDeleted = new FieldMeta("isDeleted", "is_deleted");
+    FieldMapping isDeleted = new FieldMapping("isDeleted", "is_deleted");
     /**
      * addressId字段映射
      * <p></p>
      */
-    FieldMeta addressId = new FieldMeta("addressId", "address_id");
+    FieldMapping addressId = new FieldMapping("addressId", "address_id");
     /**
      * age字段映射
      * <p></p>
      */
-    FieldMeta age = new FieldMeta("age", "age");
+    FieldMapping age = new FieldMapping("age", "age");
     /**
      * grade字段映射
      * <p></p>
      */
-    FieldMeta grade = new FieldMeta("grade", "grade");
+    FieldMapping grade = new FieldMapping("grade", "grade");
     /**
      * userName字段映射
      * <p></p>
      */
-    FieldMeta userName = new FieldMeta("userName", "user_name");
+    FieldMapping userName = new FieldMapping("userName", "user_name");
     /**
      * version字段映射
      * <p></p>
      */
-    FieldMeta version = new FieldMeta("version", "version");
+    FieldMapping version = new FieldMapping("version", "version");
 
     /**
      * 实例属性和数据库字段对应表

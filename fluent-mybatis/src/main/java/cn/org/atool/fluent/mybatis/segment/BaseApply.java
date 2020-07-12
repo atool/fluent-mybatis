@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
 
 /**
@@ -19,7 +19,7 @@ public abstract class BaseApply<
     /**
      * 当前被操作的字段
      */
-    protected FieldMeta current;
+    protected FieldMapping current;
 
     BaseApply(SEGMENT segment) {
         this.segment = segment;
@@ -32,7 +32,7 @@ public abstract class BaseApply<
      * @param <APPLY> 操作者类型
      * @return 返回操作自身
      */
-    <APPLY extends BaseApply<SEGMENT, W>> APPLY setCurrentField(FieldMeta current) {
+    <APPLY extends BaseApply<SEGMENT, W>> APPLY setCurrentField(FieldMapping current) {
         this.current = current;
         return (APPLY) this;
     }

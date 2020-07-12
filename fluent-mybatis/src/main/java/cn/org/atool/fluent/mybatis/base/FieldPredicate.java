@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.method.metadata.BaseFieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
 
 import java.util.function.Predicate;
 
@@ -10,5 +10,5 @@ import java.util.function.Predicate;
  * @author wudarui
  */
 @FunctionalInterface
-public interface FieldPredicate extends Predicate<BaseFieldMeta> {
+public interface FieldPredicate extends Predicate<FieldMeta> {
 }

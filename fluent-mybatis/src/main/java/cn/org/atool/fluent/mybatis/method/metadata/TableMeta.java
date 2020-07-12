@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
+import cn.org.atool.fluent.mybatis.base.FieldPredicate;
 import cn.org.atool.fluent.mybatis.segment.model.StrConstant;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -70,7 +71,7 @@ public class TableMeta implements StrConstant {
      * @param predicate      过滤条件
      * @return sql 片段
      */
-    public String filter(boolean includePrimary, Predicate<BaseFieldMeta> predicate) {
+    public String filter(boolean includePrimary, FieldPredicate predicate) {
         List<String> columns = new ArrayList<>();
         if (primary != null && (includePrimary || predicate.test(primary))) {
             columns.add(primary.getColumn());

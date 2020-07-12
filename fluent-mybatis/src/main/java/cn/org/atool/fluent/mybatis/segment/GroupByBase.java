@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
@@ -63,7 +63,7 @@ public abstract class GroupByBase<
      * @param columns 字段列表
      * @return groupBy选择器
      */
-    public G apply(FieldMeta... columns) {
+    public G apply(FieldMapping... columns) {
         Stream.of(columns).filter(c -> c != null).map(c -> c.column).forEach(apply::add);
         return (G) this;
     }
@@ -75,12 +75,12 @@ public abstract class GroupByBase<
      * @param columns   字段列表
      * @return groupBy选择器
      */
-    public G apply(boolean condition, FieldMeta... columns) {
+    public G apply(boolean condition, FieldMapping... columns) {
         return condition ? this.apply(columns) : (G) this;
     }
 
     @Override
-    protected G process(FieldMeta field) {
+    protected G process(FieldMapping field) {
         return this.apply(field.column);
     }
 

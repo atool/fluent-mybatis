@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 
@@ -38,7 +38,7 @@ public abstract class SelectorBase<
     }
 
     @Override
-    protected SelectorApply<S, Q> process(FieldMeta field) {
+    protected SelectorApply<S, Q> process(FieldMapping field) {
         return this.apply.setCurrentField(field);
     }
 

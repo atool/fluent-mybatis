@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  * @create 2020/5/27 6:45 下午
  */
 @Getter
-public class TablePrimaryMeta extends BaseFieldMeta {
+public class TablePrimaryMeta extends FieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */

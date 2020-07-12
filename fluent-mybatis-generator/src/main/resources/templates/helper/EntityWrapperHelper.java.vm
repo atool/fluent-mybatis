@@ -1,6 +1,6 @@
 package ${wrapperHelper.package};
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.*;
 import ${mapping.package}.${mapping.name};
 import ${entityQuery.package}.${entityQuery.name};
@@ -16,7 +16,7 @@ import ${entityUpdate.package}.${entityUpdate.name};
  */
 public class ${wrapperHelper.name} {
     public interface ISegment<R> {
-        R set(FieldMeta fieldMeta);
+        R set(FieldMapping fieldMapping);
         #foreach($field in ${fields})
 
         default R ${field.name}() {

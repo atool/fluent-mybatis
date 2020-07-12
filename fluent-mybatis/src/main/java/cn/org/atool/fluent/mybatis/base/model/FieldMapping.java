@@ -6,7 +6,7 @@ package cn.org.atool.fluent.mybatis.base.model;
  * @author darui.wu
  * @create 2020/6/23 9:16 上午
  */
-public class FieldMeta {
+public class FieldMapping {
     /**
      * 属性名称
      */
@@ -16,7 +16,7 @@ public class FieldMeta {
      */
     public final String column;
 
-    public FieldMeta(String name, String column) {
+    public FieldMapping(String name, String column) {
         this.name = name;
         this.column = column;
     }

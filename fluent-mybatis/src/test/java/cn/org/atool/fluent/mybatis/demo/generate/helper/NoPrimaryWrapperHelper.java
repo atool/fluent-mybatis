@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoPrimaryQuery;
@@ -16,7 +16,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoPrimaryUpdate;
  */
 public class NoPrimaryWrapperHelper {
     public interface ISegment<R> {
-        R set(FieldMeta fieldMeta);
+        R set(FieldMapping fieldMapping);
 
         default R column1() {
             return this.set(NoPrimaryMapping.column1);

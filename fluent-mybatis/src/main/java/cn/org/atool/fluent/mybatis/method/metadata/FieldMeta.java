@@ -5,8 +5,6 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
-
 /**
  * BaseFieldInfo
  *
@@ -14,7 +12,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
  * @create 2020/5/27 6:46 下午
  */
 @Getter
-public abstract class BaseFieldMeta implements Comparable<BaseFieldMeta> {
+public abstract class FieldMeta implements Comparable<FieldMeta> {
     /**
      * 字段名
      */
@@ -32,7 +30,7 @@ public abstract class BaseFieldMeta implements Comparable<BaseFieldMeta> {
      */
     private JdbcType jdbcType;
 
-    public BaseFieldMeta(String column, Field field) {
+    public FieldMeta(String column, Field field) {
         this.column = column;
         this.property = field.getName();
         this.propertyType = field.getType();
@@ -54,12 +52,17 @@ public abstract class BaseFieldMeta implements Comparable<BaseFieldMeta> {
         return el;
     }
 
-    public boolean isSelected() {
+    /**
+     * 非大字段
+     *
+     * @return
+     */
+    public boolean isNotLarge() {
         return true;
     }
 
     @Override
-    public int compareTo(BaseFieldMeta info) {
+    public int compareTo(FieldMeta info) {
         return this.column.compareTo(info == null ? null : info.getColumn());
     }
 }

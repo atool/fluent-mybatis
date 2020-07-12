@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -295,7 +295,7 @@ public abstract class WhereBase<
     }
 
     @Override
-    protected WhereApply process(FieldMeta field) {
+    protected WhereApply process(FieldMapping field) {
         return this.apply.setCurrentField(field);
     }
 }

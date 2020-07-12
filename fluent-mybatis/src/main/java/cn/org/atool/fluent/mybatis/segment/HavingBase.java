@@ -1,12 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMeta;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 
 /**
  * BaseHaving: having设置
@@ -63,7 +62,7 @@ public abstract class HavingBase<
     }
 
     @Override
-    protected HavingApply<H, Q> process(FieldMeta field) {
+    protected HavingApply<H, Q> process(FieldMapping field) {
         return this.apply.setCurrentField(field);
     }
 }
