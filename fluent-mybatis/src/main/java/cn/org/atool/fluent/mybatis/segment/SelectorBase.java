@@ -37,6 +37,18 @@ public abstract class SelectorBase<
         return (S) this;
     }
 
+    /**
+     * 增加查询字段
+     *
+     * @param column  查询字段
+     * @param columns 查询字段
+     * @return 查询字段选择器
+     */
+    public S apply(FieldMapping column, FieldMapping... columns) {
+        this.getQuery().select(column, columns);
+        return (S) this;
+    }
+
     @Override
     protected SelectorApply<S, Q> process(FieldMapping field) {
         return this.apply.setCurrentField(field);

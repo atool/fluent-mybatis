@@ -34,8 +34,8 @@ public @interface TableField {
     String insert() default "";
 
     /**
-     * 非大字段
-     * <p>大字段可设置为 false 使用 select(BaseFieldMeta::notLarge)不加入 select 查询范围</p>
+     * 是否非大字段
+     * <p>使用 select(true, FieldMeta::notLarge)排除大字段查询</p>
      */
     boolean notLarge() default true;
 

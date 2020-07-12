@@ -43,10 +43,11 @@ public interface IQuery<
     /**
      * 设置查询字段
      *
+     * @param field  查询字段
      * @param fields 字段列表
      * @return children
      */
-    Q select(FieldMapping... fields);
+    Q select(FieldMapping field, FieldMapping... fields);
 
     /**
      * 过滤查询的字段信息
@@ -56,7 +57,7 @@ public interface IQuery<
      * <p>例3: 只要字符串类型字段                 -> select(i -> i.getPropertyType instance String)</p>
      *
      * @param includePrimary 包含主键?
-     * @param predicate 过滤方式 (主键除外!)
+     * @param predicate      过滤方式 (主键除外!)
      * @return 字段选择器
      */
     Q select(boolean includePrimary, FieldPredicate predicate);

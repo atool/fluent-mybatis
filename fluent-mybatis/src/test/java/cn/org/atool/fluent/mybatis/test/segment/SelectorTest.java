@@ -1,10 +1,13 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping.*;
 
 /**
  * SelectorTest
@@ -20,14 +23,12 @@ public class SelectorTest extends BaseTest {
     public void test_select() throws Exception {
         UserQuery query = new UserQuery()
             .select(selector -> selector
-                .id().as()
-                .age().sum()
-                .apply("address_id", "1"))
+                .age().sum(), "id", "address_id", "1")
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, SUM(age), address_id, 1 FROM t_user WHERE id = ? GROUP BY id");
+            .eq("SELECT SUM(age), id, address_id, 1 FROM t_user WHERE id = ? GROUP BY id");
     }
 
     @Test
@@ -54,18 +55,17 @@ public class SelectorTest extends BaseTest {
     public void test_select_no_alias() throws Exception {
         UserQuery query = new UserQuery()
             .select(selector -> selector
-                .id().as()
                 .age().sum()
                 .age().max()
                 .age().min()
                 .age().avg()
                 .age().count()
-                .age().group_concat())
+                .age().group_concat(), id)
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age) " +
+            .eq("SELECT SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age), id " +
                 "FROM t_user WHERE id = ? GROUP BY id");
     }
 

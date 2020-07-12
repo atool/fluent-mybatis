@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
+import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.AddressQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
@@ -52,7 +53,7 @@ public class NestedQueryTest extends BaseTest {
         UserQuery query = new UserQuery()
             .where
             .id().in(AddressQuery.class,
-                q -> q.select(by -> by.userId().as())
+                q -> q.select(AddressMapping.userId)
                     .where.address().like("杭州滨江").end())
             .end();
         mapper.listEntity(query);

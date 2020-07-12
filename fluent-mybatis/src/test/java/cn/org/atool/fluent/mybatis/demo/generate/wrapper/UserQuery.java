@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.wrapper;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.UserEntity;
@@ -9,13 +10,13 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.UserWrapperHelper.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.function.Function;
+
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
+ * @author generate code
  * @ClassName UserQuery
  * @Description UserEntity查询（删除）条件
- *
- * @author generate code
  */
 public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
     public final Selector select = new Selector(this);
@@ -37,7 +38,7 @@ public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
      */
     public final QueryWhere where = new QueryWhere(this);
 
-    public UserQuery(){
+    public UserQuery() {
         super(UserMapping.Table_Name, UserEntity.class, UserQuery.class);
     }
 
@@ -53,11 +54,26 @@ public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
     /**
      * 查询字段设置
      *
-     * @param by 查询字段设置器
+     * @param by      查询字段设置器
+     * @param columns 查询字段列表
      * @return 查询器UserQuery
      */
-    public UserQuery select(Function<Selector, Selector> by){
-        by.apply(this.select).toString();
+    public UserQuery select(Function<Selector, Selector> by, String... columns) {
+        by.apply(this.select);
+        this.select(columns);
+        return this;
+    }
+
+    /**
+     * 查询字段设置
+     *
+     * @param by      查询字段设置器
+     * @param columns 查询字段列表
+     * @return 查询器UserQuery
+     */
+    public UserQuery select(Function<Selector, Selector> by, FieldMapping column, FieldMapping... columns) {
+        by.apply(this.select);
+        this.select(column, columns);
         return this;
     }
 

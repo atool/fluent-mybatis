@@ -28,9 +28,9 @@ public class SelectorApply<
      *
      * @return 返回字段选择器
      */
-    public S as() {
-        return this.segment.apply(this.current.column);
-    }
+//    public S as() {
+//        return this.segment.apply(this.current.column);
+//    }
 
     /**
      * 查询字段

@@ -11,6 +11,7 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * AbstractQueryWrapper
@@ -47,13 +48,18 @@ public abstract class BaseQuery<
 
     @Override
     public Q select(String... columns) {
-        Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
+        if (isNotEmpty(columns)) {
+            Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
+        }
         return (Q) this;
     }
 
     @Override
-    public Q select(FieldMapping... fields) {
-        Stream.of(fields).filter(field -> field != null).map(field -> field.column).forEach(this.wrapperData::addSelectColumn);
+    public Q select(FieldMapping field, FieldMapping... fields) {
+        this.wrapperData.addSelectColumn(field.column);
+        if (isNotEmpty(fields)) {
+            Stream.of(fields).filter(f -> field != null).map(f -> f.column).forEach(this.wrapperData::addSelectColumn);
+        }
         return (Q) this;
     }
 

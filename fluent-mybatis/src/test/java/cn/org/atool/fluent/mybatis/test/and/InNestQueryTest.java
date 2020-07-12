@@ -22,7 +22,8 @@ public class InNestQueryTest extends BaseTest {
     @Test
     void test_and_in_nested() {
         UserQuery query = new UserQuery()
-            .select.id().as().age().sum().end()
+            .select("id")
+            .select.age().sum().end()
             .where
             .id().in(q -> q
                 .selectId()
