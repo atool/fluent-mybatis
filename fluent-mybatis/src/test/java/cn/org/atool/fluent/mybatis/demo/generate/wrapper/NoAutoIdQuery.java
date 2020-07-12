@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.demo.generate.wrapper;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import cn.org.atool.fluent.mybatis.demo.generate.entity.NoAutoIdEntity;
@@ -9,7 +8,6 @@ import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdWrapperHelper.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import java.util.function.Function;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
@@ -49,32 +47,6 @@ public class NoAutoIdQuery extends BaseQuery<NoAutoIdEntity, NoAutoIdQuery> {
     @Override
     public NoAutoIdQuery selectId() {
         return this.select(NoAutoIdMapping.id.column);
-    }
-
-    /**
-     * 查询字段设置
-     *
-     * @param by 查询字段设置器
-     * @param columns 查询字段列表
-     * @return 查询器NoAutoIdQuery
-     */
-    public NoAutoIdQuery select(Function<Selector, Selector> by, String... columns){
-        by.apply(this.select);
-        this.select(columns);
-        return this;
-    }
-
-    /**
-     * 查询字段设置
-     *
-     * @param by      查询字段设置器
-     * @param columns 查询字段列表
-     * @return 查询器NoAutoIdQuery
-     */
-    public NoAutoIdQuery select(Function<Selector, Selector> by, FieldMapping column, FieldMapping... columns) {
-        by.apply(this.select);
-        this.select(column, columns);
-        return this;
     }
 
     @Override

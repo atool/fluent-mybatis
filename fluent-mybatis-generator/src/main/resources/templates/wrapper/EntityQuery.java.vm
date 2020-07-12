@@ -1,7 +1,6 @@
 package ${entityQuery.package};
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import ${entity.package}.${entity.name};
@@ -9,7 +8,6 @@ import ${mapping.package}.${mapping.name};
 import ${wrapperHelper.package}.${wrapperHelper.name}.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import java.util.function.Function;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
@@ -53,32 +51,6 @@ public class ${entityQuery.name} extends BaseQuery<${entity.name}, ${entityQuery
 #else
         throw new FluentMybatisException("The primary key of in table[" + ${mapping.name}.Table_Name + "] was not found.");
 #end
-    }
-
-    /**
-     * 查询字段设置
-     *
-     * @param by 查询字段设置器
-     * @param columns 查询字段列表
-     * @return 查询器${entityQuery.name}
-     */
-    public ${entityQuery.name} select(Function<Selector, Selector> by, String... columns){
-        by.apply(this.select);
-        this.select(columns);
-        return this;
-    }
-
-    /**
-     * 查询字段设置
-     *
-     * @param by      查询字段设置器
-     * @param columns 查询字段列表
-     * @return 查询器${entityQuery.name}
-     */
-    public ${entityQuery.name} select(Function<Selector, Selector> by, FieldMapping column, FieldMapping... columns) {
-        by.apply(this.select);
-        this.select(column, columns);
-        return this;
     }
 
     @Override

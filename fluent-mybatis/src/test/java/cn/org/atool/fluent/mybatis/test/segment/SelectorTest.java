@@ -22,8 +22,8 @@ public class SelectorTest extends BaseTest {
     @Test
     public void test_select() throws Exception {
         UserQuery query = new UserQuery()
-            .select(selector -> selector
-                .age().sum(), "id", "address_id", "1")
+            .select.age().sum().end()
+            .select("id", "address_id", "1")
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
@@ -34,15 +34,15 @@ public class SelectorTest extends BaseTest {
     @Test
     public void test_select_alias() throws Exception {
         UserQuery query = new UserQuery()
-            .select(selector -> selector
-                .id().as("pk")
-                .age().sum("sum")
-                .age().max("max")
-                .age().min("min")
-                .age().avg("avg")
-                .age().count("count")
-                .age().group_concat("concat")
-            )
+            .select
+            .id().as("pk")
+            .age().sum("sum")
+            .age().max("max")
+            .age().min("min")
+            .age().avg("avg")
+            .age().count("count")
+            .age().group_concat("concat")
+            .end()
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
@@ -54,13 +54,15 @@ public class SelectorTest extends BaseTest {
     @Test
     public void test_select_no_alias() throws Exception {
         UserQuery query = new UserQuery()
-            .select(selector -> selector
-                .age().sum()
-                .age().max()
-                .age().min()
-                .age().avg()
-                .age().count()
-                .age().group_concat(), id)
+            .select
+            .age().sum()
+            .age().max()
+            .age().min()
+            .age().avg()
+            .age().count()
+            .age().group_concat()
+            .end()
+            .select(id)
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
