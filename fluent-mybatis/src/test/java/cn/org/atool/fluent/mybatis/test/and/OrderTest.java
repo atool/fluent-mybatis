@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
+import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -33,5 +34,18 @@ public class OrderTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().where().eq("user_name LIKE ?");
         db.sqlList().wantFirstSql().end("ORDER BY id ASC, address_id ASC, user_name DESC, id+0 ASC");
+    }
+
+    @Test
+    public void orderBy_condition() {
+        UserQuery query = new UserQuery()
+            .where.userName().like("user").end()
+            .orderBy
+            .apply(true, false, UserMapping.id, UserMapping.addressId)
+            .apply(false, true, UserMapping.userName)
+            .asc("id+0")
+            .end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql().end("ORDER BY id DESC, address_id DESC, id+0 ASC");
     }
 }
