@@ -71,10 +71,10 @@ public class TableFieldMeta extends BaseFieldMeta {
     public String el() {
         String el = super.el();
         if (typeHandler != null) {
-            el += (COMMA + "typeHandler=" + typeHandler.getName());
+            el += (", typeHandler = " + typeHandler.getName());
         }
         if (isNotBlank(numericScale)) {
-            el += (COMMA + "numericScale=" + numericScale);
+            el += (", numericScale = " + numericScale);
         }
         return el;
     }

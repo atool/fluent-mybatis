@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 import static org.test4j.generator.mybatis.config.constant.ConfigKey.KEY_ENTITY;
+import static org.test4j.tools.commons.StringHelper.isNotBlank;
 
 /**
  * EntityTemplate
@@ -73,17 +74,17 @@ public class EntityTemplate extends BaseTemplate {
             text.append(")");
         } else {
             text.quotas("@TableField(value = '%s'", field.getColumnName());
-            switch (field.getCategory()) {
-                case GmtCreate:
-                    text.quotas(", insert = 'now()'");
-                    break;
-                case GmtModified:
-                    text.quotas(", insert = 'now()', update = 'now()'");
-                    break;
-                case IsDeleted:
-                    text.quotas(", insert = '0'");
-                    break;
-                default:
+            if (isNotBlank(field.getInsert())) {
+                text.quotas(", insert = '%s'", field.getInsert());
+            }
+            if (isNotBlank(field.getUpdate())) {
+                text.quotas(", update = '%s'", field.getUpdate());
+            }
+            if( field.getIsLarge() != null && !field.getIsLarge()){
+                text.quotas(", notLarge = false");
+            }
+            if(isNotBlank(field.getTypeHandler())){
+                text.quotas(", typeHandler = '%s'", field.getTypeHandler());
             }
             text.append(")");
         }

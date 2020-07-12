@@ -71,7 +71,7 @@ public class UserEntity implements IEntity, IBaseEntity<UserEntity>{
     /**
      * 
      */
-    @TableField(value = "version")
+    @TableField(value = "version", notLarge = false)
     private String version;
 
     @Override

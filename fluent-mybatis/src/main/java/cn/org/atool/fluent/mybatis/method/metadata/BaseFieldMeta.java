@@ -49,7 +49,7 @@ public abstract class BaseFieldMeta implements Comparable<BaseFieldMeta> {
     public String el() {
         String el = this.property;
         if (this.jdbcType != null) {
-            el += (COMMA + "jdbcType=" + jdbcType.name());
+            el += (", jdbcType = " + jdbcType.name());
         }
         return el;
     }
