@@ -37,7 +37,9 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     @Override
     public List<String> selectObjs(Long... ids) {
         return super.listPoJos(
-            super.query().select(UserMapping.userName)
+            super.query()
+                .select
+                .apply(UserMapping.userName).end()
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(UserMapping.userName.column)
         );
@@ -46,7 +48,9 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     @Override
     public List<String> selectObjs2(Long... ids) {
         return super.listPoJos(
-            super.query().select(UserMapping.userName, UserMapping.age)
+            super.query()
+                .select
+                .apply(UserMapping.userName, UserMapping.age).end()
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(UserMapping.userName.column)
         );

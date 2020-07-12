@@ -26,7 +26,7 @@ public class SelectObjsTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .select(UserMapping.userName)
+            .select.apply(UserMapping.userName).end()
             .where.id().eq(24L).end();
         List<String> users = mapper.listObjs(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
@@ -41,7 +41,7 @@ public class SelectObjsTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .select(UserMapping.userName)
+            .select.apply(UserMapping.userName).end()
             .where.userName().eq("u2").end();
         List<String> users = mapper.listObjs(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");

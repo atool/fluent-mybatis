@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.base.FieldPredicate;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
@@ -46,27 +44,11 @@ public abstract class BaseQuery<
         return (Q) this;
     }
 
-    @Override
-    public Q select(String... columns) {
+    protected Q select(String... columns) {
         if (isNotEmpty(columns)) {
             Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
         }
         return (Q) this;
-    }
-
-    @Override
-    public Q select(FieldMapping field, FieldMapping... fields) {
-        this.wrapperData.addSelectColumn(field.column);
-        if (isNotEmpty(fields)) {
-            Stream.of(fields).filter(f -> field != null).map(f -> f.column).forEach(this.wrapperData::addSelectColumn);
-        }
-        return (Q) this;
-    }
-
-    @Override
-    public Q select(boolean includePrimary, FieldPredicate predicate) {
-        String selected = this.getTableMeta().filter(includePrimary, predicate);
-        return this.select(selected);
     }
 
     @Override

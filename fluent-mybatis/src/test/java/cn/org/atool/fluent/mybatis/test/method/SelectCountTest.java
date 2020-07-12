@@ -46,7 +46,7 @@ public class SelectCountTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .select("id")
+            .select.apply("id").end()
             .where.userName().eq("u2").end();
         int count = mapper.count(query);
         db.sqlList().wantFirstSql().start("SELECT COUNT( id )").end("FROM t_user WHERE user_name = ?");
@@ -61,7 +61,7 @@ public class SelectCountTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .select("id")
+            .select.apply("id").end()
             .where.userName().eq("u2").end()
             .limit(2);
         int count = mapper.count(query);

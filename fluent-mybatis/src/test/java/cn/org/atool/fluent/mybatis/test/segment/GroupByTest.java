@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
-import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -35,7 +34,8 @@ public class GroupByTest extends BaseTest {
     @Test
     public void test_groupBy_having() throws Exception {
         UserQuery query = new UserQuery()
-            .select("count(1)", "sum(1)")
+            .select
+            .apply("count(1)", "sum(1)").end()
             .where
             .id().eq(24L).end()
             .groupBy
@@ -55,8 +55,12 @@ public class GroupByTest extends BaseTest {
     @Test
     public void test_count_gt_10_groupByGrade() throws Exception {
         UserQuery query = new UserQuery()
-            .select(grade)
-            .select.id().count().age().max().age().min().age().avg().end()
+            .select
+            .apply(grade)
+            .id().count()
+            .age().max()
+            .age().min()
+            .age().avg().end()
             .where
             .age().between(15, 25).end()
             .groupBy.apply(grade).end()

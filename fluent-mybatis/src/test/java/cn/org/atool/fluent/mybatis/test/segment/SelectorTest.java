@@ -1,13 +1,10 @@
 package cn.org.atool.fluent.mybatis.test.segment;
 
-import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping.*;
 
 /**
  * SelectorTest
@@ -22,8 +19,9 @@ public class SelectorTest extends BaseTest {
     @Test
     public void test_select() throws Exception {
         UserQuery query = new UserQuery()
-            .select.age().sum().end()
-            .select("id", "address_id", "1")
+            .select
+            .age().sum()
+            .apply("id", "address_id", "1").end()
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
@@ -54,6 +52,7 @@ public class SelectorTest extends BaseTest {
     @Test
     public void test_select_no_alias() throws Exception {
         UserQuery query = new UserQuery()
+            .selectId()
             .select
             .age().sum()
             .age().max()
@@ -62,19 +61,19 @@ public class SelectorTest extends BaseTest {
             .age().count()
             .age().group_concat()
             .end()
-            .select(id)
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age), id " +
+            .eq("SELECT id, SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age) " +
                 "FROM t_user WHERE id = ? GROUP BY id");
     }
 
     @Test
     public void test_select2() throws Exception {
         UserQuery query = new UserQuery()
-            .select(true, f -> f.getProperty().startsWith("gmt"))
+            .selectId()
+            .select.apply(f -> f.getProperty().startsWith("gmt")).end()
             .where.id().eq(24L).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

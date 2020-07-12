@@ -35,7 +35,7 @@ public class NotInNestQueryTest extends BaseTest {
             selectId()
             .where.
                 id().notIn(UserQuery.class, q -> q
-                .select("address_id")
+                .select.apply("address_id").end()
                 .where.
                     age().eq(24)
                 .end())
