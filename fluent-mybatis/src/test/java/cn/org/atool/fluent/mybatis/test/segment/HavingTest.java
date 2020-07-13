@@ -7,6 +7,8 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping.id;
+
 /**
  * HavingTest
  *
@@ -22,7 +24,7 @@ public class HavingTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select
             .age().sum("avg")
-            .apply(UserMapping.id).end()
+            .apply(id).end()
             .where.id().eq(24L).end()
             .groupBy.id()
             .end()
@@ -51,7 +53,7 @@ public class HavingTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select
             .age().sum("avg")
-            .apply("id").end()
+            .apply(id).end()
             .where.id().eq(24L).end()
             .groupBy.id()
             .end()
