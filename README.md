@@ -1,6 +1,6 @@
 # Fluent-Mybatis介绍
  
-   [gitee/fluent-mybatis-docs](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
+[详细介绍, 移步gitee](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
     
 ## Fluent-Mybatis能干吗
 fluent-mybatis是mybatis的增强版，既有改变，又有增强，简化开发、提高效率。
