@@ -30,7 +30,7 @@ public class NoPrimaryWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, NoPrimaryQuery>
+    public static final class Selector extends SelectorBase<Selector, NoPrimaryQuery, SelectorApply<Selector, NoPrimaryQuery>>
         implements ISegment<SelectorApply<Selector, NoPrimaryQuery>> {
 
         public Selector(NoPrimaryQuery query) {

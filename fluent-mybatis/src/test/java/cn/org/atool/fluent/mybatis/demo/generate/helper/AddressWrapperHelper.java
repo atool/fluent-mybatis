@@ -46,7 +46,7 @@ public class AddressWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, AddressQuery>
+    public static final class Selector extends SelectorBase<Selector, AddressQuery, SelectorApply<Selector, AddressQuery>>
         implements ISegment<SelectorApply<Selector, AddressQuery>> {
 
         public Selector(AddressQuery query) {

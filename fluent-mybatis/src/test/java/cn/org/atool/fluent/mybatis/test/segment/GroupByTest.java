@@ -81,7 +81,7 @@ public class GroupByTest extends BaseTest {
     public void test_count_gt_10_groupByGrade() throws Exception {
         UserQuery query = new UserQuery()
             .select
-            .apply(grade)
+            .apply(grade.column)
             .id().count()
             .age().max()
             .age().min()

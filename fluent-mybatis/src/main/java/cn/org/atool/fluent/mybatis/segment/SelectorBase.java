@@ -18,12 +18,16 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
  * @create 2020/6/21 3:13 下午
  */
 public abstract class SelectorBase<
-    S extends SelectorBase<S, Q>,
-    Q extends IQuery<?, Q>
+    S extends SelectorBase<S, Q, R>,
+    Q extends IQuery<?, Q>,
+    R extends SelectorApply<S, Q>
     >
-    extends BaseSegment<SelectorApply<S, Q>, Q> {
+    extends BaseSegment<R, Q> {
 
-    private final SelectorApply<S, Q> apply = new SelectorApply(this);
+//    private final SelectorApply<S, Q> apply = new SelectorApply(this);
+    protected R getApply(){
+        return null;
+    }
 
     protected SelectorBase(Q query) {
         super(query);
@@ -57,24 +61,6 @@ public abstract class SelectorBase<
     }
 
     /**
-     * 增加查询字段
-     *
-     * @param field  查询字段
-     * @param fields 查询字段
-     * @return 查询字段选择器
-     */
-    public S apply(FieldMapping field, FieldMapping... fields) {
-        this.wrapperData().addSelectColumn(field.column);
-        if (isNotEmpty(fields)) {
-            Stream.of(fields)
-                .filter(f -> field != null)
-                .map(f -> f.column)
-                .forEach(this.wrapperData()::addSelectColumn);
-        }
-        return (S) this;
-    }
-
-    /**
      * 过滤查询的字段信息
      *
      * <p>例1: 只要 java 字段名以 "test" 开头的   -> select(i -> i.getProperty().startsWith("test"))</p>
@@ -90,8 +76,8 @@ public abstract class SelectorBase<
     }
 
     @Override
-    protected SelectorApply<S, Q> process(FieldMapping field) {
-        return this.apply.setCurrentField(field);
+    protected R process(FieldMapping field) {
+        return this.getApply().setCurrentField(field);
     }
 
     private BaseQuery getQuery() {

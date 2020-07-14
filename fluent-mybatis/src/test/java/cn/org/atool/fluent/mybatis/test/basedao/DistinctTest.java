@@ -32,7 +32,7 @@ public class DistinctTest extends BaseTest {
             );
         UserQuery query = new UserQuery()
             .distinct()
-            .select.apply(UserMapping.userName).end()
+            .select.apply(UserMapping.userName.column).end()
             .where.age().eq(30).end();
 
         List<UserEntity> users = mapper.listEntity(query);

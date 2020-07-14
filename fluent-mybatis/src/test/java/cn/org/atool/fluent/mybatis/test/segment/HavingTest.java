@@ -24,7 +24,7 @@ public class HavingTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select
             .age().sum("avg")
-            .apply(id).end()
+            .apply(id.column).end()
             .where.id().eq(24L).end()
             .groupBy.id()
             .end()
@@ -53,7 +53,7 @@ public class HavingTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select
             .age().sum("avg")
-            .apply(id).end()
+            .apply(id.column).end()
             .where.id().eq(24L).end()
             .groupBy.id()
             .end()

@@ -30,7 +30,7 @@ public class NoAutoIdWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, NoAutoIdQuery>
+    public static final class Selector extends SelectorBase<Selector, NoAutoIdQuery, SelectorApply<Selector, NoAutoIdQuery>>
         implements ISegment<SelectorApply<Selector, NoAutoIdQuery>> {
 
         public Selector(NoAutoIdQuery query) {

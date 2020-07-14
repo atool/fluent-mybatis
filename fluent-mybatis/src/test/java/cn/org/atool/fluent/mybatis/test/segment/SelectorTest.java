@@ -20,8 +20,9 @@ public class SelectorTest extends BaseTest {
     public void test_select() throws Exception {
         UserQuery query = new UserQuery()
             .select
-            .age().sum()
-            .apply("id", "address_id", "1").end()
+            .apply("id", "address_id", "1")
+            .id().max.age("age").min.version().sum.age()
+            .end()
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);

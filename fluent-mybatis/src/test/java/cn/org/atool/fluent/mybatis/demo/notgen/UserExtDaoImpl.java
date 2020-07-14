@@ -39,7 +39,7 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
         return super.listPoJos(
             super.query()
                 .select
-                .apply(UserMapping.userName).end()
+                .apply(UserMapping.userName.column).end()
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(UserMapping.userName.column)
         );
@@ -50,7 +50,7 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
         return super.listPoJos(
             super.query()
                 .select
-                .apply(UserMapping.userName, UserMapping.age).end()
+                .apply(UserMapping.userName.column, UserMapping.age.column).end()
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(UserMapping.userName.column)
         );
