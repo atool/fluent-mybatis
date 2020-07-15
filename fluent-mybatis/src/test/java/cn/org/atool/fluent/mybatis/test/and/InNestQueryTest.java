@@ -24,7 +24,7 @@ public class InNestQueryTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select
             .apply("id")
-            .age().sum().end()
+            .sum.age().end()
             .where
             .id().in(q -> q
                 .selectId()

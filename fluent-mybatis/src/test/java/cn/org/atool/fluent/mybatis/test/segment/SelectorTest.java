@@ -18,29 +18,33 @@ public class SelectorTest extends BaseTest {
 
     @Test
     public void test_select() throws Exception {
-        UserQuery query = new UserQuery()
-            .select
+        UserQuery query = new UserQuery();
+
+        query.select
             .apply("id", "address_id", "1")
-            .id().max.age("age").min.version().sum.age()
+            .id()
+            .max.age("max")
+            .min.version()
+            .sum.age()
             .end()
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(age), id, address_id, 1 FROM t_user WHERE id = ? GROUP BY id");
+            .eq("SELECT id, address_id, 1, MAX(age) AS max, MIN(version), SUM(age) FROM t_user WHERE id = ? GROUP BY id");
     }
 
     @Test
     public void test_select_alias() throws Exception {
         UserQuery query = new UserQuery()
             .select
-            .id().as("pk")
-            .age().sum("sum")
-            .age().max("max")
-            .age().min("min")
-            .age().avg("avg")
-            .age().count("count")
-            .age().group_concat("concat")
+            .id("pk")
+            .sum.age("sum")
+            .max.age("max")
+            .min.age("min")
+            .avg.age("avg")
+            .count.age("count")
+            .group_concat.age("concat")
             .end()
             .where.id().eq(24L).end()
             .groupBy.id().end();
@@ -55,14 +59,15 @@ public class SelectorTest extends BaseTest {
         UserQuery query = new UserQuery()
             .selectId()
             .select
-            .age().sum()
-            .age().max()
-            .age().min()
-            .age().avg()
-            .age().count()
-            .age().group_concat()
+            .sum.age()
+            .max.age()
+            .min.age()
+            .avg.age()
+            .count.age()
+            .group_concat.age()
             .end()
-            .where.id().eq(24L).end()
+            .where
+            .id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

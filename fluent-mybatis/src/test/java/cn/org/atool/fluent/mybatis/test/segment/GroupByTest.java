@@ -82,10 +82,11 @@ public class GroupByTest extends BaseTest {
         UserQuery query = new UserQuery()
             .select
             .apply(grade.column)
-            .id().count()
-            .age().max()
-            .age().min()
-            .age().avg().end()
+            .count.id()
+            .max.age()
+            .min.age()
+            .avg.age()
+            .end()
             .where
             .age().between(15, 25).end()
             .groupBy.apply(grade).end()

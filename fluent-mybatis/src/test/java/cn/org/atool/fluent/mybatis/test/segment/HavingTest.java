@@ -23,8 +23,9 @@ public class HavingTest extends BaseTest {
     public void test_groupBy_having() throws Exception {
         UserQuery query = new UserQuery()
             .select
-            .age().sum("avg")
-            .apply(id.column).end()
+            .sum.age("avg")
+            .apply(id.column)
+            .end()
             .where.id().eq(24L).end()
             .groupBy.id()
             .end()
@@ -52,8 +53,9 @@ public class HavingTest extends BaseTest {
     public void test_groupBy_having2() throws Exception {
         UserQuery query = new UserQuery()
             .select
-            .age().sum("avg")
-            .apply(id.column).end()
+            .sum.age("avg")
+            .apply(id.column)
+            .end()
             .where.id().eq(24L).end()
             .groupBy.id()
             .end()

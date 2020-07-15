@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoPrimaryQuery;
@@ -30,11 +31,28 @@ public class NoPrimaryWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, NoPrimaryQuery, SelectorApply<Selector, NoPrimaryQuery>>
-        implements ISegment<SelectorApply<Selector, NoPrimaryQuery>> {
+    public static final class Selector extends SelectorBase<Selector, NoPrimaryQuery>
+        implements ISegment<Selector> {
 
         public Selector(NoPrimaryQuery query) {
             super(query);
+        }
+
+        protected Selector(Selector selector, IAggregate aggregate) {
+            super(selector, aggregate);
+        }
+
+        protected Selector aggregateSelector(IAggregate aggregate) {
+            return new Selector(this, aggregate);
+        }
+        /** 别名 **/
+
+        public Selector column1(String alias) {
+            return this.set(NoPrimaryMapping.column1);
+        }
+
+        public Selector column2(String alias) {
+            return this.set(NoPrimaryMapping.column2);
         }
     }
 

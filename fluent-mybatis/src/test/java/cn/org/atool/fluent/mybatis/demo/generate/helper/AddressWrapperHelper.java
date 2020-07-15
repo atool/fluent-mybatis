@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.AddressMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.AddressQuery;
@@ -46,11 +47,44 @@ public class AddressWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, AddressQuery, SelectorApply<Selector, AddressQuery>>
-        implements ISegment<SelectorApply<Selector, AddressQuery>> {
+    public static final class Selector extends SelectorBase<Selector, AddressQuery>
+        implements ISegment<Selector> {
 
         public Selector(AddressQuery query) {
             super(query);
+        }
+
+        protected Selector(Selector selector, IAggregate aggregate) {
+            super(selector, aggregate);
+        }
+
+        protected Selector aggregateSelector(IAggregate aggregate) {
+            return new Selector(this, aggregate);
+        }
+        /** 别名 **/
+
+        public Selector id(String alias) {
+            return this.set(AddressMapping.id);
+        }
+
+        public Selector gmtCreated(String alias) {
+            return this.set(AddressMapping.gmtCreated);
+        }
+
+        public Selector gmtModified(String alias) {
+            return this.set(AddressMapping.gmtModified);
+        }
+
+        public Selector isDeleted(String alias) {
+            return this.set(AddressMapping.isDeleted);
+        }
+
+        public Selector address(String alias) {
+            return this.set(AddressMapping.address);
+        }
+
+        public Selector userId(String alias) {
+            return this.set(AddressMapping.userId);
         }
     }
 

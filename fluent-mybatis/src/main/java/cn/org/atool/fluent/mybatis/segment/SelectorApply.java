@@ -15,7 +15,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
  * @create 2020/6/21 3:26 下午
  */
 public class SelectorApply<
-    S extends SelectorBase<S, Q, ?>,
+    S extends SelectorBase<S, Q>,
     Q extends IQuery<?, Q>
     > extends BaseApply<S, Q> {
 
@@ -61,117 +61,117 @@ public class SelectorApply<
         return this.segment.apply(expression);
     }
 
-//    /**
-//     * 返回参数字段之和
-//     *
-//     * @return 返回字段选择器
-//     */
-//    public S sum() {
-//        return this.apply(SUM);
-//    }
+    /**
+     * 返回参数字段之和
+     *
+     * @return 返回字段选择器
+     */
+    public S sum() {
+        return this.apply(SUM, null);
+    }
 
-//    /**
-//     * 返回参数字段之和
-//     *
-//     * @param alias as 别名
-//     * @return 返回字段选择器
-//     */
-//    public S sum(String alias) {
-//        return this.apply(SUM, alias);
-//    }
+    /**
+     * 返回参数字段之和
+     *
+     * @param alias as 别名
+     * @return 返回字段选择器
+     */
+    public S sum(String alias) {
+        return this.apply(SUM, alias);
+    }
 
-//    /**
-//     * 返回参数字段的数量，不统计为NULL的记录
-//     *
-//     * @return 返回字段选择器
-//     */
-//    public S count() {
-//        return this.apply(COUNT);
-//    }
+    /**
+     * 返回参数字段的数量，不统计为NULL的记录
+     *
+     * @return 返回字段选择器
+     */
+    public S count() {
+        return this.apply(COUNT, null);
+    }
 
-//    /**
-//     * 返回参数字段的数量，不统计为NULL的记录
-//     *
-//     * @param alias as 别名
-//     * @return 返回字段选择器
-//     */
-//    public S count(String alias) {
-//        return this.apply(COUNT, alias);
-//    }
+    /**
+     * 返回参数字段的数量，不统计为NULL的记录
+     *
+     * @param alias as 别名
+     * @return 返回字段选择器
+     */
+    public S count(String alias) {
+        return this.apply(COUNT, alias);
+    }
 
-//    /**
-//     * 返回参数字段的最大值
-//     *
-//     * @return 返回字段选择器
-//     */
-//    public S max() {
-//        return this.apply(MAX);
-//    }
+    /**
+     * 返回参数字段的最大值
+     *
+     * @return 返回字段选择器
+     */
+    public S max() {
+        return this.apply(MAX, null);
+    }
 
-//    /**
-//     * 返回参数字段的最大值
-//     *
-//     * @param alias as 别名
-//     * @return 返回字段选择器
-//     */
-//    public S max(String alias) {
-//        return this.apply(MAX, alias);
-//    }
+    /**
+     * 返回参数字段的最大值
+     *
+     * @param alias as 别名
+     * @return 返回字段选择器
+     */
+    public S max(String alias) {
+        return this.apply(MAX, alias);
+    }
 
-//    /**
-//     * 返回参数字段的最小值
-//     *
-//     * @return 返回字段选择器
-//     */
-//    public S min() {
-//        return this.apply(MIN);
-//    }
+    /**
+     * 返回参数字段的最小值
+     *
+     * @return 返回字段选择器
+     */
+    public S min() {
+        return this.apply(MIN, null);
+    }
 
-//    /**
-//     * 返回参数字段的最小值
-//     *
-//     * @param alias as 别名
-//     * @return 返回字段选择器
-//     */
-//    public S min(String alias) {
-//        return this.apply(MIN, alias);
-//    }
+    /**
+     * 返回参数字段的最小值
+     *
+     * @param alias as 别名
+     * @return 返回字段选择器
+     */
+    public S min(String alias) {
+        return this.apply(MIN, alias);
+    }
 
-//    /**
-//     * 返回参数字段的平均值
-//     *
-//     * @return 返回字段选择器
-//     */
-//    public S avg() {
-//        return this.apply(AVG);
-//    }
+    /**
+     * 返回参数字段的平均值
+     *
+     * @return 返回字段选择器
+     */
+    public S avg() {
+        return this.apply(AVG, null);
+    }
 
-//    /**
-//     * 返回参数字段的平均值
-//     *
-//     * @param alias as 别名
-//     * @return 返回字段选择器
-//     */
-//    public S avg(String alias) {
-//        return this.apply(AVG, alias);
-//    }
+    /**
+     * 返回参数字段的平均值
+     *
+     * @param alias as 别名
+     * @return 返回字段选择器
+     */
+    public S avg(String alias) {
+        return this.apply(AVG, alias);
+    }
 
-//    /**
-//     * 返回符合条件的参数字段值的连接字符串
-//     *
-//     * @return 返回字段选择器
-//     */
-//    public S group_concat() {
-//        return this.apply(GROUP_CONCAT);
-//    }
+    /**
+     * 返回符合条件的参数字段值的连接字符串
+     *
+     * @return 返回字段选择器
+     */
+    public S group_concat() {
+        return this.apply(GROUP_CONCAT, null);
+    }
 
-//    /**
-//     * 返回符合条件的参数字段值的连接字符串
-//     *
-//     * @param alias as 别名
-//     * @return 返回字段选择器
-//     */
-//    public S group_concat(String alias) {
-//        return this.apply(GROUP_CONCAT, alias);
-//    }
+    /**
+     * 返回符合条件的参数字段值的连接字符串
+     *
+     * @param alias as 别名
+     * @return 返回字段选择器
+     */
+    public S group_concat(String alias) {
+        return this.apply(GROUP_CONCAT, alias);
+    }
 }

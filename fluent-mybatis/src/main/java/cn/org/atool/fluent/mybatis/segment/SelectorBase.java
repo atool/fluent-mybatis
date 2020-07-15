@@ -4,10 +4,11 @@ import cn.org.atool.fluent.mybatis.base.FieldPredicate;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
@@ -18,20 +19,59 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
  * @create 2020/6/21 3:13 下午
  */
 public abstract class SelectorBase<
-    S extends SelectorBase<S, Q, R>,
-    Q extends IQuery<?, Q>,
-    R extends SelectorApply<S, Q>
+    S extends SelectorBase<S, Q>,
+    Q extends IQuery<?, Q>
     >
-    extends BaseSegment<R, Q> {
+    extends BaseSegment<S, Q> {
 
-//    private final SelectorApply<S, Q> apply = new SelectorApply(this);
-    protected R getApply(){
-        return null;
-    }
+    protected final IAggregate aggregate;
+
+    public S max;
+
+    public S min;
+
+    public S sum;
+
+    public S avg;
+
+    public S count;
+
+    public S group_concat;
 
     protected SelectorBase(Q query) {
         super(query);
+        this.aggregate = null;
+        this.max = this.aggregateSelector(MAX);
+        this.min = this.aggregateSelector(MIN);
+        this.sum = this.aggregateSelector(SUM);
+        this.avg = this.aggregateSelector(AVG);
+        this.count = this.aggregateSelector(COUNT);
+        this.group_concat = this.aggregateSelector(GROUP_CONCAT);
+        this.init(max).init(min).init(sum).init(avg).init(count).init(group_concat);
     }
+
+    S init(S selector) {
+        selector.max = this.max;
+        selector.min = this.min;
+        selector.sum = this.sum;
+        selector.avg = this.avg;
+        selector.count = this.count;
+        selector.group_concat = this.group_concat;
+        return (S) this;
+    }
+
+    protected SelectorBase(S selector, IAggregate aggregate) {
+        super((Q) selector.wrapper);
+        this.aggregate = aggregate;
+    }
+
+    /**
+     * 构造聚合选择器
+     *
+     * @param aggregate
+     * @return
+     */
+    protected abstract S aggregateSelector(IAggregate aggregate);
 
     /**
      * 增加查询字段
@@ -61,6 +101,24 @@ public abstract class SelectorBase<
     }
 
     /**
+     * 执行聚合函数
+     *
+     * @param aggregate 聚合函数
+     * @param alias     as别名
+     * @return 返回字段选择器
+     */
+    public S applyAs(IAggregate aggregate, String alias) {
+        if (this.currField == null) {
+            return (S) this;
+        }
+        String expression = aggregate == null ? this.currField.column : aggregate.aggregate(this.currField.column);
+        if (isNotBlank(alias)) {
+            expression = expression + " AS " + alias;
+        }
+        return this.apply(expression);
+    }
+
+    /**
      * 过滤查询的字段信息
      *
      * <p>例1: 只要 java 字段名以 "test" 开头的   -> select(i -> i.getProperty().startsWith("test"))</p>
@@ -76,8 +134,8 @@ public abstract class SelectorBase<
     }
 
     @Override
-    protected R process(FieldMapping field) {
-        return this.getApply().setCurrentField(field);
+    protected S process(FieldMapping field) {
+        return this.applyAs(this.aggregate, null);
     }
 
     private BaseQuery getQuery() {

@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.demo.generate.helper;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoAutoIdQuery;
@@ -30,11 +31,28 @@ public class NoAutoIdWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, NoAutoIdQuery, SelectorApply<Selector, NoAutoIdQuery>>
-        implements ISegment<SelectorApply<Selector, NoAutoIdQuery>> {
+    public static final class Selector extends SelectorBase<Selector, NoAutoIdQuery>
+        implements ISegment<Selector> {
 
         public Selector(NoAutoIdQuery query) {
             super(query);
+        }
+
+        protected Selector(Selector selector, IAggregate aggregate) {
+            super(selector, aggregate);
+        }
+
+        protected Selector aggregateSelector(IAggregate aggregate) {
+            return new Selector(this, aggregate);
+        }
+        /** 别名 **/
+
+        public Selector id(String alias) {
+            return this.set(NoAutoIdMapping.id);
+        }
+
+        public Selector column1(String alias) {
+            return this.set(NoAutoIdMapping.column1);
         }
     }
 
