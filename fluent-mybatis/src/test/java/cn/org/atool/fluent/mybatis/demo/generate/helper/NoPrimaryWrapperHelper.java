@@ -42,17 +42,20 @@ public class NoPrimaryWrapperHelper {
             super(selector, aggregate);
         }
 
+        @Override
         protected Selector aggregateSelector(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
         /** 别名 **/
 
         public Selector column1(String alias) {
-            return this.set(NoPrimaryMapping.column1);
+            this.currField = NoPrimaryMapping.column1;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector column2(String alias) {
-            return this.set(NoPrimaryMapping.column2);
+            this.currField = NoPrimaryMapping.column2;
+            return this.applyAs(aggregate, alias);
         }
     }
 

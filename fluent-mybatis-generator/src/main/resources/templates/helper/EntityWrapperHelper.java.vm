@@ -40,6 +40,7 @@ public class ${wrapperHelper.name} {
             super(selector, aggregate);
         }
 
+        @Override
         protected Selector aggregateSelector(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
@@ -47,7 +48,8 @@ public class ${wrapperHelper.name} {
         #foreach($field in ${fields})
 
         public Selector ${field.name}(String alias) {
-            return this.set(${mapping.name}.${field.name});
+            this.currField = ${mapping.name}.${field.name};
+            return this.applyAs(aggregate, alias);
         }
         #end
     }

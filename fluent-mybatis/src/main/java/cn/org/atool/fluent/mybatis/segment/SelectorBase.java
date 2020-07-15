@@ -65,13 +65,18 @@ public abstract class SelectorBase<
         this.aggregate = aggregate;
     }
 
+
     /**
-     * 构造聚合选择器
+     * select customized as alias
      *
-     * @param aggregate
-     * @return
+     * @param customized 自定义字段或聚合函数
+     * @param alias      别名
+     * @return 查询字段选择器
      */
-    protected abstract S aggregateSelector(IAggregate aggregate);
+    public S applyAs(String customized, String alias) {
+        this.wrapperData().addSelectColumn(String.format("%s AS %s", customized, alias));
+        return (S) this;
+    }
 
     /**
      * 增加查询字段
@@ -88,17 +93,6 @@ public abstract class SelectorBase<
         return (S) this;
     }
 
-    /**
-     * select customized as alias
-     *
-     * @param customized 自定义字段或聚合函数
-     * @param alias      别名
-     * @return 查询字段选择器
-     */
-    public S applyAs(String customized, String alias) {
-        this.wrapperData().addSelectColumn(String.format("%s AS %s", customized, alias));
-        return (S) this;
-    }
 
     /**
      * 执行聚合函数
@@ -107,7 +101,7 @@ public abstract class SelectorBase<
      * @param alias     as别名
      * @return 返回字段选择器
      */
-    public S applyAs(IAggregate aggregate, String alias) {
+    protected S applyAs(IAggregate aggregate, String alias) {
         if (this.currField == null) {
             return (S) this;
         }
@@ -132,6 +126,14 @@ public abstract class SelectorBase<
         String selected = this.getQuery().getTableMeta().filter(false, predicate);
         return this.apply(selected);
     }
+
+    /**
+     * 构造聚合选择器
+     *
+     * @param aggregate
+     * @return
+     */
+    protected abstract S aggregateSelector(IAggregate aggregate);
 
     @Override
     protected S process(FieldMapping field) {

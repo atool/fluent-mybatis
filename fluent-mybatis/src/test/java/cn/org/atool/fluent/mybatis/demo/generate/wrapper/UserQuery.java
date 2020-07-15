@@ -18,7 +18,6 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
  */
 public class UserQuery extends BaseQuery<UserEntity, UserQuery> {
     public final Selector select = new Selector(this);
-
     /**
      * 分组：GROUP BY 字段, ...
      * 例: groupBy("id", "name")

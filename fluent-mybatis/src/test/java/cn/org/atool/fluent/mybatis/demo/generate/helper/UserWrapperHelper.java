@@ -70,49 +70,55 @@ public class UserWrapperHelper {
             super(selector, aggregate);
         }
 
+        @Override
         protected Selector aggregateSelector(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
-
-        /**
-         * 别名
-         **/
+        /** 别名 **/
 
         public Selector id(String alias) {
-            return this.set(UserMapping.id);
+            this.currField = UserMapping.id;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector gmtCreated(String alias) {
-            return this.set(UserMapping.gmtCreated);
+            this.currField = UserMapping.gmtCreated;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector gmtModified(String alias) {
-            return this.set(UserMapping.gmtModified);
+            this.currField = UserMapping.gmtModified;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector isDeleted(String alias) {
-            return this.set(UserMapping.isDeleted);
+            this.currField = UserMapping.isDeleted;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector addressId(String alias) {
-            return this.set(UserMapping.addressId);
+            this.currField = UserMapping.addressId;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector age(String alias) {
             this.currField = UserMapping.age;
-            return this.applyAs(this.aggregate, alias);
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector grade(String alias) {
-            return this.set(UserMapping.grade);
+            this.currField = UserMapping.grade;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector userName(String alias) {
-            return this.set(UserMapping.userName);
+            this.currField = UserMapping.userName;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector version(String alias) {
-            return this.set(UserMapping.version);
+            this.currField = UserMapping.version;
+            return this.applyAs(aggregate, alias);
         }
     }
 

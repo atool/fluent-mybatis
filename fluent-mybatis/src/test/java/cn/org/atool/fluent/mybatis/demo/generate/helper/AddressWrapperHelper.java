@@ -58,33 +58,40 @@ public class AddressWrapperHelper {
             super(selector, aggregate);
         }
 
+        @Override
         protected Selector aggregateSelector(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
         /** 别名 **/
 
         public Selector id(String alias) {
-            return this.set(AddressMapping.id);
+            this.currField = AddressMapping.id;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector gmtCreated(String alias) {
-            return this.set(AddressMapping.gmtCreated);
+            this.currField = AddressMapping.gmtCreated;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector gmtModified(String alias) {
-            return this.set(AddressMapping.gmtModified);
+            this.currField = AddressMapping.gmtModified;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector isDeleted(String alias) {
-            return this.set(AddressMapping.isDeleted);
+            this.currField = AddressMapping.isDeleted;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector address(String alias) {
-            return this.set(AddressMapping.address);
+            this.currField = AddressMapping.address;
+            return this.applyAs(aggregate, alias);
         }
 
         public Selector userId(String alias) {
-            return this.set(AddressMapping.userId);
+            this.currField = AddressMapping.userId;
+            return this.applyAs(aggregate, alias);
         }
     }
 
