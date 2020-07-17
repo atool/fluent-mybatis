@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 /**
  * BaseApply

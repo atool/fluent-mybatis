@@ -25,10 +25,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void isNull() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .age().is(34)
-            .userName().isNull()
-            .end()
+            .set.age().is(34)
+            .set.userName().isNull().end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -38,10 +36,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_If() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .age().is_If(false, 34)
-            .userName().is_If(true, null)
-            .end()
+            .set.age().is_If(false, 34)
+            .set.userName().is_If(true, null).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -51,10 +47,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_IfNotNull() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .age().is_IfNotNull(34)
-            .userName().is_IfNotNull(null)
-            .end()
+            .set.age().is_IfNotNull(34)
+            .set.userName().is_IfNotNull(null).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -64,11 +58,9 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_IfNotBlank() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .version().is_IfNotBlank("19")
-            .userName().is_IfNotBlank(null)
-            .userName().is_IfNotBlank("  ")
-            .end()
+            .set.version().is_IfNotBlank("19")
+            .set.userName().is_IfNotBlank(null)
+            .set.userName().is_IfNotBlank("  ").end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -78,9 +70,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void apply() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .userName().apply("concat('user_name', '_abc')")
-            .end()
+            .set.userName().apply("concat('user_name', '_abc')").end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -90,10 +80,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void apply_If() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .userName().apply_If(false, "concat('user_name', '_abc')")
-            .age().apply_If(true, "age+1")
-            .end()
+            .set.userName().apply_If(false, "concat('user_name', '_abc')")
+            .set.age().apply_If(true, "age+1").end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()

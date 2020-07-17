@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 import cn.org.atool.fluent.mybatis.segment.model.SqlLike;
-import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;

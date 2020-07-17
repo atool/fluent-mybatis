@@ -2,7 +2,8 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IUpdate;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * SetObject 更新字段值

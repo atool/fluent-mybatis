@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
-import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
@@ -17,14 +17,16 @@ public abstract class HavingBase<
     H extends HavingBase<H, Q>,
     Q extends IQuery<?, Q>
     >
-    extends BaseSegment<HavingApply<H, Q>, Q> {
+    extends AggregateSegment<H, Q, HavingOperator<H>> {
 
-    private final HavingOperator<H> operator = new HavingOperator<>((H) this);
-
-    private final HavingApply<H, Q> apply = new HavingApply<>((H) this);
+    protected final HavingOperator<H> operator = new HavingOperator<>((H) this);
 
     protected HavingBase(Q query) {
         super(query);
+    }
+
+    protected HavingBase(H selector, IAggregate aggregate) {
+        super(selector, aggregate);
     }
 
     /**
@@ -47,7 +49,7 @@ public abstract class HavingBase<
      * @param aggregate 聚合函数
      * @return Having条件判断
      */
-    HavingOperator<H> apply(String column, IAggregate aggregate) {
+    protected HavingOperator<H> apply(String column, IAggregate aggregate) {
         return this.operator.aggregate(column, aggregate);
     }
 
@@ -62,7 +64,8 @@ public abstract class HavingBase<
     }
 
     @Override
-    protected HavingApply<H, Q> process(FieldMapping field) {
-        return this.apply.setCurrentField(field);
+    protected HavingOperator<H> process(FieldMapping field) {
+        this.apply(field.column, this.aggregate);
+        return this.operator;
     }
 }

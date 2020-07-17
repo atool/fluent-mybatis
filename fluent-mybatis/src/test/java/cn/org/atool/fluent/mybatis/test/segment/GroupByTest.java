@@ -89,9 +89,11 @@ public class GroupByTest extends BaseTest {
             .end()
             .where
             .age().between(15, 25).end()
-            .groupBy.apply(grade).end()
+            .groupBy
+            .grade()
+            .end()
             .having
-            .id().count().gt(10)
+            .count.id().gt(10)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

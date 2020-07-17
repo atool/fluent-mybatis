@@ -38,9 +38,7 @@ public class WhereTest_EqMap extends BaseTest {
     public void test_eq_entity() throws Exception {
         UserQuery query = new UserQuery()
             .selectId()
-            .where
-            .eqByNotNull(new UserEntity().setUserName("u2"))
-            .end();
+            .where.eqByNotNull(new UserEntity().setUserName("u2")).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE user_name = ?");

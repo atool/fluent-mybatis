@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.demo.generate.helper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.NoAutoIdMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoAutoIdQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoAutoIdUpdate;
 
@@ -15,7 +14,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoAutoIdUpdate;
  *
  * @author generate code
  */
-public class NoAutoIdWrapperHelper {
+public class NoAutoIdWrapperHelper implements NoAutoIdMapping {
     public interface ISegment<R> {
         R set(FieldMapping fieldMapping);
 
@@ -43,19 +42,17 @@ public class NoAutoIdWrapperHelper {
         }
 
         @Override
-        protected Selector aggregateSelector(IAggregate aggregate) {
+        protected Selector aggregateSegment(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
         /** 别名 **/
 
         public Selector id(String alias) {
-            this.currField = NoAutoIdMapping.id;
-            return this.applyAs(aggregate, alias);
+            return this.process(id, alias);
         }
 
         public Selector column1(String alias) {
-            this.currField = NoAutoIdMapping.column1;
-            return this.applyAs(aggregate, alias);
+            return this.process(column1, alias);
         }
     }
 
@@ -68,6 +65,15 @@ public class NoAutoIdWrapperHelper {
         public QueryWhere(NoAutoIdQuery query) {
             super(query);
         }
+
+        private QueryWhere(NoAutoIdQuery query, QueryWhere and) {
+            super(query, and);
+        }
+
+        @Override
+        protected QueryWhere orWhere(QueryWhere and) {
+            return new QueryWhere((NoAutoIdQuery) this.wrapper, and);
+        }
     }
 
     /**
@@ -78,6 +84,15 @@ public class NoAutoIdWrapperHelper {
 
         public UpdateWhere(NoAutoIdUpdate update) {
             super(update);
+        }
+
+        private UpdateWhere(NoAutoIdUpdate update, UpdateWhere and) {
+            super(update, and);
+        }
+
+        @Override
+        protected UpdateWhere orWhere(UpdateWhere and) {
+            return new UpdateWhere((NoAutoIdUpdate) this.wrapper, and);
         }
     }
 
@@ -96,10 +111,19 @@ public class NoAutoIdWrapperHelper {
      * 分组Having条件设置
      */
     public static final class Having extends HavingBase<Having, NoAutoIdQuery>
-        implements ISegment<HavingApply<Having, NoAutoIdQuery>> {
+        implements ISegment<HavingOperator<Having>> {
 
         public Having(NoAutoIdQuery query) {
             super(query);
+        }
+
+        protected Having(Having having, IAggregate aggregate) {
+            super(having, aggregate);
+        }
+
+        @Override
+        protected Having aggregateSegment(IAggregate aggregate) {
+            return new Having(this, aggregate);
         }
     }
 

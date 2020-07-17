@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
+import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
-import static java.util.stream.Collectors.joining;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
 /**
  * BaseOrder: 排序对象基类

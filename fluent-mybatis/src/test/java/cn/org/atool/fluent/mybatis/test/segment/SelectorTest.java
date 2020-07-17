@@ -25,8 +25,7 @@ public class SelectorTest extends BaseTest {
             .id()
             .max.age("max")
             .min.version()
-            .sum.age()
-            .end()
+            .sum.age().end()
             .where.id().eq(24L).end()
             .groupBy.id().end();
         mapper.listEntity(query);

@@ -17,8 +17,7 @@ class UpdateBaseTest extends BaseTest {
     @Test
     void eqByNotNull() {
         mapper.updateBy(new UserUpdate()
-            .set
-            .eqByNotNull(new HashMap<String, Object>() {
+            .set.eqByNotNull(new HashMap<String, Object>() {
                 {
                     this.put("age", 34);
                     this.put("user_name", "aaa");

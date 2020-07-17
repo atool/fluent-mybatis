@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.demo.generate.helper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserUpdate;
 
@@ -15,7 +14,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserUpdate;
  *
  * @author generate code
  */
-public class UserWrapperHelper {
+public class UserWrapperHelper implements UserMapping {
     public interface ISegment<R> {
         R set(FieldMapping fieldMapping);
 
@@ -71,54 +70,45 @@ public class UserWrapperHelper {
         }
 
         @Override
-        protected Selector aggregateSelector(IAggregate aggregate) {
+        protected Selector aggregateSegment(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
         /** 别名 **/
 
         public Selector id(String alias) {
-            this.currField = UserMapping.id;
-            return this.applyAs(aggregate, alias);
+            return this.process(id, alias);
         }
 
         public Selector gmtCreated(String alias) {
-            this.currField = UserMapping.gmtCreated;
-            return this.applyAs(aggregate, alias);
+            return this.process(gmtCreated, alias);
         }
 
         public Selector gmtModified(String alias) {
-            this.currField = UserMapping.gmtModified;
-            return this.applyAs(aggregate, alias);
+            return this.process(gmtModified, alias);
         }
 
         public Selector isDeleted(String alias) {
-            this.currField = UserMapping.isDeleted;
-            return this.applyAs(aggregate, alias);
+            return this.process(isDeleted, alias);
         }
 
         public Selector addressId(String alias) {
-            this.currField = UserMapping.addressId;
-            return this.applyAs(aggregate, alias);
+            return this.process(addressId, alias);
         }
 
         public Selector age(String alias) {
-            this.currField = UserMapping.age;
-            return this.applyAs(aggregate, alias);
+            return this.process(age, alias);
         }
 
         public Selector grade(String alias) {
-            this.currField = UserMapping.grade;
-            return this.applyAs(aggregate, alias);
+            return this.process(grade, alias);
         }
 
         public Selector userName(String alias) {
-            this.currField = UserMapping.userName;
-            return this.applyAs(aggregate, alias);
+            return this.process(userName, alias);
         }
 
         public Selector version(String alias) {
-            this.currField = UserMapping.version;
-            return this.applyAs(aggregate, alias);
+            return this.process(version, alias);
         }
     }
 
@@ -131,6 +121,15 @@ public class UserWrapperHelper {
         public QueryWhere(UserQuery query) {
             super(query);
         }
+
+        private QueryWhere(UserQuery query, QueryWhere and) {
+            super(query, and);
+        }
+
+        @Override
+        protected QueryWhere orWhere(QueryWhere and) {
+            return new QueryWhere((UserQuery) this.wrapper, and);
+        }
     }
 
     /**
@@ -141,6 +140,15 @@ public class UserWrapperHelper {
 
         public UpdateWhere(UserUpdate update) {
             super(update);
+        }
+
+        private UpdateWhere(UserUpdate update, UpdateWhere and) {
+            super(update, and);
+        }
+
+        @Override
+        protected UpdateWhere orWhere(UpdateWhere and) {
+            return new UpdateWhere((UserUpdate) this.wrapper, and);
         }
     }
 
@@ -159,10 +167,19 @@ public class UserWrapperHelper {
      * 分组Having条件设置
      */
     public static final class Having extends HavingBase<Having, UserQuery>
-        implements ISegment<HavingApply<Having, UserQuery>> {
+        implements ISegment<HavingOperator<Having>> {
 
         public Having(UserQuery query) {
             super(query);
+        }
+
+        protected Having(Having having, IAggregate aggregate) {
+            super(having, aggregate);
+        }
+
+        @Override
+        protected Having aggregateSegment(IAggregate aggregate) {
+            return new Having(this, aggregate);
         }
     }
 

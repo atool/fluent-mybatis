@@ -5,8 +5,7 @@ import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import java.util.Collection;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
-import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_BETWEEN;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
 
 /**
  * 比较操作

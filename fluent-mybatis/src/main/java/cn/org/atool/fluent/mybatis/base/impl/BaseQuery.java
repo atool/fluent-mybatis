@@ -44,7 +44,7 @@ public abstract class BaseQuery<
         return (Q) this;
     }
 
-    protected Q select(String... columns) {
+    public Q select(String... columns) {
         if (isNotEmpty(columns)) {
             Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
         }

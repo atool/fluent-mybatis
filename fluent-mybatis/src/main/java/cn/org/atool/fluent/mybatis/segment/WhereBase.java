@@ -1,20 +1,21 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
+import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
-import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotNull;
 
@@ -26,6 +27,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotNull;
  * @param <NestedQ> WRAPPER 对应的嵌套查询器
  * @author darui.wu
  */
+@Accessors(chain = true)
 public abstract class WhereBase<
     WHERE extends WhereBase<WHERE, WRAPPER, NestedQ>,
     WRAPPER extends IWrapper<?, WRAPPER, NestedQ>,
@@ -38,11 +40,27 @@ public abstract class WhereBase<
     /**
      * 当前连接符: AND 连接, OR 连接
      */
-    private KeyWordSegment currOp = AND;
+    private final KeyWordSegment currOp;
+
+    public WHERE and;
+
+    public WHERE or;
 
     protected WhereBase(WRAPPER wrapper) {
         super(wrapper);
+        this.currOp = AND;
+        this.and = (WHERE) this;
+        this.or = this.orWhere(this.and);
     }
+
+    protected WhereBase(WRAPPER wrapper, WHERE and) {
+        super(wrapper);
+        this.currOp = OR;
+        this.and = and;
+        this.or = (WHERE) this;
+    }
+
+    protected abstract WHERE orWhere(WHERE and);
 
     /**
      * where条件设置为entity对象非空属性
@@ -85,7 +103,7 @@ public abstract class WhereBase<
                 this.wrapper.getWrapperData().apply(AND, k, IS_NULL);
             }
         });
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -99,7 +117,7 @@ public abstract class WhereBase<
      */
     public WHERE exists(String select, Object... values) {
         wrapper.getWrapperData().apply(currOp, EMPTY, select, EXISTS, values);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -128,7 +146,7 @@ public abstract class WhereBase<
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), EXISTS);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -142,7 +160,7 @@ public abstract class WhereBase<
      */
     public WHERE notExists(String select, Object... values) {
         wrapper.getWrapperData().apply(currOp, EMPTY, select, NOT_EXISTS, values);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -171,7 +189,7 @@ public abstract class WhereBase<
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), NOT_EXISTS);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -187,7 +205,7 @@ public abstract class WhereBase<
      */
     public WHERE and(String applySql, Object... paras) {
         wrapper.getWrapperData().apply(AND, EMPTY, applySql, RETAIN, paras);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -201,7 +219,7 @@ public abstract class WhereBase<
     public WHERE and(String column, SqlOp op, Object... paras) {
         wrapper.validateColumn(column);
         wrapper.getWrapperData().apply(AND, column, null, op, paras);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -217,7 +235,7 @@ public abstract class WhereBase<
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         query.apply(nested);
         wrapper.getWrapperData().apply(AND, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -233,7 +251,7 @@ public abstract class WhereBase<
      */
     public WHERE or(String applySql, Object... paras) {
         wrapper.getWrapperData().apply(OR, EMPTY, applySql, RETAIN, paras);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -247,7 +265,7 @@ public abstract class WhereBase<
     public WHERE or(String column, SqlOp op, Object... paras) {
         wrapper.validateColumn(column);
         wrapper.getWrapperData().apply(OR, column, null, op, paras);
-        return this.and();
+        return this.and;
     }
 
     /**
@@ -263,27 +281,17 @@ public abstract class WhereBase<
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         apply.apply(nested);
         wrapper.getWrapperData().apply(OR, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
-        return this.and();
+        return this.and;
     }
 
     WHERE apply(String column, SqlOp op, Object... values) {
         this.wrapper.getWrapperData().apply(this.currOp, column, op, values);
-        return this.and();
+        return this.and;
     }
 
     WHERE apply(String column, String sql, SqlOp op, Object... values) {
         this.wrapper.getWrapperData().apply(this.currOp, column, sql, op, values);
-        return this.and();
-    }
-
-    public WHERE or() {
-        this.currOp = OR;
-        return (WHERE) this;
-    }
-
-    public WHERE and() {
-        this.currOp = AND;
-        return (WHERE) this;
+        return this.and;
     }
 
     Class queryClass() {

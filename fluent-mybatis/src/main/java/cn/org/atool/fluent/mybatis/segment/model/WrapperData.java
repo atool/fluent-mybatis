@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import lombok.Getter;
 import lombok.Setter;
 

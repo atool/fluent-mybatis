@@ -18,9 +18,8 @@ class OrderByBaseTest extends BaseTest {
     void orderBy() {
         mapper.listEntity(new UserQuery()
             .orderBy
-            .asc(UserMapping.id)
-            .desc(UserMapping.userName)
-            .end()
+            .id().asc()
+            .desc(UserMapping.userName).end()
         );
         db.sqlList().wantFirstSql()
             .end("FROM t_user ORDER BY id ASC, user_name DESC");

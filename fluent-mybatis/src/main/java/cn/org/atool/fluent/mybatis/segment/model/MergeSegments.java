@@ -7,7 +7,8 @@ import lombok.Setter;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.*;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.trim;
 
 /**
  * 合并 SQL 片段

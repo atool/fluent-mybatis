@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.demo.generate.helper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
-import cn.org.atool.fluent.mybatis.demo.generate.helper.NoPrimaryMapping;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoPrimaryQuery;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoPrimaryUpdate;
 
@@ -15,7 +14,7 @@ import cn.org.atool.fluent.mybatis.demo.generate.wrapper.NoPrimaryUpdate;
  *
  * @author generate code
  */
-public class NoPrimaryWrapperHelper {
+public class NoPrimaryWrapperHelper implements NoPrimaryMapping {
     public interface ISegment<R> {
         R set(FieldMapping fieldMapping);
 
@@ -43,19 +42,17 @@ public class NoPrimaryWrapperHelper {
         }
 
         @Override
-        protected Selector aggregateSelector(IAggregate aggregate) {
+        protected Selector aggregateSegment(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
         /** 别名 **/
 
         public Selector column1(String alias) {
-            this.currField = NoPrimaryMapping.column1;
-            return this.applyAs(aggregate, alias);
+            return this.process(column1, alias);
         }
 
         public Selector column2(String alias) {
-            this.currField = NoPrimaryMapping.column2;
-            return this.applyAs(aggregate, alias);
+            return this.process(column2, alias);
         }
     }
 
@@ -68,6 +65,15 @@ public class NoPrimaryWrapperHelper {
         public QueryWhere(NoPrimaryQuery query) {
             super(query);
         }
+
+        private QueryWhere(NoPrimaryQuery query, QueryWhere and) {
+            super(query, and);
+        }
+
+        @Override
+        protected QueryWhere orWhere(QueryWhere and) {
+            return new QueryWhere((NoPrimaryQuery) this.wrapper, and);
+        }
     }
 
     /**
@@ -78,6 +84,15 @@ public class NoPrimaryWrapperHelper {
 
         public UpdateWhere(NoPrimaryUpdate update) {
             super(update);
+        }
+
+        private UpdateWhere(NoPrimaryUpdate update, UpdateWhere and) {
+            super(update, and);
+        }
+
+        @Override
+        protected UpdateWhere orWhere(UpdateWhere and) {
+            return new UpdateWhere((NoPrimaryUpdate) this.wrapper, and);
         }
     }
 
@@ -96,10 +111,19 @@ public class NoPrimaryWrapperHelper {
      * 分组Having条件设置
      */
     public static final class Having extends HavingBase<Having, NoPrimaryQuery>
-        implements ISegment<HavingApply<Having, NoPrimaryQuery>> {
+        implements ISegment<HavingOperator<Having>> {
 
         public Having(NoPrimaryQuery query) {
             super(query);
+        }
+
+        protected Having(Having having, IAggregate aggregate) {
+            super(having, aggregate);
+        }
+
+        @Override
+        protected Having aggregateSegment(IAggregate aggregate) {
+            return new Having(this, aggregate);
         }
     }
 

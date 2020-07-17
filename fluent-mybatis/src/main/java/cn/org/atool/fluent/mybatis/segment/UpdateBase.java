@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.Map;
 
@@ -18,6 +18,8 @@ public abstract class UpdateBase<
     extends BaseSegment<UpdateApply<S, U>, U> {
 
     private final UpdateApply<S, U> apply = new UpdateApply<>((S) this);
+
+    public final S set = (S)this;
 
     protected UpdateBase(U updater) {
         super(updater);

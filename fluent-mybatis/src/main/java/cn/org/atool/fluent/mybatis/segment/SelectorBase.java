@@ -1,14 +1,12 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.FieldPredicate;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
 
@@ -22,60 +20,14 @@ public abstract class SelectorBase<
     S extends SelectorBase<S, Q>,
     Q extends IQuery<?, Q>
     >
-    extends BaseSegment<S, Q> {
-
-    protected final IAggregate aggregate;
-
-    public S max;
-
-    public S min;
-
-    public S sum;
-
-    public S avg;
-
-    public S count;
-
-    public S group_concat;
+    extends AggregateSegment<S, Q, S> {
 
     protected SelectorBase(Q query) {
         super(query);
-        this.aggregate = null;
-        this.max = this.aggregateSelector(MAX);
-        this.min = this.aggregateSelector(MIN);
-        this.sum = this.aggregateSelector(SUM);
-        this.avg = this.aggregateSelector(AVG);
-        this.count = this.aggregateSelector(COUNT);
-        this.group_concat = this.aggregateSelector(GROUP_CONCAT);
-        this.init(max).init(min).init(sum).init(avg).init(count).init(group_concat);
-    }
-
-    S init(S selector) {
-        selector.max = this.max;
-        selector.min = this.min;
-        selector.sum = this.sum;
-        selector.avg = this.avg;
-        selector.count = this.count;
-        selector.group_concat = this.group_concat;
-        return (S) this;
     }
 
     protected SelectorBase(S selector, IAggregate aggregate) {
-        super((Q) selector.wrapper);
-        this.aggregate = aggregate;
-    }
-
-
-    /**
-     * select customized as alias
-     *
-     * @param customized 自定义字段或聚合函数
-     * @param alias      别名
-     * @return 查询字段选择器
-     */
-    public S applyAs(String customized, String alias) {
-        this.wrapperData().addSelectColumn(String.format("%s AS %s", customized, alias));
-        return (S) this;
+        super(selector, aggregate);
     }
 
     /**
@@ -93,21 +45,32 @@ public abstract class SelectorBase<
         return (S) this;
     }
 
+    /**
+     * 增加查询字段
+     *
+     * @param columns 查询字段
+     * @return 查询字段选择器
+     */
+    public S apply(FieldMapping... columns) {
+        if (isNotEmpty(columns)) {
+            Stream.of(columns)
+                .filter(c -> c != null)
+                .map(c -> c.column)
+                .forEach(this.wrapperData()::addSelectColumn);
+        }
+        return (S) this;
+    }
 
     /**
-     * 执行聚合函数
+     * count(*) as alias
      *
-     * @param aggregate 聚合函数
-     * @param alias     as别名
-     * @return 返回字段选择器
+     * @param alias 别名, 为空时没有别名
+     * @return 选择器
      */
-    protected S applyAs(IAggregate aggregate, String alias) {
-        if (this.currField == null) {
-            return (S) this;
-        }
-        String expression = aggregate == null ? this.currField.column : aggregate.aggregate(this.currField.column);
+    public S count(String alias) {
+        String expression = "count(*)";
         if (isNotBlank(alias)) {
-            expression = expression + " AS " + alias;
+            expression += " AS " + alias;
         }
         return this.apply(expression);
     }
@@ -123,24 +86,42 @@ public abstract class SelectorBase<
      * @return 字段选择器
      */
     public S apply(FieldPredicate predicate) {
-        String selected = this.getQuery().getTableMeta().filter(false, predicate);
+        String selected = this.wrapper.getTableMeta().filter(false, predicate);
         return this.apply(selected);
     }
 
-    /**
-     * 构造聚合选择器
-     *
-     * @param aggregate
-     * @return
-     */
-    protected abstract S aggregateSelector(IAggregate aggregate);
-
     @Override
     protected S process(FieldMapping field) {
-        return this.applyAs(this.aggregate, null);
+        return this.apply(this.aggregate, null);
     }
 
-    private BaseQuery getQuery() {
-        return (BaseQuery) this.wrapper;
+    /**
+     * 对当前字段处理，别名处理
+     *
+     * @param field 字段
+     * @param alias 别名
+     * @return 选择器
+     */
+    protected S process(FieldMapping field, String alias) {
+        this.currField = field;
+        return this.apply(this.aggregate, alias);
+    }
+
+    /**
+     * 执行聚合函数
+     *
+     * @param aggregate 聚合函数
+     * @param alias     as别名, 为空时没有别名
+     * @return 返回字段选择器
+     */
+    private S apply(IAggregate aggregate, String alias) {
+        if (this.currField == null) {
+            return (S) this;
+        }
+        String expression = aggregate == null ? this.currField.column : aggregate.aggregate(this.currField.column);
+        if (isNotBlank(alias)) {
+            expression = expression + " AS " + alias;
+        }
+        return this.apply(expression);
     }
 }

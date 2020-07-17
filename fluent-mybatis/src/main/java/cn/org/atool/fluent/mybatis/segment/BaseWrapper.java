@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.IWrapper;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.IWrapper;
 import lombok.Getter;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;

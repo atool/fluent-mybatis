@@ -3,7 +3,6 @@ package ${wrapperHelper.package};
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
-import ${mapping.package}.${mapping.name};
 import ${entityQuery.package}.${entityQuery.name};
 import ${entityUpdate.package}.${entityUpdate.name};
 
@@ -15,7 +14,7 @@ import ${entityUpdate.package}.${entityUpdate.name};
  *
  * @author ${author}
  */
-public class ${wrapperHelper.name} {
+public class ${wrapperHelper.name} implements ${mapping.name} {
     public interface ISegment<R> {
         R set(FieldMapping fieldMapping);
         #foreach($field in ${fields})
@@ -41,15 +40,14 @@ public class ${wrapperHelper.name} {
         }
 
         @Override
-        protected Selector aggregateSelector(IAggregate aggregate) {
+        protected Selector aggregateSegment(IAggregate aggregate) {
             return new Selector(this, aggregate);
         }
         /** 别名 **/
         #foreach($field in ${fields})
 
         public Selector ${field.name}(String alias) {
-            this.currField = ${mapping.name}.${field.name};
-            return this.applyAs(aggregate, alias);
+            return this.process(${field.name}, alias);
         }
         #end
     }
@@ -63,6 +61,15 @@ public class ${wrapperHelper.name} {
         public QueryWhere(${entityQuery.name} query) {
             super(query);
         }
+
+        private QueryWhere(${entityQuery.name} query, QueryWhere and) {
+            super(query, and);
+        }
+
+        @Override
+        protected QueryWhere orWhere(QueryWhere and) {
+            return new QueryWhere((${entityQuery.name}) this.wrapper, and);
+        }
     }
 
     /**
@@ -73,6 +80,15 @@ public class ${wrapperHelper.name} {
 
         public UpdateWhere(${entityUpdate.name} update) {
             super(update);
+        }
+
+        private UpdateWhere(${entityUpdate.name} update, UpdateWhere and) {
+            super(update, and);
+        }
+
+        @Override
+        protected UpdateWhere orWhere(UpdateWhere and) {
+            return new UpdateWhere((${entityUpdate.name}) this.wrapper, and);
         }
     }
 
@@ -91,10 +107,19 @@ public class ${wrapperHelper.name} {
      * 分组Having条件设置
      */
     public static final class Having extends HavingBase<Having, ${entityQuery.name}>
-        implements ISegment<HavingApply<Having, ${entityQuery.name}>> {
+        implements ISegment<HavingOperator<Having>> {
 
         public Having(${entityQuery.name} query) {
             super(query);
+        }
+
+        protected Having(Having having, IAggregate aggregate) {
+            super(having, aggregate);
+        }
+
+        @Override
+        protected Having aggregateSegment(IAggregate aggregate) {
+            return new Having(this, aggregate);
         }
     }
 

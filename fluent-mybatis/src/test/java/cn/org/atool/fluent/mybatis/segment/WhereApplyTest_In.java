@@ -16,22 +16,19 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void in() {
         mapper.listEntity(new UserQuery()
-            .where
-            .age().in(new int[]{23, 34})
-            .age().in(new int[]{23})
-            .end()
+            .where.age().in(new int[]{23, 34})
+            .and.age().in(new int[]{23})
+            .or.age().in(new int[]{1}).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IN (?, ?) AND age = ?");
+            .end("WHERE age IN (?, ?) AND age = ? OR age = ?");
     }
 
     @Test
     void testIn() {
         mapper.listEntity(new UserQuery()
-            .where
-            .age().in(true, new int[]{23, 34})
-            .age().in(true, new long[]{23, 34})
-            .end()
+            .where.age().in(true, new int[]{23, 34})
+            .and.age().in(true, new long[]{23, 34}).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IN (?, ?) AND age IN (?, ?)");
@@ -40,10 +37,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void testIn_collection() {
         mapper.listEntity(new UserQuery()
-            .where
-            .age().in(true, Arrays.asList(12, 23))
-            .age().in(true, Arrays.asList(12))
-            .end()
+            .where.age().in(true, Arrays.asList(12, 23))
+            .and.age().in(true, Arrays.asList(12)).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IN (?, ?) AND age = ?");
@@ -52,10 +47,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void testIn_IfNotEmpty() {
         mapper.listEntity(new UserQuery()
-            .where
-            .age().in_IfNotEmpty(Arrays.asList(12, 23))
-            .age().in_IfNotEmpty(new long[]{23})
-            .end()
+            .where.age().in_IfNotEmpty(Arrays.asList(12, 23))
+            .and.age().in_IfNotEmpty(new long[]{23}).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IN (?, ?) AND age = ?");
@@ -64,10 +57,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void notIn() {
         mapper.listEntity(new UserQuery()
-            .where
-            .age().notIn(new int[]{23, 34})
-            .age().notIn_IfNotEmpty(new long[]{23})
-            .end()
+            .where.age().notIn(new int[]{23, 34})
+            .and.age().notIn_IfNotEmpty(new long[]{23}).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age NOT IN (?, ?) AND age NOT IN (?)");
@@ -77,10 +68,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void notIn_IfNotEmpty() {
         mapper.listEntity(new UserQuery()
-            .where
-            .age().notIn(Arrays.asList(1, 2))
-            .age().notIn_IfNotEmpty(Arrays.asList(1))
-            .end()
+            .where.age().notIn(Arrays.asList(1, 2))
+            .and.age().notIn_IfNotEmpty(Arrays.asList(1)).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age NOT IN (?, ?) AND age NOT IN (?)");

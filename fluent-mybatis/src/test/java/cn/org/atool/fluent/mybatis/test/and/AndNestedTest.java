@@ -40,11 +40,10 @@ public class AndNestedTest extends BaseTest {
             .where
             .id().in(q -> q.selectId().where.id().eq(3L).end())
             .or(q -> q.where
-                .or(q2 -> q2.where
-                    .age().eq(24)
-                    .or()
-                    .id().eq(3L)
-                    .id().eq(3)
+                .or(q2 -> q2
+                    .where.age().eq(24)
+                    .or.id().eq(3L)
+                    .and.id().eq(3)
                     .end()
                 )
                 .and(q1 -> q1.where.id().eq(2L).end()
