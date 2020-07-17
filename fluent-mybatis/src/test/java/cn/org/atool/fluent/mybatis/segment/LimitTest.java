@@ -22,9 +22,9 @@ public class LimitTest extends BaseTest {
     @Test
     public void test_limit_offset() throws Exception {
         UserQuery query = new UserQuery()
-            .where
-            .age().eq(10).end()
-            .limit(10, 20);
+            .where.age().eq(10)
+            .end()
+            .limit.by(10, 20);
 
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("WHERE age = ? LIMIT ?, ?");
@@ -33,9 +33,9 @@ public class LimitTest extends BaseTest {
     @Test
     public void test_limit_maxSize() throws Exception {
         UserQuery query = new UserQuery()
-            .where
-            .age().eq(10).end()
-            .limit(20);
+            .where.age().eq(10)
+            .end()
+            .limit.by(20);
 
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("WHERE age = ? LIMIT ?, ?");

@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_SelectList;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
 
 /**
  * SelectList: 查询满足条件所有数据

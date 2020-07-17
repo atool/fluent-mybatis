@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.method.InjectMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;

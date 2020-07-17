@@ -31,7 +31,7 @@ public abstract class UpdateBase<
      * @param values
      * @return
      */
-    public S eqByNotNull(Map<String, Object> values) {
+    public S byNotNull(Map<String, Object> values) {
         if (values != null) {
             values.forEach((column, value) -> this.wrapperData().updateSet(column, value));
         }

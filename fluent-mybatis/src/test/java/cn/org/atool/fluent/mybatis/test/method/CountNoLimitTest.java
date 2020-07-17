@@ -21,9 +21,11 @@ public class CountNoLimitTest extends BaseTest {
     @Test
     public void test_count_no_limit() throws Exception {
         UserQuery query = new UserQuery()
-            .where.id().eq(24L).end()
-            .orderBy.userName().asc().end()
-            .limit(10);
+            .where.id().eq(24L)
+            .end()
+            .orderBy.userName().asc()
+            .end()
+            .limit.by(10);
 
         mapper.count(query);
         db.sqlList().wantFirstSql()
@@ -42,12 +44,11 @@ public class CountNoLimitTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .where
-            .age().eq(10)
+            .where.age().eq(10)
             .end()
-            .orderBy
-            .userName().asc().end()
-            .limit(10, 20);
+            .orderBy.userName().asc()
+            .end()
+            .limit.by(10, 20);
         int count = mapper.countNoLimit(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT( * )")

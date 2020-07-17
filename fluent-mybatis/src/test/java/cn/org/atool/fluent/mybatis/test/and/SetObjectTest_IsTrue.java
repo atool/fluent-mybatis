@@ -19,14 +19,10 @@ public class SetObjectTest_IsTrue extends BaseTest {
     @Test
     public void isTrue() {
         UserUpdate update = new UserUpdate()
-            .set
-            .userName().is("u2")
-            .isDeleted().is(true)
-            .addressId().isNull()
-            .end()
-            .where
-            .isDeleted().eq(false)
-            .end();
+            .update.userName().is("u2")
+            .set.isDeleted().is(true)
+            .set.addressId().isNull().end()
+            .where.isDeleted().eq(false).end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE t_user SET gmt_modified = now(), user_name = ?, is_deleted = ?, address_id = ? WHERE is_deleted = ?");

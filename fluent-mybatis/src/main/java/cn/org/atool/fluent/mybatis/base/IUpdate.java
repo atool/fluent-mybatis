@@ -5,8 +5,8 @@ import java.util.function.Function;
 /**
  * IEntityUpdate: 更新接口
  *
- * @param <E> 对应的实体类
- * @param <U> 更新器
+ * @param <E>  对应的实体类
+ * @param <U>  更新器
  * @param <NQ> 对应的嵌套查询器
  * @author darui.wu
  */
@@ -16,13 +16,6 @@ public interface IUpdate<
     NQ extends IQuery<E, NQ>
     >
     extends IWrapper<E, U, NQ> {
-    /**
-     * 设置limit值
-     *
-     * @param limit
-     * @return
-     */
-    U limit(int limit);
 
     /**
      * 执行更新操作

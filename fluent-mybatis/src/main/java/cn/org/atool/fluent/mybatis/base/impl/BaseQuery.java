@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
+import cn.org.atool.fluent.mybatis.segment.LimitSegment.QueryLimit;
+import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
 import java.util.stream.Stream;
 
@@ -25,7 +25,8 @@ public abstract class BaseQuery<
     >
     extends BaseWrapper<E, Q, Q>
     implements IQuery<E, Q> {
-    private static final long serialVersionUID = 5541270981919538655L;
+
+    public final QueryLimit<Q> limit = new QueryLimit(this);
 
     protected BaseQuery(String table, Class entityClass, Class queryClass) {
         super(table, entityClass, queryClass);
@@ -48,18 +49,6 @@ public abstract class BaseQuery<
         if (isNotEmpty(columns)) {
             Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
         }
-        return (Q) this;
-    }
-
-    @Override
-    public Q limit(int limit) {
-        this.wrapperData.setPaged(new PagedOffset(0, limit));
-        return (Q) this;
-    }
-
-    @Override
-    public Q limit(int from, int limit) {
-        this.wrapperData.setPaged(new PagedOffset(from, limit));
         return (Q) this;
     }
 }

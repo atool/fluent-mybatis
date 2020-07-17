@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,23 +29,6 @@ public interface IQuery<
      * @return self
      */
     Q selectId();
-
-    /**
-     * 设置limit值
-     *
-     * @param limit 最大查询数量
-     * @return self
-     */
-    Q limit(int limit);
-
-    /**
-     * 设置limit值
-     *
-     * @param start 开始查询偏移量
-     * @param limit 最大查询数量
-     * @return self
-     */
-    Q limit(int start, int limit);
 
     /**
      * 执行查询操作

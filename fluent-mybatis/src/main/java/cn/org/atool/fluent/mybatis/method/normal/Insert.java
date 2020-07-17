@@ -8,8 +8,8 @@ import cn.org.atool.fluent.mybatis.method.metadata.TablePrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert;
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**

@@ -88,7 +88,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     @Override
     public MarkerList<E> markerPagedEntity(IQuery query) {
         int size = this.validateMarkerPaged(query);
-        query.limit(size + 1);
+        ((BaseQuery)query).limit.by(size + 1);
         List<E> list = this.mapper().listEntity(query);
         E next = null;
         if (list.size() > size) {
@@ -101,7 +101,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     @Override
     public MarkerList<Map<String, Object>> markerPagedMaps(IQuery query) {
         int size = this.validateMarkerPaged(query);
-        query.limit(size + 1);
+        ((BaseQuery)query).limit.by(size + 1);
         List list = this.mapper().listMaps(query);
         Map next = null;
         if (list.size() > size) {
@@ -120,7 +120,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
 
     @Override
     public E findOne(IQuery query) {
-        query.limit(1);
+        ((BaseQuery)query).limit.by(1);
         return this.mapper().findOne(query);
     }
 

@@ -7,8 +7,8 @@ import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**
  * BaseSelector: 查询字段构造
@@ -62,6 +62,19 @@ public abstract class SelectorBase<
     }
 
     /**
+     * select customized as alias
+     *
+     * @param customized 字段或函数
+     * @param alias      别名, 为空时没有别名
+     * @return 查询字段选择器
+     */
+    public S applyAs(String customized, String alias) {
+        String select = customized + (isBlank(alias) ? EMPTY : as + alias);
+        this.wrapperData().addSelectColumn(select);
+        return (S) this;
+    }
+
+    /**
      * count(*) as alias
      *
      * @param alias 别名, 为空时没有别名
@@ -70,7 +83,7 @@ public abstract class SelectorBase<
     public S count(String alias) {
         String expression = "count(*)";
         if (isNotBlank(alias)) {
-            expression += " AS " + alias;
+            expression += as + alias;
         }
         return this.apply(expression);
     }
@@ -120,8 +133,10 @@ public abstract class SelectorBase<
         }
         String expression = aggregate == null ? this.currField.column : aggregate.aggregate(this.currField.column);
         if (isNotBlank(alias)) {
-            expression = expression + " AS " + alias;
+            expression = expression + as + alias;
         }
         return this.apply(expression);
     }
+
+    private static final String as = " AS ";
 }

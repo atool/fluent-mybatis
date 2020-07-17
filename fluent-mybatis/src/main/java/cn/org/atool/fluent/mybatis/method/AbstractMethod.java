@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 import static java.util.stream.Collectors.joining;
 
 /**

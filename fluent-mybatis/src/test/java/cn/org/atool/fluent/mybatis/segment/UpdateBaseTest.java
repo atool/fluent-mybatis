@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class UpdateBaseTest extends BaseTest {
     @Autowired
     private UserMapper mapper;
@@ -17,7 +15,7 @@ class UpdateBaseTest extends BaseTest {
     @Test
     void eqByNotNull() {
         mapper.updateBy(new UserUpdate()
-            .set.eqByNotNull(new HashMap<String, Object>() {
+            .update.byNotNull(new HashMap<String, Object>() {
                 {
                     this.put("age", 34);
                     this.put("user_name", "aaa");

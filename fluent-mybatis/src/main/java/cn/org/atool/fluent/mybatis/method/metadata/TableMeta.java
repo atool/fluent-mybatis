@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.joining;
 

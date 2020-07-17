@@ -45,7 +45,7 @@ public class SelectMakerListTest extends BaseTest {
                 id().gt(20).
                 userName().like("user").end()
             .orderBy.id().asc().end()
-            .limit(10)
+            .limit.by(10)
         );
 
         List<Integer> ids = list.getData().stream()
@@ -65,13 +65,10 @@ public class SelectMakerListTest extends BaseTest {
         Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMapping.id.column)).intValue();
         MarkerList<Map> list = dao.markerPagedMaps(new UserQuery()
             .selectId()
-            .where.
-                id().gt(20).
-                userName().like("user")
-            .end()
-            .orderBy.id().asc()
-            .end()
-            .limit(10)
+            .where.id().gt(20)
+            .and.userName().like("user").end()
+            .orderBy.id().asc().end()
+            .limit.by(10)
         );
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});

@@ -28,10 +28,8 @@ public class QuestionMarkTest extends BaseTest {
                 .age.values(23)
             );
         UserUpdate update = new UserUpdate()
-            .set
-            .userName().apply("concat(user_name, concat('_\\\\\\?', ? ))", "_aaa")
-            .age().apply("age+1")
-            .end()
+            .update.userName().apply("concat(user_name, concat('_\\\\\\?', ? ))", "_aaa")
+            .set.age().apply("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
         db.table(t_user).query().eqDataMap(TM.user.create(1)

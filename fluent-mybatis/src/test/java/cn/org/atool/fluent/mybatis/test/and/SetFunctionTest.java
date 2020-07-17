@@ -26,13 +26,9 @@ public class SetFunctionTest extends BaseTest {
                 .age.values(23)
             );
         UserUpdate update = new UserUpdate()
-            .set
-            .userName().apply("concat(user_name, ?)", "_aaa")
-            .age().apply("age+1")
-            .end()
-            .where
-            .id().eq(1L)
-            .end();
+            .update.userName().apply("concat(user_name, ?)", "_aaa")
+            .set.age().apply("age+1").end()
+            .where.id().eq(1L).end();
         mapper.updateBy(update);
         db.table(t_user).query().eqDataMap(TM.user.create(1)
             .user_name.values("test_aaa")

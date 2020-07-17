@@ -41,12 +41,9 @@ public class SelectPagedListTest extends BaseTest {
         );
 
         PagedList<UserEntity> list = daoProtected.pagedEntity(new UserQuery()
-            .where.
-                userName().like("user")
-            .end()
-            .orderBy.
-                id().asc().end()
-            .limit(20, 10)
+            .where.userName().like("user").end()
+            .orderBy.id().asc().end()
+            .limit.by(20, 10)
         );
         want.number(list.getTotal()).eq(100);
         List<Integer> ids = list.getData().stream()
@@ -72,13 +69,11 @@ public class SelectPagedListTest extends BaseTest {
 
         Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMapping.id.column)).intValue();
         PagedList<Map> list = daoProtected.pagedMaps(new UserQuery()
-            .where.
-                id().gt(20).
-                userName().like("user")
+            .where.id().gt(20)
+            .and.userName().like("user")
             .end()
-            .orderBy.
-                id().asc().end()
-            .limit(10)
+            .orderBy.id().asc().end()
+            .limit.by(10)
         );
         want.number(list.getTotal()).eq(80);
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());

@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
+import cn.org.atool.fluent.mybatis.segment.LimitSegment.UpdateLimit;
 
 /**
  * AbstractUpdateWrapper
@@ -21,15 +21,10 @@ public abstract class BaseUpdate<
     NQ extends IQuery<E, NQ>>
     extends BaseWrapper<E, U, NQ>
     implements IUpdate<E, U, NQ> {
-    private static final long serialVersionUID = 6181348549200073762L;
+
+    public final UpdateLimit<U> limit = new UpdateLimit(this);
 
     protected BaseUpdate(String table, Class entityClass, Class queryClass) {
         super(table, entityClass, queryClass);
-    }
-
-    @Override
-    public U limit(int limit) {
-        this.wrapperData.setPaged(new PagedOffset(0, limit));
-        return (U) this;
     }
 }

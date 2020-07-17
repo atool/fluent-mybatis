@@ -9,7 +9,8 @@ import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Count_NoLimit;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_NotNull;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Where_Var;
 
 /**
  * SelectCountNoLimit: 忽略order by 和 limit 语句 查询总数
