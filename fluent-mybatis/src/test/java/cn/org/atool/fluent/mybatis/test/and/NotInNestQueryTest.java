@@ -21,8 +21,8 @@ public class NotInNestQueryTest extends BaseTest {
     void test_and_not_in_nested() {
         AddressQuery query = new AddressQuery()
             .selectId()
-            .where.
-                id().notIn(q -> q.selectId().where.id().eq(3L).end())
+            .where.id().notIn(q -> q.selectId()
+                .where.id().eq(3L).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
@@ -33,12 +33,9 @@ public class NotInNestQueryTest extends BaseTest {
     void test_and_in_nested2() {
         AddressQuery query = new AddressQuery().
             selectId()
-            .where.
-                id().notIn(UserQuery.class, q -> q
-                .select.apply("address_id").end()
-                .where.
-                    age().eq(24)
-                .end())
+            .where.id().notIn(UserQuery.class, q -> q
+                .select.addressId().end()
+                .where.age().eq(24).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

@@ -11,6 +11,8 @@ public abstract class AggregateSegment<
     R
     >
     extends BaseSegment<R, Q> {
+    public final S and = (S)this;
+
     protected final IAggregate aggregate;
 
     public S max;

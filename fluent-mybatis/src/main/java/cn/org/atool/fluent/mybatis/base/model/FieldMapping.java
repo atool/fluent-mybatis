@@ -20,4 +20,14 @@ public class FieldMapping {
         this.name = name;
         this.column = column;
     }
+
+    /**
+     * 返回字段名称
+     *
+     * @return
+     */
+    @Override
+    public String toString() {
+        return this.column;
+    }
 }

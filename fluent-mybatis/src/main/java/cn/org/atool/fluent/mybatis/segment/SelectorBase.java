@@ -81,11 +81,7 @@ public abstract class SelectorBase<
      * @return 选择器
      */
     public S count(String alias) {
-        String expression = "count(*)";
-        if (isNotBlank(alias)) {
-            expression += as + alias;
-        }
-        return this.apply(expression);
+        return this.applyAs("count(*)", alias);
     }
 
     /**
@@ -99,8 +95,9 @@ public abstract class SelectorBase<
      * @return 字段选择器
      */
     public S apply(FieldPredicate predicate) {
-        String selected = this.wrapper.getTableMeta().filter(false, predicate);
-        return this.apply(selected);
+        String select = this.wrapper.getTableMeta().filter(false, predicate);
+        this.wrapperData().addSelectColumn(select);
+        return (S) this;
     }
 
     @Override
@@ -132,10 +129,7 @@ public abstract class SelectorBase<
             return (S) this;
         }
         String expression = aggregate == null ? this.currField.column : aggregate.aggregate(this.currField.column);
-        if (isNotBlank(alias)) {
-            expression = expression + as + alias;
-        }
-        return this.apply(expression);
+        return this.applyAs(expression, alias);
     }
 
     private static final String as = " AS ";
