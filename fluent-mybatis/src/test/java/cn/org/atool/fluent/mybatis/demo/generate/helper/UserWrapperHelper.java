@@ -122,12 +122,12 @@ public class UserWrapperHelper implements UserMapping {
             super(query);
         }
 
-        private QueryWhere(UserQuery query, QueryWhere and) {
-            super(query, and);
+        private QueryWhere(UserQuery query, QueryWhere where) {
+            super(query, where);
         }
 
         @Override
-        protected QueryWhere orWhere(QueryWhere and) {
+        protected QueryWhere buildOr(QueryWhere and) {
             return new QueryWhere((UserQuery) this.wrapper, and);
         }
     }
@@ -142,12 +142,12 @@ public class UserWrapperHelper implements UserMapping {
             super(update);
         }
 
-        private UpdateWhere(UserUpdate update, UpdateWhere and) {
-            super(update, and);
+        private UpdateWhere(UserUpdate update, UpdateWhere where) {
+            super(update, where);
         }
 
         @Override
-        protected UpdateWhere orWhere(UpdateWhere and) {
+        protected UpdateWhere buildOr(UpdateWhere and) {
             return new UpdateWhere((UserUpdate) this.wrapper, and);
         }
     }

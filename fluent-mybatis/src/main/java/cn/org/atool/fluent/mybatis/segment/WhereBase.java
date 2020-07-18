@@ -50,7 +50,7 @@ public abstract class WhereBase<
         super(wrapper);
         this.currOp = AND;
         this.and = (WHERE) this;
-        this.or = this.orWhere(this.and);
+        this.or = this.buildOr(this.and);
     }
 
     protected WhereBase(WRAPPER wrapper, WHERE and) {
@@ -60,7 +60,13 @@ public abstract class WhereBase<
         this.or = (WHERE) this;
     }
 
-    protected abstract WHERE orWhere(WHERE and);
+    /**
+     * 根据and where构造or where实例
+     *
+     * @param and and where
+     * @return or where
+     */
+    protected abstract WHERE buildOr(WHERE and);
 
     /**
      * where条件设置为entity对象非空属性

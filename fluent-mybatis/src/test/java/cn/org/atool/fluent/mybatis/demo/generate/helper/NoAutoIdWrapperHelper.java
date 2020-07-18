@@ -66,12 +66,12 @@ public class NoAutoIdWrapperHelper implements NoAutoIdMapping {
             super(query);
         }
 
-        private QueryWhere(NoAutoIdQuery query, QueryWhere and) {
-            super(query, and);
+        private QueryWhere(NoAutoIdQuery query, QueryWhere where) {
+            super(query, where);
         }
 
         @Override
-        protected QueryWhere orWhere(QueryWhere and) {
+        protected QueryWhere buildOr(QueryWhere and) {
             return new QueryWhere((NoAutoIdQuery) this.wrapper, and);
         }
     }
@@ -86,12 +86,12 @@ public class NoAutoIdWrapperHelper implements NoAutoIdMapping {
             super(update);
         }
 
-        private UpdateWhere(NoAutoIdUpdate update, UpdateWhere and) {
-            super(update, and);
+        private UpdateWhere(NoAutoIdUpdate update, UpdateWhere where) {
+            super(update, where);
         }
 
         @Override
-        protected UpdateWhere orWhere(UpdateWhere and) {
+        protected UpdateWhere buildOr(UpdateWhere and) {
             return new UpdateWhere((NoAutoIdUpdate) this.wrapper, and);
         }
     }

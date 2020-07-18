@@ -66,12 +66,12 @@ public class NoPrimaryWrapperHelper implements NoPrimaryMapping {
             super(query);
         }
 
-        private QueryWhere(NoPrimaryQuery query, QueryWhere and) {
-            super(query, and);
+        private QueryWhere(NoPrimaryQuery query, QueryWhere where) {
+            super(query, where);
         }
 
         @Override
-        protected QueryWhere orWhere(QueryWhere and) {
+        protected QueryWhere buildOr(QueryWhere and) {
             return new QueryWhere((NoPrimaryQuery) this.wrapper, and);
         }
     }
@@ -86,12 +86,12 @@ public class NoPrimaryWrapperHelper implements NoPrimaryMapping {
             super(update);
         }
 
-        private UpdateWhere(NoPrimaryUpdate update, UpdateWhere and) {
-            super(update, and);
+        private UpdateWhere(NoPrimaryUpdate update, UpdateWhere where) {
+            super(update, where);
         }
 
         @Override
-        protected UpdateWhere orWhere(UpdateWhere and) {
+        protected UpdateWhere buildOr(UpdateWhere and) {
             return new UpdateWhere((NoPrimaryUpdate) this.wrapper, and);
         }
     }
