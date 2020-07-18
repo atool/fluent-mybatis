@@ -65,7 +65,7 @@ public class SelectCountTest extends BaseTest {
             .end()
             .where.userName().eq("u2")
             .end()
-            .limit.by(2);
+            .limit(2);
         int count = mapper.count(query);
         db.sqlList().wantFirstSql().start("SELECT COUNT( id )").end("FROM t_user WHERE user_name = ? LIMIT ?, ?");
         want.number(count).eq(2);

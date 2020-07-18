@@ -31,6 +31,23 @@ public interface IQuery<
     Q selectId();
 
     /**
+     * 设置limit值
+     *
+     * @param limit 最大查询数量
+     * @return self
+     */
+    Q limit(int limit);
+
+    /**
+     * 设置limit值
+     *
+     * @param start 开始查询偏移量
+     * @param limit 最大查询数量
+     * @return self
+     */
+    Q limit(int start, int limit);
+
+    /**
      * 执行查询操作
      *
      * @param executor 具体查询操作

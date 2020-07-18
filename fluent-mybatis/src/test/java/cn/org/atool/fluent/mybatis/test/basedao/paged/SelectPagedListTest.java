@@ -43,7 +43,7 @@ public class SelectPagedListTest extends BaseTest {
         PagedList<UserEntity> list = daoProtected.pagedEntity(new UserQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc().end()
-            .limit.by(20, 10)
+            .limit(20, 10)
         );
         want.number(list.getTotal()).eq(100);
         List<Integer> ids = list.getData().stream()
@@ -73,7 +73,7 @@ public class SelectPagedListTest extends BaseTest {
             .and.userName().like("user")
             .end()
             .orderBy.id().asc().end()
-            .limit.by(10)
+            .limit(10)
         );
         want.number(list.getTotal()).eq(80);
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());

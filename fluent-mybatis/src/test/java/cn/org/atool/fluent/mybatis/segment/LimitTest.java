@@ -24,7 +24,7 @@ public class LimitTest extends BaseTest {
         UserQuery query = new UserQuery()
             .where.age().eq(10)
             .end()
-            .limit.by(10, 20);
+            .limit(10, 20);
 
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("WHERE age = ? LIMIT ?, ?");
@@ -35,7 +35,7 @@ public class LimitTest extends BaseTest {
         UserQuery query = new UserQuery()
             .where.age().eq(10)
             .end()
-            .limit.by(20);
+            .limit(20);
 
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("WHERE age = ? LIMIT ?, ?");

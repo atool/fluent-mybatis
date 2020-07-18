@@ -25,7 +25,7 @@ public class CountNoLimitTest extends BaseTest {
             .end()
             .orderBy.userName().asc()
             .end()
-            .limit.by(10);
+            .limit(10);
 
         mapper.count(query);
         db.sqlList().wantFirstSql()
@@ -48,7 +48,7 @@ public class CountNoLimitTest extends BaseTest {
             .end()
             .orderBy.userName().asc()
             .end()
-            .limit.by(10, 20);
+            .limit(10, 20);
         int count = mapper.countNoLimit(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT( * )")

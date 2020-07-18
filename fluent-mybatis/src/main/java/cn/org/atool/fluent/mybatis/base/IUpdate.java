@@ -16,6 +16,13 @@ public interface IUpdate<
     NQ extends IQuery<E, NQ>
     >
     extends IWrapper<E, U, NQ> {
+    /**
+     * 设置limit值
+     *
+     * @param limit
+     * @return
+     */
+    U limit(int limit);
 
     /**
      * 执行更新操作
