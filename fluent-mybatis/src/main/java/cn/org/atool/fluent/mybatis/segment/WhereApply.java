@@ -318,7 +318,7 @@ public class WhereApply<
      * @param args   子查询语句参数，对应select语句里面的 "?" 占位符
      * @return 查询器或更新器
      */
-    public <O> WHERE inSql(String select, O... args) {
+    public <O> WHERE in(String select, O... args) {
         if (isCollection(args)) {
             return this.segment.apply(current.column, select, IN, ((Collection) args[0]).toArray());
         } else {
@@ -669,16 +669,16 @@ public class WhereApply<
     }
 
     /**
-     * set 自定义(包括操作符在内）
+     * where 自定义条件(包括操作符在内）
      * 比如 where.age().apply("=34").end()
      * <p>
      * ！！！慎用！！！！
      * 有sql注入风险
      *
-     * @param sql 自定义操作
+     * @param opArgs 自定义比较语句
      * @return 查询器或更新器
      */
-    public WHERE apply(String sql) {
-        return this.segment.apply(current.column, sql, RETAIN);
+    public WHERE apply(String opArgs) {
+        return this.segment.apply(current.column, opArgs, RETAIN);
     }
 }

@@ -74,8 +74,8 @@ public abstract class WhereBase<
      * @param entity
      * @return 查询器UserQuery
      */
-    public WHERE eqByNotNull(IEntity entity) {
-        return this.eqByNotNull(entity.columnMap());
+    public WHERE eqNotNull(IEntity entity) {
+        return this.eqNotNull(entity.columnMap());
     }
 
     /**
@@ -87,8 +87,8 @@ public abstract class WhereBase<
      * @param <V>
      * @return self
      */
-    public <V> WHERE eqByNotNull(Map<String, V> params) {
-        return eqByMap(params, true);
+    public <V> WHERE eqNotNull(Map<String, V> params) {
+        return eqMap(params, true);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class WhereBase<
      * @param ignoreNull value为null时,是否忽略。如果ignoreNull = false, 且value=null, 会执行 column is null判断
      * @return self
      */
-    public <V> WHERE eqByMap(Map<String, V> params, boolean ignoreNull) {
+    public <V> WHERE eqMap(Map<String, V> params, boolean ignoreNull) {
         params.forEach((k, v) -> {
             this.wrapper.validateColumn(k);
             if (isNotNull(v)) {
@@ -215,7 +215,35 @@ public abstract class WhereBase<
     }
 
     /**
-     * AND 嵌套
+     * 增加and[or]条件
+     *
+     * @param column 字段
+     * @param op     操作
+     * @param paras  操作参数
+     * @return 条件设置器
+     */
+    public WHERE apply(String column, SqlOp op, Object... paras) {
+        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
+        return this.and;
+    }
+
+    /**
+     * column op (format(sql, args))
+     *
+     * @param column
+     * @param sql
+     * @param op
+     * @param args
+     * @return
+     */
+    WHERE apply(String column, String sql, SqlOp op, Object... args) {
+        this.wrapper.getWrapperData().apply(this.currOp, column, sql, op, args);
+        return this.and;
+    }
+
+
+    /**
+     * 嵌套查询
      * <p>
      * 例: and(i -&gt; i.eq("name", "value1").ne("status", "status1"))
      * </p>
@@ -230,37 +258,20 @@ public abstract class WhereBase<
         return this.and;
     }
 
+
     /**
-     * <pre>
-     * OR 嵌套
+     * 嵌套查询
+     * <p>
      * 例: or(i -&gt; i.eq("name", "value1").ne("status", "status1"))
-     * </pre>
+     * </p>
      *
-     * @param apply 消费函数
-     * @return self
+     * @param query 消费函数
+     * @return children
      */
-    public WHERE or(Function<WRAPPER, WRAPPER> apply) {
+    public WHERE or(Function<WRAPPER, WRAPPER> query) {
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
-        apply.apply(nested);
+        query.apply(nested);
         wrapper.getWrapperData().apply(OR, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
-        return this.and;
-    }
-
-    /**
-     * 增加and[or]条件
-     *
-     * @param column 字段
-     * @param op     操作
-     * @param paras  操作参数
-     * @return 条件设置器
-     */
-    public WHERE apply(String column, SqlOp op, Object... paras) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
-        return this.and;
-    }
-
-    WHERE apply(String column, String sql, SqlOp op, Object... values) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, sql, op, values);
         return this.and;
     }
 

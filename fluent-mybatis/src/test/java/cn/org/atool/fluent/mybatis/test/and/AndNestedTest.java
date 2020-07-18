@@ -22,10 +22,8 @@ public class AndNestedTest extends BaseTest {
             .where
             .id().in(q -> q.selectId().where.id().eq(3L).end())
             .and(q -> q
-                .where
-                .age().eq(24)
-                .id().eq(3L)
-                .end()
+                .where.age().eq(24)
+                .and.id().eq(3L).end()
             )
             .end();
         mapper.count(query);
@@ -37,22 +35,22 @@ public class AndNestedTest extends BaseTest {
     @Test
     void test_or_nested() {
         UserQuery query = new UserQuery()
-            .where
-            .id().in(q -> q.selectId().where.id().eq(3L).end())
-            .or(q -> q.where
-                .or(q2 -> q2
+            .where.id().in(q -> q.selectId()
+                .where.id().eq(3L).end())
+            .or(q1 -> q1
+                .where.and(q2 -> q2
                     .where.age().eq(24)
                     .or.id().eq(3L)
-                    .and.id().eq(3)
-                    .end()
-                )
-                .and(q1 -> q1.where.id().eq(2L).end()
-                ).end()).end();
+                    .and.id().eq(3).end())
+                .and(q2 -> q2
+                    .where.id().eq(2L)
+                    .or.id().eq(4L).end())
+                .end())
+            .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT( * ) FROM t_user " +
                 "WHERE id IN (SELECT id FROM t_user WHERE id = ?) " +
-                "OR ( ( age = ? OR id = ? AND id = ? ) " +
-                "AND ( id = ? ) )");
+                "OR ( ( age = ? OR id = ? AND id = ? ) AND ( id = ? OR id = ? ) )");
     }
 }

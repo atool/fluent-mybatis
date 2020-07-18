@@ -103,8 +103,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_select() {
         UserQuery query = new UserQuery()
-            .where
-            .id().inSql("select id from t_user where age =?", 24)
+            .where.id().in("select id from t_user where age =?", 24)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()

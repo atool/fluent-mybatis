@@ -62,7 +62,7 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public List<E> selectByMap(Map<String, Object> where) {
-        IQuery query = this.query().where().eqByNotNull(where).end();
+        IQuery query = this.query().where().eqNotNull(where).end();
         return this.mapper().listEntity(query);
     }
 
@@ -98,7 +98,7 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public int deleteByMap(Map<String, Object> map) {
-        IQuery query = (IQuery) this.query().where().eqByNotNull((Map) map).end();
+        IQuery query = (IQuery) this.query().where().eqNotNull((Map) map).end();
         return this.mapper().delete(query);
     }
 }
