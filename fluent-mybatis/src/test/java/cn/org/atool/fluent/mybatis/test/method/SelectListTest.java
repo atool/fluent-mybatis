@@ -57,8 +57,7 @@ public class SelectListTest extends BaseTest {
                 .user_name.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
-            .where.userName().eq("u2")
-            .end()
+            .where.userName().eq("u2").end()
             .limit(2);
         List<UserEntity> users = mapper.listEntity(query);
         want.list(users).eqDataMap(EM.user.create(2)

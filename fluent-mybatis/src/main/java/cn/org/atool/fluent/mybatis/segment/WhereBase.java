@@ -195,30 +195,16 @@ public abstract class WhereBase<
     /**
      * 拼接 sql
      *
-     * <p>例1: and apply("id = 1")</p>
-     * <p>例2: and apply("date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'")</p>
-     * <p>例3: and apply("date_format(dateColumn,'%Y-%m-%d') = ?", LocalDate.now())</p>
+     * <p>例1: and[or] apply("id = 1")</p>
+     * <p>例2: and[or] apply("date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'")</p>
+     * <p>例3: and[or] apply("date_format(dateColumn,'%Y-%m-%d') = ?", LocalDate.now())</p>
      *
      * @param applySql 拼接的sql语句
      * @param paras    对应sql语句的 "?" 参数
      * @return children
      */
-    public WHERE and(String applySql, Object... paras) {
-        wrapper.getWrapperData().apply(AND, EMPTY, applySql, RETAIN, paras);
-        return this.and;
-    }
-
-    /**
-     * 增加and条件
-     *
-     * @param column 字段
-     * @param op     操作
-     * @param paras  操作参数
-     * @return 条件设置器
-     */
-    public WHERE and(String column, SqlOp op, Object... paras) {
-        wrapper.validateColumn(column);
-        wrapper.getWrapperData().apply(AND, column, null, op, paras);
+    public WHERE apply(String applySql, Object... paras) {
+        wrapper.getWrapperData().apply(this.currOp, EMPTY, applySql, RETAIN, paras);
         return this.and;
     }
 
@@ -239,36 +225,6 @@ public abstract class WhereBase<
     }
 
     /**
-     * 拼接 sql
-     *
-     * <p>例1: or apply("id = 1")</p>
-     * <p>例2: or apply("date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'")</p>
-     * <p>例3: or apply("date_format(dateColumn,'%Y-%m-%d') = ?", LocalDate.now())</p>
-     *
-     * @param applySql 拼接的sql语句
-     * @param paras    对应sql语句的 "?" 参数
-     * @return children
-     */
-    public WHERE or(String applySql, Object... paras) {
-        wrapper.getWrapperData().apply(OR, EMPTY, applySql, RETAIN, paras);
-        return this.and;
-    }
-
-    /**
-     * 增加or条件
-     *
-     * @param column 字段
-     * @param op     操作
-     * @param paras  操作参数
-     * @return 条件设置器
-     */
-    public WHERE or(String column, SqlOp op, Object... paras) {
-        wrapper.validateColumn(column);
-        wrapper.getWrapperData().apply(OR, column, null, op, paras);
-        return this.and;
-    }
-
-    /**
      * <pre>
      * OR 嵌套
      * 例: or(i -&gt; i.eq("name", "value1").ne("status", "status1"))
@@ -284,8 +240,16 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    WHERE apply(String column, SqlOp op, Object... values) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, op, values);
+    /**
+     * 增加and[or]条件
+     *
+     * @param column 字段
+     * @param op     操作
+     * @param paras  操作参数
+     * @return 条件设置器
+     */
+    public WHERE apply(String column, SqlOp op, Object... paras) {
+        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
         return this.and;
     }
 

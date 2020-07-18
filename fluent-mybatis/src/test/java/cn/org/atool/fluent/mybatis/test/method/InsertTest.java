@@ -70,7 +70,6 @@ public class InsertTest extends BaseTest {
         });
     }
 
-
     @Test
     public void test_insert_noPrimary() {
         db.table(t_no_primary).clean();

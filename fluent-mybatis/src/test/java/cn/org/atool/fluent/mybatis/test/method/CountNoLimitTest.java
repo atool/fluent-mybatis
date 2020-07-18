@@ -21,10 +21,8 @@ public class CountNoLimitTest extends BaseTest {
     @Test
     public void test_count_no_limit() throws Exception {
         UserQuery query = new UserQuery()
-            .where.id().eq(24L)
-            .end()
-            .orderBy.userName().asc()
-            .end()
+            .where.id().eq(24L).end()
+            .orderBy.userName().asc().end()
             .limit(10);
 
         mapper.count(query);

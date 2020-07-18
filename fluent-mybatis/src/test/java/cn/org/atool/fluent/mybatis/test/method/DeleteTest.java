@@ -37,7 +37,7 @@ public class DeleteTest extends BaseTest {
             .user_name.values("user1", "user2")
         );
         UserQuery update = new UserQuery()
-            .where.and("user_name=?", "user2").end();
+            .where.apply("user_name=?", "user2").end();
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE user_name=?", StringMode.SameAsSpace);
