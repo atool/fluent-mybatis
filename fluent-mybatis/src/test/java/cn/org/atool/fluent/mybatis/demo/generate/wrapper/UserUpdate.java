@@ -25,15 +25,15 @@ public class UserUpdate extends BaseUpdate<UserEntity, UserUpdate, UserQuery> {
     @Deprecated
     public final UpdateSetter set = update;
     /**
-     * 更新条件设置
-     */
+    * 更新条件设置
+    */
     public final UpdateWhere where = new UpdateWhere(this);
     /**
-     * order by
-     */
+    *  order by
+    */
     public final UpdateOrderBy orderBy = new UpdateOrderBy(this);
 
-    public UserUpdate() {
+    public UserUpdate(){
         super(UserMapping.Table_Name, UserEntity.class, UserQuery.class);
     }
 

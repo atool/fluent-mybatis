@@ -18,7 +18,12 @@ public class AddressUpdate extends BaseUpdate<AddressEntity, AddressUpdate, Addr
     /**
      * 更新值设置
      */
-    public final UpdateSetter set = new UpdateSetter(this);
+    public final UpdateSetter update = new UpdateSetter(this);
+    /**
+     * 使用update变量, 后续版本将删除
+     */
+    @Deprecated
+    public final UpdateSetter set = update;
     /**
     * 更新条件设置
     */

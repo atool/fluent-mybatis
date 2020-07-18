@@ -12,12 +12,10 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  *
  * @param <E>
  */
-public interface MyCustomerInterface<E extends IEntity>
-    extends IMapperDao<E> {
+public interface MyCustomerInterface<E extends IEntity> extends IMapperDao<E> {
     default IQuery defaultQuery() {
         return this.query()
-            .where()
-            .and("is_deleted", EQ, false)
+            .where().apply("is_deleted", EQ, false)
             .end();
     }
 }
