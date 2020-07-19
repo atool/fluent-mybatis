@@ -14,8 +14,7 @@ public class WhereObjectTest_Ne extends BaseTest {
     @Test
     public void ne() {
         UserQuery query = new UserQuery()
-            .where
-            .age().ne(34)
+            .where.age().ne(34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age <> ?", StringMode.SameAsSpace);
@@ -25,8 +24,7 @@ public class WhereObjectTest_Ne extends BaseTest {
     @Test
     public void ne_condition() {
         UserQuery query = new UserQuery()
-            .where
-            .age().ne(true, 34)
+            .where.age().ne(true, 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age <> ?", StringMode.SameAsSpace);
@@ -36,8 +34,7 @@ public class WhereObjectTest_Ne extends BaseTest {
     @Test
     public void ne_IfNotNull() {
         UserQuery query = new UserQuery()
-            .where
-            .age().ne_IfNotNull(34)
+            .where.age().ne_IfNotNull(34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age <> ?");

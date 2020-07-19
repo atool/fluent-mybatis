@@ -26,16 +26,16 @@ public class HavingTest extends BaseTest {
             .sum.age("avg")
             .apply(id.column)
             .end()
-            .where.id().eq(24L).end()
+            .where.id().eq(24L)
+            .end()
             .groupBy.id()
             .end()
-            .having
-            .sum.age().between(2, 10)
-            .count.id().gt(2)
-            .avg.age().in(new int[]{2, 3})
-            .min.age().gt(10)
-            .apply("avg").gt(10)
-            .max.age().lt(20)
+            .having.sum.age().between(2, 10)
+            .and.count.id().gt(2)
+            .and.avg.age().in(new int[]{2, 3})
+            .and.min.age().gt(10)
+            .and.apply("avg").gt(10)
+            .and.max.age().lt(20)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
@@ -56,12 +56,12 @@ public class HavingTest extends BaseTest {
             .sum.age("avg")
             .apply(id.column)
             .end()
-            .where.id().eq(24L).end()
+            .where.id().eq(24L)
+            .end()
             .groupBy.id()
             .end()
-            .having
-            .max.age().lt(20)
-            .apply("SUM(age)").lt(20)
+            .having.max.age().lt(20)
+            .and.apply("SUM(age)").lt(20)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

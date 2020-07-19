@@ -42,5 +42,4 @@ public class SaveOrUpdateTest extends BaseTest {
                         .age.values(30)
                 );
     }
-
 }

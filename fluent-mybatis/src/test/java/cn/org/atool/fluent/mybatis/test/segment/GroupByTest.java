@@ -59,15 +59,13 @@ public class GroupByTest extends BaseTest {
     @Test
     public void test_groupBy_having() throws Exception {
         UserQuery query = new UserQuery()
-            .select
-            .apply("count(1)", "sum(1)").end()
-            .where
-            .id().eq(24L).end()
-            .groupBy
-            .userName().age().end()
-            .having
-            .apply("count(1)").gt(10)
-            .apply("sum(age)").gt(3)
+            .select.apply("count(1)", "sum(1)")
+            .end()
+            .where.id().eq(24L)
+            .end()
+            .groupBy.userName().age().end()
+            .having.apply("count(1)").gt(10)
+            .sum.age().gt(3)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
@@ -87,13 +85,11 @@ public class GroupByTest extends BaseTest {
             .min.age()
             .avg.age()
             .end()
-            .where
-            .age().between(15, 25).end()
-            .groupBy
-            .grade()
+            .where.age().between(15, 25)
             .end()
-            .having
-            .count.id().gt(10)
+            .groupBy.grade()
+            .end()
+            .having.count.id().gt(10)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

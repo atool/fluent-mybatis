@@ -152,7 +152,7 @@ public class WrapperData implements IWrapperData {
      * @param column
      */
     public void addSelectColumn(String column) {
-        if (!this.sqlSelect.contains(column)) {
+        if (isNotBlank(column) && !this.sqlSelect.contains(column)) {
             this.sqlSelect.add(column);
         }
     }

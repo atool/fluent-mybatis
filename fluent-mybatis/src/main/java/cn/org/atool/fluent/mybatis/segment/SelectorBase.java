@@ -36,11 +36,10 @@ public abstract class SelectorBase<
      * @param columns 查询字段
      * @return 查询字段选择器
      */
-    public S apply(String... columns) {
+    public S apply(String column, String... columns) {
+        this.wrapperData().addSelectColumn(column);
         if (isNotEmpty(columns)) {
-            Stream.of(columns)
-                .filter(s -> isNotBlank(s))
-                .forEach(this.wrapperData()::addSelectColumn);
+            Stream.of(columns).forEach(this.wrapperData()::addSelectColumn);
         }
         return (S) this;
     }

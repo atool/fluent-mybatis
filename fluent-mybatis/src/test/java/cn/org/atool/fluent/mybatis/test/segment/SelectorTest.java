@@ -25,9 +25,12 @@ public class SelectorTest extends BaseTest {
             .id()
             .max.age("max")
             .min.version()
-            .sum.age().end()
-            .where.id().eq(24L).end()
-            .groupBy.id().end();
+            .sum.age()
+            .end()
+            .where.id().eq(24L)
+            .end()
+            .groupBy.id()
+            .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, address_id, 1, MAX(age) AS max, MIN(version), SUM(age) FROM t_user WHERE id = ? GROUP BY id");
@@ -45,8 +48,10 @@ public class SelectorTest extends BaseTest {
             .count.age("count")
             .group_concat.age("concat")
             .end()
-            .where.id().eq(24L).end()
-            .groupBy.id().end();
+            .where.id().eq(24L)
+            .end()
+            .groupBy.id()
+            .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id AS pk, SUM(age) AS sum, MAX(age) AS max, MIN(age) AS min, AVG(age) AS avg, COUNT(age) AS count, GROUP_CONCAT(age) AS concat " +
@@ -66,8 +71,10 @@ public class SelectorTest extends BaseTest {
             .group_concat.age()
             .end()
             .where
-            .id().eq(24L).end()
-            .groupBy.id().end();
+            .id().eq(24L)
+            .end()
+            .groupBy.id()
+            .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age) " +

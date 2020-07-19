@@ -19,9 +19,8 @@ public class WhereObjectTest_Exists extends BaseTest {
     @Test
     void test_exists() {
         UserQuery query = new UserQuery()
-            .where
-            .isDeleted().eq(true)
-            .exists("select 1 from t_user where age=?", 34)
+            .where.isDeleted().eq(true)
+            .and.exists("select 1 from t_user where age=?", 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
@@ -31,12 +30,13 @@ public class WhereObjectTest_Exists extends BaseTest {
     @Test
     void test_not_exists() {
         UserQuery query = new UserQuery()
-            .where
-            .isDeleted().eq(true)
-            .notExists("select 1 from t_user where age=?", 34)
+            .where.isDeleted().eq(true)
+            .and.notExists("select 1 from t_user where age=?", 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user WHERE is_deleted = ? AND NOT EXISTS (select 1 from t_user where age=?)");
+            .eq("SELECT COUNT( * ) FROM t_user " +
+                "WHERE is_deleted = ? " +
+                "AND NOT EXISTS (select 1 from t_user where age=?)");
     }
 }

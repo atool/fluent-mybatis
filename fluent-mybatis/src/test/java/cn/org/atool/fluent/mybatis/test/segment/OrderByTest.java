@@ -20,8 +20,10 @@ public class OrderByTest extends BaseTest {
     public void test_order() throws Exception {
         UserQuery query = new UserQuery()
             .selectId()
-            .where.id().eq(24L).end()
-            .orderBy.id().asc().age().desc().end();
+            .where.id().eq(24L)
+            .end()
+            .orderBy.id().asc().age().desc()
+            .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM t_user WHERE id = ? ORDER BY id ASC, age DESC");

@@ -13,6 +13,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.List;
 
+import static cn.org.atool.fluent.mybatis.demo.generate.helper.UserMapping.userName;
 import static org.test4j.tools.datagen.AbstractDataGenerator.increase;
 
 /**
@@ -32,7 +33,7 @@ public class DistinctTest extends BaseTest {
             );
         UserQuery query = new UserQuery()
             .distinct()
-            .select.apply(UserMapping.userName.column).end()
+            .select.apply(userName).end()
             .where.age().eq(30).end();
 
         List<UserEntity> users = mapper.listEntity(query);
