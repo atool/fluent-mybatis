@@ -65,13 +65,13 @@ public class GroupByTest extends BaseTest {
             .end()
             .groupBy.userName().age().end()
             .having.apply("count(1)").gt(10)
-            .sum.age().gt(3)
+            .and.sum.age().gt(3)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT count(1), sum(1) FROM t_user " +
                 "WHERE id = ? GROUP BY user_name, age " +
-                "HAVING count(1) > ? AND sum(age) > ?");
+                "HAVING count(1) > ? AND SUM(age) > ?");
     }
 
     @DisplayName("按级别grade统计年龄在15和25之间的人数在10人以上，该条件内最大、最小和平均年龄")
