@@ -241,7 +241,6 @@ public abstract class WhereBase<
         return this.and;
     }
 
-
     /**
      * 嵌套查询
      * <p>
@@ -252,10 +251,7 @@ public abstract class WhereBase<
      * @return children
      */
     public WHERE and(Function<WRAPPER, WRAPPER> query) {
-        final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
-        query.apply(nested);
-        wrapper.getWrapperData().apply(AND, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
-        return this.and;
+        return this.nestedWhere(AND, query);
     }
 
 
@@ -269,9 +265,16 @@ public abstract class WhereBase<
      * @return children
      */
     public WHERE or(Function<WRAPPER, WRAPPER> query) {
+        return this.nestedWhere(OR, query);
+    }
+
+    private WHERE nestedWhere(KeyWordSegment andOr, Function<WRAPPER, WRAPPER> query) {
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         query.apply(nested);
-        wrapper.getWrapperData().apply(OR, EMPTY, nested.getWrapperData().getMergeSql(), BRACKET);
+        String sql = nested.getWrapperData().getMergeSql();
+        if (sql != null && !sql.trim().isEmpty()) {
+            wrapper.getWrapperData().apply(andOr, EMPTY, sql, BRACKET);
+        }
         return this.and;
     }
 

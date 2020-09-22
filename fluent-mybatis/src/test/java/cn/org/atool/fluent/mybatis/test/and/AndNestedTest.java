@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.test.and;
 import cn.org.atool.fluent.mybatis.demo.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.demo.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,7 +30,38 @@ public class AndNestedTest extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?) AND ( age = ? AND id = ? )");
+    }
 
+    @DisplayName("And嵌套查询为空的场景")
+    @Test
+    void test_and_nested_is_null() {
+        UserQuery query = new UserQuery()
+            .where
+            .id().in(q -> q.selectId().where.id().eq(3L).end())
+            .and(q -> q
+                .where.age().eq(false, 24)
+                .or.id().eq(false, 3L).end()
+            )
+            .end();
+        mapper.count(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
+    }
+
+    @DisplayName("Or嵌套查询为空的场景")
+    @Test
+    void test_or_nested_is_null() {
+        UserQuery query = new UserQuery()
+            .where
+            .id().in(q -> q.selectId().where.id().eq(3L).end())
+            .or(q -> q
+                .where.age().eq(false, 24)
+                .and.id().eq(false, 3L).end()
+            )
+            .end();
+        mapper.count(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
     }
 
     @Test

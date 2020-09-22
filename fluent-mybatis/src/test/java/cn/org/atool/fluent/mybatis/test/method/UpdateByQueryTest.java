@@ -39,7 +39,7 @@ public class UpdateByQueryTest extends BaseTest {
             .user_name.values("user1", "user2")
         );
         UserUpdate update = new UserUpdate()
-            .set.userName().is("user name2").end()
+            .update.userName().is("user name2").end()
             .where.id().eq(24L)
             .and.apply("user_name='user2'")
             .or.apply("user_name=?", "xxx").end();

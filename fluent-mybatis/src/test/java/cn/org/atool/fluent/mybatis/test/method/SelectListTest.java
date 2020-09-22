@@ -64,4 +64,19 @@ public class SelectListTest extends BaseTest {
             .userName.values("u2"));
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ? LIMIT ?, ?");
     }
+
+    @Test
+    public void test_selectList_limit2() throws Exception {
+        db.table(t_user).clean()
+            .insert(TM.user.createWithInit(4)
+                .id.values(23, 24, 25, 26)
+                .user_name.values("u1", "u2", "u3", "u2")
+            );
+        UserQuery query = new UserQuery()
+            .where.userName().eq("u2").end()
+            .limit(2, 3);
+        List<UserEntity> users = mapper.listEntity(query);
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ? LIMIT ?, ?");
+        db.sqlList().wantFirstPara().eq(new Object[]{"u2", 2, 3});
+    }
 }
