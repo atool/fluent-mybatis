@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
+import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
@@ -25,6 +26,7 @@ import java.util.Map;
 @Setter
 @Accessors(chain = true)
 @TableName("no_auto_id")
+@FluentMyBatis
 public class NoAutoIdEntity implements IEntity{
     private static final long serialVersionUID = 1L;
 

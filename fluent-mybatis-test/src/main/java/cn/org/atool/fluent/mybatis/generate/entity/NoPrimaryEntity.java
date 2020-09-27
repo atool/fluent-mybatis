@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
+import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Setter
 @Accessors(chain = true)
 @TableName("no_primary")
+@FluentMyBatis
 public class NoPrimaryEntity implements IEntity{
     private static final long serialVersionUID = 1L;
 

@@ -52,7 +52,7 @@
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-generator</module>
         <module>fluent-mybatis-processor</module>
-        <module>processor-test</module>
+        <module>fluent-mybatis-test</module>
     </modules>
     <dependencies>
         <dependency>

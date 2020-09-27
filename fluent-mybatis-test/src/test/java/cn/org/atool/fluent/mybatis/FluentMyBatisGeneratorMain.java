@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.datamap.entity;
+package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.generator.MybatisGenerator;
 import org.test4j.generator.mybatis.db.ColumnJavaType;
