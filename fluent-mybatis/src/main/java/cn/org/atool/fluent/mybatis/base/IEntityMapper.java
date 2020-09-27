@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+import static cn.org.atool.fluent.mybatis.test.method.model.XmlConstant.*;
 
 /**
  * IEntityMapper: 实例Mapper基类，Mapper 继承该接口后，无需编写 mapper.xml 文件，即可获得CRUD功能

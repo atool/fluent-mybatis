@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis;
 
-import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.test.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.InjectMapper;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Setter;

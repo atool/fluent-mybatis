@@ -35,8 +35,14 @@
         </dependency>
         <dependency>
             <groupId>org.test4j</groupId>
+            <artifactId>test4j-junit5</artifactId>
+            <version>${test4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.test4j</groupId>
             <artifactId>test4j-db-dep</artifactId>
-            <version>2.6.7</version>
+            <version>${test4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

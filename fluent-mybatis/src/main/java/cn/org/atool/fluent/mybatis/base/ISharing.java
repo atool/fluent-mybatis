@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+import static cn.org.atool.fluent.mybatis.test.method.model.XmlConstant.*;
 
 /**
  * ISharingMapper: 分库分表操作
