@@ -1,7 +1,12 @@
 package cn.org.atool.fluent.mybatis.utility;
 
+import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -159,9 +164,14 @@ public class MybatisUtil {
         while (current.getSuperclass() != null && current != Object.class) {
             Field[] fields = current.getDeclaredFields();
             for (Field field : fields) {
-                String fieldName = field.getName();
-                if (!map.containsKey(fieldName) && !isStatic(field)) {
-                    map.put(fieldName, field);
+                if (isStatic(field)) {
+                    continue;
+                } else if (field.getAnnotation(NotField.class) != null) {
+                    continue;
+                } else if (map.containsKey(field.getName())) {
+                    continue;
+                } else {
+                    map.put(field.getName(), field);
                 }
             }
             current = current.getSuperclass();
@@ -322,6 +332,88 @@ public class MybatisUtil {
 
     public static String trim(String str) {
         return isBlank(str) ? EMPTY : str.trim();
+    }
+
+    /**
+     * 获取表名
+     *
+     * @param klass  Entity类名称
+     * @param prefix 表名称前缀
+     * @param suffix Entity类后缀
+     * @return
+     */
+    public static String tableName(String klass, String prefix, String suffix) {
+        if (klass.endsWith(suffix)) {
+            klass = klass.substring(0, klass.length() - suffix.length());
+        }
+        return prefix + camelToUnderline(klass, false);
+    }
+
+    /**
+     * 下划线
+     */
+    public static final char UNDERLINE = '_';
+
+    /**
+     * 驼峰转下划线
+     *
+     * @param string  要转换的字符串
+     * @param toUpper 统一转大写
+     * @return
+     */
+    public static String camelToUnderline(String string, boolean toUpper) {
+        if (isBlank(string)) {
+            return "";
+        }
+        int len = string.length();
+        StringBuilder buff = new StringBuilder(len);
+        for (int pos = 0; pos < len; pos++) {
+            char ch = string.charAt(pos);
+            if (pos != 0 && Character.isUpperCase(ch)) {
+                buff.append(UNDERLINE);
+            }
+            if (toUpper) {
+                buff.append(Character.toUpperCase(ch));  //统一都转大写
+            } else {
+                buff.append(Character.toLowerCase(ch));  //统一都转小写
+            }
+        }
+        return buff.toString();
+    }
+
+    /**
+     * 实体首字母大写
+     *
+     * @param name 待转换的字符串
+     * @param del  删除的前缀
+     * @return 转换后的字符串
+     */
+    public static String capitalFirst(String name, String del) {
+        if (!isBlank(name)) {
+            if (del != null && name.startsWith(del)) {
+                name = name.substring(del.length());
+            }
+            return name.substring(0, 1).toUpperCase() + name.substring(1);
+        } else {
+            return "";
+        }
+    }
+
+
+    /**
+     * 将异常日志转换为字符串
+     *
+     * @param e
+     * @return
+     */
+    public static String toString(Throwable e) {
+        try (StringWriter writer = new StringWriter(); PrintWriter print = new PrintWriter(writer)) {
+            e.printStackTrace(print);
+            return writer.toString();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
     }
 
     /**

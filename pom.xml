@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.2.5</version>
+    <version>1.5.0</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -51,6 +51,8 @@
     <modules>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-generator</module>
+        <module>fluent-mybatis-processor</module>
+        <module>processor-test</module>
     </modules>
     <dependencies>
         <dependency>

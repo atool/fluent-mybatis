@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -54,15 +55,16 @@ public class TableFieldMeta extends FieldMeta {
      * 全新的 存在 TableField 注解时使用的构造函数
      */
     public TableFieldMeta(Field field, TableField tableField) {
-        super(tableField.value(), field);
-        this.setJdbcType(tableField.jdbcType());
-        this.numericScale = tableField.numericScale();
-        this.typeHandler = UnknownTypeHandler.class == tableField.typeHandler() ? null : (Class<? extends TypeHandler<?>>) tableField.typeHandler();
+        super(tableField == null ? MybatisUtil.camelToUnderline(field.getName(), false) : tableField.value(), field);
+        if (tableField != null) {
+            this.setJdbcType(tableField.jdbcType());
+            this.numericScale = tableField.numericScale();
+            this.typeHandler = UnknownTypeHandler.class == tableField.typeHandler() ? null : (Class<? extends TypeHandler<?>>) tableField.typeHandler();
 
-        this.notLarge = tableField.notLarge();
-        this.insert = tableField.insert();
-        this.update = tableField.update();
-
+            this.notLarge = tableField.notLarge();
+            this.insert = tableField.insert();
+            this.update = tableField.update();
+        }
         this.el = this.el();
     }
 

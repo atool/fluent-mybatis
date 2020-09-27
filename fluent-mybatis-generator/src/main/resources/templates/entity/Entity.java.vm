@@ -3,6 +3,7 @@ package ${entity.package};
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
+import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 $!{importTypes}
 $!{entity.interface}
@@ -19,12 +20,13 @@ import java.util.Map;
  * $!{table.comment}
  * </p>
  *
- * @author ${author}
+ * @author Powered by FluentMyBatis
  */
 @Getter
 @Setter
 @Accessors(chain = true)
 @TableName("${table}")
+@FluentMyBatis
 public class ${entity.name} implements IEntity$!{entity.interfaceName}{
     private static final long serialVersionUID = 1L;
 

@@ -6,7 +6,6 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.annotation.*;
 
-
 /**
  * 表字段标识
  *

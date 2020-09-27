@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.annotation;
 import java.lang.annotation.*;
 
 /**
- * 数据库表相关
+ * 显式指定表名
  *
  * @author darui.wu
  */
@@ -20,7 +20,7 @@ public @interface TableName {
     /**
      * schema
      *
-     * @since 3.1.1
+     * @return
      */
     String schema() default "";
 }

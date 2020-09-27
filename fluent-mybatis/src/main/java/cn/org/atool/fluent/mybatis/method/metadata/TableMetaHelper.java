@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
+import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
@@ -81,14 +83,19 @@ public class TableMetaHelper {
      */
     private static boolean initTableName(Class<?> clazz, TableMeta tableMeta) {
         /* 数据库全局配置 */
-        TableName table = clazz.getAnnotation(TableName.class);
-        if (table == null) {
+        FluentMyBatis fluentMyBatis = clazz.getAnnotation(FluentMyBatis.class);
+        TableName tableAnnotation = clazz.getAnnotation(TableName.class);
+        if (fluentMyBatis == null && tableAnnotation == null) {
             return false;
         }
-
-        String tableName = table.value();
-        if (isNotBlank(table.schema())) {
-            tableName = table.schema() + "." + tableName;
+        String tableName = tableAnnotation == null ? null : tableAnnotation.value();
+        if (isBlank(tableName)) {
+            String prefix = fluentMyBatis == null ? "" : fluentMyBatis.prefix();
+            String suffix = fluentMyBatis == null ? "" : fluentMyBatis.suffix();
+            tableName = MybatisUtil.tableName(clazz.getSimpleName(), prefix, suffix);
+        }
+        if (tableAnnotation != null && isNotBlank(tableAnnotation.schema())) {
+            tableName = tableAnnotation.schema() + "." + tableName;
         }
         tableMeta.setTableName(tableName);
         return true;
@@ -108,16 +115,11 @@ public class TableMetaHelper {
 
         List<TableFieldMeta> fieldList = new ArrayList<>();
         for (Field field : fields) {
-            TableField tableField = field.getAnnotation(TableField.class);
-            if (tableField != null) {
-                fieldList.add(new TableFieldMeta(field, tableField));
-                continue;
-            }
             TableId tableId = field.getAnnotation(TableId.class);
             if (tableId == null) {
-                continue;
-            }
-            if (tableMeta.getPrimary() == null) {
+                TableField tableField = field.getAnnotation(TableField.class);
+                fieldList.add(new TableFieldMeta(field, tableField));
+            } else if (tableMeta.getPrimary() == null) {
                 tableMeta.setPrimary(new TablePrimaryMeta(field, tableId));
             } else {
                 throw FluentMybatisException.instance("There must be only one, Discover multiple @TableId annotation in %s", clazz.getName());
