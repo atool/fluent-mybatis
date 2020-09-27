@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.entity.EntityKlass;
+import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.generator.MappingGenerator;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import com.squareup.javapoet.*;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public abstract class AbstractGenerator {
     protected TypeElement curElement;
 
-    protected EntityKlass entityKlass;
+    protected FluentEntityInfo fluentEntityInfo;
 
     protected String packageName;
 
@@ -21,9 +21,9 @@ public abstract class AbstractGenerator {
 
     protected String comment;
 
-    public AbstractGenerator(TypeElement curElement, EntityKlass entityKlass) {
+    public AbstractGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         this.curElement = curElement;
-        this.entityKlass = entityKlass;
+        this.fluentEntityInfo = fluentEntityInfo;
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class AbstractGenerator {
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PROTECTED)
             .returns(TypeVariableName.get("boolean"))
-            .addStatement("return $L", entityKlass.getPrimary() != null)
+            .addStatement("return $L", fluentEntityInfo.getPrimary() != null)
             .build();
     }
 
@@ -113,10 +113,10 @@ public abstract class AbstractGenerator {
             .addAnnotation(Override.class)
             .addException(FluentMybatisException.class)
             .addParameter(String.class, "column")
-            .addCode("if (isNotBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(entityKlass))
+            .addCode("if (isNotBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluentEntityInfo))
             .addCode(this.of(
                 "\tthrow new FluentMybatisException('the column[' + column + '] was not found in table[' + $T.Table_Name + '].');\n",
-                MappingGenerator.className(entityKlass)
+                MappingGenerator.className(fluentEntityInfo)
             ))
             .addCode("}")
             .build();

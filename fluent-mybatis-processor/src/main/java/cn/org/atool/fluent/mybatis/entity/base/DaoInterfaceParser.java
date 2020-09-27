@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
-import cn.org.atool.fluent.mybatis.entity.EntityKlass;
+import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.generator.QueryGenerator;
 import cn.org.atool.fluent.mybatis.entity.generator.UpdaterGenerator;
 import com.squareup.javapoet.ClassName;
@@ -91,19 +91,19 @@ public class DaoInterfaceParser {
     /**
      * 获取泛型对应的ClassName
      *
-     * @param entityKlass
+     * @param fluentEntityInfo
      * @param types
      * @return
      */
-    public static List<ClassName> getClassNames(EntityKlass entityKlass, List<String> types) {
+    public static List<ClassName> getClassNames(FluentEntityInfo fluentEntityInfo, List<String> types) {
         return types.stream()
             .map(type -> {
                 if (type.endsWith(Entity.name())) {
-                    return entityKlass.className();
+                    return fluentEntityInfo.className();
                 } else if (type.endsWith(Query.name())) {
-                    return QueryGenerator.className(entityKlass);
+                    return QueryGenerator.className(fluentEntityInfo);
                 } else if (type.endsWith(Updater.name())) {
-                    return UpdaterGenerator.className(entityKlass);
+                    return UpdaterGenerator.className(fluentEntityInfo);
                 } else {
                     return ClassName.get("", type);
                 }

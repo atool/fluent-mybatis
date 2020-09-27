@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
-import cn.org.atool.fluent.mybatis.entity.EntityKlass;
+import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
@@ -52,8 +52,8 @@ public abstract class BaseProcessor extends AbstractProcessor {
             .map(it -> (TypeElement) it)
             .forEach(it -> {
                 try {
-                    EntityKlass entityKlass = this.parseEntity(it);
-                    List<JavaFile> javaFiles = this.generateJavaFile(it, entityKlass);
+                    FluentEntityInfo fluentEntityInfo = this.parseEntity(it);
+                    List<JavaFile> javaFiles = this.generateJavaFile(it, fluentEntityInfo);
                     for (JavaFile javaFile : javaFiles) {
                         javaFile.writeTo(filer);
                     }
@@ -112,9 +112,9 @@ public abstract class BaseProcessor extends AbstractProcessor {
      * 生成java文件
      *
      * @param curElement
-     * @param entityKlass
+     * @param fluentEntityInfo
      */
-    protected abstract java.util.List<JavaFile> generateJavaFile(TypeElement curElement, EntityKlass entityKlass);
+    protected abstract java.util.List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluentEntityInfo);
 
 
     /**
@@ -123,5 +123,5 @@ public abstract class BaseProcessor extends AbstractProcessor {
      * @param it
      * @return
      */
-    protected abstract EntityKlass parseEntity(TypeElement it);
+    protected abstract FluentEntityInfo parseEntity(TypeElement it);
 }

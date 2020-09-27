@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.EntityKlass;
+import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.*;
@@ -17,22 +17,22 @@ import static java.util.stream.Collectors.joining;
 
 public class MappingGenerator extends AbstractGenerator {
 
-    public static String getClassName(EntityKlass entityKlass) {
-        return entityKlass.getNoSuffix() + "Mapping";
+    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
+        return fluentEntityInfo.getNoSuffix() + "Mapping";
     }
 
-    public static String getPackageName(EntityKlass entityKlass) {
-        return entityKlass.getPackageName("helper");
+    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
+        return fluentEntityInfo.getPackageName("helper");
     }
 
-    public static ClassName className(EntityKlass entityKlass) {
-        return ClassName.get(getPackageName(entityKlass), getClassName(entityKlass));
+    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
+        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
     }
 
-    public MappingGenerator(TypeElement curElement, EntityKlass entityKlass) {
-        super(curElement, entityKlass);
-        this.packageName = getPackageName(entityKlass);
-        this.klassName = getClassName(entityKlass);
+    public MappingGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
+        super(curElement, fluentEntityInfo);
+        this.packageName = getPackageName(fluentEntityInfo);
+        this.klassName = getClassName(fluentEntityInfo);
         this.comment = "Entity类字段和表结构映射";
     }
 
@@ -40,7 +40,7 @@ public class MappingGenerator extends AbstractGenerator {
     public void build(TypeSpec.Builder builder) {
         builder.addField(this.f_Table_Name());
         builder.addField(this.f_Entity_Name());
-        this.entityKlass.getFields().stream()
+        this.fluentEntityInfo.getFields().stream()
             .forEach(field -> {
                 builder.addField(f_Field(field));
             });
@@ -63,20 +63,20 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_Table_Name() {
         return FieldSpec.builder(String.class, "Table_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
-            .initializer("$S", entityKlass.getTableName())
+            .initializer("$S", fluentEntityInfo.getTableName())
             .addJavadoc(super.codeBlock("表名称"))
             .build();
     }
 
     private FieldSpec f_Entity_Name() {
         return FieldSpec.builder(String.class, "Entity_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
-            .initializer("$S", entityKlass.getClassName())
+            .initializer("$S", fluentEntityInfo.getClassName())
             .addJavadoc(super.codeBlock("Entity名称"))
             .build();
     }
 
     private FieldSpec f_Property2Column() {
-        String statement = this.entityKlass.getFields().stream()
+        String statement = this.fluentEntityInfo.getFields().stream()
             .map(FieldColumn::getProperty)
             .map(field -> String.format("\t\tthis.put(%s.name, %s.column);", field, field))
             .collect(joining("\n"));
@@ -95,7 +95,7 @@ public class MappingGenerator extends AbstractGenerator {
     }
 
     private FieldSpec f_ALL_COLUMNS() {
-        String statement = this.entityKlass.getFields().stream()
+        String statement = this.fluentEntityInfo.getFields().stream()
             .map(FieldColumn::getProperty)
             .map(field -> String.format("\t\tthis.add(%s.column);", field))
             .collect(joining("\n"));

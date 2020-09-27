@@ -13,7 +13,6 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 @Getter
 @Accessors(chain = true)
-public class EntityKlass {
+public class FluentEntityInfo {
     /**
      * package
      */
@@ -78,7 +77,7 @@ public class EntityKlass {
         return this.basePack + "." + suffix;
     }
 
-    public EntityKlass setClassName(String packageName, String className) {
+    public FluentEntityInfo setClassName(String packageName, String className) {
         this.className = className;
         int dot = packageName.lastIndexOf('.');
         if (dot > 0) {
@@ -94,7 +93,7 @@ public class EntityKlass {
         return daoInterfaces == null ? new HashMap<>() : daoInterfaces;
     }
 
-    public EntityKlass setFields(List<JCVariableDecl> fields) {
+    public FluentEntityInfo setFields(List<JCVariableDecl> fields) {
         for (JCVariableDecl variable : fields) {
             FieldColumn field = this.parseField(variable);
             if (field.isPrimary() && this.primary == null) {
@@ -148,7 +147,7 @@ public class EntityKlass {
      * @param fluentMyBatis
      * @return
      */
-    public EntityKlass setFluentMyBatis(FluentMyBatis fluentMyBatis, TableName tableName, Map<String, List<String>> daoInterfaces) {
+    public FluentEntityInfo setFluentMyBatis(FluentMyBatis fluentMyBatis, TableName tableName, Map<String, List<String>> daoInterfaces) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");

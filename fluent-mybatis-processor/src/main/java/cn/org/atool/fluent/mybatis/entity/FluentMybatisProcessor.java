@@ -25,28 +25,28 @@ import java.util.List;
  */
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class MybatisProcessor extends BaseProcessor {
+public class FluentMybatisProcessor extends BaseProcessor {
 
-    public MybatisProcessor() {
+    public FluentMybatisProcessor() {
     }
 
     @Override
-    protected List<JavaFile> generateJavaFile(TypeElement curElement, EntityKlass entityKlass) {
+    protected List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         List<JavaFile> files = new ArrayList<>();
-        files.add(new MapperGenerator(curElement, entityKlass).javaFile());
-        files.add(new MappingGenerator(curElement, entityKlass).javaFile());
-        files.add(new EntityHelperGenerator(curElement, entityKlass).javaFile());
-        files.add(new WrapperHelperGenerator(curElement, entityKlass).javaFile());
-        files.add(new QueryGenerator(curElement, entityKlass).javaFile());
-        files.add(new UpdaterGenerator(curElement, entityKlass).javaFile());
-        files.add(new BaseDaoGenerator(curElement, entityKlass).javaFile());
+        files.add(new MapperGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new MappingGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new EntityHelperGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new WrapperHelperGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new QueryGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new UpdaterGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new BaseDaoGenerator(curElement, fluentEntityInfo).javaFile());
         return files;
     }
 
     @Override
-    protected EntityKlass parseEntity(TypeElement entity) {
+    protected FluentEntityInfo parseEntity(TypeElement entity) {
         try {
-            return new EntityKlass()
+            return new FluentEntityInfo()
                 .setClassName(this.getCuPackageName(entity), entity.getSimpleName().toString())
                 .setFluentMyBatis(entity.getAnnotation(FluentMyBatis.class), entity.getAnnotation(TableName.class), DaoInterfaceParser.getDaoInterfaces(entity))
                 .setFields(this.translate(entity, (JCTree) trees.getTree(entity)));

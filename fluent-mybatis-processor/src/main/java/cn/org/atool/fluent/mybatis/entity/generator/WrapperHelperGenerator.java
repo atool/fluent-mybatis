@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.EntityKlass;
+import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
@@ -12,15 +12,15 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
-    public WrapperHelperGenerator(TypeElement curElement, EntityKlass entityKlass) {
-        super(curElement, entityKlass);
-        this.packageName = getPackageName(entityKlass);
-        this.klassName = getClassName(entityKlass);
+    public WrapperHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
+        super(curElement, fluentEntityInfo);
+        this.packageName = getPackageName(fluentEntityInfo);
+        this.klassName = getClassName(fluentEntityInfo);
     }
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(MappingGenerator.className(entityKlass))
+        builder.addSuperinterface(MappingGenerator.className(fluentEntityInfo))
             .addType(this.nestedISegment())
             .addType(this.nestedSelector())
             .addType(this.nestedQueryWhere())
@@ -42,12 +42,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addTypeVariable(TypeVariableName.get("R"))
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addMethod(this.m_set_ISegment());
-        for (FieldColumn fc : entityKlass.getFields()) {
+        for (FieldColumn fc : fluentEntityInfo.getFields()) {
             builder.addMethod(MethodSpec
                 .methodBuilder(fc.getProperty())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($T.$L)", MappingGenerator.className(entityKlass), fc.getProperty())
+                .addStatement("return this.set($T.$L)", MappingGenerator.className(fluentEntityInfo), fc.getProperty())
                 .build()
             );
         }
@@ -64,12 +64,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(GroupByBase.class),
-                groupBy(entityKlass),
-                QueryGenerator.className(entityKlass)
+                groupBy(fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
-                groupBy(entityKlass)
+                segment(fluentEntityInfo),
+                groupBy(fluentEntityInfo)
             ))
             .addJavadoc("分组设置")
             .addMethod(this.constructor1())
@@ -86,12 +86,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(HavingBase.class),
-                having(entityKlass),
-                QueryGenerator.className(entityKlass)
+                having(fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
-                super.parameterizedType(ClassName.get(HavingOperator.class), having(entityKlass))
+                segment(fluentEntityInfo),
+                super.parameterizedType(ClassName.get(HavingOperator.class), having(fluentEntityInfo))
             ))
             .addJavadoc("分组Having条件设置")
             .addMethod(this.constructor1())
@@ -110,15 +110,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
-                queryOrderBy(entityKlass),
-                QueryGenerator.className(entityKlass)
+                queryOrderBy(fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
+                segment(fluentEntityInfo),
                 super.parameterizedType(
                     ClassName.get(OrderByApply.class),
-                    queryOrderBy(entityKlass),
-                    QueryGenerator.className(entityKlass))
+                    queryOrderBy(fluentEntityInfo),
+                    QueryGenerator.className(fluentEntityInfo))
             ))
             .addJavadoc("Query OrderBy设置")
             .addMethod(this.constructor1())
@@ -135,15 +135,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
-                updateOrderBy(entityKlass),
-                UpdaterGenerator.className(entityKlass)
+                updateOrderBy(fluentEntityInfo),
+                UpdaterGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
+                segment(fluentEntityInfo),
                 super.parameterizedType(
                     ClassName.get(OrderByApply.class),
-                    updateOrderBy(entityKlass),
-                    UpdaterGenerator.className(entityKlass))
+                    updateOrderBy(fluentEntityInfo),
+                    UpdaterGenerator.className(fluentEntityInfo))
             ))
             .addJavadoc("Update OrderBy设置")
             .addMethod(this.constructor1_Update())
@@ -160,15 +160,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(UpdateBase.class),
-                updateSetter(entityKlass),
-                UpdaterGenerator.className(entityKlass)
+                updateSetter(fluentEntityInfo),
+                UpdaterGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
+                segment(fluentEntityInfo),
                 super.parameterizedType(
                     ClassName.get(UpdateApply.class),
-                    updateSetter(entityKlass),
-                    UpdaterGenerator.className(entityKlass))
+                    updateSetter(fluentEntityInfo),
+                    UpdaterGenerator.className(fluentEntityInfo))
             ))
             .addJavadoc("Update set 设置")
             .addMethod(this.constructor1_Update())
@@ -180,20 +180,20 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(SelectorBase.class),
-                selector(entityKlass),
-                QueryGenerator.className(entityKlass)
+                selector(fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo)
             ))
-            .addSuperinterface(super.parameterizedType(segment(entityKlass), selector(entityKlass)))
+            .addSuperinterface(super.parameterizedType(segment(fluentEntityInfo), selector(fluentEntityInfo)))
             .addJavadoc("select字段设置")
             .addMethod(this.constructor1())
             .addMethod(this.constructor2_Selector())
             .addMethod(this.m_aggregate_Selector());
-        for (FieldColumn fc : entityKlass.getFields()) {
+        for (FieldColumn fc : fluentEntityInfo.getFields()) {
             builder.addMethod(MethodSpec
                 .methodBuilder(fc.getProperty())
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "alias")
-                .returns(selector(entityKlass))
+                .returns(selector(fluentEntityInfo))
                 .addStatement("return this.process($L, alias)", fc.getProperty())
                 .build()
             );
@@ -211,16 +211,16 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
-                queryWhere(this.entityKlass),
-                QueryGenerator.className(entityKlass),
-                QueryGenerator.className(entityKlass)
+                queryWhere(this.fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
+                segment(fluentEntityInfo),
                 super.parameterizedType(
                     ClassName.get(WhereApply.class),
-                    queryWhere(this.entityKlass),
-                    QueryGenerator.className(entityKlass)
+                    queryWhere(this.fluentEntityInfo),
+                    QueryGenerator.className(fluentEntityInfo)
                 )
             ))
             .addJavadoc("query where条件设置")
@@ -240,16 +240,16 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
-                updateWhere(this.entityKlass),
-                UpdaterGenerator.className(entityKlass),
-                QueryGenerator.className(entityKlass)
+                updateWhere(this.fluentEntityInfo),
+                UpdaterGenerator.className(fluentEntityInfo),
+                QueryGenerator.className(fluentEntityInfo)
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(entityKlass),
+                segment(fluentEntityInfo),
                 super.parameterizedType(
                     ClassName.get(WhereApply.class),
-                    updateWhere(this.entityKlass),
-                    QueryGenerator.className(entityKlass)
+                    updateWhere(this.fluentEntityInfo),
+                    QueryGenerator.className(fluentEntityInfo)
                 )
             ))
             .addJavadoc("update where条件设置")
@@ -269,7 +269,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(ClassName.get(Override.class))
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
-            .returns(having(entityKlass))
+            .returns(having(fluentEntityInfo))
             .addStatement("return new Having(this, aggregate)")
             .build();
     }
@@ -284,7 +284,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(ClassName.get(Override.class))
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
-            .returns(selector(entityKlass))
+            .returns(selector(fluentEntityInfo))
             .addStatement("return new Selector(this, aggregate)")
             .build();
     }
@@ -298,7 +298,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor1() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(QueryGenerator.className(entityKlass), "query")
+            .addParameter(QueryGenerator.className(fluentEntityInfo), "query")
             .addStatement("super(query)")
             .build();
     }
@@ -306,7 +306,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor1_Update() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(UpdaterGenerator.className(entityKlass), "updater")
+            .addParameter(UpdaterGenerator.className(fluentEntityInfo), "updater")
             .addStatement("super(updater)")
             .build();
     }
@@ -319,7 +319,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor2_Having() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PROTECTED)
-            .addParameter(having(entityKlass), "having")
+            .addParameter(having(fluentEntityInfo), "having")
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
             .addStatement("super(having, aggregate)")
             .build();
@@ -333,7 +333,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor2_Selector() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PROTECTED)
-            .addParameter(selector(entityKlass), "selector")
+            .addParameter(selector(fluentEntityInfo), "selector")
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
             .addStatement("super(selector, aggregate)")
             .build();
@@ -360,7 +360,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct1_QueryWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(QueryGenerator.className(entityKlass), "query")
+            .addParameter(QueryGenerator.className(fluentEntityInfo), "query")
             .addStatement("super(query)")
             .build();
     }
@@ -373,8 +373,8 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct2_QueryWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PRIVATE)
-            .addParameter(QueryGenerator.className(entityKlass), "query")
-            .addParameter(queryWhere(this.entityKlass), "where")
+            .addParameter(QueryGenerator.className(fluentEntityInfo), "query")
+            .addParameter(queryWhere(this.fluentEntityInfo), "where")
             .addStatement("super(query, where)")
             .build();
     }
@@ -387,7 +387,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct1_UpdateWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(UpdaterGenerator.className(entityKlass), "updater")
+            .addParameter(UpdaterGenerator.className(fluentEntityInfo), "updater")
             .addStatement("super(updater)")
             .build();
     }
@@ -400,8 +400,8 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct2_UpdateWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PRIVATE)
-            .addParameter(UpdaterGenerator.className(entityKlass), "updater")
-            .addParameter(updateWhere(this.entityKlass), "where")
+            .addParameter(UpdaterGenerator.className(fluentEntityInfo), "updater")
+            .addParameter(updateWhere(this.fluentEntityInfo), "where")
             .addStatement("super(updater, where)")
             .build();
     }
@@ -415,9 +415,9 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("buildOr")
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(Override.class)
-            .addParameter(queryWhere(this.entityKlass), "and")
-            .returns(queryWhere(this.entityKlass))
-            .addStatement("return new QueryWhere(($T) this.wrapper, and)", QueryGenerator.className(entityKlass))
+            .addParameter(queryWhere(this.fluentEntityInfo), "and")
+            .returns(queryWhere(this.fluentEntityInfo))
+            .addStatement("return new QueryWhere(($T) this.wrapper, and)", QueryGenerator.className(fluentEntityInfo))
             .build();
     }
 
@@ -430,9 +430,9 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("buildOr")
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(Override.class)
-            .addParameter(updateWhere(this.entityKlass), "and")
-            .returns(updateWhere(this.entityKlass))
-            .addStatement("return new UpdateWhere(($T) this.wrapper, and)", UpdaterGenerator.className(entityKlass))
+            .addParameter(updateWhere(this.fluentEntityInfo), "and")
+            .returns(updateWhere(this.fluentEntityInfo))
+            .addStatement("return new UpdateWhere(($T) this.wrapper, and)", UpdaterGenerator.className(fluentEntityInfo))
             .build();
     }
 
@@ -441,65 +441,65 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return false;
     }
 
-    public static ClassName queryWhere(EntityKlass entityKlass) {
+    public static ClassName queryWhere(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "QueryWhere");
     }
 
-    public static ClassName updateWhere(EntityKlass entityKlass) {
+    public static ClassName updateWhere(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "UpdateWhere");
     }
 
-    public static ClassName selector(EntityKlass entityKlass) {
+    public static ClassName selector(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "Selector");
     }
 
-    public static ClassName groupBy(EntityKlass entityKlass) {
+    public static ClassName groupBy(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "GroupBy");
     }
 
-    public static ClassName having(EntityKlass entityKlass) {
+    public static ClassName having(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "Having");
     }
 
-    public static ClassName queryOrderBy(EntityKlass entityKlass) {
+    public static ClassName queryOrderBy(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "QueryOrderBy");
     }
 
-    public static ClassName updateOrderBy(EntityKlass entityKlass) {
+    public static ClassName updateOrderBy(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "UpdateOrderBy");
     }
 
-    public static ClassName updateSetter(EntityKlass entityKlass) {
+    public static ClassName updateSetter(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "UpdateSetter");
     }
 
-    public static ClassName segment(EntityKlass entityKlass) {
+    public static ClassName segment(FluentEntityInfo fluentEntityInfo) {
         return ClassName.get(
-            getPackageName(entityKlass) + "." + getClassName(entityKlass),
+            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
             "ISegment");
     }
 
-    public static String getClassName(EntityKlass entityKlass) {
-        return entityKlass.getNoSuffix() + "WrapperHelper";
+    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
+        return fluentEntityInfo.getNoSuffix() + "WrapperHelper";
     }
 
-    public static String getPackageName(EntityKlass entityKlass) {
-        return entityKlass.getPackageName("helper");
+    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
+        return fluentEntityInfo.getPackageName("helper");
     }
 }
