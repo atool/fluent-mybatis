@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
-import cn.org.atool.fluent.mybatis.annotation.TableName;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.base.BaseProcessor;
 import cn.org.atool.fluent.mybatis.entity.base.DaoInterfaceParser;
 import cn.org.atool.fluent.mybatis.entity.generator.*;
@@ -48,7 +47,7 @@ public class FluentMybatisProcessor extends BaseProcessor {
         try {
             return new FluentEntityInfo()
                 .setClassName(this.getCuPackageName(entity), entity.getSimpleName().toString())
-                .setFluentMyBatis(entity.getAnnotation(FluentMyBatis.class), entity.getAnnotation(TableName.class), DaoInterfaceParser.getDaoInterfaces(entity))
+                .setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), DaoInterfaceParser.getDaoInterfaces(entity))
                 .setFields(this.translate(entity, (JCTree) trees.getTree(entity)));
         } catch (Throwable e) {
             messager.printMessage(Diagnostic.Kind.ERROR, entity.getQualifiedName() + "\n" + MybatisUtil.toString(e));

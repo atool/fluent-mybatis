@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
@@ -47,7 +47,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
         mIsFirstRound = false;
         log.debug("process begin !!!");
 
-        roundEnv.getElementsAnnotatedWith(FluentMyBatis.class).stream()
+        roundEnv.getElementsAnnotatedWith(FluentMybatis.class).stream()
             .filter(it -> it instanceof TypeElement)
             .map(it -> (TypeElement) it)
             .forEach(it -> {
@@ -104,7 +104,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> supported = new HashSet<>();
-        supported.add(FluentMyBatis.class.getCanonicalName());
+        supported.add(FluentMybatis.class.getCanonicalName());
         return supported;
     }
 

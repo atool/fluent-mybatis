@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
@@ -147,12 +146,12 @@ public class FluentEntityInfo {
      * @param fluentMyBatis
      * @return
      */
-    public FluentEntityInfo setFluentMyBatis(FluentMyBatis fluentMyBatis, TableName tableName, Map<String, List<String>> daoInterfaces) {
+    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis, Map<String, List<String>> daoInterfaces) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
         this.daoInterfaces = daoInterfaces;
-        this.tableName = tableName == null ? null : tableName.value();
+        this.tableName = fluentMyBatis.table();
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());
         }

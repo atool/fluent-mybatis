@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.generate.datamap.entity.AddressEntityMap;
 import cn.org.atool.fluent.mybatis.generate.datamap.entity.NoAutoIdEntityMap;
 import cn.org.atool.fluent.mybatis.generate.datamap.entity.NoPrimaryEntityMap;
 import cn.org.atool.fluent.mybatis.generate.datamap.entity.UserEntityMap;
-import cn.org.atool.fluent.mybatis.generate.datamap.entity.*;
 
 /**
  * Entity Data Map

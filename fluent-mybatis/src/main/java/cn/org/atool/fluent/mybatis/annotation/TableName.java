@@ -6,7 +6,9 @@ import java.lang.annotation.*;
  * 显式指定表名
  *
  * @author darui.wu
+ * @deprecated 请使用 @FluentMyBatis
  */
+@Deprecated
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

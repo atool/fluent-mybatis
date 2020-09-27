@@ -10,7 +10,14 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface FluentMyBatis {
+public @interface FluentMybatis {
+    /**
+     * 显式指定表名称
+     *
+     * @return
+     */
+    String table() default "";
+
     /**
      * 实体类后缀
      *

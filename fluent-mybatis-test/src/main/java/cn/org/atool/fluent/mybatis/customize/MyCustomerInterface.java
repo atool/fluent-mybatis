@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis.customize;
 
-import cn.org.atool.fluent.mybatis.base.IMapperDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IMapperDao;
 import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.IUpdate;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 

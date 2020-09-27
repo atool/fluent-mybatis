@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.generator.QueryGenerator;
 import cn.org.atool.fluent.mybatis.entity.generator.UpdaterGenerator;
@@ -80,7 +80,7 @@ public class DaoInterfaceParser {
     private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity) {
         List<? extends AnnotationMirror> annotations = entity.getAnnotationMirrors();
         for (AnnotationMirror annotation : annotations) {
-            if (annotation.getAnnotationType().toString().contains(FluentMyBatis.class.getSimpleName())) {
+            if (annotation.getAnnotationType().toString().contains(FluentMybatis.class.getSimpleName())) {
                 return annotation;
             }
         }

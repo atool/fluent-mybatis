@@ -1,13 +1,9 @@
 package cn.org.atool.fluent.mybatis.customize;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+
+import java.sql.*;
 
 /**
  * StringArrayTypeHandler: 将string处理为string数组

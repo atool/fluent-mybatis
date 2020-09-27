@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generator.MybatisGenerator;
-import org.test4j.generator.mybatis.db.ColumnJavaType;
 
 public class FluentMyBatisGeneratorMain {
     static String url = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
 
-    static String dao_interface = "cn.org.atool.fluent.mybatis.demo.MyCustomerInterface";
+    static String dao_interface = MyCustomerInterface.class.getName();
 
     /**
      * 使用main函数，是避免全量跑test时，误执行生成代码
@@ -18,11 +18,11 @@ public class FluentMyBatisGeneratorMain {
         MybatisGenerator.build()
             .globalConfig(config -> config.setOutputDir(outputDir)
                 .setDataSource(url, "root", "password")
-                .setBasePackage("cn.org.atool.fluent.mybatis.demo.generate"))
+                .setBasePackage("cn.org.atool.fluent.mybatis.generate"))
             .tables(config -> config
                 .table("address")
                 .table("t_user", t -> t.enablePartition()
-                    .setColumn("version", f->f.setLarge()))
+                    .setColumn("version", f -> f.setLarge()))
                 .foreach(t -> t
                     .setColumn("gmt_created", "gmt_modified", "is_deleted")
                     .addBaseDaoInterface(dao_interface, "${entity}")

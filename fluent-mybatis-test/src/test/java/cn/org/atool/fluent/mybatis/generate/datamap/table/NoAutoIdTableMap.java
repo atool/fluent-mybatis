@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.generate.datamap.table;
 
+import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.module.ICore.DataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 import java.util.function.Consumer;

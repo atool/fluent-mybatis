@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.method.metadata;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.TableName;
@@ -83,23 +83,37 @@ public class TableMetaHelper {
      */
     private static boolean initTableName(Class<?> clazz, TableMeta tableMeta) {
         /* 数据库全局配置 */
-        FluentMyBatis fluentMyBatis = clazz.getAnnotation(FluentMyBatis.class);
+        FluentMybatis fluentMyBatis = clazz.getAnnotation(FluentMybatis.class);
         TableName tableAnnotation = clazz.getAnnotation(TableName.class);
         if (fluentMyBatis == null && tableAnnotation == null) {
             return false;
         }
-        String tableName = tableAnnotation == null ? null : tableAnnotation.value();
-        if (isBlank(tableName)) {
-            String prefix = fluentMyBatis == null ? "" : fluentMyBatis.prefix();
-            String suffix = fluentMyBatis == null ? "" : fluentMyBatis.suffix();
-            tableName = MybatisUtil.tableName(clazz.getSimpleName(), prefix, suffix);
+        if (fluentMyBatis != null) {
+            initByFluentMybatis(clazz, tableMeta, fluentMyBatis);
+        } else {
+            initByTableName(clazz, tableMeta, tableAnnotation);
         }
-        if (tableAnnotation != null && isNotBlank(tableAnnotation.schema())) {
-            tableName = tableAnnotation.schema() + "." + tableName;
+        return true;
+    }
+
+    private static boolean initByFluentMybatis(Class<?> clazz, TableMeta tableMeta, FluentMybatis annotation) {
+        String tableName = annotation.table();
+        if (isBlank(tableName)) {
+            tableName = MybatisUtil.tableName(clazz.getSimpleName(), annotation.prefix(), annotation.suffix());
         }
         tableMeta.setTableName(tableName);
         return true;
     }
+
+    private static boolean initByTableName(Class<?> clazz, TableMeta tableMeta, TableName annotation) {
+        String tableName = annotation == null ? null : annotation.value();
+        if (isNotBlank(annotation.schema())) {
+            tableName = annotation.schema() + "." + tableName;
+        }
+        tableMeta.setTableName(tableName);
+        return true;
+    }
+
 
     /**
      * <p>

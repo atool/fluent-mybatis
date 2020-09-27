@@ -2,18 +2,15 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-
-import java.util.Date;
-
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generate.helper.AddressEntityHelper;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -26,8 +23,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("address")
-@FluentMyBatis(
+@FluentMybatis(
     daoInterface = @DaoInterface(value = MyCustomerInterface.class, args = {ParaType.Entity})
 )
 public class AddressEntity implements IEntity, IBaseEntity<AddressEntity> {

@@ -1,17 +1,14 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMyBatis;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-
-
 import cn.org.atool.fluent.mybatis.generate.helper.NoAutoIdEntityHelper;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -25,8 +22,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("no_auto_id")
-@FluentMyBatis
+@FluentMybatis
 public class NoAutoIdEntity implements IEntity{
     private static final long serialVersionUID = 1L;
 
