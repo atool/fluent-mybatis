@@ -48,10 +48,10 @@ public class SqlProviderGenerator extends AbstractGenerator {
         for (FieldColumn field : this.fluentEntityInfo.getFields()) {
             builder.addCode("if (entity.$L() != null) {\n", field.getMethodName());
             builder.addCode("\tsql.VALUES($S, $S);\n", field.getColumn(), "#{" + field.getProperty() + "}");
-//            if (isNotBlank(field.getInsert())) {
-//                builder.addCode("} else {\n");
-//                builder.addCode("\tsql.VALUES($S, $S);\n", field.getColumn(), field.getInsert());
-//            }
+            if (isNotBlank(field.getInsert())) {
+                builder.addCode("} else {\n");
+                builder.addCode("\tsql.VALUES($S, $S);\n", field.getColumn(), field.getInsert());
+            }
             builder.addCode("}\n");
         }
         return builder.addStatement("return sql.toString()")

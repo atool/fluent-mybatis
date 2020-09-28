@@ -25,7 +25,7 @@ public interface InjectMethods {
     default List<InjectMethod> methods(DbType dbType) {
         return Arrays.asList(
             // insert
-            new Insert(dbType),
+            //new Insert(dbType),
             new InsertBatch(dbType),
             // select
             new SelectById(dbType),

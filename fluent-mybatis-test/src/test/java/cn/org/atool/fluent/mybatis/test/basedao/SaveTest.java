@@ -35,7 +35,7 @@ public class SaveTest extends BaseTest {
     public void test_save_WithPk() throws Exception {
         db.table(t_user).clean();
         dao.save(new UserEntity().setId(4L).setUserName("test name").setAge(43));
-        db.sqlList().wantFirstSql().contains(" id,");
+        db.sqlList().wantFirstSql().contains("id,");
         db.table(t_user).query().eqDataMap(TM.user.create(1)
             .id.values(4)
             .user_name.values("test name")

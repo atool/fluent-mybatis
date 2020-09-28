@@ -46,7 +46,7 @@ public class MapperGenerator extends AbstractGenerator {
         builder.addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
             .addMember("value", "$S", getMapperName(this.fluentEntityInfo)).build()
         );
-        //builder.addMethod(this.m_insert());
+        builder.addMethod(this.m_insert());
     }
 
     public MethodSpec m_insert() {
