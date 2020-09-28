@@ -52,18 +52,18 @@ public class EntityHelperGenerator extends AbstractGenerator {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("map")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addJavadoc("Entity对象转换为HashMap，key值是对象属性")
-            .addParameter(fluentEntityInfo.className(), "entity")
+            .addParameter(fluent.className(), "entity")
             .returns(this.parameterizedType(Map.class, String.class, Object.class))
             .addStatement("Map<String, Object> map = new $T<>()", HashMap.class);
-        for (FieldColumn fc : fluentEntityInfo.getFields()) {
+        for (FieldColumn fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
             if (fc.isPrimitive()) {
                 builder.addCode("map.put($T.$L.name, entity.$L());\n",
-                    MappingGenerator.className(fluentEntityInfo), fc.getProperty(), getMethod);
+                    MappingGenerator.className(fluent), fc.getProperty(), getMethod);
             } else {
                 builder.addCode("if (entity.$L() != null) {\n", getMethod);
                 builder.addCode("\tmap.put($T.$L.name, entity.$L());\n",
-                    MappingGenerator.className(fluentEntityInfo), fc.getProperty(), getMethod);
+                    MappingGenerator.className(fluent), fc.getProperty(), getMethod);
                 builder.addCode("}\n");
             }
         }
@@ -79,18 +79,18 @@ public class EntityHelperGenerator extends AbstractGenerator {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("columnMap")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addJavadoc("Entity对象转换为HashMap，key值是数据库字段")
-            .addParameter(fluentEntityInfo.className(), "entity")
+            .addParameter(fluent.className(), "entity")
             .returns(this.parameterizedType(Map.class, String.class, Object.class))
             .addStatement("Map<String, Object> map = new $T<>()", HashMap.class);
-        for (FieldColumn fc : fluentEntityInfo.getFields()) {
+        for (FieldColumn fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
             if (fc.isPrimitive()) {
                 builder.addCode("map.put($T.$L.column, entity.$L());\n",
-                    MappingGenerator.className(fluentEntityInfo), fc.getProperty(), getMethod);
+                    MappingGenerator.className(fluent), fc.getProperty(), getMethod);
             } else {
                 builder.addCode("if (entity.$L() != null) {\n", getMethod);
                 builder.addCode("\tmap.put($T.$L.column, entity.$L());\n",
-                    MappingGenerator.className(fluentEntityInfo), fc.getProperty(), getMethod);
+                    MappingGenerator.className(fluent), fc.getProperty(), getMethod);
                 builder.addCode("}\n");
             }
         }
@@ -107,15 +107,15 @@ public class EntityHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addJavadoc("map对应属性值设置到Entity对象中")
             .addParameter(this.parameterizedType(Map.class, String.class, Object.class), "map")
-            .returns(fluentEntityInfo.className())
-            .addStatement("$T entity = new $T()", fluentEntityInfo.className(), fluentEntityInfo.className());
-        for (FieldColumn fc : fluentEntityInfo.getFields()) {
+            .returns(fluent.className())
+            .addStatement("$T entity = new $T()", fluent.className(), fluent.className());
+        for (FieldColumn fc : fluent.getFields()) {
             String setMethod = fc.setMethodName();
 
             builder.addCode("if (map.containsKey($T.$L.name)) {\n",
-                MappingGenerator.className(fluentEntityInfo), fc.getProperty());
+                MappingGenerator.className(fluent), fc.getProperty());
             builder.addCode("\tentity.$L(($T) map.get($T.$L.name));\n",
-                setMethod, fc.getType(), MappingGenerator.className(fluentEntityInfo), fc.getProperty());
+                setMethod, fc.getType(), MappingGenerator.className(fluent), fc.getProperty());
             builder.addCode("}\n");
         }
         return builder.addStatement("return entity").build();
@@ -130,11 +130,11 @@ public class EntityHelperGenerator extends AbstractGenerator {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("copy")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addJavadoc("拷贝一个entity对象")
-            .addParameter(fluentEntityInfo.className(), "entity")
-            .returns(fluentEntityInfo.className())
-            .addStatement("$T copy = new $T()", fluentEntityInfo.className(), fluentEntityInfo.className());
+            .addParameter(fluent.className(), "entity")
+            .returns(fluent.className())
+            .addStatement("$T copy = new $T()", fluent.className(), fluent.className());
         builder.addCode("{\n");
-        for (FieldColumn fc : fluentEntityInfo.getFields()) {
+        for (FieldColumn fc : fluent.getFields()) {
             builder.addStatement("\tcopy.$L(entity.$L())", fc.setMethodName(), fc.getMethodName());
         }
         builder.addCode("}\n");

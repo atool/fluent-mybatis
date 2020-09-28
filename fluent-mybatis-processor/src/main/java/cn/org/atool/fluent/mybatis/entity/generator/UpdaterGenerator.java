@@ -55,7 +55,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_setter() {
-        return FieldSpec.builder(WrapperHelperGenerator.updateSetter(fluentEntityInfo),
+        return FieldSpec.builder(WrapperHelperGenerator.updateSetter(fluent),
             "update", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateSetter(this)")
             .build();
@@ -67,7 +67,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_where() {
-        return FieldSpec.builder(WrapperHelperGenerator.updateWhere(fluentEntityInfo),
+        return FieldSpec.builder(WrapperHelperGenerator.updateWhere(fluent),
             "where", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateWhere(this)")
             .build();
@@ -79,7 +79,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_orderBy() {
-        return FieldSpec.builder(WrapperHelperGenerator.updateOrderBy(fluentEntityInfo),
+        return FieldSpec.builder(WrapperHelperGenerator.updateOrderBy(fluent),
             "orderBy", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateOrderBy(this)")
             .build();
@@ -94,18 +94,18 @@ public class UpdaterGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addStatement("super($T.Table_Name, $T.class, $T.class)",
-                MappingGenerator.className(fluentEntityInfo),
-                fluentEntityInfo.className(),
-                QueryGenerator.className(fluentEntityInfo)
+                MappingGenerator.className(fluent),
+                fluent.className(),
+                QueryGenerator.className(fluent)
             )
             .build();
     }
 
     private ParameterizedTypeName superKlass() {
         ClassName base = ClassName.get(BaseUpdate.class);
-        ClassName entity = fluentEntityInfo.className();
-        ClassName updater = UpdaterGenerator.className(fluentEntityInfo);
-        ClassName query = QueryGenerator.className(fluentEntityInfo);
+        ClassName entity = fluent.className();
+        ClassName updater = UpdaterGenerator.className(fluent);
+        ClassName query = QueryGenerator.className(fluent);
         return ParameterizedTypeName.get(base, entity, updater, query);
     }
 
@@ -118,7 +118,7 @@ public class UpdaterGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("where")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
-            .returns(WrapperHelperGenerator.updateWhere(fluentEntityInfo))
+            .returns(WrapperHelperGenerator.updateWhere(fluent))
             .addStatement("return this.where")
             .build();
     }

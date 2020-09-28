@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public abstract class AbstractGenerator {
     protected TypeElement curElement;
 
-    protected FluentEntityInfo fluentEntityInfo;
+    protected FluentEntityInfo fluent;
 
     protected String packageName;
 
@@ -21,9 +21,9 @@ public abstract class AbstractGenerator {
 
     protected String comment;
 
-    public AbstractGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
+    public AbstractGenerator(TypeElement curElement, FluentEntityInfo fluent) {
         this.curElement = curElement;
-        this.fluentEntityInfo = fluentEntityInfo;
+        this.fluent = fluent;
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class AbstractGenerator {
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PROTECTED)
             .returns(TypeVariableName.get("boolean"))
-            .addStatement("return $L", fluentEntityInfo.getPrimary() != null)
+            .addStatement("return $L", fluent.getPrimary() != null)
             .build();
     }
 
@@ -113,30 +113,13 @@ public abstract class AbstractGenerator {
             .addAnnotation(Override.class)
             .addException(FluentMybatisException.class)
             .addParameter(String.class, "column")
-            .addCode("if (isNotBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluentEntityInfo))
+            .addCode("if (isNotBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluent))
             .addCode(this.of(
                 "\tthrow new FluentMybatisException('the column[' + column + '] was not found in table[' + $T.Table_Name + '].');\n",
-                MappingGenerator.className(fluentEntityInfo)
+                MappingGenerator.className(fluent)
             ))
             .addCode("}")
             .build();
-    }
-
-    /**
-     * 定义方式如下的方法
-     * <pre>
-     * @Override
-     * public abstract Xyz methodName(...);
-     * </pre>
-     *
-     * @param methodName
-     * @return
-     */
-    protected MethodSpec.Builder publicOverrideAbstractMethod(String methodName) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
-        builder.addAnnotation(Override.class);
-        builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
-        return builder;
     }
 
     /**

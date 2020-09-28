@@ -8,10 +8,14 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.InsertProvider;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Mapper;
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Mapper;
+import static cn.org.atool.fluent.mybatis.method.SqlMethodName.M_Insert;
+import static cn.org.atool.fluent.mybatis.method.SqlMethodName.M_InsertBatch;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**
@@ -44,19 +48,24 @@ public class MapperGenerator extends AbstractGenerator {
     protected void build(TypeSpec.Builder builder) {
         builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNameConst.Mapper);
         builder.addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
-            .addMember("value", "$S", getMapperName(this.fluentEntityInfo)).build()
+            .addMember("value", "$S", getMapperName(this.fluent)).build()
         );
         builder.addMethod(this.m_insert());
+        builder.addMethod(this.m_insertBatch());
     }
 
     public MethodSpec m_insert() {
-        return super.publicOverrideAbstractMethod("insert")
-            .addParameter(fluentEntityInfo.className(), "entity")
+        return this.mapperMethod(M_Insert)
+            .addParameter(fluent.className(), "entity")
             .returns(TypeName.INT)
-            .addAnnotation(AnnotationSpec.builder(InsertProvider.class)
-                .addMember("type", "$T.class", SqlProviderGenerator.className(fluentEntityInfo))
-                .addMember("method", "$S", "insert")
-                .build())
+            .build();
+    }
+
+    public MethodSpec m_insertBatch() {
+        return this.mapperMethod(M_InsertBatch)
+            .addParameter(parameterizedType(ClassName.get(List.class),
+                fluent.className()), "entities")
+            .returns(TypeName.INT)
             .build();
     }
 
@@ -65,10 +74,31 @@ public class MapperGenerator extends AbstractGenerator {
         return true;
     }
 
+    /**
+     * 定义方式如下的方法
+     * <pre>
+     * @Override
+     * public abstract Xyz methodName(...);
+     * </pre>
+     *
+     * @param methodName
+     * @return
+     */
+    private MethodSpec.Builder mapperMethod(String methodName) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
+        builder.addAnnotation(Override.class);
+        builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+        builder.addAnnotation(AnnotationSpec.builder(InsertProvider.class)
+            .addMember("type", "$T.class", SqlProviderGenerator.className(fluent))
+            .addMember("method", "$S", methodName)
+            .build());
+        return builder;
+    }
+
     private TypeName superMapperClass() {
         return super.parameterizedType(
             ClassName.get(IEntityMapper.class),
-            fluentEntityInfo.className()
+            fluent.className()
         );
     }
 

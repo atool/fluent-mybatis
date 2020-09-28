@@ -52,7 +52,8 @@
     </insert>
     <insert id="insertBatch" parameterType="cn.org.atool.fluent.mybatis.generate.entity.UserEntity">
         INSERT INTO t_user
-        (id, address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version)VALUES <foreach collection="list" item="item" index="k" separator=",">
+        (id, address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version)
+        VALUES <foreach collection="list" item="item" index="k" separator=",">
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{item.id},
             #{item.addressId},

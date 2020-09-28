@@ -28,7 +28,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         builder.addModifiers(Modifier.ABSTRACT)
             .superclass(this.superBaseDaoImplKlass())
             .addSuperinterface(this.superMappingClass());
-        for (Map.Entry<String, List<String>> daoInterface : fluentEntityInfo.getDaoInterfaces().entrySet()) {
+        for (Map.Entry<String, List<String>> daoInterface : fluent.getDaoInterfaces().entrySet()) {
             this.addInterface(builder, daoInterface.getKey(), daoInterface.getValue());
         }
         builder.addField(this.f_mapper())
@@ -39,7 +39,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
     }
 
     private void addInterface(TypeSpec.Builder builder, String daoInterface, List<String> argNames) {
-        List<ClassName> argClassNames = DaoInterfaceParser.getClassNames(fluentEntityInfo, argNames);
+        List<ClassName> argClassNames = DaoInterfaceParser.getClassNames(fluent, argNames);
         int dot = daoInterface.lastIndexOf('.');
         String packageName = "";
         String simpleClassName = daoInterface;
@@ -57,12 +57,12 @@ public class BaseDaoGenerator extends AbstractGenerator {
     }
 
     private TypeName superMappingClass() {
-        return ClassName.get(MappingGenerator.getPackageName(fluentEntityInfo), MappingGenerator.getClassName(fluentEntityInfo));
+        return ClassName.get(MappingGenerator.getPackageName(fluent), MappingGenerator.getClassName(fluent));
     }
 
     private TypeName superBaseDaoImplKlass() {
         ClassName baseImpl = ClassName.get(BaseDaoImpl.class.getPackage().getName(), BaseDaoImpl.class.getSimpleName());
-        ClassName entity = fluentEntityInfo.className();
+        ClassName entity = fluent.className();
         return ParameterizedTypeName.get(baseImpl, entity);
     }
 
@@ -72,11 +72,11 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_mapper() {
-        return FieldSpec.builder(MapperGenerator.className(fluentEntityInfo), "mapper")
+        return FieldSpec.builder(MapperGenerator.className(fluent), "mapper")
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(ClassNameConst.Autowired)
             .addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
-                .addMember("value", "$S", getMapperName(fluentEntityInfo)).build()
+                .addMember("value", "$S", getMapperName(fluent)).build()
             )
             .build();
     }
@@ -90,7 +90,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("mapper")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
-            .returns(MapperGenerator.className(fluentEntityInfo))
+            .returns(MapperGenerator.className(fluent))
             .addStatement(super.codeBlock("return mapper"))
             .build();
     }
@@ -104,8 +104,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("query")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
-            .returns(QueryGenerator.className(fluentEntityInfo))
-            .addStatement("return new $T()", QueryGenerator.className(fluentEntityInfo))
+            .returns(QueryGenerator.className(fluent))
+            .addStatement("return new $T()", QueryGenerator.className(fluent))
             .build();
     }
 
@@ -118,8 +118,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("updater")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
-            .returns(UpdaterGenerator.className(fluentEntityInfo))
-            .addStatement("return new $T()", UpdaterGenerator.className(fluentEntityInfo))
+            .returns(UpdaterGenerator.className(fluent))
+            .addStatement("return new $T()", UpdaterGenerator.className(fluent))
             .build();
     }
 
@@ -133,12 +133,12 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC)
             .returns(String.class)
             .addJavadoc("返回实体类主键值");
-        if (fluentEntityInfo.getPrimary() == null) {
+        if (fluent.getPrimary() == null) {
             builder.addStatement("throw new $T($S)",
                 RuntimeException.class, "primary key not found.");
         } else {
             builder.addStatement("return $T.$L.column",
-                MappingGenerator.className(fluentEntityInfo), fluentEntityInfo.getPrimary().getProperty());
+                MappingGenerator.className(fluent), fluent.getPrimary().getProperty());
         }
         return builder.build();
     }

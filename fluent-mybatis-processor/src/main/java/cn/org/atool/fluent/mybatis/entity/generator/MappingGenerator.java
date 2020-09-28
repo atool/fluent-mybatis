@@ -42,7 +42,7 @@ public class MappingGenerator extends AbstractGenerator {
     public void build(TypeSpec.Builder builder) {
         builder.addField(this.f_Table_Name());
         builder.addField(this.f_Entity_Name());
-        this.fluentEntityInfo.getFields().stream()
+        this.fluent.getFields().stream()
             .forEach(field -> {
                 builder.addField(f_Field(field));
             });
@@ -65,20 +65,20 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_Table_Name() {
         return FieldSpec.builder(String.class, "Table_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
-            .initializer("$S", fluentEntityInfo.getTableName())
+            .initializer("$S", fluent.getTableName())
             .addJavadoc(super.codeBlock("表名称"))
             .build();
     }
 
     private FieldSpec f_Entity_Name() {
         return FieldSpec.builder(String.class, "Entity_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
-            .initializer("$S", fluentEntityInfo.getClassName())
+            .initializer("$S", fluent.getClassName())
             .addJavadoc(super.codeBlock("Entity名称"))
             .build();
     }
 
     private FieldSpec f_Property2Column() {
-        String statement = this.fluentEntityInfo.getFields().stream()
+        String statement = this.fluent.getFields().stream()
             .map(FieldColumn::getProperty)
             .map(field -> String.format("\t\tthis.put(%s.name, %s.column);", field, field))
             .collect(joining("\n"));
@@ -97,7 +97,7 @@ public class MappingGenerator extends AbstractGenerator {
     }
 
     private FieldSpec f_ALL_COLUMNS() {
-        String statement = this.fluentEntityInfo.getFields().stream()
+        String statement = this.fluent.getFields().stream()
             .map(FieldColumn::getProperty)
             .map(field -> String.format("\t\tthis.add(%s.column);", field))
             .collect(joining("\n"));
