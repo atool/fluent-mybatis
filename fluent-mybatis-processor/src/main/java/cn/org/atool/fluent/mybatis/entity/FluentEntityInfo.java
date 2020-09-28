@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
@@ -127,17 +128,32 @@ public class FluentEntityInfo {
                 if (!assign.lhs.getKind().equals(Kind.IDENTIFIER)) {
                     continue;
                 }
-                if ((((JCIdent) assign.lhs).name).toString().equals("value")) {
-                    String column = String.valueOf(((JCLiteral) assign.rhs).value);
-                    field.setColumn(column);
-                }
-                if ((((JCIdent) assign.lhs).name).toString().equals("auto")) {
-                    String auto = String.valueOf(((JCLiteral) assign.rhs).value);
-                    field.setAutoIncrease(Boolean.valueOf(auto));
-                }
+                this.setValue(assign, "value", field::setColumn);
+                this.setValue(assign, "auto", v -> field.setAutoIncrease(Boolean.valueOf(v)));
+                this.setValue(assign, "insert", field::setInsert);
+                this.setValue(assign, "update", field::setUpdate);
+                this.setValue(assign, "notLarge", v -> field.setNotLarge(Boolean.valueOf(v)));
+                this.setValue(assign, "numericScale", field::setNumericScale);
+                this.setValue(assign, "seqName", field::setSeqName);
             }
         }
         return field;
+    }
+
+
+    /**
+     * 获取 @TableField 或 @TableId 上定义的属性值
+     *
+     * @param assign
+     * @param method
+     * @return
+     */
+    private void setValue(JCTree.JCAssign assign, String method, Consumer<String> consumer) {
+        if (!(((JCIdent) assign.lhs).name).toString().equals(method)) {
+            return;
+        }
+        String value = String.valueOf(((JCLiteral) assign.rhs).value);
+        consumer.accept(value);
     }
 
     /**

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.ibatis.type.JdbcType;
 
 @Data
 @Accessors(chain = true)
@@ -26,6 +27,20 @@ public class FieldColumn {
     private String column;
 
     private Type type;
+
+    private JdbcType jdbcType;
+
+    private String seqName;
+
+    private String numericScale;
+
+    private String typeHandler;
+
+    private boolean notLarge = true;
+
+    private String insert;
+
+    private String update;
 
     public FieldColumn setProperty(String property) {
         this.property = property;
