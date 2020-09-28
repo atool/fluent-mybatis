@@ -2,11 +2,11 @@ package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IMapper;
 import cn.org.atool.fluent.mybatis.base.ISharing;
-import cn.org.atool.fluent.mybatis.test.method.InjectMethod;
-import cn.org.atool.fluent.mybatis.test.method.InjectMethods;
-import cn.org.atool.fluent.mybatis.test.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.test.method.model.InjectMapperXml;
-import cn.org.atool.fluent.mybatis.test.method.model.InjectMethodResource;
+import cn.org.atool.fluent.mybatis.method.InjectMethod;
+import cn.org.atool.fluent.mybatis.method.InjectMethods;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.method.model.InjectMapperXml;
+import cn.org.atool.fluent.mybatis.method.model.InjectMethodResource;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;

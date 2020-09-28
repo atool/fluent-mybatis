@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.method2;
 
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.test.method.InjectMethods;
-import cn.org.atool.fluent.mybatis.test.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.test.method.model.InjectMapperXml;
+import cn.org.atool.fluent.mybatis.method.InjectMethods;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.method.model.InjectMapperXml;
 import org.junit.jupiter.api.Test;
 import org.test4j.hamcrest.matcher.string.StringMode;
 import org.test4j.junit5.Test4J;

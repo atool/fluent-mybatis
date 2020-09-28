@@ -6,8 +6,8 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static cn.org.atool.fluent.mybatis.test.method.model.XmlConstant.WRAPPER_PARAM_FORMAT;
-import static cn.org.atool.fluent.mybatis.test.method.model.XmlConstant.Wrapper_Data;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.WRAPPER_PARAM_FORMAT;
+import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.Wrapper_Data;
 
 
 /**
