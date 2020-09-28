@@ -24,7 +24,7 @@ import java.util.Map;
 @Setter
 @Accessors(chain = true)
 @FluentMybatis(
-    prefix = "t_",
+    prefix = "t_", mapperBeanPrefix = "my",
     daoInterface = @DaoInterface(value = MyCustomerInterface.class, args = {ParaType.Entity})
 )
 public class UserEntity implements IEntity, IBaseEntity<UserEntity> {

@@ -13,16 +13,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Helper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Mapping;
 import static java.util.stream.Collectors.joining;
 
 public class MappingGenerator extends AbstractGenerator {
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + "Mapping";
+        return fluentEntityInfo.getNoSuffix() + Suffix_Mapping;
     }
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName("helper");
+        return fluentEntityInfo.getPackageName(Pack_Helper);
     }
 
     public static ClassName className(FluentEntityInfo fluentEntityInfo) {

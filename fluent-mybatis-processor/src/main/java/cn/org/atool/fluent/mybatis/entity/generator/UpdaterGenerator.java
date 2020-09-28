@@ -9,6 +9,9 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Wrapper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Update;
+
 public class UpdaterGenerator extends AbstractGenerator {
     public UpdaterGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         super(curElement, fluentEntityInfo);
@@ -18,11 +21,11 @@ public class UpdaterGenerator extends AbstractGenerator {
     }
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + "Update";
+        return fluentEntityInfo.getNoSuffix() + Suffix_Update;
     }
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName("wrapper");
+        return fluentEntityInfo.getPackageName(Pack_Wrapper);
     }
 
     public static ClassName className(FluentEntityInfo fluentEntityInfo) {

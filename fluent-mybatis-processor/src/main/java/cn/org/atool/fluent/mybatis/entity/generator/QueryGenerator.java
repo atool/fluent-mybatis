@@ -11,14 +11,17 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Wrapper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Query;
+
 public class QueryGenerator extends AbstractGenerator {
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + "Query";
+        return fluentEntityInfo.getNoSuffix() + Suffix_Query;
     }
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName("wrapper");
+        return fluentEntityInfo.getPackageName(Pack_Wrapper);
     }
 
     public static ClassName className(FluentEntityInfo fluentEntityInfo) {

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
+import cn.org.atool.fluent.mybatis.entity.base.ClassNameConst;
 import cn.org.atool.fluent.mybatis.entity.base.DaoInterfaceParser;
 import com.squareup.javapoet.*;
 
@@ -11,11 +12,15 @@ import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_BaseDao;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_BaseDao;
+import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
+
 public class BaseDaoGenerator extends AbstractGenerator {
     public BaseDaoGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         super(curElement, fluentEntityInfo);
-        this.packageName = fluentEntityInfo.getPackageName("dao.base");
-        this.klassName = fluentEntityInfo.getNoSuffix() + "BaseDao";
+        this.packageName = fluentEntityInfo.getPackageName(Pack_BaseDao);
+        this.klassName = fluentEntityInfo.getNoSuffix() + Suffix_BaseDao;
     }
 
     @Override
@@ -69,7 +74,10 @@ public class BaseDaoGenerator extends AbstractGenerator {
     private FieldSpec f_mapper() {
         return FieldSpec.builder(MapperGenerator.className(fluentEntityInfo), "mapper")
             .addModifiers(Modifier.PROTECTED)
-            .addAnnotation(ClassName.get("org.springframework.beans.factory.annotation", "Autowired"))
+            .addAnnotation(ClassNameConst.Autowired)
+            .addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
+                .addMember("value", "$S", getMapperName(fluentEntityInfo)).build()
+            )
             .build();
     }
 
@@ -82,7 +90,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("mapper")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
-            .returns(ClassName.get(MapperGenerator.getPackageName(fluentEntityInfo), MapperGenerator.getClassName(fluentEntityInfo)))
+            .returns(MapperGenerator.className(fluentEntityInfo))
             .addStatement(super.codeBlock("return mapper"))
             .build();
     }

@@ -121,4 +121,39 @@ public abstract class AbstractGenerator {
             .addCode("}")
             .build();
     }
+
+    /**
+     * 定义方式如下的方法
+     * <pre>
+     * @Override
+     * public abstract Xyz methodName(...);
+     * </pre>
+     *
+     * @param methodName
+     * @return
+     */
+    protected MethodSpec.Builder publicOverrideAbstractMethod(String methodName) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
+        builder.addAnnotation(Override.class);
+        builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+        return builder;
+    }
+
+    /**
+     * 定义方式如下的方法
+     * <pre>
+     * @Override
+     * public abstract Xyz methodName(...);
+     * </pre>
+     *
+     * @param methodName
+     * @return
+     */
+    protected MethodSpec.Builder sqlMethod(String methodName) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
+        //builder.addAnnotation(Override.class);
+        builder.returns(String.class);
+        builder.addModifiers(Modifier.PUBLIC);
+        return builder;
+    }
 }

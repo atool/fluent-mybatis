@@ -12,13 +12,16 @@ import javax.lang.model.element.TypeElement;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Helper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_EntityHelper;
+
 public class EntityHelperGenerator extends AbstractGenerator {
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + "EntityHelper";
+        return fluentEntityInfo.getNoSuffix() + Suffix_EntityHelper;
     }
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName("helper");
+        return fluentEntityInfo.getPackageName(Pack_Helper);
     }
 
     public static ClassName className(FluentEntityInfo fluentEntityInfo) {

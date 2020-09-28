@@ -35,6 +35,7 @@ public class FluentMybatisProcessor extends BaseProcessor {
         files.add(new MapperGenerator(curElement, fluentEntityInfo).javaFile());
         files.add(new MappingGenerator(curElement, fluentEntityInfo).javaFile());
         files.add(new EntityHelperGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new SqlProviderGenerator(curElement, fluentEntityInfo).javaFile());
         files.add(new WrapperHelperGenerator(curElement, fluentEntityInfo).javaFile());
         files.add(new QueryGenerator(curElement, fluentEntityInfo).javaFile());
         files.add(new UpdaterGenerator(curElement, fluentEntityInfo).javaFile());

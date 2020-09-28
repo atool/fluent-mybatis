@@ -399,6 +399,24 @@ public class MybatisUtil {
         }
     }
 
+    /**
+     * 实体首字母小写
+     *
+     * @param name 待转换的字符串
+     * @param del  删除的前缀
+     * @return 转换后的字符串
+     */
+    public static String lowerFirst(String name, String del) {
+        if (!isBlank(name)) {
+            if (del != null && name.startsWith(del)) {
+                name = name.substring(del.length());
+            }
+            return name.substring(0, 1).toLowerCase() + name.substring(1);
+        } else {
+            return "";
+        }
+    }
+
 
     /**
      * 将异常日志转换为字符串

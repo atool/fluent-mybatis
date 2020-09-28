@@ -3,15 +3,16 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
-import org.apache.ibatis.annotations.Mapper;
+import cn.org.atool.fluent.mybatis.entity.base.ClassNameConst;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import com.squareup.javapoet.*;
+import org.apache.ibatis.annotations.InsertProvider;
 
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Mapper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Mapper;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**
  * 生成Entity对应的Mapper类
@@ -19,6 +20,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
  * @author darui.wu
  */
 public class MapperGenerator extends AbstractGenerator {
+
     public MapperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         super(curElement, fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
@@ -27,11 +29,11 @@ public class MapperGenerator extends AbstractGenerator {
     }
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + "Mapper";
+        return fluentEntityInfo.getNoSuffix() + Suffix_Mapper;
     }
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName("mapper");
+        return fluentEntityInfo.getPackageName(Pack_Mapper);
     }
 
     public static ClassName className(FluentEntityInfo fluentEntityInfo) {
@@ -40,16 +42,22 @@ public class MapperGenerator extends AbstractGenerator {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder
-            .addSuperinterface(this.superMapperClass())
-            .addAnnotation(ClassName.get(Mapper.class.getPackage().getName(), Mapper.class.getSimpleName()));
-        if (isNotBlank(fluentEntityInfo.getMapperBeanPrefix())) {
-            builder.addAnnotation(AnnotationSpec.builder(ClassName
-                .get("org.springframework.beans.factory.annotation", "Qualifier"))
-                .addMember("value", "$S", fluentEntityInfo.getMapperBeanPrefix() + this.klassName)
-                .build()
-            );
-        }
+        builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNameConst.Mapper);
+        builder.addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
+            .addMember("value", "$S", getMapperName(this.fluentEntityInfo)).build()
+        );
+        //builder.addMethod(this.m_insert());
+    }
+
+    public MethodSpec m_insert() {
+        return super.publicOverrideAbstractMethod("insert")
+            .addParameter(fluentEntityInfo.className(), "entity")
+            .returns(TypeName.INT)
+            .addAnnotation(AnnotationSpec.builder(InsertProvider.class)
+                .addMember("type", "$T.class", SqlProviderGenerator.className(fluentEntityInfo))
+                .addMember("method", "$S", "insert")
+                .build())
+            .build();
     }
 
     @Override
@@ -62,5 +70,20 @@ public class MapperGenerator extends AbstractGenerator {
             ClassName.get(IEntityMapper.class),
             fluentEntityInfo.className()
         );
+    }
+
+    /**
+     * 返回对应的Mapper Bean名称
+     *
+     * @param fluentEntityInfo
+     * @return
+     */
+    public static String getMapperName(FluentEntityInfo fluentEntityInfo) {
+        String className = fluentEntityInfo.getNoSuffix() + Suffix_Mapper;
+        if (isBlank(fluentEntityInfo.getMapperBeanPrefix())) {
+            return MybatisUtil.lowerFirst(className, "");
+        } else {
+            return fluentEntityInfo.getMapperBeanPrefix() + className;
+        }
     }
 }

@@ -6,10 +6,15 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.*;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
     public WrapperHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
@@ -38,7 +43,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedISegment() {
-        TypeSpec.Builder builder = TypeSpec.interfaceBuilder("ISegment")
+        TypeSpec.Builder builder = TypeSpec.interfaceBuilder(Suffix_ISegment)
             .addTypeVariable(TypeVariableName.get("R"))
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addMethod(this.m_set_ISegment());
@@ -60,7 +65,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedGroupBy() {
-        return TypeSpec.classBuilder("GroupBy")
+        return TypeSpec.classBuilder(Suffix_GroupBy)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(GroupByBase.class),
@@ -82,7 +87,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedHaving() {
-        return TypeSpec.classBuilder("Having")
+        return TypeSpec.classBuilder(Suffix_Having)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(HavingBase.class),
@@ -106,7 +111,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedQueryOrderBy() {
-        return TypeSpec.classBuilder("QueryOrderBy")
+        return TypeSpec.classBuilder(Suffix_QueryOrderBy)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
@@ -131,7 +136,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedUpdateOrderBy() {
-        return TypeSpec.classBuilder("UpdateOrderBy")
+        return TypeSpec.classBuilder(Suffix_UpdateOrderBy)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
@@ -156,7 +161,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedUpdateSetter() {
-        return TypeSpec.classBuilder("UpdateSetter")
+        return TypeSpec.classBuilder(Suffix_UpdateSetter)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(UpdateBase.class),
@@ -176,7 +181,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     }
 
     private TypeSpec nestedSelector() {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("Selector")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_Selector)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(SelectorBase.class),
@@ -207,7 +212,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedQueryWhere() {
-        return TypeSpec.classBuilder("QueryWhere")
+        return TypeSpec.classBuilder(Suffix_QueryWhere)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
@@ -236,7 +241,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedUpdateWhere() {
-        return TypeSpec.classBuilder("UpdateWhere")
+        return TypeSpec.classBuilder(Suffix_UpdateWhere)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
@@ -442,64 +447,46 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     }
 
     public static ClassName queryWhere(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "QueryWhere");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_QueryWhere);
     }
 
     public static ClassName updateWhere(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "UpdateWhere");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_UpdateWhere);
     }
 
     public static ClassName selector(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "Selector");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_Selector);
     }
 
     public static ClassName groupBy(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "GroupBy");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_GroupBy);
     }
 
     public static ClassName having(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "Having");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_Having);
     }
 
     public static ClassName queryOrderBy(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "QueryOrderBy");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_QueryOrderBy);
     }
 
     public static ClassName updateOrderBy(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "UpdateOrderBy");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_UpdateOrderBy);
     }
 
     public static ClassName updateSetter(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "UpdateSetter");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_UpdateSetter);
     }
 
     public static ClassName segment(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(
-            getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo),
-            "ISegment");
+        return ClassName.get(getPackageName(fluentEntityInfo) + "." + getClassName(fluentEntityInfo), Suffix_ISegment);
     }
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + "WrapperHelper";
+        return fluentEntityInfo.getNoSuffix() + Suffix_WrapperHelper;
     }
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName("helper");
+        return fluentEntityInfo.getPackageName(Pack_Helper);
     }
 }
