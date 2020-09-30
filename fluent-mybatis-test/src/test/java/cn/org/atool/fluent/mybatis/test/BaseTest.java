@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.test;
 
 import cn.org.atool.fluent.mybatis.FluentMybatisSessionFactoryBean;
 import cn.org.atool.fluent.mybatis.generate.datamap.ITable;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,8 +35,9 @@ class TestSpringConfig {
     }
 
     @Bean
-    public FluentMybatisSessionFactoryBean sqlSessionFactoryBean() throws Exception {
-        FluentMybatisSessionFactoryBean bean = new FluentMybatisSessionFactoryBean();
+    public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
+//        SqlSessionFactoryBean bean = new FluentMybatisSessionFactoryBean();
+        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
         bean.setMapperLocations(new ClassPathResource("mapper/MyXmlMapper.xml"));
         return bean;

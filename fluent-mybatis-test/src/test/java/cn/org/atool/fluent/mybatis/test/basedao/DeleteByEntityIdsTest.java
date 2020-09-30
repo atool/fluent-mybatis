@@ -21,7 +21,7 @@ public class DeleteByEntityIdsTest extends BaseTest {
     public void test_deleteByEntityIds() throws Exception {
         db.table(t_user).clean().insert(TM.user.createWithInit(10));
         dao.deleteByEntityIds(Arrays.asList(new UserEntity().setId(1L), new UserEntity().setId(5L)));
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id IN ( ? , ? )");
+        db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id IN (?, ?)");
         db.table(t_user).count().isEqualTo(8);
     }
 }

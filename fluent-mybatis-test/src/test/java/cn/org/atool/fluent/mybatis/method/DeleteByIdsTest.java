@@ -22,7 +22,7 @@ public class DeleteByIdsTest extends BaseTest {
         );
         mapper.deleteByIds(Arrays.asList(24, 27, 25));
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM t_user WHERE id IN ( ? , ? , ? )", StringMode.SameAsSpace);
+            .eq("DELETE FROM t_user WHERE id IN (?, ?, ?)", StringMode.SameAsSpace);
         db.table(ITable.t_user).query().eqDataMap(TM.user.create(2)
             .id.values(23L, 26L)
             .user_name.values("user1", "user2")

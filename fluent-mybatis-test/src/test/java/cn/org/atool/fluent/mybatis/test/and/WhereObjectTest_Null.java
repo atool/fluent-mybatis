@@ -16,7 +16,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNull()
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IS NULL");
     }
 
     @Test
@@ -25,7 +25,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNull(true)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IS NULL");
     }
 
     @Test
@@ -34,7 +34,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNull(false)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNotNull()
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NOT NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IS NOT NULL");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNotNull(true)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age IS NOT NULL");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IS NOT NULL");
     }
 
     @Test
@@ -61,6 +61,6 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNotNull(false)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user");
     }
 }

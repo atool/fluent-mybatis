@@ -56,7 +56,7 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version " +
+            .eq("SELECT id, gmt_created, gmt_modified, is_deleted, address_id, age, grade, user_name, version " +
                 "FROM t_user " +
                 "WHERE id IN (SELECT user_id FROM address WHERE address LIKE ?)");
     }

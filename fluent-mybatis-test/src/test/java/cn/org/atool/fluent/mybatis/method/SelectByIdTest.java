@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,7 +28,7 @@ public class SelectByIdTest extends BaseTest {
             .user_name.values(DataGenerator.increase("username_%d")));
         UserEntity user = mapper.findById(3L);
         db.sqlList().wantFirstSql()
-            .where().eq("id=?");
+            .where().eq("id = ?");
         want.object(user)
             .eqMap(EM.user.create()
                 .userName.values("username_3")
@@ -40,9 +41,6 @@ public class SelectByIdTest extends BaseTest {
             .column_1.values(1, 2, 3)
             .column_2.values("c1", "c2", "c3")
         );
-        NoPrimaryEntity entity = noPrimaryMapper.findById(3L);
-        db.sqlList().wantFirstSql()
-            .where().eq("1!=1");
-        want.object(entity).isNull();
+        want.exception(() -> noPrimaryMapper.findById(3L), MyBatisSystemException.class);
     }
 }

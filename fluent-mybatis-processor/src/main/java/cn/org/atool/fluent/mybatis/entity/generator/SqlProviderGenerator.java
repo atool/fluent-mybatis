@@ -260,7 +260,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         if (ifNotPrimary(builder, "no primary define found.")) {
             return builder.build();
         }
-        builder.addStatement("$T sql = new SQL()", SQL.class)
+        builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.DELETE_FROM($S)", fluent.getTableName())
             .addStatement("sql.WHERE($S)", fluent.getPrimary().getColumn() + " = #{id}")
             .addStatement("return sql.toString()");

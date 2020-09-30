@@ -24,7 +24,7 @@ public class WhereObjectTest_Exists extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user WHERE is_deleted = ? AND EXISTS (select 1 from t_user where age=?)");
+            .eq("SELECT COUNT(*) FROM t_user WHERE is_deleted = ? AND EXISTS (select 1 from t_user where age=?)");
     }
 
     @Test
@@ -35,7 +35,7 @@ public class WhereObjectTest_Exists extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user " +
+            .eq("SELECT COUNT(*) FROM t_user " +
                 "WHERE is_deleted = ? " +
                 "AND NOT EXISTS (select 1 from t_user where age=?)");
     }

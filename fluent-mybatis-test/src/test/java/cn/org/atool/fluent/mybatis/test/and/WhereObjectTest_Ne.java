@@ -17,7 +17,7 @@ public class WhereObjectTest_Ne extends BaseTest {
             .where.age().ne(34)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age <> ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age <> ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -27,7 +27,7 @@ public class WhereObjectTest_Ne extends BaseTest {
             .where.age().ne(true, 34)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age <> ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age <> ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -37,7 +37,7 @@ public class WhereObjectTest_Ne extends BaseTest {
             .where.age().ne_IfNotNull(34)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age <> ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age <> ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 }

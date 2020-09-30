@@ -27,7 +27,7 @@ public class CountNoLimitTest extends BaseTest {
 
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT COUNT( * )")
+            .start("SELECT COUNT(*)")
             .end("FROM t_user WHERE id = ? ORDER BY user_name ASC LIMIT ?, ?");
 
         mapper.countNoLimit(query);
@@ -49,7 +49,7 @@ public class CountNoLimitTest extends BaseTest {
             .limit(10, 20);
         int count = mapper.countNoLimit(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT COUNT( * )")
+            .start("SELECT COUNT(*)")
             .end("FROM t_user WHERE age = ?");
         want.number(count).eq(100);
 

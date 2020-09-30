@@ -29,7 +29,7 @@ public class AndNestedTest extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?) AND ( age = ? AND id = ? )");
+            .eq("SELECT COUNT(*) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?) AND ( age = ? AND id = ? )");
     }
 
     @DisplayName("And嵌套查询为空的场景")
@@ -45,7 +45,7 @@ public class AndNestedTest extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
+            .eq("SELECT COUNT(*) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
     }
 
     @DisplayName("Or嵌套查询为空的场景")
@@ -61,7 +61,7 @@ public class AndNestedTest extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
+            .eq("SELECT COUNT(*) FROM t_user WHERE id IN (SELECT id FROM t_user WHERE id = ?)");
     }
 
     @Test
@@ -81,7 +81,7 @@ public class AndNestedTest extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT( * ) FROM t_user " +
+            .eq("SELECT COUNT(*) FROM t_user " +
                 "WHERE id IN (SELECT id FROM t_user WHERE id = ?) " +
                 "OR ( ( age = ? OR id = ? AND id = ? ) AND ( id = ? OR id = ? ) )");
     }

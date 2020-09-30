@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -62,12 +63,12 @@ public class InsertTest extends BaseTest {
             .id.values("test-id-1")
             .column_1.values("test")
         );
-        Assertions.assertThrows(DuplicateKeyException.class, () -> {
+        want.exception(() -> {
             idMapper.insert(new NoAutoIdEntity()
                 .setId("test-id-1")
                 .setColumn1("test")
             );
-        });
+        }, DuplicateKeyException.class, MyBatisSystemException.class);
     }
 
     @Test

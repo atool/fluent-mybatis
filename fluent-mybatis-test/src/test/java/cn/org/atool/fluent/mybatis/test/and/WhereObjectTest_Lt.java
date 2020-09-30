@@ -16,7 +16,7 @@ public class WhereObjectTest_Lt extends BaseTest {
             .where.age().lt(34)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age < ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age < ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -26,7 +26,7 @@ public class WhereObjectTest_Lt extends BaseTest {
             .where.age().lt(true, 34)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age < ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age < ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -36,7 +36,7 @@ public class WhereObjectTest_Lt extends BaseTest {
             .where.age().lt_IfNotNull(34)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE age < ?");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age < ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 }

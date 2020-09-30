@@ -51,7 +51,7 @@ public class SelectPagedListTest extends BaseTest {
 
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
         db.sqlList().wantSql(0)
-            .eq("SELECT COUNT( * ) FROM t_user " +
+            .eq("SELECT COUNT(*) FROM t_user " +
                 "WHERE user_name LIKE ?");
         db.sqlList().wantSql(1).end("FROM t_user " +
             "WHERE user_name LIKE ? " +

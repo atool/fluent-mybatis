@@ -21,7 +21,7 @@ public class ExistPkTest extends BaseTest {
                 .id.values(1, 3)
         );
         boolean existed = dao.existPk(1);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT( * ) FROM t_user WHERE id = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE id = ?", StringMode.SameAsSpace);
         want.bool(existed).is(true);
 
         existed = dao.existPk(2);
