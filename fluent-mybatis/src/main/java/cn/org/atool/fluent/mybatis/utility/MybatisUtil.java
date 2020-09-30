@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;

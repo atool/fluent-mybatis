@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
+import cn.org.atool.fluent.mybatis.customize.UserExtDao;
 import cn.org.atool.fluent.mybatis.generate.datamap.EM;
 import cn.org.atool.fluent.mybatis.generate.datamap.TM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

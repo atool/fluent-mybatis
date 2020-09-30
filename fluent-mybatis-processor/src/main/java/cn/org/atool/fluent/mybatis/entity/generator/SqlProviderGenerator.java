@@ -11,7 +11,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import org.apache.ibatis.jdbc.SQL;
 
 import javax.lang.model.element.TypeElement;
 import java.io.Serializable;

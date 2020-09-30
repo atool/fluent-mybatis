@@ -4,10 +4,10 @@ import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementId;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
-import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 
 import java.util.Map;
 

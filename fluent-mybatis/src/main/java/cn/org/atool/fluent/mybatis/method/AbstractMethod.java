@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
-import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
+import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
+import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 import lombok.Getter;
 
 import java.util.ArrayList;

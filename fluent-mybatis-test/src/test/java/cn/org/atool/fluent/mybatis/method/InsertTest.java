@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.generate.mapper.NoAutoIdMapper;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
