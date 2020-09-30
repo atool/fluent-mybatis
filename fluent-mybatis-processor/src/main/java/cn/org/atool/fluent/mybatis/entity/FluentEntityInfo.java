@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
 import com.sun.source.tree.Tree.Kind;
@@ -73,6 +74,8 @@ public class FluentEntityInfo {
      * Entity类字段列表
      */
     private List<FieldColumn> fields = new ArrayList<>();
+
+    private DbType dbType = DbType.MYSQL;
 
     public String getPackageName(String suffix) {
         return this.basePack + "." + suffix;
@@ -173,6 +176,7 @@ public class FluentEntityInfo {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());
         }
         this.mapperBeanPrefix = fluentMyBatis.mapperBeanPrefix();
+        this.dbType = fluentMyBatis.dbType();
         return this;
     }
 

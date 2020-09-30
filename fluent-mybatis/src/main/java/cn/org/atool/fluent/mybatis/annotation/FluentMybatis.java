@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.annotation;
 
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+
 import java.lang.annotation.*;
 
 /**
@@ -45,4 +47,11 @@ public @interface FluentMybatis {
      * @return
      */
     DaoInterface[] daoInterface() default {};
+
+    /**
+     * 分页语法
+     *
+     * @return
+     */
+    DbType dbType() default DbType.MYSQL;
 }
