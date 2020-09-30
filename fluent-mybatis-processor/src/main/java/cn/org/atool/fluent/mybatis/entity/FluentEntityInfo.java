@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
@@ -177,5 +178,15 @@ public class FluentEntityInfo {
 
     public ClassName className() {
         return ClassName.get(this.entityPack, this.className);
+    }
+
+    @Getter(AccessLevel.NONE)
+    private String All_Fields = null;
+
+    public String getAllFields() {
+        if (this.All_Fields == null) {
+            All_Fields = this.fields.stream().map(FieldColumn::getColumn).collect(Collectors.joining(", "));
+        }
+        return All_Fields;
     }
 }

@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +60,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
                         javaFile.writeTo(filer);
                     }
                 } catch (Exception e) {
+                    messager.printMessage(Diagnostic.Kind.ERROR, it.getQualifiedName() + ":\n" + MybatisUtil.toString(e));
                     throw new RuntimeException(e);
                 }
             });

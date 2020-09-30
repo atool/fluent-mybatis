@@ -15,14 +15,14 @@ import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
  * @Author darui.wu
  * @Date 2019-06-25 14:00
  */
-public interface IEntityMapper<T> extends IMapper {
+public interface IEntityMapper<E extends IEntity> extends IMapper {
     /**
      * 插入一条记录
      *
      * @param entity
      * @return
      */
-    int insert(T entity);
+    int insert(E entity);
 
     /**
      * 批量插入数据，实例的主键必须全部赋值
@@ -30,7 +30,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param entities
      * @return
      */
-    int insertBatch(List<T> entities);
+    int insertBatch(List<E> entities);
 
     /**
      * 根据id删除记录
@@ -43,10 +43,10 @@ public interface IEntityMapper<T> extends IMapper {
     /**
      * 根据 columnMap key值删除记录
      *
-     * @param columnMap
+     * @param cm
      * @return
      */
-    int deleteByMap(@Param(COLUMN_MAP) Map<String, Object> columnMap);
+    int deleteByMap(@Param(COLUMN_MAP) Map<String, Object> cm);
 
     /**
      * 根据wrapper删除记录
@@ -70,7 +70,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param entity 实体对象
      * @return
      */
-    int updateById(@Param(ENTITY) T entity);
+    int updateById(@Param(ENTITY) E entity);
 
     /**
      * 根据update对象更新记录
@@ -86,7 +86,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param id 主键ID
      * @return
      */
-    T findById(Serializable id);
+    E findById(Serializable id);
 
     /**
      * 根据 query 条件，查询一条记录
@@ -94,7 +94,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    T findOne(@Param(WRAPPER) IQuery query);
+    E findOne(@Param(WRAPPER) IQuery query);
 
     /**
      * 查询（根据ID 批量查询）
@@ -102,7 +102,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param ids 主键ID列表(不能为 null 以及 empty)
      * @return
      */
-    List<T> listByIds(@Param(COLLECTION) Collection ids);
+    List<E> listByIds(@Param(COLLECTION) Collection ids);
 
     /**
      * 查询（根据 columnMap 条件）
@@ -110,7 +110,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param columnMap 表字段 map 对象
      * @return
      */
-    List<T> listByMap(@Param(COLUMN_MAP) Map<String, Object> columnMap);
+    List<E> listByMap(@Param(COLUMN_MAP) Map<String, Object> columnMap);
 
     /**
      * 根据 query 条件，查询全部记录
@@ -118,7 +118,7 @@ public interface IEntityMapper<T> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    List<T> listEntity(@Param(WRAPPER) IQuery query);
+    List<E> listEntity(@Param(WRAPPER) IQuery query);
 
     /**
      * 根据 query 条件，查询全部记录

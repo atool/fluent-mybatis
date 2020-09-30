@@ -1,21 +1,24 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.IUpdate;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNameConst;
+import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
-import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Mapper;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Mapper;
-import static cn.org.atool.fluent.mybatis.method.SqlMethodName.M_Insert;
-import static cn.org.atool.fluent.mybatis.method.SqlMethodName.M_InsertBatch;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.*;
+import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
 
 /**
@@ -45,6 +48,12 @@ public class MapperGenerator extends AbstractGenerator {
     }
 
     @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        super.staticImport(builder);
+        builder.addStaticImport(ClassName.get(XmlConstant.class), "*");
+    }
+
+    @Override
     protected void build(TypeSpec.Builder builder) {
         builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNameConst.Mapper);
         builder.addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
@@ -52,19 +61,209 @@ public class MapperGenerator extends AbstractGenerator {
         );
         builder.addMethod(this.m_insert());
         builder.addMethod(this.m_insertBatch());
+        builder.addMethod(this.m_deleteById());
+        builder.addMethod(this.m_deleteByMap());
+        builder.addMethod(this.m_delete());
+        builder.addMethod(this.m_deleteByIds());
+        builder.addMethod(this.m_updateById());
+        builder.addMethod(this.m_updateBy());
+        builder.addMethod(this.m_findById());
+        builder.addMethod(this.m_findOne());
+        builder.addMethod(this.m_listByIds());
+        builder.addMethod(this.m_listByMap());
+        builder.addMethod(this.m_listEntity());
+        builder.addMethod(this.m_listMaps());
+        builder.addMethod(this.m_listObjs());
+        builder.addMethod(this.m_count());
+        builder.addMethod(this.m_countNoLimit());
     }
 
-    public MethodSpec m_insert() {
-        return this.mapperMethod(M_Insert)
-            .addParameter(fluent.className(), "entity")
+    public MethodSpec m_countNoLimit() {
+        return this.mapperMethod(SelectProvider.class, M_countNoLimit)
+            .addParameter(ParameterSpec.builder(IQuery.class, "query")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(Integer.class)
+            .build();
+    }
+
+    public MethodSpec m_count() {
+        return this.mapperMethod(SelectProvider.class, M_count)
+            .addParameter(ParameterSpec.builder(IQuery.class, "query")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(Integer.class)
+            .build();
+    }
+
+    public MethodSpec m_listObjs() {
+        return this.mapperMethod(SelectProvider.class, M_listObjs)
+            .addParameter(ParameterSpec.builder(IQuery.class, "query")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(parameterizedType(ClassName.get(List.class), TypeVariableName.get("O")))
+            .addTypeVariable(TypeVariableName.get("O"))
+            .build();
+    }
+
+    public MethodSpec m_listMaps() {
+        return this.mapperMethod(SelectProvider.class, M_listMaps)
+            .addAnnotation(AnnotationSpec.builder(ResultType.class)
+                .addMember("value", "$T.class", Map.class)
+                .build())
+            .addParameter(ParameterSpec.builder(IQuery.class, "query")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(parameterizedType(ClassName.get(List.class), Map_StrObj))
+            .build();
+    }
+
+    public MethodSpec m_listEntity() {
+        return this.mapperMethod(SelectProvider.class, M_listEntity)
+            .addAnnotation(AnnotationSpec.builder(ResultMap.class)
+                .addMember("value", "$S", fluent.getClassName() + "ResultMap")
+                .build())
+            .addParameter(ParameterSpec.builder(IQuery.class, "query")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
+            .build();
+    }
+
+    public MethodSpec m_listByMap() {
+        return this.mapperMethod(SelectProvider.class, M_listByMap)
+            .addAnnotation(AnnotationSpec.builder(ResultMap.class)
+                .addMember("value", "$S", fluent.getClassName() + "ResultMap")
+                .build())
+            .addParameter(ParameterSpec.builder(Map_StrObj, "columnMap")
+                .addAnnotation(paramAnnotationSpec("COLUMN_MAP"))
+                .build())
+            .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
+            .build();
+    }
+
+    public MethodSpec m_listByIds() {
+        return this.mapperMethod(SelectProvider.class, M_listByIds)
+            .addAnnotation(AnnotationSpec.builder(ResultMap.class)
+                .addMember("value", "$S", fluent.getClassName() + "ResultMap")
+                .build())
+            .addParameter(ParameterSpec.builder(Collection.class, "ids")
+                .addAnnotation(paramAnnotationSpec("COLLECTION"))
+                .build())
+            .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
+            .build();
+    }
+
+    public MethodSpec m_findOne() {
+        return this.mapperMethod(SelectProvider.class, M_findOne)
+            .addAnnotation(AnnotationSpec.builder(ResultMap.class)
+                .addMember("value", "$S", fluent.getClassName() + "ResultMap")
+                .build())
+            .addParameter(ParameterSpec.builder(IQuery.class, "query")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(fluent.className())
+            .build();
+    }
+
+    public MethodSpec m_findById() {
+        List<CodeBlock> results = new ArrayList<>();
+        for (FieldColumn field : fluent.getFields()) {
+            results.add(CodeBlock.of("@$T(column = $S, property = $S)", Result.class, field.getColumn(), field.getProperty()));
+        }
+        return this.mapperMethod(SelectProvider.class, M_findById)
+            .addAnnotation(AnnotationSpec.builder(Results.class)
+                .addMember("id", "$S", fluent.getClassName() + "ResultMap")
+                .addMember("value", "{\n$L\n}", CodeBlock.join(results, ",\n"))
+                .build())
+            .addParameter(Serializable.class, "id")
+            .returns(fluent.className())
+            .build();
+    }
+
+    public MethodSpec m_updateBy() {
+        return this.mapperMethod(UpdateProvider.class, M_updateBy)
+            .addParameter(ParameterSpec.builder(IUpdate.class, "update")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_updateById() {
+        return this.mapperMethod(UpdateProvider.class, M_updateById)
+            .addParameter(ParameterSpec.builder(fluent.className(), "entity")
+                .addAnnotation(paramAnnotationSpec("ENTITY"))
+                .build())
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_deleteByIds() {
+        return this.mapperMethod(DeleteProvider.class, M_deleteByIds)
+            .addParameter(ParameterSpec.builder(parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable")), "idList")
+                .addAnnotation(paramAnnotationSpec("COLLECTION"))
+                .build())
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_delete() {
+        return this.mapperMethod(DeleteProvider.class, M_Delete)
+            .addParameter(ParameterSpec.builder(IQuery.class, "wrapper")
+                .addAnnotation(paramAnnotationSpec("WRAPPER"))
+                .build())
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_deleteByMap() {
+        return this.mapperMethod(DeleteProvider.class, M_DeleteByMap)
+            .addParameter(ParameterSpec.builder(Map_StrObj, "cm")
+                .addAnnotation(paramAnnotationSpec("COLUMN_MAP"))
+                .build())
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    /**
+     * <pre>
+     * @Param("value") 注解
+     * </pre>
+     *
+     * @param value
+     * @return
+     */
+    private AnnotationSpec paramAnnotationSpec(String value) {
+        return AnnotationSpec.builder(Param.class).addMember("value", "$L", value).build();
+    }
+
+    public MethodSpec m_deleteById() {
+        return this.mapperMethod(DeleteProvider.class, M_DeleteById)
+            .addParameter(ClassName.get(Serializable.class), "id")
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_insertBatch() {
-        return this.mapperMethod(M_InsertBatch)
+        return this.mapperMethod(InsertProvider.class, M_InsertBatch)
             .addParameter(parameterizedType(ClassName.get(List.class),
                 fluent.className()), "entities")
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_insert() {
+        MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert);
+        if (fluent.getPrimary() != null) {
+            builder.addAnnotation(AnnotationSpec.builder(Options.class)
+                .addMember("useGeneratedKeys", "true")
+                .addMember("keyProperty", "$S", fluent.getPrimary().getProperty())
+                .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
+                .build());
+        }
+        return builder
+            .addParameter(fluent.className(), "entity")
             .returns(TypeName.INT)
             .build();
     }
@@ -84,11 +283,11 @@ public class MapperGenerator extends AbstractGenerator {
      * @param methodName
      * @return
      */
-    private MethodSpec.Builder mapperMethod(String methodName) {
+    private MethodSpec.Builder mapperMethod(Class provider, String methodName) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
         builder.addAnnotation(Override.class);
         builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
-        builder.addAnnotation(AnnotationSpec.builder(InsertProvider.class)
+        builder.addAnnotation(AnnotationSpec.builder(provider)
             .addMember("type", "$T.class", SqlProviderGenerator.className(fluent))
             .addMember("method", "$S", methodName)
             .build());

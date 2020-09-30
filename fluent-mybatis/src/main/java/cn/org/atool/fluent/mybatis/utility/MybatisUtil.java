@@ -271,6 +271,18 @@ public class MybatisUtil {
     }
 
     /**
+     * 断言list参数不能为空
+     *
+     * @param property
+     * @param map
+     */
+    public static void assertNotEmpty(String property, Map map) {
+        if (map == null || map.size() == 0) {
+            throw FluentMybatisException.instance("the parameter[%s] can't be empty.", property);
+        }
+    }
+
+    /**
      * 断言数组array参数不能为空
      *
      * @param property

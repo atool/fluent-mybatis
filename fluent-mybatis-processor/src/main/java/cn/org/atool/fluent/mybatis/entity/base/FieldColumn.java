@@ -79,4 +79,17 @@ public class FieldColumn {
             return "set" + MybatisUtil.capitalFirst(this.property, null);
         }
     }
+
+    /**
+     * mybatis el 表达式
+     *
+     * @return
+     */
+    public String mybatisEl() {
+        return this.column + " = #{" + this.property + "}";
+    }
+
+    public String getPropertyEl() {
+        return "#{" + this.property + "}";
+    }
 }

@@ -1,6 +1,9 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
+
+import java.util.Map;
 
 public interface ClassNameConst {
     ClassName Qualifier = ClassName.get("org.springframework.beans.factory.annotation", "Qualifier");
@@ -8,6 +11,8 @@ public interface ClassNameConst {
     ClassName Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");
 
     ClassName Autowired = ClassName.get("org.springframework.beans.factory.annotation", "Autowired");
+
+    ParameterizedTypeName Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
     String Suffix_Mapper = "Mapper";
 
