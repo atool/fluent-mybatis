@@ -9,8 +9,8 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Wrapper;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_Update;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Pack_Wrapper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Suffix_Update;
 
 public class UpdaterGenerator extends AbstractGenerator {
     public UpdaterGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {

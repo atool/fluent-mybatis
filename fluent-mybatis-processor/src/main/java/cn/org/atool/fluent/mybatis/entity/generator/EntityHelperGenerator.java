@@ -12,8 +12,8 @@ import javax.lang.model.element.TypeElement;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_Helper;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_EntityHelper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Pack_Helper;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Suffix_EntityHelper;
 
 public class EntityHelperGenerator extends AbstractGenerator {
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {

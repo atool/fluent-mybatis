@@ -14,7 +14,7 @@ import com.squareup.javapoet.TypeVariableName;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.*;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
     public WrapperHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {

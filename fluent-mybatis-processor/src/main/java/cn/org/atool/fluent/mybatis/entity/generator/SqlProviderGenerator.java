@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.*;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.MapperUtils.*;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.COLUMN_MAP;

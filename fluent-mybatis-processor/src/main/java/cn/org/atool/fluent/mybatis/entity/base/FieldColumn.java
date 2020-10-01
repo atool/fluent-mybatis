@@ -1,13 +1,21 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.tree.JCTree;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.JdbcType;
+
+import java.util.function.Consumer;
+
+import static com.sun.tools.javac.tree.JCTree.*;
 
 @Data
 @Accessors(chain = true)
@@ -33,7 +41,9 @@ public class FieldColumn {
     private String seqName;
 
     private String numericScale;
-
+    /**
+     * type handler
+     */
     private String typeHandler;
 
     private boolean notLarge = true;

@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.ClassNameConst;
+import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import cn.org.atool.fluent.mybatis.entity.base.DaoInterfaceParser;
 import com.squareup.javapoet.*;
 
@@ -12,8 +12,8 @@ import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Pack_BaseDao;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNameConst.Suffix_BaseDao;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Pack_BaseDao;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Suffix_BaseDao;
 import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
 
 public class BaseDaoGenerator extends AbstractGenerator {
@@ -74,8 +74,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
     private FieldSpec f_mapper() {
         return FieldSpec.builder(MapperGenerator.className(fluent), "mapper")
             .addModifiers(Modifier.PROTECTED)
-            .addAnnotation(ClassNameConst.Autowired)
-            .addAnnotation(AnnotationSpec.builder(ClassNameConst.Qualifier)
+            .addAnnotation(ClassNames.Autowired)
+            .addAnnotation(AnnotationSpec.builder(ClassNames.Qualifier)
                 .addMember("value", "$S", getMapperName(fluent)).build()
             )
             .build();

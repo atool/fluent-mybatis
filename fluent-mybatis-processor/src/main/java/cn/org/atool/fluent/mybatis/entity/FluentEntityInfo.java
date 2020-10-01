@@ -1,16 +1,11 @@
 package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.base.FieldColumnParser;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -19,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
@@ -99,65 +93,13 @@ public class FluentEntityInfo {
 
     public FluentEntityInfo setFields(List<JCVariableDecl> fields) {
         for (JCVariableDecl variable : fields) {
-            FieldColumn field = this.parseField(variable);
+            FieldColumn field = FieldColumnParser.valueOf(variable);
             if (field.isPrimary() && this.primary == null) {
                 this.primary = field;
             }
             this.fields.add(field);
         }
         return this;
-    }
-
-    /**
-     * 解析字段
-     *
-     * @param variable
-     * @return
-     */
-    private FieldColumn parseField(JCVariableDecl variable) {
-        FieldColumn field = new FieldColumn()
-            .setProperty(variable.getName().toString())
-            .setType(variable.getType().type);
-        for (JCTree.JCAnnotation annotation : variable.mods.annotations) {
-            String type = annotation.type.toString();
-            if (!type.contains(TableField.class.getSimpleName()) && !type.contains(TableId.class.getSimpleName())) {
-                continue;
-            }
-            field.setPrimary(type.contains(TableId.class.getSimpleName()));
-            for (JCTree.JCExpression expression : annotation.args) {
-                if (!expression.getKind().equals(Kind.ASSIGNMENT)) {
-                    continue;
-                }
-                JCTree.JCAssign assign = (JCTree.JCAssign) expression;
-                if (!assign.lhs.getKind().equals(Kind.IDENTIFIER)) {
-                    continue;
-                }
-                this.setValue(assign, "value", field::setColumn);
-                this.setValue(assign, "auto", v -> field.setAutoIncrease(Boolean.valueOf(v)));
-                this.setValue(assign, "insert", field::setInsert);
-                this.setValue(assign, "update", field::setUpdate);
-                this.setValue(assign, "notLarge", v -> field.setNotLarge(Boolean.valueOf(v)));
-                this.setValue(assign, "numericScale", field::setNumericScale);
-                this.setValue(assign, "seqName", field::setSeqName);
-            }
-        }
-        return field;
-    }
-
-
-    /**
-     * 获取 @TableField 或 @TableId 上定义的属性值
-     *
-     * @param assign
-     * @param method
-     * @return
-     */
-    private void setValue(JCTree.JCAssign assign, String method, Consumer<String> consumer) {
-        if (!(((JCIdent) assign.lhs).name).toString().equals(method)) {
-            return;
-        }
-        String value = String.valueOf(((JCLiteral) assign.rhs).value);
-        consumer.accept(value);
     }
 
     /**
