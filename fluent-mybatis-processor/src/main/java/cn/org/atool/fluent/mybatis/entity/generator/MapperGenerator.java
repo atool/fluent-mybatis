@@ -86,6 +86,27 @@ public class MapperGenerator extends AbstractGenerator {
         builder.addMethod(this.m_listObjs());
         builder.addMethod(this.m_count());
         builder.addMethod(this.m_countNoLimit());
+
+        builder.addMethod(this.m_query());
+        builder.addMethod(this.m_updater());
+    }
+
+    private MethodSpec m_updater() {
+        return MethodSpec.methodBuilder("updater")
+            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+            .returns(UpdaterGenerator.className(fluent))
+            .addJavadoc("更新条件设置\n\n@return")
+            .addStatement("return new $T()", UpdaterGenerator.className(fluent))
+            .build();
+    }
+
+    private MethodSpec m_query() {
+        return MethodSpec.methodBuilder("query")
+            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+            .returns(QueryGenerator.className(fluent))
+            .addJavadoc("查询条件设置\n\n@return")
+            .addStatement("return new $T()", QueryGenerator.className(fluent))
+            .build();
     }
 
     public MethodSpec m_countNoLimit() {

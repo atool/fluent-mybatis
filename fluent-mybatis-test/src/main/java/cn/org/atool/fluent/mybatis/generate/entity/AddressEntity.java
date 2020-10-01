@@ -10,7 +10,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.LongTypeHandler;
-import org.apache.ibatis.type.StringTypeHandler;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -11,7 +11,6 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.TypeElement;
@@ -28,7 +27,6 @@ import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  *
  * @author darui.wu
  */
-@Slf4j
 public abstract class BaseProcessor extends AbstractProcessor {
     protected Filer filer;
 
@@ -47,7 +45,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
             return false;
         }
         mIsFirstRound = false;
-        log.debug("process begin !!!");
+        messager.printMessage(Diagnostic.Kind.NOTE, "process fluent mybatis begin !!!");
 
         roundEnv.getElementsAnnotatedWith(FluentMybatis.class).stream()
             .filter(it -> it instanceof TypeElement)
@@ -64,7 +62,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
                     throw new RuntimeException(e);
                 }
             });
-        log.debug("process end !!!");
+        messager.printMessage(Diagnostic.Kind.NOTE, "process fluent mybatis end !!!");
         return true;
     }
 
