@@ -153,11 +153,6 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql LIMIT(String limit) {
-        buffer.append(" LIMIT " + limit);
-        return this;
-    }
-
     public MapperSql SELECT(String table, WrapperData data, String defaultColumns) {
         buffer.append("SELECT ");
         if (data.isDistinct()) {

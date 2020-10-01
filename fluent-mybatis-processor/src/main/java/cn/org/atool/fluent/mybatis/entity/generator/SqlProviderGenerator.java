@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.mapper.MapperUtils;
+import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
@@ -101,32 +102,32 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.COUNT($S, data)", fluent.getTableName());
         builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
-        builder.addStatement("sql.LIMIT(data, false)");
-        return builder.addStatement("return sql.toString()").build();
+        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
+        return builder.build();
     }
 
     private MethodSpec m_listObjs() {
         MethodSpec.Builder builder = super.sqlMethod(M_listObjs).addParameter(ClassName.get(Map.class), Param_Map);
 
         this.selectByWrapper(builder);
-        builder.addStatement("sql.LIMIT(data, false)");
-        return builder.addStatement("return sql.toString()").build();
+        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
+        return builder.build();
     }
 
     private MethodSpec m_listMaps() {
         MethodSpec.Builder builder = super.sqlMethod(M_listMaps).addParameter(ClassName.get(Map.class), Param_Map);
 
         this.selectByWrapper(builder);
-        builder.addStatement("sql.LIMIT(data, false)");
-        return builder.addStatement("return sql.toString()").build();
+        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
+        return builder.build();
     }
 
     private MethodSpec m_listEntity() {
         MethodSpec.Builder builder = super.sqlMethod(M_listEntity).addParameter(ClassName.get(Map.class), Param_Map);
 
         this.selectByWrapper(builder);
-        builder.addStatement("sql.LIMIT(data, false)");
-        return builder.addStatement("return sql.toString()").build();
+        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
+        return builder.build();
     }
 
     private MethodSpec m_listByMap() {
@@ -156,9 +157,8 @@ public class SqlProviderGenerator extends AbstractGenerator {
     private MethodSpec m_findOne() {
         MethodSpec.Builder builder = super.sqlMethod(M_findOne).addParameter(ClassName.get(Map.class), Param_Map);
         this.selectByWrapper(builder);
-        builder.addStatement("sql.LIMIT(data, false);");
-
-        return builder.addStatement("return sql.toString()").build();
+        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
+        return builder.build();
     }
 
     private MethodSpec m_findById() {
