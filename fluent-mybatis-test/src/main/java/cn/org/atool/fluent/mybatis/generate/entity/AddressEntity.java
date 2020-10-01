@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.generate.helper.AddressEntityHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.LongTypeHandler;
 import org.apache.ibatis.type.StringTypeHandler;
 
@@ -57,9 +58,9 @@ public class AddressEntity implements IEntity, IBaseEntity<AddressEntity> {
     @TableField(value = "address")
     private String address;
     /**
-     *
+     * user id
      */
-    @TableField(value = "user_id", typeHandler = LongTypeHandler.class)
+    @TableField(value = "user_id", typeHandler = LongTypeHandler.class, jdbcType = JdbcType.NUMERIC)
     private Long userId;
 
     @Override

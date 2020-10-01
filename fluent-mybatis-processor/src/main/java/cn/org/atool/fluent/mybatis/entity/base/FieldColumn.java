@@ -1,21 +1,12 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.tree.JCTree;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.apache.ibatis.type.JdbcType;
-
-import java.util.function.Consumer;
-
-import static com.sun.tools.javac.tree.JCTree.*;
 
 @Data
 @Accessors(chain = true)
@@ -34,9 +25,9 @@ public class FieldColumn {
 
     private String column;
 
-    private Type type;
+    private Type javaType;
 
-    private JdbcType jdbcType;
+    private String jdbcType;
 
     private String seqName;
 
@@ -44,7 +35,7 @@ public class FieldColumn {
     /**
      * type handler
      */
-    private String typeHandler;
+    private Type typeHandler;
 
     private boolean notLarge = true;
 
@@ -61,7 +52,7 @@ public class FieldColumn {
     }
 
     public boolean isPrimitive() {
-        return type.isPrimitive();
+        return javaType.isPrimitive();
     }
 
     /**
@@ -70,7 +61,7 @@ public class FieldColumn {
      * @return
      */
     public String getMethodName() {
-        if (isPrimitive() && type.getTag() == TypeTag.BOOLEAN) {
+        if (isPrimitive() && javaType.getTag() == TypeTag.BOOLEAN) {
             return "is" + MybatisUtil.capitalFirst(this.property, "is");
         } else {
             return "get" + MybatisUtil.capitalFirst(this.property, null);
@@ -83,7 +74,7 @@ public class FieldColumn {
      * @return
      */
     public String setMethodName() {
-        if (isPrimitive() && type.getTag() == TypeTag.BOOLEAN) {
+        if (isPrimitive() && javaType.getTag() == TypeTag.BOOLEAN) {
             return "set" + MybatisUtil.capitalFirst(this.property, "is");
         } else {
             return "set" + MybatisUtil.capitalFirst(this.property, null);

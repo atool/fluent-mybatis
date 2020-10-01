@@ -59,7 +59,7 @@ public class ClassNames {
     public static final ClassName getClassName(String fullClassName) {
         int index = fullClassName.lastIndexOf('.');
         String packName = index < 0 ? "" : fullClassName.substring(0, index);
-        String klasName = index < 0 ? fullClassName : fullClassName.substring(index + 1, 0);
+        String klasName = index < 0 ? fullClassName : fullClassName.substring(index + 1);
         return ClassName.get(packName, klasName);
     }
 }

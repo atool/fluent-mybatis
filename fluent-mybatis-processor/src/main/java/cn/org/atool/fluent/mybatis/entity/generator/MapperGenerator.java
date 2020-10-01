@@ -11,6 +11,7 @@ import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -323,8 +324,15 @@ public class MapperGenerator extends AbstractGenerator {
             blocks.add(CodeBlock.of("@$T(", Result.class));
             blocks.add(CodeBlock.of("column = $S", field.getColumn()));
             blocks.add(CodeBlock.of(", property = $S", field.getProperty()));
-            if (isNotBlank(field.getTypeHandler())) {
-                blocks.add(CodeBlock.of(", typeHandler = $T", ClassNames.getClassName(field.getTypeHandler())));
+            blocks.add(CodeBlock.of(", javaType = $T.class", field.getJavaType()));
+            if (field.isPrimary()) {
+                blocks.add(CodeBlock.of(", id = true"));
+            }
+            if (field.getJdbcType() != null) {
+                blocks.add(CodeBlock.of(", jdbcType = $T.$L", JdbcType.class, field.getJdbcType()));
+            }
+            if (field.getTypeHandler() != null) {
+                blocks.add(CodeBlock.of(", typeHandler = $T.class", field.getTypeHandler()));
             }
             blocks.add(CodeBlock.of(")"));
             results.add(CodeBlock.join(blocks, ""));

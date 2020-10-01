@@ -115,7 +115,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
             builder.addCode("if (map.containsKey($T.$L.name)) {\n",
                 MappingGenerator.className(fluent), fc.getProperty());
             builder.addCode("\tentity.$L(($T) map.get($T.$L.name));\n",
-                setMethod, fc.getType(), MappingGenerator.className(fluent), fc.getProperty());
+                setMethod, fc.getJavaType(), MappingGenerator.className(fluent), fc.getProperty());
             builder.addCode("}\n");
         }
         return builder.addStatement("return entity").build();
