@@ -12,6 +12,8 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+
 /**
  * 字段解析工具类
  *
@@ -56,7 +58,11 @@ public class FieldColumnParser {
             if (!assign.lhs.getKind().equals(Tree.Kind.IDENTIFIER)) {
                 continue;
             }
-            setValue(assign, "value", field::setColumn);
+            setValue(assign, "value", v -> {
+                if (isNotBlank(v)) {
+                    field.setColumn(v);
+                }
+            });
             if (isPrimary) {
                 setPrimaryField(field, assign);
             } else {

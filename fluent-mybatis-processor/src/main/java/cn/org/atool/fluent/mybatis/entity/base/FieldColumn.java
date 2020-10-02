@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+
 @Data
 @Accessors(chain = true)
 public class FieldColumn {
@@ -46,7 +48,7 @@ public class FieldColumn {
     public FieldColumn setProperty(String property) {
         this.property = property;
         if (column == null) {
-            column = MybatisUtil.camelToUnderline(this.property, false);
+            column = camelToUnderline(this.property, false);
         }
         return this;
     }
@@ -62,9 +64,9 @@ public class FieldColumn {
      */
     public String getMethodName() {
         if (isPrimitive() && javaType.getTag() == TypeTag.BOOLEAN) {
-            return "is" + MybatisUtil.capitalFirst(this.property, "is");
+            return "is" + capitalFirst(this.property, "is");
         } else {
-            return "get" + MybatisUtil.capitalFirst(this.property, null);
+            return "get" + capitalFirst(this.property, null);
         }
     }
 
@@ -75,9 +77,9 @@ public class FieldColumn {
      */
     public String setMethodName() {
         if (isPrimitive() && javaType.getTag() == TypeTag.BOOLEAN) {
-            return "set" + MybatisUtil.capitalFirst(this.property, "is");
+            return "set" + capitalFirst(this.property, "is");
         } else {
-            return "set" + MybatisUtil.capitalFirst(this.property, null);
+            return "set" + capitalFirst(this.property, null);
         }
     }
 

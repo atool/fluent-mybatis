@@ -5,6 +5,9 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
+
 /**
  * BaseFieldInfo
  *
@@ -31,8 +34,8 @@ public abstract class FieldMeta implements Comparable<FieldMeta> {
     private JdbcType jdbcType;
 
     public FieldMeta(String column, Field field) {
-        this.column = column;
         this.property = field.getName();
+        this.column = isBlank(column) ? camelToUnderline(this.property, false) : column;
         this.propertyType = field.getType();
     }
 

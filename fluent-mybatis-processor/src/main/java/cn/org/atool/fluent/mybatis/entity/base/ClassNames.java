@@ -50,7 +50,7 @@ public class ClassNames {
 
     public static final String Pack_Helper = "helper";
 
-    public static final String Pack_BaseDao = "dao.base";
+    public static final String Pack_BaseDao = "dao";
 
     public static final String Pack_Mapper = "mapper";
 

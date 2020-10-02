@@ -10,6 +10,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
@@ -55,7 +56,7 @@ public class TableFieldMeta extends FieldMeta {
      * 全新的 存在 TableField 注解时使用的构造函数
      */
     public TableFieldMeta(Field field, TableField tableField) {
-        super(tableField == null ? MybatisUtil.camelToUnderline(field.getName(), false) : tableField.value(), field);
+        super(tableField == null ? camelToUnderline(field.getName(), false) : tableField.value(), field);
         if (tableField != null) {
             this.setJdbcType(tableField.jdbcType());
             this.numericScale = tableField.numericScale();

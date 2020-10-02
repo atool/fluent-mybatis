@@ -14,9 +14,10 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 public @interface TableId {
     /**
-     * 字段值
+     * 数据库字段名称
+     * 默认遵循 驼峰命名到下划线命名的转换规则
      */
-    String value();
+    String value() default "";
 
     /**
      * 是否自增主键

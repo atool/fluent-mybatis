@@ -26,10 +26,7 @@ public class FluentEntityInfo {
      * package
      */
     @Getter(AccessLevel.NONE)
-    private String basePack;
-
-    @Getter(AccessLevel.NONE)
-    private String entityPack;
+    private String packageName;
     /**
      * entity class name
      */
@@ -72,18 +69,12 @@ public class FluentEntityInfo {
     private DbType dbType = DbType.MYSQL;
 
     public String getPackageName(String suffix) {
-        return this.basePack + "." + suffix;
+        return this.packageName + "." + suffix;
     }
 
     public FluentEntityInfo setClassName(String packageName, String className) {
         this.className = className;
-        int dot = packageName.lastIndexOf('.');
-        if (dot > 0) {
-            this.basePack = packageName.substring(0, dot);
-        } else {
-            this.basePack = packageName;
-        }
-        this.entityPack = packageName;
+        this.packageName = packageName;
         return this;
     }
 
@@ -123,7 +114,7 @@ public class FluentEntityInfo {
     }
 
     public ClassName className() {
-        return ClassName.get(this.entityPack, this.className);
+        return ClassName.get(this.packageName, this.className);
     }
 
     @Getter(AccessLevel.NONE)
