@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.joining;
 
 public class BaseDaoTemplate extends BaseTemplate {
     public BaseDaoTemplate() {
-        super("templates/dao/BaseDao.java.vm", "dao/base/*BaseDao.java");
+        super("templates/dao/BaseDao.java.vm", "dao/*BaseDao.java");
         this.outputDir = OutputDir.Base;
     }
 

@@ -2,18 +2,15 @@ package ${entity.package};
 
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 $!{importTypes}
 $!{entity.interface}
-import ${entityHelper.package}.${entityHelper.name};
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * <p>
@@ -25,8 +22,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("${table}")
-@FluentMyBatis
+@FluentMybatis(table = "${table}")
 public class ${entity.name} implements IEntity$!{entity.interfaceName}{
     private static final long serialVersionUID = 1L;
 
@@ -43,15 +39,5 @@ public class ${entity.name} implements IEntity$!{entity.interfaceName}{
     @Override
     public Serializable findPk() {
         return ${entity.primaryKey};
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return ${entityHelper.name}.map(this);
-    }
-
-    @Override
-    public Map<String, Object> columnMap() {
-        return ${entityHelper.name}.columnMap(this);
     }
 }

@@ -1,6 +1,6 @@
 package ${daoImpl.package};
 
-import ${baseDao.package}.${baseDao.name};
+import ${daoImpl.baseDaoPack}.${daoImpl.baseDaoName};
 import ${daoIntf.package}.${daoIntf.name};
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  * @author ${author}
  */
 @Repository
-public class ${daoImpl.name} extends ${baseDao.name} implements ${daoIntf.name} {
+public class ${daoImpl.name} extends ${daoImpl.baseDaoName} implements ${daoIntf.name} {
 }

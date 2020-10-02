@@ -19,5 +19,7 @@ public class DaoImplTemplate extends BaseTemplate {
 
     @Override
     protected void templateConfigs(TableSetter table, Map<String, Object> context) {
+        context.put("baseDaoName", table.getEntityPrefix() + "BaseDao");
+        context.put("baseDaoPack", table.getBasePackage() + ".dao");
     }
 }
