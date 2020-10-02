@@ -8,6 +8,8 @@ import java.util.Map;
 public class ClassNames {
     public static final ClassName Qualifier = ClassName.get("org.springframework.beans.factory.annotation", "Qualifier");
 
+    public static final ClassName Component = ClassName.get("org.springframework.stereotype", "Component");
+
     public static final ClassName Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");
 
     public static final ClassName Autowired = ClassName.get("org.springframework.beans.factory.annotation", "Autowired");

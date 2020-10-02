@@ -16,9 +16,10 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 public @interface TableField {
     /**
-     * 字段值
+     * 数据库字段名称
+     * 默认采用驼峰命名转换为下划线命名
      */
-    String value();
+    String value() default "";
 
     /**
      * 字段 update set 默认值

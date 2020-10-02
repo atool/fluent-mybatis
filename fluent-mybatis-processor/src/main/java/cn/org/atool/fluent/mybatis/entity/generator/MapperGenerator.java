@@ -61,7 +61,7 @@ public class MapperGenerator extends AbstractGenerator {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNames.Mapper);
-        builder.addAnnotation(AnnotationSpec.builder(ClassNames.Qualifier)
+        builder.addAnnotation(AnnotationSpec.builder(ClassNames.Component)
             .addMember("value", "$S", getMapperName(this.fluent)).build()
         );
         builder.addField(FieldSpec.builder(String.class, "ResultMap",
