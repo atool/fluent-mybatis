@@ -25,7 +25,7 @@ public abstract class BaseTest extends Test4J implements ITable {
     "cn.org.atool.fluent.mybatis.generate.dao.impl",
     "cn.org.atool.fluent.mybatis.customize.impl"
 })
-@MapperScan({"cn.org.atool.fluent.mybatis.generate.entity.mapper",
+@MapperScan({"cn.org.atool.fluent.mybatis.generate.mapper",
     "cn.org.atool.fluent.mybatis.customize.mapper"
 })
 class TestSpringConfig {

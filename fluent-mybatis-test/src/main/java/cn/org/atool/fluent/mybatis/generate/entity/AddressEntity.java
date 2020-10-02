@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import cn.org.atool.fluent.mybatis.generate.entity.helper.AddressEntityHelper;
+import cn.org.atool.fluent.mybatis.generate.helper.AddressEntityHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

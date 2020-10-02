@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.method2;
 
-import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.method.InjectMethods;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.model.InjectMapperXml;
