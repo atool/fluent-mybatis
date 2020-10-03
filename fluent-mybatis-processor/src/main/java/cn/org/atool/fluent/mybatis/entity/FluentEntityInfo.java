@@ -78,8 +78,9 @@ public class FluentEntityInfo {
     public FluentEntityInfo setClassName(String entityPack, String className) {
         this.className = className;
         this.entityPack = entityPack;
-        int index = entityPack.lastIndexOf('.');
-        this.basePack = index > 0 ? entityPack.substring(0, index) : entityPack;
+//        int index = entityPack.lastIndexOf('.');
+//        this.basePack = index > 0 ? entityPack.substring(0, index) : entityPack;
+        this.basePack = this.entityPack;
         return this;
     }
 

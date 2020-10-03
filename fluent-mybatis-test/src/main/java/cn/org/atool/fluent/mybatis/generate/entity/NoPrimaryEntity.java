@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.generate.helper.NoPrimaryEntityHelper;
+import cn.org.atool.fluent.mybatis.generate.entity.helper.NoPrimaryEntityHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

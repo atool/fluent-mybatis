@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.AddressQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.entity.wrapper.AddressQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.generate.helper.UserMapping.id;
+import static cn.org.atool.fluent.mybatis.generate.entity.helper.UserMapping.id;
 
 /**
  * InNestQueryTest

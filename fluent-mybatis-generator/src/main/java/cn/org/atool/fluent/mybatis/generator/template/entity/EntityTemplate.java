@@ -21,7 +21,7 @@ import static org.test4j.tools.commons.StringHelper.isNotBlank;
 public class EntityTemplate extends BaseTemplate {
 
     public EntityTemplate() {
-        super("templates/entity/Entity.java.vm", "entity/*Entity.java");
+        super("templates/entity/Entity.java.vm", "*Entity.java");
     }
 
     @Override
@@ -80,14 +80,20 @@ public class EntityTemplate extends BaseTemplate {
             if (isNotBlank(field.getUpdate())) {
                 text.quotas(", update = '%s'", field.getUpdate());
             }
-            if( field.getIsLarge() != null && !field.getIsLarge()){
+            if (field.getIsLarge() != null && !field.getIsLarge()) {
                 text.quotas(", notLarge = false");
             }
-            if(isNotBlank(field.getTypeHandler())){
+            if (isNotBlank(field.getTypeHandler())) {
                 text.quotas(", typeHandler = '%s'", field.getTypeHandler());
             }
             text.append(")");
         }
         return text.toString();
+    }
+
+    @Override
+    protected String getPackage(TableSetter table) {
+        String pack = super.getPackage(table);
+        return pack.endsWith(".") ? pack.substring(0, pack.length() - 1) : pack;
     }
 }

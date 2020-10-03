@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.mapper.AddressMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.AddressQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.mapper.AddressMapper;
+import cn.org.atool.fluent.mybatis.generate.entity.wrapper.AddressQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
