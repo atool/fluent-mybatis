@@ -24,7 +24,6 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
 
 /**
  * 生成Entity对应的Mapper类
@@ -60,8 +59,8 @@ public class MapperGenerator extends AbstractGenerator {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNames.Mapper);
-        builder.addAnnotation(AnnotationSpec.builder(ClassNames.Component)
+        builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNames.CN_Mapper);
+        builder.addAnnotation(AnnotationSpec.builder(ClassNames.CN_Component)
             .addMember("value", "$S", getMapperName(this.fluent)).build()
         );
         builder.addField(FieldSpec.builder(String.class, "ResultMap",
@@ -145,7 +144,7 @@ public class MapperGenerator extends AbstractGenerator {
             .addParameter(ParameterSpec.builder(IQuery.class, "query")
                 .addAnnotation(annotation_Param("WRAPPER"))
                 .build())
-            .returns(parameterizedType(ClassName.get(List.class), Map_StrObj))
+            .returns(parameterizedType(ClassName.get(List.class), CN_Map_StrObj))
             .build();
     }
 
@@ -162,7 +161,7 @@ public class MapperGenerator extends AbstractGenerator {
     public MethodSpec m_listByMap() {
         return this.mapperMethod(SelectProvider.class, M_listByMap)
             .addAnnotation(this.annotation_ResultMap())
-            .addParameter(ParameterSpec.builder(Map_StrObj, "columnMap")
+            .addParameter(ParameterSpec.builder(CN_Map_StrObj, "columnMap")
                 .addAnnotation(annotation_Param("COLUMN_MAP"))
                 .build())
             .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
@@ -235,7 +234,7 @@ public class MapperGenerator extends AbstractGenerator {
 
     public MethodSpec m_deleteByMap() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteByMap)
-            .addParameter(ParameterSpec.builder(Map_StrObj, "cm")
+            .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
                 .addAnnotation(annotation_Param("COLUMN_MAP"))
                 .build())
             .returns(TypeName.INT)

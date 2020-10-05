@@ -5,6 +5,9 @@ import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 import cn.org.atool.fluent.mybatis.segment.model.SqlLike;
+import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
+import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
+import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;
@@ -24,7 +27,10 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 public class WhereApply<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IQuery<?, NQ>
-    > extends BaseApply<WHERE, NQ> implements IOperator<WHERE> {
+    >
+    extends BaseApply<WHERE, NQ>
+    implements
+    IOperator<WHERE>, ObjectWhere<WHERE, NQ>, NumericWhere<WHERE, NQ>, StringWhere<WHERE, NQ> {
 
     public WhereApply(WHERE where) {
         super(where);

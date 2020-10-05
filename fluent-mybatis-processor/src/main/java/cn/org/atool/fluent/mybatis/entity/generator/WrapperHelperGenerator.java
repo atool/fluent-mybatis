@@ -6,10 +6,7 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.TypeVariableName;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -212,7 +209,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedQueryWhere() {
-        return TypeSpec.classBuilder(Suffix_QueryWhere)
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_QueryWhere)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
@@ -220,19 +217,14 @@ public class WrapperHelperGenerator extends AbstractGenerator {
                 QueryGenerator.className(fluent),
                 QueryGenerator.className(fluent)
             ))
-            .addSuperinterface(super.parameterizedType(
-                segment(fluent),
-                super.parameterizedType(
-                    ClassName.get(WhereApply.class),
-                    queryWhere(this.fluent),
-                    QueryGenerator.className(fluent)
-                )
-            ))
             .addJavadoc("query where条件设置")
             .addMethod(this.construct1_QueryWhere())
             .addMethod(this.construct2_QueryWhere())
-            .addMethod(this.m_buildOr_QueryWhere())
-            .build();
+            .addMethod(this.m_buildOr_QueryWhere());
+        for (FieldColumn fc : fluent.getFields()) {
+            buildWhereCondition(builder, fc, Suffix_QueryWhere);
+        }
+        return builder.build();
     }
 
     /**
@@ -241,7 +233,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
      * @return
      */
     private TypeSpec nestedUpdateWhere() {
-        return TypeSpec.classBuilder(Suffix_UpdateWhere)
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_UpdateWhere)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
@@ -249,19 +241,46 @@ public class WrapperHelperGenerator extends AbstractGenerator {
                 UpdaterGenerator.className(fluent),
                 QueryGenerator.className(fluent)
             ))
-            .addSuperinterface(super.parameterizedType(
-                segment(fluent),
-                super.parameterizedType(
-                    ClassName.get(WhereApply.class),
-                    updateWhere(this.fluent),
-                    QueryGenerator.className(fluent)
-                )
-            ))
             .addJavadoc("update where条件设置")
             .addMethod(this.construct1_UpdateWhere())
             .addMethod(this.construct2_UpdateWhere())
-            .addMethod(this.m_buildOr_UpdateWhere())
-            .build();
+            .addMethod(this.m_buildOr_UpdateWhere());
+        for (FieldColumn fc : fluent.getFields()) {
+            buildWhereCondition(builder, fc, Suffix_UpdateWhere);
+        }
+        return builder.build();
+    }
+
+    private void buildWhereCondition(TypeSpec.Builder builder, FieldColumn fc, String suffix_queryWhere) {
+        MethodSpec.Builder field = MethodSpec
+            .methodBuilder(fc.getProperty())
+            .addModifiers(Modifier.PUBLIC);
+        String klassName = fc.getJavaType().toString();
+
+        fc.getJavaType().getOriginalType()
+
+        if (klassName.startsWith("java.lang.")) {
+            try {
+                Class klass = Class.forName(klassName);
+                if(klass.equals(String.class)){
+                    field.returns(parameterizedType(CN_StringWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+                }else if(klass.isAssignableFrom(Number.class)){
+
+                }
+            } catch (ClassNotFoundException e) {
+                field.returns(parameterizedType(CN_ObjectWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+            }
+        } else {
+            field.returns(parameterizedType(CN_ObjectWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+        }
+        if (fc.getJavaType().toString().equals(String.class.getName())) {
+        } else if (fc.getJavaType().isNumeric()) {
+            field.returns(parameterizedType(CN_NumericWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+        } else {
+            field.returns(parameterizedType(CN_ObjectWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+        }
+        field.addStatement("return this.set($T.$L)", MappingGenerator.className(fluent), fc.getProperty());
+        builder.addMethod(field.build());
     }
 
     /**
@@ -353,9 +372,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("set")
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .addParameter(ClassName.get(FieldMapping.class), "fieldMapping")
-            .returns(ClassName.get("", "R"))
+            .returns(TypeVariableName.get("R"))
             .build();
     }
+
+    /**
+     * R set(FieldMapping fieldMapping);
+     *
+     * @return
+     */
 
     /**
      * public QueryWhere(AddressQuery query)

@@ -74,8 +74,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
     private FieldSpec f_mapper() {
         return FieldSpec.builder(MapperGenerator.className(fluent), "mapper")
             .addModifiers(Modifier.PROTECTED)
-            .addAnnotation(ClassNames.Autowired)
-            .addAnnotation(AnnotationSpec.builder(ClassNames.Qualifier)
+            .addAnnotation(ClassNames.CN_Autowired)
+            .addAnnotation(AnnotationSpec.builder(ClassNames.CN_Qualifier)
                 .addMember("value", "$S", getMapperName(fluent)).build()
             )
             .build();

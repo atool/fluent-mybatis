@@ -174,7 +174,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_updateBy() {
-        MethodSpec.Builder builder = super.sqlMethod(M_updateBy).addParameter(Map_StrObj, Param_Map);
+        MethodSpec.Builder builder = super.sqlMethod(M_updateBy).addParameter(CN_Map_StrObj, Param_Map);
         builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, WRAPPER);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
 
@@ -200,7 +200,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_updateById() {
-        MethodSpec.Builder builder = super.sqlMethod(M_updateById).addParameter(Map_StrObj, Param_Map);
+        MethodSpec.Builder builder = super.sqlMethod(M_updateById).addParameter(CN_Map_StrObj, Param_Map);
         if (ifNotPrimary(builder, "no primary define found.")) {
             return builder.build();
         }
@@ -268,7 +268,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_deleteByMap() {
-        MethodSpec.Builder builder = super.sqlMethod(M_DeleteByMap).addParameter(Map_StrObj, Param_Map);
+        MethodSpec.Builder builder = super.sqlMethod(M_DeleteByMap).addParameter(CN_Map_StrObj, Param_Map);
         builder.addStatement("Map<String, Object> cm = getParas(map, $S)", COLUMN_MAP);
 
         builder

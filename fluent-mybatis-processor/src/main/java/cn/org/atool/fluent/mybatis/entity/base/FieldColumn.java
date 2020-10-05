@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import lombok.AccessLevel;
@@ -8,7 +7,8 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 @Data
 @Accessors(chain = true)
