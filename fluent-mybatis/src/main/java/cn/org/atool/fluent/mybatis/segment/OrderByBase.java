@@ -2,14 +2,15 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notEmpty;
 
 /**
  * BaseOrder: 排序对象基类
@@ -39,7 +40,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O asc(String... columns) {
-        if (isNotEmpty(columns)) {
+        if (Predicates.notEmpty(columns)) {
             Stream.of(columns).forEach(column -> this.applyField(column, true));
         }
         return (O) this;
@@ -54,7 +55,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O asc(boolean condition, String... columns) {
-        if (isNotEmpty(columns) && condition) {
+        if (Predicates.notEmpty(columns) && condition) {
             Stream.of(columns).forEach(column -> this.applyField(column, true));
         }
         return (O) this;
@@ -68,7 +69,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O asc(FieldMapping... columns) {
-        if (isNotEmpty(columns)) {
+        if (Predicates.notEmpty(columns)) {
             Stream.of(columns).forEach(field -> this.applyField(field, true));
         }
         return (O) this;
@@ -82,7 +83,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O desc(String... columns) {
-        if (isNotEmpty(columns)) {
+        if (Predicates.notEmpty(columns)) {
             Stream.of(columns).forEach(column -> this.applyField(column, false));
         }
         return (O) this;
@@ -97,7 +98,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O desc(boolean condition, String... columns) {
-        if (isNotEmpty(columns) && condition) {
+        if (Predicates.notEmpty(columns) && condition) {
             Stream.of(columns).forEach(column -> this.applyField(column, false));
         }
         return (O) this;
@@ -111,7 +112,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O desc(FieldMapping... columns) {
-        if (isNotEmpty(columns)) {
+        if (Predicates.notEmpty(columns)) {
             Stream.of(columns).forEach(field -> this.applyField(field, false));
         }
         return (O) this;
@@ -126,7 +127,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O apply(boolean condition, boolean isAsc, FieldMapping... columns) {
-        if (condition && isNotEmpty(columns)) {
+        if (condition && Predicates.notEmpty(columns)) {
             return isAsc ? this.asc(columns) : this.desc(columns);
         } else {
             return (O) this;
@@ -142,7 +143,7 @@ public abstract class OrderByBase<
      * @return 排序对象
      */
     public O apply(boolean condition, boolean isAsc, String... columns) {
-        if (condition && isNotEmpty(columns)) {
+        if (condition && Predicates.notEmpty(columns)) {
             return isAsc ? this.asc(columns) : this.desc(columns);
         } else {
             return (O) this;
@@ -155,7 +156,7 @@ public abstract class OrderByBase<
      * @param isAsc 是否顺序
      */
     private void applyField(String column, boolean isAsc) {
-        if (isNotBlank(column)) {
+        if (notBlank(column)) {
             String segment = column + SPACE + (isAsc ? ASC : DESC);
             this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY, segment, RETAIN);
         }

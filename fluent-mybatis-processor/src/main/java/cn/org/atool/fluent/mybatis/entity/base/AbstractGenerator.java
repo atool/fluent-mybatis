@@ -113,7 +113,7 @@ public abstract class AbstractGenerator {
             .addAnnotation(Override.class)
             .addException(FluentMybatisException.class)
             .addParameter(String.class, "column")
-            .addCode("if (isNotBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluent))
+            .addCode("if (notBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluent))
             .addCode(this.of(
                 "\tthrow new FluentMybatisException('the column[' + column + '] was not found in table[' + $T.Table_Name + '].');\n",
                 MappingGenerator.className(fluent)

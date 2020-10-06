@@ -4,12 +4,13 @@ import cn.org.atool.fluent.mybatis.base.FieldPredicate;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notEmpty;
 
 /**
  * BaseSelector: 查询字段构造
@@ -39,7 +40,7 @@ public abstract class SelectorBase<
      */
     public S apply(String column, String... columns) {
         this.wrapperData().addSelectColumn(column);
-        if (isNotEmpty(columns)) {
+        if (Predicates.notEmpty(columns)) {
             Stream.of(columns).forEach(this.wrapperData()::addSelectColumn);
         }
         return (S) this;
@@ -52,7 +53,7 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S apply(FieldMapping... columns) {
-        if (isNotEmpty(columns)) {
+        if (Predicates.notEmpty(columns)) {
             Stream.of(columns)
                 .filter(c -> c != null)
                 .map(c -> c.column)

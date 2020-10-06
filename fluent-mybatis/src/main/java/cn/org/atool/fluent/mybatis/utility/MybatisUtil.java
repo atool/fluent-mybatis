@@ -19,151 +19,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
  * @author darui.wu
  */
 public class MybatisUtil {
-    /**
-     * 校验集合是否为空
-     *
-     * @param coll 入参
-     * @return boolean
-     */
-    public static boolean isEmpty(Collection<?> coll) {
-        return (coll == null || coll.isEmpty());
-    }
 
-    /**
-     * 校验集合是否不为空
-     *
-     * @param coll 入参
-     * @return boolean
-     */
-    public static boolean isNotEmpty(Collection<?> coll) {
-        return !isEmpty(coll);
-    }
-
-    /**
-     * 判断Map是否为空
-     *
-     * @param map 入参
-     * @return boolean
-     */
-    public static boolean isEmpty(Map<?, ?> map) {
-        return (map == null || map.isEmpty());
-    }
-
-    /**
-     * 判断Map是否不为空
-     *
-     * @param map 入参
-     * @return boolean
-     */
-    public static boolean isNotEmpty(Map<?, ?> map) {
-        return !isEmpty(map);
-    }
-
-    /**
-     * 判断数据是否为空
-     *
-     * @param array 长度
-     * @return 数组对象为null或者长度为 0 时，返回 false
-     */
-    public static boolean isEmpty(Object[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * 判断数据是否为空
-     *
-     * @param array 长度
-     * @return 数组对象为null或者长度为 0 时，返回 false
-     */
-    public static boolean isEmpty(int[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * 判断数据是否为空
-     *
-     * @param array 长度
-     * @return 数组对象为null或者长度为 0 时，返回 false
-     */
-    public static boolean isEmpty(long[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see MybatisUtil#isEmpty(Object[])
-     */
-    public static boolean isNotEmpty(Object[] array) {
-        return !isEmpty(array);
-    }
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see MybatisUtil#isEmpty(Object[])
-     */
-    public static boolean isNotEmpty(long[] array) {
-        return !isEmpty(array);
-    }
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see MybatisUtil#isEmpty(Object[])
-     */
-    public static boolean isNotEmpty(int[] array) {
-        return !isEmpty(array);
-    }
-
-    /**
-     * 判断字符串是否为空
-     *
-     * @param cs 需要判断字符串
-     * @return 判断结果
-     */
-    public static boolean isBlank(final CharSequence cs) {
-        int strLen;
-        if (cs == null || (strLen = cs.length()) == 0) {
-            return true;
-        }
-        for (int i = 0; i < strLen; i++) {
-            if (!Character.isWhitespace(cs.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 判断字符串是否不为空
-     *
-     * @param cs 需要判断字符串
-     * @return 判断结果
-     */
-    public static boolean isNotBlank(final CharSequence cs) {
-        return !isBlank(cs);
-    }
-
-    /**
-     * 判断对象是否为空
-     *
-     * @param object ignore
-     * @return ignore
-     */
-    public static boolean isNotNull(Object object) {
-        if (object instanceof CharSequence) {
-            return isNotBlank((CharSequence) object);
-        } else {
-            return object != null;
-        }
-    }
 
     /**
      * 安全的进行字符串 format
@@ -173,7 +29,7 @@ public class MybatisUtil {
      * @return format 后的
      */
     public static String format(String target, Object... params) {
-        if (target.contains("%s") && MybatisUtil.isNotEmpty(params)) {
+        if (target.contains("%s") && Predicates.notEmpty(params)) {
             return String.format(target, params);
         } else {
             return target;
@@ -294,7 +150,7 @@ public class MybatisUtil {
      * @param value
      */
     public static void assertNotBlank(String property, String value) {
-        if (MybatisUtil.isBlank(value)) {
+        if (Predicates.isBlank(value)) {
             throw FluentMybatisException.instance("the parameter[%s] can't be blank.", property);
         }
     }
@@ -384,7 +240,7 @@ public class MybatisUtil {
     }
 
     public static String trim(String str) {
-        return isBlank(str) ? EMPTY : str.trim();
+        return Predicates.isBlank(str) ? EMPTY : str.trim();
     }
 
     /**
@@ -415,7 +271,7 @@ public class MybatisUtil {
      * @return
      */
     public static String camelToUnderline(String string, boolean toUpper) {
-        if (isBlank(string)) {
+        if (Predicates.isBlank(string)) {
             return "";
         }
         int len = string.length();
@@ -442,7 +298,7 @@ public class MybatisUtil {
      * @return 转换后的字符串
      */
     public static String capitalFirst(String name, String del) {
-        if (!isBlank(name)) {
+        if (!Predicates.isBlank(name)) {
             if (del != null && name.startsWith(del)) {
                 name = name.substring(del.length());
             }
@@ -460,7 +316,7 @@ public class MybatisUtil {
      * @return 转换后的字符串
      */
     public static String lowerFirst(String name, String del) {
-        if (!isBlank(name)) {
+        if (!Predicates.isBlank(name)) {
             if (del != null && name.startsWith(del)) {
                 name = name.substring(del.length());
             }

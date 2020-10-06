@@ -25,8 +25,8 @@ import static cn.org.atool.fluent.mybatis.mapper.MapperUtils.*;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.COLUMN_MAP;
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.WRAPPER;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 import static java.util.stream.Collectors.joining;
 
 public class SqlProviderGenerator extends AbstractGenerator {
@@ -215,7 +215,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             }
             builder.addCode("if (entity.$L() != null) {\n", field.getMethodName());
             builder.addCode("\tsets.add(\"$L = #{et.$L}\");\n", field.getColumn(), field.getProperty());
-            if (isNotBlank(field.getUpdate())) {
+            if (notBlank(field.getUpdate())) {
                 builder.addCode("} else {\n");
                 builder.addCode("\tsets.add($S);\n", field.getColumn() + " = " + field.getUpdate());
             }
@@ -293,7 +293,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addStatement("$T<String> columns = new $T<>()", List.class, ArrayList.class)
             .addStatement("List<String> values = new ArrayList<>()");
         for (FieldColumn field : this.fluent.getFields()) {
-            if (isNotBlank(field.getInsert())) {
+            if (notBlank(field.getInsert())) {
                 builder.addStatement("columns.add($S)", field.getColumn());
             }
             builder.addCode("if (entity.$L() != null) {\n", field.getMethodName());
@@ -301,7 +301,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
                 builder.addStatement("\tcolumns.add($S)", field.getColumn());
             }
             builder.addStatement("\tvalues.add($S)", field.getPropertyEl());
-            if (isNotBlank(field.getInsert())) {
+            if (notBlank(field.getInsert())) {
                 builder.addCode("} else {\n");
                 builder.addStatement("\tvalues.add($S)", field.getInsert());
             }
@@ -329,7 +329,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         String values = this.fluent.getFields().stream()
             .map(field -> {
                 String variable = listIndexEl("list", field.getProperty(), "index");
-                if (isNotBlank(field.getInsert())) {
+                if (notBlank(field.getInsert())) {
                     return String.format("entities.get(index).%s() == null ? %s : %s",
                         field.getMethodName(), '"' + field.getInsert() + '"', variable);
                 } else {

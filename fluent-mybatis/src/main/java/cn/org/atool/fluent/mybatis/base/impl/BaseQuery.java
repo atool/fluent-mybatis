@@ -5,11 +5,12 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notEmpty;
 
 /**
  * AbstractQueryWrapper
@@ -44,8 +45,8 @@ public abstract class BaseQuery<
     }
 
     public Q select(String... columns) {
-        if (isNotEmpty(columns)) {
-            Stream.of(columns).filter(s -> isNotBlank(s)).forEach(this.wrapperData::addSelectColumn);
+        if (Predicates.notEmpty(columns)) {
+            Stream.of(columns).filter(s -> notBlank(s)).forEach(this.wrapperData::addSelectColumn);
         }
         return (Q) this;
     }

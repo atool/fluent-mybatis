@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.segment2;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,8 +48,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void testIn_IfNotEmpty() {
         mapper.listEntity(new UserQuery()
-            .where.age().in(Arrays.asList(12, 23), MybatisUtil::isNotEmpty)
-            .and.age().in(new long[]{23}, MybatisUtil::isNotEmpty).end()
+            .where.age().in(Arrays.asList(12, 23), Predicates::notEmpty)
+            .and.age().in(new long[]{23}, Predicates::notEmpty).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IN (?, ?) AND age = ?");
@@ -59,7 +59,7 @@ class WhereApplyTest_In extends BaseTest {
     void notIn() {
         mapper.listEntity(new UserQuery()
             .where.age().notIn(new int[]{23, 34})
-            .and.age().notIn(new long[]{23}, MybatisUtil::isNotEmpty).end()
+            .and.age().notIn(new long[]{23}, Predicates::notEmpty).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age NOT IN (?, ?) AND age NOT IN (?)");
@@ -70,7 +70,7 @@ class WhereApplyTest_In extends BaseTest {
     void notIn_IfNotEmpty() {
         mapper.listEntity(new UserQuery()
             .where.age().notIn(Arrays.asList(1, 2))
-            .and.age().notIn(Arrays.asList(1), MybatisUtil::isNotEmpty).end()
+            .and.age().notIn(Arrays.asList(1), Predicates::notEmpty).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age NOT IN (?, ?) AND age NOT IN (?)");

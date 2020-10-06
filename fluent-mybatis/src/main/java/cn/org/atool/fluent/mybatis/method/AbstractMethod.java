@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -128,7 +128,7 @@ public abstract class AbstractMethod implements InjectMethod {
      * @return
      */
     public static boolean isUpdateDefault(TableFieldMeta field) {
-        return isNotBlank(field.getUpdate());
+        return notBlank(field.getUpdate());
     }
 
     /**
@@ -147,6 +147,6 @@ public abstract class AbstractMethod implements InjectMethod {
      * @return
      */
     protected boolean isInsertDefault(TableFieldMeta field) {
-        return isNotBlank(field.getInsert());
+        return notBlank(field.getInsert());
     }
 }

@@ -12,6 +12,8 @@ import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -152,7 +154,7 @@ public class WrapperData implements IWrapperData {
      * @param column
      */
     public void addSelectColumn(String column) {
-        if (isNotBlank(column) && !this.sqlSelect.contains(column)) {
+        if (notBlank(column) && !this.sqlSelect.contains(column)) {
             this.sqlSelect.add(column);
         }
     }
@@ -203,7 +205,7 @@ public class WrapperData implements IWrapperData {
      * @param values      对应的参数
      */
     public void updateSql(String column, String functionSql, Object... values) {
-        if (isNotBlank(functionSql)) {
+        if (notBlank(functionSql)) {
             updates.put(column, this.paramSql(functionSql, values));
         }
     }

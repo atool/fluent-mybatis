@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -34,7 +35,7 @@ public class UpdaterGenerator extends AbstractGenerator {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(MybatisUtil.class, "isNotBlank");
+        builder.addStaticImport(Predicates.class, "notBlank");
     }
 
     @Override

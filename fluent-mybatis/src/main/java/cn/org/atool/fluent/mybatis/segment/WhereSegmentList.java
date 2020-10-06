@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
@@ -16,7 +17,7 @@ public class WhereSegmentList extends BaseSegmentList {
 
     @Override
     public WhereSegmentList add(ISqlSegment first, ISqlSegment... segments) {
-        if (MybatisUtil.isEmpty(segments)) {
+        if (Predicates.isEmpty(segments)) {
             return this;
         }
         if (first.isAndOr()) {

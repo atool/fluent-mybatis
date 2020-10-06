@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 
 
 /**
@@ -69,7 +69,7 @@ public class InjectMapper {
         for (Class klass : mapperKlass) {
             boolean isSharing = ISharing.class.isAssignableFrom(klass);
             String xml = InjectMapperXml.buildMapperXml(klass, this.fluentMethods(isSharing, this.dbType));
-            if (isNotBlank(xml)) {
+            if (notBlank(xml)) {
                 Resource resource = new InjectMethodResource(klass, xml);
                 resources.add(resource);
             }

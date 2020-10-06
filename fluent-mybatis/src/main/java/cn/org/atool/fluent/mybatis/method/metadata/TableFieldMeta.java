@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,7 +10,8 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 import java.lang.reflect.Field;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 
 /**
  * 数据库表字段反射信息
@@ -75,7 +75,7 @@ public class TableFieldMeta extends FieldMeta {
         if (typeHandler != null) {
             el += (", typeHandler = " + typeHandler.getName());
         }
-        if (isNotBlank(numericScale)) {
+        if (notBlank(numericScale)) {
             el += (", numericScale = " + numericScale);
         }
         return el;

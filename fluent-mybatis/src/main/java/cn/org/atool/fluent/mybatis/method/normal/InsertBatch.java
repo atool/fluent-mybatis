@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.method.model.StatementType;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_InsertBatch;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
 
 /**
  * InsertBatch: 批量插入实现

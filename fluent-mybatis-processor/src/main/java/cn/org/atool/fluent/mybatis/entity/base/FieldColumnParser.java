@@ -12,7 +12,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 
 /**
  * 字段解析工具类
@@ -59,7 +59,7 @@ public class FieldColumnParser {
                 continue;
             }
             setValue(assign, "value", v -> {
-                if (isNotBlank(v)) {
+                if (notBlank(v)) {
                     field.setColumn(v);
                 }
             });

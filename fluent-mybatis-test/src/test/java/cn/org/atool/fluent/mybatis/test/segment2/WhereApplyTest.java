@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -214,7 +214,7 @@ class WhereApplyTest extends BaseTest {
     void eq_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().eq("abc", MybatisUtil::isNotBlank)
+            .userName().eq("abc", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -225,7 +225,7 @@ class WhereApplyTest extends BaseTest {
     void ne_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().ne("abc", MybatisUtil::isNotBlank)
+            .userName().ne("abc", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -236,7 +236,7 @@ class WhereApplyTest extends BaseTest {
     void gt_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().gt("abc", MybatisUtil::isNotBlank)
+            .userName().gt("abc", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -247,7 +247,7 @@ class WhereApplyTest extends BaseTest {
     void ge_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().ge("abc", MybatisUtil::isNotBlank)
+            .userName().ge("abc", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -258,7 +258,7 @@ class WhereApplyTest extends BaseTest {
     void lt_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().lt("abc", MybatisUtil::isNotBlank)
+            .userName().lt("abc", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -269,7 +269,7 @@ class WhereApplyTest extends BaseTest {
     void le_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().le("abc", MybatisUtil::isNotBlank)
+            .userName().le("abc", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -303,8 +303,8 @@ class WhereApplyTest extends BaseTest {
     void like_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().like("abc", MybatisUtil::isNotBlank)
-            .userName().like(" ", MybatisUtil::isNotBlank)
+            .userName().like("abc", Predicates::notBlank)
+            .userName().like(" ", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -338,8 +338,8 @@ class WhereApplyTest extends BaseTest {
     void notLike_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().notLike("abc", MybatisUtil::isNotBlank)
-            .userName().notLike(" ", MybatisUtil::isNotBlank)
+            .userName().notLike("abc", Predicates::notBlank)
+            .userName().notLike(" ", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -362,8 +362,8 @@ class WhereApplyTest extends BaseTest {
     void likeLeft_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().likeLeft("abc", MybatisUtil::isNotBlank)
-            .userName().likeLeft(" ", MybatisUtil::isNotBlank)
+            .userName().likeLeft("abc", Predicates::notBlank)
+            .userName().likeLeft(" ", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -385,8 +385,8 @@ class WhereApplyTest extends BaseTest {
     void likeRight_IfNotBlank() {
         mapper.listEntity(new UserQuery()
             .where
-            .userName().likeRight("abc", MybatisUtil::isNotBlank)
-            .userName().likeRight(" ", MybatisUtil::isNotBlank)
+            .userName().likeRight("abc", Predicates::notBlank)
+            .userName().likeRight(" ", Predicates::notBlank)
             .end()
         );
         db.sqlList().wantFirstSql()

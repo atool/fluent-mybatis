@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 
 /**
  * SetObject 更新字段值
@@ -71,7 +71,7 @@ public class UpdateApply<
      * @return 更新器
      */
     public S is_IfNotBlank(String value) {
-        return this.is_If(isNotBlank(value), value);
+        return this.is_If(notBlank(value), value);
     }
 
     //function

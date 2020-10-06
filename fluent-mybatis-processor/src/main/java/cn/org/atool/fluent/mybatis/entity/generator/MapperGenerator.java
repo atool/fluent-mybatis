@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
 
 /**
  * 生成Entity对应的Mapper类

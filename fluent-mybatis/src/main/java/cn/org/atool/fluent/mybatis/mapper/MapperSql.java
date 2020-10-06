@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 
 public class MapperSql {
     private StringBuffer buffer = new StringBuffer();
@@ -108,29 +108,29 @@ public class MapperSql {
     }
 
     public MapperSql WHERE_GROUP_BY(WrapperData data) {
-        if (isNotBlank(data.getWhereSql())) {
+        if (notBlank(data.getWhereSql())) {
             this.WHERE(data.getWhereSql());
         }
-        if (isNotBlank(data.getGroupBy())) {
+        if (notBlank(data.getGroupBy())) {
             this.APPEND(data.getGroupBy());
         }
-        if (isNotBlank(data.getLastSql())) {
+        if (notBlank(data.getLastSql())) {
             this.APPEND(data.getLastSql());
         }
         return this;
     }
 
     public MapperSql WHERE_GROUP_ORDER_BY(WrapperData data) {
-        if (isNotBlank(data.getWhereSql())) {
+        if (notBlank(data.getWhereSql())) {
             this.WHERE(data.getWhereSql());
         }
-        if (isNotBlank(data.getGroupBy())) {
+        if (notBlank(data.getGroupBy())) {
             this.APPEND(data.getGroupBy());
         }
-        if (isNotBlank(data.getOrderBy())) {
+        if (notBlank(data.getOrderBy())) {
             this.APPEND(data.getOrderBy());
         }
-        if (isNotBlank(data.getLastSql())) {
+        if (notBlank(data.getLastSql())) {
             this.APPEND(data.getLastSql());
         }
         return this;

@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 
 /**
  * <p>
@@ -107,7 +107,7 @@ public class TableMetaHelper {
 
     private static boolean initByTableName(Class<?> clazz, TableMeta tableMeta, TableName annotation) {
         String tableName = annotation == null ? null : annotation.value();
-        if (isNotBlank(annotation.schema())) {
+        if (notBlank(annotation.schema())) {
             tableName = annotation.schema() + "." + tableName;
         }
         tableMeta.setTableName(tableName);

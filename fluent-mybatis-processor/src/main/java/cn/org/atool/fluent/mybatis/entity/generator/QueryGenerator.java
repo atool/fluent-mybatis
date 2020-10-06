@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.Predicates;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -37,7 +38,7 @@ public class QueryGenerator extends AbstractGenerator {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(MybatisUtil.class, "isNotBlank");
+        builder.addStaticImport(Predicates.class, "notBlank");
     }
 
     @Override

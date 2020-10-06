@@ -17,7 +17,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotNull;
+import static cn.org.atool.fluent.mybatis.utility.Predicates.notNull;
 
 /**
  * BaseQueryAnd: AND或者OR操作基类
@@ -103,7 +103,7 @@ public abstract class WhereBase<
     public <V> WHERE eqMap(Map<String, V> params, boolean ignoreNull) {
         params.forEach((k, v) -> {
             this.wrapper.validateColumn(k);
-            if (isNotNull(v)) {
+            if (notNull(v)) {
                 this.wrapper.getWrapperData().apply(AND, k, EQ, v);
             } else if (!ignoreNull) {
                 this.wrapper.getWrapperData().apply(AND, k, IS_NULL);
