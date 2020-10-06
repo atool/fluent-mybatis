@@ -57,24 +57,6 @@ public interface NumericWhere<
     }
 
     /**
-     * @param value1 条件值
-     * @param value2 条件值
-     * @return 查询器或更新器
-     */
-    default WHERE between(Object value1, Object value2) {
-        return this.apply(BETWEEN, value1, value2);
-    }
-
-    /**
-     * @param value1 条件值
-     * @param value2 条件值
-     * @return 查询器或更新器
-     */
-    default WHERE notBetween(Object value1, Object value2) {
-        return this.apply(NOT_BETWEEN, value1, value2);
-    }
-
-    /**
      * in (values)
      *
      * @param values 条件值
@@ -156,25 +138,5 @@ public interface NumericWhere<
      */
     default WHERE in(boolean condition, long[] values) {
         return this.in(condition, toArray(values));
-    }
-
-    /**
-     * @param condition 为真时成立
-     * @param value1    条件值
-     * @param value2    条件值
-     * @return 查询器或更新器
-     */
-    default WHERE between(boolean condition, Object value1, Object value2) {
-        return this.apply(condition, BETWEEN, value1, value2);
-    }
-
-    /**
-     * @param condition 为真时成立
-     * @param value1    条件值
-     * @param value2    条件值
-     * @return 查询器或更新器
-     */
-    default WHERE notBetween(boolean condition, Object value1, Object value2) {
-        return this.apply(condition, NOT_BETWEEN, value1, value2);
     }
 }

@@ -112,7 +112,7 @@ class WhereApplyTest extends BaseTest {
     void gt_IfNotNull() {
         mapper.listEntity(new UserQuery()
             .where.age().gt_IfNotNull(34)
-            .and.version().gt_IfNotNull(null).end()
+            .and.version().eq_IfNotNull(null).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age > ?");
@@ -134,7 +134,7 @@ class WhereApplyTest extends BaseTest {
         mapper.listEntity(new UserQuery()
             .where
             .age().ge_IfNotNull(34)
-            .userName().ge_IfNotNull(null)
+            .userName().eq_IfNotNull(null)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -157,7 +157,7 @@ class WhereApplyTest extends BaseTest {
         mapper.listEntity(new UserQuery()
             .where
             .age().lt_IfNotNull(34)
-            .userName().lt_IfNotNull(null)
+            .userName().eq_IfNotNull(null)
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -180,7 +180,7 @@ class WhereApplyTest extends BaseTest {
         mapper.listEntity(new UserQuery()
             .where
             .age().le_IfNotNull(34)
-            .userName().le_IfNotNull(null)
+            .userName().eq_IfNotNull(null)
             .end()
         );
         db.sqlList().wantFirstSql()
