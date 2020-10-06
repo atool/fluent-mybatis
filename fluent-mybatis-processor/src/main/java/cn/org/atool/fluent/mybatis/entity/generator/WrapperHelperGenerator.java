@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
+import cn.org.atool.fluent.mybatis.segment.where.*;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -256,31 +257,27 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .methodBuilder(fc.getProperty())
             .addModifiers(Modifier.PUBLIC);
         String klassName = fc.getJavaType().toString();
-
-        fc.getJavaType().getOriginalType()
-
-        if (klassName.startsWith("java.lang.")) {
-            try {
-                Class klass = Class.forName(klassName);
-                if(klass.equals(String.class)){
-                    field.returns(parameterizedType(CN_StringWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
-                }else if(klass.isAssignableFrom(Number.class)){
-
-                }
-            } catch (ClassNotFoundException e) {
-                field.returns(parameterizedType(CN_ObjectWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+        try {
+            Class klass = Class.forName(klassName);
+            if (klass.equals(String.class)) {
+                field.returns(whereType(suffix_queryWhere, StringWhere.class));
+            } else if (klass.equals(Boolean.class)) {
+                field.returns(whereType(suffix_queryWhere, BooleanWhere.class));
+            } else if (Number.class.isAssignableFrom(klass)) {
+                field.returns(whereType(suffix_queryWhere, NumericWhere.class));
+            } else {
+                field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
             }
-        } else {
-            field.returns(parameterizedType(CN_ObjectWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
+        } catch (Exception e) {
+            field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
-        if (fc.getJavaType().toString().equals(String.class.getName())) {
-        } else if (fc.getJavaType().isNumeric()) {
-            field.returns(parameterizedType(CN_NumericWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
-        } else {
-            field.returns(parameterizedType(CN_ObjectWhere, TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent)));
-        }
+
         field.addStatement("return this.set($T.$L)", MappingGenerator.className(fluent), fc.getProperty());
         builder.addMethod(field.build());
+    }
+
+    private TypeName whereType(String suffix_queryWhere, Class<? extends BaseWhere> whereKlass) {
+        return parameterizedType(ClassName.get(whereKlass), TypeVariableName.get(suffix_queryWhere), QueryGenerator.className(fluent));
     }
 
     /**

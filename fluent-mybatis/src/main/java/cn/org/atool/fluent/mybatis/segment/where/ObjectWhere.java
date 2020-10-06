@@ -1,92 +1,29 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
-import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 
 import java.util.Collection;
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotEmpty;
+
 public interface ObjectWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IQuery<?, NQ>
-    > extends IOperator<WHERE> {
-
-    <O> WHERE apply(SqlOp op, O... args);
-
-    <O> WHERE apply(boolean condition, SqlOp op, O... args);
-
-    /**
-     * is null
-     *
-     * @return 查询器或更新器
-     */
-    WHERE isNull();
-
-    /**
-     * is null
-     *
-     * @param condition 条件为真时成立
-     * @return 查询器或更新器
-     */
-    WHERE isNull(boolean condition);
-
-    /**
-     * not null
-     *
-     * @return 查询器或更新器
-     */
-    WHERE isNotNull();
-
-    /**
-     * not null
-     *
-     * @param condition 条件为真时成立
-     * @return 查询器或更新器
-     */
-    WHERE isNotNull(boolean condition);
-
-    // eq
-
-    /**
-     * 等于 =
-     *
-     * @param condition 条件为真时成立
-     * @param value     条件值
-     * @return 查询器或更新器
-     */
-    WHERE eq(boolean condition, Object value);
-
-    /**
-     * 等于 =, 值不为空时成立
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    WHERE eq_IfNotNull(Object value);
-
-    // ne
-
-    /**
-     * 不等于 !=
-     *
-     * @param condition 为真时成立
-     * @param value     条件值
-     * @return 查询器或更新器
-     */
-    WHERE ne(boolean condition, Object value);
-
-    /**
-     * 不等于 !=
-     *
-     * @param value 条件值
-     * @return 查询器或更新器
-     */
-    WHERE ne_IfNotNull(Object value);
-
+    > extends BaseWhere<WHERE, NQ> {
 
     //gt
+    /**
+     * 大于
+     *
+     * @param value 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE gt(Object value) {
+        return this.apply(GT, value);
+    }
 
     /**
      * 大于
@@ -95,7 +32,9 @@ public interface ObjectWhere<
      * @param value     条件值
      * @return 查询器或更新器
      */
-    WHERE gt(boolean condition, Object value);
+    default WHERE gt(boolean condition, Object value) {
+        return this.apply(condition, GT, value);
+    }
 
     /**
      * 大于
@@ -103,7 +42,19 @@ public interface ObjectWhere<
      * @param value 条件值
      * @return 查询器或更新器
      */
-    WHERE gt_IfNotNull(Object value);
+    default WHERE gt_IfNotNull(Object value) {
+        return this.apply(value != null, GT, value);
+    }
+
+    /**
+     * 大于等于
+     *
+     * @param value 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE ge(Object value) {
+        return this.apply(GE, value);
+    }
 
     /**
      * 大于等于
@@ -112,7 +63,9 @@ public interface ObjectWhere<
      * @param value     条件值
      * @return 查询器或更新器
      */
-    WHERE ge(boolean condition, Object value);
+    default WHERE ge(boolean condition, Object value) {
+        return this.apply(condition, GE, value);
+    }
 
     /**
      * 大于等于
@@ -120,7 +73,19 @@ public interface ObjectWhere<
      * @param value 条件值
      * @return 查询器或更新器
      */
-    WHERE ge_IfNotNull(Object value);
+    default WHERE ge_IfNotNull(Object value) {
+        return this.apply(value != null, GE, value);
+    }
+
+    /**
+     * 小于
+     *
+     * @param value 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE lt(Object value) {
+        return this.apply(LT, value);
+    }
 
     /**
      * 小于
@@ -129,7 +94,9 @@ public interface ObjectWhere<
      * @param value     条件值
      * @return 查询器或更新器
      */
-    WHERE lt(boolean condition, Object value);
+    default WHERE lt(boolean condition, Object value) {
+        return this.apply(condition, LT, value);
+    }
 
     /**
      * 小于
@@ -137,7 +104,19 @@ public interface ObjectWhere<
      * @param value 条件值
      * @return 查询器或更新器
      */
-    WHERE lt_IfNotNull(Object value);
+    default WHERE lt_IfNotNull(Object value) {
+        return this.apply(value != null, LT, value);
+    }
+
+    /**
+     * 小于等于
+     *
+     * @param value 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE le(Object value) {
+        return this.apply(LE, value);
+    }
 
     /**
      * 小于等于
@@ -146,7 +125,9 @@ public interface ObjectWhere<
      * @param value     条件值
      * @return 查询器或更新器
      */
-    WHERE le(boolean condition, Object value);
+    default WHERE le(boolean condition, Object value) {
+        return this.apply(condition, LE, value);
+    }
 
     /**
      * 小于等于
@@ -154,7 +135,30 @@ public interface ObjectWhere<
      * @param value 条件值
      * @return 查询器或更新器
      */
-    WHERE le_IfNotNull(Object value);
+    default WHERE le_IfNotNull(Object value) {
+        return this.apply(value != null, LE, value);
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE in(Object[] values) {
+        return this.apply(IN, values);
+    }
+
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE in(Collection values) {
+        return this.apply(IN, values == null ? new Object[0] : values.toArray());
+    }
 
     /**
      * in (values)
@@ -180,7 +184,9 @@ public interface ObjectWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE in_IfNotEmpty(Object[] values);
+    default WHERE in_IfNotEmpty(Object[] values) {
+        return this.in(isNotEmpty(values), values);
+    }
 
     /**
      * in (values)
@@ -188,7 +194,9 @@ public interface ObjectWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE in_IfNotEmpty(Collection values);
+    default WHERE in_IfNotEmpty(Collection values) {
+        return this.in(isNotEmpty(values), values);
+    }
 
     /**
      * where column IN (select ... )
@@ -220,6 +228,27 @@ public interface ObjectWhere<
     /**
      * not in (values)
      *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(Object[] values) {
+        return this.apply(NOT_IN, values);
+    }
+
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(Collection values) {
+        return this.apply(NOT_IN, values == null ? new Object[0] : values.toArray());
+    }
+
+    /**
+     * not in (values)
+     *
      * @param condition 为真时成立
      * @param values    条件值
      * @return 查询器或更新器
@@ -241,7 +270,9 @@ public interface ObjectWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE notIn_IfNotEmpty(Object[] values);
+    default WHERE notIn_IfNotEmpty(Object[] values) {
+        return this.notIn(isNotEmpty(values), values);
+    }
 
     /**
      * not in (values)
@@ -249,7 +280,9 @@ public interface ObjectWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE notIn_IfNotEmpty(Collection values);
+    default WHERE notIn_IfNotEmpty(Collection values) {
+        return this.notIn(isNotEmpty(values), values);
+    }
 
     /**
      * not in (select ... )
@@ -268,16 +301,4 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, Function<NQ, NQ> query);
-
-    /**
-     * where 自定义条件(包括操作符在内）
-     * 比如 where.age().apply("=34").end()
-     * <p>
-     * ！！！慎用！！！！
-     * 有sql注入风险
-     *
-     * @param opArgs 自定义比较语句
-     * @return 查询器或更新器
-     */
-    WHERE apply(String opArgs);
 }

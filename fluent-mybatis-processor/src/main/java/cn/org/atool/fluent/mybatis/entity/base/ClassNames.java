@@ -1,9 +1,5 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.segment.WhereApply;
-import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
-import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
-import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 
@@ -19,12 +15,6 @@ public class ClassNames {
     public static final ClassName CN_Autowired = ClassName.get("org.springframework.beans.factory.annotation", "Autowired");
 
     public static final ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
-
-    public static final ClassName CN_NumericWhere = ClassName.get(NumericWhere.class);
-
-    public static final ClassName CN_ObjectWhere = ClassName.get(ObjectWhere.class);
-
-    public static final ClassName CN_StringWhere = ClassName.get(StringWhere.class);
 
     public static final String Suffix_Mapper = "Mapper";
 

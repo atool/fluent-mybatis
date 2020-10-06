@@ -3,10 +3,28 @@ package cn.org.atool.fluent.mybatis.segment.where;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
+
+/**
+ * 数字相关的比较
+ *
+ * @param <WHERE>
+ * @param <NQ>
+ */
 public interface NumericWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IQuery<?, NQ>
     > extends ObjectWhere<WHERE, NQ> {
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE in(int[] values) {
+        return this.apply(IN, toArray(values));
+    }
 
     /**
      * in (values)
@@ -14,7 +32,47 @@ public interface NumericWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE in_IfNotEmpty(int[] values);
+    default WHERE in(long[] values) {
+        return this.apply(IN, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(int[] values) {
+        return this.apply(NOT_IN, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(long[] values) {
+        return this.apply(NOT_IN, toArray(values));
+    }
+
+    /**
+     * @param value1 条件值
+     * @param value2 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE between(Object value1, Object value2) {
+        return this.apply(BETWEEN, value1, value2);
+    }
+
+    /**
+     * @param value1 条件值
+     * @param value2 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE notBetween(Object value1, Object value2) {
+        return this.apply(NOT_BETWEEN, value1, value2);
+    }
 
     /**
      * in (values)
@@ -22,7 +80,19 @@ public interface NumericWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE in_IfNotEmpty(long[] values);
+    default WHERE in_IfNotEmpty(int[] values) {
+        return this.in_IfNotEmpty(toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    default WHERE in_IfNotEmpty(long[] values) {
+        return this.in_IfNotEmpty(toArray(values));
+    }
 
     /**
      * in (values)
@@ -31,7 +101,9 @@ public interface NumericWhere<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    WHERE in(boolean condition, int[] values);
+    default WHERE in(boolean condition, int[] values) {
+        return this.in(condition, toArray(values));
+    }
 
     /**
      * not in (values)
@@ -39,7 +111,9 @@ public interface NumericWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE notIn_IfNotEmpty(int[] values);
+    default WHERE notIn_IfNotEmpty(int[] values) {
+        return this.notIn_IfNotEmpty(toArray(values));
+    }
 
     /**
      * not in (values)
@@ -47,7 +121,9 @@ public interface NumericWhere<
      * @param values 条件值
      * @return 查询器或更新器
      */
-    WHERE notIn_IfNotEmpty(long[] values);
+    default WHERE notIn_IfNotEmpty(long[] values) {
+        return this.notIn_IfNotEmpty(toArray(values));
+    }
 
     /**
      * not in (values)
@@ -56,7 +132,9 @@ public interface NumericWhere<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    WHERE notIn(boolean condition, int[] values);
+    default WHERE notIn(boolean condition, int[] values) {
+        return this.notIn(condition, toArray(values));
+    }
 
     /**
      * not in (values)
@@ -65,7 +143,9 @@ public interface NumericWhere<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    WHERE notIn(boolean condition, long[] values);
+    default WHERE notIn(boolean condition, long[] values) {
+        return this.notIn(condition, toArray(values));
+    }
 
     /**
      * in (values)
@@ -74,7 +154,9 @@ public interface NumericWhere<
      * @param values    条件值
      * @return 查询器或更新器
      */
-    WHERE in(boolean condition, long[] values);
+    default WHERE in(boolean condition, long[] values) {
+        return this.in(condition, toArray(values));
+    }
 
     /**
      * @param condition 为真时成立
@@ -82,7 +164,9 @@ public interface NumericWhere<
      * @param value2    条件值
      * @return 查询器或更新器
      */
-    WHERE between(boolean condition, Object value1, Object value2);
+    default WHERE between(boolean condition, Object value1, Object value2) {
+        return this.apply(condition, BETWEEN, value1, value2);
+    }
 
     /**
      * @param condition 为真时成立
@@ -90,5 +174,7 @@ public interface NumericWhere<
      * @param value2    条件值
      * @return 查询器或更新器
      */
-    WHERE notBetween(boolean condition, Object value1, Object value2);
+    default WHERE notBetween(boolean condition, Object value1, Object value2) {
+        return this.apply(condition, NOT_BETWEEN, value1, value2);
+    }
 }

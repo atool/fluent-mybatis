@@ -2,7 +2,18 @@ package cn.org.atool.fluent.mybatis.segment.where;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.model.SqlLike;
 
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.LIKE;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isNotBlank;
+
+/**
+ * 字符串相关的比较
+ *
+ * @param <WHERE>
+ * @param <NQ>
+ */
 public interface StringWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IQuery<?, NQ>
@@ -14,7 +25,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE eq_IfNotBlank(String value);
+    default WHERE eq_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), EQ, value);
+    }
 
     /**
      * ne_IfNotBlank
@@ -22,7 +35,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE ne_IfNotBlank(String value);
+    default WHERE ne_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), NE, value);
+    }
 
     /**
      * gt_IfNotBlank
@@ -30,7 +45,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE gt_IfNotBlank(String value);
+    default WHERE gt_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), GT, value);
+    }
 
     /**
      * ge_IfNotBlank
@@ -38,7 +55,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE ge_IfNotBlank(String value);
+    default WHERE ge_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), GE, value);
+    }
 
     /**
      * lt_IfNotBlank
@@ -46,7 +65,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE lt_IfNotBlank(String value);
+    default WHERE lt_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), LT, value);
+    }
 
     /**
      * le_IfNotBlank
@@ -54,7 +75,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE le_IfNotBlank(String value);
+    default WHERE le_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), LE, value);
+    }
 
     /**
      * like '%value%'
@@ -62,7 +85,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE like(String value);
+    default WHERE like(String value) {
+        return this.apply(LIKE, SqlLike.like(value));
+    }
 
     /**
      * like '%value%'
@@ -71,7 +96,9 @@ public interface StringWhere<
      * @param value     条件值
      * @return self
      */
-    WHERE like(boolean condition, String value);
+    default WHERE like(boolean condition, String value) {
+        return this.apply(condition, LIKE, SqlLike.like(value));
+    }
 
     /**
      * value不为空时, 执行 like '%value%'
@@ -79,7 +106,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE like_IfNotBlank(String value);
+    default WHERE like_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), LIKE, SqlLike.like(value));
+    }
 
     /**
      * not like '%value%'
@@ -87,7 +116,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return self
      */
-    WHERE notLike(String value);
+    default WHERE notLike(String value) {
+        return this.apply(NOT_LIKE, SqlLike.like(value));
+    }
 
     /**
      * not like '%value%'
@@ -96,7 +127,9 @@ public interface StringWhere<
      * @param value     条件值
      * @return self
      */
-    WHERE notLike(boolean condition, String value);
+    default WHERE notLike(boolean condition, String value) {
+        return this.apply(condition, NOT_LIKE, SqlLike.like(value));
+    }
 
     /**
      * not like '%value%'
@@ -104,7 +137,9 @@ public interface StringWhere<
      * @param value 条件值
      * @return where
      */
-    WHERE notLike_IfNotBlank(String value);
+    default WHERE notLike_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), NOT_LIKE, SqlLike.like(value));
+    }
 
     /**
      * like '%value'
@@ -112,7 +147,9 @@ public interface StringWhere<
      * @param value left like value
      * @return where
      */
-    WHERE likeLeft(String value);
+    default WHERE likeLeft(String value) {
+        return this.apply(LIKE, SqlLike.left(value));
+    }
 
     /**
      * like '%value'
@@ -121,7 +158,9 @@ public interface StringWhere<
      * @param value     left like value
      * @return where
      */
-    WHERE likeLeft(boolean condition, String value);
+    default WHERE likeLeft(boolean condition, String value) {
+        return this.apply(condition, LIKE, SqlLike.left(value));
+    }
 
     /**
      * like '%value'
@@ -129,7 +168,9 @@ public interface StringWhere<
      * @param value left like value
      * @return where
      */
-    WHERE likeLeft_IfNotBlank(String value);
+    default WHERE likeLeft_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), LIKE, SqlLike.left(value));
+    }
 
     /**
      * like 'value%'
@@ -137,7 +178,9 @@ public interface StringWhere<
      * @param value right like value
      * @return where
      */
-    WHERE likeRight(String value);
+    default WHERE likeRight(String value) {
+        return this.apply(LIKE, SqlLike.right(value));
+    }
 
     /**
      * like 'value%'
@@ -146,7 +189,9 @@ public interface StringWhere<
      * @param value     right like value
      * @return where
      */
-    WHERE likeRight(boolean condition, String value);
+    default WHERE likeRight(boolean condition, String value) {
+        return this.apply(condition, LIKE, SqlLike.right(value));
+    }
 
     /**
      * like 'value%'
@@ -154,5 +199,7 @@ public interface StringWhere<
      * @param value right like value
      * @return where
      */
-    WHERE likeRight_IfNotBlank(String value);
+    default WHERE likeRight_IfNotBlank(String value) {
+        return this.apply(isNotBlank(value), LIKE, SqlLike.right(value));
+    }
 }
