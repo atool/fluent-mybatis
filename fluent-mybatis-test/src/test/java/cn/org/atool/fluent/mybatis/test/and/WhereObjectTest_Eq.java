@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WhereObjectTest_Eq extends BaseTest {
@@ -34,7 +36,7 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_condition_true() {
         UserQuery query = new UserQuery()
-            .where.age().eq(true, 34)
+            .where.age().eq(34, o -> true)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age = ?", StringMode.SameAsSpace);
@@ -44,7 +46,7 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_condition_false() {
         UserQuery query = new UserQuery()
-            .where.age().eq(false, 34)
+            .where.age().eq(34, o -> false)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user");
@@ -54,7 +56,7 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_IfNotNull() {
         UserQuery query = new UserQuery()
-            .where.userName().eq_IfNotNull("name")
+            .where.userName().eq("name", Objects::nonNull)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE user_name = ?", StringMode.SameAsSpace);
@@ -64,7 +66,7 @@ public class WhereObjectTest_Eq extends BaseTest {
     @Test
     public void eq_IfNull() {
         UserQuery query = new UserQuery()
-            .where.userName().eq_IfNotNull(null)
+            .where.userName().eq(null, Objects::nonNull)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user");

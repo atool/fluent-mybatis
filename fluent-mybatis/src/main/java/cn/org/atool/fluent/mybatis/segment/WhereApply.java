@@ -62,34 +62,13 @@ public class WhereApply<
     }
 
     /**
-     * in (values)
-     *
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in(boolean condition, Object[] values) {
-        return condition ? this.in(values) : this.segment;
-    }
-
-    /**
-     * in (values)
-     *
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE in(boolean condition, Collection values) {
-        return condition ? this.in(values) : this.segment;
-    }
-
-    /**
      * where column IN (select ... )
      *
      * @param select 子查询语句
      * @param args   子查询语句参数，对应select语句里面的 "?" 占位符
      * @return 查询器或更新器
      */
+    @Override
     public <O> WHERE in(String select, O... args) {
         if (isCollection(args)) {
             return this.segment.apply(current.column, select, IN, ((Collection) args[0]).toArray());
@@ -104,6 +83,7 @@ public class WhereApply<
      * @param query 嵌套查询
      * @return 查询器或更新器
      */
+    @Override
     public WHERE in(Function<NQ, NQ> query) {
         return (WHERE) this.in(this.segment.queryClass(), query);
     }
@@ -116,32 +96,11 @@ public class WhereApply<
      * @param <NQ>  嵌套查询类
      * @return 查询器或更新器
      */
+    @Override
     public <NQ extends IQuery> WHERE in(Class<NQ> klass, Function<NQ, NQ> query) {
         NQ nested = NestedQueryFactory.nested(klass, this.segment.getParameters());
         query.apply(nested);
         return this.segment.apply(current.column, nested.getWrapperData().getQuerySql(), IN);
-    }
-
-    /**
-     * not in (values)
-     *
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notIn(boolean condition, Object[] values) {
-        return condition ? this.notIn(values) : this.segment;
-    }
-
-    /**
-     * not in (values)
-     *
-     * @param condition 为真时成立
-     * @param values    条件值
-     * @return 查询器或更新器
-     */
-    public WHERE notIn(boolean condition, Collection values) {
-        return condition ? this.notIn(values) : this.segment;
     }
 
     /**
@@ -150,6 +109,7 @@ public class WhereApply<
      * @param query 嵌套查询
      * @return 查询器或更新器
      */
+    @Override
     public WHERE notIn(Function<NQ, NQ> query) {
         return (WHERE) this.notIn(this.segment.queryClass(), query);
     }
@@ -162,6 +122,7 @@ public class WhereApply<
      * @param <NQ>       嵌套查询类
      * @return 查询器或更新器
      */
+    @Override
     public <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, Function<NQ, NQ> query) {
         NQ nested = NestedQueryFactory.nested(queryClass, this.segment.getParameters());
         query.apply(nested);
@@ -178,6 +139,7 @@ public class WhereApply<
      * @param opArgs 自定义比较语句
      * @return 查询器或更新器
      */
+    @Override
     public WHERE apply(String opArgs) {
         return this.segment.apply(current.column, opArgs, RETAIN);
     }

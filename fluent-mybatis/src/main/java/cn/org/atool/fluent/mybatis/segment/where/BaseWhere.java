@@ -4,6 +4,8 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
+import java.util.function.Predicate;
+
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 
 /**
@@ -17,9 +19,9 @@ public interface BaseWhere<
     NQ extends IQuery<?, NQ>
     > {
 
-    <O> WHERE apply(SqlOp op, O... args);
+    <T> WHERE apply(SqlOp op, T... args);
 
-    <O> WHERE apply(boolean condition, SqlOp op, O... args);
+    <T> WHERE apply(boolean condition, SqlOp op, T... args);
 
     /**
      * is null
@@ -60,42 +62,26 @@ public interface BaseWhere<
         return this.apply(condition, IS_NOT_NULL);
     }
 
-
-    // eq
-
     /**
      * 等于 =
      *
      * @param value 条件值
      * @return 查询器或更新器
      */
-    default WHERE eq(Object value) {
+    default <T> WHERE eq(T value) {
         return this.apply(EQ, value);
-    }
-
-
-    /**
-     * 等于 =
-     *
-     * @param condition 条件为真时成立
-     * @param value     条件值
-     * @return 查询器或更新器
-     */
-    default WHERE eq(boolean condition, Object value) {
-        return this.apply(condition, EQ, value);
     }
 
     /**
      * 等于 =, 值不为空时成立
      *
      * @param value 条件值
+     * @param when  条件为真时成立
      * @return 查询器或更新器
      */
-    default WHERE eq_IfNotNull(Object value) {
-        return this.apply(value != null, EQ, value);
+    default <T> WHERE eq(T value, Predicate<T> when) {
+        return this.apply(when.test(value), EQ, value);
     }
-
-    // ne
 
     /**
      * 不等于 !=
@@ -103,29 +89,19 @@ public interface BaseWhere<
      * @param value 条件值
      * @return 查询器或更新器
      */
-    default WHERE ne(Object value) {
+    default <T> WHERE ne(T value) {
         return this.apply(NE, value);
     }
 
     /**
      * 不等于 !=
      *
-     * @param condition 为真时成立
-     * @param value     条件值
-     * @return 查询器或更新器
-     */
-    default WHERE ne(boolean condition, Object value) {
-        return this.apply(condition, NE, value);
-    }
-
-    /**
-     * 不等于 !=
-     *
      * @param value 条件值
+     * @param when  为真时成立
      * @return 查询器或更新器
      */
-    default WHERE ne_IfNotNull(Object value) {
-        return this.apply(value != null, NE, value);
+    default <T> WHERE ne(T value, Predicate<T> when) {
+        return this.apply(when.test(value), NE, value);
     }
 
     /**

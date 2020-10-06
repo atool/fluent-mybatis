@@ -70,6 +70,26 @@ public class MybatisUtil {
     }
 
     /**
+     * 判断数据是否为空
+     *
+     * @param array 长度
+     * @return 数组对象为null或者长度为 0 时，返回 false
+     */
+    public static boolean isEmpty(int[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 判断数据是否为空
+     *
+     * @param array 长度
+     * @return 数组对象为null或者长度为 0 时，返回 false
+     */
+    public static boolean isEmpty(long[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
      * 判断数组是否不为空
      *
      * @param array 数组
@@ -77,6 +97,28 @@ public class MybatisUtil {
      * @see MybatisUtil#isEmpty(Object[])
      */
     public static boolean isNotEmpty(Object[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 判断数组是否不为空
+     *
+     * @param array 数组
+     * @return 数组对象内含有任意对象时返回 true
+     * @see MybatisUtil#isEmpty(Object[])
+     */
+    public static boolean isNotEmpty(long[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 判断数组是否不为空
+     *
+     * @param array 数组
+     * @return 数组对象内含有任意对象时返回 true
+     * @see MybatisUtil#isEmpty(Object[])
+     */
+    public static boolean isNotEmpty(int[] array) {
         return !isEmpty(array);
     }
 

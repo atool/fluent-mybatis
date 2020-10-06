@@ -6,6 +6,8 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Objects;
+
 public class WhereObjectTest_Ge extends BaseTest {
 
     @Autowired
@@ -23,7 +25,7 @@ public class WhereObjectTest_Ge extends BaseTest {
     @Test
     public void ge_condition() {
         UserQuery query = new UserQuery()
-            .where.age().ge(true, 34).end();
+            .where.age().ge(34, o -> true).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age >= ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
@@ -32,7 +34,7 @@ public class WhereObjectTest_Ge extends BaseTest {
     @Test
     public void ge_IfNotNull() {
         UserQuery query = new UserQuery()
-            .where.age().ge_IfNotNull(34).end();
+            .where.age().ge(34, Objects::nonNull).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age >= ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});

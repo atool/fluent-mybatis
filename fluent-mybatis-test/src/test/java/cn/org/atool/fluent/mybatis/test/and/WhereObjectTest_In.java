@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.test.and;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
@@ -26,7 +27,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_condition() {
         UserQuery query = new UserQuery()
-            .where.age().in(true, Arrays.asList(34, 35))
+            .where.age().in(Arrays.asList(34, 35), o -> true)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -36,7 +37,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_IfNotEmpty() {
         UserQuery query = new UserQuery()
-            .where.age().in_IfNotEmpty(Arrays.asList(34, 35))
+            .where.age().in(Arrays.asList(34, 35), MybatisUtil::isNotEmpty)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -56,7 +57,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_array_condition() {
         UserQuery query = new UserQuery()
-            .where.age().in(true, new Integer[]{34, 35})
+            .where.age().in(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -66,7 +67,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_array2_condition() {
         UserQuery query = new UserQuery()
-            .where.age().in(true, new Integer[]{34, 35})
+            .where.age().in(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -76,7 +77,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_arr_IfNotEmpty() {
         UserQuery query = new UserQuery()
-            .where.age().in_IfNotEmpty(new Integer[]{34, 35})
+            .where.age().in(new Integer[]{34, 35}, MybatisUtil::isNotEmpty)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age IN (?, ?)", StringMode.SameAsSpace);
@@ -86,7 +87,7 @@ public class WhereObjectTest_In extends BaseTest {
     @Test
     public void in_arr_IfNotEmpty2() {
         UserQuery query = new UserQuery()
-            .where.age().in_IfNotEmpty(new Integer[0])
+            .where.age().in(new Integer[0], MybatisUtil::isNotEmpty)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user");

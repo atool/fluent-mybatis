@@ -39,8 +39,8 @@ public class AndNestedTest extends BaseTest {
             .where
             .id().in(q -> q.selectId().where.id().eq(3L).end())
             .and(q -> q
-                .where.age().eq(false, 24)
-                .or.id().eq(false, 3L).end()
+                .where.age().eq(24, o -> false)
+                .or.id().eq(3L, o -> false).end()
             )
             .end();
         mapper.count(query);
@@ -55,8 +55,8 @@ public class AndNestedTest extends BaseTest {
             .where
             .id().in(q -> q.selectId().where.id().eq(3L).end())
             .or(q -> q
-                .where.age().eq(false, 24)
-                .and.id().eq(false, 3L).end()
+                .where.age().eq(24, o -> false)
+                .and.id().eq(3L, o -> false).end()
             )
             .end();
         mapper.count(query);

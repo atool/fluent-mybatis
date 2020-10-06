@@ -22,7 +22,7 @@ public class WhereObjectTest_Between extends BaseTest {
     @Test
     public void between_condition_true() {
         UserQuery query = new UserQuery()
-            .where.age().between(true, 23, 40).end();
+            .where.age().between(23, 40, (v1, v2) -> true).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().where().eq("age BETWEEN ? AND ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{23, 40});
@@ -32,7 +32,7 @@ public class WhereObjectTest_Between extends BaseTest {
     public void between_condition_false() {
         UserQuery query = new UserQuery()
             .where
-            .age().between(false, 23, 40)
+            .age().between(23, 40, (v1, v2) -> false)
             .userName().like("user")
             .end();
         mapper.count(query);
@@ -53,7 +53,7 @@ public class WhereObjectTest_Between extends BaseTest {
     @Test
     public void notBetween_condition_true() {
         UserQuery query = new UserQuery()
-            .where.age().notBetween(true, 23, 40).end();
+            .where.age().notBetween(23, 40, (v1, v2) -> true).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().where().eq("age NOT BETWEEN ? AND ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{23, 40});
@@ -62,7 +62,7 @@ public class WhereObjectTest_Between extends BaseTest {
     @Test
     public void notBetween_condition_false() {
         UserQuery query = new UserQuery()
-            .where.age().notBetween(false, 23, 40).end();
+            .where.age().notBetween(23, 40, (v1, v2) -> false).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().notContain("BETWEEN");
     }
