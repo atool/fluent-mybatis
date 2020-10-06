@@ -46,7 +46,7 @@ class WhereApplyTest extends BaseTest {
     @Test
     void isNotNull() {
         mapper.listEntity(new UserQuery()
-            .where.age().isNotNull().end()
+            .where.age().notNull().end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IS NOT NULL");
@@ -55,8 +55,8 @@ class WhereApplyTest extends BaseTest {
     @Test
     void testIsNotNull() {
         mapper.listEntity(new UserQuery()
-            .where.age().isNotNull(true)
-            .and.userName().isNotNull(false).end()
+            .where.age().notNull(true)
+            .and.userName().notNull(false).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IS NOT NULL");

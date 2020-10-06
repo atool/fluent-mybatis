@@ -48,7 +48,7 @@ public interface BaseWhere<
      *
      * @return 查询器或更新器
      */
-    default WHERE isNotNull() {
+    default WHERE notNull() {
         return this.apply(IS_NOT_NULL);
     }
 
@@ -58,7 +58,7 @@ public interface BaseWhere<
      * @param condition 条件为真时成立
      * @return 查询器或更新器
      */
-    default WHERE isNotNull(boolean condition) {
+    default WHERE notNull(boolean condition) {
         return this.apply(condition, IS_NOT_NULL);
     }
 
