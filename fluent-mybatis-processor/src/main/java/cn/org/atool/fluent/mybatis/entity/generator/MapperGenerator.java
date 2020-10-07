@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
-import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.*;
@@ -26,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Mapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapper;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
  * 生成Entity对应的Mapper类

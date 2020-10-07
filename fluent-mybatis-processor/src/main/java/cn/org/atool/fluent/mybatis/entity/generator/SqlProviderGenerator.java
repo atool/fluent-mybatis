@@ -24,8 +24,8 @@ import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.MapperUtils.listIndexEl;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
+import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static java.util.stream.Collectors.joining;
 
 public class SqlProviderGenerator extends AbstractGenerator {

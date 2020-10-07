@@ -8,9 +8,9 @@ import cn.org.atool.fluent.mybatis.method.metadata.TablePrimaryMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_Insert;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.COMMA;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
 
 /**
  * InsertSelected 插入非null的字段，忽略null字段

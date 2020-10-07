@@ -12,7 +12,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 
 /**
  * 字段解析工具类

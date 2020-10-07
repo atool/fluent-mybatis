@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 
 
 /**

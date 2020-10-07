@@ -1,8 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import cn.org.atool.fluent.mybatis.utility.Predicates;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +34,7 @@ public class ParameterPair extends HashMap<String, Object> {
      * @return 参数化的sql语句
      */
     public String paramSql(String sqlStr, Object... params) {
-        if (Predicates.isBlank(sqlStr)) {
+        if (If.isBlank(sqlStr)) {
             throw new FluentMybatisException("sql parameter can't be null.");
         }
 

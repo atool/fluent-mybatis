@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
@@ -29,7 +30,7 @@ public class MybatisUtil {
      * @return format 后的
      */
     public static String format(String target, Object... params) {
-        if (target.contains("%s") && Predicates.notEmpty(params)) {
+        if (target.contains("%s") && If.notEmpty(params)) {
             return String.format(target, params);
         } else {
             return target;
@@ -150,7 +151,7 @@ public class MybatisUtil {
      * @param value
      */
     public static void assertNotBlank(String property, String value) {
-        if (Predicates.isBlank(value)) {
+        if (If.isBlank(value)) {
             throw FluentMybatisException.instance("the parameter[%s] can't be blank.", property);
         }
     }
@@ -240,7 +241,7 @@ public class MybatisUtil {
     }
 
     public static String trim(String str) {
-        return Predicates.isBlank(str) ? EMPTY : str.trim();
+        return If.isBlank(str) ? EMPTY : str.trim();
     }
 
     /**
@@ -271,7 +272,7 @@ public class MybatisUtil {
      * @return
      */
     public static String camelToUnderline(String string, boolean toUpper) {
-        if (Predicates.isBlank(string)) {
+        if (If.isBlank(string)) {
             return "";
         }
         int len = string.length();
@@ -298,7 +299,7 @@ public class MybatisUtil {
      * @return 转换后的字符串
      */
     public static String capitalFirst(String name, String del) {
-        if (!Predicates.isBlank(name)) {
+        if (!If.isBlank(name)) {
             if (del != null && name.startsWith(del)) {
                 name = name.substring(del.length());
             }
@@ -316,7 +317,7 @@ public class MybatisUtil {
      * @return 转换后的字符串
      */
     public static String lowerFirst(String name, String del) {
-        if (!Predicates.isBlank(name)) {
+        if (!If.isBlank(name)) {
             if (del != null && name.startsWith(del)) {
                 name = name.substring(del.length());
             }

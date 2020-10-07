@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.utility.Predicates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(String... columns) {
-        Stream.of(columns).filter(Predicates::notBlank).forEach(apply::add);
+        Stream.of(columns).filter(If::notBlank).forEach(apply::add);
         return (G) this;
     }
 

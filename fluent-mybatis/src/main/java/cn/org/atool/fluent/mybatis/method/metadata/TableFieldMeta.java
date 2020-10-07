@@ -9,9 +9,9 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
+import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
 
 /**
  * 数据库表字段反射信息

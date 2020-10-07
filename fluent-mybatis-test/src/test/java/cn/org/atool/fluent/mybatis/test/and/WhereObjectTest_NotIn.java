@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.and;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import cn.org.atool.fluent.mybatis.utility.Predicates;
+import cn.org.atool.fluent.mybatis.If;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +36,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
     @Test
     public void notIn_IfNotEmpty() {
         UserQuery query = new UserQuery()
-            .where.age().notIn(Arrays.asList(34, 35), Predicates::notEmpty)
+            .where.age().notIn(Arrays.asList(34, 35), If::notEmpty)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age NOT IN (?, ?)");
@@ -76,7 +76,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
     @Test
     public void notIn_arr_IfNotEmpty() {
         UserQuery query = new UserQuery()
-            .where.age().notIn(new Integer[]{34, 35}, Predicates::notEmpty)
+            .where.age().notIn(new Integer[]{34, 35}, If::notEmpty)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE age NOT IN (?, ?)");
@@ -86,7 +86,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
     @Test
     public void notIn_arr_IfNotEmpty2() {
         UserQuery query = new UserQuery()
-            .where.age().notIn(new Integer[0], Predicates::notEmpty)
+            .where.age().notIn(new Integer[0], If::notEmpty)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user");

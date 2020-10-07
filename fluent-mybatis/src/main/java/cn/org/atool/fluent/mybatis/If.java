@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.utility;
+package cn.org.atool.fluent.mybatis;
 
 import java.util.Collection;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author wudarui
  */
-public class Predicates {
+public class If {
     /**
      * 校验集合是否为空
      *
@@ -84,7 +84,7 @@ public class Predicates {
      *
      * @param array 数组
      * @return 数组对象内含有任意对象时返回 true
-     * @see Predicates#isEmpty(Object[])
+     * @see If#isEmpty(Object[])
      */
     public static boolean notEmpty(Object[] array) {
         return !isEmpty(array);
@@ -95,7 +95,7 @@ public class Predicates {
      *
      * @param array 数组
      * @return 数组对象内含有任意对象时返回 true
-     * @see Predicates#isEmpty(Object[])
+     * @see If#isEmpty(Object[])
      */
     public static boolean notEmpty(long[] array) {
         return !isEmpty(array);
@@ -106,7 +106,7 @@ public class Predicates {
      *
      * @param array 数组
      * @return 数组对象内含有任意对象时返回 true
-     * @see Predicates#isEmpty(Object[])
+     * @see If#isEmpty(Object[])
      */
     public static boolean notEmpty(int[] array) {
         return !isEmpty(array);

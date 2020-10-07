@@ -10,8 +10,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 import static java.util.stream.Collectors.joining;
 
 /**

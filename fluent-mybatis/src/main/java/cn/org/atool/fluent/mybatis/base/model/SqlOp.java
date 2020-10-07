@@ -6,9 +6,9 @@ import lombok.Getter;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.If.isEmpty;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.QUESTION_MARK;
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.STR_FORMAT;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.isEmpty;
 import static java.util.stream.Collectors.joining;
 
 /**

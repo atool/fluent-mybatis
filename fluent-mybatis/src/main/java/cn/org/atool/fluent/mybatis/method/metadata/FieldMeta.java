@@ -5,8 +5,8 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
-import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
 
 /**
  * BaseFieldInfo

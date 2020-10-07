@@ -5,7 +5,8 @@ import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.function.Predicate;
 
-import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.IN;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_IN;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
 
 /**
