@@ -10,6 +10,26 @@ import java.util.Map;
  */
 public class If {
     /**
+     * 总是真的
+     *
+     * @param o
+     * @return
+     */
+    public static boolean everTrue(Object o) {
+        return true;
+    }
+
+    /**
+     * 总是假的
+     *
+     * @param o
+     * @return
+     */
+    public static boolean everFalse(Object o) {
+        return false;
+    }
+
+    /**
      * 校验集合是否为空
      *
      * @param coll 入参
@@ -60,6 +80,17 @@ public class If {
     }
 
     /**
+     * 判断数组是否不为空
+     *
+     * @param array 数组
+     * @return 数组对象内含有任意对象时返回 true
+     * @see If#isEmpty(Object[])
+     */
+    public static boolean notEmpty(Object[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
      * 判断数据是否为空
      *
      * @param array 长度
@@ -67,6 +98,17 @@ public class If {
      */
     public static boolean isEmpty(int[] array) {
         return array == null || array.length == 0;
+    }
+
+    /**
+     * 判断数组是否不为空
+     *
+     * @param array 数组
+     * @return 数组对象内含有任意对象时返回 true
+     * @see If#isEmpty(Object[])
+     */
+    public static boolean notEmpty(int[] array) {
+        return !isEmpty(array);
     }
 
     /**
@@ -79,16 +121,6 @@ public class If {
         return array == null || array.length == 0;
     }
 
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see If#isEmpty(Object[])
-     */
-    public static boolean notEmpty(Object[] array) {
-        return !isEmpty(array);
-    }
 
     /**
      * 判断数组是否不为空
@@ -98,17 +130,6 @@ public class If {
      * @see If#isEmpty(Object[])
      */
     public static boolean notEmpty(long[] array) {
-        return !isEmpty(array);
-    }
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see If#isEmpty(Object[])
-     */
-    public static boolean notEmpty(int[] array) {
         return !isEmpty(array);
     }
 
@@ -147,11 +168,17 @@ public class If {
      * @param object ignore
      * @return ignore
      */
+    public static boolean isNull(Object object) {
+        return object == null;
+    }
+
+    /**
+     * 判断对象是否非空
+     *
+     * @param object ignore
+     * @return ignore
+     */
     public static boolean notNull(Object object) {
-        if (object instanceof CharSequence) {
-            return notBlank((CharSequence) object);
-        } else {
-            return object != null;
-        }
+        return !isNull(object);
     }
 }

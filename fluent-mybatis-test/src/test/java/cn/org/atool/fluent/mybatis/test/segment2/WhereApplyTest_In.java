@@ -28,8 +28,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void testIn() {
         mapper.listEntity(new UserQuery()
-            .where.age().in(new int[]{23, 34}, o -> true)
-            .and.age().in(new long[]{23, 34}, o -> true).end()
+            .where.age().in(new int[]{23, 34}, If::everTrue)
+            .and.age().in(new long[]{23, 34}, If::everTrue).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IN (?, ?) AND age IN (?, ?)");
@@ -38,8 +38,8 @@ class WhereApplyTest_In extends BaseTest {
     @Test
     void testIn_collection() {
         mapper.listEntity(new UserQuery()
-            .where.age().in(Arrays.asList(12, 23), o -> true)
-            .and.age().in(Arrays.asList(12), o -> true).end()
+            .where.age().in(Arrays.asList(12, 23), If::everTrue)
+            .and.age().in(Arrays.asList(12), If::everTrue).end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE age IN (?, ?) AND age = ?");

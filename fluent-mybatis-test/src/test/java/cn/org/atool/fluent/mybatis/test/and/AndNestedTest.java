@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -39,8 +40,8 @@ public class AndNestedTest extends BaseTest {
             .where
             .id().in(q -> q.selectId().where.id().eq(3L).end())
             .and(q -> q
-                .where.age().eq(24, o -> false)
-                .or.id().eq(3L, o -> false).end()
+                .where.age().eq(24, If::everFalse)
+                .or.id().eq(3L, If::everFalse).end()
             )
             .end();
         mapper.count(query);
