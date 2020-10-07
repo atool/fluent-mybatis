@@ -13,6 +13,11 @@
     <artifactId>fluent-mybatis-generator</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.test4j</groupId>
             <artifactId>test4j-core</artifactId>
             <version>${test4j.version}</version>

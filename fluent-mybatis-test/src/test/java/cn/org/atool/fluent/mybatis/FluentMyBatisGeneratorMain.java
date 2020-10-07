@@ -1,12 +1,13 @@
 package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import cn.org.atool.fluent.mybatis.generator.EntityGenerator;
+import cn.org.atool.fluent.mybatis.generator.EntityGenerator2;
+
 
 public class FluentMyBatisGeneratorMain {
-    static String url = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
+    public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
 
-    static String dao_interface = MyCustomerInterface.class.getName();
+    public static final String dao_interface = MyCustomerInterface.class.getName();
 
     /**
      * 使用main函数，是避免全量跑test时，误执行生成代码
@@ -15,10 +16,10 @@ public class FluentMyBatisGeneratorMain {
      */
     public static void main(String[] args) {
         String outputDir = System.getProperty("user.dir") + "/fluent-mybatis-test/src/main/java";
-        EntityGenerator.build()
+        EntityGenerator2.build()
             .globalConfig(config -> config.setOutputDir(outputDir)
-                .setDataSource(url, "root", "password")
-                .setBasePackage("cn.org.atool.fluent.mybatis.generate"))
+                .setDataSource(URL, "root", "password")
+                .setBasePackage("cn.org.atool.fluent.mybatis.generate.entity"))
             .tables(config -> config
                 .table("address")
                 .table("t_user", t -> t.enablePartition()
