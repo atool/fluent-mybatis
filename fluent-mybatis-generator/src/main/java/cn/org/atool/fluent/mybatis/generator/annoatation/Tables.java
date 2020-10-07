@@ -102,20 +102,6 @@ public @interface Tables {
     Table[] tables();
 
     /**
-     * entity类自定义接口
-     *
-     * @return
-     */
-    Class[] entityInterface() default {Object.class};
-
-    /**
-     * dao 类自定义接口
-     *
-     * @return
-     */
-    Class[] daoInterface() default {Object.class};
-
-    /**
      * 记录创建字段
      *
      * @return

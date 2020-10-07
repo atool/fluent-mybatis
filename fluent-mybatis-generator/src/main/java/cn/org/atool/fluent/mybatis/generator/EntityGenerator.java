@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.generator;
 
+import cn.org.atool.fluent.mybatis.annotation.ParaType;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.generator.annoatation.Interface;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
 import org.test4j.generator.mybatis.config.IGlobalConfig;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
 import static org.test4j.tools.commons.StringHelper.isBlank;
@@ -58,15 +62,17 @@ public class EntityGenerator {
             t.setLogicDeleted(value(table.logicDeleted(), tables.logicDeleted()));
             t.setTablePrefix(value(table.tablePrefix(), tables.tablePrefix()));
             t.setMapperPrefix(value(table.mapperPrefix(), tables.mapperPrefix()));
-            for (Class dao : value(table.daoInterface(), tables.daoInterface())) {
-                String[] types = this.getInterfaceParaTypes(dao);
-                t.addBaseDaoInterface(dao, types);
+            for (Interface dao : table.daoInterface()) {
+                t.addBaseDaoInterface(dao.value(), value(dao.types()));
             }
-            for (Class entity : value(table.entityInterface(), tables.entityInterface())) {
-                String[] types = this.getInterfaceParaTypes(entity);
-                t.addEntityInterface(entity, types);
+            for (Interface entity : table.entityInterface()) {
+                t.addEntityInterface(entity.value(), value(entity.types()));
             }
         };
+    }
+
+    private String[] value(ParaType[] types) {
+        return Stream.of(types).map(ParaType::getVar).collect(Collectors.toList()).toArray(new String[0]);
     }
 
     private Class[] value(Class[] value1, Class[] value2) {
@@ -85,11 +91,11 @@ public class EntityGenerator {
     }
 
     private boolean isDefined(String[] value) {
-        return value.length != 1 && !Objects.equals(value[0], NOT_DEFINED);
+        return value.length != 1 || !Objects.equals(value[0], NOT_DEFINED);
     }
 
     private boolean isDefined(Class[] value) {
-        return value.length != 1 && !Objects.equals(value[0], Object.class);
+        return value.length != 1 || !Objects.equals(value[0], Object.class);
     }
 
     private String[] getInterfaceParaTypes(Class dao) {

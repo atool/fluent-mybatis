@@ -1,22 +1,25 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.annotation.ParaType;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generator.EntityGenerator;
-import cn.org.atool.fluent.mybatis.generator.EntityGenerator2;
+import cn.org.atool.fluent.mybatis.generator.annoatation.Interface;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
 
-import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain.URL;
+import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain2.URL;
 
 @Tables(url = URL, username = "root", password = "password",
     srcDir = "fluent-mybatis-test/src/main/java",
     entityPack = "cn.org.atool.fluent.mybatis.generate.entity",
     daoPack = "cn.org.atool.fluent.mybatis.generate.dao",
     tables = {
-        @Table(value = "address", daoInterface = MyCustomerInterface.class, entityInterface = IBaseEntity.class),
-        @Table(value = "t_user", tablePrefix = "t_")
-    })
+        @Table(value = {"address", "t_user"},
+            tablePrefix = "t_",
+            daoInterface = @Interface(MyCustomerInterface.class),
+            entityInterface = @Interface(IBaseEntity.class)
+        )})
 public class FluentMyBatisGeneratorMain2 {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
 
