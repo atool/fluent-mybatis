@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Pack_Helper;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Suffix_Mapping;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapping;
 import static java.util.stream.Collectors.joining;
 
 public class MappingGenerator extends AbstractGenerator {

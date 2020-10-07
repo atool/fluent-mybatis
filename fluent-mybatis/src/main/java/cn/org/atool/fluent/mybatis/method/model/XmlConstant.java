@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.model;
 
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_EW;
 import static java.lang.String.format;
 
 /**
@@ -9,31 +10,6 @@ import static java.lang.String.format;
  */
 public interface XmlConstant {
     /**
-     * wrapper 类
-     */
-    String WRAPPER = "ew";
-    /**
-     * columnMap
-     */
-    String COLUMN_MAP = "cm";
-
-    /**
-     * collection
-     */
-    String COLLECTION = "coll";
-    /**
-     * 实体类
-     */
-    String ENTITY = "et";
-    /**
-     * 分库
-     */
-    String SPEC_COMMENT = "SPEC_COMMENT";
-    /**
-     * 分表
-     */
-    String SPEC_TABLE = "SPEC_TABLE";
-    /**
      * 变量在xml文件中的占位符全路径表达式
      * 例子: #{ew.wrapperData.parameters.variable_1}
      */
@@ -41,7 +17,7 @@ public interface XmlConstant {
 
     String Spec_Comment_Not_Null = "SPEC_COMMENT != null and SPEC_COMMENT != ''";
 
-    String Wrapper_Data = format("%s.wrapperData", WRAPPER);
+    String Wrapper_Data = format("%s.wrapperData", Param_EW);
 
     String Wrapper_Exists = format("%s != null", Wrapper_Data);
 

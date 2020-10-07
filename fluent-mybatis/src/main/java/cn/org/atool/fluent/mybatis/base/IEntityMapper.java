@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 /**
  * IEntityMapper: 实例Mapper基类，Mapper 继承该接口后，无需编写 mapper.xml 文件，即可获得CRUD功能
@@ -46,7 +46,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param cm
      * @return
      */
-    int deleteByMap(@Param(COLUMN_MAP) Map<String, Object> cm);
+    int deleteByMap(@Param(Param_CM) Map<String, Object> cm);
 
     /**
      * 根据wrapper删除记录
@@ -54,7 +54,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param wrapper 实体对象封装操作类（属性条件可以为null）
      * @return
      */
-    int delete(@Param(WRAPPER) IQuery wrapper);
+    int delete(@Param(Param_EW) IQuery wrapper);
 
     /**
      * 根据id列表批量删除
@@ -62,7 +62,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param idList id列表（值不能为null或者empty）
      * @return
      */
-    int deleteByIds(@Param(COLLECTION) Collection<? extends Serializable> idList);
+    int deleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
 
     /**
      * 根据id修改
@@ -70,7 +70,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param entity 实体对象
      * @return
      */
-    int updateById(@Param(ENTITY) E entity);
+    int updateById(@Param(Param_ET) E entity);
 
     /**
      * 根据update对象更新记录
@@ -78,7 +78,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param update
      * @return
      */
-    int updateBy(@Param(WRAPPER) IUpdate update);
+    int updateBy(@Param(Param_EW) IUpdate update);
 
     /**
      * 根据 ID 查询
@@ -94,7 +94,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    E findOne(@Param(WRAPPER) IQuery query);
+    E findOne(@Param(Param_EW) IQuery query);
 
     /**
      * 查询（根据ID 批量查询）
@@ -102,7 +102,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param ids 主键ID列表(不能为 null 以及 empty)
      * @return
      */
-    List<E> listByIds(@Param(COLLECTION) Collection ids);
+    List<E> listByIds(@Param(Param_Coll) Collection ids);
 
     /**
      * 查询（根据 columnMap 条件）
@@ -110,7 +110,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param columnMap 表字段 map 对象
      * @return
      */
-    List<E> listByMap(@Param(COLUMN_MAP) Map<String, Object> columnMap);
+    List<E> listByMap(@Param(Param_CM) Map<String, Object> columnMap);
 
     /**
      * 根据 query 条件，查询全部记录
@@ -118,7 +118,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    List<E> listEntity(@Param(WRAPPER) IQuery query);
+    List<E> listEntity(@Param(Param_EW) IQuery query);
 
     /**
      * 根据 query 条件，查询全部记录
@@ -126,7 +126,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return map列表
      */
-    List<Map<String, Object>> listMaps(@Param(WRAPPER) IQuery query);
+    List<Map<String, Object>> listMaps(@Param(Param_EW) IQuery query);
 
     /**
      * <p>
@@ -137,7 +137,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    <O> List<O> listObjs(@Param(WRAPPER) IQuery query);
+    <O> List<O> listObjs(@Param(Param_EW) IQuery query);
 
     /**
      * 根据 query 条件，查询总记录数
@@ -145,7 +145,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    Integer count(@Param(WRAPPER) IQuery query);
+    Integer count(@Param(Param_EW) IQuery query);
 
     /**
      * 根据 query 条件(如果有pageOffset, 去掉pageOffset限制部分)，查询总记录数
@@ -153,5 +153,5 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param query 实体对象封装操作类（可以为 null）
      * @return
      */
-    Integer countNoLimit(@Param(WRAPPER) IQuery query);
+    Integer countNoLimit(@Param(Param_EW) IQuery query);
 }

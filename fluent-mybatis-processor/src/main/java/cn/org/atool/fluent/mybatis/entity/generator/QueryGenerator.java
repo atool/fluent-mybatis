@@ -5,15 +5,14 @@ import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.Predicates;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Pack_Wrapper;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Suffix_Query;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 
 public class QueryGenerator extends AbstractGenerator {
 

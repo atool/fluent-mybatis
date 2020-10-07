@@ -4,36 +4,12 @@ import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Double_Quota_Str;
 import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
-import static java.util.stream.Collectors.joining;
 
 public class MapperUtils {
-
-    public static final String Double_Quota_Str = String.valueOf('"');
-
-    public static String Param_Map = "map";
-
-    public static String Param_Id = "id";
-
-    public static String Param_Ids = "ids";
-
-    public static String Param_Coll = "coll";
-
-    public static String Param_List = "list";
-
-    public static String Param_CM = "cm";
-
-    public static String Param_EW = "ew";
-
-    public static String Param_ET = "et";
-
-    public static String Param_Query = "query";
-
-    public static String Param_Entity = "entity";
 
     public static WrapperData getWrapperData(Map map, String paraName) {
         IWrapper wrapper = (IWrapper) map.get(paraName);

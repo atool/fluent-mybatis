@@ -12,7 +12,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
     public WrapperHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {

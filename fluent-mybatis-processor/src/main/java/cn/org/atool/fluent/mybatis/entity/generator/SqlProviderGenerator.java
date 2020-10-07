@@ -20,11 +20,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
-import static cn.org.atool.fluent.mybatis.mapper.MapperUtils.*;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.MapperUtils.listIndexEl;
 import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.COLUMN_MAP;
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.WRAPPER;
 import static cn.org.atool.fluent.mybatis.utility.Predicates.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.Predicates.notBlank;
 import static java.util.stream.Collectors.joining;
@@ -88,7 +87,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     private MethodSpec m_countNoLimit() {
         MethodSpec.Builder builder = super.sqlMethod(M_countNoLimit).addParameter(ClassName.get(Map.class), Param_Map);
 
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, WRAPPER);
+        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.COUNT($S, data)", fluent.getTableName());
         builder.addStatement("sql.WHERE_GROUP_BY(data)");
@@ -98,7 +97,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     private MethodSpec m_count() {
         MethodSpec.Builder builder = super.sqlMethod(M_count).addParameter(ClassName.get(Map.class), Param_Map);
 
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, WRAPPER);
+        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.COUNT($S, data)", fluent.getTableName());
         builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
@@ -175,7 +174,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
     private MethodSpec m_updateBy() {
         MethodSpec.Builder builder = super.sqlMethod(M_updateBy).addParameter(CN_Map_StrObj, Param_Map);
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, WRAPPER);
+        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
 
         builder.addStatement("$T<String, String> updates = data.getUpdates()", Map.class);
@@ -243,7 +242,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
     private MethodSpec m_delete() {
         MethodSpec.Builder builder = super.sqlMethod(M_Delete).addParameter(ClassName.get(Map.class), Param_Map);
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, WRAPPER);
+        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
 
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.DELETE_FROM($S)", fluent.getTableName());
@@ -269,7 +268,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
     private MethodSpec m_deleteByMap() {
         MethodSpec.Builder builder = super.sqlMethod(M_DeleteByMap).addParameter(CN_Map_StrObj, Param_Map);
-        builder.addStatement("Map<String, Object> cm = getParas(map, $S)", COLUMN_MAP);
+        builder.addStatement("Map<String, Object> cm = getParas(map, $S)", Param_CM);
 
         builder
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
@@ -348,7 +347,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private void selectByWrapper(MethodSpec.Builder builder) {
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, WRAPPER);
+        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.SELECT($S, data, $S)", fluent.getTableName(), fluent.getAllFields());
         builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");

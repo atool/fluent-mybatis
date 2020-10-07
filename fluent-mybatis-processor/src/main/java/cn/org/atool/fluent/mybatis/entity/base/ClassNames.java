@@ -16,49 +16,6 @@ public class ClassNames {
 
     public static final ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
-    public static final String Suffix_Mapper = "Mapper";
-
-    public static final String Suffix_BaseDao = "BaseDao";
-
-    public static final String Suffix_EntityHelper = "EntityHelper";
-
-    public static final String Suffix_Mapping = "Mapping";
-
-    public static final String Suffix_Query = "Query";
-
-    public static final String Suffix_Update = "Update";
-
-    public static final String Suffix_QueryWhere = "QueryWhere";
-
-    public static final String Suffix_UpdateWhere = "UpdateWhere";
-
-    public static final String Suffix_Selector = "Selector";
-
-    public static final String Suffix_GroupBy = "GroupBy";
-
-    public static final String Suffix_Having = "Having";
-
-    public static final String Suffix_QueryOrderBy = "QueryOrderBy";
-
-    public static final String Suffix_UpdateOrderBy = "UpdateOrderBy";
-
-    public static final String Suffix_UpdateSetter = "UpdateSetter";
-
-    public static final String Suffix_ISegment = "ISegment";
-
-    public static final String Suffix_WhereSegment = "WhereSegment";
-
-    public static final String Suffix_WrapperHelper = "WrapperHelper";
-
-    public static final String Suffix_SqlProvider = "SqlProvider";
-
-    public static final String Pack_Helper = "helper";
-
-    public static final String Pack_BaseDao = "dao";
-
-    public static final String Pack_Mapper = "mapper";
-
-    public static final String Pack_Wrapper = "wrapper";
 
     public static final ClassName getClassName(String fullClassName) {
         int index = fullClassName.lastIndexOf('.');

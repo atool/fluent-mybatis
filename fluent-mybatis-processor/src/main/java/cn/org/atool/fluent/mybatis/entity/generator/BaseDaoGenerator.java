@@ -12,9 +12,9 @@ import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Pack_BaseDao;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.Suffix_BaseDao;
 import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
 
 public class BaseDaoGenerator extends AbstractGenerator {
     public BaseDaoGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {

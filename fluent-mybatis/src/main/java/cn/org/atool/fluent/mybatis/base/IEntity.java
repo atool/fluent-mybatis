@@ -24,7 +24,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toMap() {
-        throw new RuntimeException("not implement");
+        return EntityHelperFactory.getInstance(this.getClass()).toMap(this);
     }
 
     /**
@@ -33,6 +33,6 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> columnMap() {
-        throw new RuntimeException("not implement");
+        return EntityHelperFactory.getInstance(this.getClass()).columnMap(this);
     }
 }

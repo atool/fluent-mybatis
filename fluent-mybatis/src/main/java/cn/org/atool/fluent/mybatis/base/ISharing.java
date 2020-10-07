@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 /**
  * ISharingMapper: 分库分表操作
@@ -21,7 +21,7 @@ public interface ISharing<T> extends IMapper {
      * @param table   分表
      * @return
      */
-    int updateSpecByQuery(@Param(WRAPPER) IUpdate update,
+    int updateSpecByQuery(@Param(Param_EW) IUpdate update,
                           @Param(SPEC_COMMENT) String comment,
                           @Param(SPEC_TABLE) String table
     );
@@ -34,7 +34,7 @@ public interface ISharing<T> extends IMapper {
      * @param table   分表
      * @return
      */
-    int deleteSpec(@Param(WRAPPER) IQuery query,
+    int deleteSpec(@Param(Param_EW) IQuery query,
                    @Param(SPEC_COMMENT) String comment,
                    @Param(SPEC_TABLE) String table
     );
@@ -47,7 +47,7 @@ public interface ISharing<T> extends IMapper {
      * @param table   分表
      * @return
      */
-    List<T> selectSpecList(@Param(WRAPPER) IQuery query,
+    List<T> selectSpecList(@Param(Param_EW) IQuery query,
                            @Param(SPEC_COMMENT) String comment,
                            @Param(SPEC_TABLE) String table
     );

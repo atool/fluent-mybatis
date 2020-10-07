@@ -28,7 +28,6 @@ public class FluentEntityInfo {
     @Getter(AccessLevel.NONE)
     private String basePack;
 
-    @Getter(AccessLevel.NONE)
     private String entityPack;
     /**
      * entity class name
