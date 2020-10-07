@@ -28,10 +28,6 @@ public class TablePrimaryMeta extends FieldMeta {
      */
     private String seqName;
 
-    public TablePrimaryMeta(String column, Field field) {
-        super(column, field);
-    }
-
     public TablePrimaryMeta(Field field, TableId tableId) {
         super(tableId.value(), field);
         this.setJdbcType(tableId.jdbcType());
