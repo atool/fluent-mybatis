@@ -17,6 +17,13 @@ public class DaoImplTemplate extends BaseTemplate {
         return "daoImpl";
     }
 
+    @Override
+    protected void templateConfigs(TableSetter table, Map<String, Object> context) {
+        context.put("baseDaoName", table.getEntityPrefix() + "BaseDao");
+        context.put("baseDaoPack", table.getBasePackage() + ".dao");
+    }
+
+    @Override
     protected String getPackage(TableSetter table) {
         int index = this.fileNameReg.lastIndexOf('/');
         String sub = "";
@@ -24,11 +31,5 @@ public class DaoImplTemplate extends BaseTemplate {
             sub = this.fileNameReg.substring(0, index).replace('/', '.');
         }
         return table.getDaoPackage() + "." + sub;
-    }
-
-    @Override
-    protected void templateConfigs(TableSetter table, Map<String, Object> context) {
-        context.put("baseDaoName", table.getEntityPrefix() + "BaseDao");
-        context.put("baseDaoPack", table.getBasePackage() + ".dao");
     }
 }

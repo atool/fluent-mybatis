@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class DaoIntfTemplate extends BaseTemplate {
     public DaoIntfTemplate() {
-        super("templates/dao/DaoIntf.java.vm", "dao/intf/*Dao.java");
+        super("templates/dao/DaoIntf.java.vm", "intf/*Dao.java");
         super.outputDir = OutputDir.Dao;
     }
 
@@ -19,5 +19,15 @@ public class DaoIntfTemplate extends BaseTemplate {
 
     @Override
     protected void templateConfigs(TableSetter table, Map<String, Object> context) {
+    }
+
+    @Override
+    protected String getPackage(TableSetter table) {
+        int index = this.fileNameReg.lastIndexOf('/');
+        String sub = "";
+        if (index > 0) {
+            sub = this.fileNameReg.substring(0, index).replace('/', '.');
+        }
+        return table.getDaoPackage() + "." + sub;
     }
 }
