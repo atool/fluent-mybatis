@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.generate.dao.impl;
 
 import cn.org.atool.fluent.mybatis.generate.entity.dao.AddressBaseDao;
-import cn.org.atool.fluent.mybatis.generate.entity.dao.intf.AddressDao;
+import cn.org.atool.fluent.mybatis.generate.dao.intf.AddressDao;
 import org.springframework.stereotype.Repository;
 
 
