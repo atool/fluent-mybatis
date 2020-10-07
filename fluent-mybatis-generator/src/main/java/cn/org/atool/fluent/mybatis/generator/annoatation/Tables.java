@@ -4,7 +4,6 @@ import org.test4j.generator.mybatis.db.DbType;
 
 import java.lang.annotation.*;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Entity_Suffix;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
 
 /**
@@ -68,6 +67,13 @@ public @interface Tables {
     String daoPack() default "";
 
     /**
+     * 是否同时生成test4j测试辅助文件
+     *
+     * @return
+     */
+    boolean test4j() default false;
+
+    /**
      * 生成Entity文件时, 需要去除的表前缀
      *
      * @return
@@ -82,11 +88,11 @@ public @interface Tables {
     String mapperPrefix() default NOT_DEFINED;
 
     /**
-     * entity类名称后缀
+     * 如果需要生成测试辅助文件, 指定测试文件相对于根目录路径
      *
      * @return
      */
-    String entitySuffix() default Entity_Suffix;
+    String testDir() default "src/test/java";
 
     /**
      * 指定数据库表名
@@ -100,14 +106,14 @@ public @interface Tables {
      *
      * @return
      */
-    Class[] entityInterface() default {};
+    Class[] entityInterface() default {Object.class};
 
     /**
      * dao 类自定义接口
      *
      * @return
      */
-    Class[] daoInterface() default {};
+    Class[] daoInterface() default {Object.class};
 
     /**
      * 记录创建字段
@@ -129,18 +135,4 @@ public @interface Tables {
      * @return
      */
     String logicDeleted() default NOT_DEFINED;
-
-    /**
-     * 是否同时生成test4j测试辅助文件
-     *
-     * @return
-     */
-    boolean test4j() default false;
-
-    /**
-     * 如果需要生成测试辅助文件, 指定测试文件相对于根目录路径
-     *
-     * @return
-     */
-    String testDir() default "src/test/java";
 }

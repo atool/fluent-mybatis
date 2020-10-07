@@ -9,18 +9,18 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface Table {
     /**
-     * 表名称
+     * 表名称列表
      *
      * @return
      */
-    String value();
+    String[] value();
 
     /**
      * 排除字段列表
      *
      * @return
      */
-    String[] excludes() default {};
+    String[] excludes() default {NOT_DEFINED};
 
     /**
      * 显式指定字段转换属性
@@ -63,4 +63,18 @@ public @interface Table {
      * @return
      */
     String logicDeleted() default NOT_DEFINED;
+
+    /**
+     * entity类自定义接口
+     *
+     * @return
+     */
+    Class[] entityInterface() default {Object.class};
+
+    /**
+     * dao 类自定义接口
+     *
+     * @return
+     */
+    Class[] daoInterface() default {Object.class};
 }
