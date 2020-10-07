@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
@@ -7,7 +8,7 @@ import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.sun.tools.javac.code.Type;
+import com.squareup.javapoet.TypeVariableName;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -39,10 +40,10 @@ public class EntityHelperGenerator extends AbstractGenerator {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder
-            .addSuperinterface(parameterizedType(ClassName.get(IEntityHelper.class), fluent.className()))
+            .addSuperinterface(IEntityHelper.class)
             .addMethod(this.m_toEntityMap())
             .addMethod(this.m_toColumnMap())
-            .addMethod(this.m_entity())
+            .addMethod(this.m_toEntity())
             .addMethod(this.m_copy());
     }
 
@@ -54,9 +55,10 @@ public class EntityHelperGenerator extends AbstractGenerator {
     private MethodSpec m_toEntityMap() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("toEntityMap")
             .addModifiers(Modifier.PUBLIC)
-            .addJavadoc("Entity对象转换为HashMap，key值是对象属性")
-            .addParameter(fluent.className(), "entity")
+            .addParameter(IEntity.class, "iEntity")
+            .addAnnotation(Override.class)
             .returns(this.parameterizedType(Map.class, String.class, Object.class))
+            .addStatement("$T entity = ($T) iEntity", fluent.className(), fluent.className())
             .addStatement("Map<String, Object> map = new $T<>()", HashMap.class);
         for (FieldColumn fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
@@ -80,10 +82,11 @@ public class EntityHelperGenerator extends AbstractGenerator {
      */
     private MethodSpec m_toColumnMap() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("toColumnMap")
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addJavadoc("Entity对象转换为HashMap，key值是数据库字段")
-            .addParameter(fluent.className(), "entity")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(IEntity.class, "iEntity")
             .returns(this.parameterizedType(Map.class, String.class, Object.class))
+            .addAnnotation(Override.class)
+            .addStatement("$T entity = ($T) iEntity", fluent.className(), fluent.className())
             .addStatement("Map<String, Object> map = new $T<>()", HashMap.class);
         for (FieldColumn fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
@@ -105,12 +108,13 @@ public class EntityHelperGenerator extends AbstractGenerator {
      *
      * @return
      */
-    private MethodSpec m_entity() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("entity")
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addJavadoc("map对应属性值设置到Entity对象中")
+    private MethodSpec m_toEntity() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("toEntity")
+            .addModifiers(Modifier.PUBLIC)
             .addParameter(this.parameterizedType(Map.class, String.class, Object.class), "map")
-            .returns(fluent.className())
+            .addTypeVariable(TypeVariableName.get("E", IEntity.class))
+            .returns(TypeVariableName.get("E"))
+            .addAnnotation(Override.class)
             .addStatement("$T entity = new $T()", fluent.className(), fluent.className());
         for (FieldColumn fc : fluent.getFields()) {
             String setMethod = fc.setMethodName();
@@ -121,7 +125,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
                 setMethod, fc.getJavaType(), MappingGenerator.className(fluent), fc.getProperty());
             builder.addCode("}\n");
         }
-        return builder.addStatement("return entity").build();
+        return builder.addStatement("return (E)entity").build();
     }
 
     /**
@@ -131,10 +135,11 @@ public class EntityHelperGenerator extends AbstractGenerator {
      */
     private MethodSpec m_copy() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("copy")
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addJavadoc("拷贝一个entity对象")
-            .addParameter(fluent.className(), "entity")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(IEntity.class, "iEntity")
             .returns(fluent.className())
+            .addAnnotation(Override.class)
+            .addStatement("$T entity = ($T) iEntity", fluent.className(), fluent.className())
             .addStatement("$T copy = new $T()", fluent.className(), fluent.className());
         builder.addCode("{\n");
         for (FieldColumn fc : fluent.getFields()) {

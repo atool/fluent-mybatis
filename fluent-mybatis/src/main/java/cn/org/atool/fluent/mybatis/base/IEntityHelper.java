@@ -5,10 +5,9 @@ import java.util.Map;
 /**
  * entity帮助类
  *
- * @param <T>
  * @author wudarui
  */
-public interface IEntityHelper<T extends IEntity> {
+public interface IEntityHelper {
     /**
      * entity对象转换为map对象
      * key值为entity的属性字段名
@@ -16,7 +15,7 @@ public interface IEntityHelper<T extends IEntity> {
      * @param entity
      * @return
      */
-    Map<String, Object> toEntityMap(T entity);
+    Map<String, Object> toEntityMap(IEntity entity);
 
     /**
      * entity对象转换为map对象
@@ -25,5 +24,21 @@ public interface IEntityHelper<T extends IEntity> {
      * @param entity
      * @return
      */
-    Map<String, Object> toColumnMap(T entity);
+    Map<String, Object> toColumnMap(IEntity entity);
+
+    /**
+     * map对应属性值设置到Entity对象中
+     *
+     * @param map
+     * @return
+     */
+    <E extends IEntity> E toEntity(Map<String, Object> map);
+
+    /**
+     * 拷贝一个entity对象
+     *
+     * @param entity
+     * @return
+     */
+    <E extends IEntity> E copy(IEntity entity);
 }

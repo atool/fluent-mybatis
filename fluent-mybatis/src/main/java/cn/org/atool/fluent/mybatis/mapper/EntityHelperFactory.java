@@ -22,7 +22,7 @@ public class EntityHelperFactory {
 
     private final static Lock lock = new ReentrantLock(true);
 
-    public static <T extends IEntity> IEntityHelper<T> getInstance(Class<T> clazz) {
+    public static IEntityHelper getInstance(Class<? extends IEntity> clazz) {
         if (INSTANCES.containsKey(clazz)) {
             return INSTANCES.get(clazz);
         }
@@ -48,9 +48,9 @@ public class EntityHelperFactory {
         }
     }
 
-    private static <T extends IEntity> IEntityHelper getEntityHelper(Class<T> clazz, List<ClassLoader> classLoaders) throws ClassNotFoundException {
+    private static IEntityHelper getEntityHelper(Class<? extends IEntity> clazz, List<ClassLoader> classLoaders) throws ClassNotFoundException {
         for (ClassLoader classLoader : classLoaders) {
-            IEntityHelper<T> helper = doGetEntityHelper(clazz, classLoader);
+            IEntityHelper helper = doGetEntityHelper(clazz, classLoader);
             if (helper != null) {
                 return helper;
             }
@@ -58,9 +58,9 @@ public class EntityHelperFactory {
         throw new ClassNotFoundException("Cannot find entity helper for " + clazz.getName());
     }
 
-    private static <T extends IEntity> IEntityHelper doGetEntityHelper(Class<T> clazz, ClassLoader classLoader) {
+    private static IEntityHelper doGetEntityHelper(Class<? extends IEntity> clazz, ClassLoader classLoader) {
         try {
-            return (IEntityHelper<T>) classLoader.loadClass(clazz.getName() + Suffix_EntityHelper).newInstance();
+            return (IEntityHelper) classLoader.loadClass(clazz.getName() + Suffix_EntityHelper).newInstance();
         } catch (ClassNotFoundException e) {
             return null;
         } catch (InstantiationException e) {
