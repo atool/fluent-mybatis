@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 
-import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_DeleteSpec;
+import static cn.org.atool.fluent.mybatis.method.partition.StatementId.Method_DeleteSpec;
 
 /**
  * DeleteInPartition: 分库删除
@@ -19,7 +19,6 @@ public class DeleteSpec extends Delete {
         return Method_DeleteSpec;
     }
 
-    @Override
     protected boolean isSpecTable() {
         return true;
     }

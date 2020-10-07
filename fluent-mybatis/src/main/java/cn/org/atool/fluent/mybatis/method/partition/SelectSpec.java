@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 
-import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_SelectListFromSpec;
+import static cn.org.atool.fluent.mybatis.method.partition.StatementId.Method_SelectListFromSpec;
 
 /**
  * SelectSpec : 从指定表（分表）查询
@@ -19,7 +19,6 @@ public class SelectSpec extends SelectList {
         return Method_SelectListFromSpec;
     }
 
-    @Override
     protected boolean isSpecTable() {
         return true;
     }

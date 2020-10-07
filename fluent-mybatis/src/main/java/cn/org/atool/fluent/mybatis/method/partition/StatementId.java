@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.method.model;
+package cn.org.atool.fluent.mybatis.method.partition;
 
 /**
  * MethodId: mapper方法Id

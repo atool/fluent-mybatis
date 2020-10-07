@@ -2,9 +2,6 @@ package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
-import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import cn.org.atool.fluent.mybatis.method.model.StatementId;
-import cn.org.atool.fluent.mybatis.method.model.StatementType;
 
 /**
  * 物理删除逻辑

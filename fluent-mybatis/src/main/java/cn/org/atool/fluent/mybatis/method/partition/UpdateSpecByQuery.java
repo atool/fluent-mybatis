@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 
-import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_UpdateSpecByQuery;
+import static cn.org.atool.fluent.mybatis.method.partition.StatementId.Method_UpdateSpecByQuery;
 
 /**
  * UpdateSpecByQuery : 更新指定分表
@@ -19,7 +19,6 @@ public class UpdateSpecByQuery extends UpdateByQuery {
         return Method_UpdateSpecByQuery;
     }
 
-    @Override
     protected boolean isSpecTable() {
         return true;
     }
