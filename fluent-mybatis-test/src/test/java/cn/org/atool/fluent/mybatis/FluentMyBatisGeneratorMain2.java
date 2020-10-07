@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generator.EntityGenerator;
 import cn.org.atool.fluent.mybatis.generator.EntityGenerator2;
@@ -12,9 +13,8 @@ import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain.URL;
     srcDir = "fluent-mybatis-test/src/main/java",
     entityPack = "cn.org.atool.fluent.mybatis.generate.entity",
     daoPack = "cn.org.atool.fluent.mybatis.generate.dao",
-    daoInterface = MyCustomerInterface.class,
     tables = {
-        @Table(value = "address"),
+        @Table(value = "address", daoInterface = MyCustomerInterface.class, entityInterface = IBaseEntity.class),
         @Table(value = "t_user", tablePrefix = "t_")
     })
 public class FluentMyBatisGeneratorMain2 {

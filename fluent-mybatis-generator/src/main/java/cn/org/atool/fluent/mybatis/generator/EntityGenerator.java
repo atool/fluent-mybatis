@@ -70,23 +70,26 @@ public class EntityGenerator {
     }
 
     private Class[] value(Class[] value1, Class[] value2) {
-        return isDefined(value1) ? value1 : isDefined(value2) ? value2 : new Class[0];
+        Class[] value = isDefined(value1) ? value1 : isDefined(value2) ? value2 : new Class[0];
+        return value;
     }
 
     private String value(String value1, String value2) {
-        return !NOT_DEFINED.equals(value1) ? value1 : NOT_DEFINED.equals(value2) ? "" : value2;
+        String value = !NOT_DEFINED.equals(value1) ? value1 : NOT_DEFINED.equals(value2) ? "" : value2;
+        return value;
     }
 
     private String[] value(String[] value1, String[] value2) {
-        return isDefined(value1) ? value1 : isDefined(value2) ? value2 : new String[0];
+        String[] value = isDefined(value1) ? value1 : isDefined(value2) ? value2 : new String[0];
+        return value;
     }
 
     private boolean isDefined(String[] value) {
-        return value.length == 1 && Objects.equals(value[0], NOT_DEFINED);
+        return value.length != 1 && !Objects.equals(value[0], NOT_DEFINED);
     }
 
     private boolean isDefined(Class[] value) {
-        return value.length == 1 && Objects.equals(value[0], Object.class);
+        return value.length != 1 && !Objects.equals(value[0], Object.class);
     }
 
     private String[] getInterfaceParaTypes(Class dao) {
