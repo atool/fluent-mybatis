@@ -1,9 +1,8 @@
-package cn.org.atool.fluent.mybatis.method.metadata;
+package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.annotation.TableName;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -17,7 +16,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
 
 /**
  * <p>
@@ -84,36 +82,16 @@ public class TableMetaHelper {
     private static boolean initTableName(Class<?> clazz, TableMeta tableMeta) {
         /* 数据库全局配置 */
         FluentMybatis fluentMyBatis = clazz.getAnnotation(FluentMybatis.class);
-        TableName tableAnnotation = clazz.getAnnotation(TableName.class);
-        if (fluentMyBatis == null && tableAnnotation == null) {
+        if (fluentMyBatis == null) {
             return false;
         }
-        if (fluentMyBatis != null) {
-            initByFluentMybatis(clazz, tableMeta, fluentMyBatis);
-        } else {
-            initByTableName(clazz, tableMeta, tableAnnotation);
-        }
-        return true;
-    }
-
-    private static boolean initByFluentMybatis(Class<?> clazz, TableMeta tableMeta, FluentMybatis annotation) {
-        String tableName = annotation.table();
+        String tableName = fluentMyBatis.table();
         if (isBlank(tableName)) {
-            tableName = MybatisUtil.tableName(clazz.getSimpleName(), annotation.prefix(), annotation.suffix());
+            tableName = MybatisUtil.tableName(clazz.getSimpleName(), fluentMyBatis.prefix(), fluentMyBatis.suffix());
         }
         tableMeta.setTableName(tableName);
         return true;
     }
-
-    private static boolean initByTableName(Class<?> clazz, TableMeta tableMeta, TableName annotation) {
-        String tableName = annotation == null ? null : annotation.value();
-        if (notBlank(annotation.schema())) {
-            tableName = annotation.schema() + "." + tableName;
-        }
-        tableMeta.setTableName(tableName);
-        return true;
-    }
-
 
     /**
      * <p>

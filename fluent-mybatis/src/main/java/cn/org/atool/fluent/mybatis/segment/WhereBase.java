@@ -15,9 +15,9 @@ import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
 
 /**
  * BaseQueryAnd: AND或者OR操作基类

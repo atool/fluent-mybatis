@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumnParser;
-import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
 import lombok.AccessLevel;

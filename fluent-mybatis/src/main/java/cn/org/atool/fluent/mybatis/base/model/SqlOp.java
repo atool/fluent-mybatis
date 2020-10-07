@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.QUESTION_MARK;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.STR_FORMAT;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.QUESTION_MARK;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.STR_FORMAT;
 import static java.util.stream.Collectors.joining;
 
 /**

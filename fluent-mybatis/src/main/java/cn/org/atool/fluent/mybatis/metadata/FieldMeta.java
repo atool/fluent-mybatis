@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.method.metadata;
+package cn.org.atool.fluent.mybatis.metadata;
 
 import lombok.Getter;
 import org.apache.ibatis.type.JdbcType;

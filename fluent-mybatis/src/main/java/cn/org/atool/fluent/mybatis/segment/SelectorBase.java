@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * BaseSelector: 查询字段构造

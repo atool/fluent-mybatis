@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.annotation;
 
-import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.lang.annotation.*;
 

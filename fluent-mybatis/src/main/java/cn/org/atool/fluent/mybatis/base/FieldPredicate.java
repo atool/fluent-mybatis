@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.method.metadata.FieldMeta;
+import cn.org.atool.fluent.mybatis.metadata.FieldMeta;
 
 import java.util.function.Predicate;
 

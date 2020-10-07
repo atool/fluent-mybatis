@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.partition;
 
-import cn.org.atool.fluent.mybatis.method.metadata.DbType;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import lombok.Getter;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;

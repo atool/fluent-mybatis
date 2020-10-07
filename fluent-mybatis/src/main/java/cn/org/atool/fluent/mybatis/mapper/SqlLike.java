@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.segment.model;
+package cn.org.atool.fluent.mybatis.mapper;
 
 /**
  * SQL like 枚举

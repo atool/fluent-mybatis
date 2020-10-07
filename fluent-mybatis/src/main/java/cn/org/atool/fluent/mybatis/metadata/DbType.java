@@ -1,8 +1,6 @@
-package cn.org.atool.fluent.mybatis.method.metadata;
+package cn.org.atool.fluent.mybatis.metadata;
 
 import lombok.Getter;
-
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 
 /**
  * DbType 数据库类型

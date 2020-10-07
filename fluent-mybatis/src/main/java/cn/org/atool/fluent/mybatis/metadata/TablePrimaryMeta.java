@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.method.metadata;
+package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 
 /**
  * KeyWordSegment

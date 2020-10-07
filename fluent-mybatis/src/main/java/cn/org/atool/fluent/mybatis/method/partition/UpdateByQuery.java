@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method.partition;
 
-import cn.org.atool.fluent.mybatis.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 
 /**
  * UpdateByQuery

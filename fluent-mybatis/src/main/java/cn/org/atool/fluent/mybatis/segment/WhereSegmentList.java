@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;
 
 /**
  * 普通片段

@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.mapper.SqlLike;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
-import cn.org.atool.fluent.mybatis.segment.model.SqlLike;
 
 import java.util.function.Predicate;
 

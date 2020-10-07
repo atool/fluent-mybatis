@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
 
 /**
  * BaseOrder: 排序对象基类

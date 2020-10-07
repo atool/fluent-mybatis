@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.segment.model;
+package cn.org.atool.fluent.mybatis.mapper;
 
 /**
  * fluent mybatis 常量定义

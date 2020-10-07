@@ -5,9 +5,9 @@ import lombok.AccessLevel;
 import lombok.Setter;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.*;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.trim;
 
 /**
