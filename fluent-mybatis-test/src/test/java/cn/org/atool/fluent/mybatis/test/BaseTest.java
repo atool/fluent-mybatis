@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test;
 
-import cn.org.atool.fluent.mybatis.FluentMybatisSessionFactoryBean;
 import cn.org.atool.fluent.mybatis.generate.datamap.ITable;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -14,8 +13,7 @@ import org.test4j.junit5.Test4J;
 import javax.sql.DataSource;
 
 @ContextConfiguration(classes = {
-    TestSpringConfig.class//,
-    //FluentMybatisBootConfiguration.class
+    TestSpringConfig.class
 })
 public abstract class BaseTest extends Test4J implements ITable {
 }
@@ -36,7 +34,6 @@ class TestSpringConfig {
 
     @Bean
     public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
-//        SqlSessionFactoryBean bean = new FluentMybatisSessionFactoryBean();
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
         bean.setMapperLocations(new ClassPathResource("mapper/MyXmlMapper.xml"));

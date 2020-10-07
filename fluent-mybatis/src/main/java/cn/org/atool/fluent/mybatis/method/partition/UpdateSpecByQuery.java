@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
-import cn.org.atool.fluent.mybatis.method.normal.UpdateByQuery;
 
 import static cn.org.atool.fluent.mybatis.method.model.StatementId.Method_UpdateSpecByQuery;
 

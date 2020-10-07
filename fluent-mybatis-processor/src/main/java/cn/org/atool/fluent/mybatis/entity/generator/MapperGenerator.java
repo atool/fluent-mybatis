@@ -21,11 +21,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Mapper;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapper;
-import static cn.org.atool.fluent.mybatis.method.SqlMethodName.*;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 /**
  * 生成Entity对应的Mapper类
