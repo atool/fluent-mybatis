@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generator.EntityGenerator2;
 
@@ -7,7 +8,7 @@ import cn.org.atool.fluent.mybatis.generator.EntityGenerator2;
 public class FluentMyBatisGeneratorMain {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
 
-    public static final String dao_interface = MyCustomerInterface.class.getName();
+    public static final Class dao_interface = MyCustomerInterface.class;
 
     /**
      * 使用main函数，是避免全量跑test时，误执行生成代码
@@ -28,7 +29,7 @@ public class FluentMyBatisGeneratorMain {
                     .setColumn("gmt_created", "gmt_modified", "is_deleted")
                     .addBaseDaoInterface(dao_interface, "${entity}")
                     .setTablePrefix("t_")
-                    .addEntityInterface("cn.org.atool.fluent.mybatis.demo.IBaseEntity", "${entity}")
+                    .addEntityInterface(IBaseEntity.class, "${entity}")
                 )
             )
             .tables(config -> config
