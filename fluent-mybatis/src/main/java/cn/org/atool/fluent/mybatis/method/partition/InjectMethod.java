@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.method;
+package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 

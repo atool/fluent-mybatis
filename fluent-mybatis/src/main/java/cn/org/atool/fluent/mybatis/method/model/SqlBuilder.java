@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 
 /**
  * Script
@@ -171,8 +172,8 @@ public class SqlBuilder {
         this.prefixComment(isSpec);
         this.newLine().append("SELECT ");
         if (isWrapper) {
-            this.ifThen(XmlConstant.Wrapper_Distinct_True, DISTINCT);
-            this.choose(XmlConstant.Wrapper_Select_Not_Null, XmlConstant.Wrapper_Select_Var, replace("<include refid='SELECT_COLUMNS'/>"));
+            this.ifThen(Wrapper_Distinct_True, DISTINCT);
+            this.choose(Wrapper_Select_Not_Null, Wrapper_Select_Var, replace("<include refid='SELECT_COLUMNS'/>"));
         } else {
             this.quotas("<include refid='SELECT_COLUMNS'/>");
         }
@@ -190,7 +191,7 @@ public class SqlBuilder {
     public SqlBuilder selectCount(TableMeta table, boolean isSpec) {
         this.prefixComment(isSpec);
         this.append("SELECT COUNT(")
-            .choose(XmlConstant.Wrapper_Select_Not_Null, XmlConstant.Wrapper_Select_Var, ASTERISK)
+            .choose(Wrapper_Select_Not_Null, Wrapper_Select_Var, ASTERISK)
             .append(") FROM ");
         return this.byTable(table, isSpec);
     }
@@ -260,7 +261,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder checkWrapper() {
-        this.ifThen(XmlConstant.Wrapper_Exists, () -> {
+        this.ifThen(Wrapper_Exists, () -> {
         });
         return this;
     }
@@ -439,7 +440,7 @@ public class SqlBuilder {
      */
     private SqlBuilder prefixComment(boolean isSpec) {
         if (isSpec) {
-            this.newLine().ifThen(XmlConstant.Spec_Comment_Not_Null, "${SPEC_COMMENT}").newLine();
+            this.newLine().ifThen(Spec_Comment_Not_Null, "${SPEC_COMMENT}").newLine();
         }
         return this;
     }
@@ -452,7 +453,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder choosePaged(String noPagedXml, String withPagedXml) {
-        this.choose(XmlConstant.Wrapper_Page_Is_Null, noPagedXml, withPagedXml);
+        this.choose(Wrapper_Page_Is_Null, noPagedXml, withPagedXml);
         return this;
     }
 
@@ -462,7 +463,7 @@ public class SqlBuilder {
      * @return
      */
     public SqlBuilder limitDirectly() {
-        return this.ifThen(XmlConstant.Wrapper_Page_Not_Null,
-            () -> this.append(" LIMIT %s, %s ", XmlConstant.Wrapper_Paged_Offset, XmlConstant.Wrapper_Paged_Size));
+        return this.ifThen(Wrapper_Page_Not_Null,
+            () -> this.append(" LIMIT %s, %s ", Wrapper_Paged_Offset, Wrapper_Paged_Size));
     }
 }

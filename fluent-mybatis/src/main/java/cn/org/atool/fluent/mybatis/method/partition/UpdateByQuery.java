@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.method.partition;
 
-import cn.org.atool.fluent.mybatis.method.AbstractMethod;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
 import cn.org.atool.fluent.mybatis.method.model.StatementId;
 import cn.org.atool.fluent.mybatis.method.model.StatementType;
-import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 
 import java.util.Map;
+
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 
 /**
  * UpdateByQuery
@@ -37,7 +37,7 @@ public class UpdateByQuery extends AbstractMethod {
             .where(() -> super.whereByWrapper(builder))
             .append(() -> lastByWrapper(builder, true));
         if (super.getDbType().isCanDirectLimit()) {
-            builder.ifThen(XmlConstant.Wrapper_Page_Not_Null, () -> builder.append(" LIMIT %s ", XmlConstant.Wrapper_Paged_Size));
+            builder.ifThen(Wrapper_Page_Not_Null, () -> builder.append(" LIMIT %s ", Wrapper_Paged_Size));
         } else {
             // TODO
         }
@@ -55,13 +55,13 @@ public class UpdateByQuery extends AbstractMethod {
      */
     protected SqlBuilder update(TableMeta table, SqlBuilder builder) {
         return builder
-            .ifThen(XmlConstant.Wrapper_UpdateStr_Not_Null, () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
-            .ifThen(XmlConstant.Wrapper_UpdateStr_Not_Null, XmlConstant.Wrapper_UpdateStr_Var);
+            .ifThen(Wrapper_UpdateStr_Not_Null, () -> builder.eachJoining(table.getFields(), (field) -> updateField(builder, field)))
+            .ifThen(Wrapper_UpdateStr_Not_Null, Wrapper_UpdateStr_Var);
     }
 
     private void updateField(SqlBuilder builder, TableFieldMeta field) {
         if (isUpdateDefault(field)) {
-            builder.ifThen(XmlConstant.Wrapper_Update_Contain_Key, "@column = @property,", field.getUpdate(), field.getColumn());
+            builder.ifThen(Wrapper_Update_Contain_Key, "@column = @property,", field.getUpdate(), field.getColumn());
         }
     }
 }

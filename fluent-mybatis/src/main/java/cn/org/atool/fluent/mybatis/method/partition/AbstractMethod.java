@@ -1,10 +1,9 @@
-package cn.org.atool.fluent.mybatis.method;
+package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableFieldMeta;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import cn.org.atool.fluent.mybatis.method.model.XmlConstant;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -37,7 +37,7 @@ public abstract class AbstractMethod implements InjectMethod {
      */
     protected SqlBuilder whereByWrapper(SqlBuilder builder) {
         return builder
-            .ifThen(XmlConstant.Wrapper_Where_NotNull, XmlConstant.Wrapper_Where_Var);
+            .ifThen(Wrapper_Where_NotNull, Wrapper_Where_Var);
     }
 
     /**
@@ -48,11 +48,11 @@ public abstract class AbstractMethod implements InjectMethod {
      * @return
      */
     protected SqlBuilder lastByWrapper(SqlBuilder builder, boolean withOrder) {
-        builder.ifThen(XmlConstant.Wrapper_GroupBy_NotNull, XmlConstant.Wrapper_GroupBy_Var);
+        builder.ifThen(Wrapper_GroupBy_NotNull, Wrapper_GroupBy_Var);
         if (withOrder) {
-            builder.ifThen(XmlConstant.Wrapper_OrderBy_NotNull, XmlConstant.Wrapper_OrderBy_Var);
+            builder.ifThen(Wrapper_OrderBy_NotNull, Wrapper_OrderBy_Var);
         }
-        builder.ifThen(XmlConstant.Wrapper_LastSql_NotNull, XmlConstant.Wrapper_LastSql_Var);
+        builder.ifThen(Wrapper_LastSql_NotNull, Wrapper_LastSql_Var);
         return builder;
     }
 

@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
-import cn.org.atool.fluent.mybatis.mapper.MapperUtils;
+import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.mapper.MapperUtils.listIndexEl;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static java.util.stream.Collectors.joining;
@@ -52,7 +52,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     protected void staticImport(JavaFile.Builder builder) {
         super.staticImport(builder);
         builder.addStaticImport(MybatisUtil.class, "*");
-        builder.addStaticImport(MapperUtils.class, "*");
+        builder.addStaticImport(SqlProviderUtils.class, "*");
     }
 
     @Override

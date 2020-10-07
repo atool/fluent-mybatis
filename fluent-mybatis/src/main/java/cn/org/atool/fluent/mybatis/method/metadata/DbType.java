@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method.metadata;
 
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.method.model.XmlConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 
 /**
  * DbType 数据库类型

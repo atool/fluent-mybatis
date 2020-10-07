@@ -20,8 +20,6 @@ import static cn.org.atool.fluent.mybatis.segment.model.StrConstant.EMPTY;
  * @author darui.wu
  */
 public class MybatisUtil {
-
-
     /**
      * 安全的进行字符串 format
      *
