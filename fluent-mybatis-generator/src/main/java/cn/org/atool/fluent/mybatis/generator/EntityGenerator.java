@@ -10,6 +10,7 @@ import org.test4j.generator.mybatis.config.ITableSetter;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
@@ -47,13 +48,48 @@ public class EntityGenerator {
         return t -> {
             if (table.excludes().length > 0) {
                 t.setExcludes(table.excludes());
-                t.setTablePrefix(table.tablePrefix().length > 0 ? table.tablePrefix() : tables.tablePrefix());
-                for (Class dao : tables.daoInterface()) {
-                    String[] types = getInterfaceParaTypes(dao);
-                    t.addBaseDaoInterface(dao, types);
-                }
+            }
+            t.setTablePrefix(table.tablePrefix().length > 0 ? table.tablePrefix() : tables.tablePrefix());
+            if (isDefined(table.gmtCreated(), tables.gmtCreated())) {
+                t.setGmtCreate(this.getDefined(table.gmtCreated(), tables.gmtCreated()));
+            }
+            if (isDefined(table.gmtModified(), tables.gmtModified())) {
+                t.setGmtModified(this.getDefined(table.gmtModified(), tables.gmtModified()));
+            }
+            if (isDefined(table.logicDeleted(), tables.logicDeleted())) {
+                t.setLogicDeleted(this.getDefined(table.logicDeleted(), tables.logicDeleted()));
+            }
+            if (this.isDefined(table.tablePrefix(), tables.tablePrefix())) {
+                t.setTablePrefix(this.getDefined(table.tablePrefix(), tables.tablePrefix()));
+            }
+            if (this.isDefined(table.mapperPrefix(), tables.mapperPrefix())) {
+                t.setMapperPrefix(this.getDefined(table.mapperPrefix(), tables.mapperPrefix()));
+            }
+            for (Class dao : tables.daoInterface()) {
+                String[] types = getInterfaceParaTypes(dao);
+                t.addBaseDaoInterface(dao, types);
             }
         };
+    }
+
+    private boolean isDefined(String value1, String value2) {
+        return !NOT_DEFINED.equals(value1) || !NOT_DEFINED.equals(value2);
+    }
+
+    private boolean isDefined(String[] value1, String[] value2) {
+        return isDefinedArr(value1) || isDefinedArr(value2);
+    }
+
+    private boolean isDefinedArr(String[] value) {
+        return value.length == 1 && Objects.equals(value[0], NOT_DEFINED);
+    }
+
+    private String getDefined(String value1, String value2) {
+        return NOT_DEFINED.equals(value1) ? value2 : value1;
+    }
+
+    private String[] getDefined(String[] value1, String[] value2) {
+        return isDefinedArr(value1) ? value1 : value2;
     }
 
     private String[] getInterfaceParaTypes(Class dao) {

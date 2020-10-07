@@ -34,7 +34,7 @@ public @interface Table {
      *
      * @return
      */
-    String[] tablePrefix() default {};
+    String[] tablePrefix() default {NOT_DEFINED};
 
     /**
      * 生成Mapper bean时在bean name前缀
@@ -42,4 +42,25 @@ public @interface Table {
      * @return
      */
     String mapperPrefix() default NOT_DEFINED;
+
+    /**
+     * 记录创建字段
+     *
+     * @return
+     */
+    String gmtCreated() default NOT_DEFINED;
+
+    /**
+     * 记录修改字段
+     *
+     * @return
+     */
+    String gmtModified() default NOT_DEFINED;
+
+    /**
+     * 逻辑删除字段
+     *
+     * @return
+     */
+    String logicDeleted() default NOT_DEFINED;
 }

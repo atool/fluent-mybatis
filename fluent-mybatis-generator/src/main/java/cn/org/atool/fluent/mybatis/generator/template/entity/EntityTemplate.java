@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.generator.template.entity;
 
+import cn.org.atool.fluent.mybatis.annotation.DaoInterface;
 import org.test4j.generator.mybatis.config.impl.TableField;
 import org.test4j.generator.mybatis.config.impl.TableSetter;
 import org.test4j.generator.mybatis.template.BaseTemplate;
@@ -30,16 +31,38 @@ public class EntityTemplate extends BaseTemplate {
     }
 
     @Override
-    protected void templateConfigs(TableSetter table, Map<String, Object> templateContext) {
-        this.putInterfaces(templateContext, table, table.getEntityInterfaces());
+    protected void templateConfigs(TableSetter table, Map<String, Object> parent, Map<String, Object> ctx) {
+        this.putInterfaces(ctx, table, table.getEntityInterfaces());
 
-        templateContext.put("primaryKey", this.findPrimaryKey(table));
+        ctx.put("primaryKey", this.findPrimaryKey(table));
         Map<String, String> annotation = new HashMap<>();
         for (TableField field : table.getFields()) {
             String text = this.fieldAnnotation(table, field);
             annotation.put(field.getName(), text);
         }
-        templateContext.put("annotation", annotation);
+        ctx.put("annotation", annotation);
+        StringBuffer buff = new StringBuffer();
+        buff.append("table = ").append('"').append(table.getTableName()).append('"');
+        if (isNotBlank(table.getMapperBeanPrefix())) {
+            buff.append(", mapperBeanPrefix = ").append('"').append(table.getMapperBeanPrefix()).append('"');
+        }
+        if (table.getBaseDaoInterfaces() != null && !table.getBaseDaoInterfaces().isEmpty()) {
+            this.addImport(parent, DaoInterface.class);
+            buff.append(", daoInterface = {\n");
+            for (Map.Entry<Class, String[]> entry : table.getBaseDaoInterfaces().entrySet()) {
+                this.addImport(parent, entry.getKey());
+                buff.append("\t@DaoInterface(");
+                buff.append("value = ").append(entry.getKey().getSimpleName()).append(".class");
+                buff.append(", args = {");
+                buff.append("})\n");
+            }
+            buff.append("}");
+        }
+        ctx.put("fluentMybatis", buff.toString());
+    }
+
+    private void addImport(Map<String, Object> parent, Class klass) {
+        parent.put("importTypes", parent.get("importTypes") + "\nimport " + klass.getName() + ";");
     }
 
     private String findPrimaryKey(TableSetter table) {
@@ -51,12 +74,13 @@ public class EntityTemplate extends BaseTemplate {
         return "null";
     }
 
-    private void putInterfaces(Map<String, Object> templateContext, TableSetter table, Map<String, String> interfaces) {
+    private void putInterfaces(Map<String, Object> templateContext, TableSetter table, Map<Class, String[]> interfaces) {
         if (interfaces == null || interfaces.size() == 0) {
             return;
         }
-        templateContext.put("interface", interfaces.values().stream().map(i -> "import " + i + ";").collect(joining("\n")));
-        templateContext.put("interfaceName", interfaces.keySet().stream().map(str -> super.replace(str, table.getContext(), "${entity}"))
+        templateContext.put("interface", interfaces.keySet().stream().map(i -> "import " + i.getName() + ";").collect(joining("\n")));
+        templateContext.put("interfaceName", interfaces.entrySet().stream()
+            .map(e -> e.getKey().getSimpleName() + "<" + String.join(", ", e.getValue()) + ">")
             .collect(joining(", ", ", ", ""))
         );
     }

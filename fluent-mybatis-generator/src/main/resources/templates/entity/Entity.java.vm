@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Accessors(chain = true)
-@FluentMybatis(table = "${table}")
+@FluentMybatis(${entity.fluentMybatis})
 public class ${entity.name} implements IEntity$!{entity.interfaceName}{
     private static final long serialVersionUID = 1L;
 

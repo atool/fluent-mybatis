@@ -72,7 +72,7 @@ public @interface Tables {
      *
      * @return
      */
-    String[] tablePrefix() default {};
+    String[] tablePrefix() default {NOT_DEFINED};
 
     /**
      * 生成Mapper bean时在bean name前缀
@@ -114,21 +114,21 @@ public @interface Tables {
      *
      * @return
      */
-    String gmtCreateColumn() default "";
+    String gmtCreated() default NOT_DEFINED;
 
     /**
      * 记录修改字段
      *
      * @return
      */
-    String gmtModifiedColumn() default "";
+    String gmtModified() default NOT_DEFINED;
 
     /**
      * 逻辑删除字段
      *
      * @return
      */
-    String logicDeletedColumn() default "";
+    String logicDeleted() default NOT_DEFINED;
 
     /**
      * 是否同时生成test4j测试辅助文件
