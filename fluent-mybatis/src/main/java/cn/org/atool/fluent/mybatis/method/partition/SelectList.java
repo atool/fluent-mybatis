@@ -2,11 +2,6 @@ package cn.org.atool.fluent.mybatis.method.partition;
 
 import cn.org.atool.fluent.mybatis.method.metadata.DbType;
 import cn.org.atool.fluent.mybatis.method.metadata.TableMeta;
-import cn.org.atool.fluent.mybatis.method.model.SqlBuilder;
-import cn.org.atool.fluent.mybatis.method.model.StatementId;
-import cn.org.atool.fluent.mybatis.method.model.StatementType;
-
-import java.util.Map;
 
 /**
  * SelectList: 查询满足条件所有数据
@@ -21,42 +16,11 @@ public class SelectList extends AbstractMethod {
 
     @Override
     public String statementId() {
-        return StatementId.Method_SelectList;
+        return "";
     }
 
     @Override
     public String getMethodSql(Class entity, TableMeta table) {
-        String noPageXml = this.noPageXml(table);
-
-        SqlBuilder builder = SqlBuilder.instance();
-        builder
-            .begin(StatementType.select, statementId(), Map.class, resultType())
-            .checkWrapper();
-        if (super.getDbType().isCanDirectLimit()) {
-            builder.append(noPageXml).limitDirectly();
-        } else {
-            builder.choosePaged(noPageXml, super.getDbType().selectByPaged(noPageXml));
-        }
-        String xml = builder.end(StatementType.select)
-            .toString();
-        return xml;
-    }
-
-    private String noPageXml(TableMeta table) {
-        SqlBuilder builder = SqlBuilder.instance();
-        return builder
-            .select(table, true, super.isSpecTable())
-            .where(() -> super.whereByWrapper(builder))
-            .append(() -> lastByWrapper(builder, true))
-            .toString();
-    }
-
-    /**
-     * 这里单独定义出来，方便重载
-     *
-     * @return
-     */
-    protected Class resultType() {
-        return null;
+        return "";
     }
 }

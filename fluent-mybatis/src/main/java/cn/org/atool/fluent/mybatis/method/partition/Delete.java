@@ -18,19 +18,11 @@ public class Delete extends AbstractMethod {
 
     @Override
     public String statementId() {
-        return StatementId.Method_Delete;
+        return "";
     }
 
     @Override
     public String getMethodSql(Class entity, TableMeta table) {
-        SqlBuilder builder = SqlBuilder.instance();
-        return builder
-            .begin(StatementType.delete, statementId(), entity)
-            .checkWrapper()
-            .delete(table, super.isSpecTable())
-            .where(() -> super.whereByWrapper(builder))
-            .append(() -> lastByWrapper(builder, true))
-            .end(StatementType.delete)
-            .toString();
+        return "";
     }
 }

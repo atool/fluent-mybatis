@@ -134,18 +134,6 @@ public class SqlBuilder {
         return this.newLine().append("</%s>", statementType.name());
     }
 
-    /**
-     * insert into tableName
-     *
-     * @param table  表结构
-     * @param isSpec 是否指定表名
-     * @return SqlBuilder
-     */
-    public SqlBuilder insert(TableMeta table, boolean isSpec) {
-        this.prefixComment(isSpec);
-        this.newLine().append("INSERT INTO ");
-        return this.byTable(table, isSpec);
-    }
 
     /**
      * delete from table
@@ -178,21 +166,6 @@ public class SqlBuilder {
             this.quotas("<include refid='SELECT_COLUMNS'/>");
         }
         this.append(" FROM ");
-        return this.byTable(table, isSpec);
-    }
-
-    /**
-     * select count(*)
-     *
-     * @param table  表结构
-     * @param isSpec 是否指定表名
-     * @return SqlBuilder
-     */
-    public SqlBuilder selectCount(TableMeta table, boolean isSpec) {
-        this.prefixComment(isSpec);
-        this.append("SELECT COUNT(")
-            .choose(Wrapper_Select_Not_Null, Wrapper_Select_Var, ASTERISK)
-            .append(") FROM ");
         return this.byTable(table, isSpec);
     }
 
@@ -305,49 +278,18 @@ public class SqlBuilder {
     /**
      * 当字段不为空时，插入字段值
      * 当字段为空时，插入默认值
-     * <pre>
-     * &lt;choose>
-     * &lt;when test='%s != null'>%s,&lt;/when>
-     * &lt;otherwise>%s,&lt;/otherwise>
-     * &lt;/choose>
-     * </pre>
      *
-     * @param conditionFormat
-     * @param valueFormat
+     * @param condition
+     * @param value
      * @param defaultValue
-     * @param property
-     * @param column
      * @return
      */
-    public SqlBuilder choose(String conditionFormat, String valueFormat, String defaultValue, String property, String column) {
-        if (property == null) {
-            return this;
-        }
-        this.newLine().append("<choose>").newLine()
-            .quotas("<when test='%s'>", replace(conditionFormat, property, column))
-            .append(replace(valueFormat, property, column))
-            .append("</when>").newLine()
-            .append("<otherwise>").append(defaultValue).append("</otherwise>").newLine()
-            .append("</choose>").newLine();
-        return this;
-    }
-
     public SqlBuilder choose(String condition, String value, String defaultValue) {
         this.newLine().append("<choose>").newLine()
             .quotas("<when test='%s'>", condition).append(value).append("</when>").newLine()
             .append("<otherwise>").append(defaultValue).append("</otherwise>").newLine()
             .append("</choose>").newLine();
         return this;
-    }
-
-    /**
-     * mybatis变量: #{param}
-     *
-     * @param param
-     * @return
-     */
-    public static String safeParam(final String param) {
-        return "#{" + param + "}";
     }
 
     /**
@@ -396,40 +338,6 @@ public class SqlBuilder {
         this.quotas("<foreach collection='%s' item='%s' index='k' separator='%s'>", collection, item, separator).newLine();
         executor.execute();
         return this.newLine().append("</foreach>").newLine();
-    }
-
-    /**
-     * 标签
-     * <pre>
-     * &lt;trim prefix="{}" suffix="{}" suffixOverrides="{}">
-     *  sql fragment
-     * &lt;/trim>
-     * </pre>
-     *
-     * @param prefix
-     * @param suffix
-     * @param suffixOverrides
-     * @param executor
-     * @return
-     */
-    public SqlBuilder trim(String prefix, String suffix, String suffixOverrides, Executor executor) {
-        this.quotas("<trim prefix='%s' suffix='%s' suffixOverrides='%s'>", prefix, suffix, suffixOverrides).newLine();
-        executor.execute();
-        return this.newLine().append("</trim>").newLine();
-    }
-
-    /**
-     * (value1, value2, value3)
-     *
-     * @param executor
-     * @return
-     */
-    public SqlBuilder brackets(Executor executor) {
-        return this.trim("(", ")", ",", executor);
-    }
-
-    public SqlBuilder brackets(String values) {
-        return this.trim("(", ")", ",", () -> this.append(values));
     }
 
     /**
