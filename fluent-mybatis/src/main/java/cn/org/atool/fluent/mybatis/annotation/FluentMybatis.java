@@ -4,6 +4,8 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.lang.annotation.*;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Entity_Suffix;
+
 /**
  * fluent mybatis相关设置
  *
@@ -25,7 +27,7 @@ public @interface FluentMybatis {
      *
      * @return
      */
-    String suffix() default "Entity";
+    String suffix() default Entity_Suffix;
 
     /**
      * 表名去掉的前缀

@@ -4,6 +4,9 @@ import org.test4j.generator.mybatis.db.DbType;
 
 import java.lang.annotation.*;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Entity_Suffix;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
+
 /**
  * 需要Entity类表定义
  *
@@ -69,21 +72,21 @@ public @interface Tables {
      *
      * @return
      */
-    String tablePrefix() default "";
+    String[] tablePrefix() default {};
 
     /**
      * 生成Mapper bean时在bean name前缀
      *
      * @return
      */
-    String mapperPrefix() default "";
+    String mapperPrefix() default NOT_DEFINED;
 
     /**
      * entity类名称后缀
      *
      * @return
      */
-    String entitySuffix() default "Entity";
+    String entitySuffix() default Entity_Suffix;
 
     /**
      * 指定数据库表名

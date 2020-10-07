@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
 import static org.test4j.tools.commons.StringHelper.isBlank;
 
 public class EntityGenerator {
@@ -46,6 +47,7 @@ public class EntityGenerator {
         return t -> {
             if (table.excludes().length > 0) {
                 t.setExcludes(table.excludes());
+                t.setTablePrefix(table.tablePrefix().length > 0 ? table.tablePrefix() : tables.tablePrefix());
                 for (Class dao : tables.daoInterface()) {
                     String[] types = getInterfaceParaTypes(dao);
                     t.addBaseDaoInterface(dao, types);

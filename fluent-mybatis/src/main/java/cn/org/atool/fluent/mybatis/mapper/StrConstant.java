@@ -7,49 +7,57 @@ package cn.org.atool.fluent.mybatis.mapper;
  */
 public interface StrConstant {
     /**
+     * Entity后缀
+     */
+    String Entity_Suffix = "Entity";
+    /**
+     * 未定义
+     */
+    String NOT_DEFINED = "$$NOT_DEFINED$$";
+    /**
      * 空串
      */
-    String EMPTY = "" ;
+    String EMPTY = "";
     /**
      * where
      */
-    String WHERE = "WHERE" ;
+    String WHERE = "WHERE";
     /**
      * distinct
      */
-    String DISTINCT = " DISTINCT " ;
+    String DISTINCT = " DISTINCT ";
     /**
      * asc
      */
-    String ASC = "ASC" ;
+    String ASC = "ASC";
     /**
      * desc
      */
-    String DESC = "DESC" ;
+    String DESC = "DESC";
     /**
      * 格式化占位符
      */
-    String STR_FORMAT = "%s" ;
+    String STR_FORMAT = "%s";
     /**
      * 逗号
      */
-    String COMMA = "," ;
+    String COMMA = ",";
     /**
      * 星号
      */
-    String ASTERISK = "*" ;
+    String ASTERISK = "*";
     /**
      * 问号
      */
-    String QUESTION_MARK = "?" ;
+    String QUESTION_MARK = "?";
     /**
      * 空格
      */
-    String SPACE = " " ;
+    String SPACE = " ";
     /**
      * 换行
      */
-    String NEWLINE = "\n" ;
+    String NEWLINE = "\n";
     /**
      * 逗号 + 空格
      */
@@ -57,5 +65,5 @@ public interface StrConstant {
     /**
      * select ... from ... where ...
      */
-    String SELECT_FROM_WHERE = "SELECT %s FROM %s WHERE %s" ;
+    String SELECT_FROM_WHERE = "SELECT %s FROM %s WHERE %s";
 }

@@ -12,10 +12,10 @@ import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain.URL;
     srcDir = "fluent-mybatis-test/src/main/java",
     entityPack = "cn.org.atool.fluent.mybatis.generate.entity",
     daoPack = "cn.org.atool.fluent.mybatis.generate.dao",
-
     daoInterface = MyCustomerInterface.class,
     tables = {
-        @Table("address")
+        @Table(value = "address"),
+        @Table(value = "t_user", tablePrefix = "t_")
     })
 public class FluentMyBatisGeneratorMain2 {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
