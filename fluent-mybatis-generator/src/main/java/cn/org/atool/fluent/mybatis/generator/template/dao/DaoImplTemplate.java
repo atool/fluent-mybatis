@@ -8,13 +8,22 @@ import java.util.Map;
 
 public class DaoImplTemplate extends BaseTemplate {
     public DaoImplTemplate() {
-        super("templates/dao/DaoImpl.java.vm", "dao/impl/*DaoImpl.java");
+        super("templates/dao/DaoImpl.java.vm", "impl/*DaoImpl.java");
         super.outputDir = OutputDir.Dao;
     }
 
     @Override
     public String getTemplateId() {
         return "daoImpl";
+    }
+
+    protected String getPackage(TableSetter table) {
+        int index = this.fileNameReg.lastIndexOf('/');
+        String sub = "";
+        if (index > 0) {
+            sub = this.fileNameReg.substring(0, index).replace('/', '.');
+        }
+        return table.getDaoPackage() + "." + sub;
     }
 
     @Override

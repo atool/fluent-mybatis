@@ -35,9 +35,10 @@ public class EntityGenerator {
 
     private Consumer<IGlobalConfigSet> getGlobalConfig(Tables tables) {
         return g -> {
-            g.setOutputDir(this.entityPath(), this.daoPath(), this.testPah());
+            g.setDataSource(tables.url(), tables.username(), tables.password());
+            g.setOutputDir(this.srcDir, this.testDir, this.srcDir);
             g.setBasePackage(tables.entityPack());
-//            g.setDaoPackage(tables.daoPack());
+            g.setDaoPackage(tables.daoPack());
         };
     }
 
