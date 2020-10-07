@@ -16,7 +16,7 @@ public interface IEntityHelper<T extends IEntity> {
      * @param entity
      * @return
      */
-    Map<String, Object> toMap(IEntity entity);
+    Map<String, Object> toEntityMap(T entity);
 
     /**
      * entity对象转换为map对象
@@ -25,5 +25,5 @@ public interface IEntityHelper<T extends IEntity> {
      * @param entity
      * @return
      */
-    Map<String, Object> columnMap(IEntity entity);
+    Map<String, Object> toColumnMap(T entity);
 }

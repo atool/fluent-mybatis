@@ -75,7 +75,7 @@ public abstract class WhereBase<
      * @return 查询器UserQuery
      */
     public WHERE eqNotNull(IEntity entity) {
-        return this.eqNotNull(entity.columnMap());
+        return this.eqNotNull(entity.toColumnMap());
     }
 
     /**

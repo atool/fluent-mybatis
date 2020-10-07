@@ -65,14 +65,4 @@ public class AddressEntity implements IEntity, IBaseEntity<AddressEntity> {
     public Serializable findPk() {
         return id;
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return AddressEntityHelper.map(this);
-    }
-
-    @Override
-    public Map<String, Object> columnMap() {
-        return AddressEntityHelper.columnMap(this);
-    }
 }

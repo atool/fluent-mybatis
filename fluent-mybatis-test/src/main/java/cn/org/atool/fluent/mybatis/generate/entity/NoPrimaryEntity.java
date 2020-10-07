@@ -39,14 +39,4 @@ public class NoPrimaryEntity implements IEntity {
     public Serializable findPk() {
         return null;
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return NoPrimaryEntityHelper.map(this);
-    }
-
-    @Override
-    public Map<String, Object> columnMap() {
-        return NoPrimaryEntityHelper.columnMap(this);
-    }
 }

@@ -79,14 +79,4 @@ public class UserEntity implements IEntity, IBaseEntity<UserEntity> {
     public Serializable findPk() {
         return id;
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return UserEntityHelper.map(this);
-    }
-
-    @Override
-    public Map<String, Object> columnMap() {
-        return UserEntityHelper.columnMap(this);
-    }
 }

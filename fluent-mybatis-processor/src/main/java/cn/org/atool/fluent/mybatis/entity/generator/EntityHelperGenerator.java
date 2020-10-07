@@ -1,11 +1,13 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
+import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import com.sun.tools.javac.code.Type;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -36,20 +38,22 @@ public class EntityHelperGenerator extends AbstractGenerator {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addMethod(this.m_map())
-            .addMethod(this.m_columnMap())
+        builder
+            .addSuperinterface(parameterizedType(ClassName.get(IEntityHelper.class), fluent.className()))
+            .addMethod(this.m_toEntityMap())
+            .addMethod(this.m_toColumnMap())
             .addMethod(this.m_entity())
             .addMethod(this.m_copy());
     }
 
     /**
-     * public static Map<String, Object> map(Entity entity)
+     * public static Map<String, Object> toEntityMap(Entity entity)
      *
      * @return
      */
-    private MethodSpec m_map() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("map")
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+    private MethodSpec m_toEntityMap() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("toEntityMap")
+            .addModifiers(Modifier.PUBLIC)
             .addJavadoc("Entity对象转换为HashMap，key值是对象属性")
             .addParameter(fluent.className(), "entity")
             .returns(this.parameterizedType(Map.class, String.class, Object.class))
@@ -70,12 +74,12 @@ public class EntityHelperGenerator extends AbstractGenerator {
     }
 
     /**
-     * public static Map<String, Object> columnMap(Entity entity)
+     * public static Map<String, Object> toColumnMap(Entity entity)
      *
      * @return
      */
-    private MethodSpec m_columnMap() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("columnMap")
+    private MethodSpec m_toColumnMap() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("toColumnMap")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addJavadoc("Entity对象转换为HashMap，key值是数据库字段")
             .addParameter(fluent.className(), "entity")

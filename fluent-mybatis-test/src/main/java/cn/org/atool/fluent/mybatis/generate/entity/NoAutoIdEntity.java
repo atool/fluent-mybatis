@@ -40,14 +40,4 @@ public class NoAutoIdEntity implements IEntity{
     public Serializable findPk() {
         return id;
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return NoAutoIdEntityHelper.map(this);
-    }
-
-    @Override
-    public Map<String, Object> columnMap() {
-        return NoAutoIdEntityHelper.columnMap(this);
-    }
 }
