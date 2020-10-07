@@ -35,7 +35,7 @@ public class EntityTemplate extends BaseTemplate {
 
     @Override
     protected void templateConfigs(TableSetter table, Map<String, Object> parent, Map<String, Object> ctx) {
-        this.putInterfaces(ctx, table, table.getEntityInterfaces());
+        this.putInterfaces(parent, ctx, table, table.getEntityInterfaces());
 
         ctx.put("primaryKey", this.findPrimaryKey(table));
         Map<String, String> annotation = new HashMap<>();
@@ -79,21 +79,22 @@ public class EntityTemplate extends BaseTemplate {
         return "null";
     }
 
-    private void putInterfaces(Map<String, Object> templateContext, TableSetter table, Map<Class, String[]> interfaces) {
+    private void putInterfaces(Map<String, Object> parent, Map<String, Object> templateContext, TableSetter table, Map<Class, String[]> interfaces) {
         if (interfaces == null || interfaces.size() == 0) {
             return;
         }
         templateContext.put("interface", interfaces.keySet().stream().map(i -> "import " + i.getName() + ";").collect(joining("\n")));
         templateContext.put("interfaceName", interfaces.entrySet().stream()
-            .map(e -> entityInterface(e.getKey(), e.getValue()))
+            .map(e -> entityInterface(parent, e.getKey(), e.getValue()))
             .collect(joining(", ", ", ", ""))
         );
     }
 
-    private String entityInterface(Class klass, String[] types) {
+    private String entityInterface(Map<String, Object> parent, Class klass, String[] types) {
         StringBuffer buff = new StringBuffer(klass.getSimpleName());
         if (types != null && types.length > 0) {
             String value = Stream.of(types)
+                .map(var -> super.getConfig(parent, var))
                 .collect(Collectors.joining(", ", "<", ">"));
             buff.append(value);
         }

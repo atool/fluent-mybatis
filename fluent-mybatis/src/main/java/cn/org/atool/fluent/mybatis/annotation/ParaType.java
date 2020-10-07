@@ -11,15 +11,15 @@ public enum ParaType {
     /**
      * 对应的实体类
      */
-    Entity("${entity}"),
+    Entity("entity.name"),
     /**
      * 对应的查询器
      */
-    Query("${query}"),
+    Query("entityQuery.name"),
     /**
      * 对应的更新器
      */
-    Updater("${update}");
+    Updater("entityUpdate.name");
 
     @Getter
     private String var;
