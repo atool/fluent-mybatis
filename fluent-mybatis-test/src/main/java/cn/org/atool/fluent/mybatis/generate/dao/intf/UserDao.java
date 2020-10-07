@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.generate.entity.dao.intf;
+package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
 import cn.org.atool.fluent.mybatis.base.IDao;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;

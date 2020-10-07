@@ -1,7 +1,7 @@
-package cn.org.atool.fluent.mybatis.generate.entity.dao.impl;
+package cn.org.atool.fluent.mybatis.generate.dao.impl;
 
 import cn.org.atool.fluent.mybatis.generate.entity.dao.NoPrimaryBaseDao;
-import cn.org.atool.fluent.mybatis.generate.entity.dao.intf.NoPrimaryDao;
+import cn.org.atool.fluent.mybatis.generate.dao.intf.NoPrimaryDao;
 import org.springframework.stereotype.Repository;
 
 

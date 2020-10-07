@@ -17,6 +17,6 @@ public class SharingTemplate extends BaseTemplate {
     }
 
     @Override
-    protected void templateConfigs(TableSetter table, Map<String, Object> context) {
+    protected void templateConfigs(TableSetter table, Map<String, Object> parent, Map<String, Object> context) {
     }
 }
