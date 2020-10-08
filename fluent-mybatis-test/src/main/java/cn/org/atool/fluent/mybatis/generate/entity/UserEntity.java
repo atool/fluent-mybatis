@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
@@ -10,7 +12,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @FluentMybatis(
     prefix = "t_", mapperBeanPrefix = "my",
-    daoInterface = @DaoInterface(value = MyCustomerInterface.class, args = {ParaType.Entity})
+    daoInterface = MyCustomerInterface.class
 )
 public class UserEntity implements IEntity, IBaseEntity<UserEntity> {
     private static final long serialVersionUID = 1L;
