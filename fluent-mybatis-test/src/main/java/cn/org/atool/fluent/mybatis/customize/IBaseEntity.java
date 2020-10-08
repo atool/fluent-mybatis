@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.customize;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
+
 import java.util.Date;
 
 /**
@@ -7,7 +9,7 @@ import java.util.Date;
  *
  * @author:darui.wu Created by darui.wu on 2020/6/2.
  */
-public interface IBaseEntity<T extends IBaseEntity> {
+public interface IBaseEntity<T extends IEntity> {
     Long getId();
 
     Date getGmtCreated();

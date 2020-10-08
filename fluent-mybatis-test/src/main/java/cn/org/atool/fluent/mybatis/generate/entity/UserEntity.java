@@ -29,7 +29,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @FluentMybatis(table = "t_user", mapperBeanPrefix = "my",
 	daoInterface = {MyCustomerInterface.class})
-public class UserEntity implements IEntity, IBaseEntity{
+public class UserEntity implements IEntity, IBaseEntity<UserEntity>{
     private static final long serialVersionUID = 1L;
 
     /**
