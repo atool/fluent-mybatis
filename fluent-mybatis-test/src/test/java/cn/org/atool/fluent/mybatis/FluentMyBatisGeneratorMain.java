@@ -2,8 +2,12 @@ package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import cn.org.atool.fluent.mybatis.generator.EntityGenerator2;
-
+import cn.org.atool.fluent.mybatis.generator.EntityGenerator;
+import cn.org.atool.fluent.mybatis.generator.generator.EntityAnnotationGenerator;
+import cn.org.atool.fluent.mybatis.generator.generator.EntityApiGenerator;
+import cn.org.atool.fluent.mybatis.generator.annoatation.Column;
+import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
+import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
 
 public class FluentMyBatisGeneratorMain {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
@@ -16,8 +20,13 @@ public class FluentMyBatisGeneratorMain {
      * @param args
      */
     public static void main(String[] args) {
+        EntityGenerator.byAnnotation(GenerateInfo.class);
+//        generate();
+    }
+
+    private static void generate() {
         String outputDir = System.getProperty("user.dir") + "/fluent-mybatis-test/src/main/java";
-        EntityGenerator2.build()
+        EntityGenerator.build()
             .globalConfig(config -> config.setOutputDir(outputDir)
                 .setDataSource(URL, "root", "password")
                 .setBasePackage("cn.org.atool.fluent.mybatis.generate.entity"))
@@ -40,5 +49,25 @@ public class FluentMyBatisGeneratorMain {
                 )
             )
             .execute();
+    }
+
+    @Tables(url = URL, username = "root", password = "password",
+        srcDir = "fluent-mybatis-test/src/main/java",
+        entityPack = "cn.org.atool.fluent.mybatis.generate.entity",
+        daoPack = "cn.org.atool.fluent.mybatis.generate.dao",
+        tables = {
+            @Table(value = {"address", "t_user"},
+                tablePrefix = "t_",
+                gmtCreated = "gmt_created",
+                gmtModified = "gmt_modified",
+                logicDeleted = "is_deleted",
+                mapperPrefix = "my",
+                daoInterface = MyCustomerInterface.class,
+                entityInterface = IBaseEntity.class,
+                columns = @Column(value = "version", isLarge = true)
+            ),
+            @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "SELECT LAST_INSERT_ID() AS ID"),
+            @Table(value = "no_primary", mapperPrefix = "new")})
+    public static class GenerateInfo {
     }
 }

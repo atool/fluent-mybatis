@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.generator;
+package cn.org.atool.fluent.mybatis.generator.generator;
 
 import cn.org.atool.fluent.mybatis.generator.template.dao.DaoImplTemplate;
 import cn.org.atool.fluent.mybatis.generator.template.dao.DaoIntfTemplate;
@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 数据库表列表
+ * 通过java编码设置方式生成Entity
  *
  * @author wudarui
  */
 @Slf4j
-public class EntityGenerator2 extends DataMapGenerator {
-    private EntityGenerator2() {
+public class EntityApiGenerator extends DataMapGenerator {
+    private EntityApiGenerator() {
     }
 
     private boolean withTest = false;
@@ -33,7 +33,7 @@ public class EntityGenerator2 extends DataMapGenerator {
      * @return
      */
     public static IGlobalConfig buildWithTest() {
-        EntityGenerator2 generator = new EntityGenerator2();
+        EntityApiGenerator generator = new EntityApiGenerator();
         generator.withTest = true;
         return generator;
     }
@@ -44,7 +44,7 @@ public class EntityGenerator2 extends DataMapGenerator {
      * @return
      */
     public static IGlobalConfig build() {
-        return new EntityGenerator2();
+        return new EntityApiGenerator();
     }
 
     private List<BaseTemplate> list = new ArrayList<>();

@@ -7,6 +7,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.util.Objects;
@@ -90,7 +91,7 @@ public class FieldColumnParser {
         setValue(assign, "notLarge", "true", v -> field.setNotLarge(Boolean.valueOf(v)));
         setValue(assign, "numericScale", "", field::setNumericScale);
         setEnumVal(assign, "jdbcType", value -> {
-            if (!Objects.equals("UNDEFINED", value)) {
+            if (!Objects.equals(JdbcType.UNDEFINED.name(), value)) {
                 field.setJdbcType(value);
             }
         });
