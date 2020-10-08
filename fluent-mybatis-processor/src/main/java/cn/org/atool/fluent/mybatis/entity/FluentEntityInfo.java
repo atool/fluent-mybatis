@@ -10,10 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -45,7 +42,7 @@ public class FluentEntityInfo {
      * dao自定义扩展接口
      */
     @Getter(AccessLevel.NONE)
-    private Map<String, List<String>> daoInterfaces;
+    private Class[] daoInterfaces;
     /**
      * 表名称前缀
      */
@@ -77,14 +74,12 @@ public class FluentEntityInfo {
     public FluentEntityInfo setClassName(String entityPack, String className) {
         this.className = className;
         this.entityPack = entityPack;
-//        int index = entityPack.lastIndexOf('.');
-//        this.basePack = index > 0 ? entityPack.substring(0, index) : entityPack;
         this.basePack = this.entityPack;
         return this;
     }
 
-    public Map<String, List<String>> getDaoInterfaces() {
-        return daoInterfaces == null ? new HashMap<>() : daoInterfaces;
+    public Class[] getDaoInterfaces() {
+        return daoInterfaces == null ? new Class[0] : daoInterfaces;
     }
 
     public FluentEntityInfo setFields(List<JCVariableDecl> fields) {
@@ -104,11 +99,11 @@ public class FluentEntityInfo {
      * @param fluentMyBatis
      * @return
      */
-    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis, Map<String, List<String>> daoInterfaces) {
+    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
-        this.daoInterfaces = daoInterfaces;
+        this.daoInterfaces = fluentMyBatis.daoInterface();
         this.tableName = fluentMyBatis.table();
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());

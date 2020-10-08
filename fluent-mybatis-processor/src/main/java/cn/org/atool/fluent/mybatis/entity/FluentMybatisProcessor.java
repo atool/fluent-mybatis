@@ -48,7 +48,7 @@ public class FluentMybatisProcessor extends BaseProcessor {
         try {
             return new FluentEntityInfo()
                 .setClassName(this.getCuPackageName(entity), entity.getSimpleName().toString())
-                .setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), DaoInterfaceParser.getDaoInterfaces(entity))
+//                .setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), DaoInterfaceParser.getDaoInterfaces(entity))
                 .setFields(this.translate(entity, (JCTree) trees.getTree(entity)));
         } catch (Throwable e) {
             messager.printMessage(Diagnostic.Kind.ERROR, entity.getQualifiedName() + "\n" + MybatisUtil.toString(e));

@@ -43,6 +43,11 @@ public @interface FluentMybatis {
      */
     String mapperBeanPrefix() default "";
 
+    /**
+     * sequence 名称
+     *
+     * @return
+     */
     String seqName() default "";
 
     /**
@@ -50,7 +55,7 @@ public @interface FluentMybatis {
      *
      * @return
      */
-    DaoInterface[] daoInterface() default {};
+    Class[] daoInterface() default {};
 
     /**
      * 分页语法

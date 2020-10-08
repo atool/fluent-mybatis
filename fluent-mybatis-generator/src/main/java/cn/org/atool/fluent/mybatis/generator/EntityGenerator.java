@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.generator;
 
-import cn.org.atool.fluent.mybatis.annotation.ParaType;
-import cn.org.atool.fluent.mybatis.generator.annoatation.Interface;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
 import org.test4j.generator.mybatis.config.IGlobalConfig;
@@ -10,8 +8,6 @@ import org.test4j.generator.mybatis.config.ITableSetter;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
 import static org.test4j.tools.commons.StringHelper.isBlank;
@@ -57,18 +53,11 @@ public class EntityGenerator {
             t.setSeqName(table.seqName());
             t.setTablePrefix(value(table.tablePrefix(), tables.tablePrefix()));
             t.setMapperPrefix(value(table.mapperPrefix(), tables.mapperPrefix()));
-            for (Interface dao : table.daoInterface()) {
-                String[] types = Stream.of(dao.types())
-                    .map(p -> "ParaType." + p.name())
-                    .collect(Collectors.toList()).toArray(new String[0]);
-
-                t.addBaseDaoInterface(dao.value(), types);
+            for (Class dao : table.daoInterface()) {
+                t.addBaseDaoInterface(dao);
             }
-            for (Interface entity : table.entityInterface()) {
-                String[] types = Stream.of(entity.types())
-                    .map(p -> p.getVar())
-                    .collect(Collectors.toList()).toArray(new String[0]);
-                t.addEntityInterface(entity.value(), types);
+            for (Class entity : table.entityInterface()) {
+                t.addEntityInterface(entity);
             }
         };
     }

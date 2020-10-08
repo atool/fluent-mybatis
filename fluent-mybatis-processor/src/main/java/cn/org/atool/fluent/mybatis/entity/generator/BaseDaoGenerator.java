@@ -4,13 +4,10 @@ import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
-import cn.org.atool.fluent.mybatis.entity.base.DaoInterfaceParser;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import java.util.List;
-import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
@@ -28,8 +25,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
         builder.addModifiers(Modifier.ABSTRACT)
             .superclass(this.superBaseDaoImplKlass())
             .addSuperinterface(this.superMappingClass());
-        for (Map.Entry<String, List<String>> daoInterface : fluent.getDaoInterfaces().entrySet()) {
-            this.addInterface(builder, daoInterface.getKey(), daoInterface.getValue());
+        for (Class daoInterface : fluent.getDaoInterfaces()) {
+            this.addInterface(builder, daoInterface);
         }
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
@@ -38,22 +35,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .addMethod(this.m_findPkColumn());
     }
 
-    private void addInterface(TypeSpec.Builder builder, String daoInterface, List<String> argNames) {
-        List<ClassName> argClassNames = DaoInterfaceParser.getClassNames(fluent, argNames);
-        int dot = daoInterface.lastIndexOf('.');
-        String packageName = "";
-        String simpleClassName = daoInterface;
-        if (dot > 0) {
-            packageName = daoInterface.substring(0, dot);
-            simpleClassName = daoInterface.substring(dot + 1);
-        }
-        if (argClassNames.isEmpty()) {
-            builder.addSuperinterface(ClassName.get(packageName, simpleClassName));
-        } else {
-            builder.addSuperinterface(parameterizedType(
-                ClassName.get(packageName, simpleClassName), argClassNames.toArray(new ClassName[0])
-            ));
-        }
+    private void addInterface(TypeSpec.Builder builder, Class daoInterface) {
+        builder.addSuperinterface(ClassName.get(daoInterface));
     }
 
     private TypeName superMappingClass() {

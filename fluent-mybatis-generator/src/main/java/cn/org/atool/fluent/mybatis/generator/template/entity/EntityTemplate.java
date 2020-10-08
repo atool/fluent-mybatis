@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.generator.template.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.DaoInterface;
-import cn.org.atool.fluent.mybatis.annotation.ParaType;
 import org.test4j.generator.mybatis.config.impl.TableField;
 import org.test4j.generator.mybatis.config.impl.TableSetter;
 import org.test4j.generator.mybatis.template.BaseTemplate;
@@ -9,9 +7,8 @@ import org.test4j.tools.commons.StringHelper;
 import org.test4j.tools.commons.TextBuilder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static org.test4j.generator.mybatis.config.constant.ConfigKey.KEY_ENTITY;
@@ -35,7 +32,7 @@ public class EntityTemplate extends BaseTemplate {
 
     @Override
     protected void templateConfigs(TableSetter table, Map<String, Object> parent, Map<String, Object> ctx) {
-        this.putInterfaces(parent, ctx, table, table.getEntityInterfaces());
+        this.putInterfaces(parent, ctx, table.getEntityInterfaces());
 
         ctx.put("primaryKey", this.findPrimaryKey(table));
         Map<String, String> annotation = new HashMap<>();
@@ -50,18 +47,13 @@ public class EntityTemplate extends BaseTemplate {
             buff.append(", mapperBeanPrefix = ").append('"').append(table.getMapperBeanPrefix()).append('"');
         }
         if (table.getBaseDaoInterfaces() != null && !table.getBaseDaoInterfaces().isEmpty()) {
-            this.addImport(parent, DaoInterface.class);
-            this.addImport(parent, ParaType.class);
-            buff.append(", daoInterface = {\n");
-            for (Map.Entry<Class, String[]> entry : table.getBaseDaoInterfaces().entrySet()) {
-                this.addImport(parent, entry.getKey());
-                buff.append("\t@DaoInterface(");
-                buff.append("value = ").append(entry.getKey().getSimpleName()).append(".class");
-                buff.append(", args = {");
-                buff.append(String.join(", ", entry.getValue()));
-                buff.append("})\n");
+            String daos = table.getBaseDaoInterfaces().stream()
+                .map(dao -> dao.getSimpleName() + ".class")
+                .collect(joining(", ", "{", "}"));
+            buff.append(", daoInterface = ").append(daos);
+            for (Class dao : table.getBaseDaoInterfaces()) {
+                this.addImport(parent, dao);
             }
-            buff.append("}");
         }
         ctx.put("fluentMybatis", buff.toString());
     }
@@ -79,26 +71,15 @@ public class EntityTemplate extends BaseTemplate {
         return "null";
     }
 
-    private void putInterfaces(Map<String, Object> parent, Map<String, Object> templateContext, TableSetter table, Map<Class, String[]> interfaces) {
+    private void putInterfaces(Map<String, Object> parent, Map<String, Object> ctx, List<Class> interfaces) {
         if (interfaces == null || interfaces.size() == 0) {
             return;
         }
-        templateContext.put("interface", interfaces.keySet().stream().map(i -> "import " + i.getName() + ";").collect(joining("\n")));
-        templateContext.put("interfaceName", interfaces.entrySet().stream()
-            .map(e -> entityInterface(parent, e.getKey(), e.getValue()))
+        ctx.put("interface", interfaces.stream().map(i -> "import " + i.getName() + ";").collect(joining("\n")));
+        ctx.put("interfaceName", interfaces.stream()
+            .map(Class::getSimpleName)
             .collect(joining(", ", ", ", ""))
         );
-    }
-
-    private String entityInterface(Map<String, Object> parent, Class klass, String[] types) {
-        StringBuffer buff = new StringBuffer(klass.getSimpleName());
-        if (types != null && types.length > 0) {
-            String value = Stream.of(types)
-                .map(var -> super.getConfig(parent, var))
-                .collect(Collectors.joining(", ", "<", ">"));
-            buff.append(value);
-        }
-        return buff.toString();
     }
 
     private String fieldAnnotation(TableSetter table, TableField field) {
