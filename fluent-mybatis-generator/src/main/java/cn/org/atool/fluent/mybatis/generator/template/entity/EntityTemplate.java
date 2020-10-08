@@ -105,8 +105,8 @@ public class EntityTemplate extends BaseTemplate {
             if (field.getIsLarge() != null && !field.getIsLarge()) {
                 text.quotas(", notLarge = false");
             }
-            if (isNotBlank(field.getTypeHandler())) {
-                text.quotas(", typeHandler = '%s'", field.getTypeHandler());
+            if (field.getTypeHandler() != null) {
+                text.quotas(", typeHandler = %s.class", field.getTypeHandler().getName());
             }
             text.append(")");
         }

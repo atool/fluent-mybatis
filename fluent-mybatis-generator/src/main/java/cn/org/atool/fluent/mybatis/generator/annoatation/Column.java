@@ -1,5 +1,8 @@
 package cn.org.atool.fluent.mybatis.generator.annoatation;
 
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
+
 import java.lang.annotation.*;
 
 @Documented
@@ -21,6 +24,20 @@ public @interface Column {
     String property() default "";
 
     /**
+     * insert的默认值
+     *
+     * @return
+     */
+    String insert() default "";
+
+    /**
+     * update的默认值
+     *
+     * @return
+     */
+    String update() default "";
+
+    /**
      * 是否大字段
      *
      * @return
@@ -33,4 +50,11 @@ public @interface Column {
      * @return
      */
     Class javaType() default Object.class;
+
+    /**
+     * type handler
+     *
+     * @return
+     */
+    Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
 }

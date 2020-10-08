@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generator.EntityGenerator;
+import cn.org.atool.fluent.mybatis.generator.annoatation.Column;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
 
@@ -20,7 +21,8 @@ import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain2.URL;
             logicDeleted = "is_deleted",
             mapperPrefix = "my",
             daoInterface = MyCustomerInterface.class,
-            entityInterface = IBaseEntity.class
+            entityInterface = IBaseEntity.class,
+            columns = @Column(value = "version", isLarge = true)
         ),
         @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "SELECT LAST_INSERT_ID() AS ID"),
         @Table(value = "no_primary", mapperPrefix = "new")})

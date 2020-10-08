@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.generator;
 
+import cn.org.atool.fluent.mybatis.generator.annoatation.Column;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
+import org.apache.ibatis.type.UnknownTypeHandler;
 import org.test4j.generator.mybatis.config.IGlobalConfig;
 import org.test4j.generator.mybatis.config.IGlobalConfigSet;
 import org.test4j.generator.mybatis.config.ITableSetter;
@@ -58,6 +60,22 @@ public class EntityGenerator {
             }
             for (Class entity : table.entityInterface()) {
                 t.addEntityInterface(entity);
+            }
+            for (Column column : table.columns()) {
+                t.setColumn(column.value(), c -> {
+                    c.setFieldName(column.property());
+                    c.setInsert(column.insert());
+                    c.setUpdate(column.update());
+                    if (column.isLarge()) {
+                        c.setLarge();
+                    }
+                    if (!Objects.equals(column.javaType(), Object.class)) {
+                        c.setJavaType(column.javaType());
+                    }
+                    if (!Objects.equals(column.typeHandler(), UnknownTypeHandler.class)) {
+                        c.setTypeHandler(column.typeHandler());
+                    }
+                });
             }
         };
     }
