@@ -51,6 +51,13 @@ public @interface Tables {
     String srcDir() default "src/main/java";
 
     /**
+     * 如果需要生成测试辅助文件, 指定测试文件相对于根目录路径
+     *
+     * @return
+     */
+    String testDir() default "";
+
+    /**
      * 生成的entity package路径
      * 默认和生成定义类相同
      *
@@ -67,12 +74,15 @@ public @interface Tables {
     String daoPack() default "";
 
     /**
-     * 是否同时生成test4j测试辅助文件
+     * 指定数据库表名
      *
      * @return
      */
-    boolean test4j() default false;
+    Table[] tables();
 
+    /**
+     * ========== 下面定义可以被 @Table 定义覆盖 ==========
+     */
     /**
      * 生成Entity文件时, 需要去除的表前缀
      *
@@ -86,20 +96,6 @@ public @interface Tables {
      * @return
      */
     String mapperPrefix() default NOT_DEFINED;
-
-    /**
-     * 如果需要生成测试辅助文件, 指定测试文件相对于根目录路径
-     *
-     * @return
-     */
-    String testDir() default "src/test/java";
-
-    /**
-     * 指定数据库表名
-     *
-     * @return
-     */
-    Table[] tables();
 
     /**
      * 记录创建字段

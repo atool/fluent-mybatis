@@ -51,10 +51,10 @@ public class EntityGenerator {
             if (table.excludes().length > 0) {
                 t.setExcludes(table.excludes());
             }
-            t.setTablePrefix(value(table.tablePrefix(), tables.tablePrefix()));
             t.setGmtCreate(value(table.gmtCreated(), tables.gmtCreated()));
             t.setGmtModified(value(table.gmtModified(), tables.gmtModified()));
             t.setLogicDeleted(value(table.logicDeleted(), tables.logicDeleted()));
+            t.setSeqName(table.seqName());
             t.setTablePrefix(value(table.tablePrefix(), tables.tablePrefix()));
             t.setMapperPrefix(value(table.mapperPrefix(), tables.mapperPrefix()));
             for (Interface dao : table.daoInterface()) {
@@ -88,10 +88,10 @@ public class EntityGenerator {
     }
 
     private IGlobalConfig globalConfig() {
-        if (tables.test4j()) {
-            return EntityGenerator2.buildWithTest();
-        } else {
+        if (isBlank(tables.testDir())) {
             return EntityGenerator2.build();
+        } else {
+            return EntityGenerator2.buildWithTest();
         }
     }
 

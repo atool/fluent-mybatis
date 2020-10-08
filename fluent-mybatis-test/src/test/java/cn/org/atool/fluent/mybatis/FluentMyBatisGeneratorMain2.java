@@ -17,9 +17,15 @@ import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain2.URL;
     tables = {
         @Table(value = {"address", "t_user"},
             tablePrefix = "t_",
+            gmtCreated = "gmt_created",
+            gmtModified = "gmt_modified",
+            logicDeleted = "is_deleted",
+            mapperPrefix = "my",
             daoInterface = @Interface(MyCustomerInterface.class),
             entityInterface = @Interface(IBaseEntity.class)
-        )})
+        ),
+        @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "test"),
+        @Table(value = "no_primary", mapperPrefix = "new")})
 public class FluentMyBatisGeneratorMain2 {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
 

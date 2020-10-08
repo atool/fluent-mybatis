@@ -43,6 +43,8 @@ public @interface FluentMybatis {
      */
     String mapperBeanPrefix() default "";
 
+    String seqName() default "";
+
     /**
      * 自定义Dao接口
      *

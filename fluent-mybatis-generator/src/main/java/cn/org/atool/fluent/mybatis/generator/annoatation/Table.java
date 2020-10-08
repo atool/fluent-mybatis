@@ -65,6 +65,13 @@ public @interface Table {
     String logicDeleted() default NOT_DEFINED;
 
     /**
+     * 表对应的seq_name
+     *
+     * @return
+     */
+    String seqName() default "";
+
+    /**
      * entity类自定义接口
      *
      * @return
