@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.*;
@@ -17,7 +18,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 @Getter
-@Accessors(chain = true)
+@ToString
 public class FluentEntityInfo {
     /**
      * package
@@ -42,7 +43,7 @@ public class FluentEntityInfo {
      * dao自定义扩展接口
      */
     @Getter(AccessLevel.NONE)
-    private Class[] daoInterfaces;
+    private List<String> daoInterfaces;
     /**
      * 表名称前缀
      */
@@ -78,8 +79,8 @@ public class FluentEntityInfo {
         return this;
     }
 
-    public Class[] getDaoInterfaces() {
-        return daoInterfaces == null ? new Class[0] : daoInterfaces;
+    public List<String> getDaoInterfaces() {
+        return daoInterfaces == null ? Collections.EMPTY_LIST : daoInterfaces;
     }
 
     public FluentEntityInfo setFields(List<JCVariableDecl> fields) {
@@ -99,11 +100,11 @@ public class FluentEntityInfo {
      * @param fluentMyBatis
      * @return
      */
-    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis) {
+    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis, List<String> daoInterfaces) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
-        this.daoInterfaces = fluentMyBatis.daoInterface();
+        this.daoInterfaces = daoInterfaces;
         this.tableName = fluentMyBatis.table();
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());

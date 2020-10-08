@@ -27,9 +27,9 @@ public class FluentMyBatisGeneratorMain {
                     .setColumn("version", f -> f.setLarge()))
                 .foreach(t -> t
                     .setColumn("gmt_created", "gmt_modified", "is_deleted")
-                    .addBaseDaoInterface(dao_interface, "${entity}")
+                    .addBaseDaoInterface(dao_interface)
                     .setTablePrefix("t_")
-                    .addEntityInterface(IBaseEntity.class, "${entity}")
+                    .addEntityInterface(IBaseEntity.class)
                 )
             )
             .tables(config -> config

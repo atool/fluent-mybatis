@@ -51,14 +51,16 @@ public abstract class BaseProcessor extends AbstractProcessor {
             .filter(it -> it instanceof TypeElement)
             .map(it -> (TypeElement) it)
             .forEach(it -> {
+                FluentEntityInfo entityInfo = null;
                 try {
-                    FluentEntityInfo fluentEntityInfo = this.parseEntity(it);
-                    List<JavaFile> javaFiles = this.generateJavaFile(it, fluentEntityInfo);
+                    entityInfo = this.parseEntity(it);
+                    List<JavaFile> javaFiles = this.generateJavaFile(it, entityInfo);
                     for (JavaFile javaFile : javaFiles) {
                         javaFile.writeTo(filer);
                     }
                 } catch (Exception e) {
-                    messager.printMessage(Diagnostic.Kind.ERROR, it.getQualifiedName() + ":\n" + MybatisUtil.toString(e));
+                    messager.printMessage(Diagnostic.Kind.ERROR,
+                        it.getQualifiedName() + ":\nEntityInfo:" + entityInfo + "\n" + MybatisUtil.toString(e));
                     throw new RuntimeException(e);
                 }
             });

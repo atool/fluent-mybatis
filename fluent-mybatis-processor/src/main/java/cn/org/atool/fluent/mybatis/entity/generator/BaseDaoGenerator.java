@@ -25,7 +25,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         builder.addModifiers(Modifier.ABSTRACT)
             .superclass(this.superBaseDaoImplKlass())
             .addSuperinterface(this.superMappingClass());
-        for (Class daoInterface : fluent.getDaoInterfaces()) {
+        for (String daoInterface : fluent.getDaoInterfaces()) {
             this.addInterface(builder, daoInterface);
         }
         builder.addField(this.f_mapper())
@@ -35,8 +35,15 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .addMethod(this.m_findPkColumn());
     }
 
-    private void addInterface(TypeSpec.Builder builder, Class daoInterface) {
-        builder.addSuperinterface(ClassName.get(daoInterface));
+    private void addInterface(TypeSpec.Builder builder, String daoInterface) {
+        int dot = daoInterface.lastIndexOf('.');
+        String packageName = "";
+        String simpleClassName = daoInterface;
+        if (dot > 0) {
+            packageName = daoInterface.substring(0, dot);
+            simpleClassName = daoInterface.substring(dot + 1);
+        }
+        builder.addSuperinterface(ClassName.get(packageName, simpleClassName));
     }
 
     private TypeName superMappingClass() {
