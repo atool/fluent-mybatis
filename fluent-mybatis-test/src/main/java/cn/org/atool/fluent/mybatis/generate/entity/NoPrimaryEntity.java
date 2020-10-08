@@ -4,7 +4,8 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-
+import java.lang.Integer;
+import java.lang.String;
 
 
 import lombok.Getter;
