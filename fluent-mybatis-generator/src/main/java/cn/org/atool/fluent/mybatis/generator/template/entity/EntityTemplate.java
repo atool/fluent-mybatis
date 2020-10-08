@@ -113,6 +113,13 @@ public class EntityTemplate extends BaseTemplate {
         Allow_Entity_Bounds.add(Serializable.class.getName());
     }
 
+    /**
+     * 构造字段上定义的注解
+     *
+     * @param table
+     * @param field
+     * @return
+     */
     private String fieldAnnotation(TableSetter table, TableField field) {
         TextBuilder text = TextBuilder.build();
         if (field.isPrimary()) {

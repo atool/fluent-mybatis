@@ -7,10 +7,13 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 import org.test4j.generator.mybatis.config.IGlobalConfig;
 import org.test4j.generator.mybatis.config.IGlobalConfigSet;
 import org.test4j.generator.mybatis.config.ITableSetter;
+import org.test4j.generator.mybatis.config.constant.DefinedColumn;
+import org.test4j.generator.mybatis.db.IFieldCategory;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NOT_DEFINED;
 import static org.test4j.tools.commons.StringHelper.isBlank;
 
@@ -67,20 +70,46 @@ public class EntityAnnotationGenerator {
                 t.addEntityInterface(entity);
             }
             for (Column column : table.columns()) {
-                t.setColumn(column.value(), c -> {
-                    c.setFieldName(column.property());
-                    c.setInsert(column.insert());
-                    c.setUpdate(column.update());
-                    if (column.isLarge()) {
-                        c.setLarge();
-                    }
-                    if (!Objects.equals(column.javaType(), Object.class)) {
-                        c.setJavaType(column.javaType());
-                    }
-                    if (!Objects.equals(column.typeHandler(), UnknownTypeHandler.class)) {
-                        c.setTypeHandler(column.typeHandler());
-                    }
-                });
+                t.setColumn(column.value(), getDefinedColumnConsumer(t, column));
+            }
+        };
+    }
+
+    /**
+     * 显式定义字段处理
+     *
+     * @param ts     表定义全局配置
+     * @param column
+     * @return
+     */
+    private Consumer<DefinedColumn> getDefinedColumnConsumer(ITableSetter ts, Column column) {
+        return c -> {
+            /** 先处理category, 保证个性化设置的覆盖 **/
+            if (column.category() == IFieldCategory.GmtCreate) {
+                ts.setGmtCreate(column.value());
+            } else if (column.category() == IFieldCategory.GmtModified) {
+                ts.setGmtModified(column.value());
+            } else if (column.category() == IFieldCategory.IsDeleted) {
+                ts.setLogicDeleted(column.value());
+            }
+            /** 个性化设置 **/
+            if (notBlank(column.property())) {
+                c.setFieldName(column.property());
+            }
+            if (notBlank(column.insert())) {
+                c.setInsert(column.insert());
+            }
+            if (notBlank(column.update())) {
+                c.setUpdate(column.update());
+            }
+            if (column.isLarge()) {
+                c.setLarge();
+            }
+            if (!Objects.equals(column.javaType(), Object.class)) {
+                c.setJavaType(column.javaType());
+            }
+            if (!Objects.equals(column.typeHandler(), UnknownTypeHandler.class)) {
+                c.setTypeHandler(column.typeHandler());
             }
         };
     }

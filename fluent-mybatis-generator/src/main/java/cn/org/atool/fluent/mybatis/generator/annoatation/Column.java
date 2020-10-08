@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generator.annoatation;
 
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
+import org.test4j.generator.mybatis.db.IFieldCategory;
 
 import java.lang.annotation.*;
 
@@ -57,4 +58,11 @@ public @interface Column {
      * @return
      */
     Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
+
+    /**
+     * 指定字段类型
+     *
+     * @return
+     */
+    IFieldCategory category() default IFieldCategory.Common;
 }
