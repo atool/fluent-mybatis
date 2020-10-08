@@ -1,6 +1,6 @@
 package ${daoIntf.package};
 
-import cn.org.atool.fluent.mybatis.base.IDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import ${entity.package}.${entity.name};
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * @author ${author}
  */
 @Repository
-public interface ${daoIntf.name} extends IDao<${entity.name}>  {
+public interface ${daoIntf.name} extends IBaseDao<${entity.name}>  {
 }

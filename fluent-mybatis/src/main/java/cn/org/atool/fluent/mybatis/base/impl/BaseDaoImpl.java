@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.base.IDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toSet;
  * @author darui.wu
  */
 public abstract class BaseDaoImpl<E extends IEntity>
-    extends DaoProtectedImpl<E> implements IDao<E> {
+    extends DaoProtectedImpl<E> implements IBaseDao<E> {
 
     @Override
     public <PK extends Serializable> PK save(E entity) {
