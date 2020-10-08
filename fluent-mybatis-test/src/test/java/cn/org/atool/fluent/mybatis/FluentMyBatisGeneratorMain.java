@@ -3,8 +3,6 @@ package cn.org.atool.fluent.mybatis;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.generator.EntityGenerator;
-import cn.org.atool.fluent.mybatis.generator.generator.EntityAnnotationGenerator;
-import cn.org.atool.fluent.mybatis.generator.generator.EntityApiGenerator;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Column;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Table;
 import cn.org.atool.fluent.mybatis.generator.annoatation.Tables;
