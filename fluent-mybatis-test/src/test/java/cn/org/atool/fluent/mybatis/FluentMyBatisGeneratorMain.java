@@ -27,7 +27,8 @@ public class FluentMyBatisGeneratorMain {
         EntityGenerator.build()
             .globalConfig(config -> config.setOutputDir(outputDir)
                 .setDataSource(URL, "root", "password")
-                .setBasePackage("cn.org.atool.fluent.mybatis.generate.entity"))
+                .setBasePackage("cn.org.atool.fluent.mybatis.generate.entity")
+                .setDaoPackage("cn.org.atool.fluent.mybatis.generate.dao"))
             .tables(config -> config
                 .table("address")
                 .table("t_user", t -> t.enablePartition()
@@ -36,11 +37,12 @@ public class FluentMyBatisGeneratorMain {
                     .setColumn("gmt_created", "gmt_modified", "is_deleted")
                     .addBaseDaoInterface(dao_interface)
                     .setTablePrefix("t_")
+                    .setMapperPrefix("my")
                     .addEntityInterface(IBaseEntity.class)
                 )
             )
             .tables(config -> config
-                .table("no_auto_id", t -> t.setSeqName("test"))
+                .table("no_auto_id", t -> t.setSeqName("SELECT LAST_INSERT_ID() AS ID"))
                 .table("no_primary")
                 .foreach(t -> t
                     .setMapperPrefix("new")
@@ -53,15 +55,12 @@ public class FluentMyBatisGeneratorMain {
         srcDir = "fluent-mybatis-test/src/main/java",
         entityPack = "cn.org.atool.fluent.mybatis.generate.entity",
         daoPack = "cn.org.atool.fluent.mybatis.generate.dao",
+        gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
             @Table(value = {"address", "t_user"},
-                tablePrefix = "t_",
-                gmtCreated = "gmt_created",
-                gmtModified = "gmt_modified",
-                logicDeleted = "is_deleted",
-                mapperPrefix = "my",
-                daoInterface = MyCustomerInterface.class,
-                entityInterface = IBaseEntity.class,
+                tablePrefix = "t_", mapperPrefix = "my",
+                dao = MyCustomerInterface.class,
+                entity = IBaseEntity.class,
                 columns = @Column(value = "version", isLarge = true)
             ),
             @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "SELECT LAST_INSERT_ID() AS ID"),

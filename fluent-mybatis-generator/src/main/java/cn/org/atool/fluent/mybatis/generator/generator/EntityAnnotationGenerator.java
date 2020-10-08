@@ -60,10 +60,10 @@ public class EntityAnnotationGenerator {
             t.setSeqName(table.seqName());
             t.setTablePrefix(value(table.tablePrefix(), tables.tablePrefix()));
             t.setMapperPrefix(value(table.mapperPrefix(), tables.mapperPrefix()));
-            for (Class dao : table.daoInterface()) {
+            for (Class dao : table.dao()) {
                 t.addBaseDaoInterface(dao);
             }
-            for (Class entity : table.entityInterface()) {
+            for (Class entity : table.entity()) {
                 t.addEntityInterface(entity);
             }
             for (Column column : table.columns()) {

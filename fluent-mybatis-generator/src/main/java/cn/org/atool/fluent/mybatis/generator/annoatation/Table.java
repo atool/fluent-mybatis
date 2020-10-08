@@ -76,12 +76,12 @@ public @interface Table {
      *
      * @return
      */
-    Class[] entityInterface() default {};
+    Class[] entity() default {};
 
     /**
      * dao 类自定义接口
      *
      * @return
      */
-    Class[] daoInterface() default {};
+    Class[] dao() default {};
 }
