@@ -46,11 +46,12 @@ public class EntityTemplate extends BaseTemplate {
         if (isNotBlank(table.getMapperBeanPrefix())) {
             buff.append(", mapperBeanPrefix = ").append('"').append(table.getMapperBeanPrefix()).append('"');
         }
+
         if (table.getBaseDaoInterfaces() != null && !table.getBaseDaoInterfaces().isEmpty()) {
             String daos = table.getBaseDaoInterfaces().stream()
                 .map(dao -> dao.getSimpleName() + ".class")
                 .collect(joining(", ", "{", "}"));
-            buff.append(", daoInterface = ").append(daos);
+            buff.append(",\n\tdaoInterface = ").append(daos);
             for (Class dao : table.getBaseDaoInterfaces()) {
                 this.addImport(parent, dao);
             }

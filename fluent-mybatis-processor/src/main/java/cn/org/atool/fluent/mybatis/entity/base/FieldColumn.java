@@ -33,6 +33,8 @@ public class FieldColumn {
 
     private String seqName;
 
+    private boolean seqIsBeforeOrder;
+
     private String numericScale;
     /**
      * type handler

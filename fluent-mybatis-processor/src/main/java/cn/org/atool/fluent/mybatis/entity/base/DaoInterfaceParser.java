@@ -2,14 +2,12 @@ package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import com.sun.tools.javac.code.Attribute;
-import com.sun.tools.javac.code.Symbol;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

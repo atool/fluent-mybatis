@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
@@ -259,16 +260,40 @@ public class MapperGenerator extends AbstractGenerator {
     public MethodSpec m_insert() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert);
         if (fluent.getPrimary() != null) {
-            builder.addAnnotation(AnnotationSpec.builder(Options.class)
-                .addMember("useGeneratedKeys", "true")
-                .addMember("keyProperty", "$S", fluent.getPrimary().getProperty())
-                .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
-                .build());
+            if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
+                this.addOptions(builder);
+            } else {
+                this.addSelectKey(builder);
+            }
         }
         return builder
             .addParameter(fluent.className(), "entity")
             .returns(TypeName.INT)
             .build();
+    }
+
+    private void addSelectKey(MethodSpec.Builder builder) {
+        String seqName = fluent.getDbType().getSeq();
+        boolean before = fluent.getDbType().isBefore();
+        if (notBlank(fluent.getPrimary().getSeqName())) {
+            seqName = fluent.getPrimary().getSeqName();
+            before = fluent.getPrimary().isSeqIsBeforeOrder();
+        }
+        builder.addAnnotation(AnnotationSpec.builder(SelectKey.class)
+            .addMember("resultType", "$T.class", fluent.getPrimary().getJavaType())
+            .addMember("keyProperty", "$S", fluent.getPrimary().getProperty())
+            .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
+            .addMember("before", "$L", before)
+            .addMember("statement", "$S", seqName)
+            .build());
+    }
+
+    private void addOptions(MethodSpec.Builder builder) {
+        builder.addAnnotation(AnnotationSpec.builder(Options.class)
+            .addMember("useGeneratedKeys", "true")
+            .addMember("keyProperty", "$S", fluent.getPrimary().getProperty())
+            .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
+            .build());
     }
 
     @Override

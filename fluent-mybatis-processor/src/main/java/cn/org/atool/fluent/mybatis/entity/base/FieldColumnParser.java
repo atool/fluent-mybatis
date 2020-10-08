@@ -58,7 +58,7 @@ public class FieldColumnParser {
             if (!assign.lhs.getKind().equals(Tree.Kind.IDENTIFIER)) {
                 continue;
             }
-            setValue(assign, "value", v -> {
+            setValue(assign, "value", "", v -> {
                 if (notBlank(v)) {
                     field.setColumn(v);
                 }
@@ -79,15 +79,16 @@ public class FieldColumnParser {
      * @param assign
      */
     private static void setPrimaryField(FieldColumn field, JCAssign assign) {
-        setValue(assign, "auto", v -> field.setAutoIncrease(Boolean.valueOf(v)));
-        setValue(assign, "seqName", field::setSeqName);
+        setValue(assign, "auto", "true", v -> field.setAutoIncrease(Boolean.valueOf(v)));
+        setValue(assign, "seqName", "", field::setSeqName);
+        setValue(assign, "before", "false", v -> field.setSeqIsBeforeOrder(Boolean.valueOf(v)));
     }
 
     private static void setField(FieldColumn field, JCAssign assign) {
-        setValue(assign, "insert", field::setInsert);
-        setValue(assign, "update", field::setUpdate);
-        setValue(assign, "notLarge", v -> field.setNotLarge(Boolean.valueOf(v)));
-        setValue(assign, "numericScale", field::setNumericScale);
+        setValue(assign, "insert", "", field::setInsert);
+        setValue(assign, "update", "", field::setUpdate);
+        setValue(assign, "notLarge", "true", v -> field.setNotLarge(Boolean.valueOf(v)));
+        setValue(assign, "numericScale", "", field::setNumericScale);
         setEnumVal(assign, "jdbcType", value -> {
             if (!Objects.equals("UNDEFINED", value)) {
                 field.setJdbcType(value);
@@ -105,14 +106,18 @@ public class FieldColumnParser {
      *
      * @param assign
      * @param method
+     * @param _default 默认值
+     * @param consumer
      * @return
      */
-    private static void setValue(JCAssign assign, String method, Consumer<String> consumer) {
-        if (!Objects.equals(method(assign), method)) {
-            return;
+    private static void setValue(JCAssign assign, String method, String _default, Consumer<String> consumer) {
+        String value = _default;
+        if (Objects.equals(method(assign), method)) {
+            value = String.valueOf(((JCTree.JCLiteral) assign.rhs).value);
         }
-        String value = String.valueOf(((JCTree.JCLiteral) assign.rhs).value);
-        consumer.accept(value);
+        if (notBlank(value)) {
+            consumer.accept(value);
+        }
     }
 
     /**

@@ -11,11 +11,11 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql"),
+    MYSQL("mysql", "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * MARIADB
      */
-    MARIADB("mariadb"),
+    MARIADB("mariadb", "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * H2
      */
@@ -27,7 +27,7 @@ public enum DbType {
     /**
      * ORACLE
      */
-    ORACLE("oracle"),
+    ORACLE("oracle", "select SEQ_USER_ID.nextval as id from dual", true),
     /**
      * DB2
      */
@@ -52,7 +52,24 @@ public enum DbType {
     @Getter
     private String alias;
 
+    @Getter
+    private String seq;
+
+    @Getter
+    private boolean before = false;
+
     DbType(String alias) {
         this.alias = alias;
+    }
+
+    DbType(String alias, String seq) {
+        this.alias = alias;
+        this.seq = seq;
+    }
+
+    DbType(String alias, String seq, boolean before) {
+        this.alias = alias;
+        this.seq = seq;
+        this.before = before;
     }
 }

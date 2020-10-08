@@ -22,7 +22,7 @@ import static cn.org.atool.fluent.mybatis.FluentMyBatisGeneratorMain2.URL;
             daoInterface = MyCustomerInterface.class,
             entityInterface = IBaseEntity.class
         ),
-        @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "test"),
+        @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "SELECT LAST_INSERT_ID() AS ID"),
         @Table(value = "no_primary", mapperPrefix = "new")})
 public class FluentMyBatisGeneratorMain2 {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";

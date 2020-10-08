@@ -44,13 +44,6 @@ public @interface FluentMybatis {
     String mapperBeanPrefix() default "";
 
     /**
-     * sequence 名称
-     *
-     * @return
-     */
-    String seqName() default "";
-
-    /**
      * 自定义Dao接口
      *
      * @return
