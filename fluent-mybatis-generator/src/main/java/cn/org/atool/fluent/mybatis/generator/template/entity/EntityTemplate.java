@@ -94,7 +94,7 @@ public class EntityTemplate extends BaseTemplate {
                     }
                 }
                 if (useEntityType) {
-                    name += "<" + super.getConfig(parent, "entity.name") + ">";
+                    name += "<" + super.getConfig(parent, "entity.name", null) + ">";
                 }
                 return name;
             })

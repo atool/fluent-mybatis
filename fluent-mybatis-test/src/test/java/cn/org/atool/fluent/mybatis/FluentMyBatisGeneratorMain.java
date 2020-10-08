@@ -53,7 +53,8 @@ public class FluentMyBatisGeneratorMain {
 
     @Tables(url = URL, username = "root", password = "password",
         srcDir = "fluent-mybatis-test/src/main/java",
-        entityPack = "cn.org.atool.fluent.mybatis.generate.entity",
+        daoDir = "fluent-mybatis-test/src/main/java",
+        basePack = "cn.org.atool.fluent.mybatis.generate.entity",
         daoPack = "cn.org.atool.fluent.mybatis.generate.dao",
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {

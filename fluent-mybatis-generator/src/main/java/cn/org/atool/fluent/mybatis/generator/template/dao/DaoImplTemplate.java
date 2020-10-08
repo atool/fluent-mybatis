@@ -6,6 +6,8 @@ import org.test4j.generator.mybatis.template.BaseTemplate;
 
 import java.util.Map;
 
+import static org.test4j.generator.mybatis.config.constant.ConfigKey.KEY_OVER_WRITE;
+
 public class DaoImplTemplate extends BaseTemplate {
     public DaoImplTemplate() {
         super("templates/dao/DaoImpl.java.vm", "impl/*DaoImpl.java");
@@ -21,6 +23,7 @@ public class DaoImplTemplate extends BaseTemplate {
     protected void templateConfigs(TableSetter table, Map<String, Object> parent, Map<String, Object> context) {
         context.put("baseDaoName", table.getEntityPrefix() + "BaseDao");
         context.put("baseDaoPack", table.getBasePackage() + ".dao");
+        context.put(KEY_OVER_WRITE, Boolean.FALSE.toString());
     }
 
     @Override

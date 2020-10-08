@@ -26,7 +26,7 @@ public class EntityAnnotationGenerator {
         if (tables.tables().length == 0) {
             throw new RuntimeException("the @Tables Annotation not found.");
         }
-        EntityAnnotationGenerator generator = new EntityAnnotationGenerator(clazz, tables);
+        EntityAnnotationGenerator generator = new EntityAnnotationGenerator(tables);
         generator.globalConfig()
             .globalConfig(generator.getGlobalConfig(tables))
             .tables(tc -> {
@@ -43,8 +43,8 @@ public class EntityAnnotationGenerator {
     private Consumer<IGlobalConfigSet> getGlobalConfig(Tables tables) {
         return g -> {
             g.setDataSource(tables.url(), tables.username(), tables.password());
-            g.setOutputDir(this.srcDir, this.testDir, this.srcDir);
-            g.setBasePackage(tables.entityPack());
+            g.setOutputDir(this.srcDir, this.testDir, this.daoDir);
+            g.setBasePackage(tables.basePack());
             g.setDaoPackage(tables.daoPack());
         };
     }
@@ -85,6 +85,30 @@ public class EntityAnnotationGenerator {
         };
     }
 
+    private IGlobalConfig globalConfig() {
+        if (isBlank(tables.testDir())) {
+            return EntityApiGenerator.build();
+        } else {
+            return EntityApiGenerator.buildWithTest();
+        }
+    }
+
+    private final Tables tables;
+
+    private final String srcDir;
+
+    private final String testDir;
+
+    private final String daoDir;
+
+    private EntityAnnotationGenerator(Tables tables) {
+        this.tables = tables;
+        this.srcDir = System.getProperty("user.dir") + "/" + tables.srcDir() + "/";
+        this.testDir = System.getProperty("user.dir") + "/" + tables.testDir() + "/";
+        this.daoDir = System.getProperty("user.dir") + "/" + tables.daoDir() + "/";
+    }
+
+
     private String value(String value1, String value2) {
         String value = !NOT_DEFINED.equals(value1) ? value1 : NOT_DEFINED.equals(value2) ? "" : value2;
         return value;
@@ -97,47 +121,5 @@ public class EntityAnnotationGenerator {
 
     private boolean isDefined(String[] value) {
         return value.length != 1 || !Objects.equals(value[0], NOT_DEFINED);
-    }
-
-    private IGlobalConfig globalConfig() {
-        if (isBlank(tables.testDir())) {
-            return EntityApiGenerator.build();
-        } else {
-            return EntityApiGenerator.buildWithTest();
-        }
-    }
-
-    private final Class mainKlass;
-
-    private final Tables tables;
-
-    private final String srcDir;
-
-    private final String testDir;
-
-    private EntityAnnotationGenerator(Class mainKlass, Tables tables) {
-        this.mainKlass = mainKlass;
-        this.tables = tables;
-        this.srcDir = System.getProperty("user.dir") + "/" + tables.srcDir() + "/";
-        this.testDir = System.getProperty("user.dir") + "/" + tables.testDir() + "/";
-    }
-
-    private String getPath(String pack, boolean isSrc) {
-        if (isBlank(pack)) {
-            pack = this.mainKlass.getPackage().getName();
-        }
-        return (isSrc ? this.srcDir : this.testDir) + pack.replace('.', '/');
-    }
-
-    private String testPah() {
-        return getPath(tables.entityPack(), false);
-    }
-
-    private String daoPath() {
-        return getPath(tables.daoPack(), true);
-    }
-
-    private String entityPath() {
-        return getPath(tables.entityPack(), true);
     }
 }

@@ -58,12 +58,19 @@ public @interface Tables {
     String testDir() default "";
 
     /**
+     * dao接口和实现默认生成路径
+     *
+     * @return
+     */
+    String daoDir() default "target/generate";
+
+    /**
      * 生成的entity package路径
      * 默认和生成定义类相同
      *
      * @return
      */
-    String entityPack() default "";
+    String basePack() default "";
 
     /**
      * 生成 dao interface 和 dao implement的package路径
