@@ -43,7 +43,12 @@ public class BaseDaoGenerator extends AbstractGenerator {
             packageName = daoInterface.substring(0, dot);
             simpleClassName = daoInterface.substring(dot + 1);
         }
-        builder.addSuperinterface(ClassName.get(packageName, simpleClassName));
+        builder.addSuperinterface(parameterizedType(
+            ClassName.get(packageName, simpleClassName),
+            fluent.className(),
+            QueryGenerator.className(fluent),
+            UpdaterGenerator.className(fluent)
+        ));
     }
 
     private TypeName superMappingClass() {
