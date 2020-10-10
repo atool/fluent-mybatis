@@ -9,9 +9,10 @@ import com.squareup.javapoet.ClassName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -75,8 +76,13 @@ public class FluentEntityInfo {
     public FluentEntityInfo setClassName(String entityPack, String className) {
         this.className = className;
         this.entityPack = entityPack;
-        this.basePack = this.entityPack;
+        this.basePack = this.getParentPackage(entityPack);
         return this;
+    }
+
+    private String getParentPackage(String entityPack) {
+        int index = entityPack.lastIndexOf('.');
+        return index > 0 ? entityPack.substring(0, index) : entityPack;
     }
 
     public List<String> getDaoInterfaces() {

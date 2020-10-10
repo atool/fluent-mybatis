@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.generate.entity.helper.UserMapping.userName;
+import static cn.org.atool.fluent.mybatis.generate.helper.UserMapping.userName;
 import static org.test4j.tools.datagen.AbstractDataGenerator.increase;
 
 /**

@@ -45,7 +45,7 @@ public interface FluentConst {
 
     String Pack_Helper = "helper";
 
-    String Pack_BaseDao = "dao";
+    String Pack_BaseDao = "dao.base";
 
     String Pack_Mapper = "mapper";
 

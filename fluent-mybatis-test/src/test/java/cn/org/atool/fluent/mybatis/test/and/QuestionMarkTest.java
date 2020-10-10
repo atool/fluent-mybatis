@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
 import cn.org.atool.fluent.mybatis.generate.DM;
-import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserUpdate;
+import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

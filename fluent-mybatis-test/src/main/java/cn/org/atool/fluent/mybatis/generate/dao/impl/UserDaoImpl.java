@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.generate.dao.impl;
 
-import cn.org.atool.fluent.mybatis.generate.entity.dao.UserBaseDao;
+import cn.org.atool.fluent.mybatis.generate.dao.base.UserBaseDao;
 import cn.org.atool.fluent.mybatis.generate.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
-import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserUpdate;
+import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.UserUpdate;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -1,12 +1,11 @@
 package cn.org.atool.fluent.mybatis.test.segment2;
 
-import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserUpdate;
+import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UpdateApplyTest extends BaseTest {
     @Autowired
@@ -36,8 +35,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_If() {
         mapper.updateBy(new UserUpdate()
-            .update.age().is_If(false, 34)
-            .set.userName().is_If(true, null).end()
+            .update.age().is(34, If::everFalse)
+            .set.userName().is(null, If::everTrue).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -47,8 +46,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_IfNotNull() {
         mapper.updateBy(new UserUpdate()
-            .update.age().is_IfNotNull(34)
-            .set.userName().is_IfNotNull(null).end()
+            .update.age().is(34, If::notNull)
+            .set.userName().is(null, If::notNull).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -58,9 +57,9 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_IfNotBlank() {
         mapper.updateBy(new UserUpdate()
-            .update.version().is_IfNotBlank("19")
-            .set.userName().is_IfNotBlank(null)
-            .set.userName().is_IfNotBlank("  ").end()
+            .update.version().is("19", If::notBlank)
+            .set.userName().is(null, If::notBlank)
+            .set.userName().is("  ", If::notBlank).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()

@@ -2,7 +2,8 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IUpdate;
 
-import static cn.org.atool.fluent.mybatis.If.notBlank;
+import java.util.function.Predicate;
+
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
 
 /**
@@ -44,34 +45,14 @@ public class UpdateApply<
     }
 
     /**
-     * 当condition为真时，更新 #{column}=value
-     *
-     * @param condition 条件为真时执行
-     * @param value     更新值
-     * @return 更新器
-     */
-    public S is_If(boolean condition, Object value) {
-        return condition ? this.is(value) : this.segment;
-    }
-
-    /**
      * value不为null时更新
      *
      * @param value 更新值
+     * @param when  当条件为真时设置更新
      * @return 更新器
      */
-    public S is_IfNotNull(Object value) {
-        return this.is_If(value != null, value);
-    }
-
-    /**
-     * 当value为非空字符串时，更新记录值等于value
-     *
-     * @param value 更新值
-     * @return 更新器
-     */
-    public S is_IfNotBlank(String value) {
-        return this.is_If(notBlank(value), value);
+    public <O> S is(O value, Predicate<O> when) {
+        return when.test(value) ? this.is(value) : this.segment;
     }
 
     //function

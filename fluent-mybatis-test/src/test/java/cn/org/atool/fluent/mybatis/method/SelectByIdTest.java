@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.entity.mapper.NoPrimaryMapper;
-import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
