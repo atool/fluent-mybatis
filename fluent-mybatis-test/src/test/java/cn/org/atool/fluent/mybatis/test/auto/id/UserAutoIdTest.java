@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.auto.id;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.ITable;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.ITable;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -24,7 +24,7 @@ public class UserAutoIdTest extends BaseTest {
         int count = mapper.insert(user);
         want.number(count).isEqualTo(1);
         want.number(user.getId()).eq(124L);
-        db.table(ITable.t_user).query().eqDataMap(TM.user.create(1).id.values(124L));
+        db.table(ITable.t_user).query().eqDataMap(DM.user.table(1).id.values(124L));
     }
 
     @Test

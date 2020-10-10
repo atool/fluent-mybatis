@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.generate.datamap.mix;
+package cn.org.atool.fluent.mybatis.generate.mix;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.table.NoPrimaryTableMap;
+import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;
@@ -18,31 +18,31 @@ public class NoPrimaryTableMix implements IMix {
     }
 
     @Step("准备表[no_primary]数据{1}")
-    public NoPrimaryTableMix readyNoPrimaryTable(NoPrimaryTableMap data) {
+    public NoPrimaryTableMix readyNoPrimaryTable(NoPrimaryDataMap data) {
         db.table("no_primary").insert(data);
         return this;
     }
 
     @Step("验证表[no_primary]有全表数据{1}")
-    public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryTableMap data) {
+    public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap data) {
         db.table("no_primary").query().eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[no_primary]有符合条件{1}的数据{2}")
-    public NoPrimaryTableMix checkNoPrimaryTable(String where, NoPrimaryTableMap data) {
+    public NoPrimaryTableMix checkNoPrimaryTable(String where, NoPrimaryDataMap data) {
         db.table("no_primary").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[no_primary]有符合条件{1}的数据{2}")
-    public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryTableMap where, NoPrimaryTableMap data) {
+    public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap where, NoPrimaryDataMap data) {
         db.table("no_primary").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[no_primary]有{1}条符合条件{2}的数据")
-    public NoPrimaryTableMix countNoPrimaryTable(int count, NoPrimaryTableMap where) {
+    public NoPrimaryTableMix countNoPrimaryTable(int count, NoPrimaryDataMap where) {
         db.table("no_primary").queryWhere(where).sizeEq(count);
         return this;
     }

@@ -65,8 +65,28 @@ public class UserEntity implements IEntity, IBaseEntity<UserEntity>{
     /**
      * 
      */
+    @TableField(value = "e_mail")
+    private String eMail;
+    /**
+     * 
+     */
+    @TableField(value = "first_name")
+    private String firstName;
+    /**
+     * 
+     */
     @TableField(value = "grade")
     private Integer grade;
+    /**
+     * 
+     */
+    @TableField(value = "last_name")
+    private String lastName;
+    /**
+     * 
+     */
+    @TableField(value = "post_code")
+    private String postCode;
     /**
      * 
      */

@@ -1,8 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.UserExtDao;
-import cn.org.atool.fluent.mybatis.generate.datamap.EM;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -21,26 +20,26 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectById() throws Exception {
-        db.table(t_user).clean().insert(TM.user.createWithInit(3)
-                .user_name.values(DataGenerator.increase("username_%d")));
+        db.table(t_user).clean().insert(DM.user.initTable(3)
+            .userName.values(DataGenerator.increase("username_%d")));
         UserEntity user = dao.selectById(3L);
         db.sqlList().wantFirstSql()
-                .where().eq("id = ?");
+            .where().eq("id = ?");
         want.object(user)
-                .eqMap(EM.user.create()
-                        .userName.values("username_3")
-                );
+            .eqMap(DM.user.entity()
+                .userName.values("username_3")
+            );
     }
 
     @Test
     public void test_selectByIds() throws Exception {
-        db.table(t_user).clean().insert(TM.user.createWithInit(10)
-                .user_name.values(DataGenerator.increase("username_%d")));
+        db.table(t_user).clean().insert(DM.user.initTable(10)
+            .userName.values(DataGenerator.increase("username_%d")));
         List<UserEntity> users = dao.selectByIds(Arrays.asList(3L, 5L));
         db.sqlList().wantFirstSql()
-                .where().eq("id IN (?, ?)");
-        want.object(users).eqDataMap(EM.user.create(2)
-                .userName.values("username_3", "username_5")
+            .where().eq("id IN (?, ?)");
+        want.object(users).eqDataMap(DM.user.entity(2)
+            .userName.values("username_3", "username_5")
         );
     }
 }

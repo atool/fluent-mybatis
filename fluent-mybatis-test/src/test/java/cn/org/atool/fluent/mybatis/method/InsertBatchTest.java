@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -23,9 +23,9 @@ public class InsertBatchTest extends BaseTest {
         mapper.insertBatch(list);
         db.table(t_user).count().eq(2);
         db.table(t_user).query().print()
-            .eqDataMap(TM.user.create(2)
+            .eqDataMap(DM.user.table(2)
                 .age.values(23, 24)
-                .user_name.values("name1", "name2")
+                .userName.values("name1", "name2")
             );
         want.number(list.get(0).getId()).isNull();
         want.number(list.get(1).getId()).isNull();
@@ -40,9 +40,9 @@ public class InsertBatchTest extends BaseTest {
         mapper.insertBatch(list);
         db.table(t_user).count().eq(2);
         db.table(t_user).query().print()
-            .eqDataMap(TM.user.create(2)
+            .eqDataMap(DM.user.table(2)
                 .age.values(23, 24)
-                .user_name.values("name1", "name2")
+                .userName.values("name1", "name2")
             );
         want.array(list.stream().map(UserEntity::getId).toArray())
             .eqReflect(new long[]{23, 24});
@@ -58,9 +58,9 @@ public class InsertBatchTest extends BaseTest {
         mapper.insertBatch(list);
         db.table(t_user).count().eq(2);
         db.table(t_user).query().print()
-            .eqDataMap(TM.user.create(2)
+            .eqDataMap(DM.user.table(2)
                 .age.values(23, 24)
-                .user_name.values("name1", "name2")
+                .userName.values("name1", "name2")
             );
         want.number(list.get(1).getId()).isNull();
     }

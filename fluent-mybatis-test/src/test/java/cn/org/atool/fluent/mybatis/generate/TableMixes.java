@@ -1,9 +1,6 @@
-package cn.org.atool.fluent.mybatis.generate.datamap;
+package cn.org.atool.fluent.mybatis.generate;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.mix.AddressTableMix;
-import cn.org.atool.fluent.mybatis.generate.datamap.mix.NoAutoIdTableMix;
-import cn.org.atool.fluent.mybatis.generate.datamap.mix.NoPrimaryTableMix;
-import cn.org.atool.fluent.mybatis.generate.datamap.mix.UserTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.*;
 import org.test4j.module.spec.annotations.Mix;
 import org.test4j.module.spec.annotations.Mixes;
 
@@ -18,18 +15,18 @@ public class TableMixes {
     public AddressTableMix addressTableMix;
 
     @Mix
-    public UserTableMix userTableMix;
+    public NoPrimaryTableMix noPrimaryTableMix;
 
     @Mix
-    public NoPrimaryTableMix noPrimaryTableMix;
+    public UserTableMix userTableMix;
 
     @Mix
     public NoAutoIdTableMix noAutoIdTableMix;
 
     public void cleanAllTable() {
         this.addressTableMix.cleanAddressTable();
-        this.userTableMix.cleanUserTable();
         this.noPrimaryTableMix.cleanNoPrimaryTable();
+        this.userTableMix.cleanUserTable();
         this.noAutoIdTableMix.cleanNoAutoIdTable();
     }
 }

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -24,9 +24,9 @@ public class InsertSelectedTest extends BaseTest {
             .setAge(23)
             .setUserName("tom mike");
         userMapper.insert(user);
-        db.table(t_user).query().eqDataMap(TM.user.create(1)
+        db.table(t_user).query().eqDataMap(DM.user.table(1)
             .age.values(23)
-            .user_name.values("tom mike")
+            .userName.values("tom mike")
         );
         db.sqlList().wantFirstSql().eq("INSERT INTO t_user(gmt_created, gmt_modified, is_deleted, age, user_name) VALUES (now(), now(), 0, ?, ?)");
         want.number(user.getId()).isGt(0L);
@@ -40,10 +40,10 @@ public class InsertSelectedTest extends BaseTest {
             .setId(100L)
             .setAddressId(200L);
         userMapper.insert(user);
-        db.table(t_user).query().eqDataMap(TM.user.create(1)
+        db.table(t_user).query().eqDataMap(DM.user.table(1)
             .id.values(100)
-            .user_name.values("tom mike")
-            .address_id.values(200)
+            .userName.values("tom mike")
+            .addressId.values(200)
         );
         db.sqlList().wantFirstSql().eq("INSERT INTO t_user(id, gmt_created, gmt_modified, is_deleted, address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
         want.number(user.getId()).eq(100L);

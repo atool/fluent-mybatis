@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.generate.datamap.mix;
+package cn.org.atool.fluent.mybatis.generate.mix;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.table.AddressTableMap;
+import cn.org.atool.fluent.mybatis.generate.dm.AddressDataMap;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;
@@ -18,31 +18,31 @@ public class AddressTableMix implements IMix {
     }
 
     @Step("准备表[address]数据{1}")
-    public AddressTableMix readyAddressTable(AddressTableMap data) {
+    public AddressTableMix readyAddressTable(AddressDataMap data) {
         db.table("address").insert(data);
         return this;
     }
 
     @Step("验证表[address]有全表数据{1}")
-    public AddressTableMix checkAddressTable(AddressTableMap data) {
+    public AddressTableMix checkAddressTable(AddressDataMap data) {
         db.table("address").query().eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[address]有符合条件{1}的数据{2}")
-    public AddressTableMix checkAddressTable(String where, AddressTableMap data) {
+    public AddressTableMix checkAddressTable(String where, AddressDataMap data) {
         db.table("address").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[address]有符合条件{1}的数据{2}")
-    public AddressTableMix checkAddressTable(AddressTableMap where, AddressTableMap data) {
+    public AddressTableMix checkAddressTable(AddressDataMap where, AddressDataMap data) {
         db.table("address").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[address]有{1}条符合条件{2}的数据")
-    public AddressTableMix countAddressTable(int count, AddressTableMap where) {
+    public AddressTableMix countAddressTable(int count, AddressDataMap where) {
         db.table("address").queryWhere(where).sizeEq(count);
         return this;
     }

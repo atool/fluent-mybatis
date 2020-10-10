@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.ITable;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.ITable;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -22,9 +22,9 @@ public class InsertWithPkTest extends BaseTest {
         mapper.insert(user);
         db.table(ITable.t_user)
                 .query()
-                .eqDataMap(TM.user.create(1)
+                .eqDataMap(DM.user.table(1)
                         .id.values(34L)
-                        .user_name.values("user name")
+                        .userName.values("user name")
                         .age.values(25)
                 );
     }

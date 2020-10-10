@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.generate.datamap.mix;
+package cn.org.atool.fluent.mybatis.generate.mix;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.table.UserTableMap;
+import cn.org.atool.fluent.mybatis.generate.dm.UserDataMap;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;
@@ -18,31 +18,31 @@ public class UserTableMix implements IMix {
     }
 
     @Step("准备表[t_user]数据{1}")
-    public UserTableMix readyUserTable(UserTableMap data) {
+    public UserTableMix readyUserTable(UserDataMap data) {
         db.table("t_user").insert(data);
         return this;
     }
 
     @Step("验证表[t_user]有全表数据{1}")
-    public UserTableMix checkUserTable(UserTableMap data) {
+    public UserTableMix checkUserTable(UserDataMap data) {
         db.table("t_user").query().eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[t_user]有符合条件{1}的数据{2}")
-    public UserTableMix checkUserTable(String where, UserTableMap data) {
+    public UserTableMix checkUserTable(String where, UserDataMap data) {
         db.table("t_user").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[t_user]有符合条件{1}的数据{2}")
-    public UserTableMix checkUserTable(UserTableMap where, UserTableMap data) {
+    public UserTableMix checkUserTable(UserDataMap where, UserDataMap data) {
         db.table("t_user").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
         return this;
     }
 
     @Step("验证表[t_user]有{1}条符合条件{2}的数据")
-    public UserTableMix countUserTable(int count, UserTableMap where) {
+    public UserTableMix countUserTable(int count, UserDataMap where) {
         db.table("t_user").queryWhere(where).sizeEq(count);
         return this;
     }

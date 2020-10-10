@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -20,9 +20,9 @@ public class SetFunctionTest extends BaseTest {
     @Test
     void setFunction() {
         db.table(t_user).clean()
-            .insert(TM.user.createWithInit(1)
+            .insert(DM.user.initTable(1)
                 .id.values(1)
-                .user_name.values("test")
+                .userName.values("test")
                 .age.values(23)
             );
         UserUpdate update = new UserUpdate()
@@ -30,8 +30,8 @@ public class SetFunctionTest extends BaseTest {
             .set.age().apply("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
-        db.table(t_user).query().eqDataMap(TM.user.create(1)
-            .user_name.values("test_aaa")
+        db.table(t_user).query().eqDataMap(DM.user.table(1)
+            .userName.values("test_aaa")
             .age.values(24)
         );
         db.sqlList().wantFirstSql()

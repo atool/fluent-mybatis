@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.ITable;
+import cn.org.atool.fluent.mybatis.generate.ITable;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;

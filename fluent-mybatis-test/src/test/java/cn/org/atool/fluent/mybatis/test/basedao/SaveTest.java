@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.UserExtDao;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -25,8 +25,8 @@ public class SaveTest extends BaseTest {
     public void test_save_noPk() throws Exception {
         db.table(t_user).clean();
         dao.save(new UserEntity().setUserName("test name").setAge(43));
-        db.table(t_user).query().eqDataMap(TM.user.create(1)
-            .user_name.values("test name")
+        db.table(t_user).query().eqDataMap(DM.user.table(1)
+            .userName.values("test name")
             .age.values(43)
         );
     }
@@ -36,9 +36,9 @@ public class SaveTest extends BaseTest {
         db.table(t_user).clean();
         dao.save(new UserEntity().setId(4L).setUserName("test name").setAge(43));
         db.sqlList().wantFirstSql().contains("id,");
-        db.table(t_user).query().eqDataMap(TM.user.create(1)
+        db.table(t_user).query().eqDataMap(DM.user.table(1)
             .id.values(4)
-            .user_name.values("test name")
+            .userName.values("test name")
             .age.values(43)
         );
     }
@@ -60,9 +60,9 @@ public class SaveTest extends BaseTest {
         dao.save(Arrays.asList(new UserEntity().setId(4L).setUserName("test name1").setAge(43),
             new UserEntity().setId(5L).setUserName("test name2").setAge(43)
         ));
-        db.table(t_user).query().eqDataMap(TM.user.create(2)
+        db.table(t_user).query().eqDataMap(DM.user.table(2)
             .id.values(4, 5)
-            .user_name.values("test name1", "test name2")
+            .userName.values("test name1", "test name2")
             .age.values(43)
         );
     }
@@ -75,8 +75,8 @@ public class SaveTest extends BaseTest {
             new UserEntity().setUserName("test name2").setAge(43)
         );
         dao.save(list);
-        db.table(t_user).query().eqDataMap(TM.user.create(2)
-            .user_name.values("test name1", "test name2")
+        db.table(t_user).query().eqDataMap(DM.user.table(2)
+            .userName.values("test name1", "test name2")
             .age.values(43)
         );
         want.number(list.get(0).getId()).isNull();

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.UserExtDao;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class ExistPkTest extends BaseTest {
 
     @Test
     public void test_exist() {
-        db.table(t_user).clean().insert(TM.user.create(2)
+        db.table(t_user).clean().insert(DM.user.table(2)
                 .id.values(1, 3)
         );
         boolean existed = dao.existPk(1);

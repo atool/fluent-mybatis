@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.ITable;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.ITable;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -15,35 +15,35 @@ public class DeleteTest extends BaseTest {
 
     @Test
     public void testDeleteById() {
-        db.table(ITable.t_user).clean().insert(TM.user.createWithInit(2)
+        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
             .id.values(23L, 24L)
-            .user_name.values("user1", "user2")
+            .userName.values("user1", "user2")
         );
         UserQuery update = new UserQuery()
             .where.id().eq(24L).end();
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(TM.user.create(1)
+        db.table(ITable.t_user).query().eqDataMap(DM.user.table(1)
             .id.values(23L)
-            .user_name.values("user1")
+            .userName.values("user1")
         );
     }
 
     @Test
     public void testDelete_apply() {
-        db.table(ITable.t_user).clean().insert(TM.user.createWithInit(2)
+        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
             .id.values(23L, 24L)
-            .user_name.values("user1", "user2")
+            .userName.values("user1", "user2")
         );
         UserQuery update = new UserQuery()
             .where.apply("user_name=?", "user2").end();
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE user_name=?", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(TM.user.create(1)
+        db.table(ITable.t_user).query().eqDataMap(DM.user.table(1)
             .id.values(23L)
-            .user_name.values("user1")
+            .userName.values("user1")
         );
     }
 }

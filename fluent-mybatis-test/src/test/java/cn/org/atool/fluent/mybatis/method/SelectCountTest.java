@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.generate.entity.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.entity.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -25,9 +25,9 @@ public class SelectCountTest extends BaseTest {
     @Test
     public void test_selectCount() throws Exception {
         db.table(t_user).clean()
-            .insert(TM.user.createWithInit(4)
+            .insert(DM.user.initTable(4)
                 .id.values(23, 24, 25, 26)
-                .user_name.values("u1", "u2", "u3", "u2")
+                .userName.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
             .where.id().eq(24L).end();
@@ -39,9 +39,9 @@ public class SelectCountTest extends BaseTest {
     @Test
     public void test_selectCount_hasMultiple() throws Exception {
         db.table(t_user).clean()
-            .insert(TM.user.createWithInit(4)
+            .insert(DM.user.initTable(4)
                 .id.values(23, 24, 25, 26)
-                .user_name.values("u1", "u2", "u3", "u2")
+                .userName.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
             .selectId()
@@ -54,9 +54,9 @@ public class SelectCountTest extends BaseTest {
     @Test
     public void test_selectCount_limit() throws Exception {
         db.table(t_user).clean()
-            .insert(TM.user.createWithInit(4)
+            .insert(DM.user.initTable(4)
                 .id.values(23, 24, 25, 26)
-                .user_name.values("u1", "u2", "u3", "u2")
+                .userName.values("u1", "u2", "u3", "u2")
             );
         UserQuery query = new UserQuery()
             .selectId()

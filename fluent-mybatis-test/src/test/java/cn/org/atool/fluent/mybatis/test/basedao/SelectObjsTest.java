@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.UserExtDao;
-import cn.org.atool.fluent.mybatis.generate.datamap.TM;
+import cn.org.atool.fluent.mybatis.generate.DM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ public class SelectObjsTest extends BaseTest {
     @Test
     public void test_selectObjs() throws Exception {
         db.table(t_user).clean()
-                .insert(TM.user.createWithInit(10)
-                        .user_name.values(DataGenerator.increase("username_%d"))
+                .insert(DM.user.initTable(10)
+                        .userName.values(DataGenerator.increase("username_%d"))
                 );
 
         List<String> names = dao.selectObjs(2L, 3L, 5L);
@@ -30,8 +30,8 @@ public class SelectObjsTest extends BaseTest {
     @Test
     public void test_selectObjs_2() throws Exception {
         db.table(t_user).clean()
-                .insert(TM.user.createWithInit(1)
-                        .user_name.values((Object)null)
+                .insert(DM.user.initTable(1)
+                        .userName.values((Object)null)
                 );
 
         List<String> names = dao.selectObjs(1L);
@@ -41,8 +41,8 @@ public class SelectObjsTest extends BaseTest {
     @Test
     public void test_selectObjs2() throws Exception {
         db.table(t_user).clean()
-                .insert(TM.user.createWithInit(1)
-                        .user_name.values((Object) null)
+                .insert(DM.user.initTable(1)
+                        .userName.values((Object) null)
                         .age.values((Object)null)
                 );
 
