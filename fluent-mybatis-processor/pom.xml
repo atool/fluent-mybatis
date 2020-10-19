@@ -5,17 +5,25 @@
     <parent>
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
-        <version>1.3.1</version>
+        <version>1.3.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fluent-mybatis-processor</artifactId>
+    <properties>
+        <atool.generator.version>1.0.0</atool.generator.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>fluent-mybatis</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>generator</artifactId>
+            <version>${atool.generator.version}</version>
         </dependency>
         <!-- java code generator-->
         <dependency>
@@ -27,6 +35,18 @@
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
             <version>1.0-rc7</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.0-jre</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -8,11 +8,9 @@ import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,8 +53,14 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStaticImport(SqlProviderUtils.class, "*");
     }
 
+    private String All_Entity_Fields = "ALL_ENTITY_FIELDS";
+
     @Override
     protected void build(TypeSpec.Builder builder) {
+        builder.addField(FieldSpec.builder(String.class, All_Entity_Fields,
+            Modifier.STATIC, Modifier.FINAL, Modifier.PRIVATE)
+            .initializer("$S", fluent.getAllFields())
+            .build());
         builder.addMethod(this.m_insert());
         builder.addMethod(this.m_insertBatch());
         builder.addMethod(this.m_deleteByMap());
@@ -131,9 +135,9 @@ public class SqlProviderGenerator extends AbstractGenerator {
     private MethodSpec m_listByMap() {
         MethodSpec.Builder builder = super.sqlMethod(M_listByMap).addParameter(ClassName.get(Map.class), Param_Map);
 
-        builder.addStatement("$T<String, Object> where = getParas(map, $S);", Map.class, Param_CM);
+        builder.addStatement("$T<String, Object> where = getParas(map, $S)", Map.class, Param_CM);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, $S)", fluent.getTableName(), fluent.getAllFields());
+        builder.addStatement("sql.SELECT($S, $L)", fluent.getTableName(), All_Entity_Fields);
 
         builder.addStatement("sql.WHERE($S, where)", Param_CM);
         return builder.addStatement("return sql.toString()").build();
@@ -144,9 +148,9 @@ public class SqlProviderGenerator extends AbstractGenerator {
         if (ifNotPrimary(builder, "no primary found.")) {
             return builder.build();
         }
-        builder.addStatement("$T ids = getParas(map, $S);", Collection.class, Param_Coll);
+        builder.addStatement("$T ids = getParas(map, $S)", Collection.class, Param_Coll);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, $S)", fluent.getTableName(), fluent.getAllFields());
+        builder.addStatement("sql.SELECT($S, $L)", fluent.getTableName(), All_Entity_Fields);
         builder.addStatement("sql.WHERE_PK_IN($S, ids.size())", fluent.getPrimary().getColumn());
 
         return builder.addStatement("return sql.toString()").build();
@@ -166,7 +170,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         }
         builder.addStatement("assertNotNull($S, $L)", Param_Id, Param_Id);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, $S)", fluent.getTableName(), fluent.getAllFields());
+        builder.addStatement("sql.SELECT($S, $L)", fluent.getTableName(), All_Entity_Fields);
         builder.addStatement("sql.WHERE($S)", fluent.getPrimary().mybatisEl());
         return builder.addStatement("return sql.toString()").build();
     }
@@ -316,12 +320,10 @@ public class SqlProviderGenerator extends AbstractGenerator {
         MethodSpec.Builder builder = super.sqlMethod(M_InsertBatch).addParameter(ClassName.get(Map.class), Param_Map);
 
         builder.addStatement("assertNotEmpty($S, map)", Param_Map);
-        String columns = this.fluent.getFields().stream()
-            .map(FieldColumn::getColumn).map(c -> '"' + c + '"').collect(joining(", "));
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("$T<$T> entities = getParas(map, $S)", List.class, fluent.className(), Param_List)
             .addStatement("sql.INSERT_INTO($S)", fluent.getTableName())
-            .addStatement("sql.INSERT_COLUMNS($L)", columns)
+            .addStatement("sql.INSERT_COLUMNS($L)", All_Entity_Fields)
             .addStatement("sql.VALUES()");
 
         String values = this.fluent.getFields().stream()
@@ -348,7 +350,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     private void selectByWrapper(MethodSpec.Builder builder) {
         builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, data, $S)", fluent.getTableName(), fluent.getAllFields());
+        builder.addStatement("sql.SELECT($S, data, $L)", fluent.getTableName(), All_Entity_Fields);
         builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
     }
 

@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractGenerator {
-    protected TypeElement curElement;
-
     protected FluentEntityInfo fluent;
 
     protected String packageName;
@@ -22,7 +20,6 @@ public abstract class AbstractGenerator {
     protected String comment;
 
     public AbstractGenerator(TypeElement curElement, FluentEntityInfo fluent) {
-        this.curElement = curElement;
         this.fluent = fluent;
     }
 
