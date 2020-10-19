@@ -4,12 +4,10 @@ import cn.org.atool.fluent.mybatis.generate.dao.base.NoPrimaryBaseDao;
 import cn.org.atool.fluent.mybatis.generate.dao.intf.NoPrimaryDao;
 import org.springframework.stereotype.Repository;
 
-
 /**
- * @ClassName NoPrimaryDaoImpl
- * @Description NoPrimaryEntity数据操作实现类
+ * NoPrimaryDaoImpl: 数据操作接口实现
  *
- * @author generate code
+ * @author Powered By Fluent Mybatis
  */
 @Repository
 public class NoPrimaryDaoImpl extends NoPrimaryBaseDao implements NoPrimaryDao {

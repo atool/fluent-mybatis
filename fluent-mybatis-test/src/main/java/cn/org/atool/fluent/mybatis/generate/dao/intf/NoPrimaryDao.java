@@ -2,14 +2,11 @@ package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.NoPrimaryEntity;
-import org.springframework.stereotype.Repository;
 
 /**
- * @ClassName NoPrimaryDao
- * @Description NoPrimaryEntity数据操作接口
+ * NoPrimaryDao: 数据操作接口
  *
- * @author generate code
+ * @author Powered By Fluent Mybatis
  */
-@Repository
-public interface NoPrimaryDao extends IBaseDao<NoPrimaryEntity>  {
+public interface NoPrimaryDao extends IBaseDao<NoPrimaryEntity> {
 }

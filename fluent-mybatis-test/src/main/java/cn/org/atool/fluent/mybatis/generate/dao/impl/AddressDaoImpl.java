@@ -4,12 +4,10 @@ import cn.org.atool.fluent.mybatis.generate.dao.base.AddressBaseDao;
 import cn.org.atool.fluent.mybatis.generate.dao.intf.AddressDao;
 import org.springframework.stereotype.Repository;
 
-
 /**
- * @ClassName AddressDaoImpl
- * @Description AddressEntity数据操作实现类
+ * AddressDaoImpl: 数据操作接口实现
  *
- * @author generate code
+ * @author Powered By Fluent Mybatis
  */
 @Repository
 public class AddressDaoImpl extends AddressBaseDao implements AddressDao {

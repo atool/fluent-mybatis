@@ -24,7 +24,7 @@ public class FluentMyBatisGeneratorMain {
 
     @Tables(url = URL, username = "root", password = "password",
         srcDir = "fluent-mybatis-test/src/main/java",
-        daoDir = "fluent-mybatis-test/src/main/java",
+        daoDir = "fluent-mybatis-test/target/out",
         testDir = "fluent-mybatis-test/src/test/java",
         basePack = "cn.org.atool.fluent.mybatis.generate",
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
