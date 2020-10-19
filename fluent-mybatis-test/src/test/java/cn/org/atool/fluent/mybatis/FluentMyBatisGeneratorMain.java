@@ -2,10 +2,10 @@ package cn.org.atool.fluent.mybatis;
 
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import org.test4j.generator.FileGenerator;
-import org.test4j.generator.annotation.Column;
-import org.test4j.generator.annotation.Table;
-import org.test4j.generator.annotation.Tables;
+import cn.org.atool.generator.FileGenerator;
+import cn.org.atool.generator.annotation.Column;
+import cn.org.atool.generator.annotation.Table;
+import cn.org.atool.generator.annotation.Tables;
 
 public class FluentMyBatisGeneratorMain {
     public static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
