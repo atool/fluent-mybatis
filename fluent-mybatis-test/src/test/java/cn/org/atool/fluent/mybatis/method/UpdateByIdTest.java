@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
-import cn.org.atool.fluent.mybatis.generate.ITable;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -21,7 +20,7 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -36,7 +35,7 @@ public class UpdateByIdTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("UPDATE t_user SET gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
 
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
@@ -45,7 +44,7 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate_gmtCreate() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -61,7 +60,7 @@ public class UpdateByIdTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("UPDATE t_user SET gmt_created = ?, gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
 
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
@@ -70,7 +69,7 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate2() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -86,7 +85,7 @@ public class UpdateByIdTest extends BaseTest {
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE t_user SET gmt_created = ?, gmt_modified = ?, is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)

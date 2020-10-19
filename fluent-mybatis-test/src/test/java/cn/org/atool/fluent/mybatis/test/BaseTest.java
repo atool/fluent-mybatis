@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test;
 
-import cn.org.atool.fluent.mybatis.generate.ITable;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 @ContextConfiguration(classes = {
     TestSpringConfig.class
 })
-public abstract class BaseTest extends Test4J implements ITable {
+public abstract class BaseTest extends Test4J implements ATM.Table {
 }
 
 @Configuration

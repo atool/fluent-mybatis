@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -21,8 +21,8 @@ public class QuestionMarkTest extends BaseTest {
     @DisplayName("?反义处理")
     @Test
     void test() {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(1)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(1)
                 .id.values(1)
                 .userName.values("test")
                 .age.values(23)
@@ -32,7 +32,7 @@ public class QuestionMarkTest extends BaseTest {
             .set.age().apply("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
-        db.table(t_user).query().eqDataMap(DM.user.table(1)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
             .userName.values("test_\\?_aaa")
             .age.values(24)
         );

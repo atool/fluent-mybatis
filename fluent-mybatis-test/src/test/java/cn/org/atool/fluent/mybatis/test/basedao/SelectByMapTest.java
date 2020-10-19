@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.UserExtDao;
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -21,8 +21,8 @@ public class SelectByMapTest extends BaseTest {
 
     @Test
     public void test_selectByMap() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(10)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(10)
                 .userName.values(DataGenerator.increase("username_%d"))
             );
 
@@ -32,7 +32,7 @@ public class SelectByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
-        want.list(users).eqDataMap(DM.user.entity(1)
+        want.list(users).eqDataMap(ATM.DataMap.user.entity(1)
             .userName.values("username_4"));
     }
 }

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
@@ -21,8 +21,8 @@ public class SelectByMapTest extends BaseTest {
 
     @Test
     public void test_selectByMap() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(4)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(4)
                 .userName.values("u1", "u2", "u3", "u2")
             );
 
@@ -32,7 +32,7 @@ public class SelectByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
-        want.list(users).eqDataMap(DM.user.entity(2)
+        want.list(users).eqDataMap(ATM.DataMap.user.entity(2)
             .userName.values("u2"));
     }
 }

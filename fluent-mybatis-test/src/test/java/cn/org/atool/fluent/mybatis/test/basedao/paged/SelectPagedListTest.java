@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
 import cn.org.atool.fluent.mybatis.base.IDaoProtected;
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
@@ -34,7 +34,7 @@ public class SelectPagedListTest extends BaseTest {
     @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
     @Test
     public void test_select_paged_list() throws Exception {
-        db.table(t_user).clean().insert(DM.user.initTable(100)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
@@ -61,7 +61,7 @@ public class SelectPagedListTest extends BaseTest {
 
     @Test
     public void test_select_paged_list2() throws Exception {
-        db.table(t_user).clean().insert(DM.user.initTable(100)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))

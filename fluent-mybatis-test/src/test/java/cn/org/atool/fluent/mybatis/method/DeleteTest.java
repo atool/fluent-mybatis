@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.ITable;
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -15,7 +14,7 @@ public class DeleteTest extends BaseTest {
 
     @Test
     public void testDeleteById() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -24,7 +23,7 @@ public class DeleteTest extends BaseTest {
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(1)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
             .id.values(23L)
             .userName.values("user1")
         );
@@ -32,7 +31,7 @@ public class DeleteTest extends BaseTest {
 
     @Test
     public void testDelete_apply() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -41,7 +40,7 @@ public class DeleteTest extends BaseTest {
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM t_user WHERE user_name=?", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(1)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
             .id.values(23L)
             .userName.values("user1")
         );

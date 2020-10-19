@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
@@ -36,8 +36,8 @@ public class CountNoLimitTest extends BaseTest {
 
     @Test
     public void test_count_and_list() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(100)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(100)
                 .age.values(10)
                 .userName.values("u1", "u2", "u3", "u2")
             );

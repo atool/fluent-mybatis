@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
 import cn.org.atool.fluent.mybatis.base.IDaoProtected;
 import cn.org.atool.fluent.mybatis.base.model.MarkerList;
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
@@ -34,7 +34,7 @@ public class SelectMakerListTest extends BaseTest {
     @DisplayName("准备100条数据，按条件>分页开始标识方式查询，自动获取下一页的标识")
     @Test
     public void test_select_paged_list() throws Exception {
-        db.table(t_user).clean().insert(DM.user.initTable(100)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
@@ -57,7 +57,7 @@ public class SelectMakerListTest extends BaseTest {
 
     @Test
     public void test_select_paged_list2() throws Exception {
-        db.table(t_user).clean().insert(DM.user.initTable(100)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))

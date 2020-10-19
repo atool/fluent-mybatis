@@ -1,45 +1,32 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import java.lang.Integer;
 import java.lang.String;
-
-
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
-import java.io.Serializable;
 
 /**
- * <p>
- * 
- * </p>
+ * NoPrimaryEntity: 数据映射实体定义
  *
- * @author Powered by FluentMyBatis
+ * @author Powered By Fluent Mybatis
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-@FluentMybatis(table = "no_primary", mapperBeanPrefix = "new")
-public class NoPrimaryEntity implements IEntity{
-    private static final long serialVersionUID = 1L;
+@Data
+@Accessors(
+    chain = true
+)
+@FluentMybatis(
+    table = "no_primary",
+    mapperBeanPrefix = "new"
+)
+public class NoPrimaryEntity implements IEntity {
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 
-     */
-    @TableField(value = "column_1")
-    private Integer column1;
-    /**
-     * 
-     */
-    @TableField(value = "column_2")
-    private String column2;
+  @TableField("column_1")
+  private Integer column1;
 
-    @Override
-    public Serializable findPk() {
-        return null;
-    }
+  @TableField("column_2")
+  private String column2;
 }

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -16,14 +16,14 @@ public class InsertBatchTest extends BaseTest {
 
     @Test
     public void testInsertBatch_withoutPk() {
-        db.table(t_user).clean();
+        db.table(ATM.Table.user).clean();
         List<UserEntity> list = list(
             new UserEntity().setUserName("name1").setAge(23),
             new UserEntity().setUserName("name2").setAge(24));
         mapper.insertBatch(list);
-        db.table(t_user).count().eq(2);
-        db.table(t_user).query().print()
-            .eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).count().eq(2);
+        db.table(ATM.Table.user).query().print()
+            .eqDataMap(ATM.DataMap.user.table(2)
                 .age.values(23, 24)
                 .userName.values("name1", "name2")
             );
@@ -33,14 +33,14 @@ public class InsertBatchTest extends BaseTest {
 
     @Test
     public void testInsertBatch_WithId() {
-        db.table(t_user).clean();
+        db.table(ATM.Table.user).clean();
         List<UserEntity> list = list(
             new UserEntity().setId(23L).setUserName("name1").setAge(23),
             new UserEntity().setId(24L).setUserName("name2").setAge(24));
         mapper.insertBatch(list);
-        db.table(t_user).count().eq(2);
-        db.table(t_user).query().print()
-            .eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).count().eq(2);
+        db.table(ATM.Table.user).query().print()
+            .eqDataMap(ATM.DataMap.user.table(2)
                 .age.values(23, 24)
                 .userName.values("name1", "name2")
             );
@@ -51,14 +51,14 @@ public class InsertBatchTest extends BaseTest {
     @DisplayName("部分id有值，实体id不会回写")
     @Test
     public void testInsertBatch() {
-        db.table(t_user).clean();
+        db.table(ATM.Table.user).clean();
         List<UserEntity> list = list(
             new UserEntity().setUserName("name1").setAge(23).setId(101L),
             new UserEntity().setUserName("name2").setAge(24));
         mapper.insertBatch(list);
-        db.table(t_user).count().eq(2);
-        db.table(t_user).query().print()
-            .eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).count().eq(2);
+        db.table(ATM.Table.user).query().print()
+            .eqDataMap(ATM.DataMap.user.table(2)
                 .age.values(23, 24)
                 .userName.values("name1", "name2")
             );

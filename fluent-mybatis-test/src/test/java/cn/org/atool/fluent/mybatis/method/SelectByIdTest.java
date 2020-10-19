@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
@@ -22,20 +22,20 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectById() throws Exception {
-        db.table(t_user).clean().insert(DM.user.initTable(3)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(3)
             .userName.values(DataGenerator.increase("username_%d")));
         UserEntity user = mapper.findById(3L);
         db.sqlList().wantFirstSql()
             .where().eq("id = ?");
         want.object(user)
-            .eqMap(DM.user.entity()
+            .eqMap(ATM.DataMap.user.entity()
                 .userName.values("username_3")
             );
     }
 
     @Test
     public void test_selectById_noPrimary() throws Exception {
-        db.table(t_no_primary).clean().insert(DM.noPrimary.initTable(3)
+        db.table(ATM.Table.noPrimary).clean().insert(ATM.DataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );

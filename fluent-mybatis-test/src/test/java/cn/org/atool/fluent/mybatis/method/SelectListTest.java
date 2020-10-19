@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
@@ -20,8 +20,8 @@ public class SelectListTest extends BaseTest {
 
     @Test
     public void test_selectList() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(4)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -29,14 +29,14 @@ public class SelectListTest extends BaseTest {
             .where.id().eq(24L).end();
         List<UserEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
-        want.list(users).eqDataMap(DM.user.entity(1)
+        want.list(users).eqDataMap(ATM.DataMap.user.entity(1)
             .userName.values("u2"));
     }
 
     @Test
     public void test_selectList_hasMultiple() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(4)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -44,14 +44,14 @@ public class SelectListTest extends BaseTest {
             .where.userName().eq("u2").end();
         List<UserEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
-        want.list(users).eqDataMap(DM.user.entity(2)
+        want.list(users).eqDataMap(ATM.DataMap.user.entity(2)
             .userName.values("u2"));
     }
 
     @Test
     public void test_selectList_limit() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(4)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -59,15 +59,15 @@ public class SelectListTest extends BaseTest {
             .where.userName().eq("u2").end()
             .limit(2);
         List<UserEntity> users = mapper.listEntity(query);
-        want.list(users).eqDataMap(DM.user.entity(2)
+        want.list(users).eqDataMap(ATM.DataMap.user.entity(2)
             .userName.values("u2"));
         db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ? LIMIT ?, ?");
     }
 
     @Test
     public void test_selectList_limit2() throws Exception {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(4)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );

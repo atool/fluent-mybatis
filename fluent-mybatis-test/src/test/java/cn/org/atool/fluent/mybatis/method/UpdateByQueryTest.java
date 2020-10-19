@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.method;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
-import cn.org.atool.fluent.mybatis.generate.ITable;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -15,7 +14,7 @@ public class UpdateByQueryTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -26,7 +25,7 @@ public class UpdateByQueryTest extends BaseTest {
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE t_user SET gmt_modified = now(), user_name = ? WHERE id = ? AND 1=1", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user name2")
         );
@@ -34,7 +33,7 @@ public class UpdateByQueryTest extends BaseTest {
 
     @Test
     public void testUpdate_apply() {
-        db.table(ITable.t_user).clean().insert(DM.user.initTable(2)
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
         );
@@ -49,7 +48,7 @@ public class UpdateByQueryTest extends BaseTest {
                 "WHERE id = ? " +
                 "AND user_name='user2' " +
                 "OR user_name=?", StringMode.SameAsSpace);
-        db.table(ITable.t_user).query().eqDataMap(DM.user.table(2)
+        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user name2")
         );

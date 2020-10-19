@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.UserExtDao;
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -19,9 +19,9 @@ public class DeleteByEntityIdsTest extends BaseTest {
 
     @Test
     public void test_deleteByEntityIds() throws Exception {
-        db.table(t_user).clean().insert(DM.user.initTable(10));
+        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(10));
         dao.deleteByEntityIds(Arrays.asList(new UserEntity().setId(1L), new UserEntity().setId(5L)));
         db.sqlList().wantFirstSql().eq("DELETE FROM t_user WHERE id IN (?, ?)");
-        db.table(t_user).count().isEqualTo(8);
+        db.table(ATM.Table.user).count().isEqualTo(8);
     }
 }

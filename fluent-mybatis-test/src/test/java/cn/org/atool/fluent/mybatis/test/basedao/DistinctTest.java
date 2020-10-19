@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.generate.DM;
+import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
@@ -24,8 +24,8 @@ public class DistinctTest extends BaseTest {
 
     @Test
     public void test_distinct() {
-        db.table(t_user).clean()
-            .insert(DM.user.initTable(10)
+        db.table(ATM.Table.user).clean()
+            .insert(ATM.DataMap.user.initTable(10)
                 .userName.values(increase(index -> index > 5 ? "user2" : "user1"))
                 .age.values(30)
             );
@@ -36,7 +36,7 @@ public class DistinctTest extends BaseTest {
 
         List<UserEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("SELECT DISTINCT user_name FROM t_user WHERE age = ?", StringMode.SameAsSpace);
-        want.list(users).eqDataMap(DM.user.entity(2)
+        want.list(users).eqDataMap(ATM.DataMap.user.entity(2)
             .userName.values("user1", "user2")
         );
     }
