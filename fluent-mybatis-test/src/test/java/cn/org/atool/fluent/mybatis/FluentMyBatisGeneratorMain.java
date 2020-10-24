@@ -29,7 +29,7 @@ public class FluentMyBatisGeneratorMain {
         basePack = "cn.org.atool.fluent.mybatis.generate",
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
-            @Table(value = {"address", "t_user"},
+            @Table(value = {"address", "t_user", "student_score"},
                 tablePrefix = "t_", mapperPrefix = "my",
                 dao = MyCustomerInterface.class,
                 entity = IBaseEntity.class,

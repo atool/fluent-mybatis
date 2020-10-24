@@ -3,10 +3,12 @@ package cn.org.atool.fluent.mybatis.generate;
 import cn.org.atool.fluent.mybatis.generate.dm.AddressDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.UserDataMap;
 import cn.org.atool.fluent.mybatis.generate.mix.AddressTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.UserTableMix;
 import java.lang.Class;
 import java.lang.Override;
@@ -32,6 +34,8 @@ public interface ATM {
     String user = "t_user";
 
     String noAutoId = "no_auto_id";
+
+    String studentScore = "student_score";
   }
 
   /**
@@ -45,6 +49,8 @@ public interface ATM {
     UserDataMap.Factory user = new UserDataMap.Factory();
 
     NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
+
+    StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
   }
 
   /**
@@ -64,11 +70,15 @@ public interface ATM {
     @Mix
     public NoAutoIdTableMix noAutoIdTableMix;
 
+    @Mix
+    public StudentScoreTableMix studentScoreTableMix;
+
     public void cleanAllTable() {
       this.addressTableMix.cleanAddressTable();
       this.noPrimaryTableMix.cleanNoPrimaryTable();
       this.userTableMix.cleanUserTable();
       this.noAutoIdTableMix.cleanNoAutoIdTable();
+      this.studentScoreTableMix.cleanStudentScoreTable();
     }
   }
 
@@ -82,7 +92,8 @@ public interface ATM {
       	AddressDataMap.class,
       	NoPrimaryDataMap.class,
       	UserDataMap.class,
-      	NoAutoIdDataMap.class
+      	NoAutoIdDataMap.class,
+      	StudentScoreDataMap.class
       );
     }
 

@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
-import java.lang.Boolean;
-import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
 import org.test4j.tools.datagen.KeyValue;
+
+import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * UserDataMap: 表(实体)数据对比(插入)构造器
@@ -47,6 +47,12 @@ public class UserDataMap extends DataMap<UserDataMap> {
   public final transient KeyValue<UserDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
+      value = "account",
+      type = "varchar(45)"
+  )
+  public final transient KeyValue<UserDataMap> account = new KeyValue(this, "account", "account", supplier);
+
+  @ColumnDef(
       value = "address_id",
       type = "bigint(21)"
   )
@@ -59,16 +65,28 @@ public class UserDataMap extends DataMap<UserDataMap> {
   public final transient KeyValue<UserDataMap> age = new KeyValue(this, "age", "age", supplier);
 
   @ColumnDef(
-      value = "e_mail",
-      type = "varchar(100)"
+      value = "avatar",
+      type = "varchar(255)"
   )
-  public final transient KeyValue<UserDataMap> eMail = new KeyValue(this, "e_mail", "eMail", supplier);
+  public final transient KeyValue<UserDataMap> avatar = new KeyValue(this, "avatar", "avatar", supplier);
 
   @ColumnDef(
-      value = "first_name",
-      type = "varchar(50)"
+      value = "birthday",
+      type = "datetime"
   )
-  public final transient KeyValue<UserDataMap> firstName = new KeyValue(this, "first_name", "firstName", supplier);
+  public final transient KeyValue<UserDataMap> birthday = new KeyValue(this, "birthday", "birthday", supplier);
+
+  @ColumnDef(
+      value = "bonus_points",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<UserDataMap> bonusPoints = new KeyValue(this, "bonus_points", "bonusPoints", supplier);
+
+  @ColumnDef(
+      value = "e_mail",
+      type = "varchar(45)"
+  )
+  public final transient KeyValue<UserDataMap> eMail = new KeyValue(this, "e_mail", "eMail", supplier);
 
   @ColumnDef(
       value = "grade",
@@ -77,16 +95,22 @@ public class UserDataMap extends DataMap<UserDataMap> {
   public final transient KeyValue<UserDataMap> grade = new KeyValue(this, "grade", "grade", supplier);
 
   @ColumnDef(
-      value = "last_name",
-      type = "varchar(50)"
+      value = "password",
+      type = "varchar(45)"
   )
-  public final transient KeyValue<UserDataMap> lastName = new KeyValue(this, "last_name", "lastName", supplier);
+  public final transient KeyValue<UserDataMap> password = new KeyValue(this, "password", "password", supplier);
 
   @ColumnDef(
-      value = "post_code",
-      type = "varchar(100)"
+      value = "phone",
+      type = "varchar(20)"
   )
-  public final transient KeyValue<UserDataMap> postCode = new KeyValue(this, "post_code", "postCode", supplier);
+  public final transient KeyValue<UserDataMap> phone = new KeyValue(this, "phone", "phone", supplier);
+
+  @ColumnDef(
+      value = "status",
+      type = "varchar(32)"
+  )
+  public final transient KeyValue<UserDataMap> status = new KeyValue(this, "status", "status", supplier);
 
   @ColumnDef(
       value = "user_name",
