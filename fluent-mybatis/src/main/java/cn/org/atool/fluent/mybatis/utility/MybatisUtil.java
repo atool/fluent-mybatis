@@ -274,7 +274,7 @@ public class MybatisUtil {
             return "";
         }
         int len = string.length();
-        StringBuilder buff = new StringBuilder(len);
+        StringBuilder buff = new StringBuilder(len + 10);
         for (int pos = 0; pos < len; pos++) {
             char ch = string.charAt(pos);
             if (pos != 0 && Character.isUpperCase(ch)) {
@@ -285,6 +285,42 @@ public class MybatisUtil {
             } else {
                 buff.append(Character.toLowerCase(ch));  //统一都转小写
             }
+        }
+        return buff.toString();
+    }
+
+    /**
+     * 下划线转驼峰命名
+     *
+     * @param string
+     * @param firstCapital true: 首字母大写, false:首字母小写
+     * @return
+     */
+    public static String underlineToCamel(String string, boolean firstCapital) {
+        if (If.isBlank(string)) {
+            return "";
+        }
+        boolean first = true;
+        boolean underline = false;
+        StringBuilder buff = new StringBuilder(string.length());
+        for (char ch : string.toCharArray()) {
+            if (ch == '_') {
+                if (!first) {
+                    underline = true;
+                }
+                continue;
+            }
+            if (first) {
+                /** 首字母 **/
+                buff.append(firstCapital ? Character.toUpperCase(ch) : Character.toLowerCase(ch));
+            } else if (underline) {
+                /** 下划线转驼峰 **/
+                buff.append(Character.toUpperCase(ch));
+            } else {
+                buff.append(ch);
+            }
+            first = false;
+            underline = false;
         }
         return buff.toString();
     }

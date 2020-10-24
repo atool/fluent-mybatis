@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.model.PagedList;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -39,16 +40,6 @@ public interface IDaoProtected<E extends IEntity> {
     List<E> listEntity(IQuery query);
 
     /**
-     * 根据query查询对应实例列表
-     *
-     * @param query     查询条件
-     * @param converter 从Entity对象转换为POJO对象
-     * @param <POJO>    POJO实体类型
-     * @return POJO list
-     */
-    <POJO> List<POJO> listObjs(IQuery query, Function<E, POJO> converter);
-
-    /**
      * 根据query查询记录列表, 返回Map对象列表
      *
      * @param query 查询条件
@@ -65,6 +56,16 @@ public interface IDaoProtected<E extends IEntity> {
      * @return POJO list
      */
     <POJO> List<POJO> listPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+
+    /**
+     * 根据query查询记录列表, 并将数据结果转换PoJo对象
+     *
+     * @param clazz  PoJo对象类型
+     * @param query  查询条件
+     * @param <POJO> PoJo对象类型
+     * @return PoJo列表
+     */
+    <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery query);
 
     /**
      * 分页查询实例
@@ -93,6 +94,16 @@ public interface IDaoProtected<E extends IEntity> {
     <POJO> PagedList<POJO> pagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
 
     /**
+     * 分页查询数据（结果集为PoJo对象）
+     *
+     * @param klass  PoJo类型
+     * @param query  查询条件
+     * @param <POJO> PoJo类型
+     * @return 分页查询结果
+     */
+    <POJO> PagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query);
+
+    /**
      * 按Marker标识分页查询
      *
      * @param query 查询条件
@@ -119,23 +130,52 @@ public interface IDaoProtected<E extends IEntity> {
     <POJO> MarkerList<POJO> markerPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
 
     /**
+     * 按Marker标识分页查询（结果集为PoJo对象）
+     *
+     * @param klass  PoJo类型
+     * @param query  查询条件
+     * @param <POJO> PoJo类型
+     * @return 分页查询结果
+     */
+    <POJO> MarkerList<POJO> markerPagedPoJos(Class<POJO> klass, IQuery query);
+
+    /**
      * 根据query查询满足条件的第一条记录
      * 当有多条记录符合条件时，只取第一条记录
      *
      * @param query 查询条件
      * @return 满足条件的一条记录
      */
-    E findOne(IQuery query);
+    Optional<E> findOne(IQuery query);
 
     /**
-     * 根据query查询满足条件的第一条记录，并根据function解析出对应字段
+     * 根据query查询满足条件的第一条记录
+     * 当有多条记录符合条件时，只取第一条记录
+     *
+     * @param query 查询条件
+     * @return 满足条件的一条记录
+     */
+    Optional<Map<String, Object>> findOneResult(IQuery query);
+
+    /**
+     * 根据query查询满足条件的第一条记录，并根据converter从map转换为POJO实例
      *
      * @param query     查询条件
-     * @param converter 获取entity字段值函数
-     * @param <F>
-     * @return
+     * @param converter 从map转换为POJO实例
+     * @param <POJO>    POJO类型
+     * @return POJO实例
      */
-    <F> F findOne(IQuery query, Function<E, F> converter);
+    <POJO> Optional<POJO> findOneResult(IQuery query, Function<Map<String, Object>, POJO> converter);
+
+    /**
+     * 根据query查询满足条件的第一条记录，并转换为POJO实例
+     *
+     * @param klass  POJO类型
+     * @param query  查询条件
+     * @param <POJO> POJO类型
+     * @return POJO实例
+     */
+    <POJO> Optional<POJO> findOneResult(Class<POJO> klass, IQuery query);
 
     /**
      * 返回符合条件的记录数

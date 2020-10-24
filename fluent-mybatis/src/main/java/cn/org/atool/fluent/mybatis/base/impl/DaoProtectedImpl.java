@@ -5,9 +5,15 @@ import cn.org.atool.fluent.mybatis.base.model.MarkerList;
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -44,12 +50,6 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public <F> List<F> listObjs(IQuery query, Function<E, F> converter) {
-        List<E> list = this.mapper().listEntity(query);
-        return this.toPoJoList(list, converter);
-    }
-
-    @Override
     public List<Map<String, Object>> listMaps(IQuery query) {
         return this.listPoJos(query, null);
     }
@@ -58,6 +58,12 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     public <POJO> List<POJO> listPoJos(IQuery query, Function<Map<String, Object>, POJO> converter) {
         List<Map<String, Object>> list = this.mapper().listMaps(query);
         return this.toPoJoList(list, converter);
+    }
+
+    @Override
+    public <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery query) {
+        List<Map<String, Object>> list = this.mapper().listMaps(query);
+        return this.toPoJoList(clazz, list);
     }
 
     @Override
@@ -83,6 +89,13 @@ public abstract class DaoProtectedImpl<E extends IEntity>
             List<POJO> list = this.toPoJoList(paged.getData(), converter);
             return new PagedList<>(paged.getTotal(), list);
         }
+    }
+
+    @Override
+    public <POJO> PagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query) {
+        PagedList<Map<String, Object>> paged = this.pagedMaps(query);
+        List<POJO> list = this.toPoJoList(klass, paged.getData());
+        return new PagedList<>(paged.getTotal(), list);
     }
 
     @Override
@@ -119,15 +132,38 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public E findOne(IQuery query) {
-        query.limit(1);
-        return this.mapper().findOne(query);
+    public <POJO> MarkerList<POJO> markerPagedPoJos(Class<POJO> klass, IQuery query) {
+        MarkerList<Map<String, Object>> paged = this.markerPagedMaps(query);
+        List<POJO> list = this.toPoJoList(klass, paged.getData());
+        POJO next = this.toPoJo(klass, paged.getNext());
+        return new MarkerList<>(list, next);
     }
 
     @Override
-    public <F> F findOne(IQuery query, Function<E, F> converter) {
-        E obj = this.findOne(query);
-        return this.toPoJo(obj, converter);
+    public Optional<E> findOne(IQuery query) {
+        query.limit(1);
+        E one = this.mapper().findOne(query);
+        return Optional.ofNullable(one);
+    }
+
+    @Override
+    public Optional<Map<String, Object>> findOneResult(IQuery query) {
+        query.limit(1);
+        List<Map<String, Object>> list = this.listMaps(query);
+        Map<String, Object> map = list == null || list.size() == 0 ? null : list.get(0);
+        return Optional.ofNullable(map);
+    }
+
+    @Override
+    public <F> Optional<F> findOneResult(IQuery query, Function<Map<String, Object>, F> converter) {
+        Optional<Map<String, Object>> optional = this.findOneResult(query);
+        return optional.map(m -> this.toPoJo(m, converter));
+    }
+
+    @Override
+    public <POJO> Optional<POJO> findOneResult(Class<POJO> klass, IQuery query) {
+        Optional<Map<String, Object>> optional = this.findOneResult(query);
+        return optional.map(m -> this.toPoJo(klass, m));
     }
 
     @Override
@@ -149,25 +185,59 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     /**
      * 将Map转换为指定的PoJo对象
      *
-     * @param map       map对象
+     * @param map       map或entity对象
      * @param converter 转换函数
      * @param <POJO>    PoJo类型
      * @return 转换后的对象
      */
-    private <ME, POJO> POJO toPoJo(ME map, Function<ME, POJO> converter) {
+    private <POJO> POJO toPoJo(Map<String, Object> map, Function<Map<String, Object>, POJO> converter) {
         return map == null ? null : converter.apply(map);
     }
 
     /**
      * 将Map转换为指定的PoJo对象
      *
-     * @param list      map对象列表
+     * @param klass  POJO类型
+     * @param map    map对象
+     * @param <POJO> PoJo类型
+     * @return 根据Map值设置后的对象
+     */
+    private <POJO> POJO toPoJo(Class<POJO> klass, Map<String, Object> map) {
+        try {
+            POJO target = klass.newInstance();
+            MetaObject metaObject = MetaObject.forObject(target, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String name = MybatisUtil.underlineToCamel(entry.getKey(), false);
+                metaObject.setValue(name, entry.getValue());
+            }
+            return target;
+        } catch (Exception e) {
+            throw new RuntimeException("convert map to object[type=" + klass.getName() + "] error: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 将Map转换为指定的PoJo对象
+     *
+     * @param list      Map或Entity对象列表
      * @param converter 转换函数
      * @param <POJO>    PoJo类型
      * @return 转换后的对象列表
      */
-    private <ME, POJO> List<POJO> toPoJoList(List<ME> list, Function<ME, POJO> converter) {
+    private <POJO> List<POJO> toPoJoList(List<Map<String, Object>> list, Function<Map<String, Object>, POJO> converter) {
         return list == null ? null : list.stream().map(map -> toPoJo(map, converter)).collect(toList());
+    }
+
+    /**
+     * 将Map转换为指定的PoJo对象
+     *
+     * @param klass  POJO类型
+     * @param list   map对象列表
+     * @param <POJO> POJO类型
+     * @return POJO实例列表
+     */
+    private <POJO> List<POJO> toPoJoList(Class<POJO> klass, List<Map<String, Object>> list) {
+        return list == null ? null : list.stream().map(map -> toPoJo(klass, map)).collect(toList());
     }
 
     /**

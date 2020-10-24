@@ -21,8 +21,9 @@ public class AndNestedTest extends BaseTest {
     @Test
     void test_and_nested() {
         UserQuery query = new UserQuery()
-            .where
-            .id().in(q -> q.selectId().where.id().eq(3L).end())
+            .where.id().in(q -> q
+                .selectId()
+                .where.id().eq(3L).end())
             .and(q -> q
                 .where.age().eq(24)
                 .and.id().eq(3L).end()
@@ -37,8 +38,9 @@ public class AndNestedTest extends BaseTest {
     @Test
     void test_and_nested_is_null() {
         UserQuery query = new UserQuery()
-            .where
-            .id().in(q -> q.selectId().where.id().eq(3L).end())
+            .where.id().in(q -> q
+                .selectId()
+                .where.id().eq(3L).end())
             .and(q -> q
                 .where.age().eq(24, If::everFalse)
                 .or.id().eq(3L, If::everFalse).end()
@@ -68,7 +70,8 @@ public class AndNestedTest extends BaseTest {
     @Test
     void test_or_nested() {
         UserQuery query = new UserQuery()
-            .where.id().in(q -> q.selectId()
+            .where.id().in(q -> q
+                .selectId()
                 .where.id().eq(3L).end())
             .or(q1 -> q1
                 .where.and(q2 -> q2

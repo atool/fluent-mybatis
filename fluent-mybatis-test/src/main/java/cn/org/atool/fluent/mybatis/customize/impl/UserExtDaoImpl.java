@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
@@ -19,12 +20,13 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
 
     @Override
     public List<String> selectFields(Long... ids) {
-        return super.listObjs(
+        return super.listEntity(
             super.query()
                 .where.id().in(ids)
-                .end(),
-            UserEntity::getUserName
-        );
+                .end()
+        ).stream()
+            .map(UserEntity::getUserName)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -56,14 +58,19 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
 
     @Override
     public UserEntity selectOne(String likeName) {
-        return super.query().where.userName().like(likeName).end().execute(super::findOne);
+        return super.query()
+            .where.userName().like(likeName)
+            .end()
+            .execute(super::findOne)
+            .orElse(null);
     }
 
     @Override
     public String selectOne(long id) {
         return super.findOne(super.query()
-                .where.id().eq(id).end(),
-            UserEntity::getUserName);
+            .where.id().eq(id).end())
+            .map(UserEntity::getUserName)
+            .orElse(null);
     }
 
     @Override
