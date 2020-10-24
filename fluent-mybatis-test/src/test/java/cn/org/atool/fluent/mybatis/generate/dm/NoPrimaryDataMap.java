@@ -1,11 +1,14 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
+import java.lang.String;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.module.ICore.DataMap;
+import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.tools.datagen.IDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -68,6 +71,53 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
 
   public static NoPrimaryDataMap entity(int size) {
     return new NoPrimaryDataMap(false, size);
+  }
+
+  /**
+   * DataMap数据和表[no_primary]数据比较
+   */
+  public NoPrimaryDataMap eqTable() {
+    IDatabase.db.table("no_primary").query().eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[no_primary]数据比较
+   */
+  public NoPrimaryDataMap eqQuery(String query) {
+    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[no_primary]数据比较
+   */
+  public NoPrimaryDataMap eqQuery(IDataMap query) {
+    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * 清空[no_primary]表数据
+   */
+  public NoPrimaryDataMap clean() {
+    IDatabase.db.cleanTable("no_primary");
+    return this;
+  }
+
+  /**
+   * 插入[no_primary]表数据
+   */
+  public NoPrimaryDataMap insert() {
+    IDatabase.db.table("no_primary").insert(this);
+    return this;
+  }
+
+  /**
+   * 先清空, 再插入[no_primary]表数据
+   */
+  public NoPrimaryDataMap cleanAndInsert() {
+    return this.clean().insert();
   }
 
   public static class Factory {

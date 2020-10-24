@@ -1,13 +1,16 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
-import org.test4j.module.ICore.DataMap;
-import org.test4j.module.database.annotations.ColumnDef;
-import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.KeyValue;
-
+import java.lang.Boolean;
+import java.lang.String;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.module.ICore.DataMap;
+import org.test4j.module.database.IDatabase;
+import org.test4j.module.database.annotations.ColumnDef;
+import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.tools.datagen.IDataMap;
+import org.test4j.tools.datagen.KeyValue;
 
 /**
  * UserDataMap: 表(实体)数据对比(插入)构造器
@@ -165,6 +168,53 @@ public class UserDataMap extends DataMap<UserDataMap> {
 
   public static UserDataMap entity(int size) {
     return new UserDataMap(false, size);
+  }
+
+  /**
+   * DataMap数据和表[t_user]数据比较
+   */
+  public UserDataMap eqTable() {
+    IDatabase.db.table("t_user").query().eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[t_user]数据比较
+   */
+  public UserDataMap eqQuery(String query) {
+    IDatabase.db.table("t_user").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[t_user]数据比较
+   */
+  public UserDataMap eqQuery(IDataMap query) {
+    IDatabase.db.table("t_user").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * 清空[t_user]表数据
+   */
+  public UserDataMap clean() {
+    IDatabase.db.cleanTable("t_user");
+    return this;
+  }
+
+  /**
+   * 插入[t_user]表数据
+   */
+  public UserDataMap insert() {
+    IDatabase.db.table("t_user").insert(this);
+    return this;
+  }
+
+  /**
+   * 先清空, 再插入[t_user]表数据
+   */
+  public UserDataMap cleanAndInsert() {
+    return this.clean().insert();
   }
 
   public static class Factory {

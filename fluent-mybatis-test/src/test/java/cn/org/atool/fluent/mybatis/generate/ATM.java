@@ -39,7 +39,7 @@ public interface ATM {
   }
 
   /**
-   * 应用表数据构造器
+   * table or entity data构造器
    */
   interface DataMap {
     AddressDataMap.Factory address = new AddressDataMap.Factory();

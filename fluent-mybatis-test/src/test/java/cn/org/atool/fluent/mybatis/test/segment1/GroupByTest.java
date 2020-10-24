@@ -25,7 +25,7 @@ public class GroupByTest extends BaseTest {
         UserQuery query = new UserQuery()
             .selectId()
             .where.id().eq(24L).end()
-            .groupBy.apply("user_name", "age").end()
+            .groupBy.userName().age().end()
             .last("/** comment **/");
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()

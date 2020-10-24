@@ -1,12 +1,15 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
+import java.lang.String;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.module.ICore.DataMap;
+import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.tools.datagen.IDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -99,6 +102,53 @@ public class AddressDataMap extends DataMap<AddressDataMap> {
 
   public static AddressDataMap entity(int size) {
     return new AddressDataMap(false, size);
+  }
+
+  /**
+   * DataMap数据和表[address]数据比较
+   */
+  public AddressDataMap eqTable() {
+    IDatabase.db.table("address").query().eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[address]数据比较
+   */
+  public AddressDataMap eqQuery(String query) {
+    IDatabase.db.table("address").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[address]数据比较
+   */
+  public AddressDataMap eqQuery(IDataMap query) {
+    IDatabase.db.table("address").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * 清空[address]表数据
+   */
+  public AddressDataMap clean() {
+    IDatabase.db.cleanTable("address");
+    return this;
+  }
+
+  /**
+   * 插入[address]表数据
+   */
+  public AddressDataMap insert() {
+    IDatabase.db.table("address").insert(this);
+    return this;
+  }
+
+  /**
+   * 先清空, 再插入[address]表数据
+   */
+  public AddressDataMap cleanAndInsert() {
+    return this.clean().insert();
   }
 
   public static class Factory {

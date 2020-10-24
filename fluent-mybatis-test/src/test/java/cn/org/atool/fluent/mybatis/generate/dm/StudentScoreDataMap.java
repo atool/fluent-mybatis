@@ -1,13 +1,15 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
-import java.lang.Boolean;
+import org.test4j.module.ICore.DataMap;
+import org.test4j.module.database.IDatabase;
+import org.test4j.module.database.annotations.ColumnDef;
+import org.test4j.module.database.annotations.ScriptTable;
+import org.test4j.tools.datagen.IDataMap;
+import org.test4j.tools.datagen.KeyValue;
+
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import org.test4j.module.ICore.DataMap;
-import org.test4j.module.database.annotations.ColumnDef;
-import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.KeyValue;
 
 /**
  * StudentScoreDataMap: 表(实体)数据对比(插入)构造器
@@ -117,6 +119,53 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
 
   public static StudentScoreDataMap entity(int size) {
     return new StudentScoreDataMap(false, size);
+  }
+
+  /**
+   * DataMap数据和表[student_score]数据比较
+   */
+  public StudentScoreDataMap eqTable() {
+    IDatabase.db.table("student_score").query().eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[student_score]数据比较
+   */
+  public StudentScoreDataMap eqQuery(String query) {
+    IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[student_score]数据比较
+   */
+  public StudentScoreDataMap eqQuery(IDataMap query) {
+    IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this);
+    return this;
+  }
+
+  /**
+   * 清空[student_score]表数据
+   */
+  public StudentScoreDataMap clean() {
+    IDatabase.db.cleanTable("student_score");
+    return this;
+  }
+
+  /**
+   * 插入[student_score]表数据
+   */
+  public StudentScoreDataMap insert() {
+    IDatabase.db.table("student_score").insert(this);
+    return this;
+  }
+
+  /**
+   * 先清空, 再插入[student_score]表数据
+   */
+  public StudentScoreDataMap cleanAndInsert() {
+    return this.clean().insert();
   }
 
   public static class Factory {

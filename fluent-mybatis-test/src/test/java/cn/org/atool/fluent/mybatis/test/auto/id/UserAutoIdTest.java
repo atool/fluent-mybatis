@@ -23,7 +23,10 @@ public class UserAutoIdTest extends BaseTest {
         int count = mapper.insert(user);
         want.number(count).isEqualTo(1);
         want.number(user.getId()).eq(124L);
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1).id.values(124L));
+        ATM.DataMap.user
+            .table(1)
+            .id.values(124L)
+            .eqTable();
     }
 
     @Test
