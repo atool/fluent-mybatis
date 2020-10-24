@@ -155,13 +155,13 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public <F> Optional<F> findOneResult(IQuery query, Function<Map<String, Object>, F> converter) {
+    public <F> Optional<F> findOnePoJo(IQuery query, Function<Map<String, Object>, F> converter) {
         Optional<Map<String, Object>> optional = this.findOneResult(query);
         return optional.map(m -> this.toPoJo(m, converter));
     }
 
     @Override
-    public <POJO> Optional<POJO> findOneResult(Class<POJO> klass, IQuery query) {
+    public <POJO> Optional<POJO> findOnePoJo(Class<POJO> klass, IQuery query) {
         Optional<Map<String, Object>> optional = this.findOneResult(query);
         return optional.map(m -> this.toPoJo(klass, m));
     }

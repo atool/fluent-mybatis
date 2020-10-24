@@ -84,21 +84,21 @@ public interface IDaoProtected<E extends IEntity> {
     PagedList<Map<String, Object>> pagedMaps(IQuery query);
 
     /**
-     * 分页查询数据（结果集为PoJo对象）
+     * 分页查询数据（结果集为Object对象）
      *
      * @param query     查询条件
      * @param converter 从Map记录对实体POJO的转换函数
-     * @param <POJO>    POJO实体类型
+     * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
     <POJO> PagedList<POJO> pagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
 
     /**
-     * 分页查询数据（结果集为PoJo对象）
+     * 分页查询数据（结果集为Object对象）
      *
-     * @param klass  PoJo类型
+     * @param klass  Object类型
      * @param query  查询条件
-     * @param <POJO> PoJo类型
+     * @param <POJO> Object类型
      * @return 分页查询结果
      */
     <POJO> PagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query);
@@ -120,21 +120,21 @@ public interface IDaoProtected<E extends IEntity> {
     MarkerList<Map<String, Object>> markerPagedMaps(IQuery query);
 
     /**
-     * 按Marker标识分页查询（结果集为PoJo对象）
+     * 按Marker标识分页查询（结果集为Object对象）
      *
      * @param query     查询条件
      * @param converter 从Map记录对实体POJO的转换函数
-     * @param <POJO>    POJO实体类型
+     * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
     <POJO> MarkerList<POJO> markerPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
 
     /**
-     * 按Marker标识分页查询（结果集为PoJo对象）
+     * 按Marker标识分页查询（结果集为Object对象）
      *
-     * @param klass  PoJo类型
+     * @param klass  Object类型
      * @param query  查询条件
-     * @param <POJO> PoJo类型
+     * @param <POJO> Object类型
      * @return 分页查询结果
      */
     <POJO> MarkerList<POJO> markerPagedPoJos(Class<POJO> klass, IQuery query);
@@ -158,24 +158,24 @@ public interface IDaoProtected<E extends IEntity> {
     Optional<Map<String, Object>> findOneResult(IQuery query);
 
     /**
-     * 根据query查询满足条件的第一条记录，并根据converter从map转换为POJO实例
+     * 根据query查询满足条件的第一条记录，并根据converter从map转换为Object实例
      *
      * @param query     查询条件
-     * @param converter 从map转换为POJO实例
-     * @param <POJO>    POJO类型
-     * @return POJO实例
+     * @param converter 从map转换为Object实例
+     * @param <POJO>    Object类型
+     * @return Object实例
      */
-    <POJO> Optional<POJO> findOneResult(IQuery query, Function<Map<String, Object>, POJO> converter);
+    <POJO> Optional<POJO> findOnePoJo(IQuery query, Function<Map<String, Object>, POJO> converter);
 
     /**
-     * 根据query查询满足条件的第一条记录，并转换为POJO实例
+     * 根据query查询满足条件的第一条记录，并转换为Object实例
      *
-     * @param klass  POJO类型
+     * @param klass  Object类型
      * @param query  查询条件
-     * @param <POJO> POJO类型
-     * @return POJO实例
+     * @param <POJO> Object类型
+     * @return Object实例
      */
-    <POJO> Optional<POJO> findOneResult(Class<POJO> klass, IQuery query);
+    <POJO> Optional<POJO> findOnePoJo(Class<POJO> klass, IQuery query);
 
     /**
      * 返回符合条件的记录数
