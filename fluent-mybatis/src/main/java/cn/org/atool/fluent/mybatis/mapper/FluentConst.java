@@ -37,8 +37,6 @@ public interface FluentConst {
 
     String Suffix_ISegment = "ISegment";
 
-    String Suffix_WhereSegment = "WhereSegment";
-
     String Suffix_WrapperHelper = "WrapperHelper";
 
     String Suffix_SqlProvider = "SqlProvider";
@@ -55,10 +53,6 @@ public interface FluentConst {
 
     String Param_Map = "map";
 
-    String Param_Id = "id";
-
-    String Param_Ids = "ids";
-
     String Param_Coll = "coll";
 
     String Param_List = "list";
@@ -68,8 +62,6 @@ public interface FluentConst {
     String Param_EW = "ew";
 
     String Param_ET = "et";
-
-    String Param_Query = "query";
 
     String Param_Entity = "entity";
 

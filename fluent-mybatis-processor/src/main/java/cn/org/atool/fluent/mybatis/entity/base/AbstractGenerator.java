@@ -127,13 +127,27 @@ public abstract class AbstractGenerator {
      * </pre>
      *
      * @param methodName
+     * @param isOverride 是否注解@Override
      * @return
      */
-    protected MethodSpec.Builder sqlMethod(String methodName) {
+    protected MethodSpec.Builder sqlMethod(String methodName, boolean isOverride) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
-        //builder.addAnnotation(Override.class);
+        if (isOverride) {
+            builder.addAnnotation(Override.class);
+        }
         builder.returns(String.class);
         builder.addModifiers(Modifier.PUBLIC);
         return builder;
+    }
+
+    /**
+     * 未定义主键异常
+     *
+     * @param builder
+     * @return
+     */
+    protected MethodSpec.Builder throwPrimaryNoFound(MethodSpec.Builder builder) {
+        return builder.addStatement("throw new $T($S)",
+            RuntimeException.class, "primary key not found.");
     }
 }

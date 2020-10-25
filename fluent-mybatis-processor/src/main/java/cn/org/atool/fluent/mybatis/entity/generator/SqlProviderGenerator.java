@@ -1,28 +1,31 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
+import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
-import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.squareup.javapoet.*;
+import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrStr;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static java.util.stream.Collectors.joining;
 
 public class SqlProviderGenerator extends AbstractGenerator {
@@ -51,139 +54,32 @@ public class SqlProviderGenerator extends AbstractGenerator {
         super.staticImport(builder);
         builder.addStaticImport(MybatisUtil.class, "*");
         builder.addStaticImport(SqlProviderUtils.class, "*");
+        builder.addStaticImport(FluentConst.class, "*");
     }
-
-    private String All_Entity_Fields = "ALL_ENTITY_FIELDS";
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addField(FieldSpec.builder(String.class, All_Entity_Fields,
-            Modifier.STATIC, Modifier.FINAL, Modifier.PRIVATE)
-            .initializer("$S", fluent.getAllFields())
-            .build());
+        builder.superclass(BaseSqlProvider.class);
+        // provider method
         builder.addMethod(this.m_insert());
         builder.addMethod(this.m_insertBatch());
-        builder.addMethod(this.m_deleteByMap());
-        builder.addMethod(this.m_deleteById());
-        builder.addMethod(this.m_deleteByIds());
-        builder.addMethod(this.m_delete());
-        /**
-         * update
-         */
         builder.addMethod(this.m_updateById());
-        builder.addMethod(this.m_updateBy());
-        /**
-         *  select
-         */
-        builder.addMethod(this.m_findOne());
-        builder.addMethod(this.m_findById());
-        builder.addMethod(this.m_listByIds());
-        builder.addMethod(this.m_listByMap());
 
-        builder.addMethod(this.m_listEntity());
-        builder.addMethod(this.m_listMaps());
-        builder.addMethod(this.m_listObjs());
-        builder.addMethod(this.m_countNoLimit());
-        builder.addMethod(this.m_count());
+        //Override method
+        builder.addMethod(this.m_updateDefaults());
+        builder.addMethod(this.m_tableName());
+        builder.addMethod(this.m_idColumn());
+        builder.addMethod(this.m_allFields());
+        builder.addMethod(this.m_dbType());
     }
 
-    private MethodSpec m_countNoLimit() {
-        MethodSpec.Builder builder = super.sqlMethod(M_countNoLimit).addParameter(ClassName.get(Map.class), Param_Map);
+    private MethodSpec m_updateDefaults() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("updateDefaults")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(parameterizedType(List.class, String.class))
+            .addParameter(CN_Map_StrStr, "updates");
 
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.COUNT($S, data)", fluent.getTableName());
-        builder.addStatement("sql.WHERE_GROUP_BY(data)");
-        return builder.addStatement("return sql.toString()").build();
-    }
-
-    private MethodSpec m_count() {
-        MethodSpec.Builder builder = super.sqlMethod(M_count).addParameter(ClassName.get(Map.class), Param_Map);
-
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.COUNT($S, data)", fluent.getTableName());
-        builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
-        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
-        return builder.build();
-    }
-
-    private MethodSpec m_listObjs() {
-        MethodSpec.Builder builder = super.sqlMethod(M_listObjs).addParameter(ClassName.get(Map.class), Param_Map);
-
-        this.selectByWrapper(builder);
-        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
-        return builder.build();
-    }
-
-    private MethodSpec m_listMaps() {
-        MethodSpec.Builder builder = super.sqlMethod(M_listMaps).addParameter(ClassName.get(Map.class), Param_Map);
-
-        this.selectByWrapper(builder);
-        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
-        return builder.build();
-    }
-
-    private MethodSpec m_listEntity() {
-        MethodSpec.Builder builder = super.sqlMethod(M_listEntity).addParameter(ClassName.get(Map.class), Param_Map);
-
-        this.selectByWrapper(builder);
-        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
-        return builder.build();
-    }
-
-    private MethodSpec m_listByMap() {
-        MethodSpec.Builder builder = super.sqlMethod(M_listByMap).addParameter(ClassName.get(Map.class), Param_Map);
-
-        builder.addStatement("$T<String, Object> where = getParas(map, $S)", Map.class, Param_CM);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, $L)", fluent.getTableName(), All_Entity_Fields);
-
-        builder.addStatement("sql.WHERE($S, where)", Param_CM);
-        return builder.addStatement("return sql.toString()").build();
-    }
-
-    private MethodSpec m_listByIds() {
-        MethodSpec.Builder builder = super.sqlMethod(M_listByIds).addParameter(ClassName.get(Map.class), Param_Map);
-        if (ifNotPrimary(builder, "no primary found.")) {
-            return builder.build();
-        }
-        builder.addStatement("$T ids = getParas(map, $S)", Collection.class, Param_Coll);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, $L)", fluent.getTableName(), All_Entity_Fields);
-        builder.addStatement("sql.WHERE_PK_IN($S, ids.size())", fluent.getPrimary().getColumn());
-
-        return builder.addStatement("return sql.toString()").build();
-    }
-
-    private MethodSpec m_findOne() {
-        MethodSpec.Builder builder = super.sqlMethod(M_findOne).addParameter(ClassName.get(Map.class), Param_Map);
-        this.selectByWrapper(builder);
-        builder.addStatement("return byPaged($T.$L, data, sql.toString())", DbType.class, fluent.getDbType().name());
-        return builder.build();
-    }
-
-    private MethodSpec m_findById() {
-        MethodSpec.Builder builder = super.sqlMethod(M_findById).addParameter(Serializable.class, Param_Id);
-        if (ifNotPrimary(builder, "no primary define found.")) {
-            return builder.build();
-        }
-        builder.addStatement("assertNotNull($S, $L)", Param_Id, Param_Id);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, $L)", fluent.getTableName(), All_Entity_Fields);
-        builder.addStatement("sql.WHERE($S)", fluent.getPrimary().mybatisEl());
-        return builder.addStatement("return sql.toString()").build();
-    }
-
-    private MethodSpec m_updateBy() {
-        MethodSpec.Builder builder = super.sqlMethod(M_updateBy).addParameter(CN_Map_StrObj, Param_Map);
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-
-        builder.addStatement("$T<String, String> updates = data.getUpdates()", Map.class);
-        builder.addStatement("assertNotEmpty($S, updates)", "updates");
-
-        builder.addStatement("sql.UPDATE($S)", fluent.getTableName());
         builder.addStatement("$T<String> sets = new $T<>()", List.class, ArrayList.class);
         for (FieldColumn field : this.fluent.getFields()) {
             if (isBlank(field.getUpdate())) {
@@ -193,22 +89,19 @@ public class SqlProviderGenerator extends AbstractGenerator {
             builder.addCode("\tsets.add($S);\n", field.getColumn() + " = " + field.getUpdate());
             builder.addCode("}\n");
         }
-        builder.addStatement("sets.add(data.getUpdateStr())");
-        builder.addStatement("sql.SET(sets)");
-
-        builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
-        builder.addStatement("sql.LIMIT(data, true)");
-        return builder.addStatement("return sql.toString()").build();
+        return builder.addStatement("return sets").build();
     }
 
     private MethodSpec m_updateById() {
-        MethodSpec.Builder builder = super.sqlMethod(M_updateById).addParameter(CN_Map_StrObj, Param_Map);
-        if (ifNotPrimary(builder, "no primary define found.")) {
+        MethodSpec.Builder builder = super.sqlMethod(M_updateById, false)
+            .addParameter(CN_Map_StrObj, Param_Map);
+        if (this.ifNotPrimary(builder)) {
             return builder.build();
         }
-        builder.addStatement("$T entity = getParas(map, $S)", fluent.className(), Param_ET);
+        builder.addStatement("$T entity = getParas(map, Param_ET)", fluent.className());
+        builder.addStatement("assertNotNull(Param_Entity, entity)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.UPDATE($S)", fluent.getTableName());
+        builder.addStatement("sql.UPDATE(this.tableName())");
         builder.addStatement("$T<String> sets = new $T<>()", List.class, ArrayList.class);
 
         for (FieldColumn field : this.fluent.getFields()) {
@@ -229,69 +122,14 @@ public class SqlProviderGenerator extends AbstractGenerator {
         return builder.addStatement("return sql.toString()").build();
     }
 
-    private MethodSpec m_deleteByIds() {
-        MethodSpec.Builder builder = super.sqlMethod(M_deleteByIds).addParameter(ClassName.get(Map.class), Param_Map);
-        if (ifNotPrimary(builder, "no primary define found.")) {
-            return builder.build();
-        }
-        builder.addStatement("$T ids = getParas(map, $S)", Collection.class, Param_Coll);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-
-        builder.addStatement("sql.DELETE_FROM($S)", fluent.getTableName());
-        builder.addStatement("sql.WHERE_PK_IN($S, ids.size())", fluent.getPrimary().getColumn());
-
-        return builder.addStatement("return sql.toString()").build();
-    }
-
-    private MethodSpec m_delete() {
-        MethodSpec.Builder builder = super.sqlMethod(M_Delete).addParameter(ClassName.get(Map.class), Param_Map);
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
-
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.DELETE_FROM($S)", fluent.getTableName());
-
-        builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
-
-        return builder.addStatement("return sql.toString()").build();
-    }
-
-    private MethodSpec m_deleteById() {
-        MethodSpec.Builder builder = super.sqlMethod(M_DeleteById)
-            .addParameter(ClassName.get(Serializable.class), "id");
-        if (ifNotPrimary(builder, "no primary define found.")) {
-            return builder.build();
-        }
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("sql.DELETE_FROM($S)", fluent.getTableName())
-            .addStatement("sql.WHERE($S)", fluent.getPrimary().getColumn() + " = #{id}")
-            .addStatement("return sql.toString()");
-
-        return builder.build();
-    }
-
-    private MethodSpec m_deleteByMap() {
-        MethodSpec.Builder builder = super.sqlMethod(M_DeleteByMap).addParameter(CN_Map_StrObj, Param_Map);
-        builder.addStatement("Map<String, Object> cm = getParas(map, $S)", Param_CM);
-
-        builder
-            .addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("sql.DELETE_FROM($S)", fluent.getTableName())
-            .addStatement("$T<String> where = new $T<>()", List.class, ArrayList.class)
-            .addCode("for (String key : cm.keySet()) {\n")
-            .addCode("\twhere.add(key + $S + key + $S);\n", " = #{cm.", "}")
-            .addCode("}\n")
-            .addStatement("sql.WHERE(where)")
-            .addStatement("return sql.toString()");
-        return builder.build();
-    }
-
     private MethodSpec m_insert() {
-        MethodSpec.Builder builder = super.sqlMethod(M_Insert).addParameter(fluent.className(), Param_Entity);
+        MethodSpec.Builder builder = super.sqlMethod(M_Insert, false)
+            .addParameter(fluent.className(), Param_Entity);
 
         builder
-            .addStatement("assertNotNull($S, entity)", Param_Entity)
+            .addStatement("assertNotNull(Param_Entity, entity)")
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("sql.INSERT_INTO($S)", fluent.getTableName())
+            .addStatement("sql.INSERT_INTO(this.tableName())")
             .addStatement("$T<String> columns = new $T<>()", List.class, ArrayList.class)
             .addStatement("List<String> values = new ArrayList<>()");
         for (FieldColumn field : this.fluent.getFields()) {
@@ -317,13 +155,14 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_insertBatch() {
-        MethodSpec.Builder builder = super.sqlMethod(M_InsertBatch).addParameter(ClassName.get(Map.class), Param_Map);
+        MethodSpec.Builder builder = super.sqlMethod(M_InsertBatch, false)
+            .addParameter(ClassName.get(Map.class), Param_Map);
 
-        builder.addStatement("assertNotEmpty($S, map)", Param_Map);
+        builder.addStatement("assertNotEmpty(Param_List, map)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("$T<$T> entities = getParas(map, $S)", List.class, fluent.className(), Param_List)
-            .addStatement("sql.INSERT_INTO($S)", fluent.getTableName())
-            .addStatement("sql.INSERT_COLUMNS($L)", All_Entity_Fields)
+            .addStatement("$T<$T> entities = getParas(map, Param_List)", List.class, fluent.className())
+            .addStatement("sql.INSERT_INTO(this.tableName())")
+            .addStatement("sql.INSERT_COLUMNS(this.allFields())")
             .addStatement("sql.VALUES()");
 
         String values = this.fluent.getFields().stream()
@@ -347,11 +186,35 @@ public class SqlProviderGenerator extends AbstractGenerator {
         return builder.addStatement("return sql.toString()").build();
     }
 
-    private void selectByWrapper(MethodSpec.Builder builder) {
-        builder.addStatement("$T data = getWrapperData(map, $S)", WrapperData.class, Param_EW);
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.SELECT($S, data, $L)", fluent.getTableName(), All_Entity_Fields);
-        builder.addStatement("sql.WHERE_GROUP_ORDER_BY(data)");
+    private MethodSpec m_tableName() {
+        MethodSpec.Builder builder = super.sqlMethod("tableName", true);
+        builder.addStatement("return $S", fluent.getTableName());
+        return builder.build();
+    }
+
+    private MethodSpec m_idColumn() {
+        MethodSpec.Builder builder = super.sqlMethod("idColumn", true);
+        if (fluent.getPrimary() == null) {
+            this.throwPrimaryNoFound(builder);
+        } else {
+            builder.addStatement("return $S", fluent.getPrimary().getColumn());
+        }
+        return builder.build();
+    }
+
+    private MethodSpec m_allFields() {
+        MethodSpec.Builder builder = super.sqlMethod("allFields", true);
+        builder.addStatement("return $S", fluent.getAllFields());
+        return builder.build();
+    }
+
+    private MethodSpec m_dbType() {
+        return MethodSpec.methodBuilder("dbType")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(DbType.class)
+            .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
+            .build();
     }
 
     /**
@@ -359,12 +222,11 @@ public class SqlProviderGenerator extends AbstractGenerator {
      * 没有主键生成 "抛出异常语句"
      *
      * @param builder
-     * @param error
      * @return
      */
-    private boolean ifNotPrimary(MethodSpec.Builder builder, String error) {
+    private boolean ifNotPrimary(MethodSpec.Builder builder) {
         if (fluent.getPrimary() == null) {
-            builder.addStatement("throw new $T($S)", ClassName.get(RuntimeException.class), error);
+            super.throwPrimaryNoFound(builder);
             return true;
         } else {
             return false;

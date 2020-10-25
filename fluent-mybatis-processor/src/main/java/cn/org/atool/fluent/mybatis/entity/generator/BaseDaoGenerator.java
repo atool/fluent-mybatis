@@ -129,8 +129,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .returns(String.class)
             .addJavadoc("返回实体类主键值");
         if (fluent.getPrimary() == null) {
-            builder.addStatement("throw new $T($S)",
-                RuntimeException.class, "primary key not found.");
+            super.throwPrimaryNoFound(builder);
         } else {
             builder.addStatement("return $T.$L.column",
                 MappingGenerator.className(fluent), fluent.getPrimary().getProperty());

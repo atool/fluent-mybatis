@@ -16,6 +16,7 @@ public class ClassNames {
 
     public static final ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
+    public static final ParameterizedTypeName CN_Map_StrStr = ParameterizedTypeName.get(Map.class, String.class, String.class);
 
     public static final ClassName getClassName(String fullClassName) {
         int index = fullClassName.lastIndexOf('.');
