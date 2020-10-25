@@ -61,4 +61,17 @@ public abstract class BaseQuery<
         this.wrapperData.setPaged(new PagedOffset(from, limit));
         return (Q) this;
     }
+
+    /**
+     * 新创建一个空查询
+     *
+     * @return
+     */
+    public Q newEmpty() {
+        try {
+            return (Q) this.getClass().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

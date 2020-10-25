@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import lombok.Getter;
 
 /**
  * BaseApply
@@ -19,6 +20,7 @@ public abstract class BaseApply<
     /**
      * 当前被操作的字段
      */
+    @Getter
     protected FieldMapping current;
 
     BaseApply(SEGMENT segment) {

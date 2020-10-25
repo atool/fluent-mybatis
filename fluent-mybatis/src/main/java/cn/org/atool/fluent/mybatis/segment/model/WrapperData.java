@@ -5,10 +5,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -80,6 +77,10 @@ public class WrapperData implements IWrapperData {
             String sql = sqlSelect.stream().collect(joining(COMMA_SPACE));
             return isBlank(sql) ? null : sql.trim();
         }
+    }
+
+    public Set<String> sqlSelect() {
+        return this.sqlSelect;
     }
 
     @Override
