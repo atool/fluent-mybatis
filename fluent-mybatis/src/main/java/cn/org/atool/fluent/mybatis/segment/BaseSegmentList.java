@@ -20,6 +20,7 @@ public abstract class BaseSegmentList {
     /**
      * sql片段列表
      */
+    @Getter
     protected final List<ISqlSegment> segments = new ArrayList<>();
 
     /**

@@ -4,10 +4,10 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.functions.JoinOnConsumer;
+import cn.org.atool.fluent.mybatis.segment.model.ColumnSegment;
+import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-
-import java.util.Set;
 
 public class JoinQuery<Q1 extends BaseQuery<?, Q1>, Q2 extends BaseQuery<?, Q2>>
     implements IQuery<IEntity, JoinQuery<Q1, Q2>> {
@@ -27,9 +27,22 @@ public class JoinQuery<Q1 extends BaseQuery<?, Q1>, Q2 extends BaseQuery<?, Q2>>
         String table = String.format("%s AS t1 JOIN %s AS t2 ON %s",
             w1.getTable(), w2.getTable(), join.where());
         this.wrapperData = new WrapperData(table, new ParameterPair(), IEntity.class, JoinQuery.class);
-        Set<String> select1 = w1.sqlSelect();
-        Set<String> select2 = w2.sqlSelect();
 
+        w1.sqlSelect().forEach(this.wrapperData::addSelectColumn);
+        w2.sqlSelect().forEach(this.wrapperData::addSelectColumn);
+
+        w1.getMergeSegments().getWhere().getSegments().forEach(seg -> {
+            if (seg instanceof ColumnSegment) {
+
+            } else {
+                this.wrapperData.getMergeSegments().getWhere().addAll(seg);
+            }
+        });
+        this.wrapperData.getMergeSegments().getWhere().addAll(KeyWordSegment.AND);
+        w2.getMergeSegments().getWhere().getSegments().forEach(seg -> {
+
+            this.wrapperData.getMergeSegments().getWhere().addAll(seg);
+        });
     }
 
     @Override

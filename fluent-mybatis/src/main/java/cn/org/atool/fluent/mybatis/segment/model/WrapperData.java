@@ -174,7 +174,7 @@ public class WrapperData implements IWrapperData {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
         String segment = operator.operator(this.getParameters(), format, args);
-        this.getMergeSegments().add(keyWord, () -> column, () -> segment);
+        this.getMergeSegments().add(keyWord, ColumnSegment.column(column), () -> segment);
     }
 
     /**

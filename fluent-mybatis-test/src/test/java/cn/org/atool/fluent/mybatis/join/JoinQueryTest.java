@@ -16,15 +16,15 @@ public class JoinQueryTest extends BaseTest {
     public void test_join() {
         JoinQuery<UserQuery, AddressQuery> query = new JoinQuery<>(
             new UserQuery()
+                .select.age().end()
                 .where.isDeleted().eq(true).end(),
             new AddressQuery()
+                .select.userId().end()
                 .where.isDeleted().eq(true).end(),
             (q1, q2, join) -> {
                 join.on(q1.where.id(), q2.where.id());
             });
 
         mapper.listMaps(query);
-        db.sqlList().wantFirstSql().where().eq("is_deleted = ?");
-        db.sqlList().wantFirstPara().eqReflect(new Object[]{true});
     }
 }
