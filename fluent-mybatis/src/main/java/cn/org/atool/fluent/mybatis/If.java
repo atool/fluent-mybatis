@@ -8,14 +8,14 @@ import java.util.Map;
  *
  * @author wudarui
  */
-public class If {
+public interface If {
     /**
      * 总是真的
      *
      * @param o
      * @return
      */
-    public static boolean everTrue(Object o) {
+    static boolean everTrue(Object o) {
         return true;
     }
 
@@ -25,7 +25,7 @@ public class If {
      * @param o
      * @return
      */
-    public static boolean everFalse(Object o) {
+    static boolean everFalse(Object o) {
         return false;
     }
 
@@ -35,7 +35,7 @@ public class If {
      * @param coll 入参
      * @return boolean
      */
-    public static boolean isEmpty(Collection<?> coll) {
+    static boolean isEmpty(Collection<?> coll) {
         return (coll == null || coll.isEmpty());
     }
 
@@ -45,7 +45,7 @@ public class If {
      * @param coll 入参
      * @return boolean
      */
-    public static boolean notEmpty(Collection<?> coll) {
+    static boolean notEmpty(Collection<?> coll) {
         return !isEmpty(coll);
     }
 
@@ -55,7 +55,7 @@ public class If {
      * @param map 入参
      * @return boolean
      */
-    public static boolean isEmpty(Map<?, ?> map) {
+    static boolean isEmpty(Map<?, ?> map) {
         return (map == null || map.isEmpty());
     }
 
@@ -65,7 +65,7 @@ public class If {
      * @param map 入参
      * @return boolean
      */
-    public static boolean notEmpty(Map<?, ?> map) {
+    static boolean notEmpty(Map<?, ?> map) {
         return !isEmpty(map);
     }
 
@@ -75,7 +75,7 @@ public class If {
      * @param array 长度
      * @return 数组对象为null或者长度为 0 时，返回 false
      */
-    public static boolean isEmpty(Object[] array) {
+    static boolean isEmpty(Object[] array) {
         return array == null || array.length == 0;
     }
 
@@ -86,7 +86,7 @@ public class If {
      * @return 数组对象内含有任意对象时返回 true
      * @see If#isEmpty(Object[])
      */
-    public static boolean notEmpty(Object[] array) {
+    static boolean notEmpty(Object[] array) {
         return !isEmpty(array);
     }
 
@@ -96,7 +96,7 @@ public class If {
      * @param array 长度
      * @return 数组对象为null或者长度为 0 时，返回 false
      */
-    public static boolean isEmpty(int[] array) {
+    static boolean isEmpty(int[] array) {
         return array == null || array.length == 0;
     }
 
@@ -107,7 +107,7 @@ public class If {
      * @return 数组对象内含有任意对象时返回 true
      * @see If#isEmpty(Object[])
      */
-    public static boolean notEmpty(int[] array) {
+    static boolean notEmpty(int[] array) {
         return !isEmpty(array);
     }
 
@@ -117,7 +117,7 @@ public class If {
      * @param array 长度
      * @return 数组对象为null或者长度为 0 时，返回 false
      */
-    public static boolean isEmpty(long[] array) {
+    static boolean isEmpty(long[] array) {
         return array == null || array.length == 0;
     }
 
@@ -129,7 +129,7 @@ public class If {
      * @return 数组对象内含有任意对象时返回 true
      * @see If#isEmpty(Object[])
      */
-    public static boolean notEmpty(long[] array) {
+    static boolean notEmpty(long[] array) {
         return !isEmpty(array);
     }
 
@@ -139,7 +139,7 @@ public class If {
      * @param cs 需要判断字符串
      * @return 判断结果
      */
-    public static boolean isBlank(final CharSequence cs) {
+    static boolean isBlank(final CharSequence cs) {
         int strLen;
         if (cs == null || (strLen = cs.length()) == 0) {
             return true;
@@ -158,7 +158,7 @@ public class If {
      * @param cs 需要判断字符串
      * @return 判断结果
      */
-    public static boolean notBlank(final CharSequence cs) {
+    static boolean notBlank(final CharSequence cs) {
         return !isBlank(cs);
     }
 
@@ -168,7 +168,7 @@ public class If {
      * @param object ignore
      * @return ignore
      */
-    public static boolean isNull(Object object) {
+    static boolean isNull(Object object) {
         return object == null;
     }
 
@@ -178,7 +178,7 @@ public class If {
      * @param object ignore
      * @return ignore
      */
-    public static boolean notNull(Object object) {
+    static boolean notNull(Object object) {
         return !isNull(object);
     }
 }
