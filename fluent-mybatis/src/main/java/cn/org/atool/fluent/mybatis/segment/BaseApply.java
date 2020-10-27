@@ -15,7 +15,7 @@ public abstract class BaseApply<
     W extends IWrapper<?, W, ?>
     > {
 
-    protected final SEGMENT segment;
+    public final SEGMENT segment;
 
     /**
      * 当前被操作的字段
