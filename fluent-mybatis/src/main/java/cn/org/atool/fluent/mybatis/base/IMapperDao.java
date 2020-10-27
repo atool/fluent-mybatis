@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+
 /**
  * IMapperDao: 构造mapper, query, update对象
  *
@@ -33,5 +35,7 @@ public interface IMapperDao<E extends IEntity> {
      *
      * @return
      */
-    String findPkColumn();
+    default FieldMapping primaryField() {
+        throw new RuntimeException("not implement.");
+    }
 }

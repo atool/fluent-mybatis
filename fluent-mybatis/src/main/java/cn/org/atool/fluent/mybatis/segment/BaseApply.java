@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import lombok.Getter;
 
 /**
  * BaseApply
@@ -17,25 +16,17 @@ public abstract class BaseApply<
     > {
 
     protected final SEGMENT segment;
+
     /**
      * 当前被操作的字段
+     *
+     * @return
      */
-    @Getter
-    protected FieldMapping current;
+    public FieldMapping current() {
+        return this.segment.current;
+    }
 
     BaseApply(SEGMENT segment) {
         this.segment = segment;
-    }
-
-    /**
-     * 设置当前被操作的字段
-     *
-     * @param current 字段定义
-     * @param <APPLY> 操作者类型
-     * @return 返回操作自身
-     */
-    <APPLY extends BaseApply<SEGMENT, W>> APPLY setCurrentField(FieldMapping current) {
-        this.current = current;
-        return (APPLY) this;
     }
 }

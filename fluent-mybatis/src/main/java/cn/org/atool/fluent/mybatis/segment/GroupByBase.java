@@ -3,16 +3,14 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.segment.model.ColumnSegment;
+import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA_SPACE;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
-import static java.util.stream.Collectors.joining;
 
 /**
  * BaseGroupBy
@@ -29,7 +27,7 @@ public abstract class GroupByBase<
     /**
      * 排序字段
      */
-    private final List<String> apply = new ArrayList<>();
+    private final List<ISqlSegment> apply = new ArrayList<>();
 
     protected GroupByBase(Q query) {
         super(query);
@@ -42,7 +40,7 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(String... columns) {
-        Stream.of(columns).filter(If::notBlank).forEach(apply::add);
+        Stream.of(columns).filter(If::notBlank).forEach(c -> apply.add(() -> c));
         return (G) this;
     }
 
@@ -64,7 +62,10 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(FieldMapping... columns) {
-        Stream.of(columns).filter(c -> c != null).map(c -> c.column).forEach(apply::add);
+        Stream.of(columns).filter(c -> c != null)
+            .map(this::columnWithAlias)
+            .map(ColumnSegment::column)
+            .forEach(apply::add);
         return (G) this;
     }
 
@@ -80,14 +81,16 @@ public abstract class GroupByBase<
     }
 
     @Override
-    protected G process(FieldMapping field) {
-        return this.apply(field.column);
+    protected G apply() {
+        this.apply(this.current);
+        return (G) this;
     }
 
     @Override
     public Q end() {
-        String segment = this.apply.stream().collect(joining(COMMA_SPACE));
-        this.wrapper.getWrapperData().apply(GROUP_BY, EMPTY, segment, RETAIN);
+        for (ISqlSegment segment : this.apply) {
+            this.wrapper.getWrapperData().apply(GROUP_BY, segment);
+        }
         return super.end();
     }
 }

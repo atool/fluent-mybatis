@@ -49,8 +49,8 @@ public abstract class HavingBase<
      * @param aggregate 聚合函数
      * @return Having条件判断
      */
-    protected HavingOperator<H> apply(String column, IAggregate aggregate) {
-        return this.operator.aggregate(column, aggregate);
+    protected HavingOperator<H> apply(FieldMapping column, IAggregate aggregate) {
+        return this.operator.aggregate(this.columnWithAlias(column), aggregate);
     }
 
     /**
@@ -73,8 +73,8 @@ public abstract class HavingBase<
     }
 
     @Override
-    protected HavingOperator<H> process(FieldMapping field) {
-        this.apply(field.column, this.aggregate);
+    protected HavingOperator<H> apply() {
+        this.apply(this.current, this.aggregate);
         return this.operator;
     }
 }

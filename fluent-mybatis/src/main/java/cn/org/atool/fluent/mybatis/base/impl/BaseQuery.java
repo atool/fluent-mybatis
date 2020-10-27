@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -62,16 +63,5 @@ public abstract class BaseQuery<
         return (Q) this;
     }
 
-    /**
-     * 新创建一个空查询
-     *
-     * @return
-     */
-    public Q newEmpty() {
-        try {
-            return (Q) this.getClass().newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public abstract List<String> allFields();
 }

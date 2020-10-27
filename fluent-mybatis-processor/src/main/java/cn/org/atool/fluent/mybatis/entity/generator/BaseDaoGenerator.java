@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
@@ -32,7 +33,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .addMethod(this.m_mapper())
             .addMethod(this.m_query())
             .addMethod(this.m_updater())
-            .addMethod(this.m_findPkColumn());
+            .addMethod(this.m_primaryField());
     }
 
     private void addInterface(TypeSpec.Builder builder, String daoInterface) {
@@ -123,15 +124,15 @@ public class BaseDaoGenerator extends AbstractGenerator {
      *
      * @return
      */
-    private MethodSpec m_findPkColumn() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("findPkColumn")
+    private MethodSpec m_primaryField() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("primaryField")
             .addModifiers(Modifier.PUBLIC)
-            .returns(String.class)
+            .returns(FieldMapping.class)
             .addJavadoc("返回实体类主键值");
         if (fluent.getPrimary() == null) {
             super.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $T.$L.column",
+            builder.addStatement("return $T.$L",
                 MappingGenerator.className(fluent), fluent.getPrimary().getProperty());
         }
         return builder.build();

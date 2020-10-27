@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+
 /**
  * dao自定义接口继承类, 定义同 IMapperDao
  * 自定义接口泛型参数需要严格按照&lt;E,Q,U>顺序定义
@@ -33,9 +35,11 @@ public interface IDao<E, Q, U> {
     IUpdate updater();
 
     /**
-     * 返回主键字段名称
+     * 返回主键字段
      *
      * @return
      */
-    String findPkColumn();
+    default FieldMapping primaryField() {
+        throw new RuntimeException("not implement.");
+    }
 }

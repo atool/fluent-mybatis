@@ -28,6 +28,12 @@ public abstract class BaseWrapper<
     implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
 
+    /**
+     * 表别名
+     */
+    @Getter
+    protected String alias = "";
+
     @Getter
     protected final WrapperData wrapperData;
 
@@ -64,7 +70,7 @@ public abstract class BaseWrapper<
      */
     protected abstract void validateColumn(String column) throws FluentMybatisException;
 
-    protected TableMeta getTableMeta(){
+    protected TableMeta getTableMeta() {
         return TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass());
     }
 }

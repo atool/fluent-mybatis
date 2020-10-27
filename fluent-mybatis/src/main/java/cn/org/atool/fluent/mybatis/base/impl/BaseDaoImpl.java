@@ -68,7 +68,7 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public boolean existPk(Serializable id) {
-        IQuery query = this.query().where().apply(this.findPkColumn(), EQ, id).end();
+        IQuery query = this.query().where().apply(this.primaryField(), EQ, id).end();
         Integer count = this.mapper().count(query);
         return count != null && count > 0;
     }

@@ -1,15 +1,18 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
-import cn.org.atool.fluent.mybatis.If;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
@@ -43,17 +46,36 @@ public class QueryGenerator extends AbstractGenerator {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superKlass())
+            .addField(this.f_allFields())
             .addField(this.f_select())
             .addField(this.f_groupBy())
             .addField(this.f_having())
             .addField(this.f_orderBy())
-            .addField(this.f_where())
+            .addField(this.f_where());
+        builder
             .addMethod(this.constructor0())
-            .addMethod(this.constructor1())
+            .addMethod(this.constructor2_String_Parameter())
+            .addMethod(this.constructor1_Parameter())
             .addMethod(this.m_selectId())
             .addMethod(this.m_where())
             .addMethod(this.m_hasPrimary())
+            .addMethod(this.m_allFields())
             .addMethod(this.m_validateColumn());
+    }
+
+    private MethodSpec m_allFields() {
+        return MethodSpec.methodBuilder("allFields")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(parameterizedType(List.class, String.class))
+            .addStatement("return ALL_FIELDS")
+            .build();
+    }
+
+    private FieldSpec f_allFields() {
+        String allFields = this.fluent.getFields().stream().map(c -> '"' + c.getColumn() + '"').collect(Collectors.joining(", "));
+        return FieldSpec.builder(parameterizedType(List.class, String.class), "ALL_FIELDS", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+            .initializer("$T.asList($L)", Arrays.class, allFields)
+            .build();
     }
 
     /**
@@ -135,11 +157,11 @@ public class QueryGenerator extends AbstractGenerator {
     }
 
     /**
-     * public AddressQuery(ParameterPair parameters) {}
+     * public XyzQuery(ParameterPair parameters) {}
      *
      * @return
      */
-    private MethodSpec constructor1() {
+    private MethodSpec constructor1_Parameter() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(ClassName.get(ParameterPair.class), "parameters")
@@ -152,7 +174,22 @@ public class QueryGenerator extends AbstractGenerator {
     }
 
     /**
-     * public AddressQuery selectId() {}
+     * public XyzQuery(String alias) {}
+     *
+     * @return
+     */
+    private MethodSpec constructor2_String_Parameter() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(ClassName.get(String.class), "alias")
+            .addParameter(ClassName.get(ParameterPair.class), "parameters")
+            .addStatement("this(parameters)")
+            .addStatement("super.alias = alias")
+            .build();
+    }
+
+    /**
+     * public XyzQuery selectId() {}
      *
      * @return
      */

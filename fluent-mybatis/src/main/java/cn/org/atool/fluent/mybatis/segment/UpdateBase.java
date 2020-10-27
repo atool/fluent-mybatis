@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IUpdate;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.Map;
 
@@ -38,9 +37,8 @@ public abstract class UpdateBase<
         return (S) this;
     }
 
-
     @Override
-    protected UpdateApply<S, U> process(FieldMapping field) {
-        return apply.setCurrentField(field);
+    protected UpdateApply<S, U> apply() {
+        return apply;
     }
 }

@@ -31,7 +31,7 @@ public class UpdateApply<
      * @return 更新器
      */
     public S is(Object value) {
-        this.segment.wrapperData().updateSet(this.current.column, value);
+        this.segment.wrapperData().updateSet(this.current().column, value);
         return segment;
     }
 
@@ -68,9 +68,9 @@ public class UpdateApply<
     public S apply(String function, Object... args) {
         assertNotBlank("function", function);
         if (args == null || args.length == 0) {
-            this.segment.wrapperData().updateSql(this.current.column, function, args);
+            this.segment.wrapperData().updateSql(this.current().column, function, args);
         } else {
-            this.segment.wrapperData().updateSql(this.current.column, function, args);
+            this.segment.wrapperData().updateSql(this.current().column, function, args);
         }
         return this.segment;
     }

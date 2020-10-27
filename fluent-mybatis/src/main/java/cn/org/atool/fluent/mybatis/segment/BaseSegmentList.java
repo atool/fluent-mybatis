@@ -23,6 +23,10 @@ public abstract class BaseSegmentList {
     @Getter
     protected final List<ISqlSegment> segments = new ArrayList<>();
 
+    public boolean isEmpty() {
+        return segments.isEmpty();
+    }
+
     /**
      * 添加sql片段
      *

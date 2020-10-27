@@ -55,7 +55,7 @@ public abstract class SelectorBase<
         if (If.notEmpty(columns)) {
             Stream.of(columns)
                 .filter(c -> c != null)
-                .map(c -> c.column)
+                .map(this::columnWithAlias)
                 .forEach(this.wrapperData()::addSelectColumn);
         }
         return (S) this;
@@ -69,7 +69,7 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S applyAs(String customized, String alias) {
-        String select = customized + (isBlank(alias) ? EMPTY : as + alias);
+        String select = customized + (isBlank(alias) ? EMPTY : AS + alias);
         this.wrapperData().addSelectColumn(select);
         return (S) this;
     }
@@ -101,7 +101,7 @@ public abstract class SelectorBase<
     }
 
     @Override
-    protected S process(FieldMapping field) {
+    protected S apply() {
         return this.apply(this.aggregate, null);
     }
 
@@ -113,7 +113,7 @@ public abstract class SelectorBase<
      * @return 选择器
      */
     protected S process(FieldMapping field, String alias) {
-        this.currField = field;
+        this.current = field;
         return this.apply(this.aggregate, alias);
     }
 
@@ -125,12 +125,12 @@ public abstract class SelectorBase<
      * @return 返回字段选择器
      */
     private S apply(IAggregate aggregate, String alias) {
-        if (this.currField == null) {
+        if (this.current == null) {
             return (S) this;
         }
-        String expression = aggregate == null ? this.currField.column : aggregate.aggregate(this.currField.column);
+        String expression = aggregate == null ? this.currentWithAlias() : aggregate.aggregate(this.currentWithAlias());
         return this.applyAs(expression, alias);
     }
 
-    private static final String as = " AS ";
+    private static final String AS = " AS ";
 }
