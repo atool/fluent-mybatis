@@ -15,11 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.segment.JoinWrapperData.T1_ALIAS;
-import static cn.org.atool.fluent.mybatis.segment.JoinWrapperData.T2_ALIAS;
-
 public class JoinQuery<Q1 extends BaseQuery<?, Q1>>
     implements IQuery<IEntity, JoinQuery<Q1>>, IJoinQuery<Q1> {
+
     private final Class<Q1> queryClass;
 
     private final Q1 query;
@@ -31,7 +29,7 @@ public class JoinQuery<Q1 extends BaseQuery<?, Q1>>
 
     public JoinQuery(Class<Q1> queryClass, Function<Q1, Q1> query) {
         this.queryClass = queryClass;
-        this.query = newQuery(queryClass, T1_ALIAS, new ParameterPair());
+        this.query = newQuery(queryClass, alias(), new ParameterPair());
         query.apply(this.query);
         this.wrapperData = new JoinWrapperData(this.query, this.queries);
     }
@@ -65,14 +63,14 @@ public class JoinQuery<Q1 extends BaseQuery<?, Q1>>
                                                               Class<Q2> queryClass,
                                                               Function<Q2, Q2> apply,
                                                               JoinConsumer<Q1, Q2> join) {
-        Q2 query = newQuery(queryClass, T2_ALIAS, this.query.wrapperData.getParameters());
+        Q2 query = newQuery(queryClass, alias(), this.query.wrapperData.getParameters());
+        this.queries.add(query);
         apply.apply(query);
         JoinOn on = new JoinOn(this.query, joinType, query);
         join.accept(on, newEmptyQuery(this.queryClass), newEmptyQuery(queryClass));
         this.wrapperData.addTable(on.table());
         return this;
     }
-
 
     @Override
     public JoinQuery<Q1> distinct() {
@@ -131,5 +129,11 @@ public class JoinQuery<Q1 extends BaseQuery<?, Q1>>
             throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
                 queryClass.getSimpleName(), e.getMessage()), e);
         }
+    }
+
+    private int aliasIndex = 1;
+
+    private String alias() {
+        return String.format("t%d", aliasIndex++);
     }
 }

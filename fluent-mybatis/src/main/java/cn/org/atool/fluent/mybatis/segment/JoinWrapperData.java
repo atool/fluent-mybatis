@@ -15,8 +15,6 @@ import java.util.List;
  * @author wudarui
  */
 public class JoinWrapperData extends WrapperData {
-    public static final String T1_ALIAS = "t1";
-    public static final String T2_ALIAS = "t2";
 
     private final BaseQuery query;
 

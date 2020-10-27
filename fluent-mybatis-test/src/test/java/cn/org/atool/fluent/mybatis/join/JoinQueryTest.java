@@ -39,8 +39,8 @@ public class JoinQueryTest extends BaseTest {
         query.limit(20);
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq("SELECT t1.age, t2.user_id " +
-            "FROM t_user AS t1 " +
-            "JOIN address AS t2 " +
+            "FROM t_user t1 " +
+            "JOIN address t2 " +
             "ON t1.id = t2.id " +
             "AND t1.age = t2.user_id " +
             "WHERE t1.is_deleted = ? " +
@@ -64,7 +64,7 @@ public class JoinQueryTest extends BaseTest {
                 .groupBy.age().apply("t1.id").end()
                 .having.max.age().gt(1L).end()
             );
-        query.join(AddressQuery.class, aq -> aq
+        query.leftJoin(AddressQuery.class, aq -> aq
                 .select.userId().end()
                 .where.isDeleted().eq(true)
                 .and.address().like("vas")
@@ -76,8 +76,8 @@ public class JoinQueryTest extends BaseTest {
         query.distinct().limit(20);
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq("SELECT DISTINCT t1.age, t2.user_id " +
-            "FROM t_user AS t1 " +
-            "LEFT JOIN address AS t2 " +
+            "FROM t_user t1 " +
+            "LEFT JOIN address t2 " +
             "ON t1.id = t2.id " +
             "AND t1.age = t2.user_id " +
             "WHERE t1.is_deleted = ? " +
@@ -105,6 +105,6 @@ public class JoinQueryTest extends BaseTest {
                 .on(q1.where.id(), q2.where.id())
         );
         mapper.listMaps(query.build());
-        db.sqlList().wantFirstSql().end("FROM t_user AS t1 RIGHT JOIN address AS t2 ON t1.id = t2.id WHERE t1.is_deleted = ? AND t1.age IS NULL AND t2.is_deleted = ? AND t2.address LIKE ?");
+        db.sqlList().wantFirstSql().end("FROM t_user t1 RIGHT JOIN address t2 ON t1.id = t2.id WHERE t1.is_deleted = ? AND t1.age IS NULL AND t2.is_deleted = ? AND t2.address LIKE ?");
     }
 }
