@@ -84,10 +84,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_mapper() {
-        return MethodSpec.methodBuilder("mapper")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(ClassNames.mapper(fluent))
+        return super.publicMethod("mapper", true, mapper(fluent))
             .addStatement(super.codeBlock("return mapper"))
             .build();
     }
@@ -98,10 +95,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_query() {
-        return MethodSpec.methodBuilder("query")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(query(fluent))
+        return super.publicMethod("query", true, query(fluent))
             .addStatement("return new $T()", query(fluent))
             .build();
     }
@@ -123,9 +117,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_primaryField() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("primaryField")
-            .addModifiers(Modifier.PUBLIC)
-            .returns(FieldMapping.class)
+        MethodSpec.Builder builder = super.publicMethod("primaryField", false, FieldMapping.class)
             .addJavadoc("返回实体类主键值");
         if (fluent.getPrimary() == null) {
             super.throwPrimaryNoFound(builder);

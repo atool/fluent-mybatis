@@ -58,10 +58,6 @@ public abstract class AbstractGenerator {
         return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), "\n");
     }
 
-    protected CodeBlock of(String format, Object... args) {
-        return CodeBlock.of(format.replace('\'', '"'), args);
-    }
-
     protected CodeBlock codeBlock(CodeBlock... blocks) {
         return CodeBlock.join(Stream.of(blocks).collect(Collectors.toList()), "\n");
     }

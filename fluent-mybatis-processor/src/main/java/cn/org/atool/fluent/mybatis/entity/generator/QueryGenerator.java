@@ -177,10 +177,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_where() {
-        return MethodSpec.methodBuilder("where")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(queryWhere(fluent))
+        return super.publicMethod("where", true, queryWhere(fluent))
             .addStatement("return this.where")
             .build();
     }

@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.*;
 
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.Map;
 
@@ -91,12 +90,9 @@ public class EntityHelperGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_toEntity() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("toEntity")
-            .addModifiers(Modifier.PUBLIC)
+        MethodSpec.Builder builder = super.publicMethod("toEntity", true, TypeVariableName.get("E"))
             .addParameter(this.parameterizedType(Map.class, String.class, Object.class), "map")
             .addTypeVariable(TypeVariableName.get("E", IEntity.class))
-            .returns(TypeVariableName.get("E"))
-            .addAnnotation(Override.class)
             .addStatement("$T entity = new $T()", fluent.className(), fluent.className());
         for (FieldColumn fc : fluent.getFields()) {
             String setMethod = fc.setMethodName();
@@ -115,11 +111,8 @@ public class EntityHelperGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_copy() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("copy")
-            .addModifiers(Modifier.PUBLIC)
+        MethodSpec.Builder builder = super.publicMethod("copy", true, fluent.className())
             .addParameter(IEntity.class, "iEntity")
-            .returns(fluent.className())
-            .addAnnotation(Override.class)
             .addStatement("$T entity = ($T) iEntity", fluent.className(), fluent.className())
             .addStatement("$T copy = new $T()", fluent.className(), fluent.className());
         builder.addCode("{\n");

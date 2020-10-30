@@ -117,10 +117,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_where() {
-        return MethodSpec.methodBuilder("where")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(updateWhere(fluent))
+        return super.publicMethod("where", true, updateWhere(fluent))
             .addStatement("return this.where")
             .build();
     }
