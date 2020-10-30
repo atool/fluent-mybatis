@@ -5,7 +5,6 @@ import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.*;
 
@@ -38,7 +37,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(ClassNames.mapping(fluent), "*");
+        builder.addStaticImport(fluent.mapping(), "*");
         super.staticImport(builder);
     }
 
@@ -56,14 +55,14 @@ public class EntityHelperGenerator extends AbstractGenerator {
     private MethodSpec m_toColumnMap() {
         return super.publicMethod("toColumnMap", true, CN_Map_StrObj)
             .addParameter(IEntity.class, "entity")
-            .addStatement("return this.toMap(($T)entity, false)", fluent.className())
+            .addStatement("return this.toMap(($T)entity, false)", fluent.entity())
             .build();
     }
 
     private MethodSpec m_toEntityMap() {
         return super.publicMethod("toEntityMap", true, CN_Map_StrObj)
             .addParameter(IEntity.class, "entity")
-            .addStatement("return this.toMap(($T)entity, true)", fluent.className())
+            .addStatement("return this.toMap(($T)entity, true)", fluent.entity())
             .build();
     }
 
@@ -74,7 +73,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
      */
     private MethodSpec m_toMap() {
         MethodSpec.Builder builder = super.publicMethod("toMap", false, CN_Map_StrObj)
-            .addParameter(fluent.className(), "entity")
+            .addParameter(fluent.entity(), "entity")
             .addParameter(TypeName.BOOLEAN, "isProperty")
             .addCode("return new $T(isProperty)\n", EntityToMap.class);
         for (FieldColumn fc : fluent.getFields()) {
@@ -93,7 +92,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
         MethodSpec.Builder builder = super.publicMethod("toEntity", true, TypeVariableName.get("E"))
             .addParameter(this.parameterizedType(Map.class, String.class, Object.class), "map")
             .addTypeVariable(TypeVariableName.get("E", IEntity.class))
-            .addStatement("$T entity = new $T()", fluent.className(), fluent.className());
+            .addStatement("$T entity = new $T()", fluent.entity(), fluent.entity());
         for (FieldColumn fc : fluent.getFields()) {
             String setMethod = fc.setMethodName();
 
@@ -111,10 +110,10 @@ public class EntityHelperGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_copy() {
-        MethodSpec.Builder builder = super.publicMethod("copy", true, fluent.className())
+        MethodSpec.Builder builder = super.publicMethod("copy", true, fluent.entity())
             .addParameter(IEntity.class, "iEntity")
-            .addStatement("$T entity = ($T) iEntity", fluent.className(), fluent.className())
-            .addStatement("$T copy = new $T()", fluent.className(), fluent.className());
+            .addStatement("$T entity = ($T) iEntity", fluent.entity(), fluent.entity())
+            .addStatement("$T copy = new $T()", fluent.entity(), fluent.entity());
         builder.addCode("{\n");
         for (FieldColumn fc : fluent.getFields()) {
             builder.addStatement("\tcopy.$L(entity.$L())", fc.setMethodName(), fc.getMethodName());

@@ -10,7 +10,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 
@@ -57,7 +57,7 @@ public class QueryGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("allFields")
             .addModifiers(Modifier.PUBLIC)
             .returns(CN_List_Str)
-            .addStatement("return $T.ALL_COLUMNS", mapping(fluent))
+            .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
             .build();
     }
 
@@ -67,7 +67,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_select() {
-        return FieldSpec.builder(selector(fluent),
+        return FieldSpec.builder(fluent.selector(),
             "select", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("指定查询字段, 默认无需设置")
             .initializer("new Selector(this)")
@@ -80,7 +80,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_groupBy() {
-        return FieldSpec.builder(groupBy(fluent), "groupBy", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.groupBy(), "groupBy", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("分组：GROUP BY 字段, ...\n")
             .addJavadoc("例: groupBy('id', 'name')")
             .initializer("new GroupBy(this)")
@@ -93,7 +93,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_having() {
-        return FieldSpec.builder(having(fluent), "having", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.having(), "having", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("分组条件设置 having...")
             .initializer("new Having(this)")
             .build();
@@ -105,7 +105,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_orderBy() {
-        return FieldSpec.builder(queryOrderBy(fluent), "orderBy", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.queryOrderBy(), "orderBy", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("排序设置 order by ...")
             .initializer("new QueryOrderBy(this)")
             .build();
@@ -117,7 +117,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_where() {
-        return FieldSpec.builder(queryWhere(fluent), "where", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.queryWhere(), "where", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new QueryWhere(this)")
             .addJavadoc("查询条件 where ...")
             .build();
@@ -132,9 +132,9 @@ public class QueryGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addStatement("super($T.Table_Name, $T.class, $T.class)",
-                mapping(fluent),
-                fluent.className(),
-                query(fluent)
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query()
             )
             .build();
     }
@@ -149,9 +149,9 @@ public class QueryGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC)
             .addParameter(ClassName.get(ParameterPair.class), "parameters")
             .addStatement("super($T.Table_Name, parameters, $T.class, $T.class)",
-                mapping(fluent),
-                fluent.className(),
-                query(fluent)
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query()
             )
             .build();
     }
@@ -177,15 +177,15 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_where() {
-        return super.publicMethod("where", true, queryWhere(fluent))
+        return super.publicMethod("where", true, fluent.queryWhere())
             .addStatement("return this.where")
             .build();
     }
 
     private ParameterizedTypeName superKlass() {
         ClassName base = ClassName.get(BaseQuery.class);
-        ClassName entity = fluent.className();
-        ClassName query = query(fluent);
+        ClassName entity = fluent.entity();
+        ClassName query = fluent.query();
         return ParameterizedTypeName.get(base, entity, query);
     }
 

@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 /**
@@ -90,18 +90,18 @@ public class MapperGenerator extends AbstractGenerator {
     private MethodSpec m_updater() {
         return MethodSpec.methodBuilder("updater")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(ClassNames.updater(fluent))
+            .returns(fluent.updater())
             .addJavadoc("更新条件设置\n\n@return")
-            .addStatement("return new $T()", ClassNames.updater(fluent))
+            .addStatement("return new $T()", fluent.updater())
             .build();
     }
 
     private MethodSpec m_query() {
         return MethodSpec.methodBuilder("query")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(query(fluent))
+            .returns(fluent.query())
             .addJavadoc("查询条件设置\n\n@return")
-            .addStatement("return new $T()", query(fluent))
+            .addStatement("return new $T()", fluent.query())
             .build();
     }
 
@@ -151,7 +151,7 @@ public class MapperGenerator extends AbstractGenerator {
             .addParameter(ParameterSpec.builder(IQuery.class, "query")
                 .addAnnotation(annotation_Param("Param_EW"))
                 .build())
-            .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
+            .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
 
@@ -161,7 +161,7 @@ public class MapperGenerator extends AbstractGenerator {
             .addParameter(ParameterSpec.builder(CN_Map_StrObj, "columnMap")
                 .addAnnotation(annotation_Param("Param_CM"))
                 .build())
-            .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
+            .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
 
@@ -171,7 +171,7 @@ public class MapperGenerator extends AbstractGenerator {
             .addParameter(ParameterSpec.builder(Collection.class, "ids")
                 .addAnnotation(annotation_Param("Param_Coll"))
                 .build())
-            .returns(parameterizedType(ClassName.get(List.class), fluent.className()))
+            .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
 
@@ -181,7 +181,7 @@ public class MapperGenerator extends AbstractGenerator {
             .addParameter(ParameterSpec.builder(IQuery.class, "query")
                 .addAnnotation(annotation_Param("Param_EW"))
                 .build())
-            .returns(fluent.className())
+            .returns(fluent.entity())
             .build();
     }
 
@@ -189,7 +189,7 @@ public class MapperGenerator extends AbstractGenerator {
         return this.mapperMethod(SelectProvider.class, M_findById)
             .addAnnotation(this.annotation_Results())
             .addParameter(Serializable.class, "id")
-            .returns(fluent.className())
+            .returns(fluent.entity())
             .build();
     }
 
@@ -204,7 +204,7 @@ public class MapperGenerator extends AbstractGenerator {
 
     public MethodSpec m_updateById() {
         return this.mapperMethod(UpdateProvider.class, M_updateById)
-            .addParameter(ParameterSpec.builder(fluent.className(), "entity")
+            .addParameter(ParameterSpec.builder(fluent.entity(), "entity")
                 .addAnnotation(annotation_Param("Param_ET"))
                 .build())
             .returns(TypeName.INT)
@@ -248,7 +248,7 @@ public class MapperGenerator extends AbstractGenerator {
 
     public MethodSpec m_insertBatch() {
         return this.mapperMethod(InsertProvider.class, M_InsertBatch)
-            .addParameter(parameterizedType(ClassName.get(List.class), fluent.className()), "entities")
+            .addParameter(parameterizedType(ClassName.get(List.class), fluent.entity()), "entities")
             .returns(TypeName.INT)
             .build();
     }
@@ -263,7 +263,7 @@ public class MapperGenerator extends AbstractGenerator {
             }
         }
         return builder
-            .addParameter(fluent.className(), "entity")
+            .addParameter(fluent.entity(), "entity")
             .returns(TypeName.INT)
             .build();
     }
@@ -312,7 +312,7 @@ public class MapperGenerator extends AbstractGenerator {
         builder.addAnnotation(Override.class);
         builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
         builder.addAnnotation(AnnotationSpec.builder(provider)
-            .addMember("type", "$T.class", sqlProvider(fluent))
+            .addMember("type", "$T.class", fluent.sqlProvider())
             .addMember("method", "$S", methodName)
             .build());
         return builder;
@@ -321,7 +321,7 @@ public class MapperGenerator extends AbstractGenerator {
     private TypeName superMapperClass() {
         return super.parameterizedType(
             ClassName.get(IEntityMapper.class),
-            fluent.className()
+            fluent.entity()
         );
     }
 

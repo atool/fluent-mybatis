@@ -50,7 +50,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStaticImport(MybatisUtil.class, "*");
         builder.addStaticImport(SqlProviderUtils.class, "*");
         builder.addStaticImport(FluentConst.class, "*");
-        builder.addStaticImport(mapping(fluent), "*");
+        builder.addStaticImport(fluent.mapping(), "*");
     }
 
     @Override
@@ -88,7 +88,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         if (this.ifNotPrimary(builder)) {
             return builder.build();
         }
-        builder.addStatement("$T entity = getParas(map, Param_ET)", fluent.className());
+        builder.addStatement("$T entity = getParas(map, Param_ET)", fluent.entity());
         builder.addStatement("assertNotNull(Param_Entity, entity)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.UPDATE(this.tableName())");
@@ -108,7 +108,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
     private MethodSpec m_insert() {
         MethodSpec.Builder builder = super.publicMethod(M_Insert, false, String.class)
-            .addParameter(fluent.className(), Param_Entity);
+            .addParameter(fluent.entity(), Param_Entity);
 
         builder
             .addStatement("assertNotNull(Param_Entity, entity)")
@@ -133,7 +133,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
         builder.addStatement("assertNotEmpty(Param_List, map)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("$T<$T> entities = getParas(map, Param_List)", List.class, fluent.className())
+            .addStatement("$T<$T> entities = getParas(map, Param_List)", List.class, fluent.entity())
             .addStatement("sql.INSERT_INTO(this.tableName())")
             .addStatement("sql.INSERT_COLUMNS(this.allFields())")
             .addStatement("sql.VALUES()");

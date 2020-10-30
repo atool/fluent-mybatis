@@ -12,7 +12,6 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
@@ -24,7 +23,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(mapping(fluent))
+        builder.addSuperinterface(fluent.mapping())
             .addType(this.nestedISegment())
             .addType(this.nestedSelector())
             .addType(this.nestedQueryWhere())
@@ -51,7 +50,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
                 .methodBuilder(fc.getProperty())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($T.$L)", mapping(fluent), fc.getProperty())
+                .addStatement("return this.set($T.$L)", fluent.mapping(), fc.getProperty())
                 .build()
             );
         }
@@ -68,12 +67,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(GroupByBase.class),
-                groupBy(fluent),
-                query(fluent)
+                fluent.groupBy(),
+                fluent.query()
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(fluent),
-                groupBy(fluent)
+                fluent.segment(),
+                fluent.groupBy()
             ))
             .addJavadoc("分组设置")
             .addMethod(this.constructor1())
@@ -90,12 +89,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(HavingBase.class),
-                having(fluent),
-                query(fluent)
+                fluent.having(),
+                fluent.query()
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(fluent),
-                super.parameterizedType(ClassName.get(HavingOperator.class), having(fluent))
+                fluent.segment(),
+                super.parameterizedType(ClassName.get(HavingOperator.class), fluent.having())
             ))
             .addJavadoc("分组Having条件设置")
             .addMethod(this.constructor1())
@@ -114,15 +113,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
-                queryOrderBy(fluent),
-                query(fluent)
+                fluent.queryOrderBy(),
+                fluent.query()
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(fluent),
+                fluent.segment(),
                 super.parameterizedType(
                     ClassName.get(OrderByApply.class),
-                    queryOrderBy(fluent),
-                    query(fluent))
+                    fluent.queryOrderBy(),
+                    fluent.query())
             ))
             .addJavadoc("Query OrderBy设置")
             .addMethod(this.constructor1())
@@ -139,15 +138,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
-                updateOrderBy(fluent),
-                updater(fluent)
+                fluent.updateOrderBy(),
+                fluent.updater()
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(fluent),
+                fluent.segment(),
                 super.parameterizedType(
                     ClassName.get(OrderByApply.class),
-                    updateOrderBy(fluent),
-                    updater(fluent))
+                    fluent.updateOrderBy(),
+                    fluent.updater())
             ))
             .addJavadoc("Update OrderBy设置")
             .addMethod(this.constructor1_Update())
@@ -164,15 +163,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(UpdateBase.class),
-                updateSetter(fluent),
-                updater(fluent)
+                fluent.updateSetter(),
+                fluent.updater()
             ))
             .addSuperinterface(super.parameterizedType(
-                segment(fluent),
+                fluent.segment(),
                 super.parameterizedType(
                     ClassName.get(UpdateApply.class),
-                    updateSetter(fluent),
-                    updater(fluent))
+                    fluent.updateSetter(),
+                    fluent.updater())
             ))
             .addJavadoc("Update set 设置")
             .addMethod(this.constructor1_Update())
@@ -184,10 +183,10 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
                 ClassName.get(SelectorBase.class),
-                selector(fluent),
-                query(fluent)
+                fluent.selector(),
+                fluent.query()
             ))
-            .addSuperinterface(super.parameterizedType(segment(fluent), selector(fluent)))
+            .addSuperinterface(super.parameterizedType(fluent.segment(), fluent.selector()))
             .addJavadoc("select字段设置")
             .addMethod(this.constructor1())
             .addMethod(this.constructor2_Selector())
@@ -197,7 +196,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
                 .methodBuilder(fc.getProperty())
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "alias")
-                .returns(selector(fluent))
+                .returns(fluent.selector())
                 .addStatement("return this.process($L, alias)", fc.getProperty())
                 .build()
             );
@@ -215,9 +214,9 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
-                queryWhere(this.fluent),
-                query(fluent),
-                query(fluent)
+                fluent.queryWhere(),
+                fluent.query(),
+                fluent.query()
             ))
             .addJavadoc("query where条件设置")
             .addMethod(this.construct1_QueryWhere())
@@ -239,9 +238,9 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
-                updateWhere(this.fluent),
-                updater(fluent),
-                query(fluent)
+                fluent.updateWhere(),
+                fluent.updater(),
+                fluent.query()
             ))
             .addJavadoc("update where条件设置")
             .addMethod(this.construct1_UpdateWhere())
@@ -273,12 +272,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($T.$L)", mapping(fluent), fc.getProperty());
+        field.addStatement("return this.set($T.$L)", fluent.mapping(), fc.getProperty());
         builder.addMethod(field.build());
     }
 
     private TypeName whereType(String suffix_queryWhere, Class<? extends BaseWhere> whereKlass) {
-        return parameterizedType(ClassName.get(whereKlass), TypeVariableName.get(suffix_queryWhere), query(fluent));
+        return parameterizedType(ClassName.get(whereKlass), TypeVariableName.get(suffix_queryWhere), fluent.query());
     }
 
     /**
@@ -291,7 +290,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(ClassName.get(Override.class))
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
-            .returns(having(fluent))
+            .returns(fluent.having())
             .addStatement("return new Having(this, aggregate)")
             .build();
     }
@@ -306,7 +305,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(ClassName.get(Override.class))
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
-            .returns(selector(fluent))
+            .returns(fluent.selector())
             .addStatement("return new Selector(this, aggregate)")
             .build();
     }
@@ -320,7 +319,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor1() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(query(fluent), "query")
+            .addParameter(fluent.query(), "query")
             .addStatement("super(query)")
             .build();
     }
@@ -328,7 +327,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor1_Update() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(updater(fluent), "updater")
+            .addParameter(fluent.updater(), "updater")
             .addStatement("super(updater)")
             .build();
     }
@@ -341,7 +340,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor2_Having() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PROTECTED)
-            .addParameter(having(fluent), "having")
+            .addParameter(fluent.having(), "having")
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
             .addStatement("super(having, aggregate)")
             .build();
@@ -355,7 +354,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor2_Selector() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PROTECTED)
-            .addParameter(selector(fluent), "selector")
+            .addParameter(fluent.selector(), "selector")
             .addParameter(ClassName.get(IAggregate.class), "aggregate")
             .addStatement("super(selector, aggregate)")
             .build();
@@ -388,7 +387,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct1_QueryWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(query(fluent), "query")
+            .addParameter(fluent.query(), "query")
             .addStatement("super(query)")
             .build();
     }
@@ -401,8 +400,8 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct2_QueryWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PRIVATE)
-            .addParameter(query(fluent), "query")
-            .addParameter(queryWhere(this.fluent), "where")
+            .addParameter(fluent.query(), "query")
+            .addParameter(fluent.queryWhere(), "where")
             .addStatement("super(query, where)")
             .build();
     }
@@ -415,7 +414,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct1_UpdateWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(updater(fluent), "updater")
+            .addParameter(fluent.updater(), "updater")
             .addStatement("super(updater)")
             .build();
     }
@@ -428,8 +427,8 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct2_UpdateWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PRIVATE)
-            .addParameter(updater(fluent), "updater")
-            .addParameter(updateWhere(this.fluent), "where")
+            .addParameter(fluent.updater(), "updater")
+            .addParameter(fluent.updateWhere(), "where")
             .addStatement("super(updater, where)")
             .build();
     }
@@ -443,9 +442,9 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("buildOr")
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(Override.class)
-            .addParameter(queryWhere(this.fluent), "and")
-            .returns(queryWhere(this.fluent))
-            .addStatement("return new QueryWhere(($T) this.wrapper, and)", query(fluent))
+            .addParameter(fluent.queryWhere(), "and")
+            .returns(fluent.queryWhere())
+            .addStatement("return new QueryWhere(($T) this.wrapper, and)", fluent.query())
             .build();
     }
 
@@ -458,9 +457,9 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("buildOr")
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(Override.class)
-            .addParameter(updateWhere(this.fluent), "and")
-            .returns(updateWhere(this.fluent))
-            .addStatement("return new UpdateWhere(($T) this.wrapper, and)", updater(fluent))
+            .addParameter(fluent.updateWhere(), "and")
+            .returns(fluent.updateWhere())
+            .addStatement("return new UpdateWhere(($T) this.wrapper, and)", fluent.updater())
             .build();
     }
 

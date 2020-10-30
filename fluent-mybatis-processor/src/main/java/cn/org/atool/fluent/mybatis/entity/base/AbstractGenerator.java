@@ -92,7 +92,7 @@ public abstract class AbstractGenerator {
         if (fluent.getPrimary() == null) {
             builder.addStatement("return null");
         } else {
-            builder.addStatement("return $T.$L.column", ClassNames.mapping(fluent), fluent.getPrimary().getColumn());
+            builder.addStatement("return $T.$L.column", fluent.mapping(), fluent.getPrimary().getColumn());
         }
         return builder.build();
     }

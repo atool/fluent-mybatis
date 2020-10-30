@@ -9,7 +9,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
 
@@ -57,7 +57,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_setter() {
-        return FieldSpec.builder(updateSetter(fluent),
+        return FieldSpec.builder(fluent.updateSetter(),
             "update", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateSetter(this)")
             .build();
@@ -69,7 +69,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_where() {
-        return FieldSpec.builder(updateWhere(fluent),
+        return FieldSpec.builder(fluent.updateWhere(),
             "where", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateWhere(this)")
             .build();
@@ -81,7 +81,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_orderBy() {
-        return FieldSpec.builder(updateOrderBy(fluent),
+        return FieldSpec.builder(fluent.updateOrderBy(),
             "orderBy", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateOrderBy(this)")
             .build();
@@ -96,18 +96,18 @@ public class UpdaterGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addStatement("super($T.Table_Name, $T.class, $T.class)",
-                mapping(fluent),
-                fluent.className(),
-                query(fluent)
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query()
             )
             .build();
     }
 
     private ParameterizedTypeName superKlass() {
         ClassName base = ClassName.get(BaseUpdate.class);
-        ClassName entity = fluent.className();
-        ClassName updater = updater(fluent);
-        ClassName query = query(fluent);
+        ClassName entity = fluent.entity();
+        ClassName updater = fluent.updater();
+        ClassName query = fluent.query();
         return ParameterizedTypeName.get(base, entity, updater, query);
     }
 
@@ -117,7 +117,7 @@ public class UpdaterGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_where() {
-        return super.publicMethod("where", true, updateWhere(fluent))
+        return super.publicMethod("where", true, fluent.updateWhere())
             .addStatement("return this.where")
             .build();
     }
@@ -126,7 +126,7 @@ public class UpdaterGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("allFields")
             .addModifiers(Modifier.PROTECTED)
             .returns(CN_List_Str)
-            .addStatement("return $T.ALL_COLUMNS", mapping(fluent))
+            .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
             .build();
     }
 
