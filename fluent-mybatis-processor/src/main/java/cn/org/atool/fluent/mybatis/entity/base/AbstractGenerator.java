@@ -102,6 +102,10 @@ public abstract class AbstractGenerator {
         return builder.build();
     }
 
+    protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, Class returnKlass) {
+        return this.publicMethod(methodName, isOverride, ClassName.get(returnKlass));
+    }
+
     /**
      * 定义方式如下的方法
      * <pre>
@@ -113,12 +117,12 @@ public abstract class AbstractGenerator {
      * @param isOverride 是否注解@Override
      * @return
      */
-    protected MethodSpec.Builder sqlMethod(String methodName, boolean isOverride) {
+    protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, TypeName returnKlass) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
         if (isOverride) {
             builder.addAnnotation(Override.class);
         }
-        builder.returns(String.class);
+        builder.returns(returnKlass);
         builder.addModifiers(Modifier.PUBLIC);
         return builder;
     }

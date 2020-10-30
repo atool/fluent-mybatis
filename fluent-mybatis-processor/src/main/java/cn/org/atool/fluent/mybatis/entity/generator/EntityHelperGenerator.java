@@ -12,6 +12,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper;
 
 /**
@@ -26,10 +27,6 @@ public class EntityHelperGenerator extends AbstractGenerator {
 
     public static String getPackageName(FluentEntityInfo fluent) {
         return fluent.getEntityPack();
-    }
-
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
     }
 
     public EntityHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
@@ -49,10 +46,25 @@ public class EntityHelperGenerator extends AbstractGenerator {
     protected void build(TypeSpec.Builder builder) {
         builder
             .addSuperinterface(IEntityHelper.class)
-            .addMethod(this.m_toMap(true))
-            .addMethod(this.m_toMap(false))
+            .addMethod(this.m_toColumnMap())
+            .addMethod(this.m_toEntityMap())
+            .addMethod(this.m_toMap())
             .addMethod(this.m_toEntity())
             .addMethod(this.m_copy());
+    }
+
+    private MethodSpec m_toColumnMap() {
+        return super.publicMethod("toColumnMap", true, CN_Map_StrObj)
+            .addParameter(IEntity.class, "entity")
+            .addStatement("return this.toMap(($T)entity, false)", fluent.className())
+            .build();
+    }
+
+    private MethodSpec m_toEntityMap() {
+        return super.publicMethod("toEntityMap", true, CN_Map_StrObj)
+            .addParameter(IEntity.class, "entity")
+            .addStatement("return this.toMap(($T)entity, true)", fluent.className())
+            .build();
     }
 
     /**
@@ -60,17 +72,14 @@ public class EntityHelperGenerator extends AbstractGenerator {
      *
      * @return
      */
-    private MethodSpec m_toMap(boolean isProperty) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(isProperty ? "toEntityMap" : "toColumnMap")
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(IEntity.class, "entity")
-            .addAnnotation(Override.class)
-            .returns(this.parameterizedType(Map.class, String.class, Object.class))
-            .addStatement("$T et = ($T) entity", fluent.className(), fluent.className())
-            .addCode("return new $T($L)\n", EntityToMap.class, isProperty);
+    private MethodSpec m_toMap() {
+        MethodSpec.Builder builder = super.publicMethod("toMap", false, CN_Map_StrObj)
+            .addParameter(fluent.className(), "entity")
+            .addParameter(TypeName.BOOLEAN, "isProperty")
+            .addCode("return new $T(isProperty)\n", EntityToMap.class);
         for (FieldColumn fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
-            builder.addCode("\t.put($L, et.$L())\n", fc.getProperty(), getMethod);
+            builder.addCode("\t.put($L, entity.$L())\n", fc.getProperty(), getMethod);
         }
         return builder.addCode("\t.getMap();").build();
     }

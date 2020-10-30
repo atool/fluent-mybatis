@@ -17,14 +17,12 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrStr;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static java.util.stream.Collectors.joining;
@@ -76,13 +74,10 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_updateDefaults() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("updateDefaults")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(parameterizedType(List.class, String.class))
-            .addParameter(CN_Map_StrStr, "updates");
+        MethodSpec.Builder builder = super.publicMethod("updateDefaults", true, CN_List_Str)
+            .addParameter(CN_Map_StrStr, "updates")
+            .addCode("return new $T(updates)\n", UpdateDefault.class);
 
-        builder.addCode("return new $T(updates)\n", UpdateDefault.class);
         for (FieldColumn field : this.fluent.getFields()) {
             if (notBlank(field.getUpdate())) {
                 builder.addCode("\t.add($L, $S)\n", field.getProperty(), field.getUpdate());
@@ -92,7 +87,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_updateById() {
-        MethodSpec.Builder builder = super.sqlMethod(M_updateById, false)
+        MethodSpec.Builder builder = super.publicMethod(M_updateById, false, String.class)
             .addParameter(CN_Map_StrObj, Param_Map);
         if (this.ifNotPrimary(builder)) {
             return builder.build();
@@ -116,7 +111,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_insert() {
-        MethodSpec.Builder builder = super.sqlMethod(M_Insert, false)
+        MethodSpec.Builder builder = super.publicMethod(M_Insert, false, String.class)
             .addParameter(fluent.className(), Param_Entity);
 
         builder
@@ -137,7 +132,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_insertBatch() {
-        MethodSpec.Builder builder = super.sqlMethod(M_InsertBatch, false)
+        MethodSpec.Builder builder = super.publicMethod(M_InsertBatch, false, String.class)
             .addParameter(ClassName.get(Map.class), Param_Map);
 
         builder.addStatement("assertNotEmpty(Param_List, map)");
@@ -169,13 +164,13 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_tableName() {
-        MethodSpec.Builder builder = super.sqlMethod("tableName", true);
-        builder.addStatement("return Table_Name");
-        return builder.build();
+        return super.publicMethod("tableName", true, String.class)
+            .addStatement("return Table_Name")
+            .build();
     }
 
     private MethodSpec m_idColumn() {
-        MethodSpec.Builder builder = super.sqlMethod("idColumn", true);
+        MethodSpec.Builder builder = super.publicMethod("idColumn", true, String.class);
         if (fluent.getPrimary() == null) {
             this.throwPrimaryNoFound(builder);
         } else {
@@ -185,16 +180,13 @@ public class SqlProviderGenerator extends AbstractGenerator {
     }
 
     private MethodSpec m_allFields() {
-        MethodSpec.Builder builder = super.sqlMethod("allFields", true);
-        builder.addStatement("return ALL_JOIN_COLUMNS");
-        return builder.build();
+        return super.publicMethod("allFields", true, String.class)
+            .addStatement("return ALL_JOIN_COLUMNS")
+            .build();
     }
 
     private MethodSpec m_dbType() {
-        return MethodSpec.methodBuilder("dbType")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(DbType.class)
+        return super.publicMethod("dbType", true, DbType.class)
             .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
             .build();
     }

@@ -12,6 +12,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
@@ -139,14 +140,14 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .superclass(super.parameterizedType(
                 ClassName.get(OrderByBase.class),
                 updateOrderBy(fluent),
-                UpdaterGenerator.className(fluent)
+                updater(fluent)
             ))
             .addSuperinterface(super.parameterizedType(
                 segment(fluent),
                 super.parameterizedType(
                     ClassName.get(OrderByApply.class),
                     updateOrderBy(fluent),
-                    UpdaterGenerator.className(fluent))
+                    updater(fluent))
             ))
             .addJavadoc("Update OrderBy设置")
             .addMethod(this.constructor1_Update())
@@ -164,14 +165,14 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .superclass(super.parameterizedType(
                 ClassName.get(UpdateBase.class),
                 updateSetter(fluent),
-                UpdaterGenerator.className(fluent)
+                updater(fluent)
             ))
             .addSuperinterface(super.parameterizedType(
                 segment(fluent),
                 super.parameterizedType(
                     ClassName.get(UpdateApply.class),
                     updateSetter(fluent),
-                    UpdaterGenerator.className(fluent))
+                    updater(fluent))
             ))
             .addJavadoc("Update set 设置")
             .addMethod(this.constructor1_Update())
@@ -239,7 +240,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .superclass(super.parameterizedType(
                 ClassName.get(WhereBase.class),
                 updateWhere(this.fluent),
-                UpdaterGenerator.className(fluent),
+                updater(fluent),
                 QueryGenerator.className(fluent)
             ))
             .addJavadoc("update where条件设置")
@@ -327,7 +328,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec constructor1_Update() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(UpdaterGenerator.className(fluent), "updater")
+            .addParameter(updater(fluent), "updater")
             .addStatement("super(updater)")
             .build();
     }
@@ -414,7 +415,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct1_UpdateWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(UpdaterGenerator.className(fluent), "updater")
+            .addParameter(updater(fluent), "updater")
             .addStatement("super(updater)")
             .build();
     }
@@ -427,7 +428,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     private MethodSpec construct2_UpdateWhere() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PRIVATE)
-            .addParameter(UpdaterGenerator.className(fluent), "updater")
+            .addParameter(updater(fluent), "updater")
             .addParameter(updateWhere(this.fluent), "where")
             .addStatement("super(updater, where)")
             .build();
@@ -459,7 +460,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addAnnotation(Override.class)
             .addParameter(updateWhere(this.fluent), "and")
             .returns(updateWhere(this.fluent))
-            .addStatement("return new UpdateWhere(($T) this.wrapper, and)", UpdaterGenerator.className(fluent))
+            .addStatement("return new UpdateWhere(($T) this.wrapper, and)", updater(fluent))
             .build();
     }
 

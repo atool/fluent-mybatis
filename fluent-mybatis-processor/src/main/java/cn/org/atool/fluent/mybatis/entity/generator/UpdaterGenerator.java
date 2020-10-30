@@ -1,20 +1,24 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
 
-
+/**
+ * updater代码生成
+ *
+ * @author wudarui
+ */
 public class UpdaterGenerator extends AbstractGenerator {
     public UpdaterGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         super(curElement, fluentEntityInfo);
@@ -29,10 +33,6 @@ public class UpdaterGenerator extends AbstractGenerator {
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
         return fluentEntityInfo.getPackageName(Pack_Wrapper);
-    }
-
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class UpdaterGenerator extends AbstractGenerator {
     private ParameterizedTypeName superKlass() {
         ClassName base = ClassName.get(BaseUpdate.class);
         ClassName entity = fluent.className();
-        ClassName updater = UpdaterGenerator.className(fluent);
+        ClassName updater = ClassNames.updater(fluent);
         ClassName query = QueryGenerator.className(fluent);
         return ParameterizedTypeName.get(base, entity, updater, query);
     }

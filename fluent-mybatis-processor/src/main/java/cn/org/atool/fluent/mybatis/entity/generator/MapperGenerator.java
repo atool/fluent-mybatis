@@ -48,10 +48,6 @@ public class MapperGenerator extends AbstractGenerator {
         return fluentEntityInfo.getPackageName(Pack_Mapper);
     }
 
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
-    }
-
     @Override
     protected void staticImport(JavaFile.Builder builder) {
         super.staticImport(builder);
@@ -94,9 +90,9 @@ public class MapperGenerator extends AbstractGenerator {
     private MethodSpec m_updater() {
         return MethodSpec.methodBuilder("updater")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(UpdaterGenerator.className(fluent))
+            .returns(ClassNames.updater(fluent))
             .addJavadoc("更新条件设置\n\n@return")
-            .addStatement("return new $T()", UpdaterGenerator.className(fluent))
+            .addStatement("return new $T()", ClassNames.updater(fluent))
             .build();
     }
 
