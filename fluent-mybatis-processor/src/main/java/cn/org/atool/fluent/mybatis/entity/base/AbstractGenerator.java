@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.generator.MappingGenerator;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -90,33 +89,17 @@ public abstract class AbstractGenerator {
      *
      * @return
      */
-    protected MethodSpec m_hasPrimary() {
-        return MethodSpec.methodBuilder("hasPrimary")
+    protected MethodSpec m_primary() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("primary")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PROTECTED)
-            .returns(TypeVariableName.get("boolean"))
-            .addStatement("return $L", fluent.getPrimary() != null)
-            .build();
-    }
-
-    /**
-     * protected void validateColumn(String column) throws FluentMybatisException
-     *
-     * @return
-     */
-    protected MethodSpec m_validateColumn() {
-        return MethodSpec.methodBuilder("validateColumn")
-            .addModifiers(Modifier.PROTECTED)
-            .addAnnotation(Override.class)
-            .addException(FluentMybatisException.class)
-            .addParameter(String.class, "column")
-            .addCode("if (notBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluent))
-            .addCode(this.of(
-                "\tthrow new FluentMybatisException('the column[' + column + '] was not found in table[' + $T.Table_Name + '].');\n",
-                MappingGenerator.className(fluent)
-            ))
-            .addCode("}")
-            .build();
+            .returns(String.class);
+        if (fluent.getPrimary() == null) {
+            builder.addStatement("return null");
+        } else {
+            builder.addStatement("return $T.$L.column", MappingGenerator.className(fluent), fluent.getPrimary().getColumn());
+        }
+        return builder.build();
     }
 
     /**

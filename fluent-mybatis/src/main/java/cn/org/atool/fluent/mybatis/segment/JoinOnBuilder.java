@@ -1,9 +1,7 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
-import cn.org.atool.fluent.mybatis.segment.JoinWrapperData;
-import cn.org.atool.fluent.mybatis.segment.WhereApply;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 
 import java.util.ArrayList;
@@ -16,18 +14,18 @@ import static java.lang.String.format;
  *
  * @author wudarui
  */
-public class JoinOn {
-    private BaseQuery query1;
+public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>> {
+    private BaseQuery queryLeft;
 
-    private BaseQuery query2;
+    private BaseQuery queryRight;
 
     private JoinType joinType;
 
     private List<String> ons = new ArrayList<>();
 
-    public JoinOn(BaseQuery query1, JoinType joinType, BaseQuery query2) {
-        this.query1 = query1;
-        this.query2 = query2;
+    public JoinOnBuilder(BaseQuery queryLeft, JoinType joinType, BaseQuery queryRight) {
+        this.queryLeft = queryLeft;
+        this.queryRight = queryRight;
         this.joinType = joinType;
     }
 
@@ -38,10 +36,11 @@ public class JoinOn {
      * @param right
      * @return
      */
-    public JoinOn on(BaseWhere left, BaseWhere right) {
+    public JoinOnBuilder<QL, QR> on(BaseWhere left, BaseWhere right) {
         return this.on(
-            this.query1.getAlias() + "." + ((WhereApply) left).current().column,
-            this.query2.getAlias() + "." + ((WhereApply) right).current().column);
+            ((WhereApply) left).current().alias(this.queryLeft.getAlias()),
+            ((WhereApply) right).current().alias(this.queryRight.getAlias())
+        );
     }
 
     /**
@@ -51,13 +50,15 @@ public class JoinOn {
      * @param right
      * @return
      */
-    public JoinOn on(String left, String right) {
+    public JoinOnBuilder on(String left, String right) {
         this.ons.add(format(left + " = " + right));
         return this;
     }
 
     public String table() {
-        String joinTable = this.joinType.join() + " " + this.query2.getWrapperData().getTable() + " " + this.query2.getAlias();
+        String joinTable = String.format("%s %s %s",
+            this.joinType.join(), this.queryRight.getWrapperData().getTable(), this.queryRight.getAlias()
+        );
         if (this.ons.isEmpty()) {
             return joinTable;
         } else {

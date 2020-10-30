@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base.impl;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
 
 /**
  * AbstractQueryWrapper
@@ -44,6 +46,31 @@ public abstract class BaseQuery<
         return (Q) this;
     }
 
+    /**
+     * 显式指定查询所有字段, 在join查询中有用
+     *
+     * @return
+     */
+    public Q selectAll() {
+        this.allFields().stream().map(c -> alias(this.alias, c)).forEach(this::select);
+        return (Q) this;
+    }
+
+    @Override
+    public Q selectId() {
+        if (this.primary() == null) {
+            throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
+        } else {
+            return this.select(alias(this.alias, this.primary()));
+        }
+    }
+
+    /**
+     * 查询指定字段
+     *
+     * @param columns
+     * @return
+     */
     public Q select(String... columns) {
         if (If.notEmpty(columns)) {
             Stream.of(columns).filter(s -> notBlank(s)).forEach(this.wrapperData::addSelectColumn);

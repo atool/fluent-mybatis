@@ -4,15 +4,12 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
@@ -46,7 +43,6 @@ public class QueryGenerator extends AbstractGenerator {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superKlass())
-            .addField(this.f_allFields())
             .addField(this.f_select())
             .addField(this.f_groupBy())
             .addField(this.f_having())
@@ -56,25 +52,16 @@ public class QueryGenerator extends AbstractGenerator {
             .addMethod(this.constructor0())
             .addMethod(this.constructor2_String_Parameter())
             .addMethod(this.constructor1_Parameter())
-            .addMethod(this.m_selectId())
             .addMethod(this.m_where())
-            .addMethod(this.m_hasPrimary())
-            .addMethod(this.m_allFields())
-            .addMethod(this.m_validateColumn());
+            .addMethod(this.m_primary())
+            .addMethod(this.m_allFields());
     }
 
     private MethodSpec m_allFields() {
         return MethodSpec.methodBuilder("allFields")
             .addModifiers(Modifier.PUBLIC)
             .returns(parameterizedType(List.class, String.class))
-            .addStatement("return ALL_FIELDS")
-            .build();
-    }
-
-    private FieldSpec f_allFields() {
-        String allFields = this.fluent.getFields().stream().map(c -> '"' + c.getColumn() + '"').collect(Collectors.joining(", "));
-        return FieldSpec.builder(parameterizedType(List.class, String.class), "ALL_FIELDS", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$T.asList($L)", Arrays.class, allFields)
+            .addStatement("return $T.ALL_COLUMNS", MappingGenerator.className(fluent))
             .build();
     }
 
@@ -186,27 +173,6 @@ public class QueryGenerator extends AbstractGenerator {
             .addStatement("this(parameters)")
             .addStatement("super.alias = alias")
             .build();
-    }
-
-    /**
-     * public XyzQuery selectId() {}
-     *
-     * @return
-     */
-    private MethodSpec m_selectId() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("selectId")
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Override.class)
-            .returns(QueryGenerator.className(fluent));
-        if (fluent.getPrimary() == null) {
-            builder.addStatement("throw new $T($S + $T.Table_Name + $S)",
-                FluentMybatisException.class, "The primary key of in table[",
-                MappingGenerator.className(fluent), "] was not found.");
-        } else {
-            builder.addStatement("return this.select($T.$L.column)",
-                MappingGenerator.className(fluent), fluent.getPrimary().getProperty());
-        }
-        return builder.build();
     }
 
     /**

@@ -35,6 +35,28 @@ public interface IDao<E, Q, U> {
     IUpdate updater();
 
     /**
+     * 对保存的entity类设置默认值
+     * 比如: 数据隔离的环境值, 租户值等等
+     *
+     * @param entity
+     * @return
+     */
+    default E setInsertDefault(E entity) {
+        return entity;
+    }
+
+    /**
+     * 设置字段更新默认值
+     * 比如: gmt_modified = new Date()
+     *
+     * @param entity
+     * @return
+     */
+    default E setUpdateDefault(E entity) {
+        return entity;
+    }
+
+    /**
      * 返回主键字段
      *
      * @return

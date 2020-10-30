@@ -9,6 +9,8 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import java.util.List;
+
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
 
@@ -46,8 +48,8 @@ public class UpdaterGenerator extends AbstractGenerator {
             .addField(this.f_orderBy())
             .addMethod(this.constructor0())
             .addMethod(this.m_where())
-            .addMethod(this.m_hasPrimary())
-            .addMethod(this.m_validateColumn());
+            .addMethod(this.m_primary())
+            .addMethod(this.m_allFields());
     }
 
     /**
@@ -121,6 +123,14 @@ public class UpdaterGenerator extends AbstractGenerator {
             .addModifiers(Modifier.PUBLIC)
             .returns(WrapperHelperGenerator.updateWhere(fluent))
             .addStatement("return this.where")
+            .build();
+    }
+
+    private MethodSpec m_allFields() {
+        return MethodSpec.methodBuilder("allFields")
+            .addModifiers(Modifier.PROTECTED)
+            .returns(parameterizedType(List.class, String.class))
+            .addStatement("return $T.ALL_COLUMNS", MappingGenerator.className(fluent))
             .build();
     }
 

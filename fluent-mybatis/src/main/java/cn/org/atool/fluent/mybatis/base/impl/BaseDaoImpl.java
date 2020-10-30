@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.IDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -26,6 +27,9 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public <PK extends Serializable> PK save(E entity) {
+        if (this instanceof IDao) {
+            ((IDao) this).setInsertDefault(entity);
+        }
         this.mapper().insert(entity);
         return (PK) entity.findPk();
     }
@@ -35,6 +39,9 @@ public abstract class BaseDaoImpl<E extends IEntity>
         Set pks = list.stream().map(E::findPk).filter(pk -> pk != null).collect(toSet());
         if (!pks.isEmpty() && pks.size() != list.size()) {
             throw FluentMybatisException.instance("The primary key of the list instance must be assigned to all or none");
+        }
+        if (this instanceof IDao) {
+            list.forEach(((IDao) this)::setInsertDefault);
         }
         return this.mapper().insertBatch(list);
     }

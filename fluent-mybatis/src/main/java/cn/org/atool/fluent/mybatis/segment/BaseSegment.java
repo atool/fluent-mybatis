@@ -6,8 +6,6 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-
 /**
  * BaseSegment
  *
@@ -43,11 +41,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * @return
      */
     protected String columnWithAlias(FieldMapping column) {
-        if (isBlank(wrapper.getAlias())) {
-            return column.column;
-        } else {
-            return this.wrapper.getAlias() + "." + column.column;
-        }
+        return column.alias(this.wrapper.getAlias());
     }
 
     protected BaseSegment(W wrapper) {
@@ -76,6 +70,11 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         return (W) this.wrapper;
     }
 
+    /**
+     * 查询条件
+     *
+     * @return
+     */
     WrapperData wrapperData() {
         return this.wrapper.getWrapperData();
     }

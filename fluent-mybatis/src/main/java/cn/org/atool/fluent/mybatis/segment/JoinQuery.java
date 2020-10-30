@@ -1,130 +1,129 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IJoinQuery;
 import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.JoinOn;
+import cn.org.atool.fluent.mybatis.base.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.functions.JoinConsumer;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import lombok.Getter;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
-public class JoinQuery<Q1 extends BaseQuery<?, Q1>>
-    implements IQuery<IEntity, JoinQuery<Q1>>, IJoinQuery<Q1> {
-
-    private final Class<Q1> queryClass;
-
-    private final Q1 query;
-
+/**
+ * 联合查询条件
+ *
+ * @param <QL>
+ */
+public class JoinQuery<QL extends BaseQuery<?, QL>>
+    implements IQuery<IEntity, JoinQuery<QL>>, JoinBuilder<QL> {
+    /**
+     * 主查询类型
+     */
+    private final Class<QL> queryClass;
+    /**
+     * 主查询条件
+     */
+    private final QL query;
+    /**
+     * join查询, 允许有多个join
+     */
     private final List<BaseQuery> queries = new ArrayList<>();
 
     @Getter
     private JoinWrapperData wrapperData;
 
-    public JoinQuery(Class<Q1> queryClass, Function<Q1, Q1> query) {
+    public JoinQuery(Class<QL> queryClass, Function<QL, QL> query) {
         this.queryClass = queryClass;
         this.query = newQuery(queryClass, alias(), new ParameterPair());
         query.apply(this.query);
         this.wrapperData = new JoinWrapperData(this.query, this.queries);
     }
 
-    public static <Q1 extends BaseQuery<?, Q1>> IJoinQuery<Q1> from(Class<Q1> clazz, Function<Q1, Q1> query) {
-        return new JoinQuery<Q1>(clazz, query);
+    @Override
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR> join(
+        Class<QR> clazz,
+        Function<QR, QR> query) {
+        return join(JoinType.Join, clazz, query);
     }
 
     @Override
-    public <Q2 extends BaseQuery<?, Q2>> IJoinQuery<Q1> join(Class<Q2> clazz,
-                                                             Function<Q2, Q2> query,
-                                                             JoinConsumer<Q1, Q2> join) {
-        return join(JoinType.Join, clazz, query, join);
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR> leftJoin(
+        Class<QR> clazz,
+        Function<QR, QR> query) {
+        return join(JoinType.LeftJoin, clazz, query);
     }
 
     @Override
-    public <Q2 extends BaseQuery<?, Q2>> IJoinQuery<Q1> leftJoin(Class<Q2> clazz,
-                                                                 Function<Q2, Q2> query,
-                                                                 JoinConsumer<Q1, Q2> join) {
-        return join(JoinType.LeftJoin, clazz, query, join);
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR> rightJoin(
+        Class<QR> clazz,
+        Function<QR, QR> query) {
+        return join(JoinType.RightJoin, clazz, query);
     }
 
-    @Override
-    public <Q2 extends BaseQuery<?, Q2>> IJoinQuery<Q1> rightJoin(Class<Q2> clazz,
-                                                                  Function<Q2, Q2> query,
-                                                                  JoinConsumer<Q1, Q2> join) {
-        return join(JoinType.RightJoin, clazz, query, join);
-    }
-
-    private <Q2 extends BaseQuery<?, Q2>> IJoinQuery<Q1> join(JoinType joinType,
-                                                              Class<Q2> queryClass,
-                                                              Function<Q2, Q2> apply,
-                                                              JoinConsumer<Q1, Q2> join) {
-        Q2 query = newQuery(queryClass, alias(), this.query.wrapperData.getParameters());
+    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR> join(
+        JoinType joinType,
+        Class<QR> queryClass,
+        Function<QR, QR> apply) {
+        QR query = newQuery(queryClass, alias(), this.query.wrapperData.getParameters());
         this.queries.add(query);
         apply.apply(query);
-        JoinOn on = new JoinOn(this.query, joinType, query);
-        join.accept(on, newEmptyQuery(this.queryClass), newEmptyQuery(queryClass));
-        this.wrapperData.addTable(on.table());
-        return this;
+        return new JoinOn<>(this, this.queryClass, this.query, joinType, queryClass, query);
     }
 
     @Override
-    public JoinQuery<Q1> distinct() {
+    public JoinQuery<QL> distinct() {
         this.wrapperData.setDistinct(true);
         return this;
     }
 
     @Override
-    public JoinQuery<Q1> limit(int limit) {
+    public JoinQuery<QL> limit(int limit) {
         this.wrapperData.setPaged(new PagedOffset(0, limit));
         return this;
     }
 
     @Override
-    public JoinQuery<Q1> limit(int start, int limit) {
+    public JoinQuery<QL> limit(int start, int limit) {
         this.wrapperData.setPaged(new PagedOffset(start, limit));
         return this;
     }
 
     @Override
-    public JoinQuery<Q1> last(String lastSql) {
+    public JoinQuery<QL> last(String lastSql) {
         this.wrapperData.last(lastSql);
         return this;
     }
 
     @Override
-    public JoinQuery<Q1> selectId() {
+    public JoinQuery<QL> selectAll() {
         throw new RuntimeException("not support");
     }
 
     @Override
-    public WhereBase<?, JoinQuery<Q1>, JoinQuery<Q1>> where() {
+    public JoinQuery<QL> selectId() {
         throw new RuntimeException("not support");
     }
 
-    /**
-     * 执行on条件时, 新创建查询对象, 避免对原有对象的造成干扰
-     *
-     * @param klass
-     * @param <Q>
-     * @return
-     */
-    private static <Q extends BaseQuery<?, Q>> Q newEmptyQuery(Class<Q> klass) {
-        try {
-            return klass.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(String.format("new %s() error: %s",
-                klass.getSimpleName(), e.getMessage()), e);
-        }
+    @Override
+    public WhereBase<?, JoinQuery<QL>, JoinQuery<QL>> where() {
+        throw new RuntimeException("not support");
     }
+
+    private static Map<Class, Constructor> QueryAliasConstructors = new HashMap<>(128);
 
     private static <Q extends BaseQuery<?, Q>> Q newQuery(Class<Q> queryClass, String alias, ParameterPair parameters) {
         try {
-            return queryClass.getConstructor(String.class, ParameterPair.class).newInstance(alias, parameters);
+            if (!QueryAliasConstructors.containsKey(queryClass)) {
+                QueryAliasConstructors.put(queryClass, queryClass.getConstructor(String.class, ParameterPair.class));
+            }
+            return (Q) QueryAliasConstructors.get(queryClass).newInstance(alias, parameters);
         } catch (Exception e) {
             throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
                 queryClass.getSimpleName(), e.getMessage()), e);

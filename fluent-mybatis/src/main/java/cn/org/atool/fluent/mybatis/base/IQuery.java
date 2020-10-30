@@ -24,6 +24,13 @@ public interface IQuery<
     Q distinct();
 
     /**
+     * 查询Entity所有字段
+     *
+     * @return
+     */
+    Q selectAll();
+
+    /**
      * 只查询主键字段
      *
      * @return self

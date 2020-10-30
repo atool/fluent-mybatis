@@ -9,6 +9,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
+
 /**
  * 关联查询条件设置
  *
@@ -41,27 +43,33 @@ public class JoinWrapperData extends WrapperData {
         return String.join(" ", this.tables);
     }
 
+    private boolean selectMerged = false;
+
     @Override
     public String getSqlSelect() {
-        if (!this.sqlSelect.isEmpty()) {
+        if (selectMerged) {
             return super.getSqlSelect();
         }
         this.sqlSelect.addAll(this.query.wrapperData.sqlSelect());
         for (BaseQuery query : this.queries) {
             this.sqlSelect.addAll(query.wrapperData.sqlSelect());
         }
-        if (this.sqlSelect.isEmpty()) {
-            this.query.allFields().forEach(field -> this.sqlSelect.add(query.alias + "." + field));
-            for (BaseQuery query : this.queries) {
-                query.allFields().forEach(field -> this.sqlSelect.add(query.alias + "." + field));
-            }
+        if (!this.sqlSelect.isEmpty()) {
+            return super.getSqlSelect();
         }
+        this.query.allFields().forEach(c -> this.sqlSelect.add(alias(query.alias, (String) c)));
+        for (BaseQuery query : this.queries) {
+            query.allFields().forEach(c -> this.sqlSelect.add(alias(query.alias, (String) c)));
+        }
+        selectMerged = true;
         return super.getSqlSelect();
     }
 
+    private boolean whereMerged = false;
+
     @Override
     public String getWhereSql() {
-        if (!this.mergeSegments.getWhere().isEmpty()) {
+        if (whereMerged) {
             return super.getWhereSql();
         }
         this.query.wrapperData.getMergeSegments().getWhere().getSegments().forEach(this.mergeSegments.getWhere()::addAll);
@@ -72,14 +80,15 @@ public class JoinWrapperData extends WrapperData {
             }
             query.wrapperData.getMergeSegments().getWhere().getSegments().forEach(this.mergeSegments.getWhere()::addAll);
         }
+        whereMerged = true;
         return super.getWhereSql();
     }
 
-    private boolean groupBy = false;
+    private boolean groupByMerged = false;
 
     @Override
     public String getGroupBy() {
-        if (groupBy) {
+        if (groupByMerged) {
             return super.getGroupBy();
         }
         this.query.wrapperData.getMergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments.getGroupBy()::addAll);
@@ -92,22 +101,22 @@ public class JoinWrapperData extends WrapperData {
             }
             query.wrapperData.getMergeSegments().getHaving().getSegments().forEach(this.mergeSegments.getHaving()::addAll);
         }
-        this.groupBy = true;
+        this.groupByMerged = true;
         return super.getGroupBy();
     }
 
-    private boolean orderBy = false;
+    private boolean orderByMerged = false;
 
     @Override
     public String getOrderBy() {
-        if (orderBy) {
+        if (orderByMerged) {
             return super.getOrderBy();
         }
         this.query.wrapperData.getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
         for (BaseQuery query : this.queries) {
             query.wrapperData.getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
         }
-        orderBy = true;
+        orderByMerged = true;
         return super.getOrderBy();
     }
 

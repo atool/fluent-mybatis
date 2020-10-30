@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -267,4 +270,82 @@ public abstract class BaseSqlProvider {
      * @return
      */
     protected abstract DbType dbType();
+
+    /**
+     * insert by entity字段构造
+     */
+    protected static class InsertList {
+        public final List<String> columns = new ArrayList<>();
+
+        public final List<String> values = new ArrayList<>();
+
+        public InsertList() {
+        }
+
+        /**
+         * insert字段表达式
+         *
+         * @param field    对象字段
+         * @param value    对象属性值
+         * @param _default insert默认值
+         */
+        public InsertList add(FieldMapping field, Object value, String _default) {
+            if (value != null) {
+                this.columns.add(field.column);
+                this.values.add("#{" + field.name + "}");
+            } else if (notBlank(_default)) {
+                this.columns.add(field.column);
+                this.values.add(_default);
+            }
+            return this;
+        }
+    }
+
+    /**
+     * update by entity字段构造
+     */
+    protected static class UpdateSet {
+        @Getter
+        private final List<String> updates = new ArrayList<>();
+
+        public UpdateSet() {
+        }
+
+        /**
+         * update字段表达式
+         *
+         * @param field    对象字段
+         * @param value    对象属性值
+         * @param _default insert默认值
+         */
+        public UpdateSet add(FieldMapping field, Object value, String _default) {
+            if (value != null) {
+                this.updates.add(field.el(Param_ET));
+            } else if (notBlank(_default)) {
+                this.updates.add(field.column + " = " + _default);
+            }
+            return this;
+        }
+    }
+
+    /**
+     * 追加更新默认值
+     */
+    protected static class UpdateDefault {
+        @Getter
+        private final List<String> updateDefaults = new ArrayList<>();
+
+        private final Map<String, String> updates;
+
+        public UpdateDefault(Map<String, String> updates) {
+            this.updates = updates;
+        }
+
+        public UpdateDefault add(FieldMapping field, String _default) {
+            if (!updates.containsKey(field.name)) {
+                updateDefaults.add(field.column + " = " + _default);
+            }
+            return this;
+        }
+    }
 }

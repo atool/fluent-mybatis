@@ -16,11 +16,9 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrStr;
@@ -55,6 +53,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStaticImport(MybatisUtil.class, "*");
         builder.addStaticImport(SqlProviderUtils.class, "*");
         builder.addStaticImport(FluentConst.class, "*");
+        builder.addStaticImport(MappingGenerator.className(fluent), "*");
     }
 
     @Override
@@ -80,16 +79,13 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .returns(parameterizedType(List.class, String.class))
             .addParameter(CN_Map_StrStr, "updates");
 
-        builder.addStatement("$T<String> sets = new $T<>()", List.class, ArrayList.class);
+        builder.addCode("return new UpdateDefault(updates)\n");
         for (FieldColumn field : this.fluent.getFields()) {
-            if (isBlank(field.getUpdate())) {
-                continue;
+            if (notBlank(field.getUpdate())) {
+                builder.addCode("\t.add($L, $S)\n", field.getProperty(), field.getUpdate());
             }
-            builder.addCode("if (!updates.containsKey($S)) {\n", field.getProperty());
-            builder.addCode("\tsets.add($S);\n", field.getColumn() + " = " + field.getUpdate());
-            builder.addCode("}\n");
         }
-        return builder.addStatement("return sets").build();
+        return builder.addCode("\t.getUpdateDefaults();").build();
     }
 
     private MethodSpec m_updateById() {
@@ -102,22 +98,16 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStatement("assertNotNull(Param_Entity, entity)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.UPDATE(this.tableName())");
-        builder.addStatement("$T<String> sets = new $T<>()", List.class, ArrayList.class);
-
+        builder.addCode("UpdateSet updates = new UpdateSet()");
         for (FieldColumn field : this.fluent.getFields()) {
-            if (field.isPrimary()) {
-                continue;
+            if (!field.isPrimary()) {
+                builder.addCode("\n\t.add($L, entity.$L(), $S)",
+                    field.getProperty(), field.getMethodName(), field.getUpdate());
             }
-            builder.addCode("if (entity.$L() != null) {\n", field.getMethodName());
-            builder.addCode("\tsets.add(\"$L = #{et.$L}\");\n", field.getColumn(), field.getProperty());
-            if (notBlank(field.getUpdate())) {
-                builder.addCode("} else {\n");
-                builder.addCode("\tsets.add($S);\n", field.getColumn() + " = " + field.getUpdate());
-            }
-            builder.addCode("}\n");
         }
-        builder.addStatement("sql.SET(sets)");
-        builder.addStatement("sql.WHERE(\"$L = #{et.$L}\")", fluent.getPrimary().getColumn(), fluent.getPrimary().getProperty());
+        builder.addCode(";\n");
+        builder.addStatement("sql.SET(updates.getUpdates())");
+        builder.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getProperty());
 
         return builder.addStatement("return sql.toString()").build();
     }
@@ -130,27 +120,16 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addStatement("assertNotNull(Param_Entity, entity)")
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.INSERT_INTO(this.tableName())")
-            .addStatement("$T<String> columns = new $T<>()", List.class, ArrayList.class)
-            .addStatement("List<String> values = new ArrayList<>()");
+            .addCode("InsertList inserts = new InsertList()");
         for (FieldColumn field : this.fluent.getFields()) {
-            if (notBlank(field.getInsert())) {
-                builder.addStatement("columns.add($S)", field.getColumn());
-            }
-            builder.addCode("if (entity.$L() != null) {\n", field.getMethodName());
-            if (isBlank(field.getInsert())) {
-                builder.addStatement("\tcolumns.add($S)", field.getColumn());
-            }
-            builder.addStatement("\tvalues.add($S)", field.getPropertyEl());
-            if (notBlank(field.getInsert())) {
-                builder.addCode("} else {\n");
-                builder.addStatement("\tvalues.add($S)", field.getInsert());
-            }
-            builder.addCode("}\n");
+            builder.addCode("\n\t.add($L, entity.$L(), $S)",
+                field.getProperty(), field.getMethodName(), field.getInsert());
         }
+        builder.addCode(";\n");
         builder
-            .addStatement("sql.INSERT_COLUMNS(columns)")
+            .addStatement("sql.INSERT_COLUMNS(inserts.columns)")
             .addStatement("sql.VALUES()")
-            .addStatement("sql.INSERT_VALUES(values)");
+            .addStatement("sql.INSERT_VALUES(inserts.values)");
         return builder.addStatement("return sql.toString()").build();
     }
 
@@ -188,7 +167,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
     private MethodSpec m_tableName() {
         MethodSpec.Builder builder = super.sqlMethod("tableName", true);
-        builder.addStatement("return $S", fluent.getTableName());
+        builder.addStatement("return Table_Name");
         return builder.build();
     }
 
@@ -197,14 +176,14 @@ public class SqlProviderGenerator extends AbstractGenerator {
         if (fluent.getPrimary() == null) {
             this.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $S", fluent.getPrimary().getColumn());
+            builder.addStatement("return $L.column", fluent.getPrimary().getProperty());
         }
         return builder.build();
     }
 
     private MethodSpec m_allFields() {
         MethodSpec.Builder builder = super.sqlMethod("allFields", true);
-        builder.addStatement("return $S", fluent.getAllFields());
+        builder.addStatement("return ALL_JOIN_COLUMNS");
         return builder.build();
     }
 

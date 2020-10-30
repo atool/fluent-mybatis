@@ -22,4 +22,8 @@ public interface MyCustomerInterface<E, Q, U> extends IDao<E, Q, U> {
             .where().apply("is_deleted", EQ, false)
             .end();
     }
+
+    default E setInsertDefault(E entity) {
+        return entity;
+    }
 }
