@@ -14,6 +14,11 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapping;
 import static java.util.stream.Collectors.joining;
 
+/**
+ * Mapping代码生成
+ *
+ * @author wudarui
+ */
 public class MappingGenerator extends AbstractGenerator {
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
@@ -22,10 +27,6 @@ public class MappingGenerator extends AbstractGenerator {
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
         return fluentEntityInfo.getPackageName(Pack_Helper);
-    }
-
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
     }
 
     public MappingGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {

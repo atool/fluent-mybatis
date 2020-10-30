@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
+import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.*;
 
@@ -38,7 +39,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(MappingGenerator.className(fluent), "*");
+        builder.addStaticImport(ClassNames.mapping(fluent), "*");
         super.staticImport(builder);
     }
 

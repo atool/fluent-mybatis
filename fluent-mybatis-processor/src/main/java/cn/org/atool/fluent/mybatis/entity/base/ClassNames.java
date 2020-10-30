@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
-import cn.org.atool.fluent.mybatis.entity.generator.EntityHelperGenerator;
-import cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator;
-import cn.org.atool.fluent.mybatis.entity.generator.UpdaterGenerator;
+import cn.org.atool.fluent.mybatis.entity.generator.*;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 
 import java.util.List;
 import java.util.Map;
+
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 public class ClassNames {
     public static final ClassName CN_Qualifier = ClassName.get("org.springframework.beans.factory.annotation", "Qualifier");
@@ -66,5 +66,104 @@ public class ClassNames {
         return ClassName.get(
             MapperGenerator.getPackageName(fluent),
             MapperGenerator.getClassName(fluent));
+    }
+
+    /**
+     * ClassName of XyzMapping
+     *
+     * @param fluent
+     * @return
+     */
+    public static ClassName mapping(FluentEntityInfo fluent) {
+        return ClassName.get(
+            MappingGenerator.getPackageName(fluent),
+            MappingGenerator.getClassName(fluent));
+    }
+
+    /**
+     * ClassName of XyzQuery
+     *
+     * @param fluent
+     * @return
+     */
+    public static ClassName query(FluentEntityInfo fluent) {
+        return ClassName.get(
+            QueryGenerator.getPackageName(fluent),
+            QueryGenerator.getClassName(fluent));
+    }
+
+    /**
+     * ClassName of XyzSqlProvider
+     *
+     * @param fluent
+     * @return
+     */
+    public static ClassName sqlProvider(FluentEntityInfo fluent) {
+        return ClassName.get(
+            SqlProviderGenerator.getPackageName(fluent),
+            SqlProviderGenerator.getClassName(fluent));
+    }
+
+    public static ClassName queryWhere(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_QueryWhere);
+    }
+
+    public static ClassName updateWhere(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_UpdateWhere);
+    }
+
+    public static ClassName selector(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_Selector);
+    }
+
+    public static ClassName groupBy(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_GroupBy);
+    }
+
+    public static ClassName having(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_Having);
+    }
+
+    public static ClassName queryOrderBy(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_QueryOrderBy);
+    }
+
+    public static ClassName updateOrderBy(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_UpdateOrderBy);
+    }
+
+    public static ClassName updateSetter(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_UpdateSetter);
+    }
+
+    public static ClassName segment(FluentEntityInfo fluent) {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(fluent)
+                + "." +
+                WrapperHelperGenerator.getClassName(fluent), Suffix_ISegment);
     }
 }

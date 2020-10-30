@@ -10,6 +10,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
@@ -47,8 +48,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
         builder.addSuperinterface(parameterizedType(
             ClassName.get(packageName, simpleClassName),
             fluent.className(),
-            QueryGenerator.className(fluent),
-            ClassNames.updater(fluent)
+            query(fluent),
+            updater(fluent)
         ));
     }
 
@@ -100,8 +101,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
         return MethodSpec.methodBuilder("query")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
-            .returns(QueryGenerator.className(fluent))
-            .addStatement("return new $T()", QueryGenerator.className(fluent))
+            .returns(query(fluent))
+            .addStatement("return new $T()", query(fluent))
             .build();
     }
 
@@ -111,8 +112,8 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_updater() {
-        return super.publicMethod("updater", true, ClassNames.updater(fluent))
-            .addStatement("return new $T()", ClassNames.updater(fluent))
+        return super.publicMethod("updater", true, updater(fluent))
+            .addStatement("return new $T()", updater(fluent))
             .build();
     }
 
@@ -129,8 +130,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         if (fluent.getPrimary() == null) {
             super.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $T.$L",
-                MappingGenerator.className(fluent), fluent.getPrimary().getProperty());
+            builder.addStatement("return $T.$L", mapping(fluent), fluent.getPrimary().getProperty());
         }
         return builder.build();
     }

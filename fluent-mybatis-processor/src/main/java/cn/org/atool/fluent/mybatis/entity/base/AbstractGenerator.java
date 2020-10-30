@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
-import cn.org.atool.fluent.mybatis.entity.generator.MappingGenerator;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -97,7 +96,7 @@ public abstract class AbstractGenerator {
         if (fluent.getPrimary() == null) {
             builder.addStatement("return null");
         } else {
-            builder.addStatement("return $T.$L.column", MappingGenerator.className(fluent), fluent.getPrimary().getColumn());
+            builder.addStatement("return $T.$L.column", ClassNames.mapping(fluent), fluent.getPrimary().getColumn());
         }
         return builder.build();
     }

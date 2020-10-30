@@ -37,10 +37,6 @@ public class SqlProviderGenerator extends AbstractGenerator {
         return fluentEntityInfo.getPackageName(Pack_Helper);
     }
 
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
-    }
-
     public SqlProviderGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
         super(curElement, fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
@@ -54,7 +50,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStaticImport(MybatisUtil.class, "*");
         builder.addStaticImport(SqlProviderUtils.class, "*");
         builder.addStaticImport(FluentConst.class, "*");
-        builder.addStaticImport(MappingGenerator.className(fluent), "*");
+        builder.addStaticImport(mapping(fluent), "*");
     }
 
     @Override

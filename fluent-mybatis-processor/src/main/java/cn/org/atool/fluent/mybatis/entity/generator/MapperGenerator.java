@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 /**
@@ -99,9 +99,9 @@ public class MapperGenerator extends AbstractGenerator {
     private MethodSpec m_query() {
         return MethodSpec.methodBuilder("query")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(QueryGenerator.className(fluent))
+            .returns(query(fluent))
             .addJavadoc("查询条件设置\n\n@return")
-            .addStatement("return new $T()", QueryGenerator.className(fluent))
+            .addStatement("return new $T()", query(fluent))
             .build();
     }
 
@@ -312,7 +312,7 @@ public class MapperGenerator extends AbstractGenerator {
         builder.addAnnotation(Override.class);
         builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
         builder.addAnnotation(AnnotationSpec.builder(provider)
-            .addMember("type", "$T.class", SqlProviderGenerator.className(fluent))
+            .addMember("type", "$T.class", sqlProvider(fluent))
             .addMember("method", "$S", methodName)
             .build());
         return builder;
