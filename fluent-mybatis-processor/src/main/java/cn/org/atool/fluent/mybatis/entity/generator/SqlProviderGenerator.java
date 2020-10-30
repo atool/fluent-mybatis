@@ -1,6 +1,9 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.model.InsertList;
+import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
+import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
@@ -79,7 +82,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .returns(parameterizedType(List.class, String.class))
             .addParameter(CN_Map_StrStr, "updates");
 
-        builder.addCode("return new UpdateDefault(updates)\n");
+        builder.addCode("return new $T(updates)\n", UpdateDefault.class);
         for (FieldColumn field : this.fluent.getFields()) {
             if (notBlank(field.getUpdate())) {
                 builder.addCode("\t.add($L, $S)\n", field.getProperty(), field.getUpdate());
@@ -98,7 +101,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStatement("assertNotNull(Param_Entity, entity)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.UPDATE(this.tableName())");
-        builder.addCode("UpdateSet updates = new UpdateSet()");
+        builder.addCode("$T updates = new UpdateSet()", UpdateSet.class);
         for (FieldColumn field : this.fluent.getFields()) {
             if (!field.isPrimary()) {
                 builder.addCode("\n\t.add($L, entity.$L(), $S)",
@@ -120,7 +123,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addStatement("assertNotNull(Param_Entity, entity)")
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.INSERT_INTO(this.tableName())")
-            .addCode("InsertList inserts = new InsertList()");
+            .addCode("$T inserts = new InsertList()", InsertList.class);
         for (FieldColumn field : this.fluent.getFields()) {
             builder.addCode("\n\t.add($L, entity.$L(), $S)",
                 field.getProperty(), field.getMethodName(), field.getInsert());
