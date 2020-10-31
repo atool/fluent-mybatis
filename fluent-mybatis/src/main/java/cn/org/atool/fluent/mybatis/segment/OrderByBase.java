@@ -168,13 +168,12 @@ public abstract class OrderByBase<
      */
     void applyField(FieldMapping column, boolean isAsc) {
         if (column != null) {
-            this.applyField(column.column, isAsc);
+            this.applyField(this.columnWithAlias(column), isAsc);
         }
     }
 
     @Override
-    protected OrderByApply<O, W> process(FieldMapping field) {
-        this.apply.setCurrentField(field);
+    protected OrderByApply<O, W> apply() {
         return this.apply;
     }
 }

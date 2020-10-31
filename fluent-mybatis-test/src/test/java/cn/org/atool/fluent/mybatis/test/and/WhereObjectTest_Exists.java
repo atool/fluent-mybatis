@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +14,29 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class WhereObjectTest_Exists extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     void test_exists() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.isDeleted().eq(true)
-            .and.exists("select 1 from t_user where age=?", 34)
+            .and.exists("select 1 from t_student where age=?", 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM t_user WHERE is_deleted = ? AND EXISTS (select 1 from t_user where age=?)");
+            .eq("SELECT COUNT(*) FROM t_student WHERE is_deleted = ? AND EXISTS (select 1 from t_student where age=?)");
     }
 
     @Test
     void test_not_exists() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.isDeleted().eq(true)
-            .and.notExists("select 1 from t_user where age=?", 34)
+            .and.notExists("select 1 from t_student where age=?", 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM t_user " +
+            .eq("SELECT COUNT(*) FROM t_student " +
                 "WHERE is_deleted = ? " +
-                "AND NOT EXISTS (select 1 from t_user where age=?)");
+                "AND NOT EXISTS (select 1 from t_student where age=?)");
     }
 }

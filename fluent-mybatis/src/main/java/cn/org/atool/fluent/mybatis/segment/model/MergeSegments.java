@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.segment.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -15,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.trim;
  *
  * @author darui.wu
  */
+@Getter
 public class MergeSegments extends BaseSegmentList {
 
     private final WhereSegmentList where = new WhereSegmentList();

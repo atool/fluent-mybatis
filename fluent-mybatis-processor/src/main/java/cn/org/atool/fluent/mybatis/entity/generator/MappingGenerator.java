@@ -8,15 +8,17 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapping;
 import static java.util.stream.Collectors.joining;
 
+/**
+ * Mapping代码生成
+ *
+ * @author wudarui
+ */
 public class MappingGenerator extends AbstractGenerator {
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {
@@ -25,10 +27,6 @@ public class MappingGenerator extends AbstractGenerator {
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
         return fluentEntityInfo.getPackageName(Pack_Helper);
-    }
-
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
     }
 
     public MappingGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
@@ -48,6 +46,7 @@ public class MappingGenerator extends AbstractGenerator {
             });
         builder.addField(this.f_Property2Column());
         builder.addField(this.f_ALL_COLUMNS());
+        builder.addField(this.f_ALL_JOIN_COLUMNS());
     }
 
     private FieldSpec f_Field(FieldColumn fc) {
@@ -99,19 +98,25 @@ public class MappingGenerator extends AbstractGenerator {
     private FieldSpec f_ALL_COLUMNS() {
         String statement = this.fluent.getFields().stream()
             .map(FieldColumn::getProperty)
-            .map(field -> String.format("\t\tthis.add(%s.column);", field))
-            .collect(joining("\n"));
+            .map(field -> String.format("\t\t%s.column", field))
+            .collect(joining(",\n"));
 
-        return FieldSpec.builder(ParameterizedTypeName.get(Set.class, String.class),
+        return FieldSpec.builder(ParameterizedTypeName.get(List.class, String.class),
             "ALL_COLUMNS", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
             .addJavadoc("数据库所有字段列表")
             .initializer(codeBlock(
-                CodeBlock.of("new $T<String>() {", HashSet.class),
-                CodeBlock.of("  {"),
+                CodeBlock.of("$T.asList(", Arrays.class),
                 CodeBlock.of(statement),
-                CodeBlock.of("  }"),
-                CodeBlock.of("}")
+                CodeBlock.of(")")
             ))
+            .build();
+    }
+
+    private FieldSpec f_ALL_JOIN_COLUMNS() {
+        return FieldSpec.builder(String.class,
+            "ALL_JOIN_COLUMNS", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("数据库所有字段列表用逗号分隔")
+            .initializer("String.join($S, ALL_COLUMNS)", ", ")
             .build();
     }
 }

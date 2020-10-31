@@ -72,7 +72,7 @@ public abstract class WhereBase<
      * where条件设置为entity对象非空属性
      *
      * @param entity
-     * @return 查询器UserQuery
+     * @return 查询器StudentQuery
      */
     public WHERE eqNotNull(IEntity entity) {
         return this.eqNotNull(entity.toColumnMap());
@@ -227,6 +227,11 @@ public abstract class WhereBase<
         return this.and;
     }
 
+    public WHERE apply(FieldMapping column, SqlOp op, Object... paras) {
+        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, paras);
+        return this.and;
+    }
+
     /**
      * column op (format(sql, args))
      *
@@ -236,8 +241,8 @@ public abstract class WhereBase<
      * @param args
      * @return
      */
-    WHERE apply(String column, String sql, SqlOp op, Object... args) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, sql, op, args);
+    WHERE apply(FieldMapping column, String sql, SqlOp op, Object... args) {
+        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), sql, op, args);
         return this.and;
     }
 
@@ -287,7 +292,7 @@ public abstract class WhereBase<
     }
 
     @Override
-    protected WhereApply process(FieldMapping field) {
-        return this.apply.setCurrentField(field);
+    protected WhereApply apply() {
+        return this.apply;
     }
 }

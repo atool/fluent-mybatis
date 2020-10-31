@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
@@ -11,21 +11,21 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 public class DeleteByIdTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Autowired
     private NoPrimaryMapper noPrimaryMapper;
 
     @Test
     public void testDeleteById() {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
+        ATM.DataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
-        );
+            .cleanAndInsert();
         mapper.deleteById(24);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM t_user WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
+            .eq("DELETE FROM t_student WHERE id = ?", StringMode.SameAsSpace);
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
         );

@@ -15,25 +15,18 @@ public abstract class BaseApply<
     W extends IWrapper<?, W, ?>
     > {
 
-    protected final SEGMENT segment;
+    public final SEGMENT segment;
+
     /**
      * 当前被操作的字段
+     *
+     * @return
      */
-    protected FieldMapping current;
+    public FieldMapping current() {
+        return this.segment.current;
+    }
 
     BaseApply(SEGMENT segment) {
         this.segment = segment;
-    }
-
-    /**
-     * 设置当前被操作的字段
-     *
-     * @param current 字段定义
-     * @param <APPLY> 操作者类型
-     * @return 返回操作自身
-     */
-    <APPLY extends BaseApply<SEGMENT, W>> APPLY setCurrentField(FieldMapping current) {
-        this.current = current;
-        return (APPLY) this;
     }
 }

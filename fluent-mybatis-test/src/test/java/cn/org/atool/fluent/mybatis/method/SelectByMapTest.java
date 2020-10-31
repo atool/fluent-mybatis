@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +17,21 @@ import java.util.List;
  */
 public class SelectByMapTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void test_selectByMap() throws Exception {
-        db.table(ATM.Table.user).clean()
-            .insert(ATM.DataMap.user.initTable(4)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.DataMap.student.initTable(4)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
 
-        List<UserEntity> users = mapper.listByMap(new HashMap<String, Object>() {
+        List<StudentEntity> users = mapper.listByMap(new HashMap<String, Object>() {
             {
-                this.put(UserMapping.userName.column, "u2");
+                this.put(StudentMapping.userName.column, "u2");
             }
         });
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
-        want.list(users).eqDataMap(ATM.DataMap.user.entity(2)
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ?");
+        want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
             .userName.values("u2"));
     }
 }

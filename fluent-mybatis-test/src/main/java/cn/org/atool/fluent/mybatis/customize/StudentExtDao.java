@@ -1,22 +1,22 @@
 package cn.org.atool.fluent.mybatis.customize;
 
-import cn.org.atool.fluent.mybatis.generate.dao.intf.UserDao;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 
 import java.util.List;
 
-public interface UserExtDao extends UserDao {
+public interface StudentExtDao extends IBaseDao<StudentEntity> {
     int count(String userName);
 
     List<String> selectFields(Long... ids);
 
-    List<UserEntity> selectList(Long... ids);
+    List<StudentEntity> selectList(Long... ids);
 
     List<String> selectObjs(Long... ids);
 
     List<String> selectObjs2(Long... ids);
 
-    UserEntity selectOne(String likeName);
+    StudentEntity selectOne(String likeName);
 
     String selectOne(long id);
 

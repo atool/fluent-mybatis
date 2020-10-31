@@ -68,6 +68,12 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
   private Boolean isDeleted;
 
   /**
+   * 数据隔离环境
+   */
+  @TableField("env")
+  private String env;
+
+  /**
    * 性别, 0:女; 1:男
    */
   @TableField("gender_man")
@@ -96,6 +102,12 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
    */
   @TableField("subject")
   private String subject;
+
+  /**
+   * 租户标识
+   */
+  @TableField("tenant")
+  private Long tenant;
 
   @Override
   public Serializable findPk() {

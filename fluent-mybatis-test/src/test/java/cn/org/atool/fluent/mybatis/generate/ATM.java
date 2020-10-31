@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.generate;
 
-import cn.org.atool.fluent.mybatis.generate.dm.AddressDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.UserDataMap;
-import cn.org.atool.fluent.mybatis.generate.mix.AddressTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.UserTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentTableMix;
 import java.lang.Class;
 import java.lang.Override;
 import java.lang.String;
@@ -27,11 +27,11 @@ public interface ATM {
    * 应用表名
    */
   interface Table {
-    String address = "address";
+    String student = "t_student";
 
     String noPrimary = "no_primary";
 
-    String user = "t_user";
+    String homeAddress = "home_address";
 
     String noAutoId = "no_auto_id";
 
@@ -42,11 +42,11 @@ public interface ATM {
    * table or entity data构造器
    */
   interface DataMap {
-    AddressDataMap.Factory address = new AddressDataMap.Factory();
+    StudentDataMap.Factory student = new StudentDataMap.Factory();
 
     NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
 
-    UserDataMap.Factory user = new UserDataMap.Factory();
+    HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
 
     NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
 
@@ -59,13 +59,13 @@ public interface ATM {
   @org.test4j.module.spec.annotations.Mixes
   class Mixes {
     @Mix
-    public AddressTableMix addressTableMix;
+    public StudentTableMix studentTableMix;
 
     @Mix
     public NoPrimaryTableMix noPrimaryTableMix;
 
     @Mix
-    public UserTableMix userTableMix;
+    public HomeAddressTableMix homeAddressTableMix;
 
     @Mix
     public NoAutoIdTableMix noAutoIdTableMix;
@@ -74,9 +74,9 @@ public interface ATM {
     public StudentScoreTableMix studentScoreTableMix;
 
     public void cleanAllTable() {
-      this.addressTableMix.cleanAddressTable();
+      this.studentTableMix.cleanStudentTable();
       this.noPrimaryTableMix.cleanNoPrimaryTable();
-      this.userTableMix.cleanUserTable();
+      this.homeAddressTableMix.cleanHomeAddressTable();
       this.noAutoIdTableMix.cleanNoAutoIdTable();
       this.studentScoreTableMix.cleanStudentScoreTable();
     }
@@ -89,9 +89,9 @@ public interface ATM {
     @Override
     public List<Class> getTableKlass() {
       return list(
-      	AddressDataMap.class,
+      	StudentDataMap.class,
       	NoPrimaryDataMap.class,
-      	UserDataMap.class,
+      	HomeAddressDataMap.class,
       	NoAutoIdDataMap.class,
       	StudentScoreDataMap.class
       );

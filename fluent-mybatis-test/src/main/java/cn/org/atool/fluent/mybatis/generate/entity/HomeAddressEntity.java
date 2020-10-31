@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import java.io.Serializable;
 import java.lang.Boolean;
-import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -17,7 +16,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * UserEntity: 数据映射实体定义
+ * HomeAddressEntity: 数据映射实体定义
  *
  * @author Powered By Fluent Mybatis
  */
@@ -26,11 +25,11 @@ import lombok.experimental.Accessors;
     chain = true
 )
 @FluentMybatis(
-    table = "t_user",
+    table = "home_address",
     mapperBeanPrefix = "my",
     daoInterface = {MyCustomerInterface.class}
 )
-public class UserEntity implements IEntity, IBaseEntity<UserEntity> {
+public class HomeAddressEntity implements IEntity, IBaseEntity<HomeAddressEntity> {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -68,85 +67,46 @@ public class UserEntity implements IEntity, IBaseEntity<UserEntity> {
   private Boolean isDeleted;
 
   /**
-   * 账号
+   * 详细住址
    */
-  @TableField("account")
-  private String account;
+  @TableField("address")
+  private String address;
 
   /**
-   * 收货地址id
+   * 城市
    */
-  @TableField("address_id")
-  private Long addressId;
+  @TableField("city")
+  private String city;
 
   /**
-   * 年龄
+   * 区
    */
-  @TableField("age")
-  private Integer age;
+  @TableField("district")
+  private String district;
 
   /**
-   * 头像
+   * 数据隔离环境
    */
-  @TableField("avatar")
-  private String avatar;
+  @TableField("env")
+  private String env;
 
   /**
-   * 生日
+   * 省份
    */
-  @TableField("birthday")
-  private Date birthday;
+  @TableField("province")
+  private String province;
 
   /**
-   * 会员积分
+   * 用户id
    */
-  @TableField("bonus_points")
-  private Long bonusPoints;
+  @TableField("student_id")
+  private Long studentId;
 
   /**
-   * 电子邮件
+   * 租户标识
    */
-  @TableField("e_mail")
-  private String eMail;
-
-  /**
-   * 等级
-   */
-  @TableField("grade")
-  private Integer grade;
-
-  /**
-   * 密码
-   */
-  @TableField("password")
-  private String password;
-
-  /**
-   * 电话
-   */
-  @TableField("phone")
-  private String phone;
-
-  /**
-   * 状态(字典)
-   */
-  @TableField("status")
-  private String status;
-
-  /**
-   * 名字
-   */
-  @TableField("user_name")
-  private String userName;
-
-  /**
-   * 版本号
-   */
-  @TableField(
-      value = "version",
-      notLarge = false
-  )
-  private String version;
+  @TableField("tenant")
+  private Long tenant;
 
   @Override
   public Serializable findPk() {

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.entity.base;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 
+import java.util.List;
 import java.util.Map;
 
 public class ClassNames {
@@ -17,6 +18,8 @@ public class ClassNames {
     public static final ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
     public static final ParameterizedTypeName CN_Map_StrStr = ParameterizedTypeName.get(Map.class, String.class, String.class);
+
+    public static final ParameterizedTypeName CN_List_Str = ParameterizedTypeName.get(List.class, String.class);
 
     public static final ClassName getClassName(String fullClassName) {
         int index = fullClassName.lastIndexOf('.');

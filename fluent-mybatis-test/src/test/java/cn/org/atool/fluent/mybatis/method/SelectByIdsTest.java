@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
@@ -18,20 +18,22 @@ import java.util.List;
  */
 public class SelectByIdsTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Autowired
     private NoPrimaryMapper noPrimaryMapper;
 
     @Test
     public void test_selectById() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(3)
-            .userName.values(DataGenerator.increase("username_%d")));
-        List<UserEntity> users = mapper.listByIds(Arrays.asList(3L, 1L));
+        ATM.DataMap.student.initTable(3)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .cleanAndInsert();
+
+        List<StudentEntity> users = mapper.listByIds(Arrays.asList(3L, 1L));
         db.sqlList().wantFirstSql()
             .where().eq("id IN (?, ?)");
         want.list(users)
-            .eqMap(ATM.DataMap.user.entity(2)
+            .eqMap(ATM.DataMap.student.entity(2)
                 .userName.values("username_1", "username_3")
             );
     }

@@ -1,16 +1,16 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
-import cn.org.atool.fluent.mybatis.If;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 
@@ -22,10 +22,6 @@ public class QueryGenerator extends AbstractGenerator {
 
     public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
         return fluentEntityInfo.getPackageName(Pack_Wrapper);
-    }
-
-    public static ClassName className(FluentEntityInfo fluentEntityInfo) {
-        return ClassName.get(getPackageName(fluentEntityInfo), getClassName(fluentEntityInfo));
     }
 
     public QueryGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
@@ -47,13 +43,22 @@ public class QueryGenerator extends AbstractGenerator {
             .addField(this.f_groupBy())
             .addField(this.f_having())
             .addField(this.f_orderBy())
-            .addField(this.f_where())
+            .addField(this.f_where());
+        builder
             .addMethod(this.constructor0())
-            .addMethod(this.constructor1())
-            .addMethod(this.m_selectId())
+            .addMethod(this.constructor2_String_Parameter())
+            .addMethod(this.constructor1_Parameter())
             .addMethod(this.m_where())
-            .addMethod(this.m_hasPrimary())
-            .addMethod(this.m_validateColumn());
+            .addMethod(this.m_primary())
+            .addMethod(this.m_allFields());
+    }
+
+    private MethodSpec m_allFields() {
+        return MethodSpec.methodBuilder("allFields")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(CN_List_Str)
+            .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
+            .build();
     }
 
     /**
@@ -62,7 +67,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_select() {
-        return FieldSpec.builder(WrapperHelperGenerator.selector(fluent),
+        return FieldSpec.builder(fluent.selector(),
             "select", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("指定查询字段, 默认无需设置")
             .initializer("new Selector(this)")
@@ -75,7 +80,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_groupBy() {
-        return FieldSpec.builder(WrapperHelperGenerator.groupBy(fluent), "groupBy", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.groupBy(), "groupBy", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("分组：GROUP BY 字段, ...\n")
             .addJavadoc("例: groupBy('id', 'name')")
             .initializer("new GroupBy(this)")
@@ -88,7 +93,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_having() {
-        return FieldSpec.builder(WrapperHelperGenerator.having(fluent), "having", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.having(), "having", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("分组条件设置 having...")
             .initializer("new Having(this)")
             .build();
@@ -100,7 +105,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_orderBy() {
-        return FieldSpec.builder(WrapperHelperGenerator.queryOrderBy(fluent), "orderBy", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.queryOrderBy(), "orderBy", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("排序设置 order by ...")
             .initializer("new QueryOrderBy(this)")
             .build();
@@ -112,7 +117,7 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_where() {
-        return FieldSpec.builder(WrapperHelperGenerator.queryWhere(fluent), "where", Modifier.PUBLIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.queryWhere(), "where", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new QueryWhere(this)")
             .addJavadoc("查询条件 where ...")
             .build();
@@ -127,49 +132,43 @@ public class QueryGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addStatement("super($T.Table_Name, $T.class, $T.class)",
-                MappingGenerator.className(fluent),
-                fluent.className(),
-                QueryGenerator.className(fluent)
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query()
             )
             .build();
     }
 
     /**
-     * public AddressQuery(ParameterPair parameters) {}
+     * public XyzQuery(ParameterPair parameters) {}
      *
      * @return
      */
-    private MethodSpec constructor1() {
+    private MethodSpec constructor1_Parameter() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(ClassName.get(ParameterPair.class), "parameters")
             .addStatement("super($T.Table_Name, parameters, $T.class, $T.class)",
-                MappingGenerator.className(fluent),
-                fluent.className(),
-                QueryGenerator.className(fluent)
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query()
             )
             .build();
     }
 
     /**
-     * public AddressQuery selectId() {}
+     * public XyzQuery(String alias) {}
      *
      * @return
      */
-    private MethodSpec m_selectId() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("selectId")
+    private MethodSpec constructor2_String_Parameter() {
+        return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Override.class)
-            .returns(QueryGenerator.className(fluent));
-        if (fluent.getPrimary() == null) {
-            builder.addStatement("throw new $T($S + $T.Table_Name + $S)",
-                FluentMybatisException.class, "The primary key of in table[",
-                MappingGenerator.className(fluent), "] was not found.");
-        } else {
-            builder.addStatement("return this.select($T.$L.column)",
-                MappingGenerator.className(fluent), fluent.getPrimary().getProperty());
-        }
-        return builder.build();
+            .addParameter(ClassName.get(String.class), "alias")
+            .addParameter(ClassName.get(ParameterPair.class), "parameters")
+            .addStatement("this(parameters)")
+            .addStatement("super.alias = alias")
+            .build();
     }
 
     /**
@@ -178,18 +177,15 @@ public class QueryGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_where() {
-        return MethodSpec.methodBuilder("where")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(WrapperHelperGenerator.queryWhere(fluent))
+        return super.publicMethod("where", true, fluent.queryWhere())
             .addStatement("return this.where")
             .build();
     }
 
     private ParameterizedTypeName superKlass() {
         ClassName base = ClassName.get(BaseQuery.class);
-        ClassName entity = fluent.className();
-        ClassName query = QueryGenerator.className(fluent);
+        ClassName entity = fluent.entity();
+        ClassName query = fluent.query();
         return ParameterizedTypeName.get(base, entity, query);
     }
 

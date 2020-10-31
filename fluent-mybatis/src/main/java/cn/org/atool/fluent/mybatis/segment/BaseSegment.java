@@ -23,7 +23,26 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 当前处理字段
      */
-    protected FieldMapping currField;
+    protected FieldMapping current;
+
+    /**
+     * 加上表别名的字段名称
+     *
+     * @return
+     */
+    protected String currentWithAlias() {
+        return this.columnWithAlias(this.current);
+    }
+
+    /**
+     * 加上表别名的字段名称
+     *
+     * @param column
+     * @return
+     */
+    protected String columnWithAlias(FieldMapping column) {
+        return column.alias(this.wrapper.getAlias());
+    }
 
     protected BaseSegment(W wrapper) {
         this.wrapper = (BaseWrapper) wrapper;
@@ -36,11 +55,11 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * @return BaseSegment子类或者操作器
      */
     public R set(FieldMapping field) {
-        this.currField = field;
-        return this.process(this.currField);
+        this.current = field;
+        return this.apply();
     }
 
-    protected abstract R process(FieldMapping currField);
+    protected abstract R apply();
 
     /**
      * 结束本段操作，返回查询（更新）器对象
@@ -51,6 +70,11 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         return (W) this.wrapper;
     }
 
+    /**
+     * 查询条件
+     *
+     * @return
+     */
     WrapperData wrapperData() {
         return this.wrapper.getWrapperData();
     }

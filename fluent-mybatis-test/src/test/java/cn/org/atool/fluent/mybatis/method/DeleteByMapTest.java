@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +11,14 @@ import java.util.HashMap;
 
 public class DeleteByMapTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void testDeleteByIds() {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
+        ATM.DataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
-        );
+            .cleanAndInsert();
         mapper.deleteByMap(new HashMap<String, Object>() {
             {
                 this.put("id", 24);
@@ -26,8 +26,8 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM t_user WHERE user_name = ? AND id = ?", StringMode.SameAsSpace);
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
+            .eq("DELETE FROM t_student WHERE user_name = ? AND id = ?", StringMode.SameAsSpace);
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(23L)
         );
     }

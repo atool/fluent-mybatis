@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.test.segment1;
 
-import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cn.org.atool.fluent.mybatis.generate.helper.UserMapping.grade;
+import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.grade;
 
 /**
  * GroupByTest
@@ -18,47 +18,47 @@ import static cn.org.atool.fluent.mybatis.generate.helper.UserMapping.grade;
  */
 public class GroupByTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void test_groupBy() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
             .where.id().eq(24L).end()
             .groupBy.userName().age().end()
             .last("/** comment **/");
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name, age /** comment **/");
+            .eq("SELECT id FROM t_student WHERE id = ? GROUP BY user_name, age /** comment **/");
     }
 
     @Test
     public void test_groupBy2() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
             .where.id().eq(24L).end()
-            .groupBy.apply(UserMapping.userName, UserMapping.age).end();
+            .groupBy.apply(StudentMapping.userName, StudentMapping.age).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name, age");
+            .eq("SELECT id FROM t_student WHERE id = ? GROUP BY user_name, age");
     }
 
     @Test
     public void test_groupBy_condition() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
             .where.id().eq(24L).end()
             .groupBy
-            .apply(true, UserMapping.userName)
-            .apply(false, UserMapping.age).end();
+            .apply(true, StudentMapping.userName)
+            .apply(false, StudentMapping.age).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE id = ? GROUP BY user_name");
+            .eq("SELECT id FROM t_student WHERE id = ? GROUP BY user_name");
     }
 
     @Test
     public void test_groupBy_having() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .select.apply("count(1)", "sum(1)")
             .end()
             .where.id().eq(24L)
@@ -69,7 +69,7 @@ public class GroupByTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT count(1), sum(1) FROM t_user " +
+            .eq("SELECT count(1), sum(1) FROM t_student " +
                 "WHERE id = ? GROUP BY user_name, age " +
                 "HAVING count(1) > ? AND SUM(age) > ?");
     }
@@ -77,7 +77,7 @@ public class GroupByTest extends BaseTest {
     @DisplayName("按级别grade统计年龄在15和25之间的人数在10人以上，该条件内最大、最小和平均年龄")
     @Test
     public void test_count_gt_10_groupByGrade() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .select
             .apply(grade.column)
             .count.id()
@@ -94,7 +94,7 @@ public class GroupByTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT grade, COUNT(id), MAX(age), MIN(age), AVG(age) " +
-                "FROM t_user " +
+                "FROM t_student " +
                 "WHERE age BETWEEN ? AND ? " +
                 "GROUP BY grade " +
                 "HAVING COUNT(id) > ?");

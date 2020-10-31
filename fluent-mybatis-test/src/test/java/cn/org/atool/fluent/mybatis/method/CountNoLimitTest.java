@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class CountNoLimitTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void test_count_no_limit() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.id().eq(24L).end()
             .orderBy.userName().asc().end()
             .limit(10);
@@ -28,7 +28,7 @@ public class CountNoLimitTest extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT(*)")
-            .end("FROM t_user WHERE id = ? ORDER BY user_name ASC LIMIT ?, ?");
+            .end("FROM t_student WHERE id = ? ORDER BY user_name ASC LIMIT ?, ?");
 
         mapper.countNoLimit(query);
         db.sqlList().wantSql(1).end("WHERE id = ?");
@@ -36,12 +36,11 @@ public class CountNoLimitTest extends BaseTest {
 
     @Test
     public void test_count_and_list() throws Exception {
-        db.table(ATM.Table.user).clean()
-            .insert(ATM.DataMap.user.initTable(100)
-                .age.values(10)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
-        UserQuery query = new UserQuery()
+        ATM.DataMap.student.initTable(100)
+            .age.values(10)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
+        StudentQuery query = new StudentQuery()
             .where.age().eq(10)
             .end()
             .orderBy.userName().asc()
@@ -50,10 +49,10 @@ public class CountNoLimitTest extends BaseTest {
         int count = mapper.countNoLimit(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT(*)")
-            .end("FROM t_user WHERE age = ?");
+            .end("FROM t_student WHERE age = ?");
         want.number(count).eq(100);
 
-        List<UserEntity> list = mapper.listEntity(query);
+        List<StudentEntity> list = mapper.listEntity(query);
         db.sqlList().wantSql(1)
             .start("SELECT id,")
             .end("WHERE age = ? ORDER BY user_name ASC LIMIT ?, ?");

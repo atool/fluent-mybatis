@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+
 /**
  * dao自定义接口继承类, 定义同 IMapperDao
  * 自定义接口泛型参数需要严格按照&lt;E,Q,U>顺序定义
@@ -33,9 +35,42 @@ public interface IDao<E, Q, U> {
     IUpdate updater();
 
     /**
-     * 返回主键字段名称
+     * 对保存的entity类设置默认值
+     * 比如: 数据隔离的环境值, 租户值等等
+     *
+     * @param entity
+     */
+    default void setInsertDefault(E entity) {
+    }
+
+    /**
+     * 通过query()方法构造的动态SQL默认添加的where条件
+     * 比如追加 env的环境变量
+     *
+     * @param query
+     * @return 返回query本身
+     */
+    default IWrapper setQueryDefault(Q query) {
+        return (IWrapper) query;
+    }
+
+    /**
+     * 通过updater()方法构造的动态SQL默认添加的where条件
+     * 比如追加 env的环境变量
+     *
+     * @param updater
+     * @return 返回updater本身
+     */
+    default IWrapper setUpdateDefault(U updater) {
+        return (IWrapper) updater;
+    }
+
+    /**
+     * 返回主键字段
      *
      * @return
      */
-    String findPkColumn();
+    default FieldMapping primaryField() {
+        throw new RuntimeException("无需实现, 在各EntityDaoImpl有具体实现.");
+    }
 }

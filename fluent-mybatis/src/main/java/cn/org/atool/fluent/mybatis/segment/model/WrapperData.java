@@ -5,10 +5,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -28,23 +25,34 @@ public class WrapperData implements IWrapperData {
      * select 前面是否加 DISTINCT 关键字
      */
     @Setter
-    private boolean isDistinct = false;
+    protected boolean isDistinct = false;
     /**
      * 查询字段
      */
-    private Set<String> sqlSelect = new LinkedHashSet<>(8);
+    protected Set<String> sqlSelect = new LinkedHashSet<>(8);
+    /**
+     * 表名
+     */
+    protected String table;
+    /**
+     * 自定义参数列表
+     */
+    protected final ParameterPair parameters;
+    /**
+     * where, group, having ,order by对象列表
+     */
+    protected final MergeSegments mergeSegments = new MergeSegments();
+
+    /**
+     * 分页参数
+     */
+    @Setter
+    protected PagedOffset paged;
+
     /**
      * SQL 更新字段内容，例如：name='1', age=2
      */
     private final Map<String, String> updates = new LinkedHashMap<>(16);
-    /**
-     * 表名
-     */
-    private final String table;
-    /**
-     * 自定义参数列表
-     */
-    private final ParameterPair parameters;
     /**
      * 实体类型
      */
@@ -53,21 +61,17 @@ public class WrapperData implements IWrapperData {
      * 对应的嵌套查询类
      */
     private final Class queryClass;
-    /**
-     * where, group, having ,order by对象列表
-     */
-    private final MergeSegments mergeSegments;
-    /**
-     * 分页参数
-     */
-    @Setter
-    private PagedOffset paged;
+
+    protected WrapperData() {
+        this.parameters = new ParameterPair();
+        this.queryClass = null;
+        this.entityClass = null;
+    }
 
     public WrapperData(String table, ParameterPair parameters, Class entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.parameters = parameters;
-        this.mergeSegments = new MergeSegments();
         this.entityClass = entityClass;
         this.queryClass = queryClass;
     }
@@ -80,6 +84,10 @@ public class WrapperData implements IWrapperData {
             String sql = sqlSelect.stream().collect(joining(COMMA_SPACE));
             return isBlank(sql) ? null : sql.trim();
         }
+    }
+
+    public Set<String> sqlSelect() {
+        return this.sqlSelect;
     }
 
     @Override
@@ -173,7 +181,14 @@ public class WrapperData implements IWrapperData {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
         String segment = operator.operator(this.getParameters(), format, args);
-        this.getMergeSegments().add(keyWord, () -> column, () -> segment);
+        this.getMergeSegments().add(keyWord, ColumnSegment.column(column), () -> segment);
+    }
+
+    public void apply(KeyWordSegment keyWord, ISqlSegment... segments) {
+        if (keyWord == null) {
+            throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
+        }
+        this.getMergeSegments().add(keyWord, segments);
     }
 
     /**

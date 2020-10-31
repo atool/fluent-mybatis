@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
@@ -15,20 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class SelectByIdTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Autowired
     private NoPrimaryMapper noPrimaryMapper;
 
     @Test
     public void test_selectById() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(3)
-            .userName.values(DataGenerator.increase("username_%d")));
-        UserEntity user = mapper.findById(3L);
+        ATM.DataMap.student.initTable(3)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .cleanAndInsert();
+        StudentEntity student = mapper.findById(3L);
         db.sqlList().wantFirstSql()
             .where().eq("id = ?");
-        want.object(user)
-            .eqMap(ATM.DataMap.user.entity()
+        want.object(student)
+            .eqMap(ATM.DataMap.student.entity()
                 .userName.values("username_3")
             );
     }

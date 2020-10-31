@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.test.segment1;
 
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cn.org.atool.fluent.mybatis.generate.helper.UserMapping.id;
+import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.id;
 
 /**
  * HavingTest
@@ -16,11 +16,11 @@ import static cn.org.atool.fluent.mybatis.generate.helper.UserMapping.id;
  */
 public class HavingTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void test_groupBy_having() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .select
             .sum.age("avg")
             .apply(id.column)
@@ -36,7 +36,7 @@ public class HavingTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(age) AS avg, id FROM t_user WHERE id = ? " +
+            .eq("SELECT SUM(age) AS avg, id FROM t_student WHERE id = ? " +
                 "GROUP BY id " +
                 "HAVING SUM(age) BETWEEN ? AND ? " +
                 "AND COUNT(id) > ? " +
@@ -48,7 +48,7 @@ public class HavingTest extends BaseTest {
 
     @Test
     public void test_groupBy_having2() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .select
             .sum.age("avg")
             .apply(id.column)
@@ -62,7 +62,7 @@ public class HavingTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(age) AS avg, id FROM t_user WHERE id = ? " +
+            .eq("SELECT SUM(age) AS avg, id FROM t_student WHERE id = ? " +
                 "GROUP BY id " +
                 "HAVING MAX(age) < ? AND SUM(age) < ?");
     }

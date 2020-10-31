@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.segment1;
 
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,29 +18,29 @@ import java.util.HashMap;
  */
 public class WhereTest_EqMap extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void test_eq_map() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
             .where.eqNotNull(new HashMap<String, Object>() {
                 {
-                    this.put(UserMapping.userName.column, "user1");
+                    this.put(StudentMapping.userName.column, "user1");
                 }
             }).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE user_name = ?");
+            .eq("SELECT id FROM t_student WHERE user_name = ?");
     }
 
     @Test
     public void test_eq_entity() throws Exception {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
-            .where.eqNotNull(new UserEntity().setUserName("u2")).end();
+            .where.eqNotNull(new StudentEntity().setUserName("u2")).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE user_name = ?");
+            .eq("SELECT id FROM t_student WHERE user_name = ?");
     }
 }

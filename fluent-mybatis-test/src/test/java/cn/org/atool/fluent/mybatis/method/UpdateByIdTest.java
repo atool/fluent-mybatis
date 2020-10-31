@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +16,16 @@ import java.util.Date;
  */
 public class UpdateByIdTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void testUpdate() {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
+        ATM.DataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
-        );
+            .cleanAndInsert();
 
-        UserEntity update = new UserEntity()
+        StudentEntity update = new StudentEntity()
             .setAge(45)
             .setUserName("test name")
             .setIsDeleted(true)
@@ -33,9 +33,9 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE t_student SET gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
 
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
@@ -44,12 +44,12 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate_gmtCreate() {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
+        ATM.DataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
-        );
+            .cleanAndInsert();
 
-        UserEntity update = new UserEntity()
+        StudentEntity update = new StudentEntity()
             .setAge(45)
             .setUserName("test name")
             .setIsDeleted(true)
@@ -58,9 +58,9 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_created = ?, gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE t_student SET gmt_created = ?, gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
 
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
@@ -69,12 +69,12 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate2() {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(2)
+        ATM.DataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
-        );
+            .cleanAndInsert();
 
-        UserEntity update = new UserEntity()
+        StudentEntity update = new StudentEntity()
             .setAge(45)
             .setUserName("test name")
             .setIsDeleted(true)
@@ -84,8 +84,8 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_created = ?, gmt_modified = ?, is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(2)
+            .eq("UPDATE t_student SET gmt_created = ?, gmt_modified = ?, is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)

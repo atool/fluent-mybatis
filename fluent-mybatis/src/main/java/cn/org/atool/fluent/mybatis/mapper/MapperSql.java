@@ -9,7 +9,13 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.el;
 
+/**
+ * Mapper SQL组装
+ *
+ * @author darui.wu
+ */
 public class MapperSql {
     private StringBuffer buffer = new StringBuffer();
 
@@ -101,7 +107,7 @@ public class MapperSql {
             if (entry.getValue() == null) {
                 ands.add(entry.getKey() + " IS NULL");
             } else {
-                ands.add(entry.getKey() + " = #{" + prefix + "." + entry.getKey() + "}");
+                ands.add(el(entry.getKey(), prefix, entry.getKey()));
             }
         }
         return this.WHERE(ands);

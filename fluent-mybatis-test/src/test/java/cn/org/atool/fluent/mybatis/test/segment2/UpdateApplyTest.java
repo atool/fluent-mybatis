@@ -1,29 +1,29 @@
 package cn.org.atool.fluent.mybatis.test.segment2;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserUpdate;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class UpdateApplyTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     void is() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.age().is(34).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_user SET gmt_modified = now(), age = ? WHERE id = ?");
+            .eq("UPDATE t_student SET gmt_modified = now(), age = ? WHERE id = ?");
     }
 
     @Test
     void isNull() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.age().is(34)
             .set.userName().isNull().end()
             .where.id().eq(2).end()
@@ -34,7 +34,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_If() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.age().is(34, If::everFalse)
             .set.userName().is(null, If::everTrue).end()
             .where.id().eq(2).end()
@@ -45,7 +45,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_IfNotNull() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.age().is(34, If::notNull)
             .set.userName().is(null, If::notNull).end()
             .where.id().eq(2).end()
@@ -56,7 +56,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_IfNotBlank() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.version().is("19", If::notBlank)
             .set.userName().is(null, If::notBlank)
             .set.userName().is("  ", If::notBlank).end()
@@ -68,7 +68,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void apply() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.userName().apply("concat('user_name', '_abc')").end()
             .where.id().eq(2).end()
         );
@@ -78,7 +78,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void apply_If() {
-        mapper.updateBy(new UserUpdate()
+        mapper.updateBy(new StudentUpdate()
             .update.userName().apply_If(false, "concat('user_name', '_abc')")
             .set.age().apply_If(true, "age+1").end()
             .where.id().eq(2).end()

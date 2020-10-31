@@ -1,8 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.*;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.io.Serializable;
@@ -26,6 +24,7 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public <PK extends Serializable> PK save(E entity) {
+        this.setDaoEntityDefault(entity);
         this.mapper().insert(entity);
         return (PK) entity.findPk();
     }
@@ -36,16 +35,19 @@ public abstract class BaseDaoImpl<E extends IEntity>
         if (!pks.isEmpty() && pks.size() != list.size()) {
             throw FluentMybatisException.instance("The primary key of the list instance must be assigned to all or none");
         }
+        list.forEach(this::setDaoEntityDefault);
         return this.mapper().insertBatch(list);
     }
 
     @Override
     public boolean saveOrUpdate(E entity) {
         if (entity.findPk() == null) {
+            this.setDaoEntityDefault(entity);
             return this.mapper().insert(entity) > 0;
         } else if (this.existPk(entity.findPk())) {
             return this.mapper().updateById(entity) > 0;
         } else {
+            this.setDaoEntityDefault(entity);
             return this.mapper().insert(entity) > 0;
         }
     }
@@ -68,7 +70,10 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public boolean existPk(Serializable id) {
-        IQuery query = this.query().where().apply(this.findPkColumn(), EQ, id).end();
+        /**
+         * 只设置id，不添加默认值
+         */
+        IQuery query = this.newQuery().where().apply(this.primaryField(), EQ, id).end();
         Integer count = this.mapper().count(query);
         return count != null && count > 0;
     }
@@ -101,4 +106,52 @@ public abstract class BaseDaoImpl<E extends IEntity>
         IQuery query = (IQuery) this.query().where().eqNotNull((Map) map).end();
         return this.mapper().delete(query);
     }
+
+
+    /**
+     * 插入实例的默认值字段设置
+     *
+     * @param entity
+     */
+    protected void setDaoEntityDefault(E entity) {
+        if (this instanceof IDao) {
+            ((IDao) this).setInsertDefault(entity);
+        }
+    }
+
+    /**
+     * 默认查询条件设置
+     *
+     * @param query
+     */
+    protected void setDaoQueryDefault(Object query) {
+        if (this instanceof IDao && query instanceof IQuery) {
+            ((IDao) this).setQueryDefault(query);
+        }
+    }
+
+    /**
+     * 默认更新内容或更新条件设置
+     *
+     * @param updater
+     */
+    protected void setDaoUpdateDefault(Object updater) {
+        if (this instanceof IDao && updater instanceof IUpdate) {
+            ((IDao) this).setUpdateDefault(updater);
+        }
+    }
+
+    /**
+     * 无任何条件的查询
+     *
+     * @return
+     */
+    protected abstract IQuery<E, ?> newQuery();
+
+    /**
+     * 无任何设置的更新器
+     *
+     * @return
+     */
+    protected abstract IUpdate<E, ?, ?> newUpdater();
 }

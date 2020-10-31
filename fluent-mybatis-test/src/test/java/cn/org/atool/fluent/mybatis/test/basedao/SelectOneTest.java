@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
+import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +14,39 @@ import org.test4j.hamcrest.matcher.string.StringMode;
  */
 public class SelectOneTest extends BaseTest {
     @Autowired
-    private UserExtDao dao;
+    private StudentExtDao dao;
 
     @Test
     public void test_selectOne() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(10)
-                .userName.values(DataGenerator.increase("username_%d")));
+        ATM.DataMap.student.initTable(10)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
+            .cleanAndInsert();
 
-        UserEntity user = dao.selectOne("username");
-        want.object(user).notNull();
+        StudentEntity student = dao.selectOne("username");
+        want.object(student).notNull();
         db.sqlList().wantFirstSql().start("SELECT")
-                .end("FROM t_user WHERE user_name LIKE ? LIMIT ?, ?", StringMode.SameAsSpace);
+            .end("FROM t_student " +
+                "WHERE is_deleted = ? " +
+                "AND env = ? " +
+                "AND user_name LIKE ? " +
+                "LIMIT ?, ?", StringMode.SameAsSpace);
     }
 
     @Test
     public void test_selectOne2() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(10)
-                .userName.values(DataGenerator.increase("username_%d")));
+        ATM.DataMap.student.initTable(10)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
+            .cleanAndInsert();
 
         String username = dao.selectOne(5);
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
-                .end("FROM t_user WHERE id = ? LIMIT ?, ?", StringMode.SameAsSpace);
+            .end("FROM t_student " +
+                "WHERE is_deleted = ? " +
+                "AND env = ? " +
+                "AND id = ? " +
+                "LIMIT ?, ?", StringMode.SameAsSpace);
     }
 }

@@ -10,6 +10,9 @@ import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
 
+import java.util.List;
+
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
 
 /**
@@ -27,6 +30,12 @@ public abstract class BaseWrapper<
     >
     implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
+
+    /**
+     * 表别名
+     */
+    @Getter
+    protected String alias = "";
 
     @Getter
     protected final WrapperData wrapperData;
@@ -47,12 +56,13 @@ public abstract class BaseWrapper<
     }
 
     /**
-     * 是否有主键字段
+     * 如果有主键字段返回主键字段
+     * 如果没有定义主键，返回null
      *
-     * @return true: 有主键字段
+     * @return 主键字段
      */
-    protected boolean hasPrimary() {
-        return true;
+    protected String primary() {
+        return null;
     }
 
     /**
@@ -62,9 +72,20 @@ public abstract class BaseWrapper<
      * @return 如果不是合法字段，抛出异常
      * @throws FluentMybatisException 字段校验异常
      */
-    protected abstract void validateColumn(String column) throws FluentMybatisException;
+    protected void validateColumn(String column) throws FluentMybatisException {
+        if (notBlank(column) && !this.allFields().contains(column)) {
+            throw new FluentMybatisException("the column[" + column + "] was not found in table[" + this.wrapperData.getTable() + "].");
+        }
+    }
 
-    protected TableMeta getTableMeta(){
+    /**
+     * 表所有字段列表
+     *
+     * @return
+     */
+    protected abstract List<String> allFields();
+
+    protected TableMeta getTableMeta() {
         return TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass());
     }
 }

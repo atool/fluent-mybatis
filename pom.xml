@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.3.3</version>
+    <version>1.4.0</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -40,7 +40,7 @@
         <spring.version>4.3.14.RELEASE</spring.version>
         <mybatis.version>3.5.2</mybatis.version>
         <jmockit.version>1.48</jmockit.version>
-        <test4j.version>2.6.9</test4j.version>
+        <test4j.version>2.7.0</test4j.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>

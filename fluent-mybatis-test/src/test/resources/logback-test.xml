@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-5level - %msg %n</pattern>
+        </encoder>
+    </appender>
+    <logger name="cn.org.atool.fluent.mybatis" level="DEBUG" addtivity="false">
+    </logger>
+
+    <!--root是默认的logger 这里设定输出级别是info-->
+    <root level="WARN">
+        <!--定义了两个appender，日志会通过往这两个appender里面写-->
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

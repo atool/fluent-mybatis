@@ -1,8 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
-import cn.org.atool.fluent.mybatis.entity.generator.MappingGenerator;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -60,10 +58,6 @@ public abstract class AbstractGenerator {
         return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), "\n");
     }
 
-    protected CodeBlock of(String format, Object... args) {
-        return CodeBlock.of(format.replace('\'', '"'), args);
-    }
-
     protected CodeBlock codeBlock(CodeBlock... blocks) {
         return CodeBlock.join(Stream.of(blocks).collect(Collectors.toList()), "\n");
     }
@@ -90,33 +84,21 @@ public abstract class AbstractGenerator {
      *
      * @return
      */
-    protected MethodSpec m_hasPrimary() {
-        return MethodSpec.methodBuilder("hasPrimary")
+    protected MethodSpec m_primary() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("primary")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PROTECTED)
-            .returns(TypeVariableName.get("boolean"))
-            .addStatement("return $L", fluent.getPrimary() != null)
-            .build();
+            .returns(String.class);
+        if (fluent.getPrimary() == null) {
+            builder.addStatement("return null");
+        } else {
+            builder.addStatement("return $T.$L.column", fluent.mapping(), fluent.getPrimary().getColumn());
+        }
+        return builder.build();
     }
 
-    /**
-     * protected void validateColumn(String column) throws FluentMybatisException
-     *
-     * @return
-     */
-    protected MethodSpec m_validateColumn() {
-        return MethodSpec.methodBuilder("validateColumn")
-            .addModifiers(Modifier.PROTECTED)
-            .addAnnotation(Override.class)
-            .addException(FluentMybatisException.class)
-            .addParameter(String.class, "column")
-            .addCode("if (notBlank(column) && !$T.ALL_COLUMNS.contains(column)) {\n", MappingGenerator.className(fluent))
-            .addCode(this.of(
-                "\tthrow new FluentMybatisException('the column[' + column + '] was not found in table[' + $T.Table_Name + '].');\n",
-                MappingGenerator.className(fluent)
-            ))
-            .addCode("}")
-            .build();
+    protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, Class returnKlass) {
+        return this.publicMethod(methodName, isOverride, ClassName.get(returnKlass));
     }
 
     /**
@@ -130,13 +112,23 @@ public abstract class AbstractGenerator {
      * @param isOverride 是否注解@Override
      * @return
      */
-    protected MethodSpec.Builder sqlMethod(String methodName, boolean isOverride) {
+    protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, TypeName returnKlass) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
         if (isOverride) {
             builder.addAnnotation(Override.class);
         }
-        builder.returns(String.class);
+        builder.returns(returnKlass);
         builder.addModifiers(Modifier.PUBLIC);
+        return builder;
+    }
+
+    protected MethodSpec.Builder protectedMethod(String methodName, boolean isOverride, TypeName returnKlass) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
+        if (isOverride) {
+            builder.addAnnotation(Override.class);
+        }
+        builder.returns(returnKlass);
+        builder.addModifiers(Modifier.PROTECTED);
         return builder;
     }
 

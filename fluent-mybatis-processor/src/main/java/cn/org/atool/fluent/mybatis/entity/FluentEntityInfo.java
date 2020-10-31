@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumnParser;
+import cn.org.atool.fluent.mybatis.entity.generator.*;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 @Getter
@@ -120,10 +122,6 @@ public class FluentEntityInfo {
         return this;
     }
 
-    public ClassName className() {
-        return ClassName.get(this.entityPack, this.className);
-    }
-
     @Getter(AccessLevel.NONE)
     private String All_Fields = null;
 
@@ -132,5 +130,145 @@ public class FluentEntityInfo {
             All_Fields = this.fields.stream().map(FieldColumn::getColumn).collect(Collectors.joining(", "));
         }
         return All_Fields;
+    }
+
+    // all ClassName
+
+    /**
+     * ClassName of XyzEntity
+     *
+     * @return
+     */
+    public ClassName entity() {
+        return ClassName.get(this.getEntityPack(), this.getClassName());
+    }
+
+    /**
+     * ClassName of XyzUpdater
+     *
+     * @return
+     */
+    public ClassName updater() {
+        return ClassName.get(
+            UpdaterGenerator.getPackageName(this),
+            UpdaterGenerator.getClassName(this));
+    }
+
+    /**
+     * ClassName of XyzEntityHelper
+     *
+     * @return
+     */
+    public ClassName entityHelper() {
+        return ClassName.get(
+            EntityHelperGenerator.getPackageName(this),
+            EntityHelperGenerator.getClassName(this));
+    }
+
+    /**
+     * ClassName of XyzMapper
+     *
+     * @return
+     */
+    public ClassName mapper() {
+        return ClassName.get(
+            MapperGenerator.getPackageName(this),
+            MapperGenerator.getClassName(this));
+    }
+
+    /**
+     * ClassName of XyzMapping
+     *
+     * @return
+     */
+    public ClassName mapping() {
+        return ClassName.get(
+            MappingGenerator.getPackageName(this),
+            MappingGenerator.getClassName(this));
+    }
+
+    /**
+     * ClassName of XyzQuery
+     *
+     * @return
+     */
+    public ClassName query() {
+        return ClassName.get(
+            QueryGenerator.getPackageName(this),
+            QueryGenerator.getClassName(this));
+    }
+
+    /**
+     * ClassName of XyzSqlProvider
+     *
+     * @return
+     */
+    public ClassName sqlProvider() {
+        return ClassName.get(
+            SqlProviderGenerator.getPackageName(this),
+            SqlProviderGenerator.getClassName(this));
+    }
+
+    public ClassName queryWhere() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_QueryWhere);
+    }
+
+    public ClassName updateWhere() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_UpdateWhere);
+    }
+
+    public ClassName selector() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_Selector);
+    }
+
+    public ClassName groupBy() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_GroupBy);
+    }
+
+    public ClassName having() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_Having);
+    }
+
+    public ClassName queryOrderBy() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_QueryOrderBy);
+    }
+
+    public ClassName updateOrderBy() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_UpdateOrderBy);
+    }
+
+    public ClassName updateSetter() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_UpdateSetter);
+    }
+
+    public ClassName segment() {
+        return ClassName.get(
+            WrapperHelperGenerator.getPackageName(this)
+                + "." +
+                WrapperHelperGenerator.getClassName(this), Suffix_ISegment);
     }
 }

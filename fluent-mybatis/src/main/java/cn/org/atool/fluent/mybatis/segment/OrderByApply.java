@@ -23,7 +23,7 @@ public class OrderByApply<
      * @return
      */
     public O asc() {
-        this.segment.applyField(this.current, true);
+        this.segment.applyField(this.current(), true);
         return this.segment;
     }
 
@@ -33,7 +33,7 @@ public class OrderByApply<
      * @return
      */
     public O desc() {
-        this.segment.applyField(this.current, false);
+        this.segment.applyField(this.current(), false);
         return this.segment;
     }
 
@@ -45,7 +45,7 @@ public class OrderByApply<
      */
     public O ascIf(boolean condition) {
         if (condition) {
-            this.segment.applyField(this.current, true);
+            this.segment.applyField(this.current(), true);
         }
         return this.segment;
     }
@@ -58,7 +58,7 @@ public class OrderByApply<
      */
     public O descIf(boolean condition) {
         if (condition) {
-            this.segment.applyField(this.current, false);
+            this.segment.applyField(this.current(), false);
         }
         return this.segment;
     }

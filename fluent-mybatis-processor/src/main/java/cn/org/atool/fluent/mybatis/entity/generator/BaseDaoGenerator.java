@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
@@ -30,9 +31,11 @@ public class BaseDaoGenerator extends AbstractGenerator {
         }
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
+            .addMethod(this.m_newQuery())
             .addMethod(this.m_query())
+            .addMethod(this.m_newUpdater())
             .addMethod(this.m_updater())
-            .addMethod(this.m_findPkColumn());
+            .addMethod(this.m_primaryField());
     }
 
     private void addInterface(TypeSpec.Builder builder, String daoInterface) {
@@ -45,9 +48,9 @@ public class BaseDaoGenerator extends AbstractGenerator {
         }
         builder.addSuperinterface(parameterizedType(
             ClassName.get(packageName, simpleClassName),
-            fluent.className(),
-            QueryGenerator.className(fluent),
-            UpdaterGenerator.className(fluent)
+            fluent.entity(),
+            fluent.query(),
+            fluent.updater()
         ));
     }
 
@@ -57,7 +60,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
 
     private TypeName superBaseDaoImplKlass() {
         ClassName baseImpl = ClassName.get(BaseDaoImpl.class.getPackage().getName(), BaseDaoImpl.class.getSimpleName());
-        ClassName entity = fluent.className();
+        ClassName entity = fluent.entity();
         return ParameterizedTypeName.get(baseImpl, entity);
     }
 
@@ -67,7 +70,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private FieldSpec f_mapper() {
-        return FieldSpec.builder(MapperGenerator.className(fluent), "mapper")
+        return FieldSpec.builder(fluent.mapper(), "mapper")
             .addModifiers(Modifier.PROTECTED)
             .addAnnotation(ClassNames.CN_Autowired)
             .addAnnotation(AnnotationSpec.builder(ClassNames.CN_Qualifier)
@@ -82,10 +85,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_mapper() {
-        return MethodSpec.methodBuilder("mapper")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(MapperGenerator.className(fluent))
+        return super.publicMethod("mapper", true, fluent.mapper())
             .addStatement(super.codeBlock("return mapper"))
             .build();
     }
@@ -96,11 +96,22 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_query() {
-        return MethodSpec.methodBuilder("query")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(QueryGenerator.className(fluent))
-            .addStatement("return new $T()", QueryGenerator.className(fluent))
+        return super.publicMethod("query", true, fluent.query())
+            .addStatement("$T query = this.newQuery()", fluent.query())
+            .addStatement("super.setDaoQueryDefault(query)")
+            .addStatement("return query")
+            .build();
+    }
+
+    private MethodSpec m_newQuery() {
+        return super.protectedMethod("newQuery", true, fluent.query())
+            .addStatement("return new $T()", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_newUpdater() {
+        return super.protectedMethod("newUpdater", true, fluent.updater())
+            .addStatement("return new $T()", fluent.updater())
             .build();
     }
 
@@ -110,11 +121,10 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_updater() {
-        return MethodSpec.methodBuilder("updater")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(UpdaterGenerator.className(fluent))
-            .addStatement("return new $T()", UpdaterGenerator.className(fluent))
+        return super.publicMethod("updater", true, fluent.updater())
+            .addStatement("$T updater = this.newUpdater()", fluent.updater())
+            .addStatement("super.setDaoUpdateDefault(updater)")
+            .addStatement("return updater")
             .build();
     }
 
@@ -123,16 +133,13 @@ public class BaseDaoGenerator extends AbstractGenerator {
      *
      * @return
      */
-    private MethodSpec m_findPkColumn() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("findPkColumn")
-            .addModifiers(Modifier.PUBLIC)
-            .returns(String.class)
+    private MethodSpec m_primaryField() {
+        MethodSpec.Builder builder = super.publicMethod("primaryField", false, FieldMapping.class)
             .addJavadoc("返回实体类主键值");
         if (fluent.getPrimary() == null) {
             super.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $T.$L.column",
-                MappingGenerator.className(fluent), fluent.getPrimary().getProperty());
+            builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getProperty());
         }
         return builder.build();
     }

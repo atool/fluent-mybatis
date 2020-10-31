@@ -41,19 +41,19 @@ public class WhereApply<
     @Override
     public <O> WHERE apply(SqlOp op, O... args) {
         if (op.getArgSize() > 0) {
-            assertNotEmpty(current.name, args);
+            assertNotEmpty(this.current().name, args);
             if (args.length != op.getArgSize()) {
                 throw new FluentMybatisException(op.getArgSize() + " parameters are required, but " + args.length + " is passed in");
             }
-            Stream.of(args).forEach(arg -> assertNotNull(current.name, arg));
+            Stream.of(args).forEach(arg -> assertNotNull(this.current().name, arg));
         }
         if (op.getArgSize() == -1) {
-            assertNotEmpty(current.name, args);
+            assertNotEmpty(this.current().name, args);
         }
         if (op == IN && args.length == 1) {
-            return this.segment.apply(current.column, EQ, args[0]);
+            return this.segment.apply(this.current(), EQ, args[0]);
         } else {
-            return this.segment.apply(current.column, op, args);
+            return this.segment.apply(this.current(), op, args);
         }
     }
 
@@ -71,9 +71,9 @@ public class WhereApply<
     @Override
     public <O> WHERE in(String select, O... args) {
         if (isCollection(args)) {
-            return this.segment.apply(current.column, select, IN, ((Collection) args[0]).toArray());
+            return this.segment.apply(this.current(), select, IN, ((Collection) args[0]).toArray());
         } else {
-            return this.segment.apply(current.column, select, IN, args);
+            return this.segment.apply(this.current(), select, IN, args);
         }
     }
 
@@ -100,7 +100,7 @@ public class WhereApply<
     public <NQ extends IQuery> WHERE in(Class<NQ> klass, Function<NQ, NQ> query) {
         NQ nested = NestedQueryFactory.nested(klass, this.segment.getParameters());
         query.apply(nested);
-        return this.segment.apply(current.column, nested.getWrapperData().getQuerySql(), IN);
+        return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), IN);
     }
 
     /**
@@ -126,7 +126,7 @@ public class WhereApply<
     public <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, Function<NQ, NQ> query) {
         NQ nested = NestedQueryFactory.nested(queryClass, this.segment.getParameters());
         query.apply(nested);
-        return this.segment.apply(current.column, nested.getWrapperData().getQuerySql(), NOT_IN);
+        return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), NOT_IN);
     }
 
     /**
@@ -141,6 +141,6 @@ public class WhereApply<
      */
     @Override
     public WHERE apply(String opArgs) {
-        return this.segment.apply(current.column, opArgs, RETAIN);
+        return this.segment.apply(this.current(), opArgs, RETAIN);
     }
 }
