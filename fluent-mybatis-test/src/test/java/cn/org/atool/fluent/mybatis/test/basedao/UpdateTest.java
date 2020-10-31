@@ -20,10 +20,13 @@ public class UpdateTest extends BaseTest {
     public void test_update() throws Exception {
         ATM.DataMap.student.initTable(5)
             .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
             .cleanAndInsert();
 
         dao.updateUserNameById("new_user_name", 4L);
-        db.sqlList().wantFirstSql().eq("UPDATE t_student SET gmt_modified = now(), user_name = ? WHERE id = ?");
+        db.sqlList().wantFirstSql().eq("UPDATE t_student " +
+            "SET gmt_modified = now(), user_name = ? " +
+            "WHERE is_deleted = ? AND env = ? AND id = ?");
         db.table(ATM.Table.student).queryWhere("id=4")
             .eqDataMap(ATM.DataMap.student.table(1)
                 .userName.values("new_user_name")

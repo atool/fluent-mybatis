@@ -122,6 +122,16 @@ public abstract class AbstractGenerator {
         return builder;
     }
 
+    protected MethodSpec.Builder protectedMethod(String methodName, boolean isOverride, TypeName returnKlass) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
+        if (isOverride) {
+            builder.addAnnotation(Override.class);
+        }
+        builder.returns(returnKlass);
+        builder.addModifiers(Modifier.PROTECTED);
+        return builder;
+    }
+
     /**
      * 未定义主键异常
      *

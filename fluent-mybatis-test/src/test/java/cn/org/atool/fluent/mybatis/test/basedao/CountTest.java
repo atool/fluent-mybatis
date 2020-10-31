@@ -19,9 +19,11 @@ public class CountTest extends BaseTest {
     public void test_count() throws Exception {
         ATM.DataMap.student.initTable(10)
             .userName.values("test1", "test12", "test3", "test12", "tess2")
+            .env.values("test_env")
             .cleanAndInsert();
         int count = dao.count("test12");
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_student WHERE user_name = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_student " +
+            "WHERE is_deleted = ? AND env = ? AND user_name = ?", StringMode.SameAsSpace);
         want.number(count).eq(2);
     }
 }

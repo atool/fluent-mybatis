@@ -31,6 +31,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         }
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
+            .addMethod(this.m_emptyQuery())
             .addMethod(this.m_query())
             .addMethod(this.m_updater())
             .addMethod(this.m_primaryField());
@@ -95,6 +96,14 @@ public class BaseDaoGenerator extends AbstractGenerator {
      */
     private MethodSpec m_query() {
         return super.publicMethod("query", true, fluent.query())
+            .addStatement("$T query = new $T()", fluent.query(), fluent.query())
+            .addStatement("super.setDaoQueryDefault(query)")
+            .addStatement("return query")
+            .build();
+    }
+
+    private MethodSpec m_emptyQuery() {
+        return super.protectedMethod("emptyQuery", true, fluent.query())
             .addStatement("return new $T()", fluent.query())
             .build();
     }
@@ -106,7 +115,9 @@ public class BaseDaoGenerator extends AbstractGenerator {
      */
     private MethodSpec m_updater() {
         return super.publicMethod("updater", true, fluent.updater())
-            .addStatement("return new $T()", fluent.updater())
+            .addStatement("$T updater = new $T()", fluent.updater(), fluent.updater())
+            .addStatement("super.setDaoUpdateDefault(updater)")
+            .addStatement("return updater")
             .build();
     }
 

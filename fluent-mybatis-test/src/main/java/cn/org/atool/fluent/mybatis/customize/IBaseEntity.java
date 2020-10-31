@@ -10,6 +10,10 @@ import java.util.Date;
  * @author:darui.wu Created by darui.wu on 2020/6/2.
  */
 public interface IBaseEntity<T extends IEntity> {
+    String getEnv();
+
+    Long getTenant();
+
     Long getId();
 
     Date getGmtCreated();
@@ -17,6 +21,10 @@ public interface IBaseEntity<T extends IEntity> {
     Date getGmtModified();
 
     Boolean getIsDeleted();
+
+    T setEnv(String env);
+
+    T setTenant(Long tenantId);
 
     T setId(Long id);
 

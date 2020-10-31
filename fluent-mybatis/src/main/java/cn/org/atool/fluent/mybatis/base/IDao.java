@@ -39,21 +39,30 @@ public interface IDao<E, Q, U> {
      * 比如: 数据隔离的环境值, 租户值等等
      *
      * @param entity
-     * @return
      */
-    default E setInsertDefault(E entity) {
-        return entity;
+    default void setInsertDefault(E entity) {
     }
 
     /**
-     * 设置字段更新默认值
-     * 比如: gmt_modified = new Date()
+     * 通过query()方法构造的动态SQL默认添加的where条件
+     * 比如追加 env的环境变量
      *
-     * @param entity
-     * @return
+     * @param query
+     * @return 返回query本身
      */
-    default E setUpdateDefault(E entity) {
-        return entity;
+    default IWrapper setQueryDefault(Q query) {
+        return (IWrapper) query;
+    }
+
+    /**
+     * 通过updater()方法构造的动态SQL默认添加的where条件
+     * 比如追加 env的环境变量
+     *
+     * @param updater
+     * @return 返回updater本身
+     */
+    default IWrapper setUpdateDefault(U updater) {
+        return (IWrapper) updater;
     }
 
     /**
@@ -62,6 +71,6 @@ public interface IDao<E, Q, U> {
      * @return
      */
     default FieldMapping primaryField() {
-        throw new RuntimeException("not implement.");
+        throw new RuntimeException("无需实现, 在各EntityDaoImpl有具体实现.");
     }
 }

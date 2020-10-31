@@ -21,6 +21,7 @@ public class SelectListTest extends BaseTest {
     public void test_selectList() throws Exception {
         ATM.DataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
             .cleanAndInsert();
 
         List<StudentEntity> users = dao.selectList(3L, 6L, 7L);

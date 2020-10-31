@@ -22,13 +22,15 @@ public class DeleteByMapTest extends BaseTest {
     public void test_deleteByMap() throws Exception {
         ATM.DataMap.student.initTable(10)
             .userName.values("test1", "test12", "test3", "test12", "tess2")
+            .env.values("test_env")
             .cleanAndInsert();
         dao.deleteByMap(new HashMap<String, Object>() {
             {
                 this.put(StudentMapping.userName.column, "test12");
             }
         });
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_student WHERE user_name = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("DELETE FROM t_student " +
+            "WHERE is_deleted = ? AND env = ? AND user_name = ?", StringMode.SameAsSpace);
         db.table(ATM.Table.student).count().eq(8);
     }
 }

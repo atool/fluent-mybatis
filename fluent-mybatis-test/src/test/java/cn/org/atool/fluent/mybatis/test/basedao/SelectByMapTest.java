@@ -23,6 +23,7 @@ public class SelectByMapTest extends BaseTest {
     public void test_selectByMap() throws Exception {
         ATM.DataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
             .cleanAndInsert();
 
         List<StudentEntity> users = dao.selectByMap(new HashMap<String, Object>() {
@@ -30,7 +31,8 @@ public class SelectByMapTest extends BaseTest {
                 this.put(StudentMapping.userName.column, "username_4");
             }
         });
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ?");
+        db.sqlList().wantFirstSql().start("SELECT")
+            .end("FROM t_student WHERE is_deleted = ? AND env = ? AND user_name = ?");
         want.list(users).eqDataMap(ATM.DataMap.student.entity(1)
             .userName.values("username_4"));
     }

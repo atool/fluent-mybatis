@@ -18,10 +18,10 @@ public class SelectFieldsTest extends BaseTest {
 
     @Test
     public void test_selectFields() throws Exception {
-        db.table(ATM.Table.student).clean()
-                .insert(ATM.DataMap.student.initTable(10)
-                        .userName.values(DataGenerator.increase("username_%d"))
-                );
+        ATM.DataMap.student.initTable(10)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
+            .cleanAndInsert();
 
         List<String> names = dao.selectFields(3L, 5L, 8L);
         want.list(names).eqReflect(new String[]{"username_3", "username_5", "username_8"});

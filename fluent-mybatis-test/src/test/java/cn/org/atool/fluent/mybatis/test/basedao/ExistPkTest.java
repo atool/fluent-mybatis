@@ -19,9 +19,12 @@ public class ExistPkTest extends BaseTest {
     public void test_exist() {
         ATM.DataMap.student.table(2)
             .id.values(1, 3)
+            .env.values("test_env")
+            .isDeleted.values(0)
             .cleanAndInsert();
         boolean existed = dao.existPk(1);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_student WHERE id = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) " +
+            "FROM t_student WHERE id = ?", StringMode.SameAsSpace);
         want.bool(existed).is(true);
 
         existed = dao.existPk(2);

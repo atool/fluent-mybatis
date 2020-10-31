@@ -3,6 +3,8 @@ package cn.org.atool.fluent.mybatis.generate.dao.intf;
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 
+import java.util.List;
+
 /**
  * StudentDao: 数据操作接口
  *
@@ -15,4 +17,12 @@ public interface StudentDao extends IBaseDao<StudentEntity> {
      * @return
      */
     int noOverWrite();
+
+    /**
+     * 根据姓名模糊查询学生列表
+     *
+     * @param name
+     * @return
+     */
+    List<StudentEntity> findStudentsByName(String name);
 }

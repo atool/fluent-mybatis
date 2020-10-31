@@ -20,23 +20,33 @@ public class SelectOneTest extends BaseTest {
     public void test_selectOne() throws Exception {
         ATM.DataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
             .cleanAndInsert();
 
         StudentEntity student = dao.selectOne("username");
         want.object(student).notNull();
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student WHERE user_name LIKE ? LIMIT ?, ?", StringMode.SameAsSpace);
+            .end("FROM t_student " +
+                "WHERE is_deleted = ? " +
+                "AND env = ? " +
+                "AND user_name LIKE ? " +
+                "LIMIT ?, ?", StringMode.SameAsSpace);
     }
 
     @Test
     public void test_selectOne2() throws Exception {
         ATM.DataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
+            .env.values("test_env")
             .cleanAndInsert();
 
         String username = dao.selectOne(5);
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student WHERE id = ? LIMIT ?, ?", StringMode.SameAsSpace);
+            .end("FROM t_student " +
+                "WHERE is_deleted = ? " +
+                "AND env = ? " +
+                "AND id = ? " +
+                "LIMIT ?, ?", StringMode.SameAsSpace);
     }
 }
