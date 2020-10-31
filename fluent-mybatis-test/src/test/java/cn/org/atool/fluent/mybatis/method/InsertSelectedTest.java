@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,37 +15,37 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class InsertSelectedTest extends BaseTest {
     @Autowired
-    private UserMapper userMapper;
+    private StudentMapper userMapper;
 
     @Test
     void testInsert() {
-        db.table(ATM.Table.user).clean();
-        UserEntity user = new UserEntity()
+        db.table(ATM.Table.student).clean();
+        StudentEntity student = new StudentEntity()
             .setAge(23)
             .setUserName("tom mike");
-        userMapper.insert(user);
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
+        userMapper.insert(student);
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .age.values(23)
             .userName.values("tom mike")
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO t_user(gmt_created, gmt_modified, is_deleted, age, user_name) VALUES (now(), now(), 0, ?, ?)");
-        want.number(user.getId()).isGt(0L);
+        db.sqlList().wantFirstSql().eq("INSERT INTO t_student(gmt_created, gmt_modified, is_deleted, age, user_name) VALUES (now(), now(), 0, ?, ?)");
+        want.number(student.getId()).isGt(0L);
     }
 
     @Test
     void testInsert_withId() {
-        db.table(ATM.Table.user).clean();
-        UserEntity user = new UserEntity()
+        db.table(ATM.Table.student).clean();
+        StudentEntity student = new StudentEntity()
             .setUserName("tom mike")
             .setId(100L)
             .setAddressId(200L);
-        userMapper.insert(user);
-        db.table(ATM.Table.user).query().eqDataMap(ATM.DataMap.user.table(1)
+        userMapper.insert(student);
+        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(100)
             .userName.values("tom mike")
             .addressId.values(200)
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO t_user(id, gmt_created, gmt_modified, is_deleted, address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
-        want.number(user.getId()).eq(100L);
+        db.sqlList().wantFirstSql().eq("INSERT INTO t_student(id, gmt_created, gmt_modified, is_deleted, address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
+        want.number(student.getId()).eq(100L);
     }
 }

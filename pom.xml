@@ -40,7 +40,7 @@
         <spring.version>4.3.14.RELEASE</spring.version>
         <mybatis.version>3.5.2</mybatis.version>
         <jmockit.version>1.48</jmockit.version>
-        <test4j.version>2.6.9</test4j.version>
+        <test4j.version>2.7.0</test4j.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>

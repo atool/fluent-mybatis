@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
+import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class SelectObjsTest extends BaseTest {
     @Autowired
-    private UserExtDao dao;
+    private StudentExtDao dao;
 
     @Test
     public void test_selectObjs() throws Exception {
-        db.table(ATM.Table.user).clean()
-                .insert(ATM.DataMap.user.initTable(10)
+        db.table(ATM.Table.student).clean()
+                .insert(ATM.DataMap.student.initTable(10)
                         .userName.values(DataGenerator.increase("username_%d"))
                 );
 
@@ -29,8 +29,8 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs_2() throws Exception {
-        db.table(ATM.Table.user).clean()
-                .insert(ATM.DataMap.user.initTable(1)
+        db.table(ATM.Table.student).clean()
+                .insert(ATM.DataMap.student.initTable(1)
                         .userName.values((Object)null)
                 );
 
@@ -40,8 +40,8 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs2() throws Exception {
-        db.table(ATM.Table.user).clean()
-                .insert(ATM.DataMap.user.initTable(1)
+        db.table(ATM.Table.student).clean()
+                .insert(ATM.DataMap.student.initTable(1)
                         .userName.values((Object) null)
                         .age.values((Object)null)
                 );

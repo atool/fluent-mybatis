@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.segment2;
 
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import cn.org.atool.fluent.mybatis.If;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,11 @@ import java.util.Objects;
 class WhereApplyTest extends BaseTest {
 
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     void apply() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().apply("=1").end()
         );
         db.sqlList().wantFirstSql()
@@ -26,7 +26,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void isNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().isNull().end()
         );
         db.sqlList().wantFirstSql()
@@ -35,7 +35,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void testIsNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().isNull(true)
             .and.userName().isNull(false).end()
         );
@@ -45,7 +45,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void isNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().notNull().end()
         );
         db.sqlList().wantFirstSql()
@@ -54,7 +54,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void testIsNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().notNull(true)
             .and.userName().notNull(false).end()
         );
@@ -64,7 +64,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void eq() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().eq(34).end()
         );
         db.sqlList().wantFirstSql()
@@ -73,7 +73,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void eq_IfNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().eq(34, o -> o != null)
             .and.userName().eq(null, Objects::nonNull).end()
         );
@@ -83,7 +83,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void ne() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().ne(34).end()
         );
         db.sqlList().wantFirstSql()
@@ -92,7 +92,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void ne_IfNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().ne(null, Objects::nonNull)
             .and.userName().ne("", Objects::nonNull).end()
         );
@@ -102,7 +102,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void gt() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().gt(34).end()
         );
         db.sqlList().wantFirstSql()
@@ -111,7 +111,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void gt_IfNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where.age().gt(34, Objects::nonNull)
             .and.version().eq(null, Objects::nonNull).end()
         );
@@ -121,7 +121,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void ge() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().ge(34)
             .end()
@@ -132,7 +132,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void ge_IfNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().ge(34, Objects::nonNull)
             .userName().eq(null, Objects::nonNull)
@@ -144,7 +144,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void lt() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().lt(34)
             .end()
@@ -155,7 +155,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void lt_IfNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().lt(34, Objects::nonNull)
             .userName().eq(null, Objects::nonNull)
@@ -167,7 +167,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void le() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().le(34)
             .end()
@@ -178,7 +178,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void le_IfNotNull() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().le(34, Objects::nonNull)
             .userName().eq(null, Objects::nonNull)
@@ -190,7 +190,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void between() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().between(34, 45, (v1, v2) -> true)
             .end()
@@ -201,7 +201,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void notBetween() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .age().notBetween(34, 45, (v1, v2) -> true)
             .end()
@@ -212,7 +212,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void eq_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().eq("abc", If::notBlank)
             .end()
@@ -223,7 +223,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void ne_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().ne("abc", If::notBlank)
             .end()
@@ -234,7 +234,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void gt_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().gt("abc", If::notBlank)
             .end()
@@ -245,7 +245,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void ge_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().ge("abc", If::notBlank)
             .end()
@@ -256,7 +256,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void lt_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().lt("abc", If::notBlank)
             .end()
@@ -267,7 +267,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void le_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().le("abc", If::notBlank)
             .end()
@@ -278,7 +278,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void like() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().like("abc")
             .end()
@@ -289,7 +289,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void testLike() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().like("abc", o -> true)
             .userName().like("abc", o -> false)
@@ -301,7 +301,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void like_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().like("abc", If::notBlank)
             .userName().like(" ", If::notBlank)
@@ -313,7 +313,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void notLike() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().notLike("abc")
             .end()
@@ -324,7 +324,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void testNotLike() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().notLike("abc", o -> true)
             .userName().notLike("abc", o -> false)
@@ -336,7 +336,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void notLike_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().notLike("abc", If::notBlank)
             .userName().notLike(" ", If::notBlank)
@@ -348,7 +348,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void likeLeft() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().likeLeft("abc")
             .end()
@@ -360,7 +360,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void likeLeft_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().likeLeft("abc", If::notBlank)
             .userName().likeLeft(" ", If::notBlank)
@@ -372,7 +372,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void likeRight() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().likeRight("abc")
             .end()
@@ -383,7 +383,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void likeRight_IfNotBlank() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().likeRight("abc", If::notBlank)
             .userName().likeRight(" ", If::notBlank)
@@ -395,7 +395,7 @@ class WhereApplyTest extends BaseTest {
 
     @Test
     void testApply() {
-        mapper.listEntity(new UserQuery()
+        mapper.listEntity(new StudentQuery()
             .where
             .userName().apply(SqlOp.EQ, "abc'")
             .age().apply(true, SqlOp.LT, 12)

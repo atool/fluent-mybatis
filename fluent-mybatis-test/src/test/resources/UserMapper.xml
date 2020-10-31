@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.org.atool.fluent.mybatis.generate.mapper.UserMapper">
+<mapper namespace="cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper">
     <!-- base result map -->
-    <resultMap id="BaseResultMap" type="cn.org.atool.fluent.mybatis.generate.entity.UserEntity">
+    <resultMap id="BaseResultMap" type="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity">
         <id column="id" property="id" />
         <result column="address_id" property="addressId" />
         <result column="age" property="age" />
@@ -16,8 +16,8 @@
     <sql id="SELECT_COLUMNS">
 <![CDATA[id, address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version]]>
 </sql>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.org.atool.fluent.mybatis.generate.entity.UserEntity" useGeneratedKeys="true">
-        INSERT INTO t_user
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity" useGeneratedKeys="true">
+        INSERT INTO t_student
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="addressId != null">address_id,</if>
@@ -50,8 +50,8 @@
         <if test="version != null">#{version},</if>
     </trim>
     </insert>
-    <insert id="insertBatch" parameterType="cn.org.atool.fluent.mybatis.generate.entity.UserEntity">
-        INSERT INTO t_user
+    <insert id="insertBatch" parameterType="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity">
+        INSERT INTO t_student
         (id, address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version)
         VALUES <foreach collection="list" item="item" index="k" separator=",">
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -77,13 +77,13 @@
     </foreach>
     </insert>
     <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT <include refid="SELECT_COLUMNS"/> FROM t_user
+        SELECT <include refid="SELECT_COLUMNS"/> FROM t_student
         <where>
             id=#{et.id}
         </where>
     </select>
     <select id="listByIds" parameterType="java.util.Collection" resultMap="BaseResultMap">
-        SELECT <include refid="SELECT_COLUMNS"/> FROM t_user
+        SELECT <include refid="SELECT_COLUMNS"/> FROM t_student
         <where>
             id IN (<foreach collection="coll" item="item" index="k" separator=",">
             #{item}
@@ -92,7 +92,7 @@
         </where>
     </select>
     <select id="listByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
-        SELECT <include refid="SELECT_COLUMNS"/> FROM t_user
+        SELECT <include refid="SELECT_COLUMNS"/> FROM t_student
         <where>
             <if test="cm != null and !cm.isEmpty"><foreach collection="cm" item="v" index="k" separator="AND ">
                 <choose>
@@ -112,7 +112,7 @@
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
             <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
-        FROM t_user
+        FROM t_student
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
@@ -131,7 +131,7 @@
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
             <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
-        FROM t_user
+        FROM t_student
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
@@ -150,7 +150,7 @@
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
             <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
-        FROM t_user
+        FROM t_student
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
@@ -169,7 +169,7 @@
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
             <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
         </choose>
-        FROM t_user
+        FROM t_student
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
@@ -187,7 +187,7 @@
                     <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise>*</otherwise>
                 </choose>
-                ) FROM t_user
+                ) FROM t_student
                 <where>
                     <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
@@ -200,7 +200,7 @@
                     <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
                     <otherwise>*</otherwise>
                 </choose>
-                ) FROM t_user
+                ) FROM t_student
                 <where>
                     <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
                 </where>
@@ -217,7 +217,7 @@
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
             <otherwise>*</otherwise>
         </choose>
-        ) FROM t_user
+        ) FROM t_student
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
@@ -225,9 +225,9 @@
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
     </select>
-    <delete id="delete" parameterType="cn.org.atool.fluent.mybatis.generate.entity.UserEntity">
+    <delete id="delete" parameterType="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity">
         <if test="ew.wrapperData != null"></if>
-        DELETE FROM t_user
+        DELETE FROM t_student
         <where>
             <if test="ew.wrapperData.whereSql != null">${ew.wrapperData.whereSql}</if>
         </where>
@@ -236,13 +236,13 @@
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
     </delete>
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM t_user
+        DELETE FROM t_student
         <where>
             id=#{et.id}
         </where>
     </delete>
     <delete id="deleteByIds" parameterType="java.util.Collection">
-        DELETE FROM t_user
+        DELETE FROM t_student
         <where>
             id IN (<foreach collection="coll" item="item" index="k" separator=",">
             #{item}
@@ -251,7 +251,7 @@
         </where>
     </delete>
     <delete id="deleteByMap" parameterType="java.util.Map">
-        DELETE FROM t_user
+        DELETE FROM t_student
         <where>
             <if test="cm != null and !cm.isEmpty"><foreach collection="cm" item="v" index="k" separator="AND ">
                 <choose>
@@ -263,7 +263,7 @@
         </where>
     </delete>
     <update id="updateById" parameterType="java.util.Map">
-        UPDATE t_user
+        UPDATE t_student
         <set>
             <if test="et.addressId != null">address_id=#{et.addressId},</if>
             <if test="et.age != null">age=#{et.age},</if>
@@ -280,7 +280,7 @@
     </update>
     <update id="updateBy" parameterType="java.util.Map">
         <if test="ew.wrapperData != null"></if>
-        UPDATE t_user
+        UPDATE t_student
         <set>
             <if test="ew.wrapperData.updateStr != null">
                 <if test="ew.wrapperData.updates.containsKey('gmt_modified') == false">gmt_modified = now(),</if>

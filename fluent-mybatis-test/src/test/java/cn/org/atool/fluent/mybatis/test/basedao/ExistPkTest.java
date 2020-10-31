@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
+import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -13,15 +13,15 @@ import org.test4j.hamcrest.matcher.string.StringMode;
  */
 public class ExistPkTest extends BaseTest {
     @Autowired
-    private UserExtDao dao;
+    private StudentExtDao dao;
 
     @Test
     public void test_exist() {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.table(2)
-                .id.values(1, 3)
-        );
+        ATM.DataMap.student.table(2)
+            .id.values(1, 3)
+            .cleanAndInsert();
         boolean existed = dao.existPk(1);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_user WHERE id = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM t_student WHERE id = ?", StringMode.SameAsSpace);
         want.bool(existed).is(true);
 
         existed = dao.existPk(2);

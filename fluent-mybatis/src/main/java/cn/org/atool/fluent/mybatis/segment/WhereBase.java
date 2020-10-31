@@ -72,7 +72,7 @@ public abstract class WhereBase<
      * where条件设置为entity对象非空属性
      *
      * @param entity
-     * @return 查询器UserQuery
+     * @return 查询器StudentQuery
      */
     public WHERE eqNotNull(IEntity entity) {
         return this.eqNotNull(entity.toColumnMap());

@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
+import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,16 @@ import java.util.List;
  */
 public class SelectListTest extends BaseTest {
     @Autowired
-    private UserExtDao dao;
+    private StudentExtDao dao;
 
     @Test
     public void test_selectList() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(10)
-            .userName.values(DataGenerator.increase("username_%d")));
+        ATM.DataMap.student.initTable(10)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .cleanAndInsert();
 
-        List<UserEntity> users = dao.selectList(3L, 6L, 7L);
-        want.list(users).eqDataMap(ATM.DataMap.user.entity(3)
+        List<StudentEntity> users = dao.selectList(3L, 6L, 7L);
+        want.list(users).eqDataMap(ATM.DataMap.student.entity(3)
             .id.values(3, 6, 7)
             .userName.values("username_3", "username_6", "username_7")
         );

@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.method;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,35 +16,35 @@ import java.util.Map;
  */
 public class SelectMapsTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void test_selectMaps() throws Exception {
-        db.table(ATM.Table.user).clean()
-            .insert(ATM.DataMap.user.initTable(4)
+        db.table(ATM.Table.student).clean()
+            .insert(ATM.DataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.id().eq(24L).end();
         List<Map<String, Object>> users = mapper.listMaps(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE id = ?");
-        want.list(users).eqDataMap(ATM.DataMap.user.table(1)
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE id = ?");
+        want.list(users).eqDataMap(ATM.DataMap.student.table(1)
             .userName.values("u2"));
     }
 
     @Test
     public void test_selectMaps_hasMultiple() throws Exception {
-        db.table(ATM.Table.user).clean()
-            .insert(ATM.DataMap.user.initTable(4)
+        db.table(ATM.Table.student).clean()
+            .insert(ATM.DataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.userName().eq("u2").end();
         List<Map<String, Object>> users = mapper.listMaps(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_user WHERE user_name = ?");
-        want.list(users).eqDataMap(ATM.DataMap.user.table(2)
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ?");
+        want.list(users).eqDataMap(ATM.DataMap.student.table(2)
             .userName.values("u2"));
     }
 }

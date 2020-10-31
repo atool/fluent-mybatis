@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao;
 
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
+import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -14,17 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class UpdateTest extends BaseTest {
     @Autowired
-    private UserExtDao dao;
+    private StudentExtDao dao;
 
     @Test
     public void test_update() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(5)
-                .userName.values(DataGenerator.increase("username_%d")));
+        ATM.DataMap.student.initTable(5)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .cleanAndInsert();
+
         dao.updateUserNameById("new_user_name", 4L);
-        db.sqlList().wantFirstSql().eq("UPDATE t_user SET gmt_modified = now(), user_name = ? WHERE id = ?");
-        db.table(ATM.Table.user).queryWhere("id=4")
-                .eqDataMap(ATM.DataMap.user.table(1)
-                        .userName.values("new_user_name")
-                );
+        db.sqlList().wantFirstSql().eq("UPDATE t_student SET gmt_modified = now(), user_name = ? WHERE id = ?");
+        db.table(ATM.Table.student).queryWhere("id=4")
+            .eqDataMap(ATM.DataMap.student.table(1)
+                .userName.values("new_user_name")
+            );
     }
 }

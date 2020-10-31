@@ -1,19 +1,19 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     public void order() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc()
             .addressId().desc()
@@ -25,7 +25,7 @@ public class OrderTest extends BaseTest {
 
     @Test
     public void order2() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.userName().like("user").end()
             .orderBy
             .id().asc()
@@ -40,11 +40,11 @@ public class OrderTest extends BaseTest {
 
     @Test
     public void orderBy_condition() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .where.userName().like("user").end()
             .orderBy
-            .apply(true, false, UserMapping.id, UserMapping.addressId)
-            .apply(false, true, UserMapping.userName)
+            .apply(true, false, StudentMapping.id, StudentMapping.addressId)
+            .apply(false, true, StudentMapping.userName)
             .asc("id+0")
             .end();
         mapper.listEntity(query);

@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.test.basedao.paged;
 import cn.org.atool.fluent.mybatis.base.IDaoProtected;
 import cn.org.atool.fluent.mybatis.base.model.MarkerList;
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
-import cn.org.atool.fluent.mybatis.generate.helper.UserMapping;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,19 +28,19 @@ import java.util.stream.Collectors;
 public class SelectMakerListTest extends BaseTest {
 
     @Autowired
-    @Qualifier("userDaoImpl")
+    @Qualifier("studentDaoImpl")
     private IDaoProtected dao;
 
     @DisplayName("准备100条数据，按条件>分页开始标识方式查询，自动获取下一页的标识")
     @Test
     public void test_select_paged_list() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(100)
+        ATM.DataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
-        );
+            .cleanAndInsert();
 
-        MarkerList<UserEntity> list = dao.markerPagedEntity(new UserQuery()
+        MarkerList<StudentEntity> list = dao.markerPagedEntity(new StudentQuery()
             .where.
                 id().gt(20).
                 userName().like("user").end()
@@ -51,19 +51,20 @@ public class SelectMakerListTest extends BaseTest {
         List<Integer> ids = list.getData().stream()
             .map(e -> (int) (long) e.getId()).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
-        long next = list.parseMarker((UserEntity e) -> e.getId());
+        long next = list.parseMarker((StudentEntity e) -> e.getId());
         want.number(next).eq(31L);
     }
 
     @Test
     public void test_select_paged_list2() throws Exception {
-        db.table(ATM.Table.user).clean().insert(ATM.DataMap.user.initTable(100)
+        ATM.DataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
-        );
-        Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(UserMapping.id.column)).intValue();
-        MarkerList<Map> list = dao.markerPagedMaps(new UserQuery()
+            .cleanAndInsert();
+
+        Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
+        MarkerList<Map> list = dao.markerPagedMaps(new StudentQuery()
             .selectId()
             .where.id().gt(20)
             .and.userName().like("user").end()

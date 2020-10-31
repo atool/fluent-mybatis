@@ -1,15 +1,16 @@
 package cn.org.atool.fluent.mybatis.customize.impl;
 
-import cn.org.atool.fluent.mybatis.customize.UserExtDao;
-import cn.org.atool.fluent.mybatis.generate.dao.impl.UserDaoImpl;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
+import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
+public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, IBaseDao<StudentEntity> {
     @Override
     public int count(String userName) {
         return super.query()
@@ -25,12 +26,12 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
                 .where.id().in(ids)
                 .end()
         ).stream()
-            .map(UserEntity::getUserName)
+            .map(StudentEntity::getUserName)
             .collect(Collectors.toList());
     }
 
     @Override
-    public List<UserEntity> selectList(Long... ids) {
+    public List<StudentEntity> selectList(Long... ids) {
         return super.query()
             .where.id().in(ids).end()
             .execute(super::listEntity);
@@ -57,7 +58,7 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     }
 
     @Override
-    public UserEntity selectOne(String likeName) {
+    public StudentEntity selectOne(String likeName) {
         return super.query()
             .where.userName().like(likeName)
             .end()
@@ -69,7 +70,7 @@ public class UserExtDaoImpl extends UserDaoImpl implements UserExtDao {
     public String selectOne(long id) {
         return super.findOne(super.query()
             .where.id().eq(id).end())
-            .map(UserEntity::getUserName)
+            .map(StudentEntity::getUserName)
             .orElse(null);
     }
 

@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * StudentScoreEntity: 数据映射实体定义
+ * StudentEntity: 数据映射实体定义
  *
  * @author Powered By Fluent Mybatis
  */
@@ -26,21 +26,21 @@ import lombok.experimental.Accessors;
     chain = true
 )
 @FluentMybatis(
-    table = "student_score",
+    table = "t_student",
     mapperBeanPrefix = "my",
     daoInterface = {MyCustomerInterface.class}
 )
-public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEntity> {
+public class StudentEntity implements IEntity, IBaseEntity<StudentEntity> {
   private static final long serialVersionUID = 1L;
 
   /**
-   * 主键ID
+   * 主键id
    */
   @TableId("id")
   private Long id;
 
   /**
-   * 记录创建时间
+   * 创建时间
    */
   @TableField(
       value = "gmt_created",
@@ -49,7 +49,7 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
   private Date gmtCreated;
 
   /**
-   * 记录最后修改时间
+   * 更新时间
    */
   @TableField(
       value = "gmt_modified",
@@ -59,7 +59,7 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
   private Date gmtModified;
 
   /**
-   * 逻辑删除标识
+   * 是否逻辑删除
    */
   @TableField(
       value = "is_deleted",
@@ -68,46 +68,97 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
   private Boolean isDeleted;
 
   /**
+   * 账号
+   */
+  @TableField("account")
+  private String account;
+
+  /**
+   * 地址id
+   */
+  @TableField("address_id")
+  private Long addressId;
+
+  /**
+   * 年龄
+   */
+  @TableField("age")
+  private Integer age;
+
+  /**
+   * 头像
+   */
+  @TableField("avatar")
+  private String avatar;
+
+  /**
+   * 生日
+   */
+  @TableField("birthday")
+  private Date birthday;
+
+  /**
+   * 积分
+   */
+  @TableField("bonus_points")
+  private Long bonusPoints;
+
+  /**
+   * 电子邮件
+   */
+  @TableField("e_mail")
+  private String eMail;
+
+  /**
    * 数据隔离环境
    */
   @TableField("env")
   private String env;
 
   /**
-   * 性别, 0:女; 1:男
+   * 年级
    */
-  @TableField("gender_man")
-  private Integer genderMan;
+  @TableField("grade")
+  private Integer grade;
 
   /**
-   * 学期
+   * 密码
    */
-  @TableField("school_term")
-  private Integer schoolTerm;
+  @TableField("password")
+  private String password;
 
   /**
-   * 成绩
+   * 电话
    */
-  @TableField("score")
-  private Integer score;
+  @TableField("phone")
+  private String phone;
 
   /**
-   * 学号
+   * 状态(字典)
    */
-  @TableField("student_id")
-  private Long studentId;
-
-  /**
-   * 学科
-   */
-  @TableField("subject")
-  private String subject;
+  @TableField("status")
+  private String status;
 
   /**
    * 租户标识
    */
   @TableField("tenant")
   private Long tenant;
+
+  /**
+   * 名字
+   */
+  @TableField("user_name")
+  private String userName;
+
+  /**
+   * 版本号
+   */
+  @TableField(
+      value = "version",
+      notLarge = false
+  )
+  private String version;
 
   @Override
   public Serializable findPk() {

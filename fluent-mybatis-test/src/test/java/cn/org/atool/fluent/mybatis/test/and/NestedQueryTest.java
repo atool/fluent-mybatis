@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
-import cn.org.atool.fluent.mybatis.generate.mapper.UserMapper;
-import cn.org.atool.fluent.mybatis.generate.wrapper.AddressQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.UserQuery;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cn.org.atool.fluent.mybatis.generate.helper.AddressMapping.userId;
+import static cn.org.atool.fluent.mybatis.generate.helper.HomeAddressMapping.studentId;
 
 /**
  * NestedQueryTest
@@ -18,46 +18,46 @@ import static cn.org.atool.fluent.mybatis.generate.helper.AddressMapping.userId;
  */
 public class NestedQueryTest extends BaseTest {
     @Autowired
-    private UserMapper mapper;
+    private StudentMapper mapper;
 
     @Test
     void test_or_nested() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
-            .where.exists(AddressQuery.class, q -> q
+            .where.exists(HomeAddressQuery.class, q -> q
                 .where.address().like("u")
-                .and.id().apply("=t_user.address_id").end())
+                .and.id().apply("=t_student.address_id").end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE EXISTS (SELECT * FROM address WHERE address LIKE ? AND id =t_user.address_id)");
+            .eq("SELECT id FROM t_student WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =t_student.address_id)");
 
     }
 
     @Test
     void test_exist() {
-        UserQuery query = new UserQuery()
+        StudentQuery query = new StudentQuery()
             .selectId()
             .where.exists(q -> q.selectId()
                 .where.id().eq(34L).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_user WHERE EXISTS (SELECT id FROM t_user WHERE id = ?)");
+            .eq("SELECT id FROM t_student WHERE EXISTS (SELECT id FROM t_student WHERE id = ?)");
     }
 
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
     @Test
     void test_nested_query_address_like() {
-        UserQuery query = new UserQuery()
-            .where.id().in(AddressQuery.class, q -> q
-                .select.apply(userId).end()
+        StudentQuery query = new StudentQuery()
+            .where.id().in(HomeAddressQuery.class, q -> q
+                .select.apply(studentId).end()
                 .where.address().like("杭州滨江").end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .start("SELECT id, gmt_created, gmt_modified, is_deleted,")
-            .end("FROM t_user " +
-                "WHERE id IN (SELECT user_id FROM address WHERE address LIKE ?)");
+            .end("FROM t_student " +
+                "WHERE id IN (SELECT student_id FROM home_address WHERE address LIKE ?)");
     }
 }

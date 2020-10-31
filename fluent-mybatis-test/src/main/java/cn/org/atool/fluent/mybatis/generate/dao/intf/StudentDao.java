@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 
 /**
- * @author generate code
- * @ClassName UserDao
- * @Description UserEntity数据操作接口
+ * StudentDao: 数据操作接口
+ *
+ * @author Powered By Fluent Mybatis
  */
-public interface UserDao extends IBaseDao<UserEntity> {
+public interface StudentDao extends IBaseDao<StudentEntity> {
     /**
      * 测试 dao类不会被重写
      *

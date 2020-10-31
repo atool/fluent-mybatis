@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.UserEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
@@ -12,12 +12,12 @@ import java.util.Map;
 public class EntityTest extends Test4J {
     @Test
     void copy() {
-        UserEntity user = new UserEntity()
+        StudentEntity student = new StudentEntity()
             .setUserName("fluent mybatis")
             .setAge(3)
             .setVersion("1.3.0")
             .copy();
-        want.object(user).eqDataMap(ATM.DataMap.user.entity()
+        want.object(student).eqDataMap(ATM.DataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
@@ -25,12 +25,12 @@ public class EntityTest extends Test4J {
 
     @Test
     void toEntityMap() {
-        Map<String, Object> user = new UserEntity()
+        Map<String, Object> student = new StudentEntity()
             .setUserName("fluent mybatis")
             .setAge(3)
             .setVersion("1.3.0")
             .toEntityMap();
-        want.object(user).eqDataMap(ATM.DataMap.user.entity()
+        want.object(student).eqDataMap(ATM.DataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
@@ -38,12 +38,12 @@ public class EntityTest extends Test4J {
 
     @Test
     void toColumnMap() {
-        Map<String, Object> user = new UserEntity()
+        Map<String, Object> student = new StudentEntity()
             .setUserName("fluent mybatis")
             .setAge(3)
             .setVersion("1.3.0")
             .toColumnMap();
-        want.object(user).eqDataMap(ATM.DataMap.user.table()
+        want.object(student).eqDataMap(ATM.DataMap.student.table()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
@@ -56,8 +56,8 @@ public class EntityTest extends Test4J {
         map.put("age", 3);
         map.put("version", "1.3.0");
 
-        UserEntity user = EntityHelperFactory.getInstance(UserEntity.class).toEntity(map);
-        want.object(user).eqDataMap(ATM.DataMap.user.entity()
+        StudentEntity student = EntityHelperFactory.getInstance(StudentEntity.class).toEntity(map);
+        want.object(student).eqDataMap(ATM.DataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
