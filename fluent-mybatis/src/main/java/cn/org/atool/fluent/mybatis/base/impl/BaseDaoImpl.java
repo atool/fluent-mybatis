@@ -73,7 +73,7 @@ public abstract class BaseDaoImpl<E extends IEntity>
         /**
          * 只设置id，不添加默认值
          */
-        IQuery query = this.emptyQuery().where().apply(this.primaryField(), EQ, id).end();
+        IQuery query = this.newQuery().where().apply(this.primaryField(), EQ, id).end();
         Integer count = this.mapper().count(query);
         return count != null && count > 0;
     }
@@ -146,5 +146,12 @@ public abstract class BaseDaoImpl<E extends IEntity>
      *
      * @return
      */
-    protected abstract IQuery<E, ?> emptyQuery();
+    protected abstract IQuery<E, ?> newQuery();
+
+    /**
+     * 无任何设置的更新器
+     *
+     * @return
+     */
+    protected abstract IUpdate<E, ?, ?> newUpdater();
 }
