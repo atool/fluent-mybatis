@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import lombok.Getter;
 
 import java.util.Collection;
@@ -112,7 +112,7 @@ public enum SqlOp {
      * @param paras      参数列表
      * @return sql片段
      */
-    public String operator(ParameterPair parameters, String format, Object... paras) {
+    public String operator(Parameters parameters, String format, Object... paras) {
         String sql = this.keyWord;
         if (format != null) {
             sql = String.format(this.keyWord, format);

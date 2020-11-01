@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import lombok.experimental.Accessors;
 
@@ -148,7 +148,7 @@ public abstract class WhereBase<
      * @return self
      */
     public <ANQ extends IQuery<?, ANQ>> WHERE exists(Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
-        ParameterPair parameters = wrapper.getWrapperData().getParameters();
+        Parameters parameters = wrapper.getWrapperData().getParameters();
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), EXISTS);
@@ -191,7 +191,7 @@ public abstract class WhereBase<
      * @return self
      */
     public <ANQ extends IQuery> WHERE notExists(Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
-        ParameterPair parameters = wrapper.getWrapperData().getParameters();
+        Parameters parameters = wrapper.getWrapperData().getParameters();
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), NOT_EXISTS);
@@ -287,7 +287,7 @@ public abstract class WhereBase<
         return this.wrapper.getWrapperData().getQueryClass();
     }
 
-    ParameterPair getParameters() {
+    Parameters getParameters() {
         return this.wrapper.getWrapperData().getParameters();
     }
 

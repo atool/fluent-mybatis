@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
@@ -10,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>> {
-    private JoinQuery<QL> joinBuilder;
+public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB> {
+    private JoinQuery<QL> joinQuery;
 
     private QL onLeft;
 
@@ -19,8 +18,8 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>> {
 
     private JoinOnBuilder onBuilder;
 
-    public JoinOn(JoinQuery<QL> joinBuilder, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
-        this.joinBuilder = joinBuilder;
+    public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
+        this.joinQuery = joinQuery;
         this.onBuilder = new JoinOnBuilder(qLeft, joinType, qRight);
         this.onLeft = newEmptyQuery(qLeftClass);
         this.onRight = newEmptyQuery(qRightClass);
@@ -33,14 +32,14 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>> {
      * @param r 右查询条件
      * @return
      */
-    public JoinOn<QL, QR> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
+    public JoinOn<QL, QR, JB> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
         this.onBuilder.on(l.apply(this.onLeft), r.apply(this.onRight));
         return this;
     }
 
-    public JoinBuilder<QL> endJoin() {
-        this.joinBuilder.getWrapperData().addTable(onBuilder.table());
-        return this.joinBuilder;
+    public JB endJoin() {
+        this.joinQuery.getWrapperData().addTable(onBuilder.table());
+        return (JB) this.joinQuery;
     }
 
     private static Map<Class, Constructor> QueryNoArgConstructors = new HashMap<>(128);

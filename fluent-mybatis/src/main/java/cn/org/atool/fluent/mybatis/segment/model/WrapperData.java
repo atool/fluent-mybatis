@@ -37,7 +37,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 自定义参数列表
      */
-    protected final ParameterPair parameters;
+    protected final Parameters parameters;
     /**
      * where, group, having ,order by对象列表
      */
@@ -63,12 +63,12 @@ public class WrapperData implements IWrapperData {
     private final Class queryClass;
 
     protected WrapperData() {
-        this.parameters = new ParameterPair();
+        this.parameters = new Parameters();
         this.queryClass = null;
         this.entityClass = null;
     }
 
-    public WrapperData(String table, ParameterPair parameters, Class entityClass, Class queryClass) {
+    public WrapperData(String table, Parameters parameters, Class entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.parameters = parameters;

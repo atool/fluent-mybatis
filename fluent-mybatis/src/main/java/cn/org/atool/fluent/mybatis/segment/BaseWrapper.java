@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IWrapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
 
@@ -41,10 +41,10 @@ public abstract class BaseWrapper<
     protected final WrapperData wrapperData;
 
     protected BaseWrapper(String table, Class<E> entityClass, Class queryClass) {
-        this(table, new ParameterPair(), entityClass, queryClass);
+        this(table, new Parameters(), entityClass, queryClass);
     }
 
-    protected BaseWrapper(String table, ParameterPair parameters, Class<E> entityClass, Class queryClass) {
+    protected BaseWrapper(String table, Parameters parameters, Class<E> entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.wrapperData = new WrapperData(table, parameters, entityClass, queryClass);
     }

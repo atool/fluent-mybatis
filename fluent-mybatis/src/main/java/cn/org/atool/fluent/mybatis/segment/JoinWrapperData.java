@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
 
@@ -23,7 +23,7 @@ public class JoinWrapperData extends WrapperData {
     private final List<BaseQuery> queries;
 
     @Getter
-    private final ParameterPair parameters;
+    private final Parameters parameters;
 
     public JoinWrapperData(BaseQuery query, List<BaseQuery> queries) {
         this.query = query;

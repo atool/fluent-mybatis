@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +36,7 @@ public abstract class BaseQuery<
     /**
      * 非对外公开的构造方法,只用于生产嵌套 sql
      */
-    protected BaseQuery(String table, ParameterPair parameters, Class entityClass, Class queryClass) {
+    protected BaseQuery(String table, Parameters parameters, Class entityClass, Class queryClass) {
         super(table, parameters, entityClass, queryClass);
     }
 

@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.segment.model.ParameterPair;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -147,7 +147,7 @@ public class QueryGenerator extends AbstractGenerator {
     private MethodSpec constructor1_Parameter() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(ClassName.get(ParameterPair.class), "parameters")
+            .addParameter(ClassName.get(Parameters.class), "parameters")
             .addStatement("super($T.Table_Name, parameters, $T.class, $T.class)",
                 fluent.mapping(),
                 fluent.entity(),
@@ -165,7 +165,7 @@ public class QueryGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(ClassName.get(String.class), "alias")
-            .addParameter(ClassName.get(ParameterPair.class), "parameters")
+            .addParameter(ClassName.get(Parameters.class), "parameters")
             .addStatement("this(parameters)")
             .addStatement("super.alias = alias")
             .build();

@@ -16,13 +16,13 @@ import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.Wrapper_Data;
  * @author darui.wu
  * @create 2020/6/19 1:53 下午
  */
-public class ParameterPair extends HashMap<String, Object> {
+public class Parameters extends HashMap<String, Object> {
     /**
      * 自定义参数序号
      */
     protected final AtomicInteger sequence = new AtomicInteger();
 
-    public ParameterPair() {
+    public Parameters() {
         super(16);
     }
 

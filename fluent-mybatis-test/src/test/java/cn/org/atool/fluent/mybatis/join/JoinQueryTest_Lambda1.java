@@ -1,22 +1,22 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.JoinBuilder;
+import cn.org.atool.fluent.mybatis.base.JoinBuilder2;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class JoinQueryTest extends BaseTest {
+public class JoinQueryTest_Lambda1 extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
     @Test
     public void test_join() {
-        JoinBuilder<StudentQuery> query = JoinBuilder
+        JoinBuilder2<StudentQuery> query = JoinBuilder2
             .from(StudentQuery.class, q -> q
                 .select.age().end()
                 .where.isDeleted().eq(true)
@@ -55,7 +55,7 @@ public class JoinQueryTest extends BaseTest {
 
     @Test
     public void test_left_join() {
-        JoinBuilder<StudentQuery> query = JoinBuilder
+        JoinBuilder2<StudentQuery> query = JoinBuilder2
             .from(StudentQuery.class, uq -> uq
                 .select.age().end()
                 .where.isDeleted().eq(true)
@@ -92,7 +92,7 @@ public class JoinQueryTest extends BaseTest {
 
     @Test
     public void test_right_join() {
-        JoinBuilder<StudentQuery> query = JoinBuilder
+        JoinBuilder2<StudentQuery> query = JoinBuilder2
             .from(StudentQuery.class, uq -> uq
                 .where.isDeleted().eq(true)
                 .and.age().isNull()
@@ -115,7 +115,7 @@ public class JoinQueryTest extends BaseTest {
 
     @Test
     void three_join() {
-        IQuery query = JoinBuilder
+        IQuery query = JoinBuilder2
             .from(StudentQuery.class, q -> q
                 .where.age().eq(3).end())
             .leftJoin(HomeAddressQuery.class, q -> q
