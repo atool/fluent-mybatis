@@ -27,7 +27,7 @@ public class FluentMyBatisGeneratorMain {
         tables = {
             @Table(value = {"home_address", "t_student", "student_score"},
                 tablePrefix = "t_", mapperPrefix = "my",
-                dao = MyCustomerInterface.class,
+                defaults = MyCustomerInterface.class,
                 entity = IBaseEntity.class,
                 columns = @Column(value = "version", isLarge = true)
             ),

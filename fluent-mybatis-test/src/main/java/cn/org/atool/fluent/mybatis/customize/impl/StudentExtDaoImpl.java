@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, IBaseDao<StudentEntity> {
     @Override
     public int count(String userName) {
-        return super.query()
+        return super.defaultQuery()
             .where.userName().eq(userName)
             .end()
             .execute(super::count);
@@ -22,7 +22,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     @Override
     public List<String> selectFields(Long... ids) {
         return super.listEntity(
-            super.query()
+            super.defaultQuery()
                 .where.id().in(ids)
                 .end()
         ).stream()
@@ -32,7 +32,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public List<StudentEntity> selectList(Long... ids) {
-        return super.query()
+        return super.defaultQuery()
             .where.id().in(ids).end()
             .execute(super::listEntity);
     }
@@ -40,7 +40,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     @Override
     public List<String> selectObjs(Long... ids) {
         return super.listPoJos(
-            super.query()
+            super.defaultQuery()
                 .select.apply(userName).end()
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(userName.column)
@@ -50,7 +50,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     @Override
     public List<String> selectObjs2(Long... ids) {
         return super.listPoJos(
-            super.query()
+            super.defaultQuery()
                 .select.apply(userName, age).end()
                 .where.id().in(ids).end(),
             (map) -> (String) map.get(userName.column)
@@ -59,7 +59,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public StudentEntity selectOne(String likeName) {
-        return super.query()
+        return super.defaultQuery()
             .where.userName().like(likeName)
             .end()
             .execute(super::findOne)
@@ -68,7 +68,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public String selectOne(long id) {
-        return super.findOne(super.query()
+        return super.findOne(super.defaultQuery()
             .where.id().eq(id).end())
             .map(StudentEntity::getUserName)
             .orElse(null);
@@ -76,21 +76,21 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public void deleteByQuery(String username) {
-        super.query()
+        super.defaultQuery()
             .where.userName().eq(username).end()
             .execute(super::deleteBy);
     }
 
     @Override
     public void deleteByQuery(String... userNames) {
-        super.query()
+        super.defaultQuery()
             .where.userName().in(userNames).end()
             .execute(super::deleteBy);
     }
 
     @Override
     public void updateUserNameById(String newUserName, long id) {
-        super.updater()
+        super.defaultUpdater()
             .update.userName().is(newUserName).end()
             .where.id().eq(id).end()
             .execute(super::updateBy);

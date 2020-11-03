@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.annotation;
 
+import cn.org.atool.fluent.mybatis.base.IDefault;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.lang.annotation.*;
@@ -44,11 +45,18 @@ public @interface FluentMybatis {
     String mapperBeanPrefix() default "";
 
     /**
-     * 自定义Dao接口
+     * 自定义IDao接口
      *
      * @return
      */
-    Class[] daoInterface() default {};
+    //Class<? extends IDao> daoInterface() default IDao.class;
+
+    /**
+     * entity, query, updater默认值设置实现
+     *
+     * @return
+     */
+    Class<? extends IDefault> defaults() default IDefault.class;
 
     /**
      * 分页语法

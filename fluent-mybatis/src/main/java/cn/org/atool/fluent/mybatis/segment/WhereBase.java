@@ -223,7 +223,7 @@ public abstract class WhereBase<
      * @return 条件设置器
      */
     public WHERE apply(String column, SqlOp op, Object... paras) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
+        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, paras);
         return this.and;
     }
 

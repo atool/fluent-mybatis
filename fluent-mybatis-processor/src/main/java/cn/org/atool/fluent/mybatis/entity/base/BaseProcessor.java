@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.generator.WrappersFile;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
@@ -13,6 +14,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 
 import javax.annotation.processing.*;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.util.HashSet;
@@ -47,23 +49,35 @@ public abstract class BaseProcessor extends AbstractProcessor {
         mIsFirstRound = false;
         messager.printMessage(Diagnostic.Kind.NOTE, "process fluent mybatis begin !!!");
 
-        roundEnv.getElementsAnnotatedWith(FluentMybatis.class).stream()
-            .filter(it -> it instanceof TypeElement)
-            .map(it -> (TypeElement) it)
-            .forEach(it -> {
-                FluentEntityInfo entityInfo = null;
-                try {
-                    entityInfo = this.parseEntity(it);
-                    List<JavaFile> javaFiles = this.generateJavaFile(it, entityInfo);
-                    for (JavaFile javaFile : javaFiles) {
-                        javaFile.writeTo(filer);
-                    }
-                } catch (Exception e) {
-                    messager.printMessage(Diagnostic.Kind.ERROR,
-                        it.getQualifiedName() + ":\nEntityInfo:" + entityInfo + "\n" + MybatisUtil.toString(e));
-                    throw new RuntimeException(e);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(FluentMybatis.class);
+        for (Element element : elements) {
+            if (!(element instanceof TypeElement)) {
+                continue;
+            }
+            TypeElement it = (TypeElement) element;
+            FluentEntityInfo entityInfo = null;
+            try {
+                entityInfo = this.parseEntity(it);
+                WrappersFile.addFluent(entityInfo);
+                List<JavaFile> javaFiles = this.generateJavaFile(it, entityInfo);
+                for (JavaFile javaFile : javaFiles) {
+                    javaFile.writeTo(filer);
                 }
-            });
+            } catch (Exception e) {
+                messager.printMessage(Diagnostic.Kind.ERROR,
+                    it.getQualifiedName() + ":\nEntityInfo:" + entityInfo + "\n" + MybatisUtil.toString(e));
+                throw new RuntimeException(e);
+            }
+        }
+        if (WrappersFile.notEmpty()) {
+            try {
+                new WrappersFile().writeTo(filer);
+            } catch (Exception e) {
+                messager.printMessage(Diagnostic.Kind.ERROR,
+                    "Generate WrapperFactory error:\n" + MybatisUtil.toString(e));
+                throw new RuntimeException(e);
+            }
+        }
         messager.printMessage(Diagnostic.Kind.NOTE, "process fluent mybatis end !!!");
         return true;
     }

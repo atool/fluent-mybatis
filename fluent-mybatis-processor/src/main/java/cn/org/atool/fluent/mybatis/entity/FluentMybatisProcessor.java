@@ -30,16 +30,17 @@ public class FluentMybatisProcessor extends BaseProcessor {
     }
 
     @Override
-    protected List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
+    protected List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluent) {
         List<JavaFile> files = new ArrayList<>();
-        files.add(new MapperGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new MappingGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new EntityHelperGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new SqlProviderGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new WrapperHelperGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new QueryGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new UpdaterGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new BaseDaoGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new MapperGenerator(curElement, fluent).javaFile());
+        files.add(new MappingGenerator(curElement, fluent).javaFile());
+        files.add(new EntityHelperGenerator(curElement, fluent).javaFile());
+        files.add(new SqlProviderGenerator(curElement, fluent).javaFile());
+        files.add(new WrapperHelperGenerator(curElement, fluent).javaFile());
+        files.add(new QueryGenerator(curElement, fluent).javaFile());
+        files.add(new UpdaterGenerator(curElement, fluent).javaFile());
+        files.add(new BaseDaoGenerator(curElement, fluent).javaFile());
+        files.add(new WrapperDefaultGenerator(curElement, fluent).javaFile());
         return files;
     }
 
@@ -49,8 +50,8 @@ public class FluentMybatisProcessor extends BaseProcessor {
         try {
             entityInfo = new FluentEntityInfo();
             entityInfo.setClassName(this.getCuPackageName(entity), entity.getSimpleName().toString());
-            List<String> daos = DaoInterfaceParser.getDaoInterfaces(entity);
-            entityInfo.setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), daos);
+            String defaults = DaoInterfaceParser.getDefaults(entity);
+            entityInfo.setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), defaults);
             entityInfo.setFields(this.translate(entity, (JCTree) trees.getTree(entity)));
             return entityInfo;
         } catch (Throwable e) {

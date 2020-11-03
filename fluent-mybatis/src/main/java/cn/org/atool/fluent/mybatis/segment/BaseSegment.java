@@ -44,6 +44,20 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         return column.alias(this.wrapper.getAlias());
     }
 
+    /**
+     * 判断是否是字段，如果是加上别名
+     *
+     * @param column
+     * @return
+     */
+    protected String columnWithAlias(String column) {
+        if (FieldMapping.isColumnName(column)) {
+            return FieldMapping.alias(this.wrapper.getAlias(), column);
+        } else {
+            return column;
+        }
+    }
+
     protected BaseSegment(W wrapper) {
         this.wrapper = (BaseWrapper) wrapper;
     }

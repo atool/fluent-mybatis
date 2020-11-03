@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.base.IDefault;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumnParser;
 import cn.org.atool.fluent.mybatis.entity.generator.*;
@@ -26,7 +27,6 @@ public class FluentEntityInfo {
     /**
      * package
      */
-    @Getter(AccessLevel.NONE)
     private String basePack;
 
     private String entityPack;
@@ -47,6 +47,10 @@ public class FluentEntityInfo {
      */
     @Getter(AccessLevel.NONE)
     private List<String> daoInterfaces;
+    /**
+     * 默认值实现
+     */
+    private String defaults;
     /**
      * 表名称前缀
      */
@@ -108,11 +112,11 @@ public class FluentEntityInfo {
      * @param fluentMyBatis
      * @return
      */
-    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis, List<String> daoInterfaces) {
+    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
-        this.daoInterfaces = daoInterfaces;
+        this.defaults = isBlank(defaults) ? IDefault.class.getName() : defaults;
         this.tableName = fluentMyBatis.table();
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());
@@ -130,6 +134,15 @@ public class FluentEntityInfo {
             All_Fields = this.fields.stream().map(FieldColumn::getColumn).collect(Collectors.joining(", "));
         }
         return All_Fields;
+    }
+
+    /**
+     * 首字母小写,不带Entity后缀的entity名称
+     *
+     * @return
+     */
+    public String lowerNoSuffix() {
+        return MybatisUtil.lowerFirst(this.noSuffix, "");
     }
 
     // all ClassName
@@ -207,6 +220,19 @@ public class FluentEntityInfo {
         return ClassName.get(
             SqlProviderGenerator.getPackageName(this),
             SqlProviderGenerator.getClassName(this));
+    }
+
+
+    /**
+     * ClassName of XyzWrapperFactory
+     *
+     * @return
+     */
+    public ClassName wrapperFactory() {
+        return ClassName.get(
+            WrapperDefaultGenerator.getPackageName(this),
+            WrapperDefaultGenerator.getClassName(this)
+        );
     }
 
     public ClassName queryWhere() {

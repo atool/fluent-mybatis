@@ -22,8 +22,14 @@ public class WrapperHelperGenerator extends AbstractGenerator {
     }
 
     @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.addStaticImport(fluent.mapping(), "*");
+        super.staticImport(builder);
+    }
+
+    @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(fluent.mapping())
+        builder
             .addType(this.nestedISegment())
             .addType(this.nestedSelector())
             .addType(this.nestedQueryWhere())
@@ -50,7 +56,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
                 .methodBuilder(fc.getProperty())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($T.$L)", fluent.mapping(), fc.getProperty())
+                .addStatement("return this.set($L)", fc.getProperty())
                 .build()
             );
         }
@@ -272,7 +278,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($T.$L)", fluent.mapping(), fc.getProperty());
+        field.addStatement("return this.set($L)", fc.getProperty());
         builder.addMethod(field.build());
     }
 

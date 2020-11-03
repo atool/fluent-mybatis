@@ -2,10 +2,11 @@ package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.JoinBuilder;
+import cn.org.atool.fluent.mybatis.generate.Wrappers;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -17,24 +18,20 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_join() {
-        Parameters parameters = new Parameters();
+        StudentQuery studentQuery = Wrappers.student.defaultQuery("u")
+            .select.age().end()
+            .where.age().isNull().end()
+            .groupBy.age().apply("u.id").end()
+            .having.max.age().gt(1L).end()
+            .orderBy.id().desc().end();
+        HomeAddressQuery addressQuery = Wrappers.homeAddress.defaultQuery("a", studentQuery)
+            .select.studentId().end()
+            .where.address().like("vas").end()
+            .groupBy.studentId().end()
+            .orderBy.id().asc().end();
         JoinBuilder<StudentQuery> query = JoinBuilder
-            .from(new StudentQuery("u", parameters)
-                .select.age().end()
-                .where.isDeleted().eq(true)
-                .and.age().isNull()
-                .end()
-                .groupBy.age().apply("u.id").end()
-                .having.max.age().gt(1L).end()
-                .orderBy.id().desc().end()
-            ).join(new HomeAddressQuery("a", parameters)
-                .select.studentId().end()
-                .where.isDeleted().eq(true)
-                .and.address().like("vas")
-                .end()
-                .groupBy.studentId().end()
-                .orderBy.id().asc().end()
-            )
+            .from(studentQuery)
+            .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
             .on(l -> l.where.age(), r -> r.where.studentId()).endJoin()
             .limit(20);
@@ -46,8 +43,10 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "ON u.id = a.id " +
                 "AND u.age = a.student_id " +
                 "WHERE u.is_deleted = ? " +
+                "AND u.env = ? " +
                 "AND u.age IS NULL " +
                 "AND a.is_deleted = ? " +
+                "AND a.env = ? " +
                 "AND a.address LIKE ? " +
                 "GROUP BY u.age, u.id, a.student_id " +
                 "HAVING MAX(u.age) > ? " +
@@ -57,24 +56,22 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        Parameters parameters = new Parameters();
+        StudentQuery studentQuery = Wrappers.student.defaultQuery("t1")
+            .select.age().end()
+            .where.age().isNull().end()
+            .groupBy.age().apply("t1.id").end()
+            .having.max.age().gt(1L).end();
+        HomeAddressQuery addressQuery = Wrappers.homeAddress.defaultQuery("t2", studentQuery)
+            .select.studentId().end()
+            .where.address().like("vas").end()
+            .groupBy.studentId().end();
         JoinBuilder<StudentQuery> query = JoinBuilder
-            .from(new StudentQuery("t1", parameters)
-                .select.age().end()
-                .where.isDeleted().eq(true)
-                .and.age().isNull()
-                .end()
-                .groupBy.age().apply("t1.id").end()
-                .having.max.age().gt(1L).end()
-            ).leftJoin(new HomeAddressQuery("t2", parameters)
-                .select.studentId().end()
-                .where.isDeleted().eq(true)
-                .and.address().like("vas")
-                .end()
-                .groupBy.studentId().end()
+            .from(studentQuery)
+            .leftJoin(addressQuery)
+            .on((join, l, r) -> join
+                .on(l.where.id(), r.where.id())
+                .on(l.where.age(), r.where.studentId())
             )
-            .on(l -> l.where.id(), r -> r.where.id())
-            .on(l -> l.where.age(), r -> r.where.studentId()).endJoin()
             .distinct()
             .limit(20);
         mapper.listMaps(query.build());
@@ -85,8 +82,10 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "ON t1.id = t2.id " +
                 "AND t1.age = t2.student_id " +
                 "WHERE t1.is_deleted = ? " +
+                "AND t1.env = ? " +
                 "AND t1.age IS NULL " +
                 "AND t2.is_deleted = ? " +
+                "AND t2.env = ? " +
                 "AND t2.address LIKE ? " +
                 "GROUP BY t1.age, t1.id, t2.student_id " +
                 "HAVING MAX(t1.age) > ? " +

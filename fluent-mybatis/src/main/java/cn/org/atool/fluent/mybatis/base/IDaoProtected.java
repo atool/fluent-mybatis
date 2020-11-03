@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.MarkerList;
+import cn.org.atool.fluent.mybatis.base.model.TagList;
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
 
 import java.util.List;
@@ -109,7 +109,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    MarkerList<E> markerPagedEntity(IQuery query);
+    TagList<E> tagPagedEntity(IQuery query);
 
     /**
      * 按Marker标识分页查询（结果集为Map对象）
@@ -117,7 +117,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    MarkerList<Map<String, Object>> markerPagedMaps(IQuery query);
+    TagList<Map<String, Object>> tagPagedMaps(IQuery query);
 
     /**
      * 按Marker标识分页查询（结果集为Object对象）
@@ -127,7 +127,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
-    <POJO> MarkerList<POJO> markerPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+    <POJO> TagList<POJO> tagPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
 
     /**
      * 按Marker标识分页查询（结果集为Object对象）
@@ -137,7 +137,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO> Object类型
      * @return 分页查询结果
      */
-    <POJO> MarkerList<POJO> markerPagedPoJos(Class<POJO> klass, IQuery query);
+    <POJO> TagList<POJO> tagPagedPoJos(Class<POJO> klass, IQuery query);
 
     /**
      * 根据query查询满足条件的第一条记录

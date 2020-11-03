@@ -10,6 +10,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import static cn.org.atool.fluent.mybatis.entity.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
@@ -26,33 +27,26 @@ public class BaseDaoGenerator extends AbstractGenerator {
         builder.addModifiers(Modifier.ABSTRACT)
             .superclass(this.superBaseDaoImplKlass())
             .addSuperinterface(this.superMappingClass());
-        for (String daoInterface : fluent.getDaoInterfaces()) {
-            this.addInterface(builder, daoInterface);
-        }
+
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
             .addMethod(this.m_newQuery())
-            .addMethod(this.m_query())
+            .addMethod(this.m_defaultQuery())
             .addMethod(this.m_newUpdater())
-            .addMethod(this.m_updater())
+            .addMethod(this.m_defaultUpdater())
+            .addMethod(this.m_setEntityDefault())
             .addMethod(this.m_primaryField());
     }
 
-    private void addInterface(TypeSpec.Builder builder, String daoInterface) {
-        int dot = daoInterface.lastIndexOf('.');
-        String packageName = "";
-        String simpleClassName = daoInterface;
-        if (dot > 0) {
-            packageName = daoInterface.substring(0, dot);
-            simpleClassName = daoInterface.substring(dot + 1);
-        }
-        builder.addSuperinterface(parameterizedType(
-            ClassName.get(packageName, simpleClassName),
-            fluent.entity(),
-            fluent.query(),
-            fluent.updater()
-        ));
+    private MethodSpec m_setEntityDefault() {
+        return MethodSpec.methodBuilder("setEntityDefault")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PROTECTED)
+            .addParameter(fluent.entity(), "entity")
+            .addStatement("$T.$L.setInsertDefault(entity)", WrappersFile.getClassName(), fluent.lowerNoSuffix())
+            .build();
     }
+
 
     private TypeName superMappingClass() {
         return ClassName.get(MappingGenerator.getPackageName(fluent), MappingGenerator.getClassName(fluent));
@@ -90,27 +84,25 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .build();
     }
 
+    private MethodSpec m_newQuery() {
+        return super.protectedMethod(M_NEW_QUERY, true, fluent.query())
+            .addStatement("return new $T()", fluent.query())
+            .build();
+    }
+
     /**
      * public EntityQuery query() {}
      *
      * @return
      */
-    private MethodSpec m_query() {
-        return super.publicMethod("query", true, fluent.query())
-            .addStatement("$T query = this.newQuery()", fluent.query())
-            .addStatement("super.setDaoQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
-    private MethodSpec m_newQuery() {
-        return super.protectedMethod("newQuery", true, fluent.query())
-            .addStatement("return new $T()", fluent.query())
+    private MethodSpec m_defaultQuery() {
+        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
+            .addStatement("return $T.$L.$L()", WrappersFile.getClassName(), fluent.lowerNoSuffix(), M_DEFAULT_QUERY)
             .build();
     }
 
     private MethodSpec m_newUpdater() {
-        return super.protectedMethod("newUpdater", true, fluent.updater())
+        return super.protectedMethod(M_NEW_UPDATER, true, fluent.updater())
             .addStatement("return new $T()", fluent.updater())
             .build();
     }
@@ -120,11 +112,9 @@ public class BaseDaoGenerator extends AbstractGenerator {
      *
      * @return
      */
-    private MethodSpec m_updater() {
-        return super.publicMethod("updater", true, fluent.updater())
-            .addStatement("$T updater = this.newUpdater()", fluent.updater())
-            .addStatement("super.setDaoUpdateDefault(updater)")
-            .addStatement("return updater")
+    private MethodSpec m_defaultUpdater() {
+        return super.publicMethod(M_DEFAULT_UPDATER, true, fluent.updater())
+            .addStatement("return $T.$L.$L()", WrappersFile.getClassName(), fluent.lowerNoSuffix(), M_DEFAULT_UPDATER)
             .build();
     }
 
@@ -134,8 +124,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      * @return
      */
     private MethodSpec m_primaryField() {
-        MethodSpec.Builder builder = super.publicMethod("primaryField", false, FieldMapping.class)
-            .addJavadoc("返回实体类主键值");
+        MethodSpec.Builder builder = super.publicMethod("primaryField", true, FieldMapping.class);
         if (fluent.getPrimary() == null) {
             super.throwPrimaryNoFound(builder);
         } else {

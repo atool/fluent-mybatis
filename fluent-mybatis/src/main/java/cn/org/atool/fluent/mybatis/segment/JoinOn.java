@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.functions.OnConsumer;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 
@@ -23,6 +24,18 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         this.onBuilder = new JoinOnBuilder(qLeft, joinType, qRight);
         this.onLeft = newEmptyQuery(qLeftClass);
         this.onRight = newEmptyQuery(qRightClass);
+    }
+
+    /**
+     * 关联关系设置
+     *
+     * @param join
+     * @return
+     */
+    public JB on(OnConsumer<QL, QR> join) {
+        join.accept(this.onBuilder, this.onLeft, this.onRight);
+        this.joinQuery.getWrapperData().addTable(onBuilder.table());
+        return (JB) this.joinQuery;
     }
 
     /**

@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
 @FluentMybatis(
     table = "home_address",
     mapperBeanPrefix = "my",
-    daoInterface = {MyCustomerInterface.class}
+    defaults = MyCustomerInterface.class
 )
 public class HomeAddressEntity implements IEntity, IBaseEntity<HomeAddressEntity> {
   private static final long serialVersionUID = 1L;

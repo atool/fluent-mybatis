@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
 import cn.org.atool.fluent.mybatis.base.*;
-import cn.org.atool.fluent.mybatis.base.model.MarkerList;
+import cn.org.atool.fluent.mybatis.base.model.TagList;
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
@@ -99,7 +99,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public MarkerList<E> markerPagedEntity(IQuery query) {
+    public TagList<E> tagPagedEntity(IQuery query) {
         int size = this.validateMarkerPaged(query);
         query.limit(size + 1);
         List<E> list = this.mapper().listEntity(query);
@@ -107,12 +107,12 @@ public abstract class DaoProtectedImpl<E extends IEntity>
         if (list.size() > size) {
             next = list.remove(size);
         }
-        return new MarkerList<>(list, next);
+        return new TagList<>(list, next);
     }
 
 
     @Override
-    public MarkerList<Map<String, Object>> markerPagedMaps(IQuery query) {
+    public TagList<Map<String, Object>> tagPagedMaps(IQuery query) {
         int size = this.validateMarkerPaged(query);
         query.limit(size + 1);
         List list = this.mapper().listMaps(query);
@@ -120,23 +120,23 @@ public abstract class DaoProtectedImpl<E extends IEntity>
         if (list.size() > size) {
             next = (Map) list.remove(size);
         }
-        return new MarkerList<>(list, next);
+        return new TagList<>(list, next);
     }
 
     @Override
-    public <POJO> MarkerList<POJO> markerPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter) {
-        MarkerList<Map<String, Object>> paged = this.markerPagedMaps(query);
+    public <POJO> TagList<POJO> tagPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter) {
+        TagList<Map<String, Object>> paged = this.tagPagedMaps(query);
         List<POJO> list = this.toPoJoList(paged.getData(), converter);
         POJO next = this.toPoJo(paged.getNext(), converter);
-        return new MarkerList<>(list, next);
+        return new TagList<>(list, next);
     }
 
     @Override
-    public <POJO> MarkerList<POJO> markerPagedPoJos(Class<POJO> klass, IQuery query) {
-        MarkerList<Map<String, Object>> paged = this.markerPagedMaps(query);
+    public <POJO> TagList<POJO> tagPagedPoJos(Class<POJO> klass, IQuery query) {
+        TagList<Map<String, Object>> paged = this.tagPagedMaps(query);
         List<POJO> list = this.toPoJoList(klass, paged.getData());
         POJO next = this.toPoJo(klass, paged.getNext());
-        return new MarkerList<>(list, next);
+        return new TagList<>(list, next);
     }
 
     @Override
