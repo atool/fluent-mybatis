@@ -13,6 +13,11 @@ import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 
+/**
+ * QueryGenerator: *Query文件生成
+ *
+ * @author wudarui
+ */
 public class QueryGenerator extends AbstractGenerator {
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {

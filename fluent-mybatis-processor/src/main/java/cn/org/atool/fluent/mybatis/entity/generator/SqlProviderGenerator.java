@@ -26,6 +26,11 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static java.util.stream.Collectors.joining;
 
+/**
+ * SqlProviderGenerator: *SqlProvider文件生成
+ *
+ * @author wudarui
+ */
 public class SqlProviderGenerator extends AbstractGenerator {
 
     public static String getClassName(FluentEntityInfo fluentEntityInfo) {

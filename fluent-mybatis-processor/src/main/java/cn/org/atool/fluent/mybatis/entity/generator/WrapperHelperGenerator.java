@@ -13,6 +13,11 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
+/**
+ * Query&Updater辅助类文件生成
+ *
+ * @author wudarui
+ */
 public class WrapperHelperGenerator extends AbstractGenerator {
     public WrapperHelperGenerator(FluentEntityInfo fluentEntityInfo) {
         super(fluentEntityInfo);

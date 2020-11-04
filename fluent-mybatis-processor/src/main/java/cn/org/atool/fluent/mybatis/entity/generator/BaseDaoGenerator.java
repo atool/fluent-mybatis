@@ -14,6 +14,11 @@ import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMa
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
 
+/**
+ * BaseDaoGenerator: *BaseDao文件生成
+ *
+ * @author wudarui
+ */
 public class BaseDaoGenerator extends AbstractGenerator {
     public BaseDaoGenerator(FluentEntityInfo fluentEntityInfo) {
         super(fluentEntityInfo);

@@ -21,6 +21,11 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
+/**
+ * fluent mybatis生成代码Entity信息
+ *
+ * @author wudarui
+ */
 @Getter
 @ToString
 public class FluentEntityInfo {
