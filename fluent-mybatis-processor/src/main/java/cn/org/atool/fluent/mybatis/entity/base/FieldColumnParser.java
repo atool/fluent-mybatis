@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
+import cn.org.atool.fluent.mybatis.annotation.NotField;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import com.sun.source.tree.Tree;
@@ -32,26 +34,38 @@ public class FieldColumnParser {
         FieldColumn field = new FieldColumn().setProperty(variable.getName().toString())
             .setJavaType(variable.getType().type);
 
-        boolean isPrimary = false;
-        JCTree.JCAnnotation jcAnnotation = null;
-
         for (JCTree.JCAnnotation annotation : variable.mods.annotations) {
             String type = annotation.type.toString();
             if (type.contains(TableId.class.getSimpleName())) {
-                jcAnnotation = annotation;
-                isPrimary = true;
-                break;
+                setTableField(field, true, annotation);
+                return field;
             } else if (type.contains(TableField.class.getSimpleName())) {
-                jcAnnotation = annotation;
-                break;
+                setTableField(field, false, annotation);
+                return field;
+            } else if (type.contains(RefMethod.class.getSimpleName())) {
+                setRefEntity(field, annotation);
+                return null;//TODO
+            } else if (type.contains(NotField.class.getSimpleName())) {
+                return null;
             }
         }
-        if (jcAnnotation == null) {
-            return field;
-        }
+        return field;
+    }
 
+    private static void setRefEntity(FieldColumn field, JCTree.JCAnnotation annotation) {
+        //TODO
+    }
+
+    /**
+     * 设置@TableId 和 @TableField属性
+     *
+     * @param field
+     * @param isPrimary  是否@TableId
+     * @param annotation 注解
+     */
+    private static void setTableField(FieldColumn field, boolean isPrimary, JCTree.JCAnnotation annotation) {
         field.setPrimary(isPrimary);
-        for (JCTree.JCExpression expression : jcAnnotation.args) {
+        for (JCTree.JCExpression expression : annotation.args) {
             if (!expression.getKind().equals(Tree.Kind.ASSIGNMENT)) {
                 continue;
             }
@@ -70,7 +84,6 @@ public class FieldColumnParser {
                 setField(field, assign);
             }
         }
-        return field;
     }
 
     /**

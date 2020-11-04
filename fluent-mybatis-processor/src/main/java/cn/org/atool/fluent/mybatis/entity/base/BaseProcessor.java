@@ -55,17 +55,24 @@ public abstract class BaseProcessor extends AbstractProcessor {
                 continue;
             }
             TypeElement it = (TypeElement) element;
-            FluentEntityInfo entityInfo = null;
             try {
-                entityInfo = this.parseEntity(it);
+                FluentEntityInfo entityInfo = this.parseEntity(it);
                 WrappersFile.addFluent(entityInfo);
-                List<JavaFile> javaFiles = this.generateJavaFile(it, entityInfo);
+            } catch (Exception e) {
+                messager.printMessage(Diagnostic.Kind.ERROR,
+                    it.getQualifiedName() + ":\n" + MybatisUtil.toString(e));
+                throw new RuntimeException(e);
+            }
+        }
+        for (FluentEntityInfo fluent : WrappersFile.getFluents()) {
+            try {
+                List<JavaFile> javaFiles = this.generateJavaFile(fluent);
                 for (JavaFile javaFile : javaFiles) {
                     javaFile.writeTo(filer);
                 }
             } catch (Exception e) {
                 messager.printMessage(Diagnostic.Kind.ERROR,
-                    it.getQualifiedName() + ":\nEntityInfo:" + entityInfo + "\n" + MybatisUtil.toString(e));
+                    "FluentEntityInfo:" + fluent + "\n" + MybatisUtil.toString(e));
                 throw new RuntimeException(e);
             }
         }
@@ -128,10 +135,9 @@ public abstract class BaseProcessor extends AbstractProcessor {
     /**
      * 生成java文件
      *
-     * @param curElement
-     * @param fluentEntityInfo
+     * @param fluent
      */
-    protected abstract java.util.List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluentEntityInfo);
+    protected abstract java.util.List<JavaFile> generateJavaFile(FluentEntityInfo fluent);
 
 
     /**

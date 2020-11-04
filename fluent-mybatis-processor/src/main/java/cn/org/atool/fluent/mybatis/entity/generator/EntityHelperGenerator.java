@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.*;
 
-import javax.lang.model.element.TypeElement;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
@@ -28,8 +27,8 @@ public class EntityHelperGenerator extends AbstractGenerator {
         return fluent.getEntityPack();
     }
 
-    public EntityHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public EntityHelperGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
         this.comment = "Entity帮助类";

@@ -17,7 +17,6 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +36,8 @@ public class SqlProviderGenerator extends AbstractGenerator {
         return fluentEntityInfo.getPackageName(Pack_Helper);
     }
 
-    public SqlProviderGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public SqlProviderGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
         this.comment = "动态语句封装";

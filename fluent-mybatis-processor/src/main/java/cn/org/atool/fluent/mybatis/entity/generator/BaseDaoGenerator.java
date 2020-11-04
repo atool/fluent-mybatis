@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import static cn.org.atool.fluent.mybatis.entity.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
@@ -16,10 +15,16 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
 
 public class BaseDaoGenerator extends AbstractGenerator {
-    public BaseDaoGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public BaseDaoGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = fluentEntityInfo.getPackageName(Pack_BaseDao);
         this.klassName = fluentEntityInfo.getNoSuffix() + Suffix_BaseDao;
+    }
+
+    @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.addStaticImport(fluent.wrapperFactory(), "INSTANCE");
+        super.staticImport(builder);
     }
 
     @Override
@@ -43,7 +48,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PROTECTED)
             .addParameter(fluent.entity(), "entity")
-            .addStatement("$T.$L.setInsertDefault(entity)", WrappersFile.getClassName(), fluent.lowerNoSuffix())
+            .addStatement("INSTANCE.setInsertDefault(entity)")
             .build();
     }
 
@@ -97,7 +102,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      */
     private MethodSpec m_defaultQuery() {
         return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
-            .addStatement("return $T.$L.$L()", WrappersFile.getClassName(), fluent.lowerNoSuffix(), M_DEFAULT_QUERY)
+            .addStatement("return INSTANCE.$L()", M_DEFAULT_QUERY)
             .build();
     }
 
@@ -114,7 +119,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
      */
     private MethodSpec m_defaultUpdater() {
         return super.publicMethod(M_DEFAULT_UPDATER, true, fluent.updater())
-            .addStatement("return $T.$L.$L()", WrappersFile.getClassName(), fluent.lowerNoSuffix(), M_DEFAULT_UPDATER)
+            .addStatement("return INSTANCE.$L()", M_DEFAULT_UPDATER)
             .build();
     }
 

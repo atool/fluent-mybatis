@@ -32,11 +32,13 @@ public class OneToOneTest extends BaseTest {
     @Test
     public void one2one() {
         PersonEntity p1 = personMapper.selectPersonById(1);
+        System.out.println("=============================");
+
         System.out.println(p1.getAge());
-        System.out.println("=============================");
+        System.out.println("================age=============");
         System.out.println(p1.getCard());
-        System.out.println("=============================");
+        System.out.println("=================card============");
         System.out.println(p1.getNickNames());
-        System.out.println("=============================");
+        System.out.println("===================nick==========");
     }
 }

@@ -10,13 +10,12 @@ import cn.org.atool.fluent.mybatis.segment.where.*;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 public class WrapperHelperGenerator extends AbstractGenerator {
-    public WrapperHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public WrapperHelperGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
     }

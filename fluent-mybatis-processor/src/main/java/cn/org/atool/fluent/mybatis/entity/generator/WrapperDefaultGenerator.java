@@ -5,14 +5,16 @@ import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.entity.base.MethodName.M_DEFAULT_QUERY;
 import static cn.org.atool.fluent.mybatis.entity.base.MethodName.M_DEFAULT_UPDATER;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_WrapperDefault;
 
 /**
  * 构造Query和Updater的工程类
@@ -20,8 +22,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  * @author darui.wu
  */
 public class WrapperDefaultGenerator extends AbstractGenerator {
-    public WrapperDefaultGenerator(TypeElement curElement, FluentEntityInfo fluent) {
-        super(curElement, fluent);
+    public WrapperDefaultGenerator(FluentEntityInfo fluent) {
+        super(fluent);
         this.packageName = getPackageName(fluent);
         this.klassName = getClassName(fluent);
     }
@@ -37,6 +39,10 @@ public class WrapperDefaultGenerator extends AbstractGenerator {
     @Override
     protected void build(TypeSpec.Builder builder) {
         this.addWrapperDefault(builder, fluent.getDefaults());
+        builder.addField(FieldSpec.builder(fluent.wrapperFactory(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            .initializer("new $T()", fluent.wrapperFactory())
+            .build());
+        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
         builder.addMethod(this.m_newQuery_0());
         builder.addMethod(this.m_newQuery_1());
         builder.addMethod(this.m_newQuery_2());

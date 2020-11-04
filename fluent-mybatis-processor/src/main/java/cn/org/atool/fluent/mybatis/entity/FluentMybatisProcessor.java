@@ -30,17 +30,17 @@ public class FluentMybatisProcessor extends BaseProcessor {
     }
 
     @Override
-    protected List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluent) {
+    protected List<JavaFile> generateJavaFile(FluentEntityInfo fluent) {
         List<JavaFile> files = new ArrayList<>();
-        files.add(new MapperGenerator(curElement, fluent).javaFile());
-        files.add(new MappingGenerator(curElement, fluent).javaFile());
-        files.add(new EntityHelperGenerator(curElement, fluent).javaFile());
-        files.add(new SqlProviderGenerator(curElement, fluent).javaFile());
-        files.add(new WrapperHelperGenerator(curElement, fluent).javaFile());
-        files.add(new QueryGenerator(curElement, fluent).javaFile());
-        files.add(new UpdaterGenerator(curElement, fluent).javaFile());
-        files.add(new BaseDaoGenerator(curElement, fluent).javaFile());
-        files.add(new WrapperDefaultGenerator(curElement, fluent).javaFile());
+        files.add(new MapperGenerator(fluent).javaFile());
+        files.add(new MappingGenerator(fluent).javaFile());
+        files.add(new EntityHelperGenerator(fluent).javaFile());
+        files.add(new SqlProviderGenerator(fluent).javaFile());
+        files.add(new WrapperHelperGenerator(fluent).javaFile());
+        files.add(new QueryGenerator(fluent).javaFile());
+        files.add(new UpdaterGenerator(fluent).javaFile());
+        files.add(new BaseDaoGenerator(fluent).javaFile());
+        files.add(new WrapperDefaultGenerator(fluent).javaFile());
         return files;
     }
 

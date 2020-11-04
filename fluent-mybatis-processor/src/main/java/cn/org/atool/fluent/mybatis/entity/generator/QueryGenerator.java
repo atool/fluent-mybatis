@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
@@ -24,8 +23,8 @@ public class QueryGenerator extends AbstractGenerator {
         return fluentEntityInfo.getPackageName(Pack_Wrapper);
     }
 
-    public QueryGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public QueryGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
         this.comment = "查询构造";
@@ -55,6 +54,7 @@ public class QueryGenerator extends AbstractGenerator {
 
     private MethodSpec m_allFields() {
         return MethodSpec.methodBuilder("allFields")
+            .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(CN_List_Str)
             .addStatement("return $T.ALL_COLUMNS", fluent.mapping())

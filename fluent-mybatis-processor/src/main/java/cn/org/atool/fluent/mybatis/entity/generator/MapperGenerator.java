@@ -14,7 +14,6 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,8 +32,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  */
 public class MapperGenerator extends AbstractGenerator {
 
-    public MapperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public MapperGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
         this.comment = "Mapper接口";

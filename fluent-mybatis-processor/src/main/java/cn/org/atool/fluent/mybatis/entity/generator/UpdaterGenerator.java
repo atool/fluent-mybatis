@@ -7,7 +7,6 @@ import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
@@ -19,8 +18,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
  * @author wudarui
  */
 public class UpdaterGenerator extends AbstractGenerator {
-    public UpdaterGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public UpdaterGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
         this.comment = "更新构造";

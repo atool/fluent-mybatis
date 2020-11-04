@@ -1,10 +1,13 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.base.LazyEntity;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -25,7 +28,7 @@ import java.util.List;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentEntity implements IEntity, IBaseEntity<StudentEntity> {
+public class StudentEntity extends LazyEntity implements IEntity, IBaseEntity<StudentEntity> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -155,12 +158,19 @@ public class StudentEntity implements IEntity, IBaseEntity<StudentEntity> {
     )
     private String version;
 
-    @RefEntity(value = {"id:studentId", "env:env", "isDeleted:isDeleted"})
-    @NotField
+    @Getter(AccessLevel.NONE)
+    @RefMethod(Mt_StudentScoreList)
     private List<StudentScoreEntity> studentScoreList;
 
     @Override
     public Serializable findPk() {
         return this.id;
     }
+
+    public List<StudentScoreEntity> getStudentScoreList() {
+        super.lazyLoad(Mt_StudentScoreList, (List<StudentScoreEntity> value) -> this.studentScoreList = value);
+        return this.studentScoreList;
+    }
+
+    public static final String Mt_StudentScoreList = "StudentEntity_StudentScoreList";
 }

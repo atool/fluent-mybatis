@@ -98,6 +98,9 @@ public class FluentEntityInfo {
     public FluentEntityInfo setFields(List<JCVariableDecl> fields) {
         for (JCVariableDecl variable : fields) {
             FieldColumn field = FieldColumnParser.valueOf(variable);
+            if (field == null) {
+                continue;
+            }
             if (field.isPrimary() && this.primary == null) {
                 this.primary = field;
             }

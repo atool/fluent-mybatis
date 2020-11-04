@@ -4,11 +4,16 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapping;
@@ -29,8 +34,8 @@ public class MappingGenerator extends AbstractGenerator {
         return fluentEntityInfo.getPackageName(Pack_Helper);
     }
 
-    public MappingGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
+    public MappingGenerator(FluentEntityInfo fluentEntityInfo) {
+        super(fluentEntityInfo);
         this.packageName = getPackageName(fluentEntityInfo);
         this.klassName = getClassName(fluentEntityInfo);
         this.comment = "Entity类字段和表结构映射";

@@ -1,10 +1,15 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -103,12 +108,18 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
     @TableField("tenant")
     private Long tenant;
 
-    @RefEntity({"studentId:id", "env:env", "isDeleted:isDeleted"})
-    @NotField
+    @Getter(AccessLevel.NONE)
+    @RefMethod(value = "studentId:id")
     private StudentEntity student;
+
 
     @Override
     public Serializable findPk() {
         return this.id;
+    }
+
+    public StudentEntity getStudent() {
+
+        return student;
     }
 }
