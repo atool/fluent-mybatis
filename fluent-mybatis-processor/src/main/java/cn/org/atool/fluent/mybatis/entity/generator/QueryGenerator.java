@@ -55,6 +55,7 @@ public class QueryGenerator extends AbstractGenerator {
 
     private MethodSpec m_allFields() {
         return MethodSpec.methodBuilder("allFields")
+            .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(CN_List_Str)
             .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
