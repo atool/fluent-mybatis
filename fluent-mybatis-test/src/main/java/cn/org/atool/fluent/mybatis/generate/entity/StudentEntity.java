@@ -1,8 +1,10 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
-import cn.org.atool.fluent.mybatis.base.LazyEntity;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import lombok.AccessLevel;
@@ -28,7 +30,7 @@ import java.util.List;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentEntity extends LazyEntity implements IEntity, IBaseEntity<StudentEntity> {
+public class StudentEntity extends RichEntity implements IBaseEntity<StudentEntity> {
     private static final long serialVersionUID = 1L;
 
     /**

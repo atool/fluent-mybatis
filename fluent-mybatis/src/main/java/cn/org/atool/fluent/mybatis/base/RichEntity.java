@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  *
  * @author darui.wu
  */
-public abstract class LazyEntity {
+public abstract class RichEntity implements IEntity {
 
     @NotField
     protected transient Set<String> loaded = new HashSet<>(4);
@@ -27,7 +27,7 @@ public abstract class LazyEntity {
         if (loaded.contains(relation)) {
             return;
         }
-        T result = EntityLazyQuery.finder().load(relation, this);
+        T result = EntityLazyQuery.query().load(relation, this);
         set.accept(result);
         loaded.add(relation);
     }

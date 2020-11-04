@@ -30,7 +30,7 @@ public class FluentMybatisProcessor extends BaseProcessor {
     }
 
     @Override
-    protected List<JavaFile> generateJavaFile(FluentEntityInfo fluent) {
+    protected List<JavaFile> generateJavaFile(FluentEntity fluent) {
         List<JavaFile> files = new ArrayList<>();
         files.add(new MapperGenerator(fluent).javaFile());
         files.add(new MappingGenerator(fluent).javaFile());
@@ -45,10 +45,10 @@ public class FluentMybatisProcessor extends BaseProcessor {
     }
 
     @Override
-    protected FluentEntityInfo parseEntity(TypeElement entity) {
-        FluentEntityInfo entityInfo = null;
+    protected FluentEntity parseEntity(TypeElement entity) {
+        FluentEntity entityInfo = null;
         try {
-            entityInfo = new FluentEntityInfo();
+            entityInfo = new FluentEntity();
             entityInfo.setClassName(this.getCuPackageName(entity), entity.getSimpleName().toString());
             String defaults = DaoInterfaceParser.getDefaults(entity);
             entityInfo.setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), defaults);

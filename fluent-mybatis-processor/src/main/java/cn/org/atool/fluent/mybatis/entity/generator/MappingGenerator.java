@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.CodeBlock;
@@ -26,18 +26,18 @@ import static java.util.stream.Collectors.joining;
  */
 public class MappingGenerator extends AbstractGenerator {
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_Mapping;
+    public static String getClassName(FluentEntity fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_Mapping;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Helper);
+    public static String getPackageName(FluentEntity fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Helper);
     }
 
-    public MappingGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public MappingGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
         this.comment = "Entity类字段和表结构映射";
     }
 

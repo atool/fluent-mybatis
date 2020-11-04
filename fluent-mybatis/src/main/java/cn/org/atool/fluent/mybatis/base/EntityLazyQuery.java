@@ -18,7 +18,13 @@ public abstract class EntityLazyQuery {
      */
     private static EntityLazyQuery query;
 
-    public static EntityLazyQuery finder() {
+    /**
+     * 返回查询关联单例
+     * 必须将子类配置到Spring容器中进行bean初始化
+     *
+     * @return
+     */
+    public static EntityLazyQuery query() {
         if (query == null) {
             throw new RuntimeException("the LazyFinder must be defined as a spring bean.");
         }
@@ -33,7 +39,7 @@ public abstract class EntityLazyQuery {
      * @param <T>
      * @return
      */
-    public <T> T load(String relation, LazyEntity entity) {
+    public <T> T load(String relation, RichEntity entity) {
         if (!methods.containsKey(relation)) {
             throw new RuntimeException("not found method for relation:" + relation);
         }
@@ -61,8 +67,8 @@ public abstract class EntityLazyQuery {
                 continue;
             }
             Class parameterType = method.getParameterTypes()[0];
-            if (parameterType.isAssignableFrom(LazyEntity.class)) {
-                throw new RuntimeException("The type of parameter must be " + LazyEntity.class.getSimpleName());
+            if (parameterType.isAssignableFrom(RichEntity.class)) {
+                throw new RuntimeException("The type of parameter must be " + RichEntity.class.getSimpleName());
             }
             this.methods.put(ref.value(), method);
         }

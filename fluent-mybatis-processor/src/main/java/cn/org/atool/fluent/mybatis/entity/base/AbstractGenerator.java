@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractGenerator {
-    protected FluentEntityInfo fluent;
+    protected FluentEntity fluent;
 
     protected String packageName;
 
@@ -16,7 +16,7 @@ public abstract class AbstractGenerator {
 
     protected String comment;
 
-    public AbstractGenerator(FluentEntityInfo fluent) {
+    public AbstractGenerator(FluentEntity fluent) {
         this.fluent = fluent;
     }
 

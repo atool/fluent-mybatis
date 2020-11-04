@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.JoinBuilder;
-import cn.org.atool.fluent.mybatis.generate.Wrappers;
+import cn.org.atool.fluent.mybatis.generate.Mappers;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
@@ -18,13 +18,13 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Wrappers.student.defaultQuery("u")
+        StudentQuery studentQuery = Mappers.studentDefault.defaultQuery("u")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("u.id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        HomeAddressQuery addressQuery = Wrappers.homeAddress.defaultQuery("a", studentQuery)
+        HomeAddressQuery addressQuery = Mappers.homeAddressDefault.defaultQuery("a", studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end()
@@ -56,12 +56,12 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        StudentQuery studentQuery = Wrappers.student.defaultQuery("t1")
+        StudentQuery studentQuery = Mappers.studentDefault.defaultQuery("t1")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("t1.id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery addressQuery = Wrappers.homeAddress.defaultQuery("t2", studentQuery)
+        HomeAddressQuery addressQuery = Mappers.homeAddressDefault.defaultQuery("t2", studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();

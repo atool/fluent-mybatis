@@ -14,11 +14,13 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 /**
@@ -28,7 +30,7 @@ import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  */
 @Getter
 @ToString
-public class FluentEntityInfo {
+public class FluentEntity {
     /**
      * package
      */
@@ -84,7 +86,7 @@ public class FluentEntityInfo {
         return this.basePack + "." + suffix;
     }
 
-    public FluentEntityInfo setClassName(String entityPack, String className) {
+    public FluentEntity setClassName(String entityPack, String className) {
         this.className = className;
         this.entityPack = entityPack;
         this.basePack = this.getParentPackage(entityPack);
@@ -100,7 +102,7 @@ public class FluentEntityInfo {
         return daoInterfaces == null ? Collections.EMPTY_LIST : daoInterfaces;
     }
 
-    public FluentEntityInfo setFields(List<JCVariableDecl> fields) {
+    public FluentEntity setFields(List<JCVariableDecl> fields) {
         for (JCVariableDecl variable : fields) {
             FieldColumn field = FieldColumnParser.valueOf(variable);
             if (field == null) {
@@ -120,7 +122,7 @@ public class FluentEntityInfo {
      * @param fluentMyBatis
      * @return
      */
-    public FluentEntityInfo setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults) {
+    public FluentEntity setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
@@ -304,5 +306,30 @@ public class FluentEntityInfo {
             WrapperHelperGenerator.getPackageName(this)
                 + "." +
                 WrapperHelperGenerator.getClassName(this), Suffix_ISegment);
+    }
+
+
+    @Getter
+    private static List<FluentEntity> fluents = new ArrayList<>();
+    /**
+     * 所有entity对象的共同基础package
+     */
+    @Getter
+    private static String samePackage = null;
+
+    /**
+     * 排序
+     */
+    public static void sort() {
+        fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
+    }
+
+    public static void addFluent(FluentEntity fluent) {
+        fluents.add(fluent);
+        samePackage = sameStartPackage(samePackage, fluent.getBasePack());
+    }
+
+    public static boolean notEmpty() {
+        return !fluents.isEmpty();
     }
 }

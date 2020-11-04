@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
-import cn.org.atool.fluent.mybatis.entity.generator.WrappersFile;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.entity.generator.MappersFile;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
@@ -56,15 +56,16 @@ public abstract class BaseProcessor extends AbstractProcessor {
             }
             TypeElement it = (TypeElement) element;
             try {
-                FluentEntityInfo entityInfo = this.parseEntity(it);
-                WrappersFile.addFluent(entityInfo);
+                FluentEntity entityInfo = this.parseEntity(it);
+                FluentEntity.addFluent(entityInfo);
             } catch (Exception e) {
                 messager.printMessage(Diagnostic.Kind.ERROR,
                     it.getQualifiedName() + ":\n" + MybatisUtil.toString(e));
                 throw new RuntimeException(e);
             }
         }
-        for (FluentEntityInfo fluent : WrappersFile.getFluents()) {
+        FluentEntity.sort();
+        for (FluentEntity fluent : FluentEntity.getFluents()) {
             try {
                 List<JavaFile> javaFiles = this.generateJavaFile(fluent);
                 for (JavaFile javaFile : javaFiles) {
@@ -76,9 +77,9 @@ public abstract class BaseProcessor extends AbstractProcessor {
                 throw new RuntimeException(e);
             }
         }
-        if (WrappersFile.notEmpty()) {
+        if (FluentEntity.notEmpty()) {
             try {
-                new WrappersFile().writeTo(filer);
+                new MappersFile().writeTo(filer);
             } catch (Exception e) {
                 messager.printMessage(Diagnostic.Kind.ERROR,
                     "Generate WrapperFactory error:\n" + MybatisUtil.toString(e));
@@ -137,7 +138,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
      *
      * @param fluent
      */
-    protected abstract java.util.List<JavaFile> generateJavaFile(FluentEntityInfo fluent);
+    protected abstract java.util.List<JavaFile> generateJavaFile(FluentEntity fluent);
 
 
     /**
@@ -146,5 +147,5 @@ public abstract class BaseProcessor extends AbstractProcessor {
      * @param it
      * @return
      */
-    protected abstract FluentEntityInfo parseEntity(TypeElement it);
+    protected abstract FluentEntity parseEntity(TypeElement it);
 }

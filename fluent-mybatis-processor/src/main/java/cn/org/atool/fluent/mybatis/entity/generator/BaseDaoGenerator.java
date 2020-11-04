@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import com.squareup.javapoet.*;
@@ -20,10 +20,10 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
  * @author wudarui
  */
 public class BaseDaoGenerator extends AbstractGenerator {
-    public BaseDaoGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = fluentEntityInfo.getPackageName(Pack_BaseDao);
-        this.klassName = fluentEntityInfo.getNoSuffix() + Suffix_BaseDao;
+    public BaseDaoGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = fluentEntity.getPackageName(Pack_BaseDao);
+        this.klassName = fluentEntity.getNoSuffix() + Suffix_BaseDao;
     }
 
     @Override

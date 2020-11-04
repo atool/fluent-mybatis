@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
@@ -19,10 +19,10 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  * @author wudarui
  */
 public class WrapperHelperGenerator extends AbstractGenerator {
-    public WrapperHelperGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public WrapperHelperGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
     }
 
     @Override
@@ -478,11 +478,11 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return false;
     }
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_WrapperHelper;
+    public static String getClassName(FluentEntity fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_WrapperHelper;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Helper);
+    public static String getPackageName(FluentEntity fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Helper);
     }
 }

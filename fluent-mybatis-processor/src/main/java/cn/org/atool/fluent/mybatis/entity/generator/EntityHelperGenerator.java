@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import com.squareup.javapoet.*;
@@ -19,18 +19,18 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper
  * @author wudarui
  */
 public class EntityHelperGenerator extends AbstractGenerator {
-    public static String getClassName(FluentEntityInfo fluent) {
+    public static String getClassName(FluentEntity fluent) {
         return fluent.getClassName() + Suffix_EntityHelper;
     }
 
-    public static String getPackageName(FluentEntityInfo fluent) {
+    public static String getPackageName(FluentEntity fluent) {
         return fluent.getEntityPack();
     }
 
-    public EntityHelperGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public EntityHelperGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
         this.comment = "Entity帮助类";
     }
 

@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
@@ -33,18 +33,18 @@ import static java.util.stream.Collectors.joining;
  */
 public class SqlProviderGenerator extends AbstractGenerator {
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_SqlProvider;
+    public static String getClassName(FluentEntity fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_SqlProvider;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Helper);
+    public static String getPackageName(FluentEntity fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Helper);
     }
 
-    public SqlProviderGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public SqlProviderGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
         this.comment = "动态语句封装";
     }
 

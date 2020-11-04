@@ -19,6 +19,8 @@ public class ClassNames {
 
     public static final ClassName CN_Getter = ClassName.get("lombok", "Getter");
 
+    public static final ClassName CN_Setter = ClassName.get("lombok", "Setter");
+
     public static final ClassName CN_PostConstruct = ClassName.get("javax.annotation", "PostConstruct");
 
     public static final ClassName CN_Autowired = ClassName.get("org.springframework.beans.factory.annotation", "Autowired");

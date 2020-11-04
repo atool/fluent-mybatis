@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
@@ -32,19 +32,19 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  */
 public class MapperGenerator extends AbstractGenerator {
 
-    public MapperGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public MapperGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
         this.comment = "Mapper接口";
     }
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_Mapper;
+    public static String getClassName(FluentEntity fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_Mapper;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Mapper);
+    public static String getPackageName(FluentEntity fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Mapper);
     }
 
     @Override
@@ -327,15 +327,15 @@ public class MapperGenerator extends AbstractGenerator {
     /**
      * 返回对应的Mapper Bean名称
      *
-     * @param fluentEntityInfo
+     * @param fluentEntity
      * @return
      */
-    public static String getMapperName(FluentEntityInfo fluentEntityInfo) {
-        String className = fluentEntityInfo.getNoSuffix() + Suffix_Mapper;
-        if (isBlank(fluentEntityInfo.getMapperBeanPrefix())) {
+    public static String getMapperName(FluentEntity fluentEntity) {
+        String className = fluentEntity.getNoSuffix() + Suffix_Mapper;
+        if (isBlank(fluentEntity.getMapperBeanPrefix())) {
             return MybatisUtil.lowerFirst(className, "");
         } else {
-            return fluentEntityInfo.getMapperBeanPrefix() + className;
+            return fluentEntity.getMapperBeanPrefix() + className;
         }
     }
 

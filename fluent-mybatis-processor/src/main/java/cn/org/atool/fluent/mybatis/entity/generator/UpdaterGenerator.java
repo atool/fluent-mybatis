@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import com.squareup.javapoet.*;
 
@@ -18,19 +18,19 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
  * @author wudarui
  */
 public class UpdaterGenerator extends AbstractGenerator {
-    public UpdaterGenerator(FluentEntityInfo fluentEntityInfo) {
-        super(fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public UpdaterGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
         this.comment = "更新构造";
     }
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_Update;
+    public static String getClassName(FluentEntity fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_Update;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Wrapper);
+    public static String getPackageName(FluentEntity fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Wrapper);
     }
 
     @Override

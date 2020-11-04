@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.ClassName;
@@ -22,18 +22,18 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_WrapperDefau
  * @author darui.wu
  */
 public class WrapperDefaultGenerator extends AbstractGenerator {
-    public WrapperDefaultGenerator(FluentEntityInfo fluent) {
+    public WrapperDefaultGenerator(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
         this.klassName = getClassName(fluent);
     }
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_WrapperDefault;
+    public static String getClassName(FluentEntity fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_WrapperDefault;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Helper);
+    public static String getPackageName(FluentEntity fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Helper);
     }
 
     @Override
