@@ -23,18 +23,21 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
  *
  * @author darui.wu
  */
-public class MappersFile extends AbstractFile {
+public class RefsFile extends AbstractFile {
 
-    private static String Mappers = "Mappers";
+    private static String Refs = "Refs";
 
     public static ClassName getClassName() {
-        return ClassName.get(FluentEntity.getSamePackage(), Mappers);
+        return ClassName.get(FluentEntity.getSamePackage(), Refs);
     }
 
-    public MappersFile() {
+    public RefsFile() {
         this.packageName = FluentEntity.getSamePackage();
-        this.klassName = Mappers;
-        this.comment = "应用查询器，更新器工厂类";
+        this.klassName = Refs;
+        this.comment = "" +
+            "\n o - 查询器，更新器工厂类单例引用" +
+            "\n o - 应用所有Mapper Bean引用" +
+            "\n o - Entity关联对象延迟加载查询实现";
     }
 
     @Override
@@ -111,8 +114,8 @@ public class MappersFile extends AbstractFile {
         return MethodSpec.methodBuilder("INSTANCE")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("Wrapper单例")
-            .returns(MappersFile.getClassName())
-            .addStatement("return ($L) $T.query()", Mappers, EntityLazyQuery.class)
+            .returns(RefsFile.getClassName())
+            .addStatement("return ($L) $T.query()", Refs, EntityLazyQuery.class)
             .build();
     }
 

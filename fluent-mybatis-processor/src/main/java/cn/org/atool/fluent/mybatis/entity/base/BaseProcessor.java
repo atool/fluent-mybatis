@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.generator.MappersFile;
+import cn.org.atool.fluent.mybatis.entity.generator.RefsFile;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
@@ -85,7 +85,7 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
         }
         if (FluentEntity.notEmpty()) {
             try {
-                new MappersFile().writeTo(filer);
+                new RefsFile().writeTo(filer);
             } catch (Exception e) {
                 messager.printMessage(Diagnostic.Kind.ERROR,
                     "Generate WrapperFactory error:\n" + MybatisUtil.toString(e));
