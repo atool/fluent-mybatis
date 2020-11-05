@@ -3,7 +3,8 @@ package cn.org.atool.fluent.mybatis.entity.generator;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -26,11 +27,11 @@ import static java.util.stream.Collectors.joining;
  */
 public class MappingGenerator extends AbstractGenerator {
 
-    public static String getClassName(FluentEntity fluentEntity) {
+    public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_Mapping;
     }
 
-    public static String getPackageName(FluentEntity fluentEntity) {
+    public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_Helper);
     }
 
@@ -54,7 +55,7 @@ public class MappingGenerator extends AbstractGenerator {
         builder.addField(this.f_ALL_JOIN_COLUMNS());
     }
 
-    private FieldSpec f_Field(FieldColumn fc) {
+    private FieldSpec f_Field(CommonField fc) {
         return FieldSpec.builder(FieldMapping.class,
             fc.getProperty(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", fc.getProperty(), fc.getColumn())
@@ -83,7 +84,7 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_Property2Column() {
         String statement = this.fluent.getFields().stream()
-            .map(FieldColumn::getProperty)
+            .map(CommonField::getProperty)
             .map(field -> String.format("\t\tthis.put(%s.name, %s.column);", field, field))
             .collect(joining("\n"));
 
@@ -102,7 +103,7 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_ALL_COLUMNS() {
         String statement = this.fluent.getFields().stream()
-            .map(FieldColumn::getProperty)
+            .map(CommonField::getProperty)
             .map(field -> String.format("\t\t%s.column", field))
             .collect(joining(",\n"));
 

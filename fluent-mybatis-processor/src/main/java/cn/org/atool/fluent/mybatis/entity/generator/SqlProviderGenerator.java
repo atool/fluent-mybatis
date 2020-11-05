@@ -6,7 +6,8 @@ import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -33,11 +34,11 @@ import static java.util.stream.Collectors.joining;
  */
 public class SqlProviderGenerator extends AbstractGenerator {
 
-    public static String getClassName(FluentEntity fluentEntity) {
+    public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_SqlProvider;
     }
 
-    public static String getPackageName(FluentEntity fluentEntity) {
+    public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_Helper);
     }
 
@@ -78,7 +79,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addParameter(CN_Map_StrStr, "updates")
             .addCode("return new $T(updates)\n", UpdateDefault.class);
 
-        for (FieldColumn field : this.fluent.getFields()) {
+        for (CommonField field : this.fluent.getFields()) {
             if (notBlank(field.getUpdate())) {
                 builder.addCode("\t.add($L, $S)\n", field.getProperty(), field.getUpdate());
             }
@@ -97,7 +98,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.UPDATE(this.tableName())");
         builder.addCode("$T updates = new UpdateSet()", UpdateSet.class);
-        for (FieldColumn field : this.fluent.getFields()) {
+        for (CommonField field : this.fluent.getFields()) {
             if (!field.isPrimary()) {
                 builder.addCode("\n\t.add($L, entity.$L(), $S)",
                     field.getProperty(), field.getMethodName(), field.getUpdate());
@@ -119,7 +120,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.INSERT_INTO(this.tableName())")
             .addCode("$T inserts = new InsertList()", InsertList.class);
-        for (FieldColumn field : this.fluent.getFields()) {
+        for (CommonField field : this.fluent.getFields()) {
             builder.addCode("\n\t.add($L, entity.$L(), $S)",
                 field.getProperty(), field.getMethodName(), field.getInsert());
         }

@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
-
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -41,14 +39,14 @@ public abstract class EntityLazyQuery {
      */
     public <T> T load(String relation, RichEntity entity) {
         if (!methods.containsKey(relation)) {
-            throw new RuntimeException("not found method for relation:" + relation);
+            throw new RuntimeException("not found relation method:" + relation);
         }
         Method method = methods.get(relation);
         try {
             return (T) method.invoke(this, entity);
         } catch (Exception e) {
             String err = String.format("load relation[%s] of entity[%s] by method[%s] error:%s",
-                relation, entity, method.getName(), e.getMessage());
+                relation, entity.getClass().getSimpleName(), method.getName(), e.getMessage());
             throw new RuntimeException(err, e);
         }
     }
@@ -57,20 +55,15 @@ public abstract class EntityLazyQuery {
 
     @PostConstruct
     public void init() {
-        Method[] methods = this.getClass().getDeclaredMethods();
+        Method[] methods = this.getClass().getMethods();
         for (Method method : methods) {
             if (method.getParameterCount() != 1) {
                 continue;
             }
-            RefMethod ref = method.getAnnotation(RefMethod.class);
-            if (ref == null) {
-                continue;
-            }
             Class parameterType = method.getParameterTypes()[0];
-            if (parameterType.isAssignableFrom(RichEntity.class)) {
-                throw new RuntimeException("The type of parameter must be " + RichEntity.class.getSimpleName());
+            if (RichEntity.class.isAssignableFrom(parameterType)) {
+                this.methods.put(method.getName(), method);
             }
-            this.methods.put(ref.value(), method);
         }
         query = this;
     }

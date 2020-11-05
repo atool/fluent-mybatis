@@ -2,25 +2,22 @@ package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IDefault;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
 import cn.org.atool.fluent.mybatis.entity.base.FieldColumnParser;
-import cn.org.atool.fluent.mybatis.entity.generator.*;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.entity.base.IProcessor;
+import cn.org.atool.fluent.mybatis.entity.field.BaseField;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.entity.field.EntityRefField;
+import cn.org.atool.fluent.mybatis.entity.field.PrimaryField;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.squareup.javapoet.ClassName;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 /**
@@ -30,7 +27,7 @@ import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  */
 @Getter
 @ToString
-public class FluentEntity {
+public class FluentEntity extends FluentClassName implements Comparable<FluentEntity> {
     /**
      * package
      */
@@ -49,11 +46,6 @@ public class FluentEntity {
      * 表名
      */
     private String tableName;
-    /**
-     * dao自定义扩展接口
-     */
-    @Getter(AccessLevel.NONE)
-    private List<String> daoInterfaces;
     /**
      * 默认值实现
      */
@@ -74,17 +66,17 @@ public class FluentEntity {
     /**
      * 主键字段
      */
-    private FieldColumn primary;
+    private PrimaryField primary;
     /**
      * Entity类字段列表
      */
-    private List<FieldColumn> fields = new ArrayList<>();
+    private List<CommonField> fields = new ArrayList<>();
+    /**
+     * Entity关联查询信息
+     */
+    private List<EntityRefField> refFields = new ArrayList<>();
 
     private DbType dbType = DbType.MYSQL;
-
-    public String getPackageName(String suffix) {
-        return this.basePack + "." + suffix;
-    }
 
     public FluentEntity setClassName(String entityPack, String className) {
         this.className = className;
@@ -96,24 +88,6 @@ public class FluentEntity {
     private String getParentPackage(String entityPack) {
         int index = entityPack.lastIndexOf('.');
         return index > 0 ? entityPack.substring(0, index) : entityPack;
-    }
-
-    public List<String> getDaoInterfaces() {
-        return daoInterfaces == null ? Collections.EMPTY_LIST : daoInterfaces;
-    }
-
-    public FluentEntity setFields(List<JCVariableDecl> fields) {
-        for (JCVariableDecl variable : fields) {
-            FieldColumn field = FieldColumnParser.valueOf(variable);
-            if (field == null) {
-                continue;
-            }
-            if (field.isPrimary() && this.primary == null) {
-                this.primary = field;
-            }
-            this.fields.add(field);
-        }
-        return this;
     }
 
     /**
@@ -136,200 +110,28 @@ public class FluentEntity {
         return this;
     }
 
-    @Getter(AccessLevel.NONE)
-    private String All_Fields = null;
-
-    public String getAllFields() {
-        if (this.All_Fields == null) {
-            All_Fields = this.fields.stream().map(FieldColumn::getColumn).collect(Collectors.joining(", "));
+    public FluentEntity setFields(List<JCVariableDecl> fields, IProcessor processor) {
+        FieldColumnParser parser = new FieldColumnParser(processor);
+        for (JCVariableDecl variable : fields) {
+            BaseField field = parser.valueOf(variable);
+            if (field instanceof EntityRefField) {
+                this.refFields.add((EntityRefField) field);
+            } else if (field instanceof CommonField) {
+                this.addFieldColumn((CommonField) field);
+            }
         }
-        return All_Fields;
+        return this;
     }
 
-    /**
-     * 首字母小写,不带Entity后缀的entity名称
-     *
-     * @return
-     */
-    public String lowerNoSuffix() {
-        return MybatisUtil.lowerFirst(this.noSuffix, "");
+    private void addFieldColumn(CommonField field) {
+        if (field.isPrimary() && this.primary == null) {
+            this.primary = (PrimaryField) field;
+        }
+        this.fields.add(field);
     }
 
-    // all ClassName
-
-    /**
-     * ClassName of XyzEntity
-     *
-     * @return
-     */
-    public ClassName entity() {
-        return ClassName.get(this.getEntityPack(), this.getClassName());
-    }
-
-    /**
-     * ClassName of XyzUpdater
-     *
-     * @return
-     */
-    public ClassName updater() {
-        return ClassName.get(
-            UpdaterGenerator.getPackageName(this),
-            UpdaterGenerator.getClassName(this));
-    }
-
-    /**
-     * ClassName of XyzEntityHelper
-     *
-     * @return
-     */
-    public ClassName entityHelper() {
-        return ClassName.get(
-            EntityHelperGenerator.getPackageName(this),
-            EntityHelperGenerator.getClassName(this));
-    }
-
-    /**
-     * ClassName of XyzMapper
-     *
-     * @return
-     */
-    public ClassName mapper() {
-        return ClassName.get(
-            MapperGenerator.getPackageName(this),
-            MapperGenerator.getClassName(this));
-    }
-
-    /**
-     * ClassName of XyzMapping
-     *
-     * @return
-     */
-    public ClassName mapping() {
-        return ClassName.get(
-            MappingGenerator.getPackageName(this),
-            MappingGenerator.getClassName(this));
-    }
-
-    /**
-     * ClassName of XyzQuery
-     *
-     * @return
-     */
-    public ClassName query() {
-        return ClassName.get(
-            QueryGenerator.getPackageName(this),
-            QueryGenerator.getClassName(this));
-    }
-
-    /**
-     * ClassName of XyzSqlProvider
-     *
-     * @return
-     */
-    public ClassName sqlProvider() {
-        return ClassName.get(
-            SqlProviderGenerator.getPackageName(this),
-            SqlProviderGenerator.getClassName(this));
-    }
-
-
-    /**
-     * ClassName of XyzWrapperFactory
-     *
-     * @return
-     */
-    public ClassName wrapperFactory() {
-        return ClassName.get(
-            WrapperDefaultGenerator.getPackageName(this),
-            WrapperDefaultGenerator.getClassName(this)
-        );
-    }
-
-    public ClassName queryWhere() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_QueryWhere);
-    }
-
-    public ClassName updateWhere() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_UpdateWhere);
-    }
-
-    public ClassName selector() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_Selector);
-    }
-
-    public ClassName groupBy() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_GroupBy);
-    }
-
-    public ClassName having() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_Having);
-    }
-
-    public ClassName queryOrderBy() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_QueryOrderBy);
-    }
-
-    public ClassName updateOrderBy() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_UpdateOrderBy);
-    }
-
-    public ClassName updateSetter() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_UpdateSetter);
-    }
-
-    public ClassName segment() {
-        return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
-                + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_ISegment);
-    }
-
-
-    @Getter
-    private static List<FluentEntity> fluents = new ArrayList<>();
-    /**
-     * 所有entity对象的共同基础package
-     */
-    @Getter
-    private static String samePackage = null;
-
-    /**
-     * 排序
-     */
-    public static void sort() {
-        fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
-    }
-
-    public static void addFluent(FluentEntity fluent) {
-        fluents.add(fluent);
-        samePackage = sameStartPackage(samePackage, fluent.getBasePack());
-    }
-
-    public static boolean notEmpty() {
-        return !fluents.isEmpty();
+    @Override
+    public int compareTo(FluentEntity fluentEntity) {
+        return this.className.compareTo(fluentEntity.getClassName());
     }
 }

@@ -5,7 +5,8 @@ import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
 import com.squareup.javapoet.*;
 
 import java.util.Map;
@@ -19,11 +20,11 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper
  * @author wudarui
  */
 public class EntityHelperGenerator extends AbstractGenerator {
-    public static String getClassName(FluentEntity fluent) {
+    public static String getClassName(FluentClassName fluent) {
         return fluent.getClassName() + Suffix_EntityHelper;
     }
 
-    public static String getPackageName(FluentEntity fluent) {
+    public static String getPackageName(FluentClassName fluent) {
         return fluent.getEntityPack();
     }
 
@@ -75,7 +76,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
             .addParameter(fluent.entity(), "entity")
             .addParameter(TypeName.BOOLEAN, "isProperty")
             .addCode("return new $T(isProperty)\n", EntityToMap.class);
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
             builder.addCode("\t.put($L, entity.$L())\n", fc.getProperty(), getMethod);
         }
@@ -92,7 +93,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
             .addParameter(this.parameterizedType(Map.class, String.class, Object.class), "map")
             .addTypeVariable(TypeVariableName.get("E", IEntity.class))
             .addStatement("$T entity = new $T()", fluent.entity(), fluent.entity());
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             String setMethod = fc.setMethodName();
 
             builder.addCode("if (map.containsKey($L.name)) {\n", fc.getProperty());
@@ -114,7 +115,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
             .addStatement("$T entity = ($T) iEntity", fluent.entity(), fluent.entity())
             .addStatement("$T copy = new $T()", fluent.entity(), fluent.entity());
         builder.addCode("{\n");
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             builder.addStatement("\tcopy.$L(entity.$L())", fc.setMethodName(), fc.getMethodName());
         }
         builder.addCode("}\n");

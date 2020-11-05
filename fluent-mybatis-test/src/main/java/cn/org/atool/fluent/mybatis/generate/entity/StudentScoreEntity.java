@@ -1,15 +1,16 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.annotation.RefField;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -20,7 +21,9 @@ import java.util.Date;
  *
  * @author Powered By Fluent Mybatis
  */
-@Data
+@Getter
+@Setter
+@ToString(doNotUseGetters = true)
 @Accessors(
     chain = true
 )
@@ -29,7 +32,7 @@ import java.util.Date;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEntity> {
+public class StudentScoreEntity extends RichEntity implements IBaseEntity<StudentScoreEntity> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -109,9 +112,8 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
     private Long tenant;
 
     @Getter(AccessLevel.NONE)
-    @RefMethod(value = "studentId:id")
+    @RefField("studentId:id")
     private StudentEntity student;
-
 
     @Override
     public Serializable findPk() {
@@ -119,7 +121,7 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
     }
 
     public StudentEntity getStudent() {
-
+        super.lazyLoad("studentOfStudentScoreEntity", this::setStudent);
         return student;
     }
 }

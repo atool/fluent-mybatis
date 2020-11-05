@@ -1,62 +1,58 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.entity.field;
 
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
-@Data
+/**
+ * 字段描述基类
+ *
+ * @author darui.wu
+ */
+@Getter
+@ToString
 @Accessors(chain = true)
-public class FieldColumn {
+public abstract class BaseField<F extends BaseField<F>> {
     /**
-     * 是否主键
+     * 字段名称
      */
-    private boolean primary = false;
+    protected String property;
     /**
-     * 自增
+     * 字段定义类型
      */
-    private boolean autoIncrease = false;
-
-    @Setter(AccessLevel.NONE)
-    private String property;
-
-    private String column;
-
-    private Type javaType;
-
-    private String jdbcType;
-
-    private String seqName;
-
-    private boolean seqIsBeforeOrder;
-
-    private String numericScale;
+    protected Type javaType;
     /**
-     * type handler
+     * 字段对应的表字段
+     * 对关联字段非必须
      */
-    private Type typeHandler;
+    protected String column;
 
-    private boolean notLarge = true;
+    protected BaseField(String property, Type javaType) {
+        this.property = property;
+        this.javaType = javaType;
+    }
 
-    private String insert;
-
-    private String update;
-
-    public FieldColumn setProperty(String property) {
+    public F setProperty(String property) {
         this.property = property;
         if (column == null) {
             column = camelToUnderline(this.property, false);
         }
-        return this;
+        return (F) this;
     }
 
-    public boolean isPrimitive() {
-        return javaType.isPrimitive();
+    public F setJavaType(Type javaType) {
+        this.javaType = javaType;
+        return (F) this;
+    }
+
+    public F setColumn(String column) {
+        this.column = column;
+        return (F) this;
     }
 
     /**
@@ -85,16 +81,7 @@ public class FieldColumn {
         }
     }
 
-    /**
-     * mybatis el 表达式
-     *
-     * @return
-     */
-    public String mybatisEl() {
-        return this.column + " = #{" + this.property + "}";
-    }
-
-    public String getPropertyEl() {
-        return "#{" + this.property + "}";
+    public boolean isPrimitive() {
+        return javaType.isPrimitive();
     }
 }

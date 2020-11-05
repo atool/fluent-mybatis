@@ -12,6 +12,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
+import lombok.Getter;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.Element;
@@ -29,14 +30,19 @@ import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  *
  * @author darui.wu
  */
-public abstract class BaseProcessor extends AbstractProcessor {
+public abstract class BaseProcessor extends AbstractProcessor implements IProcessor {
     protected Filer filer;
 
+    @Getter
     protected Messager messager;
 
-    // javac 编译器相关类
+    /**
+     * javac 编译器相关类
+     */
+    @Getter
     protected Trees trees;
 
+    @Getter
     protected TreeMaker treeMaker;
 
     private boolean mIsFirstRound = true;

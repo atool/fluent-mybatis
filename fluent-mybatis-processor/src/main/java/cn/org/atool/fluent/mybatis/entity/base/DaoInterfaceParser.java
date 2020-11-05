@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.base.IDao;
 import cn.org.atool.fluent.mybatis.base.IDefault;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Type;
@@ -61,7 +60,7 @@ public class DaoInterfaceParser {
     public static String getDefaults(TypeElement entity) {
         AnnotationMirror mirror = getFluentMyBatisMirror(entity);
         if (mirror == null) {
-            return IDao.class.getName();
+            return IDefault.class.getName();
         }
         Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = mirror.getElementValues();
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {

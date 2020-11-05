@@ -1,15 +1,16 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.annotation.RefField;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -21,7 +22,9 @@ import java.util.List;
  *
  * @author Powered By Fluent Mybatis
  */
-@Data
+@Getter
+@Setter
+@ToString(doNotUseGetters = true)
 @Accessors(
     chain = true
 )
@@ -161,7 +164,7 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
     private String version;
 
     @Getter(AccessLevel.NONE)
-    @RefMethod(Mt_StudentScoreList)
+    @RefField({"id:studentId", "env:env", "isDeleted:isDeleted"})
     private List<StudentScoreEntity> studentScoreList;
 
     @Override
@@ -170,9 +173,7 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
     }
 
     public List<StudentScoreEntity> getStudentScoreList() {
-        super.lazyLoad(Mt_StudentScoreList, (List<StudentScoreEntity> value) -> this.studentScoreList = value);
+        super.lazyLoad("studentScoreListOfStudentEntity", this::setStudentScoreList);
         return this.studentScoreList;
     }
-
-    public static final String Mt_StudentScoreList = "StudentEntity_StudentScoreList";
 }

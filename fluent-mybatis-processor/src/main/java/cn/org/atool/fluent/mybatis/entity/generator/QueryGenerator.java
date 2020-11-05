@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
@@ -20,11 +21,11 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
  */
 public class QueryGenerator extends AbstractGenerator {
 
-    public static String getClassName(FluentEntity fluentEntity) {
+    public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_Query;
     }
 
-    public static String getPackageName(FluentEntity fluentEntity) {
+    public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_Wrapper);
     }
 

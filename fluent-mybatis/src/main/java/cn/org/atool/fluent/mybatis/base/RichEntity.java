@@ -24,11 +24,15 @@ public abstract class RichEntity implements IEntity {
      * @param <T>
      */
     protected <T> void lazyLoad(String relation, Consumer<T> set) {
-        if (loaded.contains(relation)) {
+        if (loaded.contains(relation) || set == null) {
             return;
         }
-        T result = EntityLazyQuery.query().load(relation, this);
-        set.accept(result);
-        loaded.add(relation);
+        synchronized (set) {
+            if (!loaded.contains(relation)) {
+                T result = EntityLazyQuery.query().load(relation, this);
+                set.accept(result);
+                loaded.add(relation);
+            }
+        }
     }
 }

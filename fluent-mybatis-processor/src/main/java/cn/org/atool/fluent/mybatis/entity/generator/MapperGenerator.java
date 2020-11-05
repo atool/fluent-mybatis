@@ -6,7 +6,8 @@ import cn.org.atool.fluent.mybatis.base.IUpdate;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
 import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
@@ -39,11 +40,11 @@ public class MapperGenerator extends AbstractGenerator {
         this.comment = "Mapper接口";
     }
 
-    public static String getClassName(FluentEntity fluentEntity) {
+    public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_Mapper;
     }
 
-    public static String getPackageName(FluentEntity fluentEntity) {
+    public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_Mapper);
     }
 
@@ -359,7 +360,7 @@ public class MapperGenerator extends AbstractGenerator {
      */
     private AnnotationSpec annotation_Results() {
         List<CodeBlock> results = new ArrayList<>();
-        for (FieldColumn field : fluent.getFields()) {
+        for (CommonField field : fluent.getFields()) {
             List<CodeBlock> blocks = new ArrayList<>();
             blocks.add(CodeBlock.of("@$T(", Result.class));
             blocks.add(CodeBlock.of("column = $S", field.getColumn()));
