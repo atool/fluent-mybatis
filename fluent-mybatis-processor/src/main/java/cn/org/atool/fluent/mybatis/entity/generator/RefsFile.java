@@ -1,8 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.EntityLazyQuery;
-import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.JoinBuilder;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.field.EntityRefField;
 import cn.org.atool.generator.javafile.AbstractFile;
@@ -67,46 +65,32 @@ public class RefsFile extends AbstractFile {
             .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .returns(ClassName.get(refField.getJavaType()))
+            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getProperty())
             .build();
     }
 
-    private MethodSpec m_refRealMethod(FluentEntity right, EntityRefField refField) {
+    private MethodSpec m_refRealMethod(FluentEntity fluent, EntityRefField refField) {
         if (!refField.isAutoMapping()) {
             return null;
         }
-        FluentEntity left = FluentEntity.getFluentEntity(refField.getReturnEntity());
-        if (left == null) {
+        FluentEntity ref = FluentEntity.getFluentEntity(refField.getReturnEntity());
+        if (ref == null) {
             return null;
         }
-        String lNoSuffix = left.lowerNoSuffix();
-        String rNoSuffix = right.lowerNoSuffix();
-
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(refField.getRefMethod(right))
-            .addParameter(right.entity(), "entity")
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(refField.getRefMethod(fluent))
+            .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC)
             .returns(ClassName.get(refField.getJavaType()))
-            .addCode("$T $LQuery = $LDefault.defaultQuery($S)\n", left.query(), lNoSuffix, lNoSuffix, lNoSuffix)
-            .addCode("\t.selectAll()\n");
+            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getProperty());
+        String method = refField.returnList() ? "listEntity" : "findOne";
+        spec.addCode("return $LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
         int index = 0;
         for (Map.Entry<String, String> pair : refField.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")
-                .addCode(".$L().eq(entity.get$L())\n", pair.getValue(), capitalFirst(pair.getKey(), ""));
+                .addCode(".$L().eq(entity.get$L())\n", pair.getKey(), capitalFirst(pair.getValue(), ""));
             index++;
         }
-        spec.addStatement("\t.end()");
-        spec.addStatement("$T $LQuery = $LDefault.defaultQuery($S, $LQuery)", right.query(), rNoSuffix, rNoSuffix, rNoSuffix, lNoSuffix);
-        spec.addCode("$T query = $T.from($LQuery)\n", IQuery.class, JoinBuilder.class, lNoSuffix)
-            .addCode("\t.join($LQuery)\n", rNoSuffix)
-            .addCode("\t.on((join, l, r) -> join\n");
-        for (Map.Entry<String, String> pair : refField.getMapping().entrySet()) {
-            spec.addCode("\t\t.on(l.where.$L(), r.where.$L())\n", pair.getValue(), pair.getKey());
-        }
-        spec.addStatement(").distinct().build()");
-        if (refField.returnList()) {
-            spec.addStatement("return $LMapper.listEntity(query)", lNoSuffix);
-        } else {
-            spec.addStatement("return $LMapper.findOne(query)", lNoSuffix);
-        }
+        spec.addStatement("\t.end())");
         return spec.build();
     }
 

@@ -7,26 +7,31 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 import java.io.Serializable;
+import java.lang.Boolean;
+import java.lang.Integer;
+import java.lang.Long;
+import java.lang.Override;
+import java.lang.String;
 import java.util.Date;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /**
  * StudentEntity: 数据映射实体定义
  *
  * @author Powered By Fluent Mybatis
  */
-@Getter
-@Setter
-@ToString(doNotUseGetters = true)
+@Data
 @Accessors(
     chain = true
+)
+@EqualsAndHashCode(
+    callSuper = false
 )
 @FluentMybatis(
     table = "t_student",
@@ -34,146 +39,155 @@ import java.util.List;
     defaults = MyCustomerInterface.class
 )
 public class StudentEntity extends RichEntity implements IBaseEntity<StudentEntity> {
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键id
-     */
-    @TableId("id")
-    private Long id;
+  /**
+   * 主键id
+   */
+  @TableId("id")
+  private Long id;
 
-    /**
-     * 创建时间
-     */
-    @TableField(
-        value = "gmt_created",
-        insert = "now()"
-    )
-    private Date gmtCreated;
+  /**
+   * 创建时间
+   */
+  @TableField(
+      value = "gmt_created",
+      insert = "now()"
+  )
+  private Date gmtCreated;
 
-    /**
-     * 更新时间
-     */
-    @TableField(
-        value = "gmt_modified",
-        insert = "now()",
-        update = "now()"
-    )
-    private Date gmtModified;
+  /**
+   * 更新时间
+   */
+  @TableField(
+      value = "gmt_modified",
+      insert = "now()",
+      update = "now()"
+  )
+  private Date gmtModified;
 
-    /**
-     * 是否逻辑删除
-     */
-    @TableField(
-        value = "is_deleted",
-        insert = "0"
-    )
-    private Boolean isDeleted;
+  /**
+   * 是否逻辑删除
+   */
+  @TableField(
+      value = "is_deleted",
+      insert = "0"
+  )
+  private Boolean isDeleted;
 
-    /**
-     * 账号
-     */
-    @TableField("account")
-    private String account;
+  /**
+   * 账号
+   */
+  @TableField("account")
+  private String account;
 
-    /**
-     * 地址id
-     */
-    @TableField("address_id")
-    private Long addressId;
+  /**
+   * 地址id
+   */
+  @TableField("address_id")
+  private Long addressId;
 
-    /**
-     * 年龄
-     */
-    @TableField("age")
-    private Integer age;
+  /**
+   * 年龄
+   */
+  @TableField("age")
+  private Integer age;
 
-    /**
-     * 头像
-     */
-    @TableField("avatar")
-    private String avatar;
+  /**
+   * 头像
+   */
+  @TableField("avatar")
+  private String avatar;
 
-    /**
-     * 生日
-     */
-    @TableField("birthday")
-    private Date birthday;
+  /**
+   * 生日
+   */
+  @TableField("birthday")
+  private Date birthday;
 
-    /**
-     * 积分
-     */
-    @TableField("bonus_points")
-    private Long bonusPoints;
+  /**
+   * 积分
+   */
+  @TableField("bonus_points")
+  private Long bonusPoints;
 
-    /**
-     * 电子邮件
-     */
-    @TableField("e_mail")
-    private String eMail;
+  /**
+   * 电子邮件
+   */
+  @TableField("e_mail")
+  private String eMail;
 
-    /**
-     * 数据隔离环境
-     */
-    @TableField("env")
-    private String env;
+  /**
+   * 数据隔离环境
+   */
+  @TableField("env")
+  private String env;
 
-    /**
-     * 年级
-     */
-    @TableField("grade")
-    private Integer grade;
+  /**
+   * 年级
+   */
+  @TableField("grade")
+  private Integer grade;
 
-    /**
-     * 密码
-     */
-    @TableField("password")
-    private String password;
+  /**
+   * 密码
+   */
+  @TableField("password")
+  private String password;
 
-    /**
-     * 电话
-     */
-    @TableField("phone")
-    private String phone;
+  /**
+   * 电话
+   */
+  @TableField("phone")
+  private String phone;
 
-    /**
-     * 状态(字典)
-     */
-    @TableField("status")
-    private String status;
+  /**
+   * 状态(字典)
+   */
+  @TableField("status")
+  private String status;
 
-    /**
-     * 租户标识
-     */
-    @TableField("tenant")
-    private Long tenant;
+  /**
+   * 租户标识
+   */
+  @TableField("tenant")
+  private Long tenant;
 
-    /**
-     * 名字
-     */
-    @TableField("user_name")
-    private String userName;
+  /**
+   * 名字
+   */
+  @TableField("user_name")
+  private String userName;
 
-    /**
-     * 版本号
-     */
-    @TableField(
-        value = "version",
-        notLarge = false
-    )
-    private String version;
+  /**
+   * 版本号
+   */
+  @TableField(
+      value = "version",
+      notLarge = false
+  )
+  private String version;
 
-    @Getter(AccessLevel.NONE)
-    @RefField({"id:studentId", "env:env", "isDeleted:isDeleted"})
-    private List<StudentScoreEntity> studentScoreList;
+  @Getter(AccessLevel.NONE)
+  @RefField("studentId = id && isDeleted = isDeleted && env = env")
+  private List<StudentScoreEntity> studentScoreList;
 
-    @Override
-    public Serializable findPk() {
-        return this.id;
-    }
+  @Getter(AccessLevel.NONE)
+  @RefField
+  private StudentScoreEntity englishScore;
 
-    public List<StudentScoreEntity> getStudentScoreList() {
-        super.lazyLoad("studentScoreListOfStudentEntity", this::setStudentScoreList);
-        return this.studentScoreList;
-    }
+  @Override
+  public Serializable findPk() {
+    return this.id;
+  }
+
+  public List<StudentScoreEntity> findStudentScoreList() {
+    super.lazyLoad("studentScoreListOfStudentEntity", this::setStudentScoreList);
+    return studentScoreList;
+  }
+
+  public StudentScoreEntity findEnglishScore() {
+    super.lazyLoad("englishScoreOfStudentEntity", this::setEnglishScore);
+    return englishScore;
+  }
 }

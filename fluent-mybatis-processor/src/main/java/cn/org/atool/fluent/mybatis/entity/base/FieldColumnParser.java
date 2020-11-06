@@ -98,7 +98,7 @@ public class FieldColumnParser {
     }
 
     private void setRefEntity(EntityRefField field, JCAssign assign) {
-        this.setStrArr(field, assign, "value", new String[0], field::setValue);
+        this.setValue(field, assign, "value", "", field::setValue);
     }
 
     /**

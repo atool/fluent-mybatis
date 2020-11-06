@@ -13,6 +13,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -23,6 +24,9 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(
     chain = true
+)
+@EqualsAndHashCode(
+    callSuper = false
 )
 @FluentMybatis(
     table = "home_address",

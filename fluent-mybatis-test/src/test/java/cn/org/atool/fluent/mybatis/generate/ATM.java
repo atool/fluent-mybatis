@@ -27,30 +27,30 @@ public interface ATM {
    * 应用表名
    */
   interface Table {
-    String student = "t_student";
+    String noAutoId = "no_auto_id";
 
     String noPrimary = "no_primary";
 
-    String homeAddress = "home_address";
-
-    String noAutoId = "no_auto_id";
+    String student = "t_student";
 
     String studentScore = "student_score";
+
+    String homeAddress = "home_address";
   }
 
   /**
    * table or entity data构造器
    */
   interface DataMap {
-    StudentDataMap.Factory student = new StudentDataMap.Factory();
+    NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
 
     NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
 
-    HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
-
-    NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
+    StudentDataMap.Factory student = new StudentDataMap.Factory();
 
     StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
+
+    HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
   }
 
   /**
@@ -59,26 +59,26 @@ public interface ATM {
   @org.test4j.module.spec.annotations.Mixes
   class Mixes {
     @Mix
-    public StudentTableMix studentTableMix;
+    public NoAutoIdTableMix noAutoIdTableMix;
 
     @Mix
     public NoPrimaryTableMix noPrimaryTableMix;
 
     @Mix
-    public HomeAddressTableMix homeAddressTableMix;
-
-    @Mix
-    public NoAutoIdTableMix noAutoIdTableMix;
+    public StudentTableMix studentTableMix;
 
     @Mix
     public StudentScoreTableMix studentScoreTableMix;
 
+    @Mix
+    public HomeAddressTableMix homeAddressTableMix;
+
     public void cleanAllTable() {
-      this.studentTableMix.cleanStudentTable();
-      this.noPrimaryTableMix.cleanNoPrimaryTable();
-      this.homeAddressTableMix.cleanHomeAddressTable();
       this.noAutoIdTableMix.cleanNoAutoIdTable();
+      this.noPrimaryTableMix.cleanNoPrimaryTable();
+      this.studentTableMix.cleanStudentTable();
       this.studentScoreTableMix.cleanStudentScoreTable();
+      this.homeAddressTableMix.cleanHomeAddressTable();
     }
   }
 
@@ -89,11 +89,11 @@ public interface ATM {
     @Override
     public List<Class> getTableKlass() {
       return list(
-      	StudentDataMap.class,
-      	NoPrimaryDataMap.class,
-      	HomeAddressDataMap.class,
       	NoAutoIdDataMap.class,
-      	StudentScoreDataMap.class
+      	NoPrimaryDataMap.class,
+      	StudentDataMap.class,
+      	StudentScoreDataMap.class,
+      	HomeAddressDataMap.class
       );
     }
 

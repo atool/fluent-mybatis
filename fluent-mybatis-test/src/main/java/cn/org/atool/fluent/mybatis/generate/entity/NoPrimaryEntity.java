@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import java.lang.Integer;
 import java.lang.String;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -16,6 +17,9 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(
     chain = true
+)
+@EqualsAndHashCode(
+    callSuper = false
 )
 @FluentMybatis(
     table = "no_primary",

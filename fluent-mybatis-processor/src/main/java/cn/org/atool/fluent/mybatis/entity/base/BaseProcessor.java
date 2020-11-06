@@ -88,7 +88,7 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
                 new RefsFile().writeTo(filer);
             } catch (Exception e) {
                 messager.printMessage(Diagnostic.Kind.ERROR,
-                    "Generate WrapperFactory error:\n" + MybatisUtil.toString(e));
+                    "Generate Refs error:\n" + MybatisUtil.toString(e));
                 throw new RuntimeException(e);
             }
         }

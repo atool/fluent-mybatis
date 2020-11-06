@@ -1,14 +1,18 @@
 package cn.org.atool.fluent.mybatis.entity.field;
 
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
+import cn.org.atool.generator.database.config.impl.RelationConfig;
 import com.sun.tools.javac.code.Type;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 
 /**
  * 加了@RefMethod注解的字段
@@ -27,16 +31,22 @@ public class EntityRefField extends BaseField<EntityRefField> {
         super(property, javaType);
     }
 
-    public void setValue(String[] value) {
-        this.value = value;
-        for (String item : value) {
-            if (!item.contains(":")) {
+    public void setValue(String value) {
+        List<String> list = new ArrayList<>();
+        String[] pairs = value.split("&");
+        for (String pair : pairs) {
+            if (isBlank(pair)) {
+                continue;
+            }
+            if (RelationConfig.isEquation(pair)) {
+                String[] items = pair.split("=");
+                this.mapping.put(items[0].trim(), items[1].trim());
+            } else {
                 mapping.clear();
                 return;
             }
-            String[] pair = item.split(":");
-            this.mapping.put(pair[0].trim(), pair[1].trim());
         }
+        this.value = list.toArray(new String[0]);
     }
 
     /**
@@ -48,7 +58,7 @@ public class EntityRefField extends BaseField<EntityRefField> {
      * @return
      */
     public String getRefMethod(FluentEntity fluent) {
-        return String.format("%sOf%s", this.property, fluent.getClassName());
+        return RelationConfig.relationMethod(this.property, fluent.getClassName());
     }
 
     public boolean isAutoMapping() {

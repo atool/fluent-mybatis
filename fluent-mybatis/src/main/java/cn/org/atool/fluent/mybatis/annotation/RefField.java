@@ -12,9 +12,15 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface RefField {
     /**
-     * 自动映射关联关系, 框架生成代码
+     * 自动映射关联关系
+     * <p>
+     * 如果赋值了, 框架生成代码
+     * 赋值格式 "关联Entity字段 = this.Entity字段 && 关联Entity字段 = this.Entity字段"
+     * 注意: 这里是Entity实体字段, 不是数据库表字段
+     * <p>
+     * 如果未赋值, 则手动实现关联查询
      *
      * @return
      */
-    String[] value() default {};
+    String value() default "";
 }
