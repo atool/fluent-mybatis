@@ -71,7 +71,7 @@ public class SqlProviderUtils {
         if (wrapper == null) {
             throw new RuntimeException("param[" + paraName + "] not found.");
         }
-        if (wrapper == null || wrapper.getWrapperData() == null) {
+        if (wrapper.getWrapperData() == null) {
             throw new RuntimeException("no query condition found.");
         }
         return wrapper.getWrapperData();
