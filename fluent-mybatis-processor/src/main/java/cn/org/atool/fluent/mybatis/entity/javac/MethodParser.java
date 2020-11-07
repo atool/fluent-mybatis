@@ -33,6 +33,9 @@ public class MethodParser extends BaseParser {
         }
         Type returnType = methodDecl.getReturnType().type;
         for (JCTree.JCAnnotation annotation : methodDecl.mods.annotations) {
+            if (annotation.type == null) {
+                continue;
+            }
             String type = annotation.type.toString();
             if (type.contains(RefMethod.class.getSimpleName())) {
                 EntityRefMethod method = new EntityRefMethod(methodName, returnType);

@@ -27,8 +27,8 @@ public class PrimaryField extends CommonField {
 
     private boolean seqIsBeforeOrder;
 
-    public PrimaryField(String property, Type javaType) {
-        super(property, javaType);
+    public PrimaryField(String name, Type javaType) {
+        super(name, javaType);
     }
 
     @Override
