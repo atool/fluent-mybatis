@@ -138,7 +138,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
         if (fluent.getPrimary() == null) {
             super.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getProperty());
+            builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getName());
         }
         return builder.build();
     }

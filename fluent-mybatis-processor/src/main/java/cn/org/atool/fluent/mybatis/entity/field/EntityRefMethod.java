@@ -15,19 +15,19 @@ import java.util.Map;
 import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 
 /**
- * 加了@RefMethod注解的字段
+ * 加了@RefMethod注解的方法
  *
  * @author darui.wu
  */
 @Getter
 @ToString
 @Accessors(chain = true)
-public class EntityRefField extends BaseField<EntityRefField> {
+public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
     private String[] value;
 
     private Map<String, String> mapping = new HashMap<>();
 
-    public EntityRefField(String property, Type javaType) {
+    public EntityRefMethod(String property, Type javaType) {
         super(property, javaType);
     }
 
@@ -58,7 +58,7 @@ public class EntityRefField extends BaseField<EntityRefField> {
      * @return
      */
     public String getRefMethod(FluentEntity fluent) {
-        return RelationConfig.relationMethod(this.property, fluent.getClassName());
+        return RelationConfig.relationMethod(this.name, fluent.getClassName());
     }
 
     public boolean isAutoMapping() {

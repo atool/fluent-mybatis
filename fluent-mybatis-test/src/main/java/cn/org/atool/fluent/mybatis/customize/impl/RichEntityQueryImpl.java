@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RichEntityQueryImpl extends Refs {
     @Override
-    public StudentScoreEntity englishScoreOfStudentEntity(StudentEntity entity) {
+    public StudentScoreEntity findEnglishScoreOfStudentEntity(StudentEntity entity) {
         StudentScoreQuery query = new StudentScoreQuery()
             .where.studentId().eq(entity.getId())
             .and.subject().eq("EN")

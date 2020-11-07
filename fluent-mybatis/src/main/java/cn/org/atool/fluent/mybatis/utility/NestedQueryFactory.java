@@ -20,7 +20,7 @@ public class NestedQueryFactory {
     /**
      * 构造嵌套查询对象
      *
-     * @param klass         嵌套查询对象类
+     * @param klass      嵌套查询对象类
      * @param parameters 查询参量
      * @return 嵌套查询对象
      */

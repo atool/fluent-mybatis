@@ -18,7 +18,7 @@ public abstract class UpdateBase<
 
     private final UpdateApply<S, U> apply = new UpdateApply<>((S) this);
 
-    public final S set = (S)this;
+    public final S set = (S) this;
 
     protected UpdateBase(U updater) {
         super(updater);

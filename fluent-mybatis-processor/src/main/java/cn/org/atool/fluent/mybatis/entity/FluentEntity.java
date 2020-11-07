@@ -2,15 +2,17 @@ package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IDefault;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumnParser;
 import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.entity.base.IProcessor;
-import cn.org.atool.fluent.mybatis.entity.field.BaseField;
 import cn.org.atool.fluent.mybatis.entity.field.CommonField;
-import cn.org.atool.fluent.mybatis.entity.field.EntityRefField;
+import cn.org.atool.fluent.mybatis.entity.field.EntityRefMethod;
+import cn.org.atool.fluent.mybatis.entity.field.FieldOrMethod;
 import cn.org.atool.fluent.mybatis.entity.field.PrimaryField;
+import cn.org.atool.fluent.mybatis.entity.javac.FieldParser;
+import cn.org.atool.fluent.mybatis.entity.javac.MethodParser;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -74,7 +76,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     /**
      * Entity关联查询信息
      */
-    private List<EntityRefField> refFields = new ArrayList<>();
+    private List<EntityRefMethod> refMethods = new ArrayList<>();
 
     private DbType dbType = DbType.MYSQL;
 
@@ -111,13 +113,24 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     }
 
     public FluentEntity setFields(List<JCVariableDecl> fields, IProcessor processor) {
-        FieldColumnParser parser = new FieldColumnParser(processor);
+        FieldParser parser = new FieldParser(processor);
         for (JCVariableDecl variable : fields) {
-            BaseField field = parser.valueOf(variable);
-            if (field instanceof EntityRefField) {
-                this.refFields.add((EntityRefField) field);
+            FieldOrMethod field = parser.valueOf(variable);
+            if (field instanceof EntityRefMethod) {
+                this.refMethods.add((EntityRefMethod) field);
             } else if (field instanceof CommonField) {
                 this.addFieldColumn((CommonField) field);
+            }
+        }
+        return this;
+    }
+
+    public FluentEntity setMethods(List<JCMethodDecl> methods, FluentMybatisProcessor processor) {
+        MethodParser parser = new MethodParser(processor);
+        for (JCMethodDecl methodDecl : methods) {
+            FieldOrMethod method = parser.valueOf(methodDecl);
+            if (method instanceof EntityRefMethod) {
+                this.refMethods.add((EntityRefMethod) method);
             }
         }
         return this;

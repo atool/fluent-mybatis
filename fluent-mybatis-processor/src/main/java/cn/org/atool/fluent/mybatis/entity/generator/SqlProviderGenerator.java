@@ -81,7 +81,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
         for (CommonField field : this.fluent.getFields()) {
             if (notBlank(field.getUpdate())) {
-                builder.addCode("\t.add($L, $S)\n", field.getProperty(), field.getUpdate());
+                builder.addCode("\t.add($L, $S)\n", field.getName(), field.getUpdate());
             }
         }
         return builder.addCode("\t.getUpdateDefaults();").build();
@@ -101,12 +101,12 @@ public class SqlProviderGenerator extends AbstractGenerator {
         for (CommonField field : this.fluent.getFields()) {
             if (!field.isPrimary()) {
                 builder.addCode("\n\t.add($L, entity.$L(), $S)",
-                    field.getProperty(), field.getMethodName(), field.getUpdate());
+                    field.getName(), field.getMethodName(), field.getUpdate());
             }
         }
         builder.addCode(";\n");
         builder.addStatement("sql.SET(updates.getUpdates())");
-        builder.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getProperty());
+        builder.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getName());
 
         return builder.addStatement("return sql.toString()").build();
     }
@@ -122,7 +122,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addCode("$T inserts = new InsertList()", InsertList.class);
         for (CommonField field : this.fluent.getFields()) {
             builder.addCode("\n\t.add($L, entity.$L(), $S)",
-                field.getProperty(), field.getMethodName(), field.getInsert());
+                field.getName(), field.getMethodName(), field.getInsert());
         }
         builder.addCode(";\n");
         builder
@@ -145,7 +145,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
         String values = this.fluent.getFields().stream()
             .map(field -> {
-                String variable = listIndexEl("list", field.getProperty(), "index");
+                String variable = listIndexEl("list", field.getName(), "index");
                 if (notBlank(field.getInsert())) {
                     return String.format("entities.get(index).%s() == null ? %s : %s",
                         field.getMethodName(), '"' + field.getInsert() + '"', variable);
@@ -175,7 +175,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         if (fluent.getPrimary() == null) {
             this.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $L.column", fluent.getPrimary().getProperty());
+            builder.addStatement("return $L.column", fluent.getPrimary().getName());
         }
         return builder.build();
     }

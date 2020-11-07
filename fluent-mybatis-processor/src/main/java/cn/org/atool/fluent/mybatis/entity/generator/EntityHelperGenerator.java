@@ -78,7 +78,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
             .addCode("return new $T(isProperty)\n", EntityToMap.class);
         for (CommonField fc : fluent.getFields()) {
             String getMethod = fc.getMethodName();
-            builder.addCode("\t.put($L, entity.$L())\n", fc.getProperty(), getMethod);
+            builder.addCode("\t.put($L, entity.$L())\n", fc.getName(), getMethod);
         }
         return builder.addCode("\t.getMap();").build();
     }
@@ -96,9 +96,9 @@ public class EntityHelperGenerator extends AbstractGenerator {
         for (CommonField fc : fluent.getFields()) {
             String setMethod = fc.setMethodName();
 
-            builder.addCode("if (map.containsKey($L.name)) {\n", fc.getProperty());
+            builder.addCode("if (map.containsKey($L.name)) {\n", fc.getName());
             builder.addCode("\tentity.$L(($T) map.get($L.name));\n",
-                setMethod, fc.getJavaType(), fc.getProperty());
+                setMethod, fc.getJavaType(), fc.getName());
             builder.addCode("}\n");
         }
         return builder.addStatement("return (E)entity").build();

@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.base;
 
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.field.BaseField;
 import cn.org.atool.fluent.mybatis.entity.field.CommonField;
 import cn.org.atool.fluent.mybatis.entity.generator.*;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -54,7 +53,7 @@ public abstract class FluentClassName {
 
     public String getAllFields() {
         if (this.All_Fields == null) {
-            All_Fields = this.getFields().stream().map(BaseField::getColumn).collect(Collectors.joining(", "));
+            All_Fields = this.getFields().stream().map(CommonField::getColumn).collect(Collectors.joining(", "));
         }
         return All_Fields;
     }

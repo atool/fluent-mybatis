@@ -13,12 +13,14 @@ public class SqlLike {
     public static String left(Object input) {
         return "%" + input;
     }
+
     /**
      * 值%
      */
     public static String right(Object input) {
         return input + "%";
     }
+
     /**
      * %值%
      */

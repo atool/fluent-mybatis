@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.entity.javac;
 
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
@@ -11,6 +11,11 @@ import javax.lang.model.element.Modifier;
 import static com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
+/**
+ * 遍历字段
+ *
+ * @author wudarui
+ */
 public class FieldTreeTranslator extends TreeTranslator {
     private Name rootClazzName;
 

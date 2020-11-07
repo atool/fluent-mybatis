@@ -11,7 +11,7 @@ public abstract class AggregateSegment<
     R
     >
     extends BaseSegment<R, Q> {
-    public final S and = (S)this;
+    public final S and = (S) this;
 
     protected final IAggregate aggregate;
 

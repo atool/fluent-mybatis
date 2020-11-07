@@ -277,7 +277,7 @@ public class MapperGenerator extends AbstractGenerator {
         }
         builder.addAnnotation(AnnotationSpec.builder(SelectKey.class)
             .addMember("resultType", "$T.class", fluent.getPrimary().getJavaType())
-            .addMember("keyProperty", "$S", fluent.getPrimary().getProperty())
+            .addMember("keyProperty", "$S", fluent.getPrimary().getName())
             .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
             .addMember("before", "$L", before)
             .addMember("statement", "$S", seqName)
@@ -287,7 +287,7 @@ public class MapperGenerator extends AbstractGenerator {
     private void addOptions(MethodSpec.Builder builder) {
         builder.addAnnotation(AnnotationSpec.builder(Options.class)
             .addMember("useGeneratedKeys", "true")
-            .addMember("keyProperty", "$S", fluent.getPrimary().getProperty())
+            .addMember("keyProperty", "$S", fluent.getPrimary().getName())
             .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
             .build());
     }
@@ -364,7 +364,7 @@ public class MapperGenerator extends AbstractGenerator {
             List<CodeBlock> blocks = new ArrayList<>();
             blocks.add(CodeBlock.of("@$T(", Result.class));
             blocks.add(CodeBlock.of("column = $S", field.getColumn()));
-            blocks.add(CodeBlock.of(", property = $S", field.getProperty()));
+            blocks.add(CodeBlock.of(", property = $S", field.getName()));
             blocks.add(CodeBlock.of(", javaType = $T.class", field.getJavaType()));
             if (field.isPrimary()) {
                 blocks.add(CodeBlock.of(", id = true"));

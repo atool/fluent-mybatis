@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Setter
 @ToString
 @Accessors(chain = true)
-public class CommonField extends BaseField<CommonField> {
+public class CommonField extends FieldOrMethod<CommonField> {
 
     private String jdbcType;
 
@@ -41,11 +41,11 @@ public class CommonField extends BaseField<CommonField> {
      * @return
      */
     public String mybatisEl() {
-        return this.column + " = #{" + this.property + "}";
+        return this.column + " = #{" + this.name + "}";
     }
 
     public String getPropertyEl() {
-        return "#{" + this.property + "}";
+        return "#{" + this.name + "}";
     }
 
     public boolean isPrimary() {

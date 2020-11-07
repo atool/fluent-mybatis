@@ -17,11 +17,11 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 @Getter
 @ToString
 @Accessors(chain = true)
-public abstract class BaseField<F extends BaseField<F>> {
+public abstract class FieldOrMethod<F extends FieldOrMethod<F>> {
     /**
-     * 字段名称
+     * 字段或方法名称
      */
-    protected String property;
+    protected String name;
     /**
      * 字段定义类型
      */
@@ -32,15 +32,15 @@ public abstract class BaseField<F extends BaseField<F>> {
      */
     protected String column;
 
-    protected BaseField(String property, Type javaType) {
-        this.property = property;
+    protected FieldOrMethod(String name, Type javaType) {
+        this.name = name;
         this.javaType = javaType;
     }
 
-    public F setProperty(String property) {
-        this.property = property;
+    public F setName(String name) {
+        this.name = name;
         if (column == null) {
-            column = camelToUnderline(this.property, false);
+            column = camelToUnderline(this.name, false);
         }
         return (F) this;
     }
@@ -62,9 +62,9 @@ public abstract class BaseField<F extends BaseField<F>> {
      */
     public String getMethodName() {
         if (isPrimitive() && javaType.getTag() == TypeTag.BOOLEAN) {
-            return "is" + capitalFirst(this.property, "is");
+            return "is" + capitalFirst(this.name, "is");
         } else {
-            return "get" + capitalFirst(this.property, null);
+            return "get" + capitalFirst(this.name, null);
         }
     }
 
@@ -75,9 +75,9 @@ public abstract class BaseField<F extends BaseField<F>> {
      */
     public String setMethodName() {
         if (isPrimitive() && javaType.getTag() == TypeTag.BOOLEAN) {
-            return "set" + capitalFirst(this.property, "is");
+            return "set" + capitalFirst(this.name, "is");
         } else {
-            return "set" + capitalFirst(this.property, null);
+            return "set" + capitalFirst(this.name, null);
         }
     }
 

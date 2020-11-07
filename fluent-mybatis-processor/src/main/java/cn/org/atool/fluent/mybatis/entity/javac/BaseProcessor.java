@@ -1,7 +1,8 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.entity.javac;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.entity.base.IProcessor;
 import cn.org.atool.fluent.mybatis.entity.generator.RefsFile;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.JavaFile;
@@ -9,6 +10,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -115,8 +117,19 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
      * @param curTree
      * @return
      */
-    public List<JCVariableDecl> translate(TypeElement element, JCTree curTree) {
+    public List<JCVariableDecl> translateFields(TypeElement element, JCTree curTree) {
         return new FieldTreeTranslator((Name) element.getSimpleName()).accept(curTree);
+    }
+
+    /**
+     * 返回entity类定义的(public notStatic notAbstract)方法
+     *
+     * @param element
+     * @param curTree
+     * @return
+     */
+    public List<JCMethodDecl> translateMethods(TypeElement element, JCTree curTree) {
+        return new MethodTreeTranslator((Name) element.getSimpleName()).accept(curTree);
     }
 
     @Override

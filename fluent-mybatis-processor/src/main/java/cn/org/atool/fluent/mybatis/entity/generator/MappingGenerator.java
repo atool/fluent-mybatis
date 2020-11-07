@@ -57,9 +57,9 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_Field(CommonField fc) {
         return FieldSpec.builder(FieldMapping.class,
-            fc.getProperty(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", fc.getProperty(), fc.getColumn())
-            .initializer("new FieldMapping($S, $S)", fc.getProperty(), fc.getColumn())
+            fc.getName(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", fc.getName(), fc.getColumn())
+            .initializer("new FieldMapping($S, $S)", fc.getName(), fc.getColumn())
             .build();
     }
 
@@ -84,7 +84,7 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_Property2Column() {
         String statement = this.fluent.getFields().stream()
-            .map(CommonField::getProperty)
+            .map(CommonField::getName)
             .map(field -> String.format("\t\tthis.put(%s.name, %s.column);", field, field))
             .collect(joining("\n"));
 
@@ -103,7 +103,7 @@ public class MappingGenerator extends AbstractGenerator {
 
     private FieldSpec f_ALL_COLUMNS() {
         String statement = this.fluent.getFields().stream()
-            .map(CommonField::getProperty)
+            .map(CommonField::getName)
             .map(field -> String.format("\t\t%s.column", field))
             .collect(joining(",\n"));
 

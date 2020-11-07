@@ -5,7 +5,10 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;

@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
-import cn.org.atool.fluent.mybatis.base.EntityLazyQuery;
+import cn.org.atool.fluent.mybatis.base.EntityRefQuery;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.field.EntityRefField;
+import cn.org.atool.fluent.mybatis.entity.field.EntityRefMethod;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -40,7 +40,7 @@ public class RefsFile extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.superclass(EntityLazyQuery.class);
+        builder.superclass(EntityRefQuery.class);
         builder.addModifiers(Modifier.ABSTRACT);
         for (FluentEntity fluent : FluentEntity.getFluents()) {
             builder.addField(this.m_factory(fluent));
@@ -50,13 +50,13 @@ public class RefsFile extends AbstractFile {
             builder.addField(this.m_mapper(fluent));
         }
         for (FluentEntity fluent : FluentEntity.getFluents()) {
-            for (EntityRefField refField : fluent.getRefFields()) {
+            for (EntityRefMethod refField : fluent.getRefMethods()) {
                 builder.addMethod(this.m_refMethod(fluent, refField));
             }
         }
     }
 
-    private MethodSpec m_refMethod(FluentEntity fluent, EntityRefField refField) {
+    private MethodSpec m_refMethod(FluentEntity fluent, EntityRefMethod refField) {
         MethodSpec methodSpec = this.m_refRealMethod(fluent, refField);
         if (methodSpec != null) {
             return methodSpec;
@@ -65,11 +65,11 @@ public class RefsFile extends AbstractFile {
             .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .returns(ClassName.get(refField.getJavaType()))
-            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getProperty())
+            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getName())
             .build();
     }
 
-    private MethodSpec m_refRealMethod(FluentEntity fluent, EntityRefField refField) {
+    private MethodSpec m_refRealMethod(FluentEntity fluent, EntityRefMethod refField) {
         if (!refField.isAutoMapping()) {
             return null;
         }
@@ -81,7 +81,7 @@ public class RefsFile extends AbstractFile {
             .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC)
             .returns(ClassName.get(refField.getJavaType()))
-            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getProperty());
+            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getName());
         String method = refField.returnList() ? "listEntity" : "findOne";
         spec.addCode("return $LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
         int index = 0;
@@ -99,7 +99,7 @@ public class RefsFile extends AbstractFile {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("Wrapper单例")
             .returns(RefsFile.getClassName())
-            .addStatement("return ($L) $T.query()", Refs, EntityLazyQuery.class)
+            .addStatement("return ($L) $T.query()", Refs, EntityRefQuery.class)
             .build();
     }
 

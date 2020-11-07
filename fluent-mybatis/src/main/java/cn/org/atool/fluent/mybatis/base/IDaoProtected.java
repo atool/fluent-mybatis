@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.TagList;
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
+import cn.org.atool.fluent.mybatis.base.model.TagList;
 
 import java.util.List;
 import java.util.Map;

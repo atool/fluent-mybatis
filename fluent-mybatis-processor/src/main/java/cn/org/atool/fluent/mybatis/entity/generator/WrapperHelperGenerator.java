@@ -58,10 +58,10 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addMethod(this.m_set_ISegment());
         for (CommonField fc : fluent.getFields()) {
             builder.addMethod(MethodSpec
-                .methodBuilder(fc.getProperty())
+                .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($L)", fc.getProperty())
+                .addStatement("return this.set($L)", fc.getName())
                 .build()
             );
         }
@@ -204,11 +204,11 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addMethod(this.m_aggregate_Selector());
         for (CommonField fc : fluent.getFields()) {
             builder.addMethod(MethodSpec
-                .methodBuilder(fc.getProperty())
+                .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "alias")
                 .returns(fluent.selector())
-                .addStatement("return this.process($L, alias)", fc.getProperty())
+                .addStatement("return this.process($L, alias)", fc.getName())
                 .build()
             );
         }
@@ -265,7 +265,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
 
     private void buildWhereCondition(TypeSpec.Builder builder, CommonField fc, String suffix_queryWhere) {
         MethodSpec.Builder field = MethodSpec
-            .methodBuilder(fc.getProperty())
+            .methodBuilder(fc.getName())
             .addModifiers(Modifier.PUBLIC);
         String klassName = fc.getJavaType().toString();
         try {
@@ -283,7 +283,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($L)", fc.getProperty());
+        field.addStatement("return this.set($L)", fc.getName());
         builder.addMethod(field.build());
     }
 
