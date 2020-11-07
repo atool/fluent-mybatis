@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity.field;
 
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.generator.database.config.impl.RelationConfig;
 import com.sun.tools.javac.code.Type;
@@ -58,7 +59,7 @@ public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
      * @return
      */
     public String getRefMethod(FluentEntity fluent) {
-        return RelationConfig.relationMethod(this.name, fluent.getClassName());
+        return RichEntity.refMethod(this.name, fluent.getClassName());
     }
 
     public boolean isAutoMapping() {

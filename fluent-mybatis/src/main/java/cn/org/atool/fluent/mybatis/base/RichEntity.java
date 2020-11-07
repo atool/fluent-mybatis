@@ -52,7 +52,7 @@ public abstract class RichEntity implements IEntity {
      * @return
      */
     protected <T> T loadCache(String method, Class<? extends RichEntity> entityClass) {
-        return this.loadCache(true, method + "Of" + entityClass.getSimpleName(), new Object[0]);
+        return this.loadCache(true, refMethod(method, entityClass.getSimpleName()), new Object[0]);
     }
 
     /**
@@ -71,5 +71,16 @@ public abstract class RichEntity implements IEntity {
             reArgs[index + 1] = args[index];
         }
         return reArgs;
+    }
+
+    /**
+     * relation属性关联查询方法名
+     *
+     * @param method      属性(字段)名称
+     * @param entityClass Entity类名
+     * @return
+     */
+    public static String refMethod(String method, String entityClass) {
+        return method + "Of" + entityClass;
     }
 }

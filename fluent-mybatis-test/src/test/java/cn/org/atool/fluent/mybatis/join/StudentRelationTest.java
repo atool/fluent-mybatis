@@ -38,12 +38,12 @@ public class StudentRelationTest extends BaseTest {
     void testListStudentScore() {
         StudentEntity student = studentMapper.findById(1L);
         want.object(student).notNull();
-        List<StudentScoreEntity> scores = student.findStudentScoreList();
+        List<StudentScoreEntity> scores = student.listStudentScore();
         want.list(scores).eqDataMap(ATM.DataMap.studentScore.entity(2)
             .studentId.values(1)
             .score.values(70, 80)
         );
-        List<StudentScoreEntity> scores2 = student.findStudentScoreList();
+        List<StudentScoreEntity> scores2 = student.listStudentScore();
         want.bool(scores == scores2).is(true);
     }
 

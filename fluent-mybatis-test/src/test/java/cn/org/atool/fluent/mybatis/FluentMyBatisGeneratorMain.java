@@ -46,7 +46,7 @@ public class FluentMyBatisGeneratorMain {
         relations = {
             @Relation(source = "t_student", target = "student_score", type = RelationType.TwoWay_1_N,
                 where = "id=student_id && env=env && is_deleted=is_deleted"),
-            @Relation(field = "englishScore", source = "t_student", target = "student_score", type = RelationType.OneWay_0_1)
+            @Relation(method = "findEnglishScore", source = "t_student", target = "student_score", type = RelationType.OneWay_0_1)
         })
     static class Empty2 {
     }
