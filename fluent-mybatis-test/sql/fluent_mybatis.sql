@@ -87,6 +87,7 @@ create table student
   DEFAULT CHARSET = utf8
     COMMENT '学生信息表';
 
+drop table if exists `county_division`;
 CREATE TABLE `county_division`
 (
     `id`           bigint(21) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
