@@ -12,8 +12,8 @@ import java.util.stream.Stream;
  */
 public class SqlInject {
     private static final String[] KEYWORDS = {"and", "or", "not", "use", "insert", "delete", "update", "select", "count",
-            "group", "union", "create", "drop", "truncate", "alter", "grant", "execute", "exec",
-            "xp_cmdshell", "call", "declare", "source", "sql"};
+        "group", "union", "create", "drop", "truncate", "alter", "grant", "execute", "exec",
+        "xp_cmdshell", "call", "declare", "source", "sql"};
     /**
      * 可能产生注入的危险字符串
      */

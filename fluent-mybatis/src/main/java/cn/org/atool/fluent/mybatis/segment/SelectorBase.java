@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import java.util.stream.Stream;

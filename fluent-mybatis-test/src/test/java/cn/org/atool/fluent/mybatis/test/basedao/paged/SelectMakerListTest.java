@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
 import cn.org.atool.fluent.mybatis.base.IDaoProtected;
-import cn.org.atool.fluent.mybatis.base.model.MarkerList;
+import cn.org.atool.fluent.mybatis.base.model.TagList;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
@@ -40,7 +40,7 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        MarkerList<StudentEntity> list = dao.markerPagedEntity(new StudentQuery()
+        TagList<StudentEntity> list = dao.tagPagedEntity(new StudentQuery()
             .where.
                 id().gt(20).
                 userName().like("user").end()
@@ -51,7 +51,7 @@ public class SelectMakerListTest extends BaseTest {
         List<Integer> ids = list.getData().stream()
             .map(e -> (int) (long) e.getId()).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
-        long next = list.parseMarker((StudentEntity e) -> e.getId());
+        long next = list.parseNext((StudentEntity e) -> e.getId());
         want.number(next).eq(31L);
     }
 
@@ -64,7 +64,7 @@ public class SelectMakerListTest extends BaseTest {
             .cleanAndInsert();
 
         Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
-        MarkerList<Map> list = dao.markerPagedMaps(new StudentQuery()
+        TagList<Map> list = dao.tagPagedMaps(new StudentQuery()
             .selectId()
             .where.id().gt(20)
             .and.userName().like("user").end()
@@ -73,7 +73,7 @@ public class SelectMakerListTest extends BaseTest {
         );
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
-        int next = list.parseMarker(convert);
+        int next = list.parseNext(convert);
         want.number(next).eq(31);
     }
 }

@@ -18,8 +18,8 @@ public class InsertBatchTest extends BaseTest {
     public void testInsertBatch_withoutPk() {
         db.table(ATM.Table.student).clean();
         List<StudentEntity> list = list(
-            new StudentEntity().setUserName("name1").setAge(23),
-            new StudentEntity().setUserName("name2").setAge(24));
+            new StudentEntity().setUserName("name1").setAge(23).setTenant(0L),
+            new StudentEntity().setUserName("name2").setAge(24).setTenant(0L));
         mapper.insertBatch(list);
         db.table(ATM.Table.student).count().eq(2);
         db.table(ATM.Table.student).query().print()
@@ -35,8 +35,8 @@ public class InsertBatchTest extends BaseTest {
     public void testInsertBatch_WithId() {
         db.table(ATM.Table.student).clean();
         List<StudentEntity> list = list(
-            new StudentEntity().setId(23L).setUserName("name1").setAge(23),
-            new StudentEntity().setId(24L).setUserName("name2").setAge(24));
+            new StudentEntity().setId(23L).setUserName("name1").setAge(23).setTenant(0L),
+            new StudentEntity().setId(24L).setUserName("name2").setAge(24).setTenant(0L));
         mapper.insertBatch(list);
         db.table(ATM.Table.student).count().eq(2);
         db.table(ATM.Table.student).query().print()
@@ -53,8 +53,8 @@ public class InsertBatchTest extends BaseTest {
     public void testInsertBatch() {
         db.table(ATM.Table.student).clean();
         List<StudentEntity> list = list(
-            new StudentEntity().setUserName("name1").setAge(23).setId(101L),
-            new StudentEntity().setUserName("name2").setAge(24));
+            new StudentEntity().setUserName("name1").setAge(23).setId(101L).setTenant(0L),
+            new StudentEntity().setUserName("name2").setAge(24).setTenant(0L));
         mapper.insertBatch(list);
         db.table(ATM.Table.student).count().eq(2);
         db.table(ATM.Table.student).query().print()

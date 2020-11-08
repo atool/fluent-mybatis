@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.entity.base.BaseProcessor;
+import cn.org.atool.fluent.mybatis.entity.javac.BaseProcessor;
 import cn.org.atool.fluent.mybatis.entity.base.DaoInterfaceParser;
 import cn.org.atool.fluent.mybatis.entity.generator.*;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -30,28 +30,30 @@ public class FluentMybatisProcessor extends BaseProcessor {
     }
 
     @Override
-    protected List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
+    protected List<JavaFile> generateJavaFile(FluentEntity fluent) {
         List<JavaFile> files = new ArrayList<>();
-        files.add(new MapperGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new MappingGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new EntityHelperGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new SqlProviderGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new WrapperHelperGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new QueryGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new UpdaterGenerator(curElement, fluentEntityInfo).javaFile());
-        files.add(new BaseDaoGenerator(curElement, fluentEntityInfo).javaFile());
+        files.add(new MapperGenerator(fluent).javaFile());
+        files.add(new MappingGenerator(fluent).javaFile());
+        files.add(new EntityHelperGenerator(fluent).javaFile());
+        files.add(new SqlProviderGenerator(fluent).javaFile());
+        files.add(new WrapperHelperGenerator(fluent).javaFile());
+        files.add(new QueryGenerator(fluent).javaFile());
+        files.add(new UpdaterGenerator(fluent).javaFile());
+        files.add(new BaseDaoGenerator(fluent).javaFile());
+        files.add(new WrapperDefaultGenerator(fluent).javaFile());
         return files;
     }
 
     @Override
-    protected FluentEntityInfo parseEntity(TypeElement entity) {
-        FluentEntityInfo entityInfo = null;
+    protected FluentEntity parseEntity(TypeElement entity) {
+        FluentEntity entityInfo = null;
         try {
-            entityInfo = new FluentEntityInfo();
+            entityInfo = new FluentEntity();
             entityInfo.setClassName(this.getCuPackageName(entity), entity.getSimpleName().toString());
-            List<String> daos = DaoInterfaceParser.getDaoInterfaces(entity);
-            entityInfo.setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), daos);
-            entityInfo.setFields(this.translate(entity, (JCTree) trees.getTree(entity)));
+            String defaults = DaoInterfaceParser.getDefaults(entity);
+            entityInfo.setFluentMyBatis(entity.getAnnotation(FluentMybatis.class), defaults);
+            entityInfo.setFields(this.translateFields(entity, (JCTree) trees.getTree(entity)), this);
+            entityInfo.setMethods(this.translateMethods(entity, (JCTree) trees.getTree(entity)), this);
             return entityInfo;
         } catch (Throwable e) {
             messager.printMessage(Diagnostic.Kind.ERROR, entityInfo + "\n" + MybatisUtil.toString(e));

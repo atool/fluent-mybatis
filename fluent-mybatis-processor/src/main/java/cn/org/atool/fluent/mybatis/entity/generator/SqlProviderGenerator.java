@@ -4,9 +4,10 @@ import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -17,7 +18,6 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Map;
 
@@ -27,20 +27,25 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static java.util.stream.Collectors.joining;
 
+/**
+ * SqlProviderGenerator: *SqlProvider文件生成
+ *
+ * @author wudarui
+ */
 public class SqlProviderGenerator extends AbstractGenerator {
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_SqlProvider;
+    public static String getClassName(FluentClassName fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_SqlProvider;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Helper);
+    public static String getPackageName(FluentClassName fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Helper);
     }
 
-    public SqlProviderGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public SqlProviderGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
         this.comment = "动态语句封装";
     }
 
@@ -74,9 +79,9 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addParameter(CN_Map_StrStr, "updates")
             .addCode("return new $T(updates)\n", UpdateDefault.class);
 
-        for (FieldColumn field : this.fluent.getFields()) {
+        for (CommonField field : this.fluent.getFields()) {
             if (notBlank(field.getUpdate())) {
-                builder.addCode("\t.add($L, $S)\n", field.getProperty(), field.getUpdate());
+                builder.addCode("\t.add($L, $S)\n", field.getName(), field.getUpdate());
             }
         }
         return builder.addCode("\t.getUpdateDefaults();").build();
@@ -93,15 +98,15 @@ public class SqlProviderGenerator extends AbstractGenerator {
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
         builder.addStatement("sql.UPDATE(this.tableName())");
         builder.addCode("$T updates = new UpdateSet()", UpdateSet.class);
-        for (FieldColumn field : this.fluent.getFields()) {
+        for (CommonField field : this.fluent.getFields()) {
             if (!field.isPrimary()) {
                 builder.addCode("\n\t.add($L, entity.$L(), $S)",
-                    field.getProperty(), field.getMethodName(), field.getUpdate());
+                    field.getName(), field.getMethodName(), field.getUpdate());
             }
         }
         builder.addCode(";\n");
         builder.addStatement("sql.SET(updates.getUpdates())");
-        builder.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getProperty());
+        builder.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getName());
 
         return builder.addStatement("return sql.toString()").build();
     }
@@ -115,9 +120,9 @@ public class SqlProviderGenerator extends AbstractGenerator {
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.INSERT_INTO(this.tableName())")
             .addCode("$T inserts = new InsertList()", InsertList.class);
-        for (FieldColumn field : this.fluent.getFields()) {
+        for (CommonField field : this.fluent.getFields()) {
             builder.addCode("\n\t.add($L, entity.$L(), $S)",
-                field.getProperty(), field.getMethodName(), field.getInsert());
+                field.getName(), field.getMethodName(), field.getInsert());
         }
         builder.addCode(";\n");
         builder
@@ -140,7 +145,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
 
         String values = this.fluent.getFields().stream()
             .map(field -> {
-                String variable = listIndexEl("list", field.getProperty(), "index");
+                String variable = listIndexEl("list", field.getName(), "index");
                 if (notBlank(field.getInsert())) {
                     return String.format("entities.get(index).%s() == null ? %s : %s",
                         field.getMethodName(), '"' + field.getInsert() + '"', variable);
@@ -170,7 +175,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         if (fluent.getPrimary() == null) {
             this.throwPrimaryNoFound(builder);
         } else {
-            builder.addStatement("return $L.column", fluent.getPrimary().getProperty());
+            builder.addStatement("return $L.column", fluent.getPrimary().getName());
         }
         return builder.build();
     }

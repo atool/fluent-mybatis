@@ -1,20 +1,19 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import java.io.Serializable;
-import java.lang.Boolean;
-import java.lang.Integer;
-import java.lang.Long;
-import java.lang.Override;
-import java.lang.String;
-import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * StudentEntity: 数据映射实体定义
@@ -25,12 +24,15 @@ import lombok.experimental.Accessors;
 @Accessors(
     chain = true
 )
+@EqualsAndHashCode(
+    callSuper = false
+)
 @FluentMybatis(
     table = "t_student",
     mapperBeanPrefix = "my",
-    daoInterface = {MyCustomerInterface.class}
+    defaults = MyCustomerInterface.class
 )
-public class StudentEntity implements IEntity, IBaseEntity<StudentEntity> {
+public class StudentEntity extends RichEntity implements IBaseEntity<StudentEntity> {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -163,5 +165,21 @@ public class StudentEntity implements IEntity, IBaseEntity<StudentEntity> {
   @Override
   public Serializable findPk() {
     return this.id;
+  }
+
+  /**
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   */
+  @RefMethod("studentId = id && isDeleted = isDeleted && env = env")
+  public List<StudentScoreEntity> findStudentScoreList() {
+    return super.loadCache("findStudentScoreList", StudentEntity.class);
+  }
+
+  /**
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   */
+  @RefMethod
+  public StudentScoreEntity findEnglishScore() {
+    return super.loadCache("findEnglishScore", StudentEntity.class);
   }
 }

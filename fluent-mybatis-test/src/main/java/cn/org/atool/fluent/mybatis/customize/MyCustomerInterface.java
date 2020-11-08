@@ -1,9 +1,6 @@
 package cn.org.atool.fluent.mybatis.customize;
 
-import cn.org.atool.fluent.mybatis.base.IDao;
-import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.IUpdate;
-import cn.org.atool.fluent.mybatis.base.IWrapper;
+import cn.org.atool.fluent.mybatis.base.*;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 
@@ -12,30 +9,37 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  *
  * @author wudarui
  */
-public interface MyCustomerInterface<E, Q, U> extends IDao<E, Q, U> {
+public interface MyCustomerInterface extends IDefault {
+    String F_ENV = "env";
+
+    String F_IS_DELETED = "is_deleted";
+
+    String TEST_ENV = "test_env";
 
     @Override
-    default IWrapper setQueryDefault(Q query) {
-        return ((IQuery) query).where()
-            .apply("is_deleted", EQ, false)
-            .apply("env", EQ, "test_env")
+    default IQuery setQueryDefault(IQuery query) {
+        return (IQuery) query.where()
+            .apply(F_IS_DELETED, EQ, false)
+            .apply(F_ENV, EQ, TEST_ENV)
             .end();
     }
 
     @Override
-    default IWrapper setUpdateDefault(U updater) {
-        return ((IUpdate) updater)
-            .where().apply("is_deleted", EQ, false)
-            .apply("env", EQ, "test_env")
+    default IUpdate setUpdateDefault(IUpdate updater) {
+        return (IUpdate) updater
+            .where()
+            .apply(F_IS_DELETED, EQ, false)
+            .apply(F_ENV, EQ, TEST_ENV)
             .end();
     }
 
-    default void setInsertDefault(E entity) {
+    @Override
+    default void setInsertDefault(IEntity entity) {
         if (!(entity instanceof IBaseEntity)) {
             return;
         }
         IBaseEntity be = (IBaseEntity) entity;
-        be.setEnv("test_env");
+        be.setEnv(TEST_ENV);
         be.setTenant(234567L);
     }
 }

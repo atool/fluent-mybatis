@@ -131,11 +131,37 @@ public abstract class WhereBase<
      *
      * <p>例: EXISTS("select id from table where age = 1")</p>
      *
+     * @param condition true时条件成立
+     * @param select    exists sql语句
+     * @param values    参数, 对应 select 语句中的 "?" 占位符
+     * @return self
+     */
+    public WHERE exists(boolean condition, String select, Object... values) {
+        return condition ? this.exists(select, values) : this.and;
+    }
+
+    /**
+     * EXISTS ( sql语句 )
+     *
+     * <p>例: EXISTS("select id from table where age = 1")</p>
+     *
      * @param query 嵌套查询
      * @return self
      */
     public WHERE exists(Function<NestedQ, NestedQ> query) {
         return (WHERE) this.exists(wrapper.getWrapperData().getQueryClass(), query);
+    }
+
+    /**
+     * EXISTS ( sql语句 )
+     *
+     * @param condition 条件为真时成立
+     * @param query
+     * @param <T>
+     * @return
+     */
+    public <T> WHERE exists(boolean condition, Function<NestedQ, NestedQ> query) {
+        return condition ? this.exists(query) : this.and;
     }
 
     /**
@@ -153,6 +179,19 @@ public abstract class WhereBase<
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), EXISTS);
         return this.and;
+    }
+
+    /**
+     * EXISTS ( sql语句 )
+     *
+     * @param condition  条件为真时成立
+     * @param queryClass
+     * @param query
+     * @param <ANQ>
+     * @return
+     */
+    public <ANQ extends IQuery<?, ANQ>> WHERE exists(boolean condition, Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
+        return condition ? this.exists(queryClass, query) : this.and;
     }
 
     /**
@@ -174,11 +213,38 @@ public abstract class WhereBase<
      *
      * <p>例: NOT EXISTS("select id from table where age = 1")</p>
      *
+     * @param condition true时条件成立
+     * @param select    not exists sql语句
+     * @param values    select语句参数, 对应notExistsSql语句中的 "?" 占位符
+     * @return self
+     */
+    public WHERE notExists(boolean condition, String select, Object... values) {
+        return condition ? this.notExists(select, values) : this.and;
+    }
+
+    /**
+     * NOT EXISTS ( sql语句 )
+     *
+     * <p>例: NOT EXISTS("select id from table where age = 1")</p>
+     *
      * @param query 嵌套查询
      * @return self
      */
     public WHERE notExists(Function<NestedQ, NestedQ> query) {
         return (WHERE) this.notExists(wrapper.getWrapperData().getQueryClass(), query);
+    }
+
+    /**
+     * NOT EXISTS ( sql语句 )
+     *
+     * <p>例: NOT EXISTS("select id from table where age = 1")</p>
+     *
+     * @param condition true时条件成立
+     * @param query     嵌套查询
+     * @return self
+     */
+    public WHERE notExists(boolean condition, Function<NestedQ, NestedQ> query) {
+        return condition ? this.notExists(query) : this.and;
     }
 
     /**
@@ -196,6 +262,20 @@ public abstract class WhereBase<
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), NOT_EXISTS);
         return this.and;
+    }
+
+    /**
+     * NOT EXISTS ( sql语句 )
+     *
+     * <p>例: NOT EXISTS("select id from table where age = 1")</p>
+     *
+     * @param condition  true时条件成立
+     * @param queryClass 嵌套查询对应的类
+     * @param query      嵌套查询
+     * @return self
+     */
+    public <ANQ extends IQuery> WHERE notExists(boolean condition, Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
+        return condition ? this.notExists(queryClass, query) : this.and;
     }
 
     /**
@@ -223,7 +303,7 @@ public abstract class WhereBase<
      * @return 条件设置器
      */
     public WHERE apply(String column, SqlOp op, Object... paras) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
+        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, paras);
         return this.and;
     }
 

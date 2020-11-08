@@ -23,7 +23,8 @@ public abstract class BaseTest extends Test4J {
     "cn.org.atool.fluent.mybatis.customize.impl"
 })
 @MapperScan({"cn.org.atool.fluent.mybatis.generate.mapper",
-    "cn.org.atool.fluent.mybatis.customize.mapper"
+    "cn.org.atool.fluent.mybatis.customize.mapper",
+    "cn.org.atool.fluent.mybatis.origin.mapper"
 })
 class TestSpringConfig {
     @Bean("dataSource")
@@ -35,7 +36,13 @@ class TestSpringConfig {
     public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
-        bean.setMapperLocations(new ClassPathResource("mapper/MyXmlMapper.xml"));
+        bean.setMapperLocations(
+            new ClassPathResource("mapper/MyXmlMapper.xml")
+        );
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setLazyLoadingEnabled(true);
+        configuration.setAggressiveLazyLoading(false);
+        bean.setConfiguration(configuration);
         return bean;
     }
 }

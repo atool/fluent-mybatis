@@ -1,29 +1,40 @@
 package cn.org.atool.fluent.mybatis.entity.generator;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FieldColumn;
+import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.segment.where.*;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
+/**
+ * Query&Updater辅助类文件生成
+ *
+ * @author wudarui
+ */
 public class WrapperHelperGenerator extends AbstractGenerator {
-    public WrapperHelperGenerator(TypeElement curElement, FluentEntityInfo fluentEntityInfo) {
-        super(curElement, fluentEntityInfo);
-        this.packageName = getPackageName(fluentEntityInfo);
-        this.klassName = getClassName(fluentEntityInfo);
+    public WrapperHelperGenerator(FluentEntity fluentEntity) {
+        super(fluentEntity);
+        this.packageName = getPackageName(fluentEntity);
+        this.klassName = getClassName(fluentEntity);
+    }
+
+    @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.addStaticImport(fluent.mapping(), "*");
+        super.staticImport(builder);
     }
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(fluent.mapping())
+        builder
             .addType(this.nestedISegment())
             .addType(this.nestedSelector())
             .addType(this.nestedQueryWhere())
@@ -45,12 +56,12 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addTypeVariable(TypeVariableName.get("R"))
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addMethod(this.m_set_ISegment());
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             builder.addMethod(MethodSpec
-                .methodBuilder(fc.getProperty())
+                .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($T.$L)", fluent.mapping(), fc.getProperty())
+                .addStatement("return this.set($L)", fc.getName())
                 .build()
             );
         }
@@ -191,13 +202,13 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addMethod(this.constructor1())
             .addMethod(this.constructor2_Selector())
             .addMethod(this.m_aggregate_Selector());
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             builder.addMethod(MethodSpec
-                .methodBuilder(fc.getProperty())
+                .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "alias")
                 .returns(fluent.selector())
-                .addStatement("return this.process($L, alias)", fc.getProperty())
+                .addStatement("return this.process($L, alias)", fc.getName())
                 .build()
             );
         }
@@ -222,7 +233,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addMethod(this.construct1_QueryWhere())
             .addMethod(this.construct2_QueryWhere())
             .addMethod(this.m_buildOr_QueryWhere());
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             buildWhereCondition(builder, fc, Suffix_QueryWhere);
         }
         return builder.build();
@@ -246,15 +257,15 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             .addMethod(this.construct1_UpdateWhere())
             .addMethod(this.construct2_UpdateWhere())
             .addMethod(this.m_buildOr_UpdateWhere());
-        for (FieldColumn fc : fluent.getFields()) {
+        for (CommonField fc : fluent.getFields()) {
             buildWhereCondition(builder, fc, Suffix_UpdateWhere);
         }
         return builder.build();
     }
 
-    private void buildWhereCondition(TypeSpec.Builder builder, FieldColumn fc, String suffix_queryWhere) {
+    private void buildWhereCondition(TypeSpec.Builder builder, CommonField fc, String suffix_queryWhere) {
         MethodSpec.Builder field = MethodSpec
-            .methodBuilder(fc.getProperty())
+            .methodBuilder(fc.getName())
             .addModifiers(Modifier.PUBLIC);
         String klassName = fc.getJavaType().toString();
         try {
@@ -272,7 +283,7 @@ public class WrapperHelperGenerator extends AbstractGenerator {
             field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($T.$L)", fluent.mapping(), fc.getProperty());
+        field.addStatement("return this.set($L)", fc.getName());
         builder.addMethod(field.build());
     }
 
@@ -468,11 +479,11 @@ public class WrapperHelperGenerator extends AbstractGenerator {
         return false;
     }
 
-    public static String getClassName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getNoSuffix() + Suffix_WrapperHelper;
+    public static String getClassName(FluentClassName fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_WrapperHelper;
     }
 
-    public static String getPackageName(FluentEntityInfo fluentEntityInfo) {
-        return fluentEntityInfo.getPackageName(Pack_Helper);
+    public static String getPackageName(FluentClassName fluentEntity) {
+        return fluentEntity.getPackageName(Pack_Helper);
     }
 }

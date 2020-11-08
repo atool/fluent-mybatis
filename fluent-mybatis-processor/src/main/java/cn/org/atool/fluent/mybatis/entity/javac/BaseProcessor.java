@@ -1,18 +1,23 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.entity.javac;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.entity.FluentEntityInfo;
+import cn.org.atool.fluent.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.entity.base.IProcessor;
+import cn.org.atool.fluent.mybatis.entity.generator.RefsFile;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
+import lombok.Getter;
 
 import javax.annotation.processing.*;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.util.HashSet;
@@ -27,14 +32,19 @@ import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  *
  * @author darui.wu
  */
-public abstract class BaseProcessor extends AbstractProcessor {
+public abstract class BaseProcessor extends AbstractProcessor implements IProcessor {
     protected Filer filer;
 
+    @Getter
     protected Messager messager;
 
-    // javac 编译器相关类
+    /**
+     * javac 编译器相关类
+     */
+    @Getter
     protected Trees trees;
 
+    @Getter
     protected TreeMaker treeMaker;
 
     private boolean mIsFirstRound = true;
@@ -47,23 +57,43 @@ public abstract class BaseProcessor extends AbstractProcessor {
         mIsFirstRound = false;
         messager.printMessage(Diagnostic.Kind.NOTE, "process fluent mybatis begin !!!");
 
-        roundEnv.getElementsAnnotatedWith(FluentMybatis.class).stream()
-            .filter(it -> it instanceof TypeElement)
-            .map(it -> (TypeElement) it)
-            .forEach(it -> {
-                FluentEntityInfo entityInfo = null;
-                try {
-                    entityInfo = this.parseEntity(it);
-                    List<JavaFile> javaFiles = this.generateJavaFile(it, entityInfo);
-                    for (JavaFile javaFile : javaFiles) {
-                        javaFile.writeTo(filer);
-                    }
-                } catch (Exception e) {
-                    messager.printMessage(Diagnostic.Kind.ERROR,
-                        it.getQualifiedName() + ":\nEntityInfo:" + entityInfo + "\n" + MybatisUtil.toString(e));
-                    throw new RuntimeException(e);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(FluentMybatis.class);
+        for (Element element : elements) {
+            if (!(element instanceof TypeElement)) {
+                continue;
+            }
+            TypeElement it = (TypeElement) element;
+            try {
+                FluentEntity entityInfo = this.parseEntity(it);
+                FluentEntity.addFluent(entityInfo);
+            } catch (Exception e) {
+                messager.printMessage(Diagnostic.Kind.ERROR,
+                    it.getQualifiedName() + ":\n" + MybatisUtil.toString(e));
+                throw new RuntimeException(e);
+            }
+        }
+        FluentEntity.sort();
+        for (FluentEntity fluent : FluentEntity.getFluents()) {
+            try {
+                List<JavaFile> javaFiles = this.generateJavaFile(fluent);
+                for (JavaFile javaFile : javaFiles) {
+                    javaFile.writeTo(filer);
                 }
-            });
+            } catch (Exception e) {
+                messager.printMessage(Diagnostic.Kind.ERROR,
+                    "FluentEntityInfo:" + fluent + "\n" + MybatisUtil.toString(e));
+                throw new RuntimeException(e);
+            }
+        }
+        if (FluentEntity.notEmpty()) {
+            try {
+                new RefsFile().writeTo(filer);
+            } catch (Exception e) {
+                messager.printMessage(Diagnostic.Kind.ERROR,
+                    "Generate Refs error:\n" + MybatisUtil.toString(e));
+                throw new RuntimeException(e);
+            }
+        }
         messager.printMessage(Diagnostic.Kind.NOTE, "process fluent mybatis end !!!");
         return true;
     }
@@ -87,8 +117,19 @@ public abstract class BaseProcessor extends AbstractProcessor {
      * @param curTree
      * @return
      */
-    public List<JCVariableDecl> translate(TypeElement element, JCTree curTree) {
+    public List<JCVariableDecl> translateFields(TypeElement element, JCTree curTree) {
         return new FieldTreeTranslator((Name) element.getSimpleName()).accept(curTree);
+    }
+
+    /**
+     * 返回entity类定义的(public notStatic notAbstract)方法
+     *
+     * @param element
+     * @param curTree
+     * @return
+     */
+    public List<JCMethodDecl> translateMethods(TypeElement element, JCTree curTree) {
+        return new MethodTreeTranslator((Name) element.getSimpleName()).accept(curTree);
     }
 
     @Override
@@ -114,10 +155,9 @@ public abstract class BaseProcessor extends AbstractProcessor {
     /**
      * 生成java文件
      *
-     * @param curElement
-     * @param fluentEntityInfo
+     * @param fluent
      */
-    protected abstract java.util.List<JavaFile> generateJavaFile(TypeElement curElement, FluentEntityInfo fluentEntityInfo);
+    protected abstract java.util.List<JavaFile> generateJavaFile(FluentEntity fluent);
 
 
     /**
@@ -126,5 +166,5 @@ public abstract class BaseProcessor extends AbstractProcessor {
      * @param it
      * @return
      */
-    protected abstract FluentEntityInfo parseEntity(TypeElement it);
+    protected abstract FluentEntity parseEntity(TypeElement it);
 }

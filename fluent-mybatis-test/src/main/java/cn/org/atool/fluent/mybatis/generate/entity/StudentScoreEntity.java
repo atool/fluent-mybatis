@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -25,12 +27,15 @@ import lombok.experimental.Accessors;
 @Accessors(
     chain = true
 )
+@EqualsAndHashCode(
+    callSuper = false
+)
 @FluentMybatis(
     table = "student_score",
     mapperBeanPrefix = "my",
-    daoInterface = {MyCustomerInterface.class}
+    defaults = MyCustomerInterface.class
 )
-public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEntity> {
+public class StudentScoreEntity extends RichEntity implements IBaseEntity<StudentScoreEntity> {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -112,5 +117,13 @@ public class StudentScoreEntity implements IEntity, IBaseEntity<StudentScoreEnti
   @Override
   public Serializable findPk() {
     return this.id;
+  }
+
+  /**
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   */
+  @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
+  public StudentEntity findStudent() {
+    return super.loadCache("findStudent", StudentScoreEntity.class);
   }
 }

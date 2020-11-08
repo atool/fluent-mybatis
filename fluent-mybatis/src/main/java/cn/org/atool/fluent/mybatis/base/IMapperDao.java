@@ -17,18 +17,18 @@ public interface IMapperDao<E extends IEntity> {
     IEntityMapper<E> mapper();
 
     /**
-     * 构造空白查询条件
+     * 构造默认查询条件
      *
      * @return
      */
-    <Q extends IQuery<E, Q>> Q query();
+    <Q extends IQuery<E, Q>> Q defaultQuery();
 
     /**
-     * 构造空白更新条件
+     * 构造默认更新条件
      *
      * @return
      */
-    <U extends IUpdate<E, U, ?>> U updater();
+    <U extends IUpdate<E, U, ?>> U defaultUpdater();
 
     /**
      * 返回主键字段名称

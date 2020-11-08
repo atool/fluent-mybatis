@@ -13,6 +13,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -24,10 +25,13 @@ import lombok.experimental.Accessors;
 @Accessors(
     chain = true
 )
+@EqualsAndHashCode(
+    callSuper = false
+)
 @FluentMybatis(
     table = "home_address",
     mapperBeanPrefix = "my",
-    daoInterface = {MyCustomerInterface.class}
+    defaults = MyCustomerInterface.class
 )
 public class HomeAddressEntity implements IEntity, IBaseEntity<HomeAddressEntity> {
   private static final long serialVersionUID = 1L;
