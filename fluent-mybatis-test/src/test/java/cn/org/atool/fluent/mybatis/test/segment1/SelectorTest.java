@@ -21,7 +21,7 @@ public class SelectorTest extends BaseTest {
         StudentQuery query = new StudentQuery();
 
         query.select
-            .apply("id", "address_id", "1")
+            .apply("id", "home_address_id", "1")
             .id()
             .max.age("max")
             .sum.age()
@@ -32,7 +32,7 @@ public class SelectorTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, address_id, 1, MAX(age) AS max, SUM(age) FROM t_student WHERE id = ? GROUP BY id");
+            .eq("SELECT id, home_address_id, 1, MAX(age) AS max, SUM(age) FROM student WHERE id = ? GROUP BY id");
     }
 
     @Test
@@ -54,7 +54,7 @@ public class SelectorTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id AS pk, SUM(age) AS sum, MAX(age) AS max, MIN(age) AS min, AVG(age) AS avg, COUNT(age) AS count, GROUP_CONCAT(age) AS concat " +
-                "FROM t_student WHERE id = ? GROUP BY id");
+                "FROM student WHERE id = ? GROUP BY id");
     }
 
     @Test
@@ -77,7 +77,7 @@ public class SelectorTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id, SUM(age), MAX(age), MIN(age), AVG(age), COUNT(age), GROUP_CONCAT(age) " +
-                "FROM t_student WHERE id = ? GROUP BY id");
+                "FROM student WHERE id = ? GROUP BY id");
     }
 
     @Test
@@ -88,6 +88,6 @@ public class SelectorTest extends BaseTest {
             .where.id().eq(24L).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, gmt_created, gmt_modified FROM t_student WHERE id = ?");
+            .eq("SELECT id, gmt_created, gmt_modified FROM student WHERE id = ?");
     }
 }

@@ -24,7 +24,7 @@ public class ExistPkTest extends BaseTest {
             .cleanAndInsert();
         boolean existed = dao.existPk(1);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) " +
-            "FROM t_student WHERE id = ?", StringMode.SameAsSpace);
+            "FROM student WHERE id = ?", StringMode.SameAsSpace);
         want.bool(existed).is(true);
 
         existed = dao.existPk(2);

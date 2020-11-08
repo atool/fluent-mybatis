@@ -20,7 +20,7 @@ public class DeleteByQueryTest extends BaseTest {
         dao.deleteByQuery("username_4", "username_5", "username_7");
         db.table(ATM.Table.student).count().eq(7);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM t_student " +
+            .eq("DELETE FROM student " +
                 "WHERE is_deleted = ? AND env = ? AND user_name IN (?, ?, ?)", StringMode.SameAsSpace);
     }
 }

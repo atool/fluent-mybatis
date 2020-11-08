@@ -26,7 +26,7 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM t_student WHERE user_name = ? AND id = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE user_name = ? AND id = ?", StringMode.SameAsSpace);
         db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(23L)
         );

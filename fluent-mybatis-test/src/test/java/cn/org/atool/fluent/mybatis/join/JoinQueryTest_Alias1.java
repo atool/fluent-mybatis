@@ -38,7 +38,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(
             "SELECT u.age, a.student_id " +
-                "FROM t_student u " +
+                "FROM student u " +
                 "JOIN home_address a " +
                 "ON u.id = a.id " +
                 "AND u.age = a.student_id " +
@@ -77,7 +77,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.age, t2.student_id " +
-                "FROM t_student t1 " +
+                "FROM student t1 " +
                 "LEFT JOIN home_address t2 " +
                 "ON t1.id = t2.id " +
                 "AND t1.age = t2.student_id " +
@@ -108,7 +108,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .endJoin();
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql()
-            .end("FROM t_student t1 RIGHT JOIN home_address t2 " +
+            .end("FROM student t1 RIGHT JOIN home_address t2 " +
                 "ON t1.id = t2.id " +
                 "WHERE t1.is_deleted = ? " +
                 "AND t1.age IS NULL " +
@@ -132,8 +132,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         mapper.listMaps(query);
         db.sqlList().wantFirstSql()
             .contains(new String[]{"t1.id", "t2.id", "t3.id"})
-            .end("FROM t_student t1 LEFT JOIN home_address t2 " +
-                "ON t1.address_id = t2.id " +
+            .end("FROM student t1 LEFT JOIN home_address t2 " +
+                "ON t1.home_address_id = t2.id " +
                 "LEFT JOIN student_score t3 ON t1.id = t3.student_id " +
                 "WHERE t1.age = ? " +
                 "AND t2.address LIKE ? " +

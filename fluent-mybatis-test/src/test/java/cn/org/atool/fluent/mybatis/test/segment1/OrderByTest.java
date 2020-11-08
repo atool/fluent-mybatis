@@ -26,6 +26,6 @@ public class OrderByTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_student WHERE id = ? ORDER BY id ASC, age DESC");
+            .eq("SELECT id FROM student WHERE id = ? ORDER BY id ASC, age DESC");
     }
 }

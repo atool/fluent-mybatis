@@ -31,7 +31,7 @@ public class SelectByMapTest extends BaseTest {
             put(StudentMapping.userName.column, "username_4");
         }});
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student WHERE is_deleted = ? AND env = ? AND user_name = ?");
+            .end("FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
         want.list(users).eqDataMap(ATM.DataMap.student.entity(1)
             .userName.values("username_4"));
     }
@@ -47,7 +47,7 @@ public class SelectByMapTest extends BaseTest {
             put(StudentMapping.age.column, 21);
         }});
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student WHERE is_deleted = ? AND env = ? AND age = ?");
+            .end("FROM student WHERE is_deleted = ? AND env = ? AND age = ?");
         want.object(students)
             .eqMap(ATM.DataMap.student.entity()
                 .age.values(21)
@@ -66,7 +66,7 @@ public class SelectByMapTest extends BaseTest {
             put(StudentMapping.gmtModified.column, date);
         }});
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student WHERE is_deleted = ? AND env = ? AND gmt_modified = ?");
+            .end("FROM student WHERE is_deleted = ? AND env = ? AND gmt_modified = ?");
         want.object(students)
             .eqMap(ATM.DataMap.student.entity()
                 .gmtModified.values(date)

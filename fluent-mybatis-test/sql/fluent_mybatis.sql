@@ -47,70 +47,73 @@ create table no_primary
 drop table if exists home_address;
 CREATE TABLE home_address
 (
-    id           bigint(21)   unsigned auto_increment primary key COMMENT '主键id',
-    student_id   bigint(21)   NOT NULL COMMENT '用户id',
-    province     varchar(50)  DEFAULT NULL COMMENT '省份',
-    city         varchar(50)  DEFAULT NULL COMMENT '城市',
-    district     varchar(50)  DEFAULT NULL COMMENT '区',
-    address      varchar(100) DEFAULT NULL COMMENT '详细住址',
-    env          varchar(10)  NULL comment '数据隔离环境',
-    tenant       bigint       NOT NULL default 0 comment '租户标识',
-    gmt_created  datetime     DEFAULT NULL COMMENT '创建时间',
-    gmt_modified datetime     DEFAULT NULL COMMENT '更新时间',
-    is_deleted   tinyint(2)   DEFAULT 0 COMMENT '是否逻辑删除'
+    id           bigint(21) unsigned auto_increment primary key COMMENT '主键id',
+    student_id   bigint(21)  NOT NULL COMMENT '用户id',
+    province     varchar(50)          DEFAULT NULL COMMENT '省份',
+    city         varchar(50)          DEFAULT NULL COMMENT '城市',
+    district     varchar(50)          DEFAULT NULL COMMENT '区',
+    address      varchar(100)         DEFAULT NULL COMMENT '详细住址',
+    env          varchar(10) NULL comment '数据隔离环境',
+    tenant       bigint      NOT NULL default 0 comment '租户标识',
+    gmt_created  datetime             DEFAULT NULL COMMENT '创建时间',
+    gmt_modified datetime             DEFAULT NULL COMMENT '更新时间',
+    is_deleted   tinyint(2)           DEFAULT 0 COMMENT '是否逻辑删除'
 ) ENGINE = InnoDB
   CHARACTER SET = utf8 COMMENT = '学生家庭住址';
 
 drop table if exists student;
 create table student
 (
-	id bigint(21) unsigned auto_increment comment '主键id'
-		primary key,
-	age int null comment '年龄',
-	grade int null comment '年级',
-	user_name varchar(45) null comment '名字',
-	gender_man tinyint(2) default 0 null comment '性别, 0:女; 1:男',
-	birthday datetime null comment '生日',
-	phone varchar(20) null comment '电话',
-	bonus_points bigint(21) default 0 null comment '积分',
-	status varchar(32) null comment '状态(字典)',
-	home_county_id bigint(21) null comment '家庭所在区县',
-	home_address_id bigint(21) null comment 'home_address外键',
-	address varchar(200) null comment '家庭详细住址',
-	version varchar(200) null comment '版本号',
-	env          varchar(10) NULL comment '数据隔离环境',
-    tenant       bigint       NOT NULL default 0 comment '租户标识',
-	gmt_created datetime null comment '创建时间',
-	gmt_modified datetime null comment '更新时间',
-	is_deleted tinyint(2) default 0 null comment '是否逻辑删除'
-)ENGINE=InnoDB DEFAULT CHARSET=utf8
-COMMENT '学生信息表';
+    id              bigint(21) unsigned auto_increment comment '主键id'
+        primary key,
+    age             int                  null comment '年龄',
+    grade           int                  null comment '年级',
+    user_name       varchar(45)          null comment '名字',
+    gender_man      tinyint(2) default 0 null comment '性别, 0:女; 1:男',
+    birthday        datetime             null comment '生日',
+    phone           varchar(20)          null comment '电话',
+    bonus_points    bigint(21) default 0 null comment '积分',
+    status          varchar(32)          null comment '状态(字典)',
+    home_county_id  bigint(21)           null comment '家庭所在区县',
+    home_address_id bigint(21)           null comment 'home_address外键',
+    address         varchar(200)         null comment '家庭详细住址',
+    version         varchar(200)         null comment '版本号',
+    env             varchar(10)          NULL comment '数据隔离环境',
+    tenant          bigint               NOT NULL default 0 comment '租户标识',
+    gmt_created     datetime             null comment '创建时间',
+    gmt_modified    datetime             null comment '更新时间',
+    is_deleted      tinyint(2) default 0 null comment '是否逻辑删除'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+    COMMENT '学生信息表';
 
-CREATE TABLE `county_division` (
-  `id` bigint(21) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `province` varchar(50) DEFAULT NULL COMMENT '省份',
-  `city` varchar(50) DEFAULT NULL COMMENT '城市',
-  `county` varchar(50) DEFAULT NULL COMMENT '区县',
-  `gmt_created` datetime DEFAULT NULL COMMENT '创建时间',
-  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
-  `is_deleted` tinyint(2) DEFAULT '0' COMMENT '是否逻辑删除',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='区县';
+CREATE TABLE `county_division`
+(
+    `id`           bigint(21) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `province`     varchar(50) DEFAULT NULL COMMENT '省份',
+    `city`         varchar(50) DEFAULT NULL COMMENT '城市',
+    `county`       varchar(50) DEFAULT NULL COMMENT '区县',
+    `gmt_created`  datetime    DEFAULT NULL COMMENT '创建时间',
+    `gmt_modified` datetime    DEFAULT NULL COMMENT '更新时间',
+    `is_deleted`   tinyint(2)  DEFAULT '0' COMMENT '是否逻辑删除',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='区县';
 
 DROP TABLE IF EXISTS `student_score`;
 create table `student_score`
 (
-    id           bigint      auto_increment comment '主键ID' primary key,
-    student_id   bigint      NOT NULL comment '学号',
-    gender_man   tinyint     DEFAULT 0 NOT NULL comment '性别, 0:女; 1:男',
-    school_term  int         NULL comment '学期',
-    subject      varchar(30) NULL comment '学科',
-    score        int         NULL comment '成绩',
-    env          varchar(10) NULL comment '数据隔离环境',
-    tenant       bigint      NOT NULL default 0 comment '租户标识',
-    gmt_created  datetime    NOT NULL comment '记录创建时间',
-    gmt_modified datetime    NOT NULL comment '记录最后修改时间',
-    is_deleted   tinyint     DEFAULT 0 NOT NULL comment '逻辑删除标识'
+    id           bigint auto_increment comment '主键ID' primary key,
+    student_id   bigint            NOT NULL comment '学号',
+    gender_man   tinyint DEFAULT 0 NOT NULL comment '性别, 0:女; 1:男',
+    school_term  int               NULL comment '学期',
+    subject      varchar(30)       NULL comment '学科',
+    score        int               NULL comment '成绩',
+    env          varchar(10)       NULL comment '数据隔离环境',
+    tenant       bigint            NOT NULL default 0 comment '租户标识',
+    gmt_created  datetime          NOT NULL comment '记录创建时间',
+    gmt_modified datetime          NOT NULL comment '记录最后修改时间',
+    is_deleted   tinyint DEFAULT 0 NOT NULL comment '逻辑删除标识'
 ) engine = InnoDB
   default charset = utf8 COMMENT = '学生成绩';
 
@@ -152,4 +155,3 @@ CREATE TABLE t_member_favorite
     is_deleted   tinyint(2)  DEFAULT 0 COMMENT '是否逻辑删除'
 ) ENGINE = InnoDB
   CHARACTER SET = utf8 COMMENT = '成员爱好';
-

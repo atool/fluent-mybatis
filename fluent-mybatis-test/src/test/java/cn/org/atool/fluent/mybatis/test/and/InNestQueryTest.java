@@ -65,6 +65,6 @@ public class InNestQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student WHERE address_id IN (SELECT id FROM home_address WHERE id IN (?, ?))");
+            .eq("SELECT id FROM student WHERE home_address_id IN (SELECT id FROM home_address WHERE id IN (?, ?))");
     }
 }

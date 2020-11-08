@@ -32,7 +32,7 @@ public class SelectObjsTest extends BaseTest {
             .where.id().eq(24L)
             .end();
         List<String> users = mapper.listObjs(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE id = ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE id = ?");
         want.list(users).eqReflect(new String[]{"u2"});
     }
 
@@ -49,7 +49,7 @@ public class SelectObjsTest extends BaseTest {
             .where.userName().eq("u2")
             .end();
         List<String> users = mapper.listObjs(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ?");
         want.list(users).eqReflect(new String[]{"u2", "u2"});
     }
 }

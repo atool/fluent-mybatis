@@ -39,6 +39,6 @@ public class NotInNestQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM home_address WHERE id NOT IN (SELECT address_id FROM student WHERE age = ?)");
+            .eq("SELECT id FROM home_address WHERE id NOT IN (SELECT home_address_id FROM student WHERE age = ?)");
     }
 }

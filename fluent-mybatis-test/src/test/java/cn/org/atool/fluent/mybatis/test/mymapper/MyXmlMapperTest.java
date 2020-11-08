@@ -12,6 +12,6 @@ public class MyXmlMapperTest extends BaseTest {
     @Test
     void test_my_xml_mapper() {
         this.mapper.deleteByUserId(2);
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_student WHERE id=?");
+        db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE id=?");
     }
 }

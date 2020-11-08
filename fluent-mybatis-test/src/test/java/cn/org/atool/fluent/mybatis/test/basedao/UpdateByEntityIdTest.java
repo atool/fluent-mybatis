@@ -23,7 +23,7 @@ public class UpdateByEntityIdTest extends BaseTest {
 
         dao.updateById(new StudentEntity().setId(2L).setUserName("test3").setAge(30));
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_student SET gmt_modified = now(), age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE student SET gmt_modified = now(), age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
         db.table(ATM.Table.student).queryWhere("id=2")
             .eqDataMap(ATM.DataMap.student.table(1)
                 .userName.values("test3")

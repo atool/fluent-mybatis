@@ -26,11 +26,11 @@ public class NestedQueryTest extends BaseTest {
             .selectId()
             .where.exists(HomeAddressQuery.class, q -> q
                 .where.address().like("u")
-                .and.id().apply("=student.address_id").end())
+                .and.id().apply("=student.home_address_id").end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =student.address_id)");
+            .eq("SELECT id FROM student WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =student.home_address_id)");
 
     }
 

@@ -21,7 +21,7 @@ public class DeleteByEntityIdsTest extends BaseTest {
     public void test_deleteByEntityIds() throws Exception {
         ATM.DataMap.student.initTable(10).cleanAndInsert();
         dao.deleteByEntityIds(Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(5L)));
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_student WHERE id IN (?, ?)");
+        db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE id IN (?, ?)");
         db.table(ATM.Table.student).count().isEqualTo(8);
     }
 }

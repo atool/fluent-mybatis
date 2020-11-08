@@ -26,7 +26,7 @@ public class InsertDefaultTest extends BaseTest {
             .isDeleted.values(0)
             .eqTable();
         db.sqlList().wantFirstSql().eq(
-            "INSERT INTO t_student(gmt_created, gmt_modified, is_deleted, env, tenant, user_name) " +
+            "INSERT INTO student(gmt_created, gmt_modified, is_deleted, env, tenant, user_name) " +
                 "VALUES (now(), now(), 0, ?, ?, ?)");
     }
 

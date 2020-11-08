@@ -45,7 +45,7 @@ public class InsertSelectedTest extends BaseTest {
             .userName.values("tom mike")
             .homeAddressId.values(200)
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
+        db.sqlList().wantFirstSql().eq("INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, home_address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
         want.number(student.getId()).eq(100L);
     }
 }
