@@ -151,6 +151,17 @@ public interface ObjectWhere<
     <O> WHERE in(String select, O... args);
 
     /**
+     * where column IN (select ... )
+     *
+     * @param condition true时条件成立
+     * @param select    子查询语句
+     * @param args      子查询语句参数，对应select语句里面的 "?" 占位符
+     * @param <O>
+     * @return 查询器或更新器
+     */
+    <O> WHERE in(boolean condition, String select, O... args);
+
+    /**
      * in (select ... )
      *
      * @param query 嵌套查询
@@ -161,12 +172,32 @@ public interface ObjectWhere<
     /**
      * in (select ... )
      *
+     * @param condition true时条件成立
+     * @param query     嵌套查询
+     * @return 查询器或更新器
+     */
+    WHERE in(boolean condition, Function<NQ, NQ> query);
+
+    /**
+     * in (select ... )
+     *
      * @param klass 嵌套查询类
      * @param query 嵌套查询
      * @param <NQ>  嵌套查询类
      * @return 查询器或更新器
      */
     <NQ extends IQuery> WHERE in(Class<NQ> klass, Function<NQ, NQ> query);
+
+    /**
+     * in (select ... )
+     *
+     * @param condition true时条件成立
+     * @param klass     嵌套查询类
+     * @param query     嵌套查询
+     * @param <NQ>      嵌套查询类
+     * @return 查询器或更新器
+     */
+    <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, Function<NQ, NQ> query);
 
     /**
      * not in (values)
@@ -221,12 +252,32 @@ public interface ObjectWhere<
     /**
      * not in (select ... )
      *
+     * @param condition true时条件成立
+     * @param query     嵌套查询
+     * @return 查询器或更新器
+     */
+    WHERE notIn(boolean condition, Function<NQ, NQ> query);
+
+    /**
+     * not in (select ... )
+     *
      * @param queryClass 嵌套查询类
      * @param query      嵌套查询
      * @param <NQ>       嵌套查询类
      * @return 查询器或更新器
      */
     <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, Function<NQ, NQ> query);
+
+    /**
+     * not in (select ... )
+     *
+     * @param condition  true时条件成立
+     * @param queryClass 嵌套查询类
+     * @param query      嵌套查询
+     * @param <NQ>       嵌套查询类
+     * @return 查询器或更新器
+     */
+    <NQ extends IQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, Function<NQ, NQ> query);
 
     /**
      * @param value1 条件值

@@ -77,6 +77,11 @@ public class WhereApply<
         }
     }
 
+    @Override
+    public <O> WHERE in(boolean condition, String select, O... args) {
+        return condition ? this.in(select, args) : this.segment;
+    }
+
     /**
      * in (select ... )
      *
@@ -86,6 +91,11 @@ public class WhereApply<
     @Override
     public WHERE in(Function<NQ, NQ> query) {
         return (WHERE) this.in(this.segment.queryClass(), query);
+    }
+
+    @Override
+    public WHERE in(boolean condition, Function<NQ, NQ> query) {
+        return condition ? this.in(query) : this.segment;
     }
 
     /**
@@ -103,6 +113,11 @@ public class WhereApply<
         return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), IN);
     }
 
+    @Override
+    public <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, Function<NQ, NQ> query) {
+        return condition ? this.in(klass, query) : this.segment;
+    }
+
     /**
      * not in (select ... )
      *
@@ -112,6 +127,11 @@ public class WhereApply<
     @Override
     public WHERE notIn(Function<NQ, NQ> query) {
         return (WHERE) this.notIn(this.segment.queryClass(), query);
+    }
+
+    @Override
+    public WHERE notIn(boolean condition, Function<NQ, NQ> query) {
+        return condition ? this.notIn(query) : this.segment;
     }
 
     /**
@@ -127,6 +147,11 @@ public class WhereApply<
         NQ nested = NestedQueryFactory.nested(queryClass, this.segment.getParameters());
         query.apply(nested);
         return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), NOT_IN);
+    }
+
+    @Override
+    public <NQ extends IQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, Function<NQ, NQ> query) {
+        return condition ? this.notIn(queryClass, query) : this.segment;
     }
 
     /**

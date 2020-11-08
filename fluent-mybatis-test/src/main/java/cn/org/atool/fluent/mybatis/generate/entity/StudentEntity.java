@@ -171,8 +171,8 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
    * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
    */
   @RefMethod("studentId = id && isDeleted = isDeleted && env = env")
-  public List<StudentScoreEntity> listStudentScore() {
-    return super.loadCache("listStudentScore", StudentEntity.class);
+  public List<StudentScoreEntity> findStudentScoreList() {
+    return super.loadCache("findStudentScoreList", StudentEntity.class);
   }
 
   /**
