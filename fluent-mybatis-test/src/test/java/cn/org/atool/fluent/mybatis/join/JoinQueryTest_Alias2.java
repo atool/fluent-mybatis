@@ -23,7 +23,7 @@ public class JoinQueryTest_Alias2 extends BaseTest {
         ATM.DataMap.student.initTable(3)
             .userName.formatAutoIncrease("user_%d")
             .age.values(34)
-            .addressId.values(1, 3)
+            .homeAddressId.values(1, 3)
             .cleanAndInsert();
         ATM.DataMap.homeAddress.initTable(2)
             .id.values(3, 4)
@@ -38,13 +38,13 @@ public class JoinQueryTest_Alias2 extends BaseTest {
             .join(new HomeAddressQuery("t2", parameter)
                 .where.address().like("address")
                 .end())
-            .on(l -> l.where.addressId(), r -> r.where.id())
+            .on(l -> l.where.homeAddressId(), r -> r.where.id())
             .endJoin()
             .build();
         List<StudentEntity> entities = this.mapper.listEntity(query);
         want.list(entities).eqDataMap(ATM.DataMap.student.entity(2)
             .id.values(2, 3)
-            .addressId.values(3)
+            .homeAddressId.values(3)
             .age.values(34)
             .userName.values("user_2", "user_3")
         );

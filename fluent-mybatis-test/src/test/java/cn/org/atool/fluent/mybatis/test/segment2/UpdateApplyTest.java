@@ -18,7 +18,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("UPDATE t_student SET gmt_modified = now(), age = ? WHERE id = ?");
+            .eq("UPDATE student SET gmt_modified = now(), age = ? WHERE id = ?");
     }
 
     @Test

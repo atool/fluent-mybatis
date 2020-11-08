@@ -24,7 +24,6 @@ public class SelectorTest extends BaseTest {
             .apply("id", "address_id", "1")
             .id()
             .max.age("max")
-            .min.version()
             .sum.age()
             .end()
             .where.id().eq(24L)
@@ -33,7 +32,7 @@ public class SelectorTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, address_id, 1, MAX(age) AS max, MIN(version), SUM(age) FROM t_student WHERE id = ? GROUP BY id");
+            .eq("SELECT id, address_id, 1, MAX(age) AS max, SUM(age) FROM t_student WHERE id = ? GROUP BY id");
     }
 
     @Test

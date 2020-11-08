@@ -3,7 +3,7 @@
 <mapper namespace="cn.org.atool.fluent.mybatis.customize.mapper.MyXmlMapper">
 
     <delete id="deleteByUserId" parameterType="java.lang.Long">
-        DELETE FROM t_student
+        DELETE FROM student
         <where>
             id=#{et.id}
         </where>

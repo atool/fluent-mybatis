@@ -26,11 +26,11 @@ public class NestedQueryTest extends BaseTest {
             .selectId()
             .where.exists(HomeAddressQuery.class, q -> q
                 .where.address().like("u")
-                .and.id().apply("=t_student.address_id").end())
+                .and.id().apply("=student.address_id").end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_student WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =t_student.address_id)");
+            .eq("SELECT id FROM student WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =student.address_id)");
 
     }
 
@@ -43,7 +43,7 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_student WHERE EXISTS (SELECT id FROM t_student WHERE id = ?)");
+            .eq("SELECT id FROM student WHERE EXISTS (SELECT id FROM student WHERE id = ?)");
     }
 
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
@@ -57,7 +57,7 @@ public class NestedQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .start("SELECT id, gmt_created, gmt_modified, is_deleted,")
-            .end("FROM t_student " +
+            .end("FROM student " +
                 "WHERE id IN (SELECT student_id FROM home_address WHERE address LIKE ?)");
     }
 }

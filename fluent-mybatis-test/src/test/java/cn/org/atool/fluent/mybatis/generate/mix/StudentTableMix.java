@@ -7,56 +7,56 @@ import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;
 
 /**
- * 数据库[t_student]表数据准备和校验通用方法
+ * 数据库[student]表数据准备和校验通用方法
  *
  * @author Powered By Test4J
  */
 public class StudentTableMix implements IMix {
-  @Step("清空表[t_student]数据")
+  @Step("清空表[student]数据")
   public StudentTableMix cleanStudentTable() {
-    db.table("t_student").clean();
+    db.table("student").clean();
     return this;
   }
 
-  @Step("准备表[t_student]数据{1}")
+  @Step("准备表[student]数据{1}")
   public StudentTableMix readyStudentTable(StudentDataMap data) {
-    db.table("t_student").insert(data);
+    db.table("student").insert(data);
     return this;
   }
 
-  @Step("验证表[t_student]有全表数据{1}")
+  @Step("验证表[student]有全表数据{1}")
   public StudentTableMix checkStudentTable(StudentDataMap data) {
-    db.table("t_student").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+    db.table("student").query().eqDataMap(data, EqMode.IGNORE_ORDER);
     return this;
   }
 
-  @Step("验证表[t_student]有符合条件{1}的数据{2}")
+  @Step("验证表[student]有符合条件{1}的数据{2}")
   public StudentTableMix checkStudentTable(String where, StudentDataMap data) {
-    db.table("t_student").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+    db.table("student").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
     return this;
   }
 
-  @Step("验证表[t_student]有符合条件{1}的数据{2}")
+  @Step("验证表[student]有符合条件{1}的数据{2}")
   public StudentTableMix checkStudentTable(StudentDataMap where, StudentDataMap data) {
-    db.table("t_student").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+    db.table("student").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
     return this;
   }
 
-  @Step("验证表[t_student]有{1}条符合条件{2}的数据")
+  @Step("验证表[student]有{1}条符合条件{2}的数据")
   public StudentTableMix countStudentTable(int count, StudentDataMap where) {
-    db.table("t_student").queryWhere(where).sizeEq(count);
+    db.table("student").queryWhere(where).sizeEq(count);
     return this;
   }
 
-  @Step("验证表[t_student]有{1}条符合条件{2}的数据")
+  @Step("验证表[student]有{1}条符合条件{2}的数据")
   public StudentTableMix countStudentTable(int count, String where) {
-    db.table("t_student").queryWhere(where).sizeEq(count);
+    db.table("student").queryWhere(where).sizeEq(count);
     return this;
   }
 
-  @Step("验证表[t_student]有{1}条数据")
+  @Step("验证表[student]有{1}条数据")
   public StudentTableMix countStudentTable(int count) {
-    db.table("t_student").query().sizeEq(count);
+    db.table("student").query().sizeEq(count);
     return this;
   }
 }

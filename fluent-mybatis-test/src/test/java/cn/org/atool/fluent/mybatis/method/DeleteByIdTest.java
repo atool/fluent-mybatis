@@ -24,7 +24,7 @@ public class DeleteByIdTest extends BaseTest {
             .cleanAndInsert();
         mapper.deleteById(24);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM t_student WHERE id = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE id = ?", StringMode.SameAsSpace);
         db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")

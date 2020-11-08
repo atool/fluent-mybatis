@@ -17,7 +17,7 @@ import org.test4j.tools.datagen.KeyValue;
  *
  * @author Powered By Test4J
  */
-@ScriptTable("t_student")
+@ScriptTable("student")
 public class StudentDataMap extends DataMap<StudentDataMap> {
   private boolean isTable;
 
@@ -50,28 +50,16 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
   public final transient KeyValue<StudentDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
-      value = "account",
-      type = "varchar(45)"
+      value = "address",
+      type = "varchar(200)"
   )
-  public final transient KeyValue<StudentDataMap> account = new KeyValue(this, "account", "account", supplier);
-
-  @ColumnDef(
-      value = "address_id",
-      type = "bigint(21)"
-  )
-  public final transient KeyValue<StudentDataMap> addressId = new KeyValue(this, "address_id", "addressId", supplier);
+  public final transient KeyValue<StudentDataMap> address = new KeyValue(this, "address", "address", supplier);
 
   @ColumnDef(
       value = "age",
       type = "int(11)"
   )
   public final transient KeyValue<StudentDataMap> age = new KeyValue(this, "age", "age", supplier);
-
-  @ColumnDef(
-      value = "avatar",
-      type = "varchar(255)"
-  )
-  public final transient KeyValue<StudentDataMap> avatar = new KeyValue(this, "avatar", "avatar", supplier);
 
   @ColumnDef(
       value = "birthday",
@@ -86,16 +74,16 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
   public final transient KeyValue<StudentDataMap> bonusPoints = new KeyValue(this, "bonus_points", "bonusPoints", supplier);
 
   @ColumnDef(
-      value = "e_mail",
-      type = "varchar(45)"
-  )
-  public final transient KeyValue<StudentDataMap> eMail = new KeyValue(this, "e_mail", "eMail", supplier);
-
-  @ColumnDef(
       value = "env",
       type = "varchar(10)"
   )
   public final transient KeyValue<StudentDataMap> env = new KeyValue(this, "env", "env", supplier);
+
+  @ColumnDef(
+      value = "gender_man",
+      type = "tinyint(2)"
+  )
+  public final transient KeyValue<StudentDataMap> genderMan = new KeyValue(this, "gender_man", "genderMan", supplier);
 
   @ColumnDef(
       value = "grade",
@@ -104,10 +92,16 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
   public final transient KeyValue<StudentDataMap> grade = new KeyValue(this, "grade", "grade", supplier);
 
   @ColumnDef(
-      value = "password",
-      type = "varchar(45)"
+      value = "home_address_id",
+      type = "bigint(21)"
   )
-  public final transient KeyValue<StudentDataMap> password = new KeyValue(this, "password", "password", supplier);
+  public final transient KeyValue<StudentDataMap> homeAddressId = new KeyValue(this, "home_address_id", "homeAddressId", supplier);
+
+  @ColumnDef(
+      value = "home_county_id",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<StudentDataMap> homeCountyId = new KeyValue(this, "home_county_id", "homeCountyId", supplier);
 
   @ColumnDef(
       value = "phone",
@@ -135,7 +129,7 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
 
   @ColumnDef(
       value = "version",
-      type = "varchar(45)"
+      type = "varchar(200)"
   )
   public final transient KeyValue<StudentDataMap> version = new KeyValue(this, "version", "version", supplier);
 
@@ -183,47 +177,47 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
   }
 
   /**
-   * DataMap数据和表[t_student]数据比较
+   * DataMap数据和表[student]数据比较
    */
   public StudentDataMap eqTable() {
-    IDatabase.db.table("t_student").query().eqDataMap(this);
+    IDatabase.db.table("student").query().eqDataMap(this);
     return this;
   }
 
   /**
-   * DataMap数据和表[t_student]数据比较
+   * DataMap数据和表[student]数据比较
    */
   public StudentDataMap eqQuery(String query) {
-    IDatabase.db.table("t_student").queryWhere(query).eqDataMap(this);
+    IDatabase.db.table("student").queryWhere(query).eqDataMap(this);
     return this;
   }
 
   /**
-   * DataMap数据和表[t_student]数据比较
+   * DataMap数据和表[student]数据比较
    */
   public StudentDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("t_student").queryWhere(query).eqDataMap(this);
+    IDatabase.db.table("student").queryWhere(query).eqDataMap(this);
     return this;
   }
 
   /**
-   * 清空[t_student]表数据
+   * 清空[student]表数据
    */
   public StudentDataMap clean() {
-    IDatabase.db.cleanTable("t_student");
+    IDatabase.db.cleanTable("student");
     return this;
   }
 
   /**
-   * 插入[t_student]表数据
+   * 插入[student]表数据
    */
   public StudentDataMap insert() {
-    IDatabase.db.table("t_student").insert(this);
+    IDatabase.db.table("student").insert(this);
     return this;
   }
 
   /**
-   * 先清空, 再插入[t_student]表数据
+   * 先清空, 再插入[student]表数据
    */
   public StudentDataMap cleanAndInsert() {
     return this.clean().insert();

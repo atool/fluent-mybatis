@@ -16,7 +16,7 @@ public class OrderTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc()
-            .addressId().desc()
+            .homeAddressId().desc()
             .desc("user_name", "id+0").end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().where().eq("user_name LIKE ?");
@@ -43,7 +43,7 @@ public class OrderTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.userName().like("user").end()
             .orderBy
-            .apply(true, false, StudentMapping.id, StudentMapping.addressId)
+            .apply(true, false, StudentMapping.id, StudentMapping.homeAddressId)
             .apply(false, true, StudentMapping.userName)
             .asc("id+0")
             .end();

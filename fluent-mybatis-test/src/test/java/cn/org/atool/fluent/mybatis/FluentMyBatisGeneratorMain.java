@@ -20,7 +20,11 @@ public class FluentMyBatisGeneratorMain {
      * @param args
      */
     public static void main(String[] args) {
-        FileGenerator.build(Empty1.class, Empty2.class);
+        FileGenerator.build(
+            Empty1.class,
+            Empty2.class,
+            Empty3.class
+        );
     }
 
     @Tables(url = URL, username = "root", password = "password",
@@ -37,17 +41,36 @@ public class FluentMyBatisGeneratorMain {
         srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
-            @Table(value = {"home_address", "t_student", "student_score"},
+            @Table(value = {"home_address", "student", "student_score"},
                 tablePrefix = "t_", mapperPrefix = "my",
                 defaults = MyCustomerInterface.class,
                 entity = IBaseEntity.class,
                 columns = @Column(value = "version", isLarge = true)
             )},
         relations = {
-            @Relation(source = "t_student", target = "student_score", type = RelationType.TwoWay_1_N,
+            @Relation(source = "student", target = "student_score", type = RelationType.TwoWay_1_N,
                 where = "id=student_id && env=env && is_deleted=is_deleted"),
-            @Relation(method = "findEnglishScore", source = "t_student", target = "student_score", type = RelationType.OneWay_0_1)
+            @Relation(method = "findEnglishScore", source = "student", target = "student_score", type = RelationType.OneWay_0_1)
         })
     static class Empty2 {
+    }
+
+    @Tables(
+        /** 数据库连接信息 **/
+        url = URL, username = "root", password = "password",
+        /** Entity类parent package路径 **/
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        /** 如果表定义记录创建，记录修改，逻辑删除字段 **/
+        gmtCreated = "gmt_create", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
+        /** 需要生成文件的表 ( 表名称:对应的Entity名称 ) **/
+        tables = @Table(value = {"t_member", "t_member_love", "t_member_favorite"}, tablePrefix = "t_"),
+        relations = {
+            @Relation(method = "findMyFavorite", source = "t_member", target = "t_member_favorite", type = RelationType.OneWay_0_N
+                , where = "id=member_id && is_deleted=is_deleted"),
+            @Relation(method = "findExFriends", source = "t_member", target = "t_member", type = RelationType.OneWay_0_N),
+            @Relation(method = "findCurrFriend", source = "t_member", target = "t_member", type = RelationType.OneWay_0_1)
+        }
+    )
+    static class Empty3 {
     }
 }

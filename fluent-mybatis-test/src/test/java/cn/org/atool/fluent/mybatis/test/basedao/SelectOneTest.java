@@ -26,7 +26,7 @@ public class SelectOneTest extends BaseTest {
         StudentEntity student = dao.selectOne("username");
         want.object(student).notNull();
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student " +
+            .end("FROM student " +
                 "WHERE is_deleted = ? " +
                 "AND env = ? " +
                 "AND user_name LIKE ? " +
@@ -43,7 +43,7 @@ public class SelectOneTest extends BaseTest {
         String username = dao.selectOne(5);
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM t_student " +
+            .end("FROM student " +
                 "WHERE is_deleted = ? " +
                 "AND env = ? " +
                 "AND id = ? " +

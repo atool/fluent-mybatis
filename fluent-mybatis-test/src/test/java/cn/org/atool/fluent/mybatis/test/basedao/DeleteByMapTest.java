@@ -29,7 +29,7 @@ public class DeleteByMapTest extends BaseTest {
                 this.put(StudentMapping.userName.column, "test12");
             }
         });
-        db.sqlList().wantFirstSql().eq("DELETE FROM t_student " +
+        db.sqlList().wantFirstSql().eq("DELETE FROM student " +
             "WHERE is_deleted = ? AND env = ? AND user_name = ?", StringMode.SameAsSpace);
         db.table(ATM.Table.student).count().eq(8);
     }

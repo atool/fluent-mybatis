@@ -29,7 +29,7 @@ public class SelectListTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.id().eq(24L).end();
         List<StudentEntity> users = mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE id = ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE id = ?");
         want.list(users).eqDataMap(ATM.DataMap.student.entity(1)
             .userName.values("u2"));
     }
@@ -44,7 +44,7 @@ public class SelectListTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.userName().eq("u2").end();
         List<StudentEntity> users = mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ?");
         want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
             .userName.values("u2"));
     }
@@ -62,7 +62,7 @@ public class SelectListTest extends BaseTest {
         List<StudentEntity> users = mapper.listEntity(query);
         want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
             .userName.values("u2"));
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ? LIMIT ?, ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ? LIMIT ?, ?");
     }
 
     @Test
@@ -76,7 +76,7 @@ public class SelectListTest extends BaseTest {
             .where.userName().eq("u2").end()
             .limit(2, 3);
         List<StudentEntity> users = mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ? LIMIT ?, ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ? LIMIT ?, ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"u2", 2, 3});
     }
 
@@ -91,7 +91,7 @@ public class SelectListTest extends BaseTest {
             .where.gmtCreated().gt(new Date(1604140000000L))
             .and.gmtCreated().le(new Date(1604170000000L)).end();
         List<StudentEntity> users = mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE gmt_created > ? AND gmt_created <= ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE gmt_created > ? AND gmt_created <= ?");
         want.list(users).eqDataMap(ATM.DataMap.student.entity(3));
     }
 }

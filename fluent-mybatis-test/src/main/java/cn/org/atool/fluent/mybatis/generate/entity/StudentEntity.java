@@ -7,13 +7,17 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import java.io.Serializable;
+import java.lang.Boolean;
+import java.lang.Integer;
+import java.lang.Long;
+import java.lang.Override;
+import java.lang.String;
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * StudentEntity: 数据映射实体定义
@@ -28,7 +32,7 @@ import java.util.List;
     callSuper = false
 )
 @FluentMybatis(
-    table = "t_student",
+    table = "student",
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
@@ -70,28 +74,16 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
   private Boolean isDeleted;
 
   /**
-   * 账号
+   * 家庭详细住址
    */
-  @TableField("account")
-  private String account;
-
-  /**
-   * 地址id
-   */
-  @TableField("address_id")
-  private Long addressId;
+  @TableField("address")
+  private String address;
 
   /**
    * 年龄
    */
   @TableField("age")
   private Integer age;
-
-  /**
-   * 头像
-   */
-  @TableField("avatar")
-  private String avatar;
 
   /**
    * 生日
@@ -106,16 +98,16 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
   private Long bonusPoints;
 
   /**
-   * 电子邮件
-   */
-  @TableField("e_mail")
-  private String eMail;
-
-  /**
    * 数据隔离环境
    */
   @TableField("env")
   private String env;
+
+  /**
+   * 性别, 0:女; 1:男
+   */
+  @TableField("gender_man")
+  private Integer genderMan;
 
   /**
    * 年级
@@ -124,10 +116,16 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
   private Integer grade;
 
   /**
-   * 密码
+   * home_address外键
    */
-  @TableField("password")
-  private String password;
+  @TableField("home_address_id")
+  private Long homeAddressId;
+
+  /**
+   * 家庭所在区县
+   */
+  @TableField("home_county_id")
+  private Long homeCountyId;
 
   /**
    * 电话

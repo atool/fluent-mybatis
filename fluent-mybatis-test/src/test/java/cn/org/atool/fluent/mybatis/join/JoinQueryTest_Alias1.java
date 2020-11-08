@@ -124,7 +124,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 .where.age().eq(3).end())
             .leftJoin(new HomeAddressQuery("t2", parameters)
                 .where.address().like("xxx").end())
-            .on(l -> l.where.addressId(), r -> r.where.id()).endJoin()
+            .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .leftJoin(new StudentScoreQuery("t3", parameters)
                 .where.subject().in(new String[]{"a", "b", "c"}).end())
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin()

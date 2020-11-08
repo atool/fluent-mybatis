@@ -120,7 +120,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
                 .where.age().eq(3).end())
             .leftJoin(HomeAddressQuery.class, q -> q
                 .where.address().like("xxx").end())
-            .on(l -> l.where.addressId(), r -> r.where.id()).endJoin()
+            .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .leftJoin(StudentScoreQuery.class, q -> q
                 .where.subject().in(new String[]{"a", "b", "c"}).end())
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin()

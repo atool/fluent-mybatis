@@ -1,11 +1,17 @@
 package cn.org.atool.fluent.mybatis.generate;
 
 import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberLoveDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
 import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
@@ -31,11 +37,17 @@ public interface ATM {
 
     String noPrimary = "no_primary";
 
-    String student = "t_student";
-
     String studentScore = "student_score";
 
     String homeAddress = "home_address";
+
+    String student = "student";
+
+    String memberFavorite = "t_member_favorite";
+
+    String memberLove = "t_member_love";
+
+    String member = "t_member";
   }
 
   /**
@@ -46,11 +58,17 @@ public interface ATM {
 
     NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
 
-    StudentDataMap.Factory student = new StudentDataMap.Factory();
-
     StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
 
     HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
+
+    StudentDataMap.Factory student = new StudentDataMap.Factory();
+
+    MemberFavoriteDataMap.Factory memberFavorite = new MemberFavoriteDataMap.Factory();
+
+    MemberLoveDataMap.Factory memberLove = new MemberLoveDataMap.Factory();
+
+    MemberDataMap.Factory member = new MemberDataMap.Factory();
   }
 
   /**
@@ -65,20 +83,32 @@ public interface ATM {
     public NoPrimaryTableMix noPrimaryTableMix;
 
     @Mix
-    public StudentTableMix studentTableMix;
-
-    @Mix
     public StudentScoreTableMix studentScoreTableMix;
 
     @Mix
     public HomeAddressTableMix homeAddressTableMix;
 
+    @Mix
+    public StudentTableMix studentTableMix;
+
+    @Mix
+    public MemberFavoriteTableMix memberFavoriteTableMix;
+
+    @Mix
+    public MemberLoveTableMix memberLoveTableMix;
+
+    @Mix
+    public MemberTableMix memberTableMix;
+
     public void cleanAllTable() {
       this.noAutoIdTableMix.cleanNoAutoIdTable();
       this.noPrimaryTableMix.cleanNoPrimaryTable();
-      this.studentTableMix.cleanStudentTable();
       this.studentScoreTableMix.cleanStudentScoreTable();
       this.homeAddressTableMix.cleanHomeAddressTable();
+      this.studentTableMix.cleanStudentTable();
+      this.memberFavoriteTableMix.cleanMemberFavoriteTable();
+      this.memberLoveTableMix.cleanMemberLoveTable();
+      this.memberTableMix.cleanMemberTable();
     }
   }
 
@@ -91,9 +121,12 @@ public interface ATM {
       return list(
       	NoAutoIdDataMap.class,
       	NoPrimaryDataMap.class,
-      	StudentDataMap.class,
       	StudentScoreDataMap.class,
-      	HomeAddressDataMap.class
+      	HomeAddressDataMap.class,
+      	StudentDataMap.class,
+      	MemberFavoriteDataMap.class,
+      	MemberLoveDataMap.class,
+      	MemberDataMap.class
       );
     }
 

@@ -30,7 +30,7 @@ public class SelectByMapTest extends BaseTest {
                 this.put(StudentMapping.userName.column, "u2");
             }
         });
-        db.sqlList().wantFirstSql().start("SELECT").end("FROM t_student WHERE user_name = ?");
+        db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ?");
         want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
             .userName.values("u2"));
     }

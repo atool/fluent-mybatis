@@ -35,9 +35,9 @@ public class InNestQueryTest extends BaseTest {
 
         List list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, SUM(age) FROM t_student " +
+            .eq("SELECT id, SUM(age) FROM student " +
                 "WHERE " +
-                "id IN (SELECT id FROM t_student WHERE id = ?) " +
+                "id IN (SELECT id FROM student WHERE id = ?) " +
                 "AND user_name LIKE ? " +
                 "AND age > ? " +
                 "GROUP BY id " +
@@ -53,18 +53,18 @@ public class InNestQueryTest extends BaseTest {
 
         List list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("WHERE id IN (SELECT id FROM t_student WHERE id = ?) AND user_name LIKE ?");
+            .end("WHERE id IN (SELECT id FROM student WHERE id = ?) AND user_name LIKE ?");
     }
 
     @Test
     void test_and_in_nested2() {
         StudentQuery query = new StudentQuery()
             .selectId()
-            .where.addressId().in(HomeAddressQuery.class, q -> q.selectId()
+            .where.homeAddressId().in(HomeAddressQuery.class, q -> q.selectId()
                 .where.id().in(new int[]{1, 2}).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM t_student WHERE address_id IN (SELECT id FROM home_address WHERE id IN (?, ?))");
+            .eq("SELECT id FROM student WHERE address_id IN (SELECT id FROM home_address WHERE id IN (?, ?))");
     }
 }

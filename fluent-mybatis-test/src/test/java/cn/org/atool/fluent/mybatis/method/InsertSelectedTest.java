@@ -28,7 +28,7 @@ public class InsertSelectedTest extends BaseTest {
             .age.values(23)
             .userName.values("tom mike")
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO t_student(gmt_created, gmt_modified, is_deleted, age, user_name) VALUES (now(), now(), 0, ?, ?)");
+        db.sqlList().wantFirstSql().eq("INSERT INTO student(gmt_created, gmt_modified, is_deleted, age, user_name) VALUES (now(), now(), 0, ?, ?)");
         want.number(student.getId()).isGt(0L);
     }
 
@@ -38,14 +38,14 @@ public class InsertSelectedTest extends BaseTest {
         StudentEntity student = new StudentEntity()
             .setUserName("tom mike")
             .setId(100L)
-            .setAddressId(200L);
+            .setHomeAddressId(200L);
         userMapper.insert(student);
         db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(100)
             .userName.values("tom mike")
-            .addressId.values(200)
+            .homeAddressId.values(200)
         );
-        db.sqlList().wantFirstSql().eq("INSERT INTO t_student(id, gmt_created, gmt_modified, is_deleted, address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
+        db.sqlList().wantFirstSql().eq("INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, address_id, user_name) VALUES (?, now(), now(), 0, ?, ?)");
         want.number(student.getId()).eq(100L);
     }
 }
