@@ -32,94 +32,61 @@ import java.util.Date;
     defaults = MyCustomerInterface.class
 )
 public class StudentScoreEntity extends RichEntity implements IBaseEntity<StudentScoreEntity> {
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键ID
-     */
-    @TableId("id")
-    private Long id;
+  @TableId("id")
+  private Long id;
 
-    /**
-     * 记录创建时间
-     */
-    @TableField(
-        value = "gmt_created",
-        insert = "now()"
-    )
-    private Date gmtCreated;
+  @TableField(
+      value = "gmt_created",
+      insert = "now()"
+  )
+  private Date gmtCreated;
 
-    /**
-     * 记录最后修改时间
-     */
-    @TableField(
-        value = "gmt_modified",
-        insert = "now()",
-        update = "now()"
-    )
-    private Date gmtModified;
+  @TableField(
+      value = "gmt_modified",
+      insert = "now()",
+      update = "now()"
+  )
+  private Date gmtModified;
 
-    /**
-     * 逻辑删除标识
-     */
-    @TableField(
-        value = "is_deleted",
-        insert = "0"
-    )
-    private Boolean isDeleted;
+  @TableField(
+      value = "is_deleted",
+      insert = "0"
+  )
+  private Boolean isDeleted;
 
-    /**
-     * 数据隔离环境
-     */
-    @TableField("env")
-    private String env;
+  @TableField("env")
+  private String env;
 
-    /**
-     * 性别, 0:女; 1:男
-     */
-    @TableField("gender_man")
-    private Integer genderMan;
+  @TableField("gender_man")
+  private Integer genderMan;
 
-    /**
-     * 学期
-     */
-    @TableField("school_term")
-    private Integer schoolTerm;
+  @TableField("school_term")
+  private Integer schoolTerm;
 
-    /**
-     * 成绩
-     */
-    @TableField("score")
-    private Integer score;
+  @TableField("score")
+  private Integer score;
 
-    /**
-     * 学号
-     */
-    @TableField("student_id")
-    private Long studentId;
+  @TableField("student_id")
+  private Long studentId;
 
-    /**
-     * 学科
-     */
-    @TableField("subject")
-    private String subject;
+  @TableField("subject")
+  private String subject;
 
-    /**
-     * 租户标识
-     */
-    @TableField("tenant")
-    private Long tenant;
+  @TableField("tenant")
+  private Long tenant;
 
-    @Override
-    public Serializable findPk() {
-        return this.id;
-    }
+  @Override
+  public Serializable findPk() {
+    return this.id;
+  }
 
-    /**
-     * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
-     */
-    @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
-    public StudentEntity findStudent() {
-        return super.invoke(true, "findStudent");
-    }
+  /**
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   */
+  @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
+  public StudentEntity findStudent() {
+    return super.invoke("findStudent", true);
+  }
 }

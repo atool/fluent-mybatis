@@ -12,7 +12,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author darui.wu
  */
-public interface IBaseRich extends IRich, IEntity {
+public interface IRichEntity extends IRich, IEntity {
     /**
      * 持久化entity到数据库, 调用 EntityMapper.insert(Entity)方法
      *
@@ -20,7 +20,7 @@ public interface IBaseRich extends IRich, IEntity {
      * @return
      */
     default <E extends IEntity> E save() {
-        this.invoke(false, Rich_Entity_Save);
+        this.invoke(Rich_Entity_Save, false);
         return (E) this;
     }
 
@@ -34,7 +34,7 @@ public interface IBaseRich extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        this.invoke(false, Rich_Entity_UpdateById);
+        this.invoke(Rich_Entity_UpdateById, false);
         return (E) this;
     }
 
@@ -48,7 +48,7 @@ public interface IBaseRich extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        IEntity entity = this.invoke(false, Rich_Entity_FindById);
+        IEntity entity = this.invoke(Rich_Entity_FindById, false);
         return (E) entity;
     }
 
@@ -59,7 +59,7 @@ public interface IBaseRich extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        this.invoke(false, Rich_Entity_DeleteById);
+        this.invoke(Rich_Entity_DeleteById, false);
     }
 
     /**
@@ -69,7 +69,7 @@ public interface IBaseRich extends IRich, IEntity {
      * @return
      */
     default <E extends IEntity> List<E> listByNotNull() {
-        List list = this.invoke(false, RichEntity_ListByNotNull);
+        List list = this.invoke(RichEntity_ListByNotNull, false);
         return list;
     }
 }

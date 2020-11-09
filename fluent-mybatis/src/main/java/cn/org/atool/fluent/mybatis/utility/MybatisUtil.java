@@ -379,6 +379,28 @@ public class MybatisUtil {
     }
 
     /**
+     * relation属性关联查询方法名
+     *
+     * @param method      属性(字段)名称
+     * @param entityClass Entity类名
+     * @return
+     */
+    public static String methodNameOfEntity(String method, Class entityClass) {
+        return method + "Of" + entityClass.getSimpleName();
+    }
+
+    /**
+     * relation属性关联查询方法名
+     *
+     * @param method      属性(字段)名称
+     * @param entityClass Entity类名
+     * @return
+     */
+    public static String methodNameOfEntity(String method, String entityClass) {
+        return method + "Of" + entityClass;
+    }
+
+    /**
      * fluent mybatis version
      *
      * @return

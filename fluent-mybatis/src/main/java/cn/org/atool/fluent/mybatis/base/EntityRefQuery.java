@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity;
 
 /**
  * EntityRefQuery: Entity @RefMethod关联关系, 关联加载基类
@@ -38,7 +40,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
         return query;
     }
 
-    private Map<String, Method> methodsOfService = new HashMap<>(32);
+    private Map<String, Method> methodsOfService = new ConcurrentHashMap<>(32);
 
     /**
      * 实现entityClass#methodName方法, 显式指定method的具体实现bean类型: serviceType
@@ -52,7 +54,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
      */
     public <T> T invoke(Class entityClass, String methodName, Class serviceType, Object[] args) {
         Object bean = this.findBean(serviceType);
-        String methodOfEntity = RichEntity.refMethod(methodName, this.findFluentMybatisEntity(entityClass).getSimpleName());
+        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentMybatisEntity(entityClass));
         if (!methodsOfService.containsKey(methodOfEntity)) {
             this.loadRequiredMethod(methodOfEntity, serviceType, methodName, args);
         }
@@ -124,7 +126,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
      * @return
      */
     private <T> T loadRefMethod(String methodName, Class entityClass, Object[] args) {
-        String methodOfEntity = RichEntity.refMethod(methodName, this.findFluentMybatisEntity(entityClass).getSimpleName());
+        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentMybatisEntity(entityClass));
         if (!methods.containsKey(methodOfEntity)) {
             throw new RuntimeException("the method[" + methodOfEntity + "] not defined or wrong define.");
         }
@@ -196,7 +198,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
         return entity;
     }
 
-    private Map<String, Method> methods = new HashMap<>(32);
+    private Map<String, Method> methods = new ConcurrentHashMap<>(32);
 
     protected final Map<Class<? extends IEntity>, IEntityMapper> entityMappers = new HashMap<>(16);
 

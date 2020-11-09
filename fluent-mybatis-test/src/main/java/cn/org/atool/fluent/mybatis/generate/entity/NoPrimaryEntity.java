@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.lang.Integer;
 import java.lang.String;
 import lombok.Data;
@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
     table = "no_primary",
     mapperBeanPrefix = "new"
 )
-public class NoPrimaryEntity implements IEntity {
+public class NoPrimaryEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   @TableField("column_1")

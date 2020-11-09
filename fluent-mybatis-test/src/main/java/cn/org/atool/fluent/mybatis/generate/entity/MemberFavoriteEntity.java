@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Long;
@@ -29,18 +29,12 @@ import lombok.experimental.Accessors;
 @FluentMybatis(
     table = "t_member_favorite"
 )
-public class MemberFavoriteEntity implements IEntity {
+public class MemberFavoriteEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
   @TableId("id")
   private Long id;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
@@ -48,30 +42,18 @@ public class MemberFavoriteEntity implements IEntity {
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
       insert = "0"
   )
   private Boolean isDeleted;
 
-  /**
-   * 爱好: 电影, 爬山, 徒步...
-   */
   @TableField("favorite")
   private String favorite;
 
-  /**
-   * 创建时间
-   */
   @TableField("gmt_created")
   private Date gmtCreated;
 
-  /**
-   * member表外键
-   */
   @TableField("member_id")
   private Long memberId;
 

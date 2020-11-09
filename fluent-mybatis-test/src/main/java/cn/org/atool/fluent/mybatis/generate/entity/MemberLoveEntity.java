@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Long;
@@ -29,18 +29,12 @@ import lombok.experimental.Accessors;
 @FluentMybatis(
     table = "t_member_love"
 )
-public class MemberLoveEntity implements IEntity {
+public class MemberLoveEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
   @TableId("id")
   private Long id;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
@@ -48,36 +42,21 @@ public class MemberLoveEntity implements IEntity {
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
       insert = "0"
   )
   private Boolean isDeleted;
 
-  /**
-   * member表外键
-   */
   @TableField("boy_id")
   private Long boyId;
 
-  /**
-   * member表外键
-   */
   @TableField("girl_id")
   private Long girlId;
 
-  /**
-   * 创建时间
-   */
   @TableField("gmt_created")
   private Date gmtCreated;
 
-  /**
-   * 状态
-   */
   @TableField("status")
   private String status;
 

@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.io.Serializable;
 import java.lang.Override;
 import java.lang.String;
@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
     table = "no_auto_id",
     mapperBeanPrefix = "new"
 )
-public class NoAutoIdEntity implements IEntity {
+public class NoAutoIdEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   @TableId(

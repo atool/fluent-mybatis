@@ -35,15 +35,9 @@ import lombok.experimental.Accessors;
 public class MemberEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
   @TableId("id")
   private Long id;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
@@ -51,42 +45,24 @@ public class MemberEntity extends RichEntity {
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
       insert = "0"
   )
   private Boolean isDeleted;
 
-  /**
-   * 年龄
-   */
   @TableField("age")
   private Integer age;
 
-  /**
-   * 创建时间
-   */
   @TableField("gmt_created")
   private Date gmtCreated;
 
-  /**
-   * 0:男孩; 1:女孩
-   */
   @TableField("is_girl")
   private Boolean isGirl;
 
-  /**
-   * 学校
-   */
   @TableField("school")
   private String school;
 
-  /**
-   * 名字
-   */
   @TableField("user_name")
   private String userName;
 
@@ -100,7 +76,7 @@ public class MemberEntity extends RichEntity {
    */
   @RefMethod("isDeleted = isDeleted && memberId = id")
   public List<MemberFavoriteEntity> findMyFavorite() {
-    return super.loadCache("findMyFavorite", MemberEntity.class);
+    return super.invoke("findMyFavorite", true);
   }
 
   /**
@@ -108,7 +84,7 @@ public class MemberEntity extends RichEntity {
    */
   @RefMethod
   public List<MemberEntity> findExFriends() {
-    return super.loadCache("findExFriends", MemberEntity.class);
+    return super.invoke("findExFriends", true);
   }
 
   /**
@@ -116,6 +92,6 @@ public class MemberEntity extends RichEntity {
    */
   @RefMethod
   public MemberEntity findCurrFriend() {
-    return super.loadCache("findCurrFriend", MemberEntity.class);
+    return super.invoke("findCurrFriend", true);
   }
 }

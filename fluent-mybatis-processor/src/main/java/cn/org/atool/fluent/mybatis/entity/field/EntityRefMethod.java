@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity;
 import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 
 /**
@@ -59,7 +60,7 @@ public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
      * @return
      */
     public String getRefMethod(FluentEntity fluent) {
-        return RichEntity.refMethod(this.name, fluent.getClassName());
+        return methodNameOfEntity(this.name, fluent.getClassName());
     }
 
     public boolean isAutoMapping() {
