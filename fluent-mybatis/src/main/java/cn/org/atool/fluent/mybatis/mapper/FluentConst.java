@@ -109,4 +109,25 @@ public interface FluentConst {
     String M_count = "count";
 
     String M_countNoLimit = "countNoLimit";
+
+    /**
+     * RichEntity save 方法
+     */
+    String Rich_Entity_Save = "save";
+    /**
+     * RichEntity updateById 方法
+     */
+    String Rich_Entity_UpdateById = "updateById";
+    /**
+     * RichEntity findById 方法
+     */
+    String Rich_Entity_FindById = "findById";
+    /**
+     * RichEntity deleteById 方法
+     */
+    String Rich_Entity_DeleteById = "deleteById";
+    /**
+     * RichEntity listByNotNull 方法
+     */
+    String RichEntity_ListByNotNull = "listByNotNull";
 }

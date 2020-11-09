@@ -101,6 +101,7 @@ public abstract class BaseSqlProvider {
      */
     public String listByMap(Map map) {
         Map<String, Object> where = getParas(map, Param_CM);
+        assertNotEmpty("where", where);
         MapperSql sql = new MapperSql();
         sql.SELECT(this.tableName(), this.allFields());
         sql.WHERE(Param_CM, where);

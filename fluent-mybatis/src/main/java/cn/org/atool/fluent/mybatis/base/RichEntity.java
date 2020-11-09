@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
+import cn.org.atool.fluent.mybatis.base.impl.IBaseRich;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,8 @@ import java.util.Map;
  *
  * @author darui.wu
  */
-public abstract class RichEntity implements IEntity {
+public abstract class RichEntity implements IEntity, IBaseRich {
+
     /**
      * 数据缓存, 避免多次查询
      */
@@ -20,25 +22,25 @@ public abstract class RichEntity implements IEntity {
     /**
      * 加载关联信息
      *
-     * @param cached         true: 进行缓存, false:直接查询
-     * @param methodOfEntity method name of entity
-     * @param args           方法参数
+     * @param cached     true: 进行缓存, false:直接查询
+     * @param methodName method name of entity
+     * @param args       方法参数
      * @param <T>
      */
-    protected <T> T loadCache(boolean cached, String methodOfEntity, Object[] args) {
+    private <T> T invoke(boolean cached, String methodName, Object[] args) {
         if (!cached) {
-            this.cached.remove(methodOfEntity);
-            return EntityRefQuery.query().load(methodOfEntity, this.reArgs(args));
+            this.cached.remove(methodName);
+            return EntityRefQuery.query().invoke(this.getClass(), methodName, this.reArgs(args));
         }
-        if (this.cached.containsKey(methodOfEntity)) {
-            return (T) this.cached.get(methodOfEntity);
+        if (this.cached.containsKey(methodName)) {
+            return (T) this.cached.get(methodName);
         }
         synchronized (this) {
-            if (this.cached.containsKey(methodOfEntity)) {
-                return (T) this.cached.get(methodOfEntity);
+            if (this.cached.containsKey(methodName)) {
+                return (T) this.cached.get(methodName);
             }
-            T result = EntityRefQuery.query().load(methodOfEntity, reArgs(args));
-            this.cached.put(methodOfEntity, result);
+            T result = EntityRefQuery.query().invoke(this.getClass(), methodName, reArgs(args));
+            this.cached.put(methodName, result);
             return result;
         }
     }
@@ -46,13 +48,26 @@ public abstract class RichEntity implements IEntity {
     /**
      * 加载关联信息
      *
-     * @param method      method name
-     * @param entityClass entity class name
+     * @param method method name
+     * @param clazz  entity class name
+     * @param <T>
+     * @return
+     * @deprecated used invoke(cache, method) directly
+     */
+    @Deprecated
+    protected <T> T loadCache(String method, Class clazz) {
+        return (T) this.invoke(true, method, new Object[0]);
+    }
+
+    /**
+     * 加载关联信息
+     *
+     * @param method
      * @param <T>
      * @return
      */
-    protected <T> T loadCache(String method, Class<? extends RichEntity> entityClass) {
-        return this.loadCache(true, refMethod(method, entityClass.getSimpleName()), new Object[0]);
+    public <T> T invoke(boolean cached, String method) {
+        return (T) this.invoke(cached, method, new Object[0]);
     }
 
     /**

@@ -43,17 +43,29 @@ public class RefsFile extends AbstractFile {
         builder.superclass(EntityRefQuery.class);
         builder.addModifiers(Modifier.ABSTRACT);
         for (FluentEntity fluent : FluentEntity.getFluents()) {
-            builder.addField(this.m_factory(fluent));
+            builder.addField(this.f_factory(fluent));
         }
-        builder.addMethod(this.m_instance());
         for (FluentEntity fluent : FluentEntity.getFluents()) {
-            builder.addField(this.m_mapper(fluent));
+            builder.addField(this.f_mapper(fluent));
         }
+        builder.addMethod(this.m_initEntityMapper());
+        builder.addMethod(this.m_instance());
         for (FluentEntity fluent : FluentEntity.getFluents()) {
             for (EntityRefMethod refField : fluent.getRefMethods()) {
                 builder.addMethod(this.m_refMethod(fluent, refField));
             }
         }
+    }
+
+    private MethodSpec m_initEntityMapper() {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("initEntityMapper")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.FINAL, Modifier.PROTECTED);
+
+        for (FluentEntity fluent : FluentEntity.getFluents()) {
+            builder.addStatement("this.entityMappers.put($T.class, this.$LMapper)", fluent.entity(), fluent.lowerNoSuffix());
+        }
+        return builder.build();
     }
 
     private MethodSpec m_refMethod(FluentEntity fluent, EntityRefMethod refField) {
@@ -103,7 +115,7 @@ public class RefsFile extends AbstractFile {
             .build();
     }
 
-    private FieldSpec m_mapper(FluentEntity fluent) {
+    private FieldSpec f_mapper(FluentEntity fluent) {
         return FieldSpec.builder(fluent.mapper(), fluent.lowerNoSuffix() + "Mapper",
             Modifier.PROTECTED)
             .addAnnotation(CN_Getter)
@@ -111,7 +123,7 @@ public class RefsFile extends AbstractFile {
             .build();
     }
 
-    private FieldSpec m_factory(FluentEntity fluent) {
+    private FieldSpec f_factory(FluentEntity fluent) {
         return FieldSpec.builder(fluent.wrapperFactory(), fluent.lowerNoSuffix() + "Default",
             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$T.INSTANCE", fluent.wrapperFactory())
