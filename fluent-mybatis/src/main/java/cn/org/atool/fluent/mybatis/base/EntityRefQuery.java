@@ -100,6 +100,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
      */
     public <T> T invoke(Class entityClass, String methodName, Object[] args) {
         IEntity entity = (IEntity) args[0];
+        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentMybatisEntity(entityClass));
         switch (methodName) {
             case Rich_Entity_Save:
                 return (T) this.saveEntity(entity);
@@ -112,25 +113,23 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
             case RichEntity_ListByNotNull:
                 return this.listByEntity(entity);
             default:
-                return this.loadRefMethod(methodName, entityClass, args);
+                return this.invokeRefMethod(methodOfEntity, args);
         }
     }
 
     /**
-     * 根据methodName和entity获取entity的关联信息
+     * 反射调用 methodOfEntity 方法
      *
-     * @param methodName  方法名称
-     * @param entityClass entity类或其子类
-     * @param args        方法参数列表
+     * @param methodOfEntity 方法名称
+     * @param args           方法参数列表
      * @param <T>
      * @return
      */
-    private <T> T loadRefMethod(String methodName, Class entityClass, Object[] args) {
-        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentMybatisEntity(entityClass));
-        if (!methods.containsKey(methodOfEntity)) {
+    private <T> T invokeRefMethod(String methodOfEntity, Object[] args) {
+        if (!refMethods.containsKey(methodOfEntity)) {
             throw new RuntimeException("the method[" + methodOfEntity + "] not defined or wrong define.");
         }
-        Method method = methods.get(methodOfEntity);
+        Method method = refMethods.get(methodOfEntity);
         try {
             return (T) method.invoke(this, args);
         } catch (Exception e) {
@@ -198,7 +197,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
         return entity;
     }
 
-    private Map<String, Method> methods = new ConcurrentHashMap<>(32);
+    private Map<String, Method> refMethods = new ConcurrentHashMap<>(32);
 
     protected final Map<Class<? extends IEntity>, IEntityMapper> entityMappers = new HashMap<>(16);
 
@@ -211,12 +210,12 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
     public Class<? extends IEntity> findFluentMybatisEntity(Class clazz) {
         Class entity = clazz;
         while (!this.entityMappers.containsKey(entity) && entity != Object.class) {
-            entity = clazz.getSuperclass();
+            entity = entity.getSuperclass();
         }
         if (this.entityMappers.containsKey(entity)) {
             return entity;
         } else {
-            throw new RuntimeException("the class[" + clazz.getSimpleName() + "] is not a @FluentMybatis Entity or it's sub class.");
+            throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
         }
     }
 
@@ -235,7 +234,7 @@ public abstract class EntityRefQuery implements ApplicationContextAware {
             }
             Class parameterType = method.getParameterTypes()[0];
             if (RichEntity.class.isAssignableFrom(parameterType)) {
-                this.methods.put(method.getName(), method);
+                this.refMethods.put(method.getName(), method);
             }
         }
         this.initEntityMapper();

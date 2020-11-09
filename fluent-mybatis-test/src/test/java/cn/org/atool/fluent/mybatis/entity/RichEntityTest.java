@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity;
 
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
@@ -47,9 +48,21 @@ public class RichEntityTest extends BaseTest {
             .id.values(1)
             .userName.values("test1")
             .cleanAndInsert();
-        StudentEntity entity = new StudentEntity().setId(1L).findById();
+        StudentEntity entity = new StudentEntity() {
+            {
+                this.setId(1L);
+            }
+        }.findById();
         db.sqlList().wantFirstSql().end("FROM student WHERE id = ?");
         want.object(entity).eqDataMap(ATM.DataMap.student.entity(1).userName.values("test1"));
+    }
+
+    @Test
+    void testFindById_NotFluentEntity() {
+        want.exception(
+            () -> new RichEntity() {
+            }.listByNotNull(), RuntimeException.class)
+            .contains("is not a @FluentMybatis Entity");
     }
 
     @Test
@@ -58,7 +71,6 @@ public class RichEntityTest extends BaseTest {
                 new StudentEntity().setUserName("test2").updateById(),
             RuntimeException.class).contains("the primary of entity can't be null");
     }
-
 
     @Test
     void testDeleteById() {
