@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.processor.base;
 
 public interface MethodName {
     String M_DEFAULT_QUERY = "defaultQuery";

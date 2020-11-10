@@ -1,13 +1,12 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.field.CommonField;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.*;
+import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static java.util.stream.Collectors.joining;
@@ -32,7 +31,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @author wudarui
  */
-public class SqlProviderGenerator extends AbstractGenerator {
+public class SqlProviderFiler extends AbstractFiler {
 
     public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_SqlProvider;
@@ -42,7 +41,7 @@ public class SqlProviderGenerator extends AbstractGenerator {
         return fluentEntity.getPackageName(Pack_Helper);
     }
 
-    public SqlProviderGenerator(FluentEntity fluentEntity) {
+    public SqlProviderFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
         this.klassName = getClassName(fluentEntity);

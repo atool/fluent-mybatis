@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.processor.base;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;

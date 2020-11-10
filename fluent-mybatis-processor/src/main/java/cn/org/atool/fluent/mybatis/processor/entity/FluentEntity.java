@@ -1,18 +1,10 @@
-package cn.org.atool.fluent.mybatis.entity;
+package cn.org.atool.fluent.mybatis.processor.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IDefault;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.entity.base.IProcessor;
-import cn.org.atool.fluent.mybatis.entity.field.CommonField;
-import cn.org.atool.fluent.mybatis.entity.field.EntityRefMethod;
-import cn.org.atool.fluent.mybatis.entity.field.FieldOrMethod;
-import cn.org.atool.fluent.mybatis.entity.field.PrimaryField;
-import cn.org.atool.fluent.mybatis.entity.javac.FieldParser;
-import cn.org.atool.fluent.mybatis.entity.javac.MethodParser;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -20,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 /**
  * fluent mybatis生成代码Entity信息
@@ -112,31 +103,15 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         return this;
     }
 
-    public FluentEntity setFields(List<JCVariableDecl> fields, IProcessor processor) {
-        FieldParser parser = new FieldParser(processor);
-        for (JCVariableDecl variable : fields) {
-            FieldOrMethod field = parser.valueOf(variable);
-            if (field instanceof EntityRefMethod) {
-                this.refMethods.add((EntityRefMethod) field);
-            } else if (field instanceof CommonField) {
-                this.addFieldColumn((CommonField) field);
-            }
-        }
+    public FluentEntity addMethod(EntityRefMethod method) {
+        this.refMethods.add(method);
         return this;
     }
 
-    public FluentEntity setMethods(List<JCMethodDecl> methods, FluentMybatisProcessor processor) {
-        MethodParser parser = new MethodParser(processor);
-        for (JCMethodDecl methodDecl : methods) {
-            FieldOrMethod method = parser.valueOf(methodDecl);
-            if (method instanceof EntityRefMethod) {
-                this.refMethods.add((EntityRefMethod) method);
-            }
+    public void addField(CommonField field) {
+        if (this.fields.contains(field)) {
+            return;
         }
-        return this;
-    }
-
-    private void addFieldColumn(CommonField field) {
         if (field.isPrimary() && this.primary == null) {
             this.primary = (PrimaryField) field;
         }

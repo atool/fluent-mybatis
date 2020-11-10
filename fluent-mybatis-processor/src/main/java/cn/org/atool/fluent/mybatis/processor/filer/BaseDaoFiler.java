@@ -1,16 +1,15 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.base.ClassNames;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.entity.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.entity.generator.MapperGenerator.getMapperName;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.MapperFiler.getMapperName;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
 
@@ -19,8 +18,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
  *
  * @author wudarui
  */
-public class BaseDaoGenerator extends AbstractGenerator {
-    public BaseDaoGenerator(FluentEntity fluentEntity) {
+public class BaseDaoFiler extends AbstractFiler {
+    public BaseDaoFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = fluentEntity.getPackageName(Pack_BaseDao);
         this.klassName = fluentEntity.getNoSuffix() + Suffix_BaseDao;
@@ -59,7 +58,7 @@ public class BaseDaoGenerator extends AbstractGenerator {
 
 
     private TypeName superMappingClass() {
-        return ClassName.get(MappingGenerator.getPackageName(fluent), MappingGenerator.getClassName(fluent));
+        return ClassName.get(MappingFiler.getPackageName(fluent), MappingFiler.getClassName(fluent));
     }
 
     private TypeName superBaseDaoImplKlass() {

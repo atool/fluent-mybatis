@@ -1,18 +1,16 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.processor.base;
 
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.field.CommonField;
-import cn.org.atool.fluent.mybatis.entity.generator.*;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
+import cn.org.atool.fluent.mybatis.processor.filer.*;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 
 /**
  * fluent entity构造各模块ClassName基类
@@ -76,8 +74,8 @@ public abstract class FluentClassName {
      */
     public ClassName updater() {
         return ClassName.get(
-            UpdaterGenerator.getPackageName(this),
-            UpdaterGenerator.getClassName(this));
+            UpdaterFiler.getPackageName(this),
+            UpdaterFiler.getClassName(this));
     }
 
     /**
@@ -87,8 +85,8 @@ public abstract class FluentClassName {
      */
     public ClassName entityHelper() {
         return ClassName.get(
-            EntityHelperGenerator.getPackageName(this),
-            EntityHelperGenerator.getClassName(this));
+            EntityHelperFiler.getPackageName(this),
+            EntityHelperFiler.getClassName(this));
     }
 
     /**
@@ -98,8 +96,8 @@ public abstract class FluentClassName {
      */
     public ClassName mapper() {
         return ClassName.get(
-            MapperGenerator.getPackageName(this),
-            MapperGenerator.getClassName(this));
+            MapperFiler.getPackageName(this),
+            MapperFiler.getClassName(this));
     }
 
     /**
@@ -109,8 +107,8 @@ public abstract class FluentClassName {
      */
     public ClassName mapping() {
         return ClassName.get(
-            MappingGenerator.getPackageName(this),
-            MappingGenerator.getClassName(this));
+            MappingFiler.getPackageName(this),
+            MappingFiler.getClassName(this));
     }
 
     /**
@@ -120,8 +118,8 @@ public abstract class FluentClassName {
      */
     public ClassName query() {
         return ClassName.get(
-            QueryGenerator.getPackageName(this),
-            QueryGenerator.getClassName(this));
+            QueryFiler.getPackageName(this),
+            QueryFiler.getClassName(this));
     }
 
     /**
@@ -131,8 +129,8 @@ public abstract class FluentClassName {
      */
     public ClassName sqlProvider() {
         return ClassName.get(
-            SqlProviderGenerator.getPackageName(this),
-            SqlProviderGenerator.getClassName(this));
+            SqlProviderFiler.getPackageName(this),
+            SqlProviderFiler.getClassName(this));
     }
 
 
@@ -143,109 +141,71 @@ public abstract class FluentClassName {
      */
     public ClassName wrapperFactory() {
         return ClassName.get(
-            WrapperDefaultGenerator.getPackageName(this),
-            WrapperDefaultGenerator.getClassName(this)
+            WrapperDefaultFiler.getPackageName(this),
+            WrapperDefaultFiler.getClassName(this)
         );
     }
 
     public ClassName queryWhere() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_QueryWhere);
+                WrapperHelperFiler.getClassName(this), Suffix_QueryWhere);
     }
 
     public ClassName updateWhere() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_UpdateWhere);
+                WrapperHelperFiler.getClassName(this), Suffix_UpdateWhere);
     }
 
     public ClassName selector() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_Selector);
+                WrapperHelperFiler.getClassName(this), Suffix_Selector);
     }
 
     public ClassName groupBy() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_GroupBy);
+                WrapperHelperFiler.getClassName(this), Suffix_GroupBy);
     }
 
     public ClassName having() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_Having);
+                WrapperHelperFiler.getClassName(this), Suffix_Having);
     }
 
     public ClassName queryOrderBy() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_QueryOrderBy);
+                WrapperHelperFiler.getClassName(this), Suffix_QueryOrderBy);
     }
 
     public ClassName updateOrderBy() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_UpdateOrderBy);
+                WrapperHelperFiler.getClassName(this), Suffix_UpdateOrderBy);
     }
 
     public ClassName updateSetter() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_UpdateSetter);
+                WrapperHelperFiler.getClassName(this), Suffix_UpdateSetter);
     }
 
     public ClassName segment() {
         return ClassName.get(
-            WrapperHelperGenerator.getPackageName(this)
+            WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperGenerator.getClassName(this), Suffix_ISegment);
-    }
-
-    /**
-     * FluentEntity收集器
-     */
-    /**
-     * 项目所有编译Entity类列表
-     */
-    @Getter
-    private static List<FluentEntity> fluents = new ArrayList<>();
-
-    private static Map<String, FluentEntity> map = new HashMap<>();
-
-    /**
-     * 所有entity对象的共同基础package
-     */
-    @Getter
-    private static String samePackage = null;
-
-    /**
-     * 排序
-     */
-    public static void sort() {
-        fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
-    }
-
-    public static void addFluent(FluentEntity fluent) {
-        map.put(fluent.getClassName(), fluent);
-        fluents.add(fluent);
-        samePackage = sameStartPackage(samePackage, fluent.getBasePack());
-    }
-
-    public static boolean notEmpty() {
-        return !fluents.isEmpty();
-    }
-
-    public static FluentEntity getFluentEntity(String entityName) {
-        return map.get(entityName);
+                WrapperHelperFiler.getClassName(this), Suffix_ISegment);
     }
 }

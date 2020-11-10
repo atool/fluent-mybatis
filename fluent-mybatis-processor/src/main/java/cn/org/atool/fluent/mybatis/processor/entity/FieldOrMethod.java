@@ -1,6 +1,7 @@
-package cn.org.atool.fluent.mybatis.entity.field;
+package cn.org.atool.fluent.mybatis.processor.entity;
 
-import com.sun.tools.javac.code.Type;
+import com.squareup.javapoet.TypeName;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -13,6 +14,7 @@ import lombok.experimental.Accessors;
 @Getter
 @ToString
 @Accessors(chain = true)
+@EqualsAndHashCode(of = "name")
 public abstract class FieldOrMethod<F extends FieldOrMethod<F>> {
     /**
      * 字段或方法名称
@@ -21,14 +23,14 @@ public abstract class FieldOrMethod<F extends FieldOrMethod<F>> {
     /**
      * 字段定义类型
      */
-    protected Type javaType;
+    protected TypeName javaType;
 
-    protected FieldOrMethod(String name, Type javaType) {
+    protected FieldOrMethod(String name, TypeName javaType) {
         this.name = name;
         this.javaType = javaType;
     }
 
-    public F setJavaType(Type javaType) {
+    public F setJavaType(TypeName javaType) {
         this.javaType = javaType;
         return (F) this;
     }

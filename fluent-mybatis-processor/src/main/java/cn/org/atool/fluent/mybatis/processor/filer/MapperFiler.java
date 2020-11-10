@@ -1,13 +1,12 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.ClassNames;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.base.ClassNames;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
@@ -23,7 +22,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 /**
@@ -31,9 +30,9 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author darui.wu
  */
-public class MapperGenerator extends AbstractGenerator {
+public class MapperFiler extends AbstractFiler {
 
-    public MapperGenerator(FluentEntity fluentEntity) {
+    public MapperFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
         this.klassName = getClassName(fluentEntity);

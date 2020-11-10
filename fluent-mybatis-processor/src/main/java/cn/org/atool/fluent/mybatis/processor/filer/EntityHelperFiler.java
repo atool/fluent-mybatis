@@ -1,17 +1,16 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import com.squareup.javapoet.*;
 
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper;
 
 /**
@@ -19,7 +18,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper
  *
  * @author wudarui
  */
-public class EntityHelperGenerator extends AbstractGenerator {
+public class EntityHelperFiler extends AbstractFiler {
     public static String getClassName(FluentClassName fluent) {
         return fluent.getClassName() + Suffix_EntityHelper;
     }
@@ -28,7 +27,7 @@ public class EntityHelperGenerator extends AbstractGenerator {
         return fluent.getEntityPack();
     }
 
-    public EntityHelperGenerator(FluentEntity fluentEntity) {
+    public EntityHelperFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
         this.klassName = getClassName(fluentEntity);

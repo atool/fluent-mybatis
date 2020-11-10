@@ -1,9 +1,8 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -12,8 +11,8 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.entity.base.MethodName.M_DEFAULT_QUERY;
-import static cn.org.atool.fluent.mybatis.entity.base.MethodName.M_DEFAULT_UPDATER;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_QUERY;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_WrapperDefault;
 
@@ -22,8 +21,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_WrapperDefau
  *
  * @author darui.wu
  */
-public class WrapperDefaultGenerator extends AbstractGenerator {
-    public WrapperDefaultGenerator(FluentEntity fluent) {
+public class WrapperDefaultFiler extends AbstractFiler {
+    public WrapperDefaultFiler(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
         this.klassName = getClassName(fluent);

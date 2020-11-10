@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.entity.field;
+package cn.org.atool.fluent.mybatis.processor.entity;
 
-import com.sun.tools.javac.code.Type;
+import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +27,7 @@ public class PrimaryField extends CommonField {
 
     private boolean seqIsBeforeOrder;
 
-    public PrimaryField(String name, Type javaType) {
+    public PrimaryField(String name, TypeName javaType) {
         super(name, javaType);
     }
 

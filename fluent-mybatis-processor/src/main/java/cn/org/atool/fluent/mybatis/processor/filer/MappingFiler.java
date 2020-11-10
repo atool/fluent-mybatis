@@ -1,10 +1,9 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.entity.field.CommonField;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -25,7 +24,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @author wudarui
  */
-public class MappingGenerator extends AbstractGenerator {
+public class MappingFiler extends AbstractFiler {
 
     public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_Mapping;
@@ -35,7 +34,7 @@ public class MappingGenerator extends AbstractGenerator {
         return fluentEntity.getPackageName(Pack_Helper);
     }
 
-    public MappingGenerator(FluentEntity fluentEntity) {
+    public MappingFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
         this.klassName = getClassName(fluentEntity);

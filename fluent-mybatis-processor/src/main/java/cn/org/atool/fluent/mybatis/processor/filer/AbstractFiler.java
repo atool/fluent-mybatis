@@ -1,13 +1,13 @@
-package cn.org.atool.fluent.mybatis.entity.base;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractGenerator {
+public abstract class AbstractFiler {
     protected FluentEntity fluent;
 
     protected String packageName;
@@ -16,7 +16,7 @@ public abstract class AbstractGenerator {
 
     protected String comment;
 
-    public AbstractGenerator(FluentEntity fluent) {
+    public AbstractFiler(FluentEntity fluent) {
         this.fluent = fluent;
     }
 

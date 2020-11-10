@@ -1,15 +1,14 @@
-package cn.org.atool.fluent.mybatis.entity.generator;
+package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.entity.base.AbstractGenerator;
-import cn.org.atool.fluent.mybatis.entity.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.entity.base.ClassNames.CN_List_Str;
+import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
 
@@ -18,8 +17,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
  *
  * @author wudarui
  */
-public class UpdaterGenerator extends AbstractGenerator {
-    public UpdaterGenerator(FluentEntity fluentEntity) {
+public class UpdaterFiler extends AbstractFiler {
+    public UpdaterFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
         this.klassName = getClassName(fluentEntity);

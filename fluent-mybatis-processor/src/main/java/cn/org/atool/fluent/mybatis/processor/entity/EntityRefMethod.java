@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.mybatis.entity.field;
+package cn.org.atool.fluent.mybatis.processor.entity;
 
-import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.entity.FluentEntity;
 import cn.org.atool.generator.database.config.impl.RelationConfig;
-import com.sun.tools.javac.code.Type;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -29,7 +29,7 @@ public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
 
     private Map<String, String> mapping = new HashMap<>();
 
-    public EntityRefMethod(String property, Type javaType) {
+    public EntityRefMethod(String property, TypeName javaType) {
         super(property, javaType);
     }
 
@@ -71,16 +71,23 @@ public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
     }
 
     public String getReturnEntity() {
-        List<Type> types = this.javaType.getTypeArguments();
-        if (types.isEmpty()) {
-            return this.javaType.baseType().tsym.name.toString();
-        } else {
-            return types.get(0).baseType().tsym.name.toString();
+        if (this.javaType instanceof ClassName) {
+            return ((ClassName) this.javaType).simpleName();
+        } else if (this.javaType instanceof ParameterizedTypeName) {
+            List<TypeName> args = ((ParameterizedTypeName) javaType).typeArguments;
+            if (args.size() == 1 && args.get(0) instanceof ClassName) {
+                return ((ClassName) args.get(0)).simpleName();
+            }
         }
+        throw new RuntimeException("not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
     }
 
     public boolean returnList() {
-        String type = this.javaType.baseType().tsym.name.toString();
-        return "List".equals(type);
+        if (this.javaType instanceof ParameterizedTypeName) {
+            ClassName type = ((ParameterizedTypeName) this.javaType).rawType;
+            return List.class.getSimpleName().equals(type.simpleName());
+        } else {
+            return false;
+        }
     }
 }
