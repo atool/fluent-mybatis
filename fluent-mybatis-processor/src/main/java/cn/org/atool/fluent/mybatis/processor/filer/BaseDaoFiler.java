@@ -3,15 +3,15 @@ package cn.org.atool.fluent.mybatis.processor.filer;
 import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.base.ClassNames;
+import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.MapperFiler.getMapperName;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.MapperFiler.getMapperName;
 
 /**
  * BaseDaoGenerator: *BaseDao文件生成
@@ -75,8 +75,8 @@ public class BaseDaoFiler extends AbstractFiler {
     private FieldSpec f_mapper() {
         return FieldSpec.builder(fluent.mapper(), "mapper")
             .addModifiers(Modifier.PROTECTED)
-            .addAnnotation(ClassNames.CN_Autowired)
-            .addAnnotation(AnnotationSpec.builder(ClassNames.CN_Qualifier)
+            .addAnnotation(ClassNames.Spring_Autowired)
+            .addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Qualifier)
                 .addMember("value", "$S", getMapperName(fluent)).build()
             )
             .build();

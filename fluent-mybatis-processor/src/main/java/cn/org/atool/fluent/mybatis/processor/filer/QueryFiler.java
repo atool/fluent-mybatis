@@ -9,7 +9,7 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_List_Str;
+import static cn.org.atool.generator.util.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 

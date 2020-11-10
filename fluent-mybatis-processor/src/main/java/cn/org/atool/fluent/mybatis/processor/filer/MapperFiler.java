@@ -3,12 +3,12 @@ package cn.org.atool.fluent.mybatis.processor.filer;
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.base.ClassNames;
+import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import cn.org.atool.fluent.mybatis.mapper.FluentConst;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
@@ -22,8 +22,8 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
 
 /**
  * 生成Entity对应的Mapper类
@@ -55,8 +55,8 @@ public class MapperFiler extends AbstractFiler {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNames.CN_Mapper);
-        builder.addAnnotation(AnnotationSpec.builder(ClassNames.CN_Component)
+        builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNames.Mybatis_Mapper);
+        builder.addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
             .addMember("value", "$S", getMapperName(this.fluent)).build()
         );
         builder.addField(FieldSpec.builder(String.class, "ResultMap",

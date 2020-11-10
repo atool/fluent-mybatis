@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.*;
+import static cn.org.atool.generator.util.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static java.util.stream.Collectors.joining;

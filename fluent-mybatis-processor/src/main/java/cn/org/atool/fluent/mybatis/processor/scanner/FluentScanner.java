@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.processor.scanner;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
-import cn.org.atool.fluent.mybatis.processor.base.ClassNames;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
+import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ClassName;
 import lombok.Getter;
 

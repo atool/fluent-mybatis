@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.EntityRefQuery;
+import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -13,9 +13,9 @@ import com.squareup.javapoet.TypeSpec;
 import javax.lang.model.element.Modifier;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_Autowired;
-import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_Getter;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
+import static cn.org.atool.generator.util.ClassNames.Lombok_Getter;
+import static cn.org.atool.generator.util.ClassNames.Spring_Autowired;
 
 /**
  * Mappers 代码生成
@@ -119,8 +119,8 @@ public class RefsFile extends AbstractFile {
     private FieldSpec f_mapper(FluentEntity fluent) {
         return FieldSpec.builder(fluent.mapper(), fluent.lowerNoSuffix() + "Mapper",
             Modifier.PROTECTED)
-            .addAnnotation(CN_Getter)
-            .addAnnotation(CN_Autowired)
+            .addAnnotation(Lombok_Getter)
+            .addAnnotation(Spring_Autowired)
             .build();
     }
 

@@ -10,7 +10,7 @@ import com.squareup.javapoet.*;
 
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.processor.base.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper;
 
 /**
