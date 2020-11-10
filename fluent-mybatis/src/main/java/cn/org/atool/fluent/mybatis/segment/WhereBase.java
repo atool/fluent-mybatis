@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.annotation.IoFunction;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IWrapper;
@@ -11,7 +12,6 @@ import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
-import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -148,7 +148,7 @@ public abstract class WhereBase<
      * @param query 嵌套查询
      * @return self
      */
-    public WHERE exists(Function<NestedQ, NestedQ> query) {
+    public WHERE exists(IoFunction<NestedQ> query) {
         return (WHERE) this.exists(wrapper.getWrapperData().getQueryClass(), query);
     }
 
@@ -160,7 +160,7 @@ public abstract class WhereBase<
      * @param <T>
      * @return
      */
-    public <T> WHERE exists(boolean condition, Function<NestedQ, NestedQ> query) {
+    public <T> WHERE exists(boolean condition, IoFunction<NestedQ> query) {
         return condition ? this.exists(query) : this.and;
     }
 
@@ -173,7 +173,7 @@ public abstract class WhereBase<
      * @param query      嵌套查询
      * @return self
      */
-    public <ANQ extends IQuery<?, ANQ>> WHERE exists(Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
+    public <ANQ extends IQuery<?, ANQ>> WHERE exists(Class<ANQ> queryClass, IoFunction<ANQ> query) {
         Parameters parameters = wrapper.getWrapperData().getParameters();
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
@@ -190,7 +190,7 @@ public abstract class WhereBase<
      * @param <ANQ>
      * @return
      */
-    public <ANQ extends IQuery<?, ANQ>> WHERE exists(boolean condition, Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
+    public <ANQ extends IQuery<?, ANQ>> WHERE exists(boolean condition, Class<ANQ> queryClass, IoFunction<ANQ> query) {
         return condition ? this.exists(queryClass, query) : this.and;
     }
 
@@ -230,7 +230,7 @@ public abstract class WhereBase<
      * @param query 嵌套查询
      * @return self
      */
-    public WHERE notExists(Function<NestedQ, NestedQ> query) {
+    public WHERE notExists(IoFunction<NestedQ> query) {
         return (WHERE) this.notExists(wrapper.getWrapperData().getQueryClass(), query);
     }
 
@@ -243,7 +243,7 @@ public abstract class WhereBase<
      * @param query     嵌套查询
      * @return self
      */
-    public WHERE notExists(boolean condition, Function<NestedQ, NestedQ> query) {
+    public WHERE notExists(boolean condition, IoFunction<NestedQ> query) {
         return condition ? this.notExists(query) : this.and;
     }
 
@@ -256,7 +256,7 @@ public abstract class WhereBase<
      * @param query      嵌套查询
      * @return self
      */
-    public <ANQ extends IQuery> WHERE notExists(Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
+    public <ANQ extends IQuery> WHERE notExists(Class<ANQ> queryClass, IoFunction<ANQ> query) {
         Parameters parameters = wrapper.getWrapperData().getParameters();
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
@@ -274,7 +274,9 @@ public abstract class WhereBase<
      * @param query      嵌套查询
      * @return self
      */
-    public <ANQ extends IQuery> WHERE notExists(boolean condition, Class<ANQ> queryClass, Function<ANQ, ANQ> query) {
+    public <ANQ extends IQuery> WHERE notExists(
+        boolean condition, Class<ANQ> queryClass, IoFunction<ANQ> query
+    ) {
         return condition ? this.notExists(queryClass, query) : this.and;
     }
 
@@ -335,7 +337,7 @@ public abstract class WhereBase<
      * @param query 消费函数
      * @return children
      */
-    public WHERE and(Function<WRAPPER, WRAPPER> query) {
+    public WHERE and(IoFunction<WRAPPER> query) {
         return this.nestedWhere(AND, query);
     }
 
@@ -349,11 +351,11 @@ public abstract class WhereBase<
      * @param query 消费函数
      * @return children
      */
-    public WHERE or(Function<WRAPPER, WRAPPER> query) {
+    public WHERE or(IoFunction<WRAPPER> query) {
         return this.nestedWhere(OR, query);
     }
 
-    private WHERE nestedWhere(KeyWordSegment andOr, Function<WRAPPER, WRAPPER> query) {
+    private WHERE nestedWhere(KeyWordSegment andOr, IoFunction<WRAPPER> query) {
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         query.apply(nested);
         String sql = nested.getWrapperData().getMergeSql();

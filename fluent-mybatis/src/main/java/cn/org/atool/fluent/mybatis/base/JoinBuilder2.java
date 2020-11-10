@@ -1,10 +1,9 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.annotation.IoFunction;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
 import cn.org.atool.fluent.mybatis.segment.JoinQuery;
-
-import java.util.function.Function;
 
 /**
  * 通过lambda表达方式构造join条件
@@ -23,7 +22,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QL>
      * @return
      */
-    static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, Function<QL, QL> query) {
+    static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, IoFunction<QL> query) {
         return new JoinQuery<>(clazz, query);
     }
 
@@ -35,7 +34,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QR>  join right表类型
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, Function<QR, QR> query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, IoFunction<QR> query);
 
     /**
      * from left.table left join right.table on condition
@@ -45,7 +44,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QR>  join right 表类型
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, Function<QR, QR> query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, IoFunction<QR> query);
 
     /**
      * from left.table right join right.table on condition
@@ -55,7 +54,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QR>  join right 表类型
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, Function<QR, QR> query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, IoFunction<QR> query);
 
     /**
      * distinct

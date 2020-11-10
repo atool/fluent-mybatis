@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
+import cn.org.atool.fluent.mybatis.annotation.IoFunction;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.Collection;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -167,7 +167,7 @@ public interface ObjectWhere<
      * @param query 嵌套查询
      * @return 查询器或更新器
      */
-    WHERE in(Function<NQ, NQ> query);
+    WHERE in(IoFunction<NQ> query);
 
     /**
      * in (select ... )
@@ -176,7 +176,7 @@ public interface ObjectWhere<
      * @param query     嵌套查询
      * @return 查询器或更新器
      */
-    WHERE in(boolean condition, Function<NQ, NQ> query);
+    WHERE in(boolean condition, IoFunction<NQ> query);
 
     /**
      * in (select ... )
@@ -186,7 +186,7 @@ public interface ObjectWhere<
      * @param <NQ>  嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery> WHERE in(Class<NQ> klass, Function<NQ, NQ> query);
+    <NQ extends IQuery> WHERE in(Class<NQ> klass, IoFunction<NQ> query);
 
     /**
      * in (select ... )
@@ -197,7 +197,7 @@ public interface ObjectWhere<
      * @param <NQ>      嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, Function<NQ, NQ> query);
+    <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, IoFunction<NQ> query);
 
     /**
      * not in (values)
@@ -247,7 +247,7 @@ public interface ObjectWhere<
      * @param query 嵌套查询
      * @return 查询器或更新器
      */
-    WHERE notIn(Function<NQ, NQ> query);
+    WHERE notIn(IoFunction<NQ> query);
 
     /**
      * not in (select ... )
@@ -256,7 +256,7 @@ public interface ObjectWhere<
      * @param query     嵌套查询
      * @return 查询器或更新器
      */
-    WHERE notIn(boolean condition, Function<NQ, NQ> query);
+    WHERE notIn(boolean condition, IoFunction<NQ> query);
 
     /**
      * not in (select ... )
@@ -266,7 +266,7 @@ public interface ObjectWhere<
      * @param <NQ>       嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, Function<NQ, NQ> query);
+    <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, IoFunction<NQ> query);
 
     /**
      * not in (select ... )
@@ -277,7 +277,7 @@ public interface ObjectWhere<
      * @param <NQ>       嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, Function<NQ, NQ> query);
+    <NQ extends IQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, IoFunction<NQ> query);
 
     /**
      * @param value1 条件值
