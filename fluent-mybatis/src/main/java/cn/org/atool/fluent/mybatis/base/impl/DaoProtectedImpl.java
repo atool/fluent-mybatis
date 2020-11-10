@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.model.TagList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import lombok.NonNull;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
@@ -190,7 +191,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
      * @param <POJO>    PoJo类型
      * @return 转换后的对象
      */
-    private <POJO> POJO toPoJo(Map<String, Object> map, Function<Map<String, Object>, POJO> converter) {
+    private <POJO> POJO toPoJo(Map<String, Object> map, @NonNull Function<Map<String, Object>, POJO> converter) {
         return map == null ? null : converter.apply(map);
     }
 

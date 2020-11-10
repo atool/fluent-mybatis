@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
-import cn.org.atool.fluent.mybatis.processor.FluentMybatisProcessor;
 import cn.org.atool.fluent.mybatis.processor.filer.*;
+import cn.org.atool.generator.util.GeneratorHelper;
 import com.squareup.javapoet.JavaFile;
 import lombok.Getter;
 
@@ -59,7 +59,7 @@ public class FluentList {
                     javaFile.writeTo(filer);
                 }
             } catch (Exception e) {
-                logger.accept("FluentEntityInfo:" + fluent + "\n" + FluentMybatisProcessor.toString(e));
+                logger.accept("FluentEntityInfo:" + fluent + "\n" + GeneratorHelper.toString(e));
                 throw new RuntimeException(e);
             }
         }
@@ -67,7 +67,7 @@ public class FluentList {
             try {
                 new RefsFile().writeTo(filer);
             } catch (Exception e) {
-                logger.accept("Generate Refs error:\n" + FluentMybatisProcessor.toString(e));
+                logger.accept("Generate Refs error:\n" + GeneratorHelper.toString(e));
                 throw new RuntimeException(e);
             }
         }

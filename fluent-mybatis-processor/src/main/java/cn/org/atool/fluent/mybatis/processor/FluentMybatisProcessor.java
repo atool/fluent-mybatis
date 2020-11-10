@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.processor.base.IProcessor;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.processor.scanner.FluentScanner;
+import cn.org.atool.generator.util.GeneratorHelper;
 import com.google.auto.service.AutoService;
 import lombok.Getter;
 
@@ -11,9 +12,6 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Set;
 
 import static javax.tools.Diagnostic.Kind.ERROR;
@@ -59,7 +57,7 @@ public class FluentMybatisProcessor extends AbstractProcessor implements IProces
                 scanner.scan(element);
                 FluentList.addFluent(scanner.getFluent());
             } catch (Exception e) {
-                messager.printMessage(ERROR, element.asType().toString() + ":\n" + toString(e));
+                messager.printMessage(ERROR, element.asType().toString() + ":\n" + GeneratorHelper.toString(e));
                 throw new RuntimeException(e);
             }
         }
@@ -68,21 +66,5 @@ public class FluentMybatisProcessor extends AbstractProcessor implements IProces
         messager.printMessage(NOTE, "FluentMybatis process end !!!");
         this.generated = true;
         return true;
-    }
-
-    /**
-     * 将异常日志转换为字符串
-     *
-     * @param e
-     * @return
-     */
-    public static String toString(Throwable e) {
-        try (StringWriter writer = new StringWriter(); PrintWriter print = new PrintWriter(writer)) {
-            e.printStackTrace(print);
-            return writer.toString();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
-        }
     }
 }
