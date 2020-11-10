@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
-import cn.org.atool.fluent.mybatis.annotation.IoFunction;
+import cn.org.atool.fluent.mybatis.functions.IoFunction;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
