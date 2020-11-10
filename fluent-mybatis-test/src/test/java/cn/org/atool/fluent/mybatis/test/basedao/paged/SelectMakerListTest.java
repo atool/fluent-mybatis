@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
 import cn.org.atool.fluent.mybatis.base.IDaoProtected;
 import cn.org.atool.fluent.mybatis.base.model.TagList;
+import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
@@ -16,7 +17,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -63,7 +63,7 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        Function<Map, Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
+        MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
         TagList<Map> list = dao.tagPagedMaps(new StudentQuery()
             .selectId()
             .where.id().gt(20)

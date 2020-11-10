@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.*;
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
 import cn.org.atool.fluent.mybatis.base.model.TagList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.NonNull;
@@ -15,7 +16,6 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
@@ -56,7 +56,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public <POJO> List<POJO> listPoJos(IQuery query, Function<Map<String, Object>, POJO> converter) {
+    public <POJO> List<POJO> listPoJos(IQuery query, MapFunction<POJO> converter) {
         List<Map<String, Object>> list = this.mapper().listMaps(query);
         return this.toPoJoList(list, converter);
     }
@@ -82,7 +82,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public <POJO> PagedList<POJO> pagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter) {
+    public <POJO> PagedList<POJO> pagedPoJos(IQuery query, MapFunction<POJO> converter) {
         PagedList<Map<String, Object>> paged = this.pagedMaps(query);
         if (converter == null || paged == null || paged.getData() == null) {
             return (PagedList<POJO>) paged;
@@ -125,7 +125,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public <POJO> TagList<POJO> tagPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter) {
+    public <POJO> TagList<POJO> tagPagedPoJos(IQuery query, MapFunction<POJO> converter) {
         TagList<Map<String, Object>> paged = this.tagPagedMaps(query);
         List<POJO> list = this.toPoJoList(paged.getData(), converter);
         POJO next = this.toPoJo(paged.getNext(), converter);
@@ -156,7 +156,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public <F> Optional<F> findOnePoJo(IQuery query, Function<Map<String, Object>, F> converter) {
+    public <F> Optional<F> findOnePoJo(IQuery query, MapFunction<F> converter) {
         Optional<Map<String, Object>> optional = this.findOneResult(query);
         return optional.map(m -> this.toPoJo(m, converter));
     }
@@ -191,7 +191,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
      * @param <POJO>    PoJo类型
      * @return 转换后的对象
      */
-    private <POJO> POJO toPoJo(Map<String, Object> map, @NonNull Function<Map<String, Object>, POJO> converter) {
+    private <POJO> POJO toPoJo(Map<String, Object> map, @NonNull MapFunction<POJO> converter) {
         return map == null ? null : converter.apply(map);
     }
 
@@ -225,7 +225,7 @@ public abstract class DaoProtectedImpl<E extends IEntity>
      * @param <POJO>    PoJo类型
      * @return 转换后的对象列表
      */
-    private <POJO> List<POJO> toPoJoList(List<Map<String, Object>> list, Function<Map<String, Object>, POJO> converter) {
+    private <POJO> List<POJO> toPoJoList(List<Map<String, Object>> list, MapFunction<POJO> converter) {
         return list == null ? null : list.stream().map(map -> toPoJo(map, converter)).collect(toList());
     }
 

@@ -2,11 +2,11 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.model.PagedList;
 import cn.org.atool.fluent.mybatis.base.model.TagList;
+import cn.org.atool.fluent.mybatis.functions.MapFunction;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * IDaoProtected: 被限制在Dao基类中使用的方法
@@ -55,12 +55,12 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    POJO实体类型
      * @return POJO list
      */
-    <POJO> List<POJO> listPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+    <POJO> List<POJO> listPoJos(IQuery query, MapFunction<POJO> converter);
 
     /**
      * 根据query查询记录列表, 并将数据结果转换PoJo对象
      * 转换规则是下划线转驼峰
-     * 如果不符合这个规则, 请使用方法手动映射: listPoJos(IQuery query, Function<Map<String, Object>, POJO> converter)
+     * 如果不符合这个规则, 请使用方法手动映射: listPoJos(IQuery query, MapFunction<POJO> converter)
      *
      * @param clazz  PoJo对象类型
      * @param query  查询条件
@@ -93,7 +93,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
-    <POJO> PagedList<POJO> pagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+    <POJO> PagedList<POJO> pagedPoJos(IQuery query, MapFunction<POJO> converter);
 
     /**
      * 分页查询数据（结果集为Object对象）
@@ -129,7 +129,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
-    <POJO> TagList<POJO> tagPagedPoJos(IQuery query, Function<Map<String, Object>, POJO> converter);
+    <POJO> TagList<POJO> tagPagedPoJos(IQuery query, MapFunction<POJO> converter);
 
     /**
      * 按Marker标识分页查询（结果集为Object对象）
@@ -167,7 +167,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    Object类型
      * @return Object实例
      */
-    <POJO> Optional<POJO> findOnePoJo(IQuery query, Function<Map<String, Object>, POJO> converter);
+    <POJO> Optional<POJO> findOnePoJo(IQuery query, MapFunction<POJO> converter);
 
     /**
      * 根据query查询满足条件的第一条记录，并转换为Object实例
