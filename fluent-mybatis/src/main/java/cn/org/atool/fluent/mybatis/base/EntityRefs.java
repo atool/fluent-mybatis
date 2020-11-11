@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.impl.PagedHelper;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
-import cn.org.atool.fluent.mybatis.model.FormQuery;
 import cn.org.atool.fluent.mybatis.model.FormItem;
+import cn.org.atool.fluent.mybatis.model.FormQuery;
 import cn.org.atool.fluent.mybatis.model.IPagedList;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import org.springframework.beans.BeansException;
@@ -68,7 +68,7 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
                 if (isBlank(column)) {
                     throw new RuntimeException("the field[" + item.getKey() + "] of Entity[" + clazz.getSimpleName() + "] not found.");
                 }
-                where.and.apply(column, SqlOp.valueOf(item.getOp()), item.paras());
+                where.and.apply(column, SqlOp.valueOf(item.getOp()), item.getValue());
             }
             if (condition.getCurrPage() != null) {
                 int from = condition.getPageSize() * (condition.getCurrPage() - 1);

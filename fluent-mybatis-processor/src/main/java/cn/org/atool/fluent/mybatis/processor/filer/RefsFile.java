@@ -6,8 +6,10 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.IWrapperDefaultRefFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.MapperRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
@@ -46,6 +48,7 @@ public class RefsFile extends AbstractFile {
         spec.superclass(MapperRefFiler.getClassName())
             .addSuperinterface(IWrapperDefaultRefFiler.getClassName())
             .addModifiers(Modifier.ABSTRACT)
+            .addField(this.f_mapping())
             .addMethod(m_findColumnByField(true))
             .addMethod(m_findPrimaryColumn(true))
             .addMethod(m_defaultQuery(true))
@@ -55,6 +58,13 @@ public class RefsFile extends AbstractFile {
                 spec.addMethod(this.m_refMethod(fluent, refField));
             }
         }
+    }
+
+    private FieldSpec f_mapping() {
+        return FieldSpec.builder(MappingRefFiler.getClassName(), "mapping",
+            Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .initializer("$T.INSTANCE", MappingRefFiler.getClassName())
+            .build();
     }
 
     private MethodSpec m_refMethod(FluentEntity fluent, EntityRefMethod refField) {

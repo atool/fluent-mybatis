@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 import static cn.org.atool.fluent.mybatis.model.FormItemOp.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 
 /**
  * 表单项
@@ -33,12 +33,12 @@ public class FormItem implements Serializable {
      * between [min, max]
      * in [item1, item2, ..., itemN]
      */
-    private String value;
+    private Object[] value;
 
     public FormItem() {
     }
 
-    public FormItem(String key, String op, String value) {
+    public FormItem(String key, String op, Object... value) {
         this.key = key;
         this.op = op;
         this.value = value;
@@ -51,28 +51,18 @@ public class FormItem implements Serializable {
         if (!ALL_OP.contains(op)) {
             throw new RuntimeException("only support operation:" + String.join(", ", ALL_OP) + ", but find:" + op);
         }
-        if (OP_BETWEEN.equals(op) ||
-            OP_NOT_BETWEEN.equals(op) ||
-            OP_IN.equals(op) ||
-            OP_NOT_IN.equals(op)) {
-            assertNotNull("value", value);
-            if (!value.startsWith("[") || !value.endsWith("]")) {
-                throw new RuntimeException("The range[" + op + "] value must start with '[' and end with ']'.");
+        if (OP_BETWEEN.equals(op) || OP_NOT_BETWEEN.equals(op)) {
+            assertNotEmpty("value", value);
+            if (value.length != 2) {
+                throw new RuntimeException("The number of between operation parameters[" + key + "] must be two.");
             }
-        } else if (!OP_IS_NULL.equals(op) &&
-            !OP_NOT_NULL.equals(op)) {
-            assertNotNull("value", value);
-        }
-    }
-
-    public Object[] paras() {
-        if (OP_BETWEEN.equals(op) ||
-            OP_NOT_BETWEEN.equals(op) ||
-            OP_IN.equals(op) ||
-            OP_NOT_IN.equals(op)) {
-            return value.substring(1, value.length() - 1).split(",");
-        } else {
-            return new Object[]{value};
+        } else if (OP_IN.equals(op) || OP_NOT_IN.equals(op)) {
+            assertNotEmpty("parameter of " + key, value);
+        } else if (!OP_IS_NULL.equals(op) && !OP_NOT_NULL.equals(op)) {
+            assertNotEmpty("parameter of " + key, value);
+            if (value.length != 1) {
+                throw new RuntimeException("The number of parameters[" + key + "] must be one.");
+            }
         }
     }
 }
