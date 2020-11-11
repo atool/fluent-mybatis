@@ -12,8 +12,8 @@ public class FormQueryTest extends BaseTest {
     @Test
     public void testStdPaged() {
         StdPagedList<StudentEntity> paged = new FormQuery()
-            .add.eq(Refs.mapping.student.userName, "xx")
-            .add.between(Refs.mapping.student.age, 12, 40)
+            .add.eq(Refs.Mapping.student.userName, "xx")
+            .add.between(Refs.Mapping.student.age, 12, 40)
             .setCurrPage(0)
             .paged(StudentEntity.class);
         db.sqlList().wantFirstSql().end("WHERE is_deleted = ? " +
@@ -30,8 +30,8 @@ public class FormQueryTest extends BaseTest {
     @Test
     public void testTagPaged() {
         TagPagedList<StudentEntity> paged = new FormQuery()
-            .add.eq(Refs.mapping.student.userName, "xx")
-            .add.between(Refs.mapping.student.age, 12, 40)
+            .add.eq(Refs.Mapping.student.userName, "xx")
+            .add.between(Refs.Mapping.student.age, 12, 40)
             .setNextId("0")
             .paged(StudentEntity.class);
         db.sqlList().wantFirstSql().end("WHERE is_deleted = ? " +

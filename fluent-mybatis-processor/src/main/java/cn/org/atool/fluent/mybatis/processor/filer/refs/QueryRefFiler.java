@@ -23,20 +23,24 @@ public class QueryRefFiler extends AbstractFile {
     public QueryRefFiler() {
         this.packageName = FluentList.refsPackage();
         this.klassName = QueryRef;
-        this.comment = "构造Entity对应的default query";
-    }
-
-    @Override
-    protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(IWrapperDefaultRefFiler.getClassName(), "*");
-        super.staticImport(builder);
+        this.comment = "构造Entity对应的default query\n更新器工厂类单例引用";
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
+        for (FluentEntity fluent : FluentList.getFluents()) {
+            spec.addField(this.f_factory(fluent));
+        }
         spec.addField(this.f_allQuerySupplier())
             .addStaticBlock(this.m_initSupplier())
             .addMethod(m_defaultQuery(false));
+    }
+
+    private FieldSpec f_factory(FluentEntity fluent) {
+        return FieldSpec.builder(fluent.wrapperFactory(), fluent.lowerNoSuffix(),
+            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            .initializer("$T.INSTANCE", fluent.wrapperFactory())
+            .build();
     }
 
     public static MethodSpec m_defaultQuery(boolean isRef) {
@@ -62,7 +66,7 @@ public class QueryRefFiler extends AbstractFile {
     private CodeBlock m_initSupplier() {
         List<CodeBlock> list = new ArrayList<>();
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("Supplier.put($T.class, $LDefault::defaultQuery);\n", fluent.entity(), fluent.lowerNoSuffix()));
+            list.add(CodeBlock.of("Supplier.put($T.class, $L::defaultQuery);\n", fluent.entity(), fluent.lowerNoSuffix()));
         }
         return CodeBlock.join(list, "");
     }

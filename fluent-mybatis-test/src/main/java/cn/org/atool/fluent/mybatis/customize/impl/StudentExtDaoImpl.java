@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -41,9 +42,9 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     public List<String> selectObjs(Long... ids) {
         return super.listPoJos(
             super.defaultQuery()
-                .select.apply(userName).end()
+                .select.apply(StudentMapping.userName).end()
                 .where.id().in(ids).end(),
-            (map) -> (String) map.get(userName.column)
+            (map) -> (String) map.get(StudentMapping.userName.column)
         );
     }
 
@@ -51,9 +52,9 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     public List<String> selectObjs2(Long... ids) {
         return super.listPoJos(
             super.defaultQuery()
-                .select.apply(userName, age).end()
+                .select.apply(StudentMapping.userName, StudentMapping.age).end()
                 .where.id().in(ids).end(),
-            (map) -> (String) map.get(userName.column)
+            (map) -> (String) map.get(StudentMapping.userName.column)
         );
     }
 

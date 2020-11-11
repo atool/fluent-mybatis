@@ -18,13 +18,13 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Refs.studentDefault.defaultQuery("u")
+        StudentQuery studentQuery = Refs.Query.student.defaultQuery("u")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("u.id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        HomeAddressQuery addressQuery = Refs.homeAddressDefault.defaultQuery("a", studentQuery)
+        HomeAddressQuery addressQuery = Refs.Query.homeAddress.defaultQuery("a", studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end()
@@ -56,12 +56,12 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        StudentQuery studentQuery = Refs.studentDefault.defaultQuery("t1")
+        StudentQuery studentQuery = Refs.Query.student.defaultQuery("t1")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("t1.id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery addressQuery = Refs.homeAddressDefault.defaultQuery("t2", studentQuery)
+        HomeAddressQuery addressQuery = Refs.Query.homeAddress.defaultQuery("t2", studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();

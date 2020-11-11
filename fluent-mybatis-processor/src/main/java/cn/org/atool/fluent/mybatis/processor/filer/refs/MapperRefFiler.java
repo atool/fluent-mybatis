@@ -11,6 +11,9 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.m_defaultQuery;
 import static cn.org.atool.generator.util.ClassNames.Lombok_Getter;
 import static cn.org.atool.generator.util.ClassNames.Spring_Autowired;
 
@@ -39,7 +42,10 @@ public class MapperRefFiler extends AbstractFile {
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_mapper(fluent));
         }
-        spec.addMethod(this.m_initEntityMapper());
+        spec.addMethod(m_findColumnByField(true))
+            .addMethod(m_findPrimaryColumn(true))
+            .addMethod(m_defaultQuery(true))
+            .addMethod(this.m_initEntityMapper());
     }
 
     private FieldSpec f_mapper(FluentEntity fluent) {

@@ -8,7 +8,9 @@ import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,44 +40,35 @@ public class MappingRefFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         for (FluentEntity fluent : FluentList.getFluents()) {
-            spec.addField(this.f_mapping(fluent));
+            spec.addType(this.class_mapping(fluent));
         }
-        spec.addField(this.f_INSTANCE())
-            .addField(this.f_allMappings())
-            .addMethod(this.m_initMapping())
+        spec.addField(this.f_allMappings())
+            .addStaticBlock(this.m_initMapping())
             .addMethod(m_findColumnByField(false))
             .addMethod(m_findPrimaryColumn(false));
-    }
-
-    private FieldSpec f_INSTANCE() {
-        return FieldSpec.builder(getClassName(), "INSTANCE",
-            Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("new $L()", MappingRef)
-            .build();
     }
 
     private FieldSpec f_allMappings() {
         return FieldSpec.builder(parameterizedType(Map.class, Class.class, IMapping.class),
             "mappings",
-            Modifier.PRIVATE, Modifier.FINAL)
+            Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .initializer("new $T<>()", HashMap.class)
             .build();
     }
 
-    private FieldSpec f_mapping(FluentEntity fluent) {
-        return FieldSpec.builder(fluent.mapping(), fluent.lowerNoSuffix(),
-            Modifier.FINAL, Modifier.PUBLIC)
-            .initializer("new $T(){}", fluent.mapping())
+    private TypeSpec class_mapping(FluentEntity fluent) {
+        return TypeSpec.classBuilder(fluent.lowerNoSuffix())
+            .addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC)
+            .addSuperinterface(fluent.mapping())
             .build();
     }
 
-    private MethodSpec m_initMapping() {
-        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PRIVATE);
+    private CodeBlock m_initMapping() {
+        List<CodeBlock> list = new ArrayList<>();
         for (FluentEntity fluent : FluentList.getFluents()) {
-            spec.addStatement("mappings.put($T.class, $L)", fluent.entity(), fluent.lowerNoSuffix());
+            list.add(CodeBlock.of("mappings.put($T.class, new $L());\n", fluent.entity(), fluent.lowerNoSuffix()));
         }
-        return spec.build();
+        return CodeBlock.join(list, "");
     }
 
     public static MethodSpec m_findPrimaryColumn(boolean isRef) {
@@ -89,8 +82,8 @@ public class MappingRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz属性对应数据库主键字段名称")
-                .addCode("if (INSTANCE.mappings.containsKey(clazz)) {\n")
-                .addStatement("\treturn INSTANCE.mappings.get(clazz).findPrimaryColumn()")
+                .addCode("if (mappings.containsKey(clazz)) {\n")
+                .addStatement("\treturn mappings.get(clazz).findPrimaryColumn()")
                 .addCode("}\n")
                 .addStatement("throw notFluentMybatisException(clazz)");
         }
@@ -109,8 +102,8 @@ public class MappingRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz属性field对应的数据库字段名称")
-                .addCode("if (INSTANCE.mappings.containsKey(clazz)) {\n")
-                .addStatement("\treturn INSTANCE.mappings.get(clazz).findColumnByField(field)")
+                .addCode("if (mappings.containsKey(clazz)) {\n")
+                .addStatement("\treturn mappings.get(clazz).findColumnByField(field)")
                 .addCode("}\n")
                 .addStatement("throw notFluentMybatisException(clazz)");
         }

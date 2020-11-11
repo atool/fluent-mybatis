@@ -4,21 +4,17 @@ import cn.org.atool.fluent.mybatis.base.EntityRefs;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.IWrapperDefaultRefFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.MapperRefFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.m_defaultQuery;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**
@@ -46,12 +42,9 @@ public class RefsFile extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(MapperRefFiler.getClassName())
-            .addSuperinterface(IWrapperDefaultRefFiler.getClassName())
             .addModifiers(Modifier.ABSTRACT)
-            .addField(this.f_mapping())
-            .addMethod(m_findColumnByField(true))
-            .addMethod(m_findPrimaryColumn(true))
-            .addMethod(m_defaultQuery(true))
+            .addType(this.class_mapping())
+            .addType(this.class_query())
             .addMethod(this.m_instance());
         for (FluentEntity fluent : FluentList.getFluents()) {
             for (EntityRefMethod refField : fluent.getRefMethods()) {
@@ -60,10 +53,17 @@ public class RefsFile extends AbstractFile {
         }
     }
 
-    private FieldSpec f_mapping() {
-        return FieldSpec.builder(MappingRefFiler.getClassName(), "mapping",
-            Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("$T.INSTANCE", MappingRefFiler.getClassName())
+    private TypeSpec class_mapping() {
+        return TypeSpec.classBuilder("Mapping")
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .superclass(MappingRefFiler.getClassName())
+            .build();
+    }
+
+    private TypeSpec class_query() {
+        return TypeSpec.classBuilder("Query")
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .superclass(QueryRefFiler.getClassName())
             .build();
     }
 

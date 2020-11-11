@@ -35,8 +35,7 @@ public class BaseDaoFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.addModifiers(Modifier.ABSTRACT)
-            .superclass(this.superBaseDaoImplKlass())
-            .addSuperinterface(this.superMappingClass());
+            .superclass(this.superBaseDaoImplKlass());
 
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
@@ -55,11 +54,6 @@ public class BaseDaoFiler extends AbstractFiler {
             .addParameter(fluent.entity(), "entity")
             .addStatement("INSTANCE.setInsertDefault(entity)")
             .build();
-    }
-
-
-    private TypeName superMappingClass() {
-        return ClassName.get(MappingFiler.getPackageName(fluent), MappingFiler.getClassName(fluent));
     }
 
     private TypeName superBaseDaoImplKlass() {
