@@ -1,9 +1,10 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.impl.BaseUpdate;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;

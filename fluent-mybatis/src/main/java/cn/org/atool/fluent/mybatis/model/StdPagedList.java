@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base.model;
+package cn.org.atool.fluent.mybatis.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class PagedList<E> {
+public class StdPagedList<E> implements IPagedList<E> {
     /**
      * 总记录数
      */
@@ -25,11 +25,16 @@ public class PagedList<E> {
      */
     private List<E> data;
 
-    public PagedList() {
+    public StdPagedList() {
     }
 
-    public PagedList(int total, List<E> data) {
+    public StdPagedList(int total, List<E> data) {
         this.total = total;
         this.data = data;
+    }
+
+    @Override
+    public boolean isStdPaged() {
+        return true;
     }
 }

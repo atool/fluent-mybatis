@@ -1,6 +1,9 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
-import cn.org.atool.fluent.mybatis.processor.filer.*;
+import cn.org.atool.fluent.mybatis.processor.filer.RefsFile;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.*;
+import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
+import cn.org.atool.generator.javafile.AbstractFile;
 import cn.org.atool.generator.util.GeneratorHelper;
 import com.squareup.javapoet.JavaFile;
 import lombok.Getter;
@@ -40,6 +43,10 @@ public class FluentList {
         samePackage = sameStartPackage(samePackage, fluent.getBasePack());
     }
 
+    public static String refsPackage() {
+        return getSamePackage() + ".refs";
+    }
+
     public static FluentEntity getFluentEntity(String entityName) {
         return map.get(entityName);
     }
@@ -63,14 +70,27 @@ public class FluentList {
                 throw new RuntimeException(e);
             }
         }
-        if (!fluents.isEmpty()) {
+        if (fluents.isEmpty()) {
+            return;
+        }
+        for (AbstractFile file : refFiles()) {
             try {
-                new RefsFile().writeTo(filer);
+                file.writeTo(filer);
             } catch (Exception e) {
                 logger.accept("Generate Refs error:\n" + GeneratorHelper.toString(e));
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static List<AbstractFile> refFiles() {
+        return Arrays.asList(
+            new IWrapperDefaultRefFiler(),
+            new MapperRefFiler(),
+            new MappingRefFiler(),
+            new QueryRefFiler(),
+            new RefsFile()
+        );
     }
 
     /**
@@ -79,16 +99,16 @@ public class FluentList {
      * @param fluent
      */
     private static List<JavaFile> generateJavaFile(FluentEntity fluent) {
-        List<JavaFile> files = new ArrayList<>();
-        files.add(new MapperFiler(fluent).javaFile());
-        files.add(new MappingFiler(fluent).javaFile());
-        files.add(new EntityHelperFiler(fluent).javaFile());
-        files.add(new SqlProviderFiler(fluent).javaFile());
-        files.add(new WrapperHelperFiler(fluent).javaFile());
-        files.add(new QueryFiler(fluent).javaFile());
-        files.add(new UpdaterFiler(fluent).javaFile());
-        files.add(new BaseDaoFiler(fluent).javaFile());
-        files.add(new WrapperDefaultFiler(fluent).javaFile());
-        return files;
+        return Arrays.asList(
+            new MapperFiler(fluent).javaFile(),
+            new MappingFiler(fluent).javaFile(),
+            new EntityHelperFiler(fluent).javaFile(),
+            new SqlProviderFiler(fluent).javaFile(),
+            new WrapperHelperFiler(fluent).javaFile(),
+            new QueryFiler(fluent).javaFile(),
+            new UpdaterFiler(fluent).javaFile(),
+            new BaseDaoFiler(fluent).javaFile(),
+            new WrapperDefaultFiler(fluent).javaFile()
+        );
     }
 }

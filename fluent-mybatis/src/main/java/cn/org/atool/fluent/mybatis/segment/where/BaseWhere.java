@@ -49,7 +49,7 @@ public interface BaseWhere<
      * @return 查询器或更新器
      */
     default WHERE notNull() {
-        return this.apply(IS_NOT_NULL);
+        return this.apply(NOT_NULL);
     }
 
     /**
@@ -59,7 +59,7 @@ public interface BaseWhere<
      * @return 查询器或更新器
      */
     default WHERE notNull(boolean condition) {
-        return this.apply(condition, IS_NOT_NULL);
+        return this.apply(condition, NOT_NULL);
     }
 
     /**

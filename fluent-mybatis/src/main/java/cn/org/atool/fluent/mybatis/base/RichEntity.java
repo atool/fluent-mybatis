@@ -36,12 +36,12 @@ public abstract class RichEntity implements IEntity, IRichEntity {
                 if (this.cached.containsKey(methodName)) {
                     return (T) this.cached.get(methodName);
                 }
-                T result = EntityRefQuery.query().invoke(this.getClass(), methodName, reArgs(args));
+                T result = EntityRefs.instance().invoke(this.getClass(), methodName, reArgs(args));
                 this.cached.put(methodName, result);
                 return result;
             }
         } else {
-            return EntityRefQuery.query().invoke(this.getClass(), methodName, this.reArgs(args));
+            return EntityRefs.instance().invoke(this.getClass(), methodName, this.reArgs(args));
         }
     }
 

@@ -24,7 +24,7 @@ public enum SqlOp {
     /**
      * is not null
      */
-    IS_NOT_NULL("IS NOT NULL", 0),
+    NOT_NULL("IS NOT NULL", 0),
     /**
      * 等于
      */

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.PagedList;
-import cn.org.atool.fluent.mybatis.base.model.TagList;
+import cn.org.atool.fluent.mybatis.model.StdPagedList;
+import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    PagedList<E> pagedEntity(IQuery query);
+    StdPagedList<E> pagedEntity(IQuery query);
 
     /**
      * 分页查询数据（结果集为Map对象）
@@ -83,7 +83,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    PagedList<Map<String, Object>> pagedMaps(IQuery query);
+    StdPagedList<Map<String, Object>> pagedMaps(IQuery query);
 
     /**
      * 分页查询数据（结果集为Object对象）
@@ -93,7 +93,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
-    <POJO> PagedList<POJO> pagedPoJos(IQuery query, MapFunction<POJO> converter);
+    <POJO> StdPagedList<POJO> pagedPoJos(IQuery query, MapFunction<POJO> converter);
 
     /**
      * 分页查询数据（结果集为Object对象）
@@ -103,7 +103,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO> Object类型
      * @return 分页查询结果
      */
-    <POJO> PagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query);
+    <POJO> StdPagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query);
 
     /**
      * 按Marker标识分页查询
@@ -111,7 +111,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    TagList<E> tagPagedEntity(IQuery query);
+    TagPagedList<E> tagPagedEntity(IQuery query);
 
     /**
      * 按Marker标识分页查询（结果集为Map对象）
@@ -119,7 +119,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    TagList<Map<String, Object>> tagPagedMaps(IQuery query);
+    TagPagedList<Map<String, Object>> tagPagedMaps(IQuery query);
 
     /**
      * 按Marker标识分页查询（结果集为Object对象）
@@ -129,7 +129,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO>    Object实体类型
      * @return 分页查询结果
      */
-    <POJO> TagList<POJO> tagPagedPoJos(IQuery query, MapFunction<POJO> converter);
+    <POJO> TagPagedList<POJO> tagPagedPoJos(IQuery query, MapFunction<POJO> converter);
 
     /**
      * 按Marker标识分页查询（结果集为Object对象）
@@ -139,7 +139,7 @@ public interface IDaoProtected<E extends IEntity> {
      * @param <POJO> Object类型
      * @return 分页查询结果
      */
-    <POJO> TagList<POJO> tagPagedPoJos(Class<POJO> klass, IQuery query);
+    <POJO> TagPagedList<POJO> tagPagedPoJos(Class<POJO> klass, IQuery query);
 
     /**
      * 根据query查询满足条件的第一条记录

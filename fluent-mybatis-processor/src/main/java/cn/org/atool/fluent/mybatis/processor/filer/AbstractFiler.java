@@ -137,8 +137,7 @@ public abstract class AbstractFiler {
      * @param builder
      * @return
      */
-    protected MethodSpec.Builder throwPrimaryNoFound(MethodSpec.Builder builder) {
-        return builder.addStatement("throw new $T($S)",
-            RuntimeException.class, "primary key not found.");
+    public static MethodSpec.Builder throwPrimaryNoFound(MethodSpec.Builder builder) {
+        return builder.addStatement("throw new $T($S)", RuntimeException.class, "primary key not found.");
     }
 }

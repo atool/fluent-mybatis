@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base.model;
+package cn.org.atool.fluent.mybatis.model;
 
 import lombok.Getter;
 
@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @create 2020/6/24 10:45 上午
  */
 @Getter
-public class TagList<E> {
+public class TagPagedList<E> implements IPagedList<E> {
     /**
      * 本次查询结果集
      */
@@ -25,10 +25,10 @@ public class TagList<E> {
      */
     private E next;
 
-    public TagList() {
+    public TagPagedList() {
     }
 
-    public TagList(List<E> list, E next) {
+    public TagPagedList(List<E> list, E next) {
         this.data = list;
         this.next = next;
     }
@@ -42,5 +42,10 @@ public class TagList<E> {
      */
     public <MK> MK parseNext(Function<E, MK> parser) {
         return next == null ? null : parser.apply(next);
+    }
+
+    @Override
+    public boolean isTagPaged() {
+        return true;
     }
 }

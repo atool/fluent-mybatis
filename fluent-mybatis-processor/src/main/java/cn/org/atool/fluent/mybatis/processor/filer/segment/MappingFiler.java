@@ -1,13 +1,12 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeSpec;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.Arrays;
@@ -42,16 +41,38 @@ public class MappingFiler extends AbstractFiler {
     }
 
     @Override
-    public void build(TypeSpec.Builder builder) {
-        builder.addField(this.f_Table_Name());
-        builder.addField(this.f_Entity_Name());
+    public void build(TypeSpec.Builder spec) {
+        spec.addSuperinterface(IMapping.class)
+            .addField(this.f_Table_Name())
+            .addField(this.f_Entity_Name());
         this.fluent.getFields().stream()
             .forEach(field -> {
-                builder.addField(f_Field(field));
+                spec.addField(f_Field(field));
             });
-        builder.addField(this.f_Property2Column());
-        builder.addField(this.f_ALL_COLUMNS());
-        builder.addField(this.f_ALL_JOIN_COLUMNS());
+        spec.addField(this.f_Property2Column())
+            .addField(this.f_ALL_COLUMNS())
+            .addField(this.f_ALL_JOIN_COLUMNS())
+            .addMethod(this.m_findColumnByField())
+            .addMethod(this.m_findPrimaryColumn());
+    }
+
+    private MethodSpec m_findPrimaryColumn() {
+        MethodSpec.Builder spec = super.publicMethod("findPrimaryColumn", true, String.class)
+            .addModifiers(Modifier.DEFAULT);
+        if (fluent.getPrimary() == null) {
+            throwPrimaryNoFound(spec);
+        } else {
+            spec.addStatement("return $L.column", fluent.getPrimary().getName());
+        }
+        return spec.build();
+    }
+
+    private MethodSpec m_findColumnByField() {
+        return super.publicMethod("findColumnByField", true, String.class)
+            .addParameter(String.class, "field")
+            .addModifiers(Modifier.DEFAULT)
+            .addStatement("return Property2Column.get(field)")
+            .build();
     }
 
     private FieldSpec f_Field(CommonField fc) {

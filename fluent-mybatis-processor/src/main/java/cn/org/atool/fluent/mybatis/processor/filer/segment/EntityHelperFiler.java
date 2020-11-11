@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IEntityHelper;
@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
+import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import com.squareup.javapoet.*;
 
 import java.util.Map;

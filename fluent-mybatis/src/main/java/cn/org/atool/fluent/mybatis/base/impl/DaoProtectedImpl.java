@@ -1,11 +1,9 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
 import cn.org.atool.fluent.mybatis.base.*;
-import cn.org.atool.fluent.mybatis.base.model.PagedList;
-import cn.org.atool.fluent.mybatis.base.model.TagList;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
-import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
+import cn.org.atool.fluent.mybatis.model.StdPagedList;
+import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.NonNull;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
@@ -68,76 +66,67 @@ public abstract class DaoProtectedImpl<E extends IEntity>
     }
 
     @Override
-    public PagedList<E> pagedEntity(IQuery query) {
-        int total = this.mapper().countNoLimit(query);
-        List<E> list = this.mapper().listEntity(query);
-        return new PagedList<>(total, list);
+    public StdPagedList<E> pagedEntity(IQuery query) {
+        return PagedHelper.stdPagedEntity(this.mapper(), query);
     }
 
     @Override
-    public PagedList<Map<String, Object>> pagedMaps(IQuery query) {
+    public StdPagedList<Map<String, Object>> pagedMaps(IQuery query) {
         int total = this.mapper().countNoLimit(query);
         List<Map<String, Object>> list = this.mapper().listMaps(query);
-        return new PagedList<>(total, list);
+        return new StdPagedList<>(total, list);
     }
 
     @Override
-    public <POJO> PagedList<POJO> pagedPoJos(IQuery query, MapFunction<POJO> converter) {
-        PagedList<Map<String, Object>> paged = this.pagedMaps(query);
+    public <POJO> StdPagedList<POJO> pagedPoJos(IQuery query, MapFunction<POJO> converter) {
+        StdPagedList<Map<String, Object>> paged = this.pagedMaps(query);
         if (converter == null || paged == null || paged.getData() == null) {
-            return (PagedList<POJO>) paged;
+            return (StdPagedList<POJO>) paged;
         } else {
             List<POJO> list = this.toPoJoList(paged.getData(), converter);
-            return new PagedList<>(paged.getTotal(), list);
+            return new StdPagedList<>(paged.getTotal(), list);
         }
     }
 
     @Override
-    public <POJO> PagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query) {
-        PagedList<Map<String, Object>> paged = this.pagedMaps(query);
+    public <POJO> StdPagedList<POJO> pagedPoJos(Class<POJO> klass, IQuery query) {
+        StdPagedList<Map<String, Object>> paged = this.pagedMaps(query);
         List<POJO> list = this.toPoJoList(klass, paged.getData());
-        return new PagedList<>(paged.getTotal(), list);
+        return new StdPagedList<>(paged.getTotal(), list);
     }
 
     @Override
-    public TagList<E> tagPagedEntity(IQuery query) {
-        int size = this.validateMarkerPaged(query);
-        query.limit(size + 1);
-        List<E> list = this.mapper().listEntity(query);
-        E next = null;
-        if (list.size() > size) {
-            next = list.remove(size);
-        }
-        return new TagList<>(list, next);
+    public TagPagedList<E> tagPagedEntity(IQuery query) {
+        return PagedHelper.tagPagedEntity(this.mapper(), query);
     }
 
 
     @Override
-    public TagList<Map<String, Object>> tagPagedMaps(IQuery query) {
-        int size = this.validateMarkerPaged(query);
+    public TagPagedList<Map<String, Object>> tagPagedMaps(IQuery query) {
+        int size = PagedHelper.validateTagPaged(query);
         query.limit(size + 1);
         List list = this.mapper().listMaps(query);
         Map next = null;
         if (list.size() > size) {
             next = (Map) list.remove(size);
         }
-        return new TagList<>(list, next);
+        return new TagPagedList<>(list, next);
     }
 
     @Override
-    public <POJO> TagList<POJO> tagPagedPoJos(IQuery query, MapFunction<POJO> converter) {
-        TagList<Map<String, Object>> paged = this.tagPagedMaps(query);
+    public <POJO> TagPagedList<POJO> tagPagedPoJos(IQuery query, MapFunction<POJO> converter) {
+        TagPagedList<Map<String, Object>> paged = this.tagPagedMaps(query);
         List<POJO> list = this.toPoJoList(paged.getData(), converter);
         POJO next = this.toPoJo(paged.getNext(), converter);
-        return new TagList<>(list, next);
+        return new TagPagedList<>(list, next);
     }
 
     @Override
-    public <POJO> TagList<POJO> tagPagedPoJos(Class<POJO> klass, IQuery query) {
-        TagList<Map<String, Object>> paged = this.tagPagedMaps(query);
+    public <POJO> TagPagedList<POJO> tagPagedPoJos(Class<POJO> klass, IQuery query) {
+        TagPagedList<Map<String, Object>> paged = this.tagPagedMaps(query);
         List<POJO> list = this.toPoJoList(klass, paged.getData());
         POJO next = this.toPoJo(klass, paged.getNext());
-        return new TagList<>(list, next);
+        return new TagPagedList<>(list, next);
     }
 
     @Override
@@ -239,22 +228,5 @@ public abstract class DaoProtectedImpl<E extends IEntity>
      */
     private <POJO> List<POJO> toPoJoList(Class<POJO> klass, List<Map<String, Object>> list) {
         return list == null ? null : list.stream().map(map -> toPoJo(klass, map)).collect(toList());
-    }
-
-    /**
-     * 校验marker方式分页的分页参数合法性
-     *
-     * @param query 查询条件
-     * @return 最大查询数
-     */
-    private int validateMarkerPaged(IQuery query) {
-        PagedOffset paged = query.getWrapperData().getPaged();
-        if (paged == null) {
-            throw new FluentMybatisException("Paged parameter not set");
-        }
-        if (paged.getOffset() != 0) {
-            throw new FluentMybatisException("The offset of MarkerList should from zero, please use method: limit(size) or limit(0, size) .");
-        }
-        return paged.getLimit();
     }
 }

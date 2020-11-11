@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
 import cn.org.atool.fluent.mybatis.base.IDaoProtected;
-import cn.org.atool.fluent.mybatis.base.model.PagedList;
+import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
@@ -40,7 +40,7 @@ public class SelectPagedListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        PagedList<StudentEntity> list = daoProtected.pagedEntity(new StudentQuery()
+        StdPagedList<StudentEntity> list = daoProtected.pagedEntity(new StudentQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc().end()
             .limit(20, 10)
@@ -68,7 +68,7 @@ public class SelectPagedListTest extends BaseTest {
             .cleanAndInsert();
 
         MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
-        PagedList<Map> list = daoProtected.pagedMaps(new StudentQuery()
+        StdPagedList<Map> list = daoProtected.pagedMaps(new StudentQuery()
             .where.id().gt(20)
             .and.userName().like("user")
             .end()

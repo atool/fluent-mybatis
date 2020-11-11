@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
 import com.squareup.javapoet.ClassName;

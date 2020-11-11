@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.IQuery;
@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.*;
