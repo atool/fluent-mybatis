@@ -57,7 +57,7 @@ public class MappingRefFiler extends AbstractFile {
     }
 
     private TypeSpec class_mapping(FluentEntity fluent) {
-        return TypeSpec.classBuilder(fluent.lowerNoSuffix())
+        return TypeSpec.classBuilder(fluent.getNoSuffix())
             .addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC)
             .addSuperinterface(fluent.mapping())
             .build();
@@ -66,7 +66,7 @@ public class MappingRefFiler extends AbstractFile {
     private CodeBlock m_initMapping() {
         List<CodeBlock> list = new ArrayList<>();
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("mappings.put($T.class, new $L());\n", fluent.entity(), fluent.lowerNoSuffix()));
+            list.add(CodeBlock.of("mappings.put($T.class, new $L());\n", fluent.entity(), fluent.getNoSuffix()));
         }
         return CodeBlock.join(list, "");
     }

@@ -54,7 +54,7 @@ public class RefsFile extends AbstractFile {
     }
 
     private TypeSpec class_mapping() {
-        return TypeSpec.classBuilder("Mapping")
+        return TypeSpec.classBuilder("Column")
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(MappingRefFiler.getClassName())
             .build();
