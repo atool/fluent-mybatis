@@ -71,16 +71,4 @@ public interface IRichEntity extends IRich, IEntity {
         List list = this.invoke(RichEntity_ListByNotNull, false);
         return list;
     }
-
-    /**
-     * 是否存在对应条件数据
-     *
-     * @param query
-     * @return
-     */
-    default boolean existsBy(IQuery query) {
-        IEntityMapper mapper = EntityRefs.instance().findMapper(this);
-        int count = mapper.count(query);
-        return count > 0;
-    }
 }

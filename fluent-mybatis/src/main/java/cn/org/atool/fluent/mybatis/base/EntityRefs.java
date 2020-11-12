@@ -84,6 +84,10 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
         }
     }
 
+    public static <E extends IEntity> IPagedList<E> paged(IFormQuery query) {
+        return PagedHelper.stdPagedEntity(instance().findMapper(query.entityClass()), query);
+    }
+
     /**
      * 返回clazz实体对应的默认Query实例
      *

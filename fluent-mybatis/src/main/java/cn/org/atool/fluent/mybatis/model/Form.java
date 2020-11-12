@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -45,11 +46,23 @@ public class Form implements Serializable {
      */
     private int pageSize = 1;
 
-    public static <E extends IEntity, C extends FormSetter<IFormQuery<E, C>>> IFormQuery<E, C> by(Class<C> setter, E entity) {
+    public static <E extends IEntity, C extends FormSetter<IFormQuery<E, C>>> IFormQuery<E, C>
+    by(Class<C> setter, E entity) {
         assertNotNull("entity", entity);
         assertNotNull("column setter", setter);
+
         IQuery query = EntityRefs.instance().defaultQuery(entity.getClass());
         return new FormQuery(entity, query, setter);
+    }
+
+    public static <E extends IEntity, C extends FormSetter<IFormQuery<E, C>>> IFormQuery<E, C>
+    by(Class<C> setter,Class<E> entityClass, Map form) {
+        assertNotNull("form", form);
+        assertNotNull("entityClass", entityClass);
+        assertNotNull("column setter", setter);
+
+        IQuery query = EntityRefs.instance().defaultQuery(entityClass);
+        return new FormQuery(entityClass, query,form, setter);
     }
 
     /**

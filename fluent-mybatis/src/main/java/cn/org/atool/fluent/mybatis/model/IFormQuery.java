@@ -1,12 +1,24 @@
 package cn.org.atool.fluent.mybatis.model;
 
-import cn.org.atool.fluent.mybatis.base.FormSetter;
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.*;
 
 import static cn.org.atool.fluent.mybatis.model.FormItemOp.OP_EQ;
 
-public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E, C>>> extends IQuery<E, IFormQuery<E, C>> {
+/**
+ * 简单表单查询
+ *
+ * @param <E>
+ * @param <C>
+ * @author wudarui
+ */
+public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E, C>>>
+    extends IQuery<E, IFormQuery<E, C>> {
+    /**
+     * 对应的实体Entity类型
+     *
+     * @return
+     */
+    Class<? extends IEntity> entityClass();
 
     C op(String op);
 
@@ -36,5 +48,25 @@ public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E
 
     default C like() {
         return this.op(FormItemOp.OP_LIKE);
+    }
+
+    /**
+     * 是否存在对应条件数据
+     *
+     * @return
+     */
+    default boolean exists() {
+        IEntityMapper mapper = EntityRefs.instance().findMapper(this.entityClass());
+        int count = mapper.count(this);
+        return count > 0;
+    }
+
+    /**
+     * 分页查询数据
+     *
+     * @return
+     */
+    default <P extends IPagedList<E>> P paged() {
+        return (P) EntityRefs.paged(this);
     }
 }

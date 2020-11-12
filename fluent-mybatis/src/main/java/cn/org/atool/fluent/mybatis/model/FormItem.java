@@ -50,7 +50,7 @@ public class FormItem implements Serializable {
         assertNotBlank("key", key);
         if (isBlank(op)) {
             op = OP_EQ;
-        } else if (ALL_OP.contains(op)) {
+        } else if (!ALL_OP.contains(op)) {
             throw new RuntimeException("only support operation:" + String.join(", ", ALL_OP) + ", but find:" + op);
         }
         if (OP_BETWEEN.equals(op) || OP_NOT_BETWEEN.equals(op)) {

@@ -41,6 +41,8 @@ public interface FormItemOp {
     String OP_NOT_NULL = NOT_NULL.name();
 
     List<String> ALL_OP = Arrays.asList(
-        OP_GT, OP_GE, OP_EQ, OP_LE, OP_LT, OP_LIKE, OP_NOT_LIKE, OP_BETWEEN, OP_NOT_BETWEEN, OP_IN, OP_NOT_IN, OP_IS_NULL, OP_NOT_NULL
+        OP_GT, OP_GE, OP_EQ, OP_NE, OP_LE, OP_LT,
+        OP_LIKE, OP_NOT_LIKE, OP_BETWEEN, OP_NOT_BETWEEN,
+        OP_IN, OP_NOT_IN, OP_IS_NULL, OP_NOT_NULL
     );
 }
