@@ -97,7 +97,7 @@ public abstract class AbstractFiler {
     }
 
     protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, Class returnKlass) {
-        return this.publicMethod(methodName, isOverride, ClassName.get(returnKlass));
+        return this.publicMethod(methodName, isOverride, returnKlass == null ? null : ClassName.get(returnKlass));
     }
 
     /**
@@ -116,7 +116,9 @@ public abstract class AbstractFiler {
         if (isOverride) {
             builder.addAnnotation(Override.class);
         }
-        builder.returns(returnKlass);
+        if (returnKlass != null) {
+            builder.returns(returnKlass);
+        }
         builder.addModifiers(Modifier.PUBLIC);
         return builder;
     }

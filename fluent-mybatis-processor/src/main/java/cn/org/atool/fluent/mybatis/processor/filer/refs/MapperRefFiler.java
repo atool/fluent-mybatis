@@ -14,6 +14,8 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.m_defaultQuery;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.m_findDefaultGetter;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.SetterRefFiler.m_newFormSetter;
 import static cn.org.atool.generator.util.ClassNames.Lombok_Getter;
 import static cn.org.atool.generator.util.ClassNames.Spring_Autowired;
 
@@ -44,8 +46,13 @@ public class MapperRefFiler extends AbstractFile {
         }
         spec.addMethod(m_findColumnByField(true))
             .addMethod(m_findPrimaryColumn(true))
+            .addMethod(m_findDefaultGetter(true))
             .addMethod(m_defaultQuery(true))
+            .addMethod(m_newFormSetter(true))
             .addMethod(this.m_initEntityMapper());
+        spec.addType(this.class_mapping())
+            .addType(this.class_query())
+            .addType(this.class_setter());
     }
 
     private FieldSpec f_mapper(FluentEntity fluent) {
@@ -65,6 +72,28 @@ public class MapperRefFiler extends AbstractFile {
             builder.addStatement("this.entityMappers.put($T.class, this.$LMapper)", fluent.entity(), fluent.lowerNoSuffix());
         }
         return builder.build();
+    }
+
+
+    private TypeSpec class_mapping() {
+        return TypeSpec.classBuilder("Column")
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .superclass(MappingRefFiler.getClassName())
+            .build();
+    }
+
+    private TypeSpec class_query() {
+        return TypeSpec.classBuilder("Query")
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .superclass(QueryRefFiler.getClassName())
+            .build();
+    }
+
+    private TypeSpec class_setter() {
+        return TypeSpec.classBuilder("Setter")
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .superclass(SetterRefFiler.getClassName())
+            .build();
     }
 
     @Override

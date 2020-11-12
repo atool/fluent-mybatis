@@ -1,21 +1,19 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_QUERY;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_WrapperDefault;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 
 /**
  * 构造Query和Updater的工程类
@@ -38,18 +36,26 @@ public class WrapperDefaultFiler extends AbstractFiler {
     }
 
     @Override
-    protected void build(TypeSpec.Builder builder) {
-        this.addWrapperDefault(builder, fluent.getDefaults());
-        builder.addField(FieldSpec.builder(fluent.wrapperFactory(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .initializer("new $T()", fluent.wrapperFactory())
-            .build());
-        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
-        builder.addMethod(this.m_newQuery_0());
-        builder.addMethod(this.m_newQuery_1());
-        builder.addMethod(this.m_newQuery_2());
-        builder.addMethod(this.m_newUpdater());
+    protected void build(TypeSpec.Builder spec) {
+        this.addWrapperDefault(spec, fluent.getDefaults());
+        spec.addSuperinterface(IDefaultGetter.class)
+            .addField(FieldSpec.builder(fluent.wrapperFactory(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("new $T()", fluent.wrapperFactory())
+                .build())
+            .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
+            .addMethod(this.m_initEntityDefault())
+            .addMethod(this.m_newQuery_0())
+            .addMethod(this.m_newQuery_1())
+            .addMethod(this.m_newQuery_2())
+            .addMethod(this.m_newUpdater());
     }
 
+    /**
+     * 设置implements自定义接口
+     *
+     * @param builder
+     * @param daoInterface
+     */
     protected void addWrapperDefault(TypeSpec.Builder builder, String daoInterface) {
         int dot = daoInterface.lastIndexOf('.');
         String packageName = "";
@@ -61,11 +67,15 @@ public class WrapperDefaultFiler extends AbstractFiler {
         builder.addSuperinterface(ClassName.get(packageName, simpleClassName));
     }
 
+    private MethodSpec m_initEntityDefault() {
+        return super.publicMethod(M_INIT_ENTITY_DEFAULT, true, (TypeName) null)
+            .addParameter(IEntity.class, "entity")
+            .addStatement("this.setInsertDefault(entity)")
+            .build();
+    }
+
     private MethodSpec m_newQuery_0() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addJavadoc("实例化查询构造器\n")
-            .addJavadoc("o - 设置默认查询条件\n\n")
-            .addJavadoc("@return 查询构造器")
+        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addStatement("$T query = new $T()", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
@@ -73,13 +83,8 @@ public class WrapperDefaultFiler extends AbstractFiler {
     }
 
     private MethodSpec m_newQuery_1() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addParameter(String.class, "alias")
-            .addJavadoc("实例化查询构造器\n")
-            .addJavadoc("o - 设置默认查询条件\n")
-            .addJavadoc("o - 设置别名alias\n\n")
-            .addJavadoc("@param alias 别名\n")
-            .addJavadoc("@return 查询构造器")
             .addStatement("$T query = new $T(alias, new $T())", fluent.query(), fluent.query(), ClassName.get(Parameters.class))
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
@@ -87,16 +92,9 @@ public class WrapperDefaultFiler extends AbstractFiler {
     }
 
     private MethodSpec m_newQuery_2() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addParameter(String.class, "alias")
             .addParameter(BaseQuery.class, "joinFrom")
-            .addJavadoc("实例化查询构造器\n")
-            .addJavadoc("o - 设置默认查询条件\n")
-            .addJavadoc("o - 设置别名alias\n")
-            .addJavadoc("o - 设置变量实例来自From查询实例\n\n")
-            .addJavadoc("@param alias 别名\n")
-            .addJavadoc("@param joinFrom 关联查询时,from表查询对象\n")
-            .addJavadoc("@return 查询构造器")
             .addStatement("$T query = new $T(alias, joinFrom.getWrapperData().getParameters())", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
@@ -104,10 +102,7 @@ public class WrapperDefaultFiler extends AbstractFiler {
     }
 
     private MethodSpec m_newUpdater() {
-        return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
-            .addJavadoc("实例化更新构造器\n")
-            .addJavadoc("o - 设置默认更新条件\n\n")
-            .addJavadoc("@return 更新构造器")
+        return super.publicMethod(M_DEFAULT_UPDATER, true, fluent.updater())
             .addStatement("$T updater = new $T()", fluent.updater(), fluent.updater())
             .addStatement("this.setUpdateDefault(updater)")
             .addStatement("return updater")

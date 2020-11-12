@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.annotation;
 
-import cn.org.atool.fluent.mybatis.base.IDefault;
+import cn.org.atool.fluent.mybatis.base.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.lang.annotation.*;
@@ -56,7 +56,7 @@ public @interface FluentMybatis {
      *
      * @return
      */
-    Class<? extends IDefault> defaults() default IDefault.class;
+    Class<? extends IDefaultSetter> defaults() default IDefaultSetter.class;
 
     /**
      * 分页语法

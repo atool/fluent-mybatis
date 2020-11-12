@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.base.IDefault;
+import cn.org.atool.fluent.mybatis.base.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -93,7 +93,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
-        this.defaults = isBlank(defaults) ? IDefault.class.getName() : defaults;
+        this.defaults = isBlank(defaults) ? IDefaultSetter.class.getName() : defaults;
         this.tableName = fluentMyBatis.table();
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());

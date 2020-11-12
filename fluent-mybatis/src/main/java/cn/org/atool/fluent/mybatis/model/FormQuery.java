@@ -1,54 +1,84 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.experimental.Accessors;
+import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
- * 简单表单查询设置
+ * 通用的Form形式查询
  *
+ * @param <E>
+ * @param <C>
  * @author darui.wu
  */
-@Data
-@Accessors(chain = true)
-public class FormQuery implements Serializable {
-    private static final long serialVersionUID = 7702717917894301362L;
+public class FormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E, C>>> implements IFormQuery<E, C> {
+    private final E entity;
+    private final Map<String, Object> map;
+    private final IQuery<E, ?> query;
+    private final FormSetter<IFormQuery<E, C>> setter;
 
-    @Getter(AccessLevel.NONE)
-    public final FormItemAdder add = new FormItemAdder(this);
+    public FormQuery(E entity, IQuery<E, ?> query, Class<C> setter) {
+        this.entity = entity;
+        this.map = this.entity.toEntityMap();
+        this.query = query;
+        this.setter = EntityRefs.instance().newFormSetter(setter, this);
+    }
 
-    /**
-     * 条件项列表
-     */
-    private List<FormItem> items = new ArrayList<>();
-    /**
-     * 标准分页时, 当前页码
-     */
-    private Integer currPage;
-    /**
-     * Tag分页时, 当前页id值
-     */
-    private String nextId;
-    /**
-     * 查询一页的数量
-     */
-    private int pageSize = 1;
+    @Override
+    public C op(String op) {
+        this.setter.set(c -> this.query.where().apply(c.column, SqlOp.valueOf(op), map.get(c.name)));
+        return (C) setter;
+    }
 
-    /**
-     * 分页查询数据
-     *
-     * @param clazz
-     * @param <E>
-     * @return
-     */
-    public <E extends IEntity, P extends IPagedList<E>> P paged(Class<E> clazz) {
-        return (P) EntityRefs.paged(clazz, this);
+    @Override
+    public IFormQuery<E, C> distinct() {
+        this.query.distinct();
+        return this;
+    }
+
+    @Override
+    public IFormQuery<E, C> selectAll() {
+        this.query.selectAll();
+        return this;
+    }
+
+    @Override
+    public IFormQuery<E, C> selectId() {
+        this.query.selectId();
+        return this;
+    }
+
+    @Override
+    public IFormQuery<E, C> limit(int limit) {
+        this.query.limit(limit);
+        return this;
+    }
+
+    @Override
+    public IFormQuery<E, C> limit(int start, int limit) {
+        this.query.limit(start, limit);
+        return this;
+    }
+
+    @Override
+    public IFormQuery<E, C> last(String lastSql) {
+        this.query.last(lastSql);
+        return this;
+    }
+
+    @Override
+    public WhereBase where() {
+        return this.query.where();
+    }
+
+    @Override
+    public WrapperData getWrapperData() {
+        return this.query.getWrapperData();
     }
 }

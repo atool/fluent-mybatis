@@ -146,6 +146,12 @@ public abstract class FluentClassName {
         );
     }
 
+    public ClassName wrapperHelper() {
+        return ClassName.get(
+            WrapperHelperFiler.getPackageName(this),
+            WrapperHelperFiler.getClassName(this));
+    }
+
     public ClassName queryWhere() {
         return ClassName.get(
             WrapperHelperFiler.getPackageName(this)
@@ -207,5 +213,12 @@ public abstract class FluentClassName {
             WrapperHelperFiler.getPackageName(this)
                 + "." +
                 WrapperHelperFiler.getClassName(this), Suffix_ISegment);
+    }
+
+    public ClassName formSetter() {
+        return ClassName.get(
+            WrapperHelperFiler.getPackageName(this)
+                + "." +
+                WrapperHelperFiler.getClassName(this), Suffix_FormSetter);
     }
 }

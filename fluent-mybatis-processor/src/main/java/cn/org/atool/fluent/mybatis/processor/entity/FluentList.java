@@ -88,6 +88,7 @@ public class FluentList {
             new MapperRefFiler(),
             new MappingRefFiler(),
             new QueryRefFiler(),
+            new SetterRefFiler(),
             new RefsFile()
         );
     }

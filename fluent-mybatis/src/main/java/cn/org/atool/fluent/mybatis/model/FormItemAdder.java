@@ -12,9 +12,9 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @author wudarui
  */
 public class FormItemAdder {
-    private final FormQuery form;
+    private final Form form;
 
-    public FormItemAdder(FormQuery form) {
+    public FormItemAdder(Form form) {
         this.form = form;
     }
 
@@ -26,12 +26,12 @@ public class FormItemAdder {
      * @param value
      * @return
      */
-    private FormQuery item(String key, String op, Object... value) {
+    private Form item(String key, String op, Object... value) {
         this.form.getItems().add(new FormItem(key, op, value));
         return form;
     }
 
-    private FormQuery item(FieldMapping key, String op, Object... value) {
+    private Form item(FieldMapping key, String op, Object... value) {
         this.form.getItems().add(new FormItem(key.name, op, value));
         return form;
     }
@@ -39,122 +39,122 @@ public class FormItemAdder {
     /**
      * columnt op
      **/
-    public FormQuery eq(String key, Object value) {
+    public Form eq(String key, Object value) {
         return this.item(key, OP_EQ, value);
     }
 
-    public FormQuery gt(String key, Object value) {
+    public Form gt(String key, Object value) {
         return this.item(key, OP_GT, value);
     }
 
-    public FormQuery ge(String key, Object value) {
+    public Form ge(String key, Object value) {
         return this.item(key, OP_GE, value);
     }
 
-    public FormQuery lt(String key, Object value) {
+    public Form lt(String key, Object value) {
         return this.item(key, OP_LT, value);
     }
 
-    public FormQuery le(String key, Object value) {
+    public Form le(String key, Object value) {
         return this.item(key, OP_LE, value);
     }
 
-    public FormQuery like(String key, String value) {
+    public Form like(String key, String value) {
         return this.item(key, OP_LIKE, value);
     }
 
-    public FormQuery notLike(String key, String value) {
+    public Form notLike(String key, String value) {
         return this.item(key, OP_NOT_LIKE, value);
     }
 
-    public FormQuery between(String key, Object min, Object max) {
+    public Form between(String key, Object min, Object max) {
         assertNotNull("min", min);
         assertNotNull("max", max);
         return this.item(key, OP_BETWEEN, min, max);
     }
 
-    public FormQuery notBetween(String key, Object min, Object max) {
+    public Form notBetween(String key, Object min, Object max) {
         assertNotNull("min", min);
         assertNotNull("max", max);
         return this.item(key, OP_NOT_BETWEEN, min, max);
     }
 
-    public FormQuery in(String key, Object... value) {
+    public Form in(String key, Object... value) {
         assertNotEmpty("items", value);
         return this.item(key, OP_BETWEEN, value);
     }
 
-    public FormQuery notIn(String key, Object... values) {
+    public Form notIn(String key, Object... values) {
         assertNotEmpty("items", values);
         return this.item(key, OP_NOT_IN, values);
     }
 
-    public FormQuery isNull(String key) {
-        return this.item(key, OP_IS_NULL, null);
+    public Form isNull(String key) {
+        return this.item(key, OP_IS_NULL);
     }
 
-    public FormQuery notNull(String key) {
-        return this.item(key, OP_NOT_NULL, null);
+    public Form notNull(String key) {
+        return this.item(key, OP_NOT_NULL);
     }
 
     /**
      * field mapping op
      **/
-    public FormQuery eq(FieldMapping key, Object value) {
+    public Form eq(FieldMapping key, Object value) {
         return this.item(key, OP_EQ, value);
     }
 
-    public FormQuery gt(FieldMapping key, Object value) {
+    public Form gt(FieldMapping key, Object value) {
         return this.item(key, OP_GT, value);
     }
 
-    public FormQuery ge(FieldMapping key, Object value) {
+    public Form ge(FieldMapping key, Object value) {
         return this.item(key, OP_GE, value);
     }
 
-    public FormQuery lt(FieldMapping key, Object value) {
+    public Form lt(FieldMapping key, Object value) {
         return this.item(key, OP_LT, value);
     }
 
-    public FormQuery le(FieldMapping key, Object value) {
+    public Form le(FieldMapping key, Object value) {
         return this.item(key, OP_LE, value);
     }
 
-    public FormQuery like(FieldMapping key, String value) {
+    public Form like(FieldMapping key, String value) {
         return this.item(key, OP_LIKE, value);
     }
 
-    public FormQuery notLike(FieldMapping key, String value) {
+    public Form notLike(FieldMapping key, String value) {
         return this.item(key, OP_NOT_LIKE, value);
     }
 
-    public FormQuery between(FieldMapping key, Object min, Object max) {
+    public Form between(FieldMapping key, Object min, Object max) {
         assertNotNull("min", min);
         assertNotNull("max", max);
         return this.item(key, OP_BETWEEN, min, max);
     }
 
-    public FormQuery notBetween(FieldMapping key, Object min, Object max) {
+    public Form notBetween(FieldMapping key, Object min, Object max) {
         assertNotNull("min", min);
         assertNotNull("max", max);
         return this.item(key, OP_NOT_BETWEEN, min, max);
     }
 
-    public FormQuery in(FieldMapping key, Object... value) {
+    public Form in(FieldMapping key, Object... value) {
         assertNotEmpty("items", value);
         return this.item(key, OP_BETWEEN, value);
     }
 
-    public FormQuery notIn(FieldMapping key, Object... value) {
+    public Form notIn(FieldMapping key, Object... value) {
         assertNotEmpty("items", value);
         return this.item(key, OP_NOT_IN, value);
     }
 
-    public FormQuery isNull(FieldMapping key) {
-        return this.item(key, OP_IS_NULL, null);
+    public Form isNull(FieldMapping key) {
+        return this.item(key, OP_IS_NULL);
     }
 
-    public FormQuery notNull(FieldMapping key) {
-        return this.item(key, OP_NOT_NULL, null);
+    public Form notNull(FieldMapping key) {
+        return this.item(key, OP_NOT_NULL);
     }
 }

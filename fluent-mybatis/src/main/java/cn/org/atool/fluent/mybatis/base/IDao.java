@@ -7,5 +7,5 @@ package cn.org.atool.fluent.mybatis.base;
  * @author wudarui
  */
 @Deprecated
-public interface IDao extends IDefault {
+public interface IDao extends IDefaultSetter {
 }

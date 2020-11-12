@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.scanner;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.base.IDefault;
+import cn.org.atool.fluent.mybatis.base.IDefaultSetter;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -29,7 +29,7 @@ public class DaoInterfaceParser {
     public static String getDefaults(TypeElement entity) {
         AnnotationMirror mirror = getFluentMyBatisMirror(entity);
         if (mirror == null) {
-            return IDefault.class.getName();
+            return IDefaultSetter.class.getName();
         }
 
         Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = mirror.getElementValues();
@@ -42,7 +42,7 @@ public class DaoInterfaceParser {
             DeclaredType aClass = (DeclaredType) value.getValue();
             return aClass.toString();
         }
-        return IDefault.class.getName();
+        return IDefaultSetter.class.getName();
     }
 
     private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity) {

@@ -73,6 +73,15 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         return this.apply();
     }
 
+    /**
+     * 当前字段
+     *
+     * @return
+     */
+    public FieldMapping get() {
+        return this.current;
+    }
+
     protected abstract R apply();
 
     /**

@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
+import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
@@ -11,7 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
 
 public class QueryRefFiler extends AbstractFile {
     private static String QueryRef = "QueryRef";
@@ -27,13 +30,20 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.addStaticImport(EntityRefs.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
+        super.staticImport(builder);
+    }
+
+    @Override
     protected void build(TypeSpec.Builder spec) {
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_factory(fluent));
         }
         spec.addField(this.f_allQuerySupplier())
             .addStaticBlock(this.m_initSupplier())
-            .addMethod(m_defaultQuery(false));
+            .addMethod(m_defaultQuery(false))
+            .addMethod(m_findDefaultGetter(false));
     }
 
     private FieldSpec f_factory(FluentEntity fluent) {
@@ -54,11 +64,25 @@ public class QueryRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Query实例")
+                .addStatement("\treturn findDefaultGetter(clazz).defaultQuery()");
+        }
+        return spec.build();
+    }
+
+    public static MethodSpec m_findDefaultGetter(boolean isRef) {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder("findDefaultGetter")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addParameter(Class.class, "clazz")
+            .returns(IDefaultGetter.class);
+        if (isRef) {
+            spec.addAnnotation(Override.class)
+                .addStatement("return $T.findDefaultGetter(clazz)", getClassName());
+        } else {
+            spec.addModifiers(Modifier.STATIC)
                 .addCode("if (Supplier.containsKey(clazz)) {\n")
-                .addStatement("\treturn Supplier.get(clazz).get()")
+                .addStatement("\treturn Supplier.get(clazz)")
                 .addCode("}\n")
-                .addStatement("throw new $T($S + clazz.getName() + $S)",
-                    RuntimeException.class, "the class[", "] is not a @FluentMybatis Entity or it's sub class.");
+                .addStatement("throw $L(clazz)", M_NOT_FLUENT_MYBATIS_EXCEPTION);
         }
         return spec.build();
     }
@@ -66,17 +90,13 @@ public class QueryRefFiler extends AbstractFile {
     private CodeBlock m_initSupplier() {
         List<CodeBlock> list = new ArrayList<>();
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("Supplier.put($T.class, $L::defaultQuery);\n", fluent.entity(), fluent.lowerNoSuffix()));
+            list.add(CodeBlock.of("Supplier.put($T.class, $L);\n", fluent.entity(), fluent.lowerNoSuffix()));
         }
         return CodeBlock.join(list, "");
     }
 
     private FieldSpec f_allQuerySupplier() {
-        return FieldSpec.builder(parameterizedType(
-            ClassName.get(Map.class),
-            ClassName.get(Class.class),
-            parameterizedType(Supplier.class, IQuery.class)
-            ), "Supplier",
+        return FieldSpec.builder(parameterizedType(Map.class, Class.class, IDefaultGetter.class), "Supplier",
             Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .initializer("new $T<>()", HashMap.class)
             .build();

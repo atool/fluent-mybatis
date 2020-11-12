@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRich;
+import cn.org.atool.fluent.mybatis.base.*;
 
 import java.util.List;
 
@@ -71,5 +70,17 @@ public interface IRichEntity extends IRich, IEntity {
     default <E extends IEntity> List<E> listByNotNull() {
         List list = this.invoke(RichEntity_ListByNotNull, false);
         return list;
+    }
+
+    /**
+     * 是否存在对应条件数据
+     *
+     * @param query
+     * @return
+     */
+    default boolean existsBy(IQuery query) {
+        IEntityMapper mapper = EntityRefs.instance().findMapper(this);
+        int count = mapper.count(query);
+        return count > 0;
     }
 }

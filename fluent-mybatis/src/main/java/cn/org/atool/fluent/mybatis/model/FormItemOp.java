@@ -16,6 +16,8 @@ public interface FormItemOp {
 
     String OP_GE = GE.name();
 
+    String OP_NE = NE.name();
+
     String OP_EQ = EQ.name();
 
     String OP_LE = LE.name();

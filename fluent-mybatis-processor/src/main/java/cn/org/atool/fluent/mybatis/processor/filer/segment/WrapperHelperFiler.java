@@ -1,10 +1,12 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.base.FormSetter;
+import cn.org.atool.fluent.mybatis.model.IFormQuery;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.segment.where.*;
@@ -43,7 +45,8 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addType(this.nestedHaving())
             .addType(this.nestedQueryOrderBy())
             .addType(this.nestedUpdateOrderBy())
-            .addType(this.nestedUpdateSetter());
+            .addType(this.nestedUpdateSetter())
+            .addType(this.nestedFormSetter());
     }
 
     /**
@@ -186,6 +189,26 @@ public class WrapperHelperFiler extends AbstractFiler {
             ))
             .addJavadoc("Update set 设置")
             .addMethod(this.constructor1_Update())
+            .build();
+    }
+
+
+    private TypeSpec nestedFormSetter() {
+        return TypeSpec.classBuilder(Suffix_FormSetter)
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .superclass(super.parameterizedType(
+                ClassName.get(FormSetter.class),
+                super.parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter())
+            ))
+            .addSuperinterface(super.parameterizedType(
+                fluent.segment(),
+                super.parameterizedType(
+                    ClassName.get(IFormQuery.class),
+                    fluent.entity(),
+                    fluent.formSetter())
+            ))
+            .addJavadoc("Form Column Setter")
+            .addMethod(this.constructor1_FormSetter())
             .build();
     }
 
@@ -340,6 +363,16 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addModifiers(Modifier.PUBLIC)
             .addParameter(fluent.updater(), "updater")
             .addStatement("super(updater)")
+            .build();
+    }
+
+
+    private MethodSpec constructor1_FormSetter() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter())
+                , "query")
+            .addStatement("super(query)")
             .build();
     }
 

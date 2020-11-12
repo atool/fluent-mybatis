@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
+
 /**
  * IMappingRef 文件构造
  *
@@ -27,7 +29,7 @@ public class MappingRefFiler extends AbstractFile {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(EntityRefs.class, "notFluentMybatisException");
+        builder.addStaticImport(EntityRefs.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
         super.staticImport(builder);
     }
 
@@ -85,7 +87,7 @@ public class MappingRefFiler extends AbstractFile {
                 .addCode("if (mappings.containsKey(clazz)) {\n")
                 .addStatement("\treturn mappings.get(clazz).findPrimaryColumn()")
                 .addCode("}\n")
-                .addStatement("throw notFluentMybatisException(clazz)");
+                .addStatement("throw $L(clazz)", M_NOT_FLUENT_MYBATIS_EXCEPTION);
         }
         return spec.build();
     }
@@ -105,7 +107,7 @@ public class MappingRefFiler extends AbstractFile {
                 .addCode("if (mappings.containsKey(clazz)) {\n")
                 .addStatement("\treturn mappings.get(clazz).findColumnByField(field)")
                 .addCode("}\n")
-                .addStatement("throw notFluentMybatisException(clazz)");
+                .addStatement("throw $L(clazz)", M_NOT_FLUENT_MYBATIS_EXCEPTION);
         }
         return spec.build();
     }

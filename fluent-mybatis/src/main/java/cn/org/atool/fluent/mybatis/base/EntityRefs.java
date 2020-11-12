@@ -2,8 +2,9 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.impl.PagedHelper;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.FormItem;
-import cn.org.atool.fluent.mybatis.model.FormQuery;
+import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import cn.org.atool.fluent.mybatis.model.IPagedList;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import org.springframework.beans.BeansException;
@@ -54,7 +55,7 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
      * @param <E>
      * @return
      */
-    public static <E extends IEntity> IPagedList<E> paged(Class<E> clazz, FormQuery condition) {
+    public static <E extends IEntity> IPagedList<E> paged(Class<E> clazz, Form condition) {
         assertNotNull("clazz", clazz);
         if (condition.getNextId() != null && condition.getCurrPage() != null) {
             throw new RuntimeException("nextId and currPage can only have one value");
@@ -90,6 +91,23 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
      * @return
      */
     public abstract IQuery defaultQuery(Class<? extends IEntity> clazz);
+
+    /**
+     * entity默认设置器
+     *
+     * @param clazz
+     * @return
+     */
+    public abstract IDefaultGetter findDefaultGetter(Class clazz);
+
+    /**
+     * Form Setter
+     *
+     * @param setterClass
+     * @param query
+     * @return
+     */
+    public abstract FormSetter newFormSetter(Class setterClass, IFormQuery query);
 
     /**
      * 返回clazz属性field对应的数据库字段名称
@@ -261,6 +279,7 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
      * @return
      */
     protected IEntity saveEntity(IEntity entity) {
+        this.findDefaultGetter(entity.getClass()).initEntityDefault(entity);
         this.findMapper(entity).insert(entity);
         return entity;
     }
@@ -287,11 +306,11 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
         }
     }
 
-    private IEntityMapper findMapper(IEntity entity) {
+    public IEntityMapper findMapper(IEntity entity) {
         return this.findMapper(entity.getClass());
     }
 
-    private IEntityMapper findMapper(Class<? extends IEntity> clazz) {
+    public IEntityMapper findMapper(Class<? extends IEntity> clazz) {
         Class entityClazz = this.findFluentEntityClass(clazz);
         return this.entityMappers.get(entityClazz);
     }

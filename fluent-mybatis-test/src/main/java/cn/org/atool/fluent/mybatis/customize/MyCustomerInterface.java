@@ -9,7 +9,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  *
  * @author wudarui
  */
-public interface MyCustomerInterface extends IDefault {
+public interface MyCustomerInterface extends IDefaultSetter {
     String F_ENV = "env";
 
     String F_IS_DELETED = "is_deleted";
