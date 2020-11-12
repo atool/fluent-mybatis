@@ -22,7 +22,8 @@ public class FormDemo extends BaseTest {
             .setAddress("宇宙深处");
         IFormQuery<StudentEntity, ?> query = Form.by(Refs.Setter.student, student)
             .eq().userName()
-            .eq().age();
+            .eq().age()
+            ;
         if (query.exists()) {
             throw new RuntimeException("出BUG了!");
         }

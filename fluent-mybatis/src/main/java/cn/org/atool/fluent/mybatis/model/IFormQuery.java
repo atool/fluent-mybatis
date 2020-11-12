@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.*;
 
-import static cn.org.atool.fluent.mybatis.model.FormItemOp.OP_EQ;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 
 /**
  * 简单表单查询
@@ -27,27 +27,27 @@ public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E
     }
 
     default C ne() {
-        return this.op(FormItemOp.OP_NE);
+        return this.op(OP_NE);
     }
 
     default C gt() {
-        return this.op(FormItemOp.OP_GT);
+        return this.op(OP_GT);
     }
 
     default C ge() {
-        return this.op(FormItemOp.OP_GE);
+        return this.op(OP_GE);
     }
 
     default C lt() {
-        return this.op(FormItemOp.OP_LT);
+        return this.op(OP_LT);
     }
 
     default C le() {
-        return this.op(FormItemOp.OP_LE);
+        return this.op(OP_LE);
     }
 
     default C like() {
-        return this.op(FormItemOp.OP_LIKE);
+        return this.op(OP_LIKE);
     }
 
     /**

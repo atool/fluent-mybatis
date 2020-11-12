@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model;
+package cn.org.atool.fluent.mybatis.base.model;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.List;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 
 /**
- * 条件操作符常量定义
+ * sql条件比较操作符常量
  *
- * @author darui.wu
+ * @author wudarui
  */
-public interface FormItemOp {
+public interface SqlOpStr {
 
     String OP_GT = GT.name();
 

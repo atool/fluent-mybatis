@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.model.FormItemOp.*;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 

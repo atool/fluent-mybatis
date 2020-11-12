@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
-import static cn.org.atool.fluent.mybatis.model.FormItemOp.*;
+import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
