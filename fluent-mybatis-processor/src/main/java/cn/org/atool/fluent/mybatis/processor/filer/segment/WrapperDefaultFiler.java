@@ -43,10 +43,13 @@ public class WrapperDefaultFiler extends AbstractFiler {
                 .initializer("new $T()", fluent.wrapperFactory())
                 .build())
             .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
-            .addMethod(this.m_initEntityDefault())
-            .addMethod(this.m_newQuery_0())
-            .addMethod(this.m_newQuery_1())
-            .addMethod(this.m_newQuery_2())
+            .addMethod(this.m_setEntityByDefault())
+            .addMethod(this.m_defaultQuery_0())
+            .addMethod(this.m_defaultAliasQuery())
+            .addMethod(this.m_defaultQuery_1())
+            .addMethod(this.m_defaultQuery_2())
+            .addMethod(this.m_joinFrom_1())
+            .addMethod(this.m_joinFrom_2())
             .addMethod(this.m_newUpdater());
     }
 
@@ -67,14 +70,23 @@ public class WrapperDefaultFiler extends AbstractFiler {
         builder.addSuperinterface(ClassName.get(packageName, simpleClassName));
     }
 
-    private MethodSpec m_initEntityDefault() {
-        return super.publicMethod(M_INIT_ENTITY_DEFAULT, true, (TypeName) null)
+    private MethodSpec m_setEntityByDefault() {
+        return super.publicMethod(M_SET_ENTITY_BY_DEFAULT, true, (TypeName) null)
             .addParameter(IEntity.class, "entity")
             .addStatement("this.setInsertDefault(entity)")
             .build();
     }
 
-    private MethodSpec m_newQuery_0() {
+    private MethodSpec m_defaultAliasQuery() {
+        return super.publicMethod("defaultAliasQuery", true, fluent.query())
+            .addStatement("$T parameters = new Parameters()", Parameters.class)
+            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
+            .addStatement("this.setQueryDefault(query)")
+            .addStatement("return query")
+            .build();
+    }
+
+    private MethodSpec m_defaultQuery_0() {
         return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addStatement("$T query = new $T()", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
@@ -82,7 +94,7 @@ public class WrapperDefaultFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_newQuery_1() {
+    private MethodSpec m_defaultQuery_1() {
         return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addParameter(String.class, "alias")
             .addStatement("$T query = new $T(alias, new $T())", fluent.query(), fluent.query(), ClassName.get(Parameters.class))
@@ -91,11 +103,30 @@ public class WrapperDefaultFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_newQuery_2() {
-        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
+    private MethodSpec m_defaultQuery_2() {
+        return super.publicMethod("defaultQuery", true, fluent.query())
+            .addParameter(String.class, "alias")
+            .addParameter(BaseQuery.class, "joinFrom")
+            .addAnnotation(Deprecated.class)
+            .addStatement("return this.joinFrom(alias,joinFrom)")
+            .build();
+    }
+
+    private MethodSpec m_joinFrom_2() {
+        return super.publicMethod("joinFrom", true, fluent.query())
             .addParameter(String.class, "alias")
             .addParameter(BaseQuery.class, "joinFrom")
             .addStatement("$T query = new $T(alias, joinFrom.getWrapperData().getParameters())", fluent.query(), fluent.query())
+            .addStatement("this.setQueryDefault(query)")
+            .addStatement("return query")
+            .build();
+    }
+
+    private MethodSpec m_joinFrom_1() {
+        return super.publicMethod("joinFrom", true, fluent.query())
+            .addParameter(BaseQuery.class, "joinFrom")
+            .addStatement("$T parameters = joinFrom.getWrapperData().getParameters()", Parameters.class)
+            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
             .build();

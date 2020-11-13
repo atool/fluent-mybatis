@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.functions.IoFunction;
+import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.JoinBuilder;
@@ -54,7 +54,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         this.wrapperData = new JoinWrapperData(this.query, this.queries);
     }
 
-    public JoinQuery(Class<QL> queryClass, IoFunction<QL> query) {
+    public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
         this.queryClass = queryClass;
         this.parameters = new Parameters();
         this.query = newQuery(queryClass, alias(), this.parameters);
@@ -63,17 +63,17 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, IoFunction<QR> query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query) {
         return join(JoinType.Join, clazz, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, IoFunction<QR> query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query) {
         return join(JoinType.LeftJoin, clazz, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, IoFunction<QR> query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query) {
         return join(JoinType.RightJoin, clazz, query);
     }
 
@@ -118,7 +118,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(
-        JoinType joinType, Class<QR> queryClass, IoFunction<QR> apply
+        JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
     ) {
         QR query = newQuery(queryClass, alias(), this.query.wrapperData.getParameters());
         this.queries.add(query);

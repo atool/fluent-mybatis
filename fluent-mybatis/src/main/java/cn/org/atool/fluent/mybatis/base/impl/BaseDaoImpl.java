@@ -1,20 +1,11 @@
 package cn.org.atool.fluent.mybatis.base.impl;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IQuery;
-import cn.org.atool.fluent.mybatis.base.IUpdate;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.base.*;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * BaseDaoImpl
@@ -22,37 +13,20 @@ import static java.util.stream.Collectors.toSet;
  * @param <E> 实体类
  * @author darui.wu
  */
-public abstract class BaseDaoImpl<E extends IEntity>
-    extends DaoProtectedImpl<E> implements IBaseDao<E> {
-
+public abstract class BaseDaoImpl<E extends IEntity> implements IBaseDao<E>, IDao<E> {
     @Override
     public <PK extends Serializable> PK save(E entity) {
-        this.setEntityDefault(entity);
-        this.mapper().insert(entity);
-        return (PK) entity.findPk();
+        return this.mapper().save(entity);
     }
 
     @Override
     public int save(List<E> list) {
-        Set pks = list.stream().map(E::findPk).filter(pk -> pk != null).collect(toSet());
-        if (!pks.isEmpty() && pks.size() != list.size()) {
-            throw FluentMybatisException.instance("The primary key of the list instance must be assigned to all or none");
-        }
-        list.forEach(this::setEntityDefault);
-        return this.mapper().insertBatch(list);
+        return this.mapper().save(list);
     }
 
     @Override
     public boolean saveOrUpdate(E entity) {
-        if (entity.findPk() == null) {
-            this.setEntityDefault(entity);
-            return this.mapper().insert(entity) > 0;
-        } else if (this.existPk(entity.findPk())) {
-            return this.mapper().updateById(entity) > 0;
-        } else {
-            this.setEntityDefault(entity);
-            return this.mapper().insert(entity) > 0;
-        }
+        return this.mapper().saveOrUpdate(entity);
     }
 
     @Override
@@ -67,18 +41,12 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public List<E> selectByMap(Map<String, Object> where) {
-        IQuery query = this.defaultQuery().where().eqNotNull(where).end();
-        return this.mapper().listEntity(query);
+        return this.mapper().listByMapAndDefault(where);
     }
 
     @Override
     public boolean existPk(Serializable id) {
-        /**
-         * 只设置id，不添加默认值
-         */
-        IQuery query = this.query().where().apply(this.primaryField(), EQ, id).end();
-        Integer count = this.mapper().count(query);
-        return count != null && count > 0;
+        return this.mapper().existPk(id);
     }
 
     @Override
@@ -88,10 +56,7 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public int deleteByEntityIds(Collection<E> entities) {
-        List<Serializable> ids = entities.stream()
-            .map(IEntity::findPk)
-            .collect(toList());
-        return this.mapper().deleteByIds(ids);
+        return this.mapper().deleteByEntityIds(entities);
     }
 
     @Override
@@ -106,17 +71,8 @@ public abstract class BaseDaoImpl<E extends IEntity>
 
     @Override
     public int deleteByMap(Map<String, Object> map) {
-        IQuery query = (IQuery) this.defaultQuery().where().eqNotNull((Map) map).end();
-        return this.mapper().delete(query);
+        return this.mapper().deleteByMapAndDefault(map);
     }
-
-
-    /**
-     * 插入实例的默认值字段设置
-     *
-     * @param entity
-     */
-    protected abstract void setEntityDefault(E entity);
 
     /**
      * 无任何条件的查询

@@ -14,7 +14,7 @@ public interface IMapperDao<E extends IEntity> {
      *
      * @return
      */
-    IEntityMapper<E> mapper();
+    IDaoMapper<E> mapper();
 
     /**
      * 构造默认查询条件

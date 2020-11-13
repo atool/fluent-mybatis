@@ -1,8 +1,10 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.IDaoMapper;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.IUpdate;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -55,43 +57,65 @@ public class MapperFiler extends AbstractFiler {
     }
 
     @Override
-    protected void build(TypeSpec.Builder builder) {
-        builder.addSuperinterface(this.superMapperClass()).addAnnotation(ClassNames.Mybatis_Mapper);
-        builder.addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
-            .addMember("value", "$S", getMapperName(this.fluent)).build()
-        );
-        builder.addField(FieldSpec.builder(String.class, "ResultMap",
+    protected void build(TypeSpec.Builder spec) {
+        spec.addSuperinterface(this.superMapperClass())
+            .addSuperinterface(parameterizedType(ClassName.get(IDaoMapper.class), fluent.entity()))
+            .addAnnotation(ClassNames.Mybatis_Mapper)
+            .addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
+                .addMember("value", "$S", getMapperName(this.fluent)).build()
+            );
+        spec.addField(FieldSpec.builder(String.class, "ResultMap",
             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$S", fluent.getClassName() + "ResultMap")
             .build()
         );
-        builder.addMethod(this.m_insert());
-        builder.addMethod(this.m_insertBatch());
-        builder.addMethod(this.m_deleteById());
-        builder.addMethod(this.m_deleteByMap());
-        builder.addMethod(this.m_delete());
-        builder.addMethod(this.m_deleteByIds());
-        builder.addMethod(this.m_updateById());
-        builder.addMethod(this.m_updateBy());
-        builder.addMethod(this.m_findById());
-        builder.addMethod(this.m_findOne());
-        builder.addMethod(this.m_listByIds());
-        builder.addMethod(this.m_listByMap());
-        builder.addMethod(this.m_listEntity());
-        builder.addMethod(this.m_listMaps());
-        builder.addMethod(this.m_listObjs());
-        builder.addMethod(this.m_count());
-        builder.addMethod(this.m_countNoLimit());
+        spec.addMethod(this.m_insert())
+            .addMethod(this.m_insertBatch())
+            .addMethod(this.m_deleteById())
+            .addMethod(this.m_deleteByMap())
+            .addMethod(this.m_delete())
+            .addMethod(this.m_deleteByIds())
+            .addMethod(this.m_updateById())
+            .addMethod(this.m_updateBy())
+            .addMethod(this.m_findById())
+            .addMethod(this.m_findOne())
+            .addMethod(this.m_listByIds())
+            .addMethod(this.m_listByMap())
+            .addMethod(this.m_listEntity())
+            .addMethod(this.m_listMaps())
+            .addMethod(this.m_listObjs())
+            .addMethod(this.m_count())
+            .addMethod(this.m_countNoLimit());
 
-        builder.addMethod(this.m_query());
-        builder.addMethod(this.m_updater());
+        spec.addMethod(this.m_query())
+            .addMethod(this.m_updater())
+            .addMethod(this.m_primaryField())
+            .addMethod(this.m_entityClass())
+        ;
+    }
+
+    private MethodSpec m_entityClass() {
+        return super.publicMethod("entityClass", true, parameterizedType(ClassName.get(Class.class), fluent.entity()))
+            .addModifiers(Modifier.DEFAULT)
+            .addStatement("return $T.class", fluent.entity())
+            .build();
+    }
+
+    private MethodSpec m_primaryField() {
+        MethodSpec.Builder builder = super.publicMethod("primaryField", true, FieldMapping.class)
+            .addModifiers(Modifier.DEFAULT);
+        if (fluent.getPrimary() == null) {
+            super.throwPrimaryNoFound(builder);
+        } else {
+            builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getName());
+        }
+        return builder.build();
     }
 
     private MethodSpec m_updater() {
         return MethodSpec.methodBuilder("updater")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
             .returns(fluent.updater())
-            .addJavadoc("更新条件设置\n\n@return")
             .addStatement("return new $T()", fluent.updater())
             .build();
     }
@@ -100,7 +124,6 @@ public class MapperFiler extends AbstractFiler {
         return MethodSpec.methodBuilder("query")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
             .returns(fluent.query())
-            .addJavadoc("查询条件设置\n\n@return")
             .addStatement("return new $T()", fluent.query())
             .build();
     }

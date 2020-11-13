@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -50,8 +51,8 @@ public class SaveTest extends BaseTest {
             dao.save(Arrays.asList(
                 new StudentEntity().setUserName("test name1").setAge(43),
                 new StudentEntity().setUserName("test name2").setAge(43).setId(5L)
-            )), FluentMybatisException.class
-        ).eq("The primary key of the list instance must be assigned to all or none");
+            )), FluentMybatisException.class, MyBatisSystemException.class
+        ).contains("The primary key of the list instance must be assigned to all or none");
     }
 
     @Test

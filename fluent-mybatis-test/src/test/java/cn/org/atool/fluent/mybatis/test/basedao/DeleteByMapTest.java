@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.HashMap;
 
@@ -29,8 +28,8 @@ public class DeleteByMapTest extends BaseTest {
                 this.put(StudentMapping.userName.column, "test12");
             }
         });
-        db.sqlList().wantFirstSql().eq("DELETE FROM student " +
-            "WHERE is_deleted = ? AND env = ? AND user_name = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql()
+            .eq("DELETE FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
         db.table(ATM.Table.student).count().eq(8);
     }
 }

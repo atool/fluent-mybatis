@@ -5,7 +5,6 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.test4j.hamcrest.matcher.string.StringMode;
 
 /**
  * @author darui.wu
@@ -23,8 +22,7 @@ public class ExistPkTest extends BaseTest {
             .isDeleted.values(0)
             .cleanAndInsert();
         boolean existed = dao.existPk(1);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) " +
-            "FROM student WHERE id = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE id = ? LIMIT ?, ?");
         want.bool(existed).is(true);
 
         existed = dao.existPk(2);

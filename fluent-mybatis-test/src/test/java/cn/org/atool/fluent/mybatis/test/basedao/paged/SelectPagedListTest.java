@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
-import cn.org.atool.fluent.mybatis.base.IDaoProtected;
+import cn.org.atool.fluent.mybatis.base.IDao;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
@@ -29,7 +29,7 @@ public class SelectPagedListTest extends BaseTest {
 
     @Autowired
     @Qualifier("studentDaoImpl")
-    private IDaoProtected daoProtected;
+    private IDao daoProtected;
 
     @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
     @Test
@@ -40,7 +40,7 @@ public class SelectPagedListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        StdPagedList<StudentEntity> list = daoProtected.pagedEntity(new StudentQuery()
+        StdPagedList<StudentEntity> list = daoProtected.stdPagedEntity(new StudentQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc().end()
             .limit(20, 10)
@@ -68,7 +68,7 @@ public class SelectPagedListTest extends BaseTest {
             .cleanAndInsert();
 
         MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
-        StdPagedList<Map> list = daoProtected.pagedMaps(new StudentQuery()
+        StdPagedList<Map> list = daoProtected.stdPagedMap(new StudentQuery()
             .where.id().gt(20)
             .and.userName().like("user")
             .end()

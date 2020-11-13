@@ -1,8 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
-import cn.org.atool.fluent.mybatis.base.IDefaultGetter;
-import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.base.*;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
@@ -43,6 +41,8 @@ public class QueryRefFiler extends AbstractFile {
         spec.addField(this.f_allQuerySupplier())
             .addStaticBlock(this.m_initSupplier())
             .addMethod(m_defaultQuery(false))
+            .addMethod(m_defaultUpdater(false))
+            .addMethod(m_setEntityByDefault(false))
             .addMethod(m_findDefaultGetter(false));
     }
 
@@ -65,6 +65,38 @@ public class QueryRefFiler extends AbstractFile {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Query实例")
                 .addStatement("\treturn findDefaultGetter(clazz).defaultQuery()");
+        }
+        return spec.build();
+    }
+
+    public static MethodSpec m_defaultUpdater(boolean isRef) {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder("defaultUpdater")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addParameter(Class.class, "clazz")
+            .returns(IUpdate.class);
+        if (isRef) {
+            spec.addAnnotation(Override.class)
+                .addStatement("return $T.defaultUpdater(clazz)", getClassName());
+        } else {
+            spec.addModifiers(Modifier.STATIC)
+                .addJavadoc("返回clazz实体对应的默认Query实例")
+                .addStatement("\treturn findDefaultGetter(clazz).defaultUpdater()");
+        }
+        return spec.build();
+    }
+
+    public static MethodSpec m_setEntityByDefault(boolean isRef) {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder("setEntityByDefault")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addParameter(Class.class, "clazz")
+            .addParameter(IEntity.class, "entity");
+        if (isRef) {
+            spec.addAnnotation(Override.class)
+                .addStatement("$T.setEntityByDefault(clazz, entity)", getClassName());
+        } else {
+            spec.addModifiers(Modifier.STATIC)
+                .addJavadoc("按默认值设置entity属性")
+                .addStatement("\tfindDefaultGetter(clazz).setEntityByDefault(entity)");
         }
         return spec.build();
     }

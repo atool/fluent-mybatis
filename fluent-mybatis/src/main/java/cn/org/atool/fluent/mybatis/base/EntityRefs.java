@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.impl.PagedHelper;
+import cn.org.atool.fluent.mybatis.base.impl.FormSetter;
+import cn.org.atool.fluent.mybatis.base.impl.RichEntity;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.FormItem;
@@ -74,18 +75,18 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
             if (condition.getCurrPage() != null) {
                 int from = condition.getPageSize() * (condition.getCurrPage() - 1);
                 query.limit(from, condition.getPageSize());
-                return PagedHelper.stdPagedEntity(instance().findMapper(clazz), query);
+                return instance().findMapper(clazz).stdPagedEntity(query);
             } else {
                 String column = instance().findPrimaryColumn(clazz);
                 where.and.apply(column, SqlOp.GE, condition.getNextId());
                 query.limit(condition.getPageSize());
-                return PagedHelper.tagPagedEntity(instance().findMapper(clazz), query);
+                return instance().findMapper(clazz).tagPagedEntity(query);
             }
         }
     }
 
     public static <E extends IEntity> IPagedList<E> paged(IFormQuery query) {
-        return PagedHelper.stdPagedEntity(instance().findMapper(query.entityClass()), query);
+        return instance().findMapper(query.entityClass()).stdPagedEntity(query);
     }
 
     /**
@@ -95,6 +96,23 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
      * @return
      */
     public abstract IQuery defaultQuery(Class<? extends IEntity> clazz);
+
+    /**
+     * 返回clazz实体对应的默认Updater实例
+     *
+     * @param clazz
+     * @return
+     */
+    public abstract IUpdate defaultUpdater(Class<? extends IEntity> clazz);
+
+    /**
+     * 按默认值设置entity属性
+     * 默认值值设置见 {@link IDefaultSetter#setInsertDefault(IEntity)}
+     *
+     * @param clazz  entity类型
+     * @param entity
+     */
+    public abstract void setEntityByDefault(Class clazz, IEntity entity);
 
     /**
      * entity默认设置器
@@ -283,14 +301,14 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
      * @return
      */
     protected IEntity saveEntity(IEntity entity) {
-        this.findDefaultGetter(entity.getClass()).initEntityDefault(entity);
+        this.findDefaultGetter(entity.getClass()).setEntityByDefault(entity);
         this.findMapper(entity).insert(entity);
         return entity;
     }
 
     private Map<String, Method> refMethods = new ConcurrentHashMap<>(32);
 
-    protected final Map<Class<? extends IEntity>, IEntityMapper> entityMappers = new HashMap<>(16);
+    protected final Map<Class<? extends IEntity>, IDaoMapper> entityMappers = new HashMap<>(16);
 
     /**
      * 返回标注@FluentMybatis注解Entity类
@@ -310,11 +328,11 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
         }
     }
 
-    public IEntityMapper findMapper(IEntity entity) {
+    public IDaoMapper findMapper(IEntity entity) {
         return this.findMapper(entity.getClass());
     }
 
-    public IEntityMapper findMapper(Class<? extends IEntity> clazz) {
+    public IDaoMapper findMapper(Class<? extends IEntity> clazz) {
         Class entityClazz = this.findFluentEntityClass(clazz);
         return this.entityMappers.get(entityClazz);
     }

@@ -18,13 +18,13 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Refs.Query.student.defaultQuery("u")
+        StudentQuery studentQuery = Refs.Query.student.defaultAliasQuery()
             .select.age().end()
             .where.age().isNull().end()
-            .groupBy.age().apply("u.id").end()
+            .groupBy.age().apply("t1.id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        HomeAddressQuery addressQuery = Refs.Query.homeAddress.defaultQuery("a", studentQuery)
+        HomeAddressQuery addressQuery = Refs.Query.homeAddress.joinFrom(studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end()
@@ -37,20 +37,20 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .limit(20);
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(
-            "SELECT u.age, a.student_id " +
-                "FROM student u " +
-                "JOIN home_address a " +
-                "ON u.id = a.id " +
-                "AND u.age = a.student_id " +
-                "WHERE u.is_deleted = ? " +
-                "AND u.env = ? " +
-                "AND u.age IS NULL " +
-                "AND a.is_deleted = ? " +
-                "AND a.env = ? " +
-                "AND a.address LIKE ? " +
-                "GROUP BY u.age, u.id, a.student_id " +
-                "HAVING MAX(u.age) > ? " +
-                "ORDER BY u.id DESC, a.id ASC " +
+            "SELECT t1.age, t2.student_id " +
+                "FROM student t1 " +
+                "JOIN home_address t2 " +
+                "ON t1.id = t2.id " +
+                "AND t1.age = t2.student_id " +
+                "WHERE t1.is_deleted = ? " +
+                "AND t1.env = ? " +
+                "AND t1.age IS NULL " +
+                "AND t2.is_deleted = ? " +
+                "AND t2.env = ? " +
+                "AND t2.address LIKE ? " +
+                "GROUP BY t1.age, t1.id, t2.student_id " +
+                "HAVING MAX(t1.age) > ? " +
+                "ORDER BY t1.id DESC, t2.id ASC " +
                 "LIMIT ?, ?");
     }
 

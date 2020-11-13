@@ -2,9 +2,9 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
@@ -23,14 +23,14 @@ public class SelectOneTest extends BaseTest {
             .env.values("test_env")
             .cleanAndInsert();
 
-        StudentEntity student = dao.selectOne("username");
-        want.object(student).notNull();
+        want.exception(() -> dao.selectOne("username"),
+            MyBatisSystemException.class)
+            .contains("Expected one result (or null) to be returned by selectOne(), but found");
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM student " +
                 "WHERE is_deleted = ? " +
                 "AND env = ? " +
-                "AND user_name LIKE ? " +
-                "LIMIT ?, ?", StringMode.SameAsSpace);
+                "AND user_name LIKE ?", StringMode.SameAsSpace);
     }
 
     @Test
@@ -46,7 +46,6 @@ public class SelectOneTest extends BaseTest {
             .end("FROM student " +
                 "WHERE is_deleted = ? " +
                 "AND env = ? " +
-                "AND id = ? " +
-                "LIMIT ?, ?", StringMode.SameAsSpace);
+                "AND id = ?", StringMode.SameAsSpace);
     }
 }

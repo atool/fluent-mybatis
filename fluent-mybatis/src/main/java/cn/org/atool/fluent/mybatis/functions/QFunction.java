@@ -9,5 +9,5 @@ import java.util.function.Function;
  * @author wudarui
  */
 @FunctionalInterface
-public interface IoFunction<R> extends Function<R, R> {
+public interface QFunction<R> extends Function<R, R> {
 }

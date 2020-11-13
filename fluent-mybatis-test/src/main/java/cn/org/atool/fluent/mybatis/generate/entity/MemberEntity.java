@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.EntityRefs;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
+import cn.org.atool.fluent.mybatis.base.impl.RichEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Integer;

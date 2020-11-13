@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
-import cn.org.atool.fluent.mybatis.base.IDaoProtected;
+import cn.org.atool.fluent.mybatis.base.IDao;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
@@ -29,7 +29,7 @@ public class SelectMakerListTest extends BaseTest {
 
     @Autowired
     @Qualifier("studentDaoImpl")
-    private IDaoProtected dao;
+    private IDao dao;
 
     @DisplayName("准备100条数据，按条件>分页开始标识方式查询，自动获取下一页的标识")
     @Test
@@ -64,7 +64,7 @@ public class SelectMakerListTest extends BaseTest {
             .cleanAndInsert();
 
         MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
-        TagPagedList<Map> list = dao.tagPagedMaps(new StudentQuery()
+        TagPagedList<Map> list = dao.tagPagedMap(new StudentQuery()
             .selectId()
             .where.id().gt(20)
             .and.userName().like("user").end()

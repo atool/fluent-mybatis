@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.functions.IoFunction;
+import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -89,12 +89,12 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     @Override
-    public WHERE in(IoFunction<NQ> query) {
+    public WHERE in(QFunction<NQ> query) {
         return (WHERE) this.in(this.segment.queryClass(), query);
     }
 
     @Override
-    public WHERE in(boolean condition, IoFunction<NQ> query) {
+    public WHERE in(boolean condition, QFunction<NQ> query) {
         return condition ? this.in(query) : this.segment;
     }
 
@@ -107,14 +107,14 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     @Override
-    public <NQ extends IQuery> WHERE in(Class<NQ> klass, IoFunction<NQ> query) {
+    public <NQ extends IQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query) {
         NQ nested = NestedQueryFactory.nested(klass, this.segment.getParameters());
         query.apply(nested);
         return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), IN);
     }
 
     @Override
-    public <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, IoFunction<NQ> query) {
+    public <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query) {
         return condition ? this.in(klass, query) : this.segment;
     }
 
@@ -125,12 +125,12 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     @Override
-    public WHERE notIn(IoFunction<NQ> query) {
+    public WHERE notIn(QFunction<NQ> query) {
         return (WHERE) this.notIn(this.segment.queryClass(), query);
     }
 
     @Override
-    public WHERE notIn(boolean condition, IoFunction<NQ> query) {
+    public WHERE notIn(boolean condition, QFunction<NQ> query) {
         return condition ? this.notIn(query) : this.segment;
     }
 
@@ -143,7 +143,7 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     @Override
-    public <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, IoFunction<NQ> query) {
+    public <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query) {
         NQ nested = NestedQueryFactory.nested(queryClass, this.segment.getParameters());
         query.apply(nested);
         return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), NOT_IN);
@@ -151,7 +151,7 @@ public class WhereApply<
 
     @Override
     public <NQ extends IQuery<?, NQ>> WHERE notIn(
-        boolean condition, Class<NQ> queryClass, IoFunction<NQ> query
+        boolean condition, Class<NQ> queryClass, QFunction<NQ> query
     ) {
         return condition ? this.notIn(queryClass, query) : this.segment;
     }

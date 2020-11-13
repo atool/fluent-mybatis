@@ -18,6 +18,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 public interface IEntityMapper<E extends IEntity> extends IMapper {
     /**
      * 插入一条记录
+     * 和 {@link IDaoMapper#save(IEntity)}区别，insert方法不会根据{@link IDefaultSetter#setInsertDefault(IEntity)}设置默认值
      *
      * @param entity
      * @return

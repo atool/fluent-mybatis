@@ -20,7 +20,21 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 自定义参数序号
      */
-    protected final AtomicInteger sequence = new AtomicInteger();
+    private final AtomicInteger sequence = new AtomicInteger();
+    /**
+     * join表别名序号
+     */
+    private final AtomicInteger alias = new AtomicInteger();
+
+    /**
+     * 自动分配表别名
+     *
+     * @return
+     */
+    public String alias() {
+        int index = alias.incrementAndGet();
+        return "t" + index;
+    }
 
     public Parameters() {
         super(16);

@@ -1,15 +1,16 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.impl.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.EntityRefs;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
@@ -22,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.generator.util.ClassNames.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
+import static cn.org.atool.generator.util.ClassNames.*;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -56,6 +57,7 @@ public class SqlProviderFiler extends AbstractFiler {
         builder.addStaticImport(SqlProviderUtils.class, "*");
         builder.addStaticImport(FluentConst.class, "*");
         builder.addStaticImport(fluent.mapping(), "*");
+        builder.addStaticImport(EntityRefs.class, "instance");
     }
 
     @Override
@@ -112,24 +114,24 @@ public class SqlProviderFiler extends AbstractFiler {
     }
 
     private MethodSpec m_insert() {
-        MethodSpec.Builder builder = super.publicMethod(M_Insert, false, String.class)
+        MethodSpec.Builder spec = super.publicMethod(M_Insert, false, String.class)
             .addParameter(fluent.entity(), Param_Entity);
 
-        builder
-            .addStatement("assertNotNull(Param_Entity, entity)")
+        spec.addStatement("assertNotNull(Param_Entity, entity)")
+            .addStatement("instance().setEntityByDefault(entity.getClass(), entity)")
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.INSERT_INTO(this.tableName())")
             .addCode("$T inserts = new InsertList()", InsertList.class);
         for (CommonField field : this.fluent.getFields()) {
-            builder.addCode("\n\t.add($L, entity.$L(), $S)",
+            spec.addCode("\n\t.add($L, entity.$L(), $S)",
                 field.getName(), field.getMethodName(), field.getInsert());
         }
-        builder.addCode(";\n");
-        builder
-            .addStatement("sql.INSERT_COLUMNS(inserts.columns)")
+        spec.addCode(";\n");
+        spec.addStatement("sql.INSERT_COLUMNS(inserts.columns)")
             .addStatement("sql.VALUES()")
             .addStatement("sql.INSERT_VALUES(inserts.values)");
-        return builder.addStatement("return sql.toString()").build();
+
+        return spec.addStatement("return sql.toString()").build();
     }
 
     private MethodSpec m_insertBatch() {
@@ -139,6 +141,7 @@ public class SqlProviderFiler extends AbstractFiler {
         builder.addStatement("assertNotEmpty(Param_List, map)");
         builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("$T<$T> entities = getParas(map, Param_List)", List.class, fluent.entity())
+            .addStatement("super.validateInsertBatch(entities)")
             .addStatement("sql.INSERT_INTO(this.tableName())")
             .addStatement("sql.INSERT_COLUMNS(this.allFields())")
             .addStatement("sql.VALUES()");

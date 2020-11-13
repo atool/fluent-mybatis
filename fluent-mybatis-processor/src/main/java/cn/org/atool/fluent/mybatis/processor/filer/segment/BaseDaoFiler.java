@@ -43,17 +43,7 @@ public class BaseDaoFiler extends AbstractFiler {
             .addMethod(this.m_defaultQuery())
             .addMethod(this.m_newUpdater())
             .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_setEntityDefault())
             .addMethod(this.m_primaryField());
-    }
-
-    private MethodSpec m_setEntityDefault() {
-        return MethodSpec.methodBuilder("setEntityDefault")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PROTECTED)
-            .addParameter(fluent.entity(), "entity")
-            .addStatement("INSTANCE.setInsertDefault(entity)")
-            .build();
     }
 
     private TypeName superBaseDaoImplKlass() {
