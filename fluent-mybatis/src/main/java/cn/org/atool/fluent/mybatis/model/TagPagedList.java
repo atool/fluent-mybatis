@@ -43,9 +43,4 @@ public class TagPagedList<E> implements IPagedList<E> {
     public <MK> MK parseNext(Function<E, MK> parser) {
         return next == null ? null : parser.apply(next);
     }
-
-    @Override
-    public boolean isTagPaged() {
-        return true;
-    }
 }

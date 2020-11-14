@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
 import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
 
@@ -37,7 +37,7 @@ public class SetterRefFiler extends AbstractFile {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(EntityRefs.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
+        builder.addStaticImport(MybatisUtil.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
         super.staticImport(builder);
     }
 

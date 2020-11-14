@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -10,7 +9,7 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import java.io.Serializable;
 import java.util.*;
 
-import static cn.org.atool.fluent.mybatis.base.EntityRefs.instance;
+import static cn.org.atool.fluent.mybatis.base.IRefs.instance;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;

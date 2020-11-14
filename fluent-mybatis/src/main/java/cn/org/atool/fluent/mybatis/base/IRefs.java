@@ -27,11 +27,11 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
  *
  * @author darui.wu
  */
-public abstract class EntityRefs implements ApplicationContextAware, InitializingBean {
+public abstract class IRefs implements ApplicationContextAware, InitializingBean {
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
      */
-    private static EntityRefs INSTANCE;
+    private static IRefs INSTANCE;
 
     /**
      * 返回查询关联单例
@@ -39,7 +39,7 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
      *
      * @return
      */
-    public static EntityRefs instance() {
+    public static IRefs instance() {
         if (INSTANCE == null) {
             throw new RuntimeException("the EntityRefs must be defined as a spring bean.");
         }
@@ -362,15 +362,5 @@ public abstract class EntityRefs implements ApplicationContextAware, Initializin
 
     private Object findBean(Class requiredType) {
         return applicationContext.getBean(requiredType);
-    }
-
-    /**
-     * Entity Class不是@FluentMybatis注解类异常
-     *
-     * @param clazz
-     * @return
-     */
-    public static RuntimeException notFluentMybatisException(Class clazz) {
-        return new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
     }
 }

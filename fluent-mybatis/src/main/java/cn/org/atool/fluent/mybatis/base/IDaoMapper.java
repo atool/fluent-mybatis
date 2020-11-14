@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static cn.org.atool.fluent.mybatis.base.EntityRefs.instance;
+import static cn.org.atool.fluent.mybatis.base.IRefs.instance;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
 

@@ -1,9 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRichEntity;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,12 +35,12 @@ public abstract class RichEntity implements IEntity, IRichEntity {
                 if (this.cached.containsKey(methodName)) {
                     return (T) this.cached.get(methodName);
                 }
-                T result = EntityRefs.instance().invoke(this.getClass(), methodName, reArgs(args));
+                T result = IRefs.instance().invoke(this.getClass(), methodName, reArgs(args));
                 this.cached.put(methodName, result);
                 return result;
             }
         } else {
-            return EntityRefs.instance().invoke(this.getClass(), methodName, this.reArgs(args));
+            return IRefs.instance().invoke(this.getClass(), methodName, this.reArgs(args));
         }
     }
 

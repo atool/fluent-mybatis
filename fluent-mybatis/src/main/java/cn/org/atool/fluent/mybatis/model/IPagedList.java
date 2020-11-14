@@ -9,24 +9,6 @@ import java.util.List;
  */
 public interface IPagedList<E> {
     /**
-     * 是否标准分页
-     *
-     * @return
-     */
-    default boolean isStdPaged() {
-        return false;
-    }
-
-    /**
-     * 是否tag分页
-     *
-     * @return
-     */
-    default boolean isTagPaged() {
-        return false;
-    }
-
-    /**
      * 分页查询返回数据
      *
      * @return

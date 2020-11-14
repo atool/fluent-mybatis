@@ -57,7 +57,7 @@ public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E
      * @return
      */
     default boolean exists() {
-        IEntityMapper mapper = EntityRefs.instance().findMapper(this.entityClass());
+        IEntityMapper mapper = IRefs.instance().findMapper(this.entityClass());
         int count = mapper.count(this);
         return count > 0;
     }
@@ -68,6 +68,6 @@ public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E
      * @return
      */
     default <P extends IPagedList<E>> P paged() {
-        return (P) EntityRefs.paged(this);
+        return (P) IRefs.paged(this);
     }
 }

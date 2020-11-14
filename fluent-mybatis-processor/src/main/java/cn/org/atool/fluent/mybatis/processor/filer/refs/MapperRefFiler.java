@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
@@ -38,7 +38,7 @@ public class MapperRefFiler extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(EntityRefs.class)
+        spec.superclass(IRefs.class)
             .addModifiers(Modifier.ABSTRACT);
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_mapper(fluent));

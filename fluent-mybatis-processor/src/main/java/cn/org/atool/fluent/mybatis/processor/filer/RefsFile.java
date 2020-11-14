@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
@@ -92,7 +92,7 @@ public class RefsFile extends AbstractFile {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("Refs 单例")
             .returns(RefsFile.getClassName())
-            .addStatement("return ($L) $T.instance()", Refs, EntityRefs.class)
+            .addStatement("return ($L) $T.instance()", Refs, IRefs.class)
             .build();
     }
 

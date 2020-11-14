@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.model;
 
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
@@ -28,14 +28,14 @@ public class FormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E, C>>
         this.entityClazz = entity.getClass();
         this.form = entity.toEntityMap();
         this.query = query;
-        this.setter = EntityRefs.instance().newFormSetter(setter, this);
+        this.setter = IRefs.instance().newFormSetter(setter, this);
     }
 
     public FormQuery(@NonNull Class<E> entityClass, @NonNull IQuery<E, ?> query, @NonNull Map form, @NonNull Class<C> setter) {
         this.entityClazz = entityClass;
         this.form = form;
         this.query = query;
-        this.setter = EntityRefs.instance().newFormSetter(setter, this);
+        this.setter = IRefs.instance().newFormSetter(setter, this);
     }
 
     @Override

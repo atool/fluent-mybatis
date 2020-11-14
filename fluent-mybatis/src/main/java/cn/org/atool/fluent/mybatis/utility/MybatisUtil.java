@@ -401,6 +401,16 @@ public class MybatisUtil {
     }
 
     /**
+     * Entity Class不是@FluentMybatis注解类异常
+     *
+     * @param clazz
+     * @return
+     */
+    public static RuntimeException notFluentMybatisException(Class clazz) {
+        return new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
+    }
+
+    /**
      * fluent mybatis version
      *
      * @return

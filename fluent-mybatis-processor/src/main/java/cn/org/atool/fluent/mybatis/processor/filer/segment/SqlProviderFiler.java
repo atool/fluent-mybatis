@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.BaseSqlProvider;
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
@@ -57,7 +57,7 @@ public class SqlProviderFiler extends AbstractFiler {
         builder.addStaticImport(SqlProviderUtils.class, "*");
         builder.addStaticImport(FluentConst.class, "*");
         builder.addStaticImport(fluent.mapping(), "*");
-        builder.addStaticImport(EntityRefs.class, "instance");
+        builder.addStaticImport(IRefs.class, "instance");
     }
 
     @Override

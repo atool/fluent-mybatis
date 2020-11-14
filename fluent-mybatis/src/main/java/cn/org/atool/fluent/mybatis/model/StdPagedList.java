@@ -32,9 +32,4 @@ public class StdPagedList<E> implements IPagedList<E> {
         this.total = total;
         this.data = data;
     }
-
-    @Override
-    public boolean isStdPaged() {
-        return true;
-    }
 }

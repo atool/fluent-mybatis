@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.model;
 
-import cn.org.atool.fluent.mybatis.base.EntityRefs;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
@@ -51,7 +51,7 @@ public class Form implements Serializable {
         assertNotNull("entity", entity);
         assertNotNull("column setter", setter);
 
-        IQuery query = EntityRefs.instance().defaultQuery(entity.getClass());
+        IQuery query = IRefs.instance().defaultQuery(entity.getClass());
         return new FormQuery(entity, query, setter);
     }
 
@@ -61,7 +61,7 @@ public class Form implements Serializable {
         assertNotNull("entityClass", entityClass);
         assertNotNull("column setter", setter);
 
-        IQuery query = EntityRefs.instance().defaultQuery(entityClass);
+        IQuery query = IRefs.instance().defaultQuery(entityClass);
         return new FormQuery(entityClass, query,form, setter);
     }
 
@@ -73,6 +73,6 @@ public class Form implements Serializable {
      * @return
      */
     public <E extends IEntity, P extends IPagedList<E>> P paged(Class<E> clazz) {
-        return (P) EntityRefs.paged(clazz, this);
+        return (P) IRefs.paged(clazz, this);
     }
 }
