@@ -2,29 +2,16 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
-import cn.org.atool.fluent.mybatis.segment.JoinQuery;
 
 /**
- * 通过lambda表达方式构造join条件
- * 但IDE对lambda表达式解析不是很完善，暂时隐蔽
+ * 关联查询构造方式二: 使用lambda表达式,由框架自动设置query别名和关联参数
  * <p>
- * 请使用JoinBuilder方式构造join条件
+ * 注: 在有些场景下, IDE对lambda表达式的代码提示不够智能
+ * <p>
  *
  * @param <QL>
  */
-public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
-    /**
-     * 构建Join Query Builder对象
-     *
-     * @param clazz
-     * @param query
-     * @param <QL>
-     * @return
-     */
-    static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
-        return new JoinQuery<>(clazz, query);
-    }
-
+public interface IJoinBuilder2<QL extends BaseQuery<?, QL>> extends JoinBuilder<QL> {
     /**
      * from left.table join right.table on condition
      *
@@ -33,7 +20,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QR>  join right表类型
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query);
 
     /**
      * from left.table left join right.table on condition
@@ -43,7 +30,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QR>  join right 表类型
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query);
 
     /**
      * from left.table right join right.table on condition
@@ -53,14 +40,14 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param <QR>  join right 表类型
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query);
 
     /**
      * distinct
      *
      * @return
      */
-    JoinBuilder2<QL> distinct();
+    IJoinBuilder2<QL> distinct();
 
     /**
      * limit 0, limit
@@ -68,7 +55,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param limit
      * @return
      */
-    JoinBuilder2<QL> limit(int limit);
+    IJoinBuilder2<QL> limit(int limit);
 
     /**
      * limit start, limit
@@ -77,7 +64,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param limit
      * @return
      */
-    JoinBuilder2<QL> limit(int start, int limit);
+    IJoinBuilder2<QL> limit(int start, int limit);
 
     /**
      * 追加在sql语句的末尾
@@ -87,7 +74,5 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> {
      * @param lastSql
      * @return
      */
-    JoinBuilder2<QL> last(String lastSql);
-
-    IQuery<?, QL> build();
+    IJoinBuilder2<QL> last(String lastSql);
 }

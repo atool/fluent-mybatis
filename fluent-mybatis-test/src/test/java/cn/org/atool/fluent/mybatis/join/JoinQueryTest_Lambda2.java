@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder2;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -28,7 +28,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
             .id.values(3, 4)
             .address.values("address_1", "address_2")
             .cleanAndInsert();
-        IQuery query = JoinBuilder2.from(StudentQuery.class, q ->
+        IQuery query = JoinBuilder.from(StudentQuery.class, q ->
             q.selectAll()
                 .where.age().eq(34).end())
             .join(HomeAddressQuery.class, q -> q

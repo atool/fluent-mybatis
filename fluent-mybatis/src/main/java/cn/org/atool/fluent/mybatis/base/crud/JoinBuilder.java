@@ -1,87 +1,40 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.mybatis.segment.JoinOn;
+import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.JoinQuery;
 
 /**
- * 关联查询接口
+ * 连接查询构造
  *
- * @param <QL> 查询表一
  * @author wudarui
  */
-public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
+public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
 
     /**
-     * 构建Join Query Builder对象
+     * 关联查询构造方式一: 使用直接传入设置好别名和参数的Query
      *
      * @param query
      * @param <QL>
      * @return
      */
-    static <QL extends BaseQuery<?, QL>> JoinBuilder<QL> from(QL query) {
+    static <QL extends BaseQuery<?, QL>> IJoinBuilder1<QL> from(QL query) {
         return new JoinQuery<>(query);
     }
 
     /**
-     * from left.table join right.table on condition
+     * 关联查询构造方式二: 使用lambda表达式,由框架自动设置query别名和关联参数
+     * <p>
+     * 注: 在有些场景下, IDE对lambda表达式的代码提示不够智能
+     * <p>
      *
-     * @param query 关联查询右表及右表条件设置
-     * @param <QR>  join right表类型
+     * @param clazz
+     * @param query
+     * @param <QL>
      * @return
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder<QL>> join(QR query);
-
-    /**
-     * from left.table left join right.table on condition
-     *
-     * @param query 关联查询右表及右表条件设置
-     * @param <QR>  join right 表类型
-     * @return
-     */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder<QL>> leftJoin(QR query);
-
-    /**
-     * from left.table right join right.table on condition
-     *
-     * @param query 关联查询右表及右表条件设置
-     * @param <QR>  join right 表类型
-     * @return
-     */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder<QL>> rightJoin(QR query);
-
-    /**
-     * distinct
-     *
-     * @return
-     */
-    JoinBuilder<QL> distinct();
-
-    /**
-     * limit 0, limit
-     *
-     * @param limit
-     * @return
-     */
-    JoinBuilder<QL> limit(int limit);
-
-    /**
-     * limit start, limit
-     *
-     * @param start
-     * @param limit
-     * @return
-     */
-    JoinBuilder<QL> limit(int start, int limit);
-
-    /**
-     * 追加在sql语句的末尾
-     * !!!慎用!!!
-     * 有sql注入风险
-     *
-     * @param lastSql
-     * @return
-     */
-    JoinBuilder<QL> last(String lastSql);
+    static <QL extends BaseQuery<?, QL>> IJoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
+        return new JoinQuery<>(clazz, query);
+    }
 
     IQuery<?, QL> build();
 }
