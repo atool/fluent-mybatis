@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.entity.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -44,13 +44,12 @@ public class WrapperDefaultFiler extends AbstractFiler {
                 .build())
             .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
             .addMethod(this.m_setEntityByDefault())
-            .addMethod(this.m_defaultQuery_0())
-            .addMethod(this.m_defaultAliasQuery())
-            .addMethod(this.m_defaultQuery_1())
-            .addMethod(this.m_defaultQuery_2())
-            .addMethod(this.m_joinFrom_1())
-            .addMethod(this.m_joinFrom_2())
-            .addMethod(this.m_newUpdater());
+            .addMethod(this.m_defaultQuery())
+            .addMethod(this.m_newUpdater())
+            .addMethod(this.m_aliasQuery_0())
+            .addMethod(this.m_aliasQuery_1())
+            .addMethod(this.m_aliasWith_1())
+            .addMethod(this.m_aliasWith_2());
     }
 
     /**
@@ -77,16 +76,7 @@ public class WrapperDefaultFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_defaultAliasQuery() {
-        return super.publicMethod("defaultAliasQuery", true, fluent.query())
-            .addStatement("$T parameters = new Parameters()", Parameters.class)
-            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
-            .addStatement("this.setQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
-    private MethodSpec m_defaultQuery_0() {
+    private MethodSpec m_defaultQuery() {
         return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addStatement("$T query = new $T()", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
@@ -94,39 +84,43 @@ public class WrapperDefaultFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_defaultQuery_1() {
-        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
+    private MethodSpec m_aliasQuery_0() {
+        return super.publicMethod(M_ALIAS_QUERY, true, fluent.query())
+            .addJavadoc(JavaDoc_Alias_Query_0)
+            .addStatement("$T parameters = new Parameters()", Parameters.class)
+            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
+            .addStatement("this.setQueryDefault(query)")
+            .addStatement("return query")
+            .build();
+    }
+
+    private MethodSpec m_aliasQuery_1() {
+        return super.publicMethod(M_ALIAS_QUERY, true, fluent.query())
             .addParameter(String.class, "alias")
+            .addJavadoc(JavaDoc_Alias_Query_1)
             .addStatement("$T query = new $T(alias, new $T())", fluent.query(), fluent.query(), ClassName.get(Parameters.class))
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
             .build();
     }
 
-    private MethodSpec m_defaultQuery_2() {
-        return super.publicMethod("defaultQuery", true, fluent.query())
-            .addParameter(String.class, "alias")
-            .addParameter(BaseQuery.class, "joinFrom")
-            .addAnnotation(Deprecated.class)
-            .addStatement("return this.joinFrom(alias,joinFrom)")
-            .build();
-    }
-
-    private MethodSpec m_joinFrom_2() {
-        return super.publicMethod("joinFrom", true, fluent.query())
-            .addParameter(String.class, "alias")
-            .addParameter(BaseQuery.class, "joinFrom")
-            .addStatement("$T query = new $T(alias, joinFrom.getWrapperData().getParameters())", fluent.query(), fluent.query())
+    private MethodSpec m_aliasWith_1() {
+        return super.publicMethod(M_ALIAS_WITH, true, fluent.query())
+            .addParameter(BaseQuery.class, "fromQuery")
+            .addJavadoc(JavaDoc_Alias_With_1)
+            .addStatement("$T parameters = fromQuery.getWrapperData().getParameters()", Parameters.class)
+            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
             .build();
     }
 
-    private MethodSpec m_joinFrom_1() {
-        return super.publicMethod("joinFrom", true, fluent.query())
-            .addParameter(BaseQuery.class, "joinFrom")
-            .addStatement("$T parameters = joinFrom.getWrapperData().getParameters()", Parameters.class)
-            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
+    private MethodSpec m_aliasWith_2() {
+        return super.publicMethod(M_ALIAS_WITH, true, fluent.query())
+            .addParameter(String.class, "alias")
+            .addParameter(BaseQuery.class, "fromQuery")
+            .addJavadoc(JavaDoc_Alias_With_2)
+            .addStatement("$T query = new $T(alias, fromQuery.getWrapperData().getParameters())", fluent.query(), fluent.query())
             .addStatement("this.setQueryDefault(query)")
             .addStatement("return query")
             .build();

@@ -3,8 +3,8 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IJoinBuilder1;
-import cn.org.atool.fluent.mybatis.base.crud.IJoinBuilder2;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder1;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder2;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
@@ -27,7 +27,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  */
 public class JoinQuery<QL extends BaseQuery<?, QL>>
     implements IQuery<IEntity, JoinQuery<QL>>,
-    IJoinBuilder1<QL>, IJoinBuilder2<QL> {
+    JoinBuilder1<QL>, JoinBuilder2<QL> {
     /**
      * 主查询类型
      */
@@ -63,36 +63,36 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query) {
         return join(JoinType.Join, clazz, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query) {
         return join(JoinType.LeftJoin, clazz, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query) {
         return join(JoinType.RightJoin, clazz, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder1<QL>> join(QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query) {
         return join(JoinType.Join, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder1<QL>> leftJoin(QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query) {
         return join(JoinType.LeftJoin, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder1<QL>> rightJoin(QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query) {
         return join(JoinType.RightJoin, query);
     }
 
-    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder1<QL>> join(
+    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(
         JoinType joinType, QR query) {
         this.assertQueryAlias(query);
         if (query.getWrapperData().getParameters() != this.query.getWrapperData().getParameters()) {
@@ -117,7 +117,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         }
     }
 
-    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, IJoinBuilder2<QL>> join(
+    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(
         JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
     ) {
         QR query = newQuery(queryClass, alias(), this.query.wrapperData.getParameters());

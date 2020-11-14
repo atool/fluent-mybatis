@@ -4,6 +4,8 @@ import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 
 /**
  * 进行默认设置
+ *
+ * @author wudarui
  */
 public interface IDefaultGetter {
     /**
@@ -23,6 +25,23 @@ public interface IDefaultGetter {
     <Q extends IQuery> Q defaultQuery();
 
     /**
+     * 实例化更新构造器
+     * o - 设置默认更新条件
+     *
+     * @return 更新构造器
+     */
+    <U extends IUpdate> U defaultUpdater();
+
+    /**
+     * 自动分配表别名查询构造器(join查询的时候需要定义表别名)
+     * 如果要自定义别名, 使用方法 {@link #aliasQuery(String)}
+     *
+     * @param <Q>
+     * @return
+     */
+    <Q extends IQuery> Q aliasQuery();
+
+    /**
      * 实例化查询构造器
      * o - 设置默认查询条件
      * o - 设置别名alias
@@ -30,34 +49,7 @@ public interface IDefaultGetter {
      * @param alias 别名
      * @return 查询构造器
      */
-    <Q extends IQuery> Q defaultQuery(String alias);
-
-    /**
-     * 自动分配表别名查询构造器(join查询的时候需要定义表别名)
-     * 如果要自定义别名, 使用方法 {@link #defaultQuery(String)}
-     *
-     * @param <Q>
-     * @return
-     */
-    <Q extends IQuery> Q defaultAliasQuery();
-
-    /**
-     * @deprecated use {@link #joinFrom(String, BaseQuery)}
-     */
-    @Deprecated
-    <Q extends IQuery> Q defaultQuery(String alias, BaseQuery joinFrom);
-
-    /**
-     * 实例化查询构造器
-     * o - 设置默认查询条件
-     * o - 设置别名alias
-     * o - 设置变量实例来自From查询实例
-     *
-     * @param alias    别名
-     * @param joinFrom 关联查询时,from表查询对象
-     * @return 查询构造器
-     */
-    <Q extends IQuery> Q joinFrom(String alias, BaseQuery joinFrom);
+    <Q extends IQuery> Q aliasQuery(String alias);
 
     /**
      * 关联查询
@@ -65,17 +57,21 @@ public interface IDefaultGetter {
      * o - 自动别名alias
      * o - 设置变量实例来自From查询实例
      *
-     * @param joinFrom 关联查询时,from表查询对象
+     * @param fromQuery 关联查询时,from表查询对象
      * @param <Q>
      * @return
      */
-    <Q extends IQuery> Q joinFrom(BaseQuery joinFrom);
+    <Q extends IQuery> Q aliasWith(BaseQuery fromQuery);
 
     /**
-     * 实例化更新构造器
-     * o - 设置默认更新条件
+     * 实例化查询构造器
+     * o - 设置默认查询条件
+     * o - 设置别名alias
+     * o - 设置变量实例来自From查询实例
      *
-     * @return 更新构造器
+     * @param alias     别名
+     * @param fromQuery 关联查询时,from表查询对象
+     * @return 查询构造器
      */
-    <U extends IUpdate> U defaultUpdater();
+    <Q extends IQuery> Q aliasWith(String alias, BaseQuery fromQuery);
 }

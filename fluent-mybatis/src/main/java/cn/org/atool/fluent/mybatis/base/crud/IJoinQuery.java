@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinQuery;
  *
  * @author wudarui
  */
-public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
+public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
 
     /**
      * 关联查询构造方式一: 使用直接传入设置好别名和参数的Query
@@ -17,7 +17,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @param <QL>
      * @return
      */
-    static <QL extends BaseQuery<?, QL>> IJoinBuilder1<QL> from(QL query) {
+    static <QL extends BaseQuery<?, QL>> JoinBuilder1<QL> from(QL query) {
         return new JoinQuery<>(query);
     }
 
@@ -32,9 +32,43 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @param <QL>
      * @return
      */
-    static <QL extends BaseQuery<?, QL>> IJoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
+    static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
         return new JoinQuery<>(clazz, query);
     }
+
+    /**
+     * distinct
+     *
+     * @return
+     */
+    IJoinQuery<QL> distinct();
+
+    /**
+     * limit 0, limit
+     *
+     * @param limit
+     * @return
+     */
+    IJoinQuery<QL> limit(int limit);
+
+    /**
+     * limit start, limit
+     *
+     * @param start
+     * @param limit
+     * @return
+     */
+    IJoinQuery<QL> limit(int start, int limit);
+
+    /**
+     * 追加在sql语句的末尾
+     * !!!慎用!!!
+     * 有sql注入风险
+     *
+     * @param lastSql
+     * @return
+     */
+    IJoinQuery<QL> last(String lastSql);
 
     IQuery<?, QL> build();
 }

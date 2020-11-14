@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.join;
 
+import cn.org.atool.fluent.mybatis.base.crud.IJoinQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.Refs;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
@@ -18,18 +18,18 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Refs.Query.student.defaultAliasQuery()
+        StudentQuery studentQuery = Refs.Query.student.aliasQuery()
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("t1.id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        HomeAddressQuery addressQuery = Refs.Query.homeAddress.joinFrom(studentQuery)
+        HomeAddressQuery addressQuery = Refs.Query.homeAddress.aliasWith(studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end()
             .orderBy.id().asc().end();
-        JoinBuilder<StudentQuery> query = JoinBuilder
+        IJoinQuery<StudentQuery> query = IJoinQuery
             .from(studentQuery)
             .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -56,16 +56,16 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        StudentQuery studentQuery = Refs.Query.student.defaultQuery("t1")
+        StudentQuery studentQuery = Refs.Query.student.aliasQuery("t1")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("t1.id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery addressQuery = Refs.Query.homeAddress.defaultQuery("t2", studentQuery)
+        HomeAddressQuery addressQuery = Refs.Query.homeAddress.aliasWith("t2", studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();
-        JoinBuilder<StudentQuery> query = JoinBuilder
+        IJoinQuery<StudentQuery> query = IJoinQuery
             .from(studentQuery)
             .leftJoin(addressQuery)
             .on((join, l, r) -> join
@@ -95,7 +95,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
     @Test
     public void test_right_join() {
         Parameters parameters = new Parameters();
-        JoinBuilder<StudentQuery> query = JoinBuilder
+        IJoinQuery<StudentQuery> query = IJoinQuery
             .from(new StudentQuery("t1", parameters)
                 .where.isDeleted().eq(true)
                 .and.age().isNull()
@@ -119,12 +119,14 @@ public class JoinQueryTest_Alias1 extends BaseTest {
     @Test
     void three_join() {
         Parameters parameters = new Parameters();
-        IQuery query = JoinBuilder
+        IQuery query = IJoinQuery
             .from(new StudentQuery("t1", parameters)
                 .where.age().eq(3).end())
             .leftJoin(new HomeAddressQuery("t2", parameters)
                 .where.address().like("xxx").end())
-            .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
+            .on((join, l, r) -> join
+                .on(l.where.homeAddressId(), r.where.id())
+            )
             .leftJoin(new StudentScoreQuery("t3", parameters)
                 .where.subject().in(new String[]{"a", "b", "c"}).end())
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin()
