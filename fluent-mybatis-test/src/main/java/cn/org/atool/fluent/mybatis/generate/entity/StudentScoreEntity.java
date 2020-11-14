@@ -5,8 +5,8 @@ import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Integer;
@@ -35,7 +35,7 @@ import lombok.experimental.Accessors;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentScoreEntity extends RichEntity implements IBaseEntity<StudentScoreEntity> {
+public class StudentScoreEntity extends RichEntity implements MyEntity {
   private static final long serialVersionUID = 1L;
 
   @TableId("id")
@@ -87,7 +87,7 @@ public class StudentScoreEntity extends RichEntity implements IBaseEntity<Studen
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
   public StudentEntity findStudent() {

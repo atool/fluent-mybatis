@@ -4,10 +4,9 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -33,7 +32,7 @@ import java.util.List;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentEntity extends RichEntity implements IBaseEntity<StudentEntity> {
+public class StudentEntity extends RichEntity implements MyEntity {
   private static final long serialVersionUID = 1L;
 
   @TableId("id")
@@ -109,7 +108,7 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
   }
 
   /**
-   * 实现定义在{@link IRefs}子类上
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod("studentId = id && isDeleted = isDeleted && env = env")
   public List<StudentScoreEntity> findStudentScoreList() {
@@ -117,7 +116,7 @@ public class StudentEntity extends RichEntity implements IBaseEntity<StudentEnti
   }
 
   /**
-   * 实现定义在{@link IRefs}子类上
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod
   public StudentScoreEntity findEnglishScore() {

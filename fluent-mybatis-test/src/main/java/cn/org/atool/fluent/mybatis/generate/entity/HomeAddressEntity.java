@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Long;
@@ -33,7 +33,7 @@ import lombok.experimental.Accessors;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class HomeAddressEntity extends RichEntity implements IBaseEntity<HomeAddressEntity> {
+public class HomeAddressEntity extends RichEntity implements MyEntity {
   private static final long serialVersionUID = 1L;
 
   @TableId("id")

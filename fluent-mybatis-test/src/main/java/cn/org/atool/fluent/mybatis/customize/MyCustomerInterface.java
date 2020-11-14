@@ -38,10 +38,10 @@ public interface MyCustomerInterface extends IDefaultSetter {
 
     @Override
     default void setInsertDefault(IEntity entity) {
-        if (!(entity instanceof IBaseEntity)) {
+        if (!(entity instanceof MyEntity)) {
             return;
         }
-        IBaseEntity be = (IBaseEntity) entity;
+        MyEntity be = (MyEntity) entity;
         be.setEnv(TEST_ENV);
         be.setTenant(234567L);
     }

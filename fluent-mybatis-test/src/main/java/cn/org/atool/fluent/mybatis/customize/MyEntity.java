@@ -9,7 +9,7 @@ import java.util.Date;
  *
  * @author:darui.wu Created by darui.wu on 2020/6/2.
  */
-public interface IBaseEntity<T extends IEntity> {
+public interface MyEntity<E extends IEntity> {
     String getEnv();
 
     Long getTenant();
@@ -22,15 +22,15 @@ public interface IBaseEntity<T extends IEntity> {
 
     Boolean getIsDeleted();
 
-    T setEnv(String env);
+    E setEnv(String env);
 
-    T setTenant(Long tenantId);
+    E setTenant(Long tenantId);
 
-    T setId(Long id);
+    E setId(Long id);
 
-    T setGmtCreated(Date date);
+    E setGmtCreated(Date date);
 
-    T setGmtModified(Date date);
+    E setGmtModified(Date date);
 
-    T setIsDeleted(Boolean isDeleted);
+    E setIsDeleted(Boolean isDeleted);
 }

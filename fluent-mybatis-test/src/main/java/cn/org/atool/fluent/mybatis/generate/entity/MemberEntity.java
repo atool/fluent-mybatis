@@ -72,7 +72,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod("isDeleted = isDeleted && memberId = id")
   public List<MemberFavoriteEntity> findMyFavorite() {
@@ -80,7 +80,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod
   public List<MemberEntity> findExFriends() {
@@ -88,7 +88,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.EntityRefQuery}子类上
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod
   public MemberEntity findCurrFriend() {

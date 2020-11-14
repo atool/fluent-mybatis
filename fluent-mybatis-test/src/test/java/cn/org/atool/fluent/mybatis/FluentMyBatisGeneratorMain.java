@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis;
 
-import cn.org.atool.fluent.mybatis.customize.IBaseEntity;
+import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.generator.FileGenerator;
 import cn.org.atool.generator.annotation.*;
@@ -44,7 +44,7 @@ public class FluentMyBatisGeneratorMain {
             @Table(value = {"home_address", "student", "student_score"},
                 tablePrefix = "t_", mapperPrefix = "my",
                 defaults = MyCustomerInterface.class,
-                entity = IBaseEntity.class,
+                entity = MyEntity.class,
                 columns = @Column(value = "version", isLarge = true)
             )},
         relations = {
