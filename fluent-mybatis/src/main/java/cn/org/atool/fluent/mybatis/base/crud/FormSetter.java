@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base.form;
+package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 

@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.entity.RichEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.io.Serializable;
 import java.lang.Override;
 import java.lang.String;

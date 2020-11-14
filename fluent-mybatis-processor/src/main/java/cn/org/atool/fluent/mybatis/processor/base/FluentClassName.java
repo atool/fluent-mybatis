@@ -141,8 +141,8 @@ public abstract class FluentClassName {
      */
     public ClassName wrapperFactory() {
         return ClassName.get(
-            WrapperDefaultFiler.getPackageName(this),
-            WrapperDefaultFiler.getClassName(this)
+            DefaultsFiler.getPackageName(this),
+            DefaultsFiler.getClassName(this)
         );
     }
 

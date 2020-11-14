@@ -17,8 +17,7 @@ import java.io.Serializable;
 public interface IWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,
-    NQ extends IQuery<E, NQ>
-    >
+    NQ extends IQuery<E, NQ>>
     extends Serializable {
 
     /**

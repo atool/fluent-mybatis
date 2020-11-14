@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
  */
 public interface IQuery<
     E extends IEntity,
-    Q extends IQuery<E, Q>
-    >
+    Q extends IQuery<E, Q>>
     extends IWrapper<E, Q, Q> {
     /**
      * distinct 查询

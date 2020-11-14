@@ -108,7 +108,7 @@ public class FluentList {
             new QueryFiler(fluent).javaFile(),
             new UpdaterFiler(fluent).javaFile(),
             new BaseDaoFiler(fluent).javaFile(),
-            new WrapperDefaultFiler(fluent).javaFile()
+            new DefaultsFiler(fluent).javaFile()
         );
     }
 }

@@ -1,8 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.entity.IEntity;
-import cn.org.atool.fluent.mybatis.base.entity.RichEntity;
-import cn.org.atool.fluent.mybatis.base.form.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;

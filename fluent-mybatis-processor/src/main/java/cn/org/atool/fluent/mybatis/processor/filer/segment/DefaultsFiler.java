@@ -12,7 +12,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_WrapperDefault;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Defaults;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 
 /**
@@ -20,15 +20,15 @@ import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
  *
  * @author darui.wu
  */
-public class WrapperDefaultFiler extends AbstractFiler {
-    public WrapperDefaultFiler(FluentEntity fluent) {
+public class DefaultsFiler extends AbstractFiler {
+    public DefaultsFiler(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
         this.klassName = getClassName(fluent);
     }
 
     public static String getClassName(FluentClassName fluentEntity) {
-        return fluentEntity.getNoSuffix() + Suffix_WrapperDefault;
+        return fluentEntity.getNoSuffix() + Suffix_Defaults;
     }
 
     public static String getPackageName(FluentClassName fluentEntity) {

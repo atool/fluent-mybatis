@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinQuery;
  *
  * @author wudarui
  */
-public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
+public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
 
     /**
      * 关联查询构造方式一: 使用直接传入设置好别名和参数的Query
@@ -71,6 +71,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
     JoinBuilder<QL> last(String lastSql);
 
     /**
+     * 返回IQuery对象
      *
      * @return
      */

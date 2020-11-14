@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.base.entity.RichEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.lang.Integer;
 import java.lang.String;
 import lombok.Data;

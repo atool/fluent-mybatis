@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 
 /**
  * IRich: Entity类@RefMethod方法实现定义

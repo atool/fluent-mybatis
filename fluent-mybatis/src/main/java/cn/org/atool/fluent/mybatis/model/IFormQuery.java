@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.*;
 import cn.org.atool.fluent.mybatis.base.entity.IEntity;
-import cn.org.atool.fluent.mybatis.base.form.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
