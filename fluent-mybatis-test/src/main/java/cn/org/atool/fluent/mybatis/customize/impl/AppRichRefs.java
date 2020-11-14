@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RichEntityQueryImpl extends Refs {
+public class AppRichRefs extends Refs {
     @Override
     public List<MemberEntity> findExFriendsOfMemberEntity(MemberEntity entity) {
         return null;

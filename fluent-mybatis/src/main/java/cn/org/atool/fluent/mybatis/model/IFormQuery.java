@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.*;
-import cn.org.atool.fluent.mybatis.base.FormSetter;
+import cn.org.atool.fluent.mybatis.utility.FormHelper;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 
@@ -68,6 +68,6 @@ public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E
      * @return
      */
     default <P extends IPagedList<E>> P paged() {
-        return (P) IRefs.paged(this);
+        return (P) FormHelper.paged(this);
     }
 }

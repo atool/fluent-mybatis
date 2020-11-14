@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.NonNull;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;

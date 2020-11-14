@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
+import cn.org.atool.fluent.mybatis.utility.FormHelper;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -73,6 +74,6 @@ public class Form implements Serializable {
      * @return
      */
     public <E extends IEntity, P extends IPagedList<E>> P paged(Class<E> clazz) {
-        return (P) IRefs.paged(clazz, this);
+        return (P) FormHelper.paged(clazz, this);
     }
 }

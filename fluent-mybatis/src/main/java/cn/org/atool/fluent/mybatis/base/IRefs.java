@@ -1,11 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
-import cn.org.atool.fluent.mybatis.model.Form;
-import cn.org.atool.fluent.mybatis.model.FormItem;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
-import cn.org.atool.fluent.mybatis.model.IPagedList;
-import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -18,9 +13,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity;
 
 /**
  * EntityRefQuery: Entity @RefMethod关联关系, 关联加载基类
@@ -44,47 +39,6 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
             throw new RuntimeException("the EntityRefs must be defined as a spring bean.");
         }
         return INSTANCE;
-    }
-
-    /**
-     * 按条件分页查询
-     *
-     * @param clazz
-     * @param condition
-     * @param <E>
-     * @return
-     */
-    public static <E extends IEntity> IPagedList<E> paged(Class<E> clazz, Form condition) {
-        assertNotNull("clazz", clazz);
-        if (condition.getNextId() != null && condition.getCurrPage() != null) {
-            throw new RuntimeException("nextId and currPage can only have one value");
-        } else if (condition.getNextId() == null && condition.getCurrPage() == null) {
-            throw new RuntimeException("nextId and currPage must have one value");
-        } else {
-            IQuery<E, ?> query = instance().defaultQuery(clazz);
-            WhereBase where = query.where();
-            for (FormItem item : condition.getItems()) {
-                String column = instance().findColumnByField(clazz, item.getKey());
-                if (isBlank(column)) {
-                    throw new RuntimeException("the field[" + item.getKey() + "] of Entity[" + clazz.getSimpleName() + "] not found.");
-                }
-                where.and.apply(column, SqlOp.valueOf(item.getOp()), item.getValue());
-            }
-            if (condition.getCurrPage() != null) {
-                int from = condition.getPageSize() * (condition.getCurrPage() - 1);
-                query.limit(from, condition.getPageSize());
-                return instance().findMapper(clazz).stdPagedEntity(query);
-            } else {
-                String column = instance().findPrimaryColumn(clazz);
-                where.and.apply(column, SqlOp.GE, condition.getNextId());
-                query.limit(condition.getPageSize());
-                return instance().findMapper(clazz).tagPagedEntity(query);
-            }
-        }
-    }
-
-    public static <E extends IEntity> IPagedList<E> paged(IFormQuery query) {
-        return instance().findMapper(query.entityClass()).stdPagedEntity(query);
     }
 
     /**
