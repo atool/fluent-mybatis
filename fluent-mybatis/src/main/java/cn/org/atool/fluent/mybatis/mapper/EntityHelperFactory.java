@@ -22,6 +22,12 @@ public class EntityHelperFactory {
 
     private final static Lock lock = new ReentrantLock(true);
 
+    /**
+     * 采用反射构造方式
+     *
+     * @param clazz
+     * @return
+     */
     public static IEntityHelper getInstance(Class<? extends IEntity> clazz) {
         if (INSTANCES.containsKey(clazz)) {
             return INSTANCES.get(clazz);
@@ -61,11 +67,7 @@ public class EntityHelperFactory {
     private static IEntityHelper doGetEntityHelper(Class<? extends IEntity> clazz, ClassLoader classLoader) {
         try {
             return (IEntityHelper) classLoader.loadClass(clazz.getName() + Suffix_EntityHelper).newInstance();
-        } catch (ClassNotFoundException e) {
-            return null;
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

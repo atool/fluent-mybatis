@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.mybatis.base.IRefs;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import static cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory.getInstance;
 
 /**
  * IEntity 实体基类
@@ -26,7 +26,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toEntityMap() {
-        return getInstance(this.getClass()).toEntityMap(this);
+        return IRefs.findEntityHelper(this.getClass()).toEntityMap(this);
     }
 
     /**
@@ -35,7 +35,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toColumnMap() {
-        return getInstance(this.getClass()).toColumnMap(this);
+        return IRefs.findEntityHelper(this.getClass()).toColumnMap(this);
     }
 
     /**
@@ -45,6 +45,6 @@ public interface IEntity extends Serializable {
      * @return
      */
     default <E extends IEntity> E copy() {
-        return (E) getInstance(this.getClass()).copy(this);
+        return (E) IRefs.findEntityHelper(this.getClass()).copy(this);
     }
 }

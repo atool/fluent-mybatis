@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
-import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;

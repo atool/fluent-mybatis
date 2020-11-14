@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
@@ -50,6 +51,7 @@ public class MapperRefFiler extends AbstractFile {
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_setEntityByDefault(true))
             .addMethod(m_newFormSetter(true))
+            .addMethod(this.m_entityHelper())
             .addMethod(this.m_initEntityMapper());
         spec.addType(this.class_mapping())
             .addType(this.class_query())
@@ -61,6 +63,16 @@ public class MapperRefFiler extends AbstractFile {
             Modifier.PROTECTED)
             .addAnnotation(Lombok_Getter)
             .addAnnotation(Spring_Autowired)
+            .build();
+    }
+
+    private MethodSpec m_entityHelper() {
+        return MethodSpec.methodBuilder("entityHelper")
+            .addParameter(Class.class, "clazz")
+            .returns(IEntityHelper.class)
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PROTECTED)
+            .addStatement("return $T.entityHelper(findFluentEntityClass(clazz))", EntityHelperRefFiler.getClassName())
             .build();
     }
 

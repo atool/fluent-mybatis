@@ -1,12 +1,10 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -34,6 +32,14 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      * 单例变量, 需要被Spring容器初始化时赋值
      */
     private static IRefs INSTANCE;
+
+    public static IEntityHelper findEntityHelper(Class clazz) {
+        if (INSTANCE == null) {
+            return EntityHelperFactory.getInstance(clazz);
+        } else {
+            return INSTANCE.entityHelper(clazz);
+        }
+    }
 
     /**
      * 返回查询关联单例
@@ -106,6 +112,14 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      * @return
      */
     public abstract String findPrimaryColumn(Class clazz);
+
+    /**
+     * 返回entity class对应的Helper类
+     *
+     * @param clazz
+     * @return
+     */
+    protected abstract IEntityHelper entityHelper(Class clazz);
 
     private Map<String, Method> methodsOfService = new ConcurrentHashMap<>(32);
 
