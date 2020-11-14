@@ -185,7 +185,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 满足条件的一条记录
      */
     default Optional<E> findOne(IQuery query) {
-        E one = this.mapper().findOne(query);
+        E one = (E)this.mapper().findOne(query);
         return Optional.ofNullable(one);
     }
 
@@ -239,5 +239,5 @@ public interface IProtectedDao<E extends IEntity> {
      *
      * @return
      */
-    IDaoMapper<E> mapper();
+    IDaoMapper mapper();
 }

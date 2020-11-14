@@ -39,8 +39,8 @@ public class DefaultsFiler extends AbstractFiler {
     protected void build(TypeSpec.Builder spec) {
         this.addWrapperDefault(spec, fluent.getDefaults());
         spec.addSuperinterface(IDefaultGetter.class)
-            .addField(FieldSpec.builder(fluent.wrapperFactory(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("new $T()", fluent.wrapperFactory())
+            .addField(FieldSpec.builder(fluent.defaults(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("new $T()", fluent.defaults())
                 .build())
             .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
             .addMethod(this.m_setEntityByDefault())

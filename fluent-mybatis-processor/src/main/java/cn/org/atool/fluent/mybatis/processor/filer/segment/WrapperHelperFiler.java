@@ -29,9 +29,9 @@ public class WrapperHelperFiler extends AbstractFiler {
     }
 
     @Override
-    protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(fluent.mapping(), "*");
-        super.staticImport(builder);
+    protected void staticImport(JavaFile.Builder spec) {
+        spec.addStaticImport(fluent.mapping(), "*");
+        super.staticImport(spec);
     }
 
     @Override

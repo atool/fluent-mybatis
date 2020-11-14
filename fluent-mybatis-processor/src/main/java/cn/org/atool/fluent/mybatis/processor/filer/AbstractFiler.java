@@ -44,7 +44,7 @@ public abstract class AbstractFiler {
         return javaBuilder.build();
     }
 
-    protected void staticImport(JavaFile.Builder builder) {
+    protected void staticImport(JavaFile.Builder spec) {
     }
 
     /**
@@ -128,7 +128,9 @@ public abstract class AbstractFiler {
         if (isOverride) {
             builder.addAnnotation(Override.class);
         }
-        builder.returns(returnKlass);
+        if (returnKlass != null) {
+            builder.returns(returnKlass);
+        }
         builder.addModifiers(Modifier.PROTECTED);
         return builder;
     }

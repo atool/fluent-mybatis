@@ -20,17 +20,16 @@ public interface MyCustomerInterface extends IDefaultSetter {
     String TEST_ENV = "test_env";
 
     @Override
-    default IQuery setQueryDefault(IQuery query) {
-        return (IQuery) query.where()
+    default void setQueryDefault(IQuery query) {
+        query.where()
             .apply(F_IS_DELETED, EQ, false)
             .apply(F_ENV, EQ, TEST_ENV)
             .end();
     }
 
     @Override
-    default IUpdate setUpdateDefault(IUpdate updater) {
-        return (IUpdate) updater
-            .where()
+    default void setUpdateDefault(IUpdate updater) {
+        updater.where()
             .apply(F_IS_DELETED, EQ, false)
             .apply(F_ENV, EQ, TEST_ENV)
             .end();

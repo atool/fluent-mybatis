@@ -146,5 +146,5 @@ public interface IBaseDao<E extends IEntity> {
      *
      * @return
      */
-    IDaoMapper<E> mapper();
+    IDaoMapper mapper();
 }

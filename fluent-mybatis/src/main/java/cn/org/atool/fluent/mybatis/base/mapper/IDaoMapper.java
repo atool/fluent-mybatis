@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import lombok.NonNull;
 
 import java.io.Serializable;
@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-public interface IDaoMapper<E extends IEntity> extends IEntityMapper<E> {
+public interface IDaoMapper<E extends IEntity, Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>> extends IEntityMapper<E> {
     /**
      * 判断主键id记录是否已经存在
      * 只设置id，不添加默认值
@@ -315,15 +315,16 @@ public interface IDaoMapper<E extends IEntity> extends IEntityMapper<E> {
             .collect(toList());
         return this.deleteByIds(ids);
     }
-
+    /**
+     * ============ 以下方法在EntityMapper中实现接口default方法 ===========
+     */
     /**
      * 构造设置了默认条件的Query
      * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setUpdateDefault(IUpdate)}
      *
-     * @param <Q>
      * @return
      */
-    default <Q extends IQuery<E, Q>> Q defaultQuery() {
+    default Q defaultQuery() {
         return (Q) instance().defaultQuery(this.entityClass());
     }
 
@@ -331,32 +332,25 @@ public interface IDaoMapper<E extends IEntity> extends IEntityMapper<E> {
      * 构造设置了默认条件的Updater
      * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setUpdateDefault(IUpdate)}
      *
-     * @param <Q>
-     * @param <U>
      * @return
      */
-    default <Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>> U defaultUpdater() {
+    default U defaultUpdater() {
         return (U) instance().defaultUpdater(this.entityClass());
     }
-    /**
-     * ============ 以下方法在EntityMapper中实现接口default方法 ===========
-     */
+
     /**
      * 构造空查询条件
      *
-     * @param <Q>
      * @return
      */
-    <Q extends IQuery<E, Q>> Q query();
+    Q query();
 
     /**
      * 构造空更新条件
      *
-     * @param <Q>
-     * @param <U>
      * @return
      */
-    <Q extends IQuery<E, Q>, U extends IUpdate<E, U, Q>> U updater();
+    U updater();
 
     /**
      * 主键字段名称

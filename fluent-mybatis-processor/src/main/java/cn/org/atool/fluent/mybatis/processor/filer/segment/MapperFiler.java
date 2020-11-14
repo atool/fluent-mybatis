@@ -51,15 +51,15 @@ public class MapperFiler extends AbstractFiler {
     }
 
     @Override
-    protected void staticImport(JavaFile.Builder builder) {
-        super.staticImport(builder);
-        builder.addStaticImport(ClassName.get(FluentConst.class), "*");
+    protected void staticImport(JavaFile.Builder spec) {
+        super.staticImport(spec);
+        spec.addStaticImport(ClassName.get(FluentConst.class), "*");
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addSuperinterface(this.superMapperClass())
-            .addSuperinterface(parameterizedType(ClassName.get(IDaoMapper.class), fluent.entity()))
+            .addSuperinterface(parameterizedType(ClassName.get(IDaoMapper.class), fluent.entity(), fluent.query(), fluent.updater()))
             .addAnnotation(ClassNames.Mybatis_Mapper)
             .addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
                 .addMember("value", "$S", getMapperName(this.fluent)).build()

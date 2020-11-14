@@ -10,7 +10,6 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import java.io.Serializable;
 import java.util.*;
 
-import static cn.org.atool.fluent.mybatis.base.IRefs.instance;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -247,8 +246,15 @@ public abstract class BaseSqlProvider {
         if (!pks.isEmpty() && pks.size() != list.size()) {
             throw FluentMybatisException.instance("The primary key of the list instance must be assigned to all or none");
         }
-        list.forEach(entity -> instance().setEntityByDefault(entity.getClass(), entity));
+        list.forEach(this::setEntityByDefault);
     }
+
+    /**
+     * 根据{@link cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter#setInsertDefault(IEntity)}设置默认值
+     *
+     * @param entity
+     */
+    protected abstract void setEntityByDefault(IEntity entity);
 
     /**
      * 构造updates中没有显式设置的默认值构造

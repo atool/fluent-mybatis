@@ -22,10 +22,8 @@ public interface IDefaultSetter {
      * 比如追加 env的环境变量
      *
      * @param query
-     * @return 返回query本身
      */
-    default IQuery setQueryDefault(IQuery query) {
-        return query;
+    default void setQueryDefault(IQuery query) {
     }
 
     /**
@@ -33,9 +31,7 @@ public interface IDefaultSetter {
      * 比如追加 env的环境变量
      *
      * @param updater
-     * @return 返回updater本身
      */
-    default IUpdate setUpdateDefault(IUpdate updater) {
-        return updater;
+    default void setUpdateDefault(IUpdate updater) {
     }
 }

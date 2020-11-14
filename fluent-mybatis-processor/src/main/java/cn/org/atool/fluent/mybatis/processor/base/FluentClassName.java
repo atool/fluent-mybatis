@@ -135,11 +135,11 @@ public abstract class FluentClassName {
 
 
     /**
-     * ClassName of XyzWrapperFactory
+     * ClassName of XyzDefaults
      *
      * @return
      */
-    public ClassName wrapperFactory() {
+    public ClassName defaults() {
         return ClassName.get(
             DefaultsFiler.getPackageName(this),
             DefaultsFiler.getClassName(this)

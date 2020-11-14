@@ -26,9 +26,9 @@ public class BaseDaoFiler extends AbstractFiler {
     }
 
     @Override
-    protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(fluent.wrapperFactory(), "INSTANCE");
-        super.staticImport(builder);
+    protected void staticImport(JavaFile.Builder spec) {
+        spec.addStaticImport(fluent.defaults(), "INSTANCE");
+        super.staticImport(spec);
     }
 
     @Override

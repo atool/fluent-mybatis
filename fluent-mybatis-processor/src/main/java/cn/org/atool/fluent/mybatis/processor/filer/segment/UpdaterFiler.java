@@ -2,16 +2,17 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.generator.util.ClassNames.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.generator.util.ClassNames.CN_List_Str;
 
 /**
  * updater代码生成
@@ -35,8 +36,8 @@ public class UpdaterFiler extends AbstractFiler {
     }
 
     @Override
-    protected void staticImport(JavaFile.Builder builder) {
-        builder.addStaticImport(If.class, "notBlank");
+    protected void staticImport(JavaFile.Builder spec) {
+        spec.addStaticImport(If.class, "notBlank");
     }
 
     @Override
@@ -48,7 +49,10 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.constructor0())
             .addMethod(this.m_where())
             .addMethod(this.m_primary())
-            .addMethod(this.m_allFields());
+            .addMethod(this.m_allFields())
+            .addMethod(this.m_emptyUpdater())
+            .addMethod(this.m_defaultUpdater())
+        ;
     }
 
     /**
@@ -119,6 +123,20 @@ public class UpdaterFiler extends AbstractFiler {
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.updateWhere())
             .addStatement("return this.where")
+            .build();
+    }
+
+    private MethodSpec m_emptyUpdater() {
+        return super.publicMethod(M_NEW_UPDATER, false, fluent.updater())
+            .addModifiers(Modifier.STATIC)
+            .addStatement("return new $T()", fluent.updater())
+            .build();
+    }
+
+    private MethodSpec m_defaultUpdater() {
+        return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
+            .addModifiers(Modifier.STATIC)
+            .addStatement("return $T.INSTANCE.defaultUpdater()", fluent.defaults())
             .build();
     }
 

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
-import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_SET_ENTITY_BY_DEFAULT;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static cn.org.atool.generator.util.ClassNames.*;
 import static java.util.stream.Collectors.joining;
@@ -51,29 +52,36 @@ public class SqlProviderFiler extends AbstractFiler {
     }
 
     @Override
-    protected void staticImport(JavaFile.Builder builder) {
-        super.staticImport(builder);
-        builder.addStaticImport(MybatisUtil.class, "*");
-        builder.addStaticImport(SqlProviderUtils.class, "*");
-        builder.addStaticImport(FluentConst.class, "*");
-        builder.addStaticImport(fluent.mapping(), "*");
-        builder.addStaticImport(IRefs.class, "instance");
+    protected void staticImport(JavaFile.Builder spec) {
+        super.staticImport(spec);
+        spec.addStaticImport(MybatisUtil.class, "*");
+        spec.addStaticImport(SqlProviderUtils.class, "*");
+        spec.addStaticImport(FluentConst.class, "*");
+        spec.addStaticImport(fluent.mapping(), "*");
     }
 
     @Override
-    protected void build(TypeSpec.Builder builder) {
-        builder.superclass(BaseSqlProvider.class);
+    protected void build(TypeSpec.Builder spec) {
+        spec.superclass(BaseSqlProvider.class);
         // provider method
-        builder.addMethod(this.m_insert());
-        builder.addMethod(this.m_insertBatch());
-        builder.addMethod(this.m_updateById());
+        spec.addMethod(this.m_insert());
+        spec.addMethod(this.m_insertBatch());
+        spec.addMethod(this.m_updateById());
 
         //Override method
-        builder.addMethod(this.m_updateDefaults());
-        builder.addMethod(this.m_tableName());
-        builder.addMethod(this.m_idColumn());
-        builder.addMethod(this.m_allFields());
-        builder.addMethod(this.m_dbType());
+        spec.addMethod(this.m_updateDefaults());
+        spec.addMethod(this.m_tableName());
+        spec.addMethod(this.m_idColumn());
+        spec.addMethod(this.m_allFields());
+        spec.addMethod(this.m_setEntityByDefault());
+        spec.addMethod(this.m_dbType());
+    }
+
+    private MethodSpec m_setEntityByDefault() {
+        return super.protectedMethod(M_SET_ENTITY_BY_DEFAULT, true, null)
+            .addParameter(IEntity.class, "entity")
+            .addStatement("$T.INSTANCE.setEntityByDefault(entity)", fluent.defaults())
+            .build();
     }
 
     private MethodSpec m_updateDefaults() {
@@ -90,27 +98,27 @@ public class SqlProviderFiler extends AbstractFiler {
     }
 
     private MethodSpec m_updateById() {
-        MethodSpec.Builder builder = super.publicMethod(M_updateById, false, String.class)
+        MethodSpec.Builder spec = super.publicMethod(M_updateById, false, String.class)
             .addParameter(CN_Map_StrObj, Param_Map);
-        if (this.ifNotPrimary(builder)) {
-            return builder.build();
+        if (this.ifNotPrimary(spec)) {
+            return spec.build();
         }
-        builder.addStatement("$T entity = getParas(map, Param_ET)", fluent.entity());
-        builder.addStatement("assertNotNull(Param_Entity, entity)");
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class);
-        builder.addStatement("sql.UPDATE(this.tableName())");
-        builder.addCode("$T updates = new UpdateSet()", UpdateSet.class);
+        spec.addStatement("$T entity = getParas(map, Param_ET)", fluent.entity());
+        spec.addStatement("assertNotNull(Param_Entity, entity)");
+        spec.addStatement("$T sql = new MapperSql()", MapperSql.class);
+        spec.addStatement("sql.UPDATE(this.tableName())");
+        spec.addCode("$T updates = new UpdateSet()", UpdateSet.class);
         for (CommonField field : this.fluent.getFields()) {
             if (!field.isPrimary()) {
-                builder.addCode("\n\t.add($L, entity.$L(), $S)",
+                spec.addCode("\n\t.add($L, entity.$L(), $S)",
                     field.getName(), field.getMethodName(), field.getUpdate());
             }
         }
-        builder.addCode(";\n");
-        builder.addStatement("sql.SET(updates.getUpdates())");
-        builder.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getName());
+        spec.addCode(";\n");
+        spec.addStatement("sql.SET(updates.getUpdates())");
+        spec.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getName());
 
-        return builder.addStatement("return sql.toString()").build();
+        return spec.addStatement("return sql.toString()").build();
     }
 
     private MethodSpec m_insert() {
@@ -118,7 +126,7 @@ public class SqlProviderFiler extends AbstractFiler {
             .addParameter(fluent.entity(), Param_Entity);
 
         spec.addStatement("assertNotNull(Param_Entity, entity)")
-            .addStatement("instance().setEntityByDefault(entity.getClass(), entity)")
+            .addStatement("this.setEntityByDefault(entity)")
             .addStatement("$T sql = new MapperSql()", MapperSql.class)
             .addStatement("sql.INSERT_INTO(this.tableName())")
             .addCode("$T inserts = new InsertList()", InsertList.class);

@@ -48,7 +48,7 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      */
     public static IRefs instance() {
         if (INSTANCE == null) {
-            throw new RuntimeException("the EntityRefs must be defined as a spring bean.");
+            throw new RuntimeException("the Refs must be defined as a spring bean.");
         }
         return INSTANCE;
     }

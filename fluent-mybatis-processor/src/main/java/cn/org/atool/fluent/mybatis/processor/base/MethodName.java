@@ -5,6 +5,10 @@ public interface MethodName {
 
     String M_DEFAULT_QUERY = "defaultQuery";
 
+    String M_NEW_QUERY = "query";
+
+    String M_NEW_UPDATER = "updater";
+
     String M_DEFAULT_UPDATER = "defaultUpdater";
 
     String M_ALIAS_QUERY = "aliasQuery";
@@ -20,10 +24,6 @@ public interface MethodName {
         "如果要自定义别名, 使用方法 {@link #aliasWith(String, BaseQuery)}";
 
     String JavaDoc_Alias_With_2 = "关联查询, 显式设置别名, 根据fromQuery自动关联?参数";
-
-    String M_NEW_QUERY = "query";
-
-    String M_NEW_UPDATER = "updater";
 
     String M_NOT_FLUENT_MYBATIS_EXCEPTION = "notFluentMybatisException";
 }
