@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 

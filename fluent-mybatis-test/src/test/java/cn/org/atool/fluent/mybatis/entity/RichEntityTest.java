@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.entity;
 
-import cn.org.atool.fluent.mybatis.base.impl.RichEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;

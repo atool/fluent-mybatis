@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base.impl;
+package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.base.EntityRefs;

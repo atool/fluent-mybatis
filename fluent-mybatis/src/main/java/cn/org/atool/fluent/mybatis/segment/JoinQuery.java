@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.base.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.JoinBuilder2;
-import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.impl.BaseDaoImpl;
+import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;

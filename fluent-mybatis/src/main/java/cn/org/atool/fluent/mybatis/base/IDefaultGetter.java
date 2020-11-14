@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
-
 /**
  * 进行默认设置
  */

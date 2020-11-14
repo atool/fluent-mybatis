@@ -1,8 +1,6 @@
-package cn.org.atool.fluent.mybatis.base.impl;
+package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;

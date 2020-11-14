@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.BaseQuery;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;

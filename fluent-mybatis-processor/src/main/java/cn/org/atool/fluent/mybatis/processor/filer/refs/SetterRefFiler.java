@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.EntityRefs;
-import cn.org.atool.fluent.mybatis.base.impl.FormSetter;
+import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;

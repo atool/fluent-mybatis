@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.*;
-import cn.org.atool.fluent.mybatis.base.impl.FormSetter;
+import cn.org.atool.fluent.mybatis.base.FormSetter;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 

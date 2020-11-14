@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
-import cn.org.atool.fluent.mybatis.base.impl.FormSetter;
+import cn.org.atool.fluent.mybatis.base.FormSetter;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;

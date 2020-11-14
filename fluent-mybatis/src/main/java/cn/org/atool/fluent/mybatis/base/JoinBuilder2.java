@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.base.impl.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
 import cn.org.atool.fluent.mybatis.segment.JoinQuery;
 

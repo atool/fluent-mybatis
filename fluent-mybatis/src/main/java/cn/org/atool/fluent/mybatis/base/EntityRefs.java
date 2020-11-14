@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.impl.FormSetter;
-import cn.org.atool.fluent.mybatis.base.impl.RichEntity;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.FormItem;
