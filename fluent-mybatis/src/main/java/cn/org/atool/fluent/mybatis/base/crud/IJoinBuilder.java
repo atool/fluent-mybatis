@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.segment.JoinQuery;
+import cn.org.atool.fluent.mybatis.segment.JoinBuilder;
 
 /**
  * 连接查询构造
  *
  * @author wudarui
  */
-public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
+public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
 
     /**
      * 关联查询构造方式一: 使用直接传入设置好别名和参数的Query
@@ -18,7 +18,7 @@ public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
      * @return
      */
     static <QL extends BaseQuery<?, QL>> JoinBuilder1<QL> from(QL query) {
-        return new JoinQuery<>(query);
+        return new JoinBuilder<>(query);
     }
 
     /**
@@ -33,7 +33,7 @@ public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
      * @return
      */
     static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
-        return new JoinQuery<>(clazz, query);
+        return new JoinBuilder<>(clazz, query);
     }
 
     /**
@@ -41,7 +41,7 @@ public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
      *
      * @return
      */
-    IJoinQuery<QL> distinct();
+    IJoinBuilder<QL> distinct();
 
     /**
      * limit 0, limit
@@ -49,7 +49,7 @@ public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
      * @param limit
      * @return
      */
-    IJoinQuery<QL> limit(int limit);
+    IJoinBuilder<QL> limit(int limit);
 
     /**
      * limit start, limit
@@ -58,7 +58,7 @@ public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
      * @param limit
      * @return
      */
-    IJoinQuery<QL> limit(int start, int limit);
+    IJoinBuilder<QL> limit(int start, int limit);
 
     /**
      * 追加在sql语句的末尾
@@ -68,7 +68,11 @@ public interface IJoinQuery<QL extends BaseQuery<?, QL>>  {
      * @param lastSql
      * @return
      */
-    IJoinQuery<QL> last(String lastSql);
+    IJoinBuilder<QL> last(String lastSql);
 
+    /**
+     *
+     * @return
+     */
     IQuery<?, QL> build();
 }

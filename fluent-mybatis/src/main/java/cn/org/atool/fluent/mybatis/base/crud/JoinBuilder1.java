@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinOn;
  * @param <QL> 查询表一
  * @author wudarui
  */
-public interface JoinBuilder1<QL extends BaseQuery<?, QL>>  extends IJoinQuery<QL> {
+public interface JoinBuilder1<QL extends BaseQuery<?, QL>>  extends IJoinBuilder<QL> {
     /**
      * from left.table join right.table on condition
      *

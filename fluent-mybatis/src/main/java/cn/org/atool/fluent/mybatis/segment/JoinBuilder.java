@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder1;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder2;
-import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -25,8 +25,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @param <QL>
  */
-public class JoinQuery<QL extends BaseQuery<?, QL>>
-    implements IQuery<IEntity, JoinQuery<QL>>,
+public class JoinBuilder<QL extends BaseQuery<?, QL>>
+    implements IQuery<IEntity, JoinBuilder<QL>>,
     JoinBuilder1<QL>, JoinBuilder2<QL> {
     /**
      * 主查询类型
@@ -46,7 +46,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     @Getter
     private JoinWrapperData wrapperData;
 
-    public JoinQuery(QL query) {
+    public JoinBuilder(QL query) {
         this.assertQueryAlias(query);
         this.query = query;
         this.queryClass = (Class<QL>) query.getClass();
@@ -54,10 +54,10 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         this.wrapperData = new JoinWrapperData(this.query, this.queries);
     }
 
-    public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
+    public JoinBuilder(Class<QL> queryClass, QFunction<QL> query) {
         this.queryClass = queryClass;
         this.parameters = new Parameters();
-        this.query = newQuery(queryClass, alias(), this.parameters);
+        this.query = newQuery(queryClass, parameters.alias(), this.parameters);
         query.apply(this.query);
         this.wrapperData = new JoinWrapperData(this.query, this.queries);
     }
@@ -120,32 +120,33 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(
         JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
     ) {
-        QR query = newQuery(queryClass, alias(), this.query.wrapperData.getParameters());
+        Parameters parameters = this.query.wrapperData.getParameters();
+        QR query = newQuery(queryClass, parameters.alias(), parameters);
         this.queries.add(query);
         apply.apply(query);
         return new JoinOn<>(this, this.queryClass, this.query, joinType, queryClass, query);
     }
 
     @Override
-    public JoinQuery<QL> distinct() {
+    public JoinBuilder<QL> distinct() {
         this.wrapperData.setDistinct(true);
         return this;
     }
 
     @Override
-    public JoinQuery<QL> limit(int limit) {
+    public JoinBuilder<QL> limit(int limit) {
         this.wrapperData.setPaged(new PagedOffset(0, limit));
         return this;
     }
 
     @Override
-    public JoinQuery<QL> limit(int start, int limit) {
+    public JoinBuilder<QL> limit(int start, int limit) {
         this.wrapperData.setPaged(new PagedOffset(start, limit));
         return this;
     }
 
     @Override
-    public JoinQuery<QL> last(String lastSql) {
+    public JoinBuilder<QL> last(String lastSql) {
         this.wrapperData.last(lastSql);
         return this;
     }
@@ -156,17 +157,17 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public JoinQuery<QL> selectAll() {
+    public JoinBuilder<QL> selectAll() {
         throw new RuntimeException("not support");
     }
 
     @Override
-    public JoinQuery<QL> selectId() {
+    public JoinBuilder<QL> selectId() {
         throw new RuntimeException("not support");
     }
 
     @Override
-    public WhereBase<?, JoinQuery<QL>, JoinQuery<QL>> where() {
+    public WhereBase<?, JoinBuilder<QL>, JoinBuilder<QL>> where() {
         throw new RuntimeException("not support");
     }
 
@@ -182,11 +183,5 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
             throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
                 queryClass.getSimpleName(), e.getMessage()), e);
         }
-    }
-
-    private int aliasIndex = 1;
-
-    private String alias() {
-        return String.format("t%d", aliasIndex++);
     }
 }
