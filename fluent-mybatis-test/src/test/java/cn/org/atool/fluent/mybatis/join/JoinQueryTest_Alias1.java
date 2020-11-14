@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
-import cn.org.atool.fluent.mybatis.base.crud.IJoinBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.generate.Refs;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -29,7 +29,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .where.address().like("vas").end()
             .groupBy.studentId().end()
             .orderBy.id().asc().end();
-        IJoinBuilder<StudentQuery> query = IJoinBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -65,7 +65,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();
-        IJoinBuilder<StudentQuery> query = IJoinBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .leftJoin(addressQuery)
             .on((join, l, r) -> join
@@ -95,7 +95,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
     @Test
     public void test_right_join() {
         Parameters parameters = new Parameters();
-        IJoinBuilder<StudentQuery> query = IJoinBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(new StudentQuery("t1", parameters)
                 .where.isDeleted().eq(true)
                 .and.age().isNull()
@@ -119,7 +119,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
     @Test
     void three_join() {
         Parameters parameters = new Parameters();
-        IQuery query = IJoinBuilder
+        IQuery query = JoinBuilder
             .from(new StudentQuery("t1", parameters)
                 .where.age().eq(3).end())
             .leftJoin(new HomeAddressQuery("t2", parameters)

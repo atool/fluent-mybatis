@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB> {
-    private JoinBuilder<QL> joinQuery;
+    private JoinQuery<QL> joinQuery;
 
     private QL onLeft;
 
@@ -19,7 +19,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
 
     private JoinOnBuilder onBuilder;
 
-    public JoinOn(JoinBuilder<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
+    public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
         this.joinQuery = joinQuery;
         this.onBuilder = new JoinOnBuilder(qLeft, joinType, qRight);
         this.onLeft = newEmptyQuery(qLeftClass);

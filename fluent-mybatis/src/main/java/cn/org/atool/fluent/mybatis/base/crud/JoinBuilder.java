@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.segment.JoinBuilder;
+import cn.org.atool.fluent.mybatis.segment.JoinQuery;
 
 /**
  * 连接查询构造
  *
  * @author wudarui
  */
-public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
+public interface JoinBuilder<QL extends BaseQuery<?, QL>>  {
 
     /**
      * 关联查询构造方式一: 使用直接传入设置好别名和参数的Query
@@ -18,7 +18,7 @@ public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @return
      */
     static <QL extends BaseQuery<?, QL>> JoinBuilder1<QL> from(QL query) {
-        return new JoinBuilder<>(query);
+        return new JoinQuery<>(query);
     }
 
     /**
@@ -33,7 +33,7 @@ public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @return
      */
     static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
-        return new JoinBuilder<>(clazz, query);
+        return new JoinQuery<>(clazz, query);
     }
 
     /**
@@ -41,7 +41,7 @@ public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
      *
      * @return
      */
-    IJoinBuilder<QL> distinct();
+    JoinBuilder<QL> distinct();
 
     /**
      * limit 0, limit
@@ -49,7 +49,7 @@ public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @param limit
      * @return
      */
-    IJoinBuilder<QL> limit(int limit);
+    JoinBuilder<QL> limit(int limit);
 
     /**
      * limit start, limit
@@ -58,7 +58,7 @@ public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @param limit
      * @return
      */
-    IJoinBuilder<QL> limit(int start, int limit);
+    JoinBuilder<QL> limit(int start, int limit);
 
     /**
      * 追加在sql语句的末尾
@@ -68,7 +68,7 @@ public interface IJoinBuilder<QL extends BaseQuery<?, QL>>  {
      * @param lastSql
      * @return
      */
-    IJoinBuilder<QL> last(String lastSql);
+    JoinBuilder<QL> last(String lastSql);
 
     /**
      *

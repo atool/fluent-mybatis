@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
-import cn.org.atool.fluent.mybatis.base.crud.IJoinBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
@@ -34,7 +34,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
                 .where.age().eq(34).end();
         QFunction<HomeAddressQuery> aq = q -> q
             .where.address().like("address").end();
-        IQuery query = IJoinBuilder.from(StudentQuery.class, uq)
+        IQuery query = JoinBuilder.from(StudentQuery.class, uq)
             .join(HomeAddressQuery.class, aq)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .build();

@@ -25,9 +25,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @param <QL>
  */
-public class JoinBuilder<QL extends BaseQuery<?, QL>>
-    implements IQuery<IEntity, JoinBuilder<QL>>,
-    JoinBuilder1<QL>, JoinBuilder2<QL> {
+public class JoinQuery<QL extends BaseQuery<?, QL>>
+    implements IQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL>, JoinBuilder2<QL> {
     /**
      * 主查询类型
      */
@@ -46,7 +45,7 @@ public class JoinBuilder<QL extends BaseQuery<?, QL>>
     @Getter
     private JoinWrapperData wrapperData;
 
-    public JoinBuilder(QL query) {
+    public JoinQuery(QL query) {
         this.assertQueryAlias(query);
         this.query = query;
         this.queryClass = (Class<QL>) query.getClass();
@@ -54,7 +53,7 @@ public class JoinBuilder<QL extends BaseQuery<?, QL>>
         this.wrapperData = new JoinWrapperData(this.query, this.queries);
     }
 
-    public JoinBuilder(Class<QL> queryClass, QFunction<QL> query) {
+    public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
         this.queryClass = queryClass;
         this.parameters = new Parameters();
         this.query = newQuery(queryClass, parameters.alias(), this.parameters);
@@ -128,25 +127,25 @@ public class JoinBuilder<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public JoinBuilder<QL> distinct() {
+    public JoinQuery<QL> distinct() {
         this.wrapperData.setDistinct(true);
         return this;
     }
 
     @Override
-    public JoinBuilder<QL> limit(int limit) {
+    public JoinQuery<QL> limit(int limit) {
         this.wrapperData.setPaged(new PagedOffset(0, limit));
         return this;
     }
 
     @Override
-    public JoinBuilder<QL> limit(int start, int limit) {
+    public JoinQuery<QL> limit(int start, int limit) {
         this.wrapperData.setPaged(new PagedOffset(start, limit));
         return this;
     }
 
     @Override
-    public JoinBuilder<QL> last(String lastSql) {
+    public JoinQuery<QL> last(String lastSql) {
         this.wrapperData.last(lastSql);
         return this;
     }
@@ -157,17 +156,17 @@ public class JoinBuilder<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public JoinBuilder<QL> selectAll() {
+    public JoinQuery<QL> selectAll() {
         throw new RuntimeException("not support");
     }
 
     @Override
-    public JoinBuilder<QL> selectId() {
+    public JoinQuery<QL> selectId() {
         throw new RuntimeException("not support");
     }
 
     @Override
-    public WhereBase<?, JoinBuilder<QL>, JoinBuilder<QL>> where() {
+    public WhereBase<?, JoinQuery<QL>, JoinQuery<QL>> where() {
         throw new RuntimeException("not support");
     }
 

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
-import cn.org.atool.fluent.mybatis.base.crud.IJoinBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -32,7 +32,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .end()
             .groupBy.studentId().end()
             .orderBy.id().asc().end();
-        IJoinBuilder<StudentQuery> query = IJoinBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(StudentQuery.class, studentQuery)
             .join(HomeAddressQuery.class, addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -70,7 +70,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .and.address().like("vas")
             .end()
             .groupBy.studentId().end();
-        IJoinBuilder<StudentQuery> query = IJoinBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(StudentQuery.class, uq)
             .leftJoin(HomeAddressQuery.class, aq)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -103,7 +103,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.isDeleted().eq(true)
             .and.address().like("vas")
             .end();
-        IJoinBuilder<StudentQuery> query = IJoinBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(StudentQuery.class, uq)
             .rightJoin(HomeAddressQuery.class, aq)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -124,7 +124,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.age().eq(3).end();
         QFunction<HomeAddressQuery> aq = q -> q
             .where.address().like("xxx").end();
-        IQuery query = IJoinBuilder
+        IQuery query = JoinBuilder
             .from(StudentQuery.class, uq)
             .leftJoin(HomeAddressQuery.class, aq)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
