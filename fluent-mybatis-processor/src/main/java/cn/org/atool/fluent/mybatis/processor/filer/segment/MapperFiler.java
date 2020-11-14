@@ -26,6 +26,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
 
 /**
@@ -89,6 +90,8 @@ public class MapperFiler extends AbstractFiler {
 
         spec.addMethod(this.m_query())
             .addMethod(this.m_updater())
+            .addMethod(this.m_defaultQuery())
+            .addMethod(this.m_defaultUpdater())
             .addMethod(this.m_primaryField())
             .addMethod(this.m_entityClass())
         ;
@@ -112,19 +115,35 @@ public class MapperFiler extends AbstractFiler {
         return builder.build();
     }
 
+    private MethodSpec m_query() {
+        return MethodSpec.methodBuilder(M_NEW_QUERY)
+            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+            .returns(fluent.query())
+            .addStatement("return new $T()", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_defaultQuery() {
+        return MethodSpec.methodBuilder(M_DEFAULT_QUERY)
+            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+            .returns(fluent.query())
+            .addStatement("return $T.INSTANCE.$L()", fluent.defaults(), M_DEFAULT_QUERY)
+            .build();
+    }
+
     private MethodSpec m_updater() {
-        return MethodSpec.methodBuilder("updater")
+        return MethodSpec.methodBuilder(M_NEW_UPDATER)
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
             .returns(fluent.updater())
             .addStatement("return new $T()", fluent.updater())
             .build();
     }
 
-    private MethodSpec m_query() {
-        return MethodSpec.methodBuilder("query")
+    private MethodSpec m_defaultUpdater() {
+        return MethodSpec.methodBuilder(M_DEFAULT_UPDATER)
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(fluent.query())
-            .addStatement("return new $T()", fluent.query())
+            .returns(fluent.updater())
+            .addStatement("return $T.INSTANCE.$L()", fluent.defaults(), M_DEFAULT_UPDATER)
             .build();
     }
 

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static cn.org.atool.fluent.mybatis.base.IRefs.instance;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
 
@@ -58,7 +57,6 @@ public interface IDaoMapper<E extends IEntity, Q extends IQuery<E, Q>, U extends
             if (this.existPk(entity.findPk())) {
                 return this.updateById(entity) > 0;
             } else {
-                instance().setEntityByDefault(this.entityClass(), entity);
                 return this.insert(entity) > 0;
             }
         }
@@ -324,9 +322,7 @@ public interface IDaoMapper<E extends IEntity, Q extends IQuery<E, Q>, U extends
      *
      * @return
      */
-    default Q defaultQuery() {
-        return (Q) instance().defaultQuery(this.entityClass());
-    }
+    Q defaultQuery();
 
     /**
      * 构造设置了默认条件的Updater
@@ -334,9 +330,7 @@ public interface IDaoMapper<E extends IEntity, Q extends IQuery<E, Q>, U extends
      *
      * @return
      */
-    default U defaultUpdater() {
-        return (U) instance().defaultUpdater(this.entityClass());
-    }
+    U defaultUpdater();
 
     /**
      * 构造空查询条件
