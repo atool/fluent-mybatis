@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.BaseDaoImpl;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.generator.util.ClassNames;
@@ -42,12 +41,11 @@ public class BaseDaoFiler extends AbstractFiler {
             .addMethod(this.m_newQuery())
             .addMethod(this.m_defaultQuery())
             .addMethod(this.m_newUpdater())
-            .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_primaryField());
+            .addMethod(this.m_defaultUpdater());
     }
 
     private TypeName superBaseDaoImplKlass() {
-        ClassName baseImpl = ClassName.get(BaseDaoImpl.class.getPackage().getName(), BaseDaoImpl.class.getSimpleName());
+        ClassName baseImpl = ClassName.get(BaseDao.class.getPackage().getName(), BaseDao.class.getSimpleName());
         ClassName entity = fluent.entity();
         return ParameterizedTypeName.get(baseImpl, entity);
     }
@@ -90,7 +88,7 @@ public class BaseDaoFiler extends AbstractFiler {
      * @return
      */
     private MethodSpec m_defaultQuery() {
-        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
+        return super.protectedMethod(M_DEFAULT_QUERY, true, fluent.query())
             .addStatement("return INSTANCE.$L()", M_DEFAULT_QUERY)
             .build();
     }
@@ -107,24 +105,9 @@ public class BaseDaoFiler extends AbstractFiler {
      * @return
      */
     private MethodSpec m_defaultUpdater() {
-        return super.publicMethod(M_DEFAULT_UPDATER, true, fluent.updater())
+        return super.protectedMethod(M_DEFAULT_UPDATER, true, fluent.updater())
             .addStatement("return INSTANCE.$L()", M_DEFAULT_UPDATER)
             .build();
-    }
-
-    /**
-     * public String findPkColumn() {}
-     *
-     * @return
-     */
-    private MethodSpec m_primaryField() {
-        MethodSpec.Builder builder = super.publicMethod("primaryField", true, FieldMapping.class);
-        if (fluent.getPrimary() == null) {
-            super.throwPrimaryNoFound(builder);
-        } else {
-            builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getName());
-        }
-        return builder.build();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.dao.IDao;
 import cn.org.atool.fluent.mybatis.generate.entity.NoPrimaryEntity;
 
 /**
@@ -8,5 +8,5 @@ import cn.org.atool.fluent.mybatis.generate.entity.NoPrimaryEntity;
  *
  * @author Powered By Fluent Mybatis
  */
-public interface NoPrimaryDao extends IBaseDao<NoPrimaryEntity> {
+public interface NoPrimaryDao extends IDao<NoPrimaryEntity> {
 }

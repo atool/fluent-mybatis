@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.entity;
 
 
 /**

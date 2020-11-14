@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
-import cn.org.atool.fluent.mybatis.base.IDao;
+import cn.org.atool.fluent.mybatis.base.dao.IProtectedDao;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
@@ -29,7 +29,7 @@ public class SelectPagedListTest extends BaseTest {
 
     @Autowired
     @Qualifier("studentDaoImpl")
-    private IDao daoProtected;
+    private IProtectedDao daoProtected;
 
     @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
     @Test

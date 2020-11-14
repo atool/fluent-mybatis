@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.dao.IDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Powered By Fluent Mybatis
  */
-public interface StudentDao extends IBaseDao<StudentEntity> {
+public interface StudentDao extends IDao<StudentEntity> {
     /**
      * 测试 dao类不会被重写
      *

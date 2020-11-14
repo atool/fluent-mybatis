@@ -1,6 +1,7 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

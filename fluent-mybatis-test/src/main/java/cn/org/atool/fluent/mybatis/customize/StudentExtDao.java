@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.customize;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.dao.IDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 
 import java.util.List;
 
-public interface StudentExtDao extends IBaseDao<StudentEntity> {
+public interface StudentExtDao extends IDao<StudentEntity> {
     int count(String userName);
 
     List<String> selectFields(Long... ids);

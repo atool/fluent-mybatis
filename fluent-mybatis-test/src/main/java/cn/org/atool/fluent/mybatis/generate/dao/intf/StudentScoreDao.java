@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.dao.IDao;
 import cn.org.atool.fluent.mybatis.customize.model.ScoreStatistics;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentScoreEntity;
 
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Powered By Fluent Mybatis
  */
-public interface StudentScoreDao extends IBaseDao<StudentScoreEntity> {
+public interface StudentScoreDao extends IDao<StudentScoreEntity> {
     /**
      * 统计从fromYear到endYear年间学科subjects的统计数据
      *

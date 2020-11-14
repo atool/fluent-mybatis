@@ -1,5 +1,13 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.base.entity.RichEntity;
+import cn.org.atool.fluent.mybatis.base.form.FormSetter;
+import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;

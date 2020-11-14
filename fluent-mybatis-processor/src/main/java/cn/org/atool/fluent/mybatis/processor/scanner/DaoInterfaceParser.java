@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.scanner;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.base.IDefaultSetter;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;

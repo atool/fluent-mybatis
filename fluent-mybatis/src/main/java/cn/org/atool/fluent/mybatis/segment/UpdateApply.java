@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 
 import java.util.function.Predicate;
 

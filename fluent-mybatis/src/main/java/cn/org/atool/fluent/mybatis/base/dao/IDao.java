@@ -1,4 +1,7 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.dao;
+
+import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,7 +15,7 @@ import java.util.Map;
  * @Author darui.wu
  * @Date 2019-06-25 12:00
  */
-public interface IBaseDao<E extends IEntity> {
+public interface IDao<E extends IEntity> {
     /**
      * 插入一条记录
      *
@@ -20,7 +23,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param <PK>   主键类型
      * @return 返回记录主键
      */
-    <PK extends Serializable> PK save(E entity);
+    default <PK extends Serializable> PK save(E entity) {
+        return (PK) this.mapper().save(entity);
+    }
 
     /**
      * 批量插入
@@ -29,7 +34,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param list 实体对象列表
      * @return 插入记录数
      */
-    int save(List<E> list);
+    default int save(List<E> list) {
+        return this.mapper().save(list);
+    }
 
     /**
      * <p>
@@ -41,7 +48,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param entity 实体对象
      * @return 更新或者插入成功
      */
-    boolean saveOrUpdate(E entity);
+    default boolean saveOrUpdate(E entity) {
+        return this.mapper().saveOrUpdate(entity);
+    }
 
     /**
      * 根据id查询
@@ -49,7 +58,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param id 主键值
      * @return 结果对象
      */
-    E selectById(Serializable id);
+    default E selectById(Serializable id) {
+        return (E) this.mapper().findById(id);
+    }
 
     /**
      * 根据id列表查询
@@ -57,7 +68,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键列表
      * @return 结果列表
      */
-    List<E> selectByIds(Collection<? extends Serializable> ids);
+    default List<E> selectByIds(Collection<? extends Serializable> ids) {
+        return this.mapper().listByIds(ids);
+    }
 
     /**
      * 根据where key值构造条件查询
@@ -65,7 +78,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param where 条件，忽略null值
      * @return 结果列表
      */
-    List<E> selectByMap(Map<String, Object> where);
+    default List<E> selectByMap(Map<String, Object> where) {
+        return this.mapper().listByMapAndDefault(where);
+    }
 
     /**
      * 判断主键id记录是否已经存在
@@ -73,7 +88,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param id 主键值
      * @return true: 记录存在; false: 记录不存在
      */
-    boolean existPk(Serializable id);
+    default boolean existPk(Serializable id) {
+        return this.mapper().existPk(id);
+    }
 
     /**
      * 根据entity的主键修改entity中非null属性
@@ -81,7 +98,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param entity 实体对象
      * @return 是否更新成功
      */
-    boolean updateById(E entity);
+    default boolean updateById(E entity) {
+        return this.mapper().updateById(entity) > 0;
+    }
 
     /**
      * 根据entities中的id值，批量删除记录
@@ -89,7 +108,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param entities
      * @return 被执行的记录数
      */
-    int deleteByEntityIds(Collection<E> entities);
+    default int deleteByEntityIds(Collection<E> entities) {
+        return this.mapper().deleteByEntityIds(entities);
+    }
 
     /**
      * 根据ids列表批量删除记录
@@ -97,7 +118,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键列表
      * @return 被执行的记录数
      */
-    int deleteByIds(Collection<? extends Serializable> ids);
+    default int deleteByIds(Collection<? extends Serializable> ids) {
+        return this.mapper().deleteByIds(ids);
+    }
 
     /**
      * 根据id删除记录
@@ -105,7 +128,9 @@ public interface IBaseDao<E extends IEntity> {
      * @param id 主键值
      * @return 是否删除成功
      */
-    boolean deleteById(Serializable id);
+    default boolean deleteById(Serializable id) {
+        return this.mapper().deleteById(id) > 0;
+    }
 
     /**
      * 根据map构造条件删除记录
@@ -113,5 +138,14 @@ public interface IBaseDao<E extends IEntity> {
      * @param map 条件, 忽略null值
      * @return 被执行的记录数
      */
-    int deleteByMap(Map<String, Object> map);
+    default int deleteByMap(Map<String, Object> map) {
+        return this.mapper().deleteByMapAndDefault(map);
+    }
+
+    /**
+     * 获取对应entity的BaseMapper
+     *
+     * @return
+     */
+    IDaoMapper<E> mapper();
 }

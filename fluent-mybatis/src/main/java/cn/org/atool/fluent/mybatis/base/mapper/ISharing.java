@@ -1,5 +1,7 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.mapper;
 
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

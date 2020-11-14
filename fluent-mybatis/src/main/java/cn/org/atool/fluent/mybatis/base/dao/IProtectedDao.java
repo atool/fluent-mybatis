@@ -1,8 +1,12 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.dao;
 
+import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
-import cn.org.atool.fluent.mybatis.functions.MapFunction;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +22,7 @@ import java.util.Optional;
  * @param <E> 实体类
  * @author:darui.wu Created by darui.wu on 2020/6/24.
  */
-public interface IDao<E extends IEntity> extends IMapperDao<E> {
+public interface IProtectedDao<E extends IEntity> {
     /**
      * 根据条件query删除记录
      *
@@ -229,4 +233,11 @@ public interface IDao<E extends IEntity> extends IMapperDao<E> {
     default int count(IQuery query) {
         return this.mapper().count(query);
     }
+
+    /**
+     * 获取对应entity的BaseMapper
+     *
+     * @return
+     */
+    IDaoMapper<E> mapper();
 }

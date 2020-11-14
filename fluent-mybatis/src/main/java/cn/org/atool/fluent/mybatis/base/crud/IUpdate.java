@@ -1,4 +1,6 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.crud;
+
+import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 
 import java.util.function.Function;
 
