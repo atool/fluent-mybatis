@@ -1,6 +1,4 @@
-package cn.org.atool.fluent.mybatis.base.entity;
-
-import cn.org.atool.fluent.mybatis.base.IRefs;
+package cn.org.atool.fluent.mybatis.base;
 
 import java.io.Serializable;
 import java.util.Map;

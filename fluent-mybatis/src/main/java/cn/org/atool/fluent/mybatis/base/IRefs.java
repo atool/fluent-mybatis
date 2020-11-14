@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.crud.*;
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;

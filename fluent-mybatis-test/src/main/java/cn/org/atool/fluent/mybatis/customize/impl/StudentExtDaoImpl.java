@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.customize.impl;
 
-import cn.org.atool.fluent.mybatis.base.dao.IDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, IDao<StudentEntity> {
+public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, IBaseDao<StudentEntity> {
     @Override
     public int count(String userName) {
         return super.defaultQuery()

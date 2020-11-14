@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
+
 import java.util.Map;
 
 /**

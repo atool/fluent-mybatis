@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import org.apache.ibatis.annotations.Param;

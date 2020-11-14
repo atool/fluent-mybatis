@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 
 import java.util.ArrayList;

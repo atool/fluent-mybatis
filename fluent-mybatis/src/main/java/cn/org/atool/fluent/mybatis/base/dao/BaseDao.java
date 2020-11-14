@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.dao;
 
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 
@@ -10,7 +11,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
  * @param <E> 实体类
  * @author darui.wu
  */
-public abstract class BaseDao<E extends IEntity> implements IDao<E>, IProtectedDao<E> {
+public abstract class BaseDao<E extends IEntity> implements IBaseDao<E>, IProtectedDao<E> {
 
     /**
      * 无任何条件的查询

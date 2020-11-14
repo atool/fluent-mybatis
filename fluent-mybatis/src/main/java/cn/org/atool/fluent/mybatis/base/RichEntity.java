@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 
 import java.util.Map;

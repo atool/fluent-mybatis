@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.base.dao.IDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.MemberEntity;
 
 /**
@@ -8,5 +8,5 @@ import cn.org.atool.fluent.mybatis.generate.entity.MemberEntity;
  *
  * @author Powered By Fluent Mybatis
  */
-public interface MemberDao extends IDao<MemberEntity> {
+public interface MemberDao extends IBaseDao<MemberEntity> {
 }

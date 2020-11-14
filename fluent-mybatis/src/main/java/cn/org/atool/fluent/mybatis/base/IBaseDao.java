@@ -1,7 +1,6 @@
-package cn.org.atool.fluent.mybatis.base.dao;
+package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
-import cn.org.atool.fluent.mybatis.base.entity.IEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -15,7 +14,7 @@ import java.util.Map;
  * @Author darui.wu
  * @Date 2019-06-25 12:00
  */
-public interface IDao<E extends IEntity> {
+public interface IBaseDao<E extends IEntity> {
     /**
      * 插入一条记录
      *
