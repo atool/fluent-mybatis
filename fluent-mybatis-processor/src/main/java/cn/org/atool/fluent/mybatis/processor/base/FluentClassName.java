@@ -219,6 +219,6 @@ public abstract class FluentClassName {
         return ClassName.get(
             WrapperHelperFiler.getPackageName(this)
                 + "." +
-                WrapperHelperFiler.getClassName(this), Suffix_FormSetter);
+                WrapperHelperFiler.getClassName(this), this.getNoSuffix() + Suffix_EntityFormSetter);
     }
 }

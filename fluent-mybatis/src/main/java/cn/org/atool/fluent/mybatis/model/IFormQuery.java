@@ -13,11 +13,11 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
  * 简单表单查询
  *
  * @param <E>
- * @param <C>
+ * @param <S>
  * @author wudarui
  */
-public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E, C>>>
-    extends IQuery<E, IFormQuery<E, C>> {
+public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>>
+    extends IQuery<E, IFormQuery<E, S>> {
     /**
      * 对应的实体Entity类型
      *
@@ -25,33 +25,33 @@ public interface IFormQuery<E extends IEntity, C extends FormSetter<IFormQuery<E
      */
     Class<? extends IEntity> entityClass();
 
-    C op(String op);
+    S op(String op);
 
-    default C eq() {
+    default S eq() {
         return this.op(OP_EQ);
     }
 
-    default C ne() {
+    default S ne() {
         return this.op(OP_NE);
     }
 
-    default C gt() {
+    default S gt() {
         return this.op(OP_GT);
     }
 
-    default C ge() {
+    default S ge() {
         return this.op(OP_GE);
     }
 
-    default C lt() {
+    default S lt() {
         return this.op(OP_LT);
     }
 
-    default C le() {
+    default S le() {
         return this.op(OP_LE);
     }
 
-    default C like() {
+    default S like() {
         return this.op(OP_LIKE);
     }
 

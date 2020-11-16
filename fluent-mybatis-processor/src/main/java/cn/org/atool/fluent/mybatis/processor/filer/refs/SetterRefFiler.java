@@ -54,7 +54,7 @@ public class SetterRefFiler extends AbstractFile {
     private CodeBlock m_initSetters() {
         List<CodeBlock> list = new ArrayList<>();
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("setters.put($L, $T.FormSetter::new);\n", fluent.lowerNoSuffix(), fluent.wrapperHelper()));
+            list.add(CodeBlock.of("setters.put($L, $T::new);\n", fluent.lowerNoSuffix(), fluent.formSetter()));
         }
         return CodeBlock.join(list, "");
     }
@@ -69,11 +69,9 @@ public class SetterRefFiler extends AbstractFile {
 
     private FieldSpec f_formSetter(FluentEntity fluent) {
         return FieldSpec.builder(
-            parameterizedType(
-                ClassName.get(Class.class),
-                TypeVariableName.get(fluent.getNoSuffix() + "WrapperHelper.FormSetter"))
+            parameterizedType(ClassName.get(Class.class), fluent.formSetter())
             , fluent.lowerNoSuffix(), Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("$T.FormSetter.class", fluent.wrapperHelper())
+            .initializer("$T.class", fluent.formSetter())
             .build();
     }
 

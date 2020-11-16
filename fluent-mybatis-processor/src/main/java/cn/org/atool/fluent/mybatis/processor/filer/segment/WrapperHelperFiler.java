@@ -1,8 +1,10 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.model.FormQuery;
 import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -10,6 +12,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.segment.where.*;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -31,6 +34,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(fluent.mapping(), "*");
+        spec.addStaticImport(MybatisUtil.class, "assertNotNull");
         super.staticImport(spec);
     }
 
@@ -194,12 +198,10 @@ public class WrapperHelperFiler extends AbstractFiler {
 
 
     private TypeSpec nestedFormSetter() {
-        return TypeSpec.classBuilder(Suffix_FormSetter)
+        return TypeSpec.classBuilder(fluent.getNoSuffix() + Suffix_EntityFormSetter)
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
             .superclass(super.parameterizedType(
-                ClassName.get(FormSetter.class),
-                super.parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter())
-            ))
+                ClassName.get(FormSetter.class), fluent.entity(), fluent.formSetter()))
             .addSuperinterface(super.parameterizedType(
                 fluent.segment(),
                 super.parameterizedType(
@@ -209,6 +211,19 @@ public class WrapperHelperFiler extends AbstractFiler {
             ))
             .addJavadoc("Form Column Setter")
             .addMethod(this.constructor1_FormSetter())
+            .addMethod(this.m_by())
+            .build();
+    }
+
+    private MethodSpec m_by() {
+        return super.publicMethod("by", true, parameterizedType(
+            ClassName.get(IFormQuery.class),
+            fluent.entity(),
+            fluent.formSetter()))
+            .addParameter(fluent.entity(), "entity")
+            .addStatement("assertNotNull($S, entity)", "entity")
+            .addStatement("$T query = $T.INSTANCE.defaultQuery()", IQuery.class, fluent.defaults())
+            .addStatement("return new $T(entity, query, FormSetter.class)", FormQuery.class)
             .build();
     }
 
