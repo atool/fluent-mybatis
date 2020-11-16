@@ -1,9 +1,6 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -13,9 +10,6 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * 简单表单查询设置
@@ -46,25 +40,6 @@ public class Form implements Serializable {
      * 查询一页的数量
      */
     private int pageSize = 1;
-
-    public static <E extends IEntity, S extends FormSetter<E, S>>
-    IFormQuery<E, S> by(Class<S> setter, E entity) {
-        assertNotNull("entity", entity);
-        assertNotNull("column setter", setter);
-
-        IQuery query = IRefs.instance().defaultQuery(entity.getClass());
-        return new FormQuery(entity, query, setter);
-    }
-
-    public static <E extends IEntity, C extends FormSetter<E, C>>
-    IFormQuery<E, C> by(Class<C> setter, Class<E> entityClass, Map form) {
-        assertNotNull("form", form);
-        assertNotNull("entityClass", entityClass);
-        assertNotNull("column setter", setter);
-
-        IQuery query = IRefs.instance().defaultQuery(entityClass);
-        return new FormQuery(entityClass, query, form, setter);
-    }
 
     /**
      * 分页查询数据

@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -10,7 +9,6 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.NonNull;
 
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * 通用的Form形式查询
@@ -25,25 +23,18 @@ public class FormQuery<E extends IEntity, S extends FormSetter<E, S>> implements
     private final IQuery<E, ?> query;
     private final FormSetter<E, S> setter;
 
-    public FormQuery(@NonNull E entity, @NonNull IQuery<E, ?> query, @NonNull Function<FormQuery, FormSetter> setter) {
-        this.entityClazz = entity.getClass();
+    public FormQuery(@NonNull E entity, @NonNull IQuery<E, ?> query, @NonNull S setter) {
         this.form = entity.toEntityMap();
         this.query = query;
-        this.setter = setter.apply(this);
+        this.setter = setter;
+        this.entityClazz = setter.entityClass();
     }
 
-    public FormQuery(@NonNull E entity, @NonNull IQuery<E, ?> query, @NonNull Class<S> setter) {
-        this.entityClazz = entity.getClass();
-        this.form = entity.toEntityMap();
-        this.query = query;
-        this.setter = IRefs.instance().newFormSetter(setter, this);
-    }
-
-    public FormQuery(@NonNull Class<E> entityClass, @NonNull IQuery<E, ?> query, @NonNull Map form, @NonNull Class<S> setter) {
-        this.entityClazz = entityClass;
+    public FormQuery(@NonNull IQuery<E, ?> query, @NonNull Map form, @NonNull S setter) {
         this.form = form;
         this.query = query;
-        this.setter = IRefs.instance().newFormSetter(setter, this);
+        this.setter = setter;
+        this.entityClazz = setter.entityClass();
     }
 
     @Override

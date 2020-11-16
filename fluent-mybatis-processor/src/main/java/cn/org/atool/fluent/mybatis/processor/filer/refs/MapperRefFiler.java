@@ -15,7 +15,6 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.SetterRefFiler.m_newFormSetter;
 import static cn.org.atool.generator.util.ClassNames.Lombok_Getter;
 import static cn.org.atool.generator.util.ClassNames.Spring_Autowired;
 
@@ -50,7 +49,6 @@ public class MapperRefFiler extends AbstractFile {
             .addMethod(m_defaultQuery(true))
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_setEntityByDefault(true))
-            .addMethod(m_newFormSetter(true))
             .addMethod(this.m_entityHelper())
             .addMethod(this.m_initEntityMapper());
         spec.addType(this.class_mapping())
@@ -103,9 +101,9 @@ public class MapperRefFiler extends AbstractFile {
     }
 
     private TypeSpec class_setter() {
-        return TypeSpec.classBuilder("Setter")
+        return TypeSpec.classBuilder("Form")
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(SetterRefFiler.getClassName())
+            .addSuperinterface(FormRefFiler.getClassName())
             .build();
     }
 

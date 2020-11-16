@@ -211,19 +211,28 @@ public class WrapperHelperFiler extends AbstractFiler {
             ))
             .addJavadoc("Form Column Setter")
             .addMethod(this.constructor1_FormSetter())
+            .addMethod(this.m_entityClass())
             .addMethod(this.m_by())
             .build();
     }
 
+    private MethodSpec m_entityClass() {
+        return super.publicMethod("entityClass", true, Class.class)
+            .addStatement("return $T.class", fluent.entity())
+            .build();
+    }
+
     private MethodSpec m_by() {
-        return super.publicMethod("by", true, parameterizedType(
+        return super.publicMethod("by", false, parameterizedType(
             ClassName.get(IFormQuery.class),
             fluent.entity(),
             fluent.formSetter()))
+            .addModifiers(Modifier.STATIC)
             .addParameter(fluent.entity(), "entity")
             .addStatement("assertNotNull($S, entity)", "entity")
-            .addStatement("$T query = $T.INSTANCE.defaultQuery()", IQuery.class, fluent.defaults())
-            .addStatement("return new $T(entity, query, FormSetter.class)", FormQuery.class)
+            .addStatement("$T setter = new $T()", fluent.formSetter(), fluent.formSetter())
+            .addStatement("$T q = $T.INSTANCE.defaultQuery()", IQuery.class, fluent.defaults())
+            .addStatement("return setter.setQuery(new $T(entity, q, setter))", FormQuery.class)
             .build();
     }
 
@@ -384,10 +393,7 @@ public class WrapperHelperFiler extends AbstractFiler {
 
     private MethodSpec constructor1_FormSetter() {
         return MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter())
-                , "query")
-            .addStatement("super(query)")
+            .addModifiers(Modifier.PRIVATE)
             .build();
     }
 

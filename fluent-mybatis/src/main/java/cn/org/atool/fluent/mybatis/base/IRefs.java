@@ -1,10 +1,12 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.crud.*;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
-import cn.org.atool.fluent.mybatis.model.IFormQuery;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -85,15 +87,6 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      * @return
      */
     public abstract IDefaultGetter findDefaultGetter(Class clazz);
-
-    /**
-     * Form Setter
-     *
-     * @param setterClass
-     * @param query
-     * @return
-     */
-    public abstract FormSetter newFormSetter(Class setterClass, IFormQuery query);
 
     /**
      * 返回clazz属性field对应的数据库字段名称
