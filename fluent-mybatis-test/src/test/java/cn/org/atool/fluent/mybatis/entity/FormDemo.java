@@ -19,7 +19,7 @@ public class FormDemo extends BaseTest {
             .setUserName("I am FluentMybatis")
             .setAge(2)
             .setAddress("宇宙深处");
-        IFormQuery query = Refs.Form.student.by(student)
+        IFormQuery<StudentEntity, ?> query = Refs.Form.student.byEntity(student)
             .eq().userName()
             .eq().age();
         if (query.exists()) {
@@ -29,7 +29,11 @@ public class FormDemo extends BaseTest {
         want.bool(query.exists()).is(true);
         Stream.of(new Object[10]).forEach(o -> student.setId(null).save());
 
-        StdPagedList<StudentEntity> list = (StdPagedList)query.limit(10).paged();
+        StdPagedList<StudentEntity> list = query
+            .limit(10)
+            .execute()
+            .stdPagedEntity();
+
         want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(10)
             .userName.values("I am FluentMybatis")
         );

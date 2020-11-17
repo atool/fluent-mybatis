@@ -13,14 +13,15 @@ import java.util.Map;
 /**
  * 通用的Form形式查询
  *
+ * @param <E>
  * @param <S>
  * @author darui.wu
  */
-public class FormQuery<S extends FormSetter<S>> implements IFormQuery<S> {
+public class FormQuery<E extends IEntity, S extends FormSetter<E, S>> implements IFormQuery<E, S> {
     private final Class<? extends IEntity> entityClazz;
     private final Map<String, Object> form;
     private final IQuery query;
-    private final FormSetter<S> setter;
+    private final FormSetter<E, S> setter;
 
     public FormQuery(@NonNull IEntity entity, @NonNull IQuery query, @NonNull S setter) {
         this.form = entity.toEntityMap();
@@ -48,37 +49,37 @@ public class FormQuery<S extends FormSetter<S>> implements IFormQuery<S> {
     }
 
     @Override
-    public IFormQuery<S> distinct() {
+    public IFormQuery<E, S> distinct() {
         this.query.distinct();
         return this;
     }
 
     @Override
-    public IFormQuery<S> selectAll() {
+    public IFormQuery<E, S> selectAll() {
         this.query.selectAll();
         return this;
     }
 
     @Override
-    public IFormQuery<S> selectId() {
+    public IFormQuery<E, S> selectId() {
         this.query.selectId();
         return this;
     }
 
     @Override
-    public IFormQuery<S> limit(int limit) {
+    public IFormQuery<E, S> limit(int limit) {
         this.query.limit(limit);
         return this;
     }
 
     @Override
-    public IFormQuery<S> limit(int start, int limit) {
+    public IFormQuery<E, S> limit(int start, int limit) {
         this.query.limit(start, limit);
         return this;
     }
 
     @Override
-    public IFormQuery<S> last(String lastSql) {
+    public IFormQuery<E, S> last(String lastSql) {
         this.query.last(lastSql);
         return this;
     }

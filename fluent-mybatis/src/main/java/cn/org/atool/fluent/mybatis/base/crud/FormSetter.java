@@ -12,18 +12,18 @@ import java.util.function.Consumer;
  * @param <S>
  * @author darui.wu
  */
-public abstract class FormSetter<S extends FormSetter<S>> {
+public abstract class FormSetter<E extends IEntity, S extends FormSetter<E, S>> {
     /**
      * IFormQuery
      */
-    private IFormQuery<S> query;
+    private IFormQuery<E, S> query;
 
     private Consumer<FieldMapping> apply;
 
     protected FormSetter() {
     }
 
-    protected IFormQuery<S> setQuery(IFormQuery query) {
+    protected IFormQuery<E, S> setQuery(IFormQuery query) {
         this.query = query;
         return this.query;
     }
@@ -38,7 +38,7 @@ public abstract class FormSetter<S extends FormSetter<S>> {
      * @param field
      * @return
      */
-    public IFormQuery<S> set(FieldMapping field) {
+    public IFormQuery<E, S> set(FieldMapping field) {
         this.apply.accept(field);
         return this.query;
     }

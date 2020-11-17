@@ -59,6 +59,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 实体类型
      */
+    @Getter
     private final Class entityClass;
     /**
      * 对应的嵌套查询类

@@ -15,7 +15,6 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
-
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
@@ -47,10 +46,10 @@ public class FormSetterFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(super.parameterizedType(ClassName.get(FormSetter.class), fluent.formSetter()))
+            .superclass(super.parameterizedType(ClassName.get(FormSetter.class), fluent.entity(), fluent.formSetter()))
             .addSuperinterface(super.parameterizedType(
                 fluent.segment(),
-                super.parameterizedType(ClassName.get(IFormQuery.class), fluent.formSetter())
+                super.parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter())
             ))
             .addMethod(this.constructor1())
             .addMethod(this.m_entityClass())
@@ -73,7 +72,7 @@ public class FormSetterFiler extends AbstractFiler {
 
     private MethodSpec m_byEntity() {
         return super.publicMethod("byEntity", false,
-            parameterizedType(ClassName.get(IFormQuery.class), fluent.formSetter()))
+            parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter()))
             .addModifiers(Modifier.STATIC)
             .addParameter(IEntity.class, "entity")
             .addStatement("assertNotNull($S, entity)", "entity")
@@ -85,7 +84,7 @@ public class FormSetterFiler extends AbstractFiler {
 
     private MethodSpec m_byMap() {
         return super.publicMethod("byMap", false,
-            parameterizedType(ClassName.get(IFormQuery.class), fluent.formSetter()))
+            parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter()))
             .addModifiers(Modifier.STATIC)
             .addParameter(Map.class, "map")
             .addStatement("assertNotNull($S, map)", "map")

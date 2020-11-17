@@ -1,10 +1,15 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * IEntityQuery: 查询接口
@@ -54,6 +59,17 @@ public interface IQuery<
      * @return self
      */
     Q limit(int start, int limit);
+
+    default QueryExecutor<E> execute() {
+        Class entityClass = this.getWrapperData().getEntityClass();
+        assertNotNull("entity class", entityClass);
+        IRichMapper mapper = IRefs.instance().findMapper(entityClass);
+        return new QueryExecutor<E>(mapper, this);
+    }
+
+    default QueryExecutor<E> executeBy(IRichMapper<E> mapper) {
+        return new QueryExecutor<E>(mapper, this);
+    }
 
     /**
      * 执行查询操作

@@ -10,10 +10,11 @@ import java.util.function.Function;
 /**
  * FormApply
  *
+ * @param <E>
  * @param <S>
  * @author darui.wu
  */
-public final class FormApply<S extends FormSetter<S>> {
+public final class FormApply<E extends IEntity, S extends FormSetter<E, S>> {
     private final Function<IEntity, IFormQuery> byEntity;
 
     private final Function<Map, IFormQuery> byMap;
@@ -23,11 +24,11 @@ public final class FormApply<S extends FormSetter<S>> {
         this.byMap = byMap;
     }
 
-    public <E extends IEntity> IFormQuery<S> by(E entity) {
+    public IFormQuery<E, S> byEntity(E entity) {
         return byEntity.apply(entity);
     }
 
-    public IFormQuery<S> by(Map map) {
+    public IFormQuery<E, S> byMap(Map map) {
         return byMap.apply(map);
     }
 }
