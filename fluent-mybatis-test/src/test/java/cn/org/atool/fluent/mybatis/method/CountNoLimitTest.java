@@ -36,7 +36,7 @@ public class CountNoLimitTest extends BaseTest {
 
     @Test
     public void test_count_and_list() throws Exception {
-        ATM.DataMap.student.initTable(100)
+        ATM.dataMap.student.initTable(100)
             .age.values(10)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();

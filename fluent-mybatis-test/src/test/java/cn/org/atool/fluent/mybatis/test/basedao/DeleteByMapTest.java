@@ -19,7 +19,7 @@ public class DeleteByMapTest extends BaseTest {
 
     @Test
     public void test_deleteByMap() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values("test1", "test12", "test3", "test12", "tess2")
             .env.values("test_env")
             .cleanAndInsert();
@@ -30,6 +30,6 @@ public class DeleteByMapTest extends BaseTest {
         });
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
-        db.table(ATM.Table.student).count().eq(8);
+        db.table(ATM.table.student).count().eq(8);
     }
 }

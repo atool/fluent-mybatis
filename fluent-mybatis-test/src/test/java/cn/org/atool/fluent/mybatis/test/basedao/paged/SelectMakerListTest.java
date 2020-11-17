@@ -34,7 +34,7 @@ public class SelectMakerListTest extends BaseTest {
     @DisplayName("准备100条数据，按条件>分页开始标识方式查询，自动获取下一页的标识")
     @Test
     public void test_select_paged_list() throws Exception {
-        ATM.DataMap.student.initTable(100)
+        ATM.dataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
@@ -57,7 +57,7 @@ public class SelectMakerListTest extends BaseTest {
 
     @Test
     public void test_select_paged_list2() throws Exception {
-        ATM.DataMap.student.initTable(100)
+        ATM.dataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))

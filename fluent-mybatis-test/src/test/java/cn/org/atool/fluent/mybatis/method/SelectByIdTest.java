@@ -22,21 +22,21 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectById() throws Exception {
-        ATM.DataMap.student.initTable(3)
+        ATM.dataMap.student.initTable(3)
             .userName.values(DataGenerator.increase("username_%d"))
             .cleanAndInsert();
         StudentEntity student = mapper.findById(3L);
         db.sqlList().wantFirstSql()
             .where().eq("id = ?");
         want.object(student)
-            .eqMap(ATM.DataMap.student.entity()
+            .eqMap(ATM.dataMap.student.entity()
                 .userName.values("username_3")
             );
     }
 
     @Test
     public void test_selectById_noPrimary() throws Exception {
-        db.table(ATM.Table.noPrimary).clean().insert(ATM.DataMap.noPrimary.initTable(3)
+        db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );

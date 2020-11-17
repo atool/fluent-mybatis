@@ -19,7 +19,7 @@ public class SetFunctionTest extends BaseTest {
 
     @Test
     void setFunction() {
-        ATM.DataMap.student.initTable(1)
+        ATM.dataMap.student.initTable(1)
             .id.values(1)
             .userName.values("test")
             .age.values(23)
@@ -29,7 +29,7 @@ public class SetFunctionTest extends BaseTest {
             .set.age().apply("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test_aaa")
             .age.values(24)
             .eqTable();

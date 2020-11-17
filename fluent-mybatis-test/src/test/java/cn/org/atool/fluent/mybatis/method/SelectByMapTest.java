@@ -21,7 +21,7 @@ public class SelectByMapTest extends BaseTest {
 
     @Test
     public void test_selectByMap() throws Exception {
-        ATM.DataMap.student.initTable(4)
+        ATM.dataMap.student.initTable(4)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
 
@@ -31,7 +31,7 @@ public class SelectByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ?");
-        want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
+        want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
     }
 }

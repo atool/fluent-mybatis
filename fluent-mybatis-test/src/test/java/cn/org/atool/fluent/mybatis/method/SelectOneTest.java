@@ -19,8 +19,8 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -28,14 +28,14 @@ public class SelectOneTest extends BaseTest {
             .where.id().eq(24L).end();
         StudentEntity student = mapper.findOne(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE id = ?");
-        want.object(student).eqDataMap(ATM.DataMap.student.entity(1)
+        want.object(student).eqDataMap(ATM.dataMap.student.entity(1)
             .userName.values("u2"));
     }
 
     @Test
     public void test_selectOne_hasMultiple() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );

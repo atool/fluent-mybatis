@@ -18,7 +18,7 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();
@@ -35,7 +35,7 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne2() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();

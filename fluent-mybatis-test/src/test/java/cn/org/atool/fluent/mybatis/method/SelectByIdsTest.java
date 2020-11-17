@@ -25,7 +25,7 @@ public class SelectByIdsTest extends BaseTest {
 
     @Test
     public void test_selectById() throws Exception {
-        ATM.DataMap.student.initTable(3)
+        ATM.dataMap.student.initTable(3)
             .userName.values(DataGenerator.increase("username_%d"))
             .cleanAndInsert();
 
@@ -33,14 +33,14 @@ public class SelectByIdsTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .where().eq("id IN (?, ?)");
         want.list(users)
-            .eqMap(ATM.DataMap.student.entity(2)
+            .eqMap(ATM.dataMap.student.entity(2)
                 .userName.values("username_1", "username_3")
             );
     }
 
     @Test
     public void test_selectById_noPrimary() throws Exception {
-        db.table(ATM.Table.noPrimary).clean().insert(ATM.DataMap.noPrimary.initTable(3)
+        db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );

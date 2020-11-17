@@ -35,18 +35,24 @@ import lombok.experimental.Accessors;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentScoreEntity extends RichEntity implements MyEntity {
+public class StudentScoreEntity extends RichEntity implements MyEntity<StudentScoreEntity> {
   private static final long serialVersionUID = 1L;
 
+  /**
+   */
   @TableId("id")
   private Long id;
 
+  /**
+   */
   @TableField(
       value = "gmt_created",
       insert = "now()"
   )
   private Date gmtCreated;
 
+  /**
+   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
@@ -54,30 +60,46 @@ public class StudentScoreEntity extends RichEntity implements MyEntity {
   )
   private Date gmtModified;
 
+  /**
+   */
   @TableField(
       value = "is_deleted",
       insert = "0"
   )
   private Boolean isDeleted;
 
+  /**
+   */
   @TableField("env")
   private String env;
 
+  /**
+   */
   @TableField("gender_man")
   private Integer genderMan;
 
+  /**
+   */
   @TableField("school_term")
   private Integer schoolTerm;
 
+  /**
+   */
   @TableField("score")
   private Integer score;
 
+  /**
+   */
   @TableField("student_id")
   private Long studentId;
 
+  /**
+   */
   @TableField("subject")
   private String subject;
 
+  /**
+   */
   @TableField("tenant")
   private Long tenant;
 

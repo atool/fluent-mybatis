@@ -17,9 +17,9 @@ public class InsertDefaultTest extends BaseTest {
     @DisplayName("dao插入默认值")
     @Test
     void testDefaultInsert() {
-        ATM.DataMap.student.table().clean();
+        ATM.dataMap.student.table().clean();
         dao.save(new StudentEntity().setUserName("FluentMybatis"));
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("FluentMybatis")
             .env.values("test_env")
             .tenant.values(234567L)
@@ -33,9 +33,9 @@ public class InsertDefaultTest extends BaseTest {
     @DisplayName("dao批量插入默认值")
     @Test
     void testDefaultBatchInsert() {
-        ATM.DataMap.student.table().clean();
+        ATM.dataMap.student.table().clean();
         dao.save(Arrays.asList(new StudentEntity().setUserName("FluentMybatis")));
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("FluentMybatis")
             .env.values("test_env")
             .tenant.values(234567L)

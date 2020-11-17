@@ -24,7 +24,7 @@ public class SelectCountTest extends BaseTest {
 
     @Test
     public void test_selectCount() throws Exception {
-        ATM.DataMap.student.initTable(4)
+        ATM.dataMap.student.initTable(4)
             .id.values(23, 24, 25, 26)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
@@ -37,7 +37,7 @@ public class SelectCountTest extends BaseTest {
 
     @Test
     public void test_selectCount_hasMultiple() throws Exception {
-        ATM.DataMap.student.initTable(4)
+        ATM.dataMap.student.initTable(4)
             .id.values(23, 24, 25, 26)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
@@ -51,7 +51,7 @@ public class SelectCountTest extends BaseTest {
 
     @Test
     public void test_selectCount_limit() throws Exception {
-        ATM.DataMap.student.initTable(4)
+        ATM.dataMap.student.initTable(4)
             .id.values(23, 24, 25, 26)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();

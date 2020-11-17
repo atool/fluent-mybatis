@@ -18,7 +18,7 @@ public class UpdateTest extends BaseTest {
 
     @Test
     public void test_update() throws Exception {
-        ATM.DataMap.student.initTable(5)
+        ATM.dataMap.student.initTable(5)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();
@@ -27,8 +27,8 @@ public class UpdateTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("UPDATE student " +
             "SET gmt_modified = now(), user_name = ? " +
             "WHERE is_deleted = ? AND env = ? AND id = ?");
-        db.table(ATM.Table.student).queryWhere("id=4")
-            .eqDataMap(ATM.DataMap.student.table(1)
+        db.table(ATM.table.student).queryWhere("id=4")
+            .eqDataMap(ATM.dataMap.student.table(1)
                 .userName.values("new_user_name")
             );
     }

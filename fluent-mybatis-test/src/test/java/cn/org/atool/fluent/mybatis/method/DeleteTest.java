@@ -14,7 +14,7 @@ public class DeleteTest extends BaseTest {
 
     @Test
     public void testDeleteById() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -24,7 +24,7 @@ public class DeleteTest extends BaseTest {
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM student WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
         );
@@ -32,7 +32,7 @@ public class DeleteTest extends BaseTest {
 
     @Test
     public void testDelete_apply() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -42,7 +42,7 @@ public class DeleteTest extends BaseTest {
         mapper.delete(update);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM student WHERE user_name=?", StringMode.SameAsSpace);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
         );

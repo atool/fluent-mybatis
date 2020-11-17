@@ -16,8 +16,8 @@ public class ListPoJosTest extends BaseTest {
 
     @Test
     public void statistics() {
-        db.table(ATM.Table.studentScore).clean();
-        ATM.DataMap.studentScore
+        db.table(ATM.table.studentScore).clean();
+        ATM.dataMap.studentScore
             .table(10).init()
             .schoolTerm.values(2001)
             .score.functionAutoIncrease(index -> (index % 11) * 10)

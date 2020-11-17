@@ -21,7 +21,7 @@ public class QuestionMarkTest extends BaseTest {
     @DisplayName("?反义处理")
     @Test
     void test() {
-        ATM.DataMap.student.initTable(1)
+        ATM.dataMap.student.initTable(1)
             .id.values(1)
             .userName.values("test")
             .age.values(23)
@@ -31,7 +31,7 @@ public class QuestionMarkTest extends BaseTest {
             .set.age().apply("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test_\\?_aaa")
             .age.values(24)
             .eqTable();

@@ -35,9 +35,13 @@ import lombok.experimental.Accessors;
 public class MemberEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
+  /**
+   */
   @TableId("id")
   private Long id;
 
+  /**
+   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
@@ -45,24 +49,36 @@ public class MemberEntity extends RichEntity {
   )
   private Date gmtModified;
 
+  /**
+   */
   @TableField(
       value = "is_deleted",
       insert = "0"
   )
   private Boolean isDeleted;
 
+  /**
+   */
   @TableField("age")
   private Integer age;
 
+  /**
+   */
   @TableField("gmt_created")
   private Date gmtCreated;
 
+  /**
+   */
   @TableField("is_girl")
   private Boolean isGirl;
 
+  /**
+   */
   @TableField("school")
   private String school;
 
+  /**
+   */
   @TableField("user_name")
   private String userName;
 

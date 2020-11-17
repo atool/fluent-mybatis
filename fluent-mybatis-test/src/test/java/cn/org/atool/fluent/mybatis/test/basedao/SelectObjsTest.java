@@ -18,7 +18,7 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();
@@ -29,7 +29,7 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs_2() throws Exception {
-        ATM.DataMap.student.initTable(1)
+        ATM.dataMap.student.initTable(1)
             .userName.values((Object) null)
             .env.values("test_env")
             .cleanAndInsert();
@@ -40,7 +40,7 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs2() throws Exception {
-        ATM.DataMap.student.initTable(1)
+        ATM.dataMap.student.initTable(1)
             .userName.values((Object) null)
             .age.values((Object) null)
             .env.values("test_env")

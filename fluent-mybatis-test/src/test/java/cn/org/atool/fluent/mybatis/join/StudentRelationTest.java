@@ -21,12 +21,12 @@ public class StudentRelationTest extends BaseTest {
 
     @BeforeEach
     public void setup() {
-        ATM.DataMap.student.initTable(1)
+        ATM.dataMap.student.initTable(1)
             .id.values(1)
             .userName.values("test")
             .env.values("test_env")
             .cleanAndInsert();
-        ATM.DataMap.studentScore.initTable(2)
+        ATM.dataMap.studentScore.initTable(2)
             .id.values(1, 2)
             .studentId.values(1, 1)
             .score.values(70, 80)
@@ -39,7 +39,7 @@ public class StudentRelationTest extends BaseTest {
         StudentEntity student = studentMapper.findById(1L);
         want.object(student).notNull();
         List<StudentScoreEntity> scores = student.findStudentScoreList();
-        want.list(scores).eqDataMap(ATM.DataMap.studentScore.entity(2)
+        want.list(scores).eqDataMap(ATM.dataMap.studentScore.entity(2)
             .studentId.values(1)
             .score.values(70, 80)
         );
@@ -51,7 +51,7 @@ public class StudentRelationTest extends BaseTest {
     void testFindStudent() {
         StudentScoreEntity score = studentScoreMapper.findById(1);
         StudentEntity student = score.findStudent();
-        want.object(student).eqDataMap(ATM.DataMap.student.entity(1)
+        want.object(student).eqDataMap(ATM.dataMap.student.entity(1)
             .id.values(1)
             .userName.values("test")
         );

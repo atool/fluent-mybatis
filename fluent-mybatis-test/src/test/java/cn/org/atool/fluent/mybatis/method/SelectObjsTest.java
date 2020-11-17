@@ -21,8 +21,8 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -38,8 +38,8 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs_hasMultiple() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );

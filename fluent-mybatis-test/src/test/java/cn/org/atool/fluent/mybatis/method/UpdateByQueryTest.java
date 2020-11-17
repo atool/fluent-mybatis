@@ -14,7 +14,7 @@ public class UpdateByQueryTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -25,7 +25,7 @@ public class UpdateByQueryTest extends BaseTest {
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ? AND 1=1", StringMode.SameAsSpace);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user name2")
         );
@@ -33,7 +33,7 @@ public class UpdateByQueryTest extends BaseTest {
 
     @Test
     public void testUpdate_apply() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -48,7 +48,7 @@ public class UpdateByQueryTest extends BaseTest {
                 "WHERE id = ? " +
                 "AND user_name='user2' " +
                 "OR user_name=?", StringMode.SameAsSpace);
-        ATM.DataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user name2")
             .eqTable();

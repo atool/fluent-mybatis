@@ -22,7 +22,7 @@ public class SelectByMapTest extends BaseTest {
 
     @Test
     public void test_selectByMap_withStringField() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();
@@ -32,13 +32,13 @@ public class SelectByMapTest extends BaseTest {
         }});
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
-        want.list(users).eqDataMap(ATM.DataMap.student.entity(1)
+        want.list(users).eqDataMap(ATM.dataMap.student.entity(1)
             .userName.values("username_4"));
     }
 
     @Test
     public void test_selectByMap_withNumberField() throws Exception {
-        ATM.DataMap.student.initTable(3)
+        ATM.dataMap.student.initTable(3)
             .age.values(DataGenerator.increase(20, 1))
             .env.values("test_env")
             .cleanAndInsert();
@@ -49,7 +49,7 @@ public class SelectByMapTest extends BaseTest {
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM student WHERE is_deleted = ? AND env = ? AND age = ?");
         want.object(students)
-            .eqMap(ATM.DataMap.student.entity()
+            .eqMap(ATM.dataMap.student.entity()
                 .age.values(21)
             );
     }
@@ -57,7 +57,7 @@ public class SelectByMapTest extends BaseTest {
     @Test
     public void test_selectByMap_withDateField() throws Exception {
         Date date = new Date(1604160000000L);
-        ATM.DataMap.student.initTable(1)
+        ATM.dataMap.student.initTable(1)
             .gmtModified.values(date)
             .env.values("test_env")
             .cleanAndInsert();
@@ -68,7 +68,7 @@ public class SelectByMapTest extends BaseTest {
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM student WHERE is_deleted = ? AND env = ? AND gmt_modified = ?");
         want.object(students)
-            .eqMap(ATM.DataMap.student.entity()
+            .eqMap(ATM.dataMap.student.entity()
                 .gmtModified.values(date)
             );
     }

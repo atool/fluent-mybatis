@@ -25,7 +25,7 @@ public class InsertTest extends BaseTest {
 
     @Test
     public void testInsert() {
-        db.table(ATM.Table.student).clean();
+        db.table(ATM.table.student).clean();
         StudentEntity student = new StudentEntity()
             .setAge(23)
             .setUserName("tom mike");
@@ -34,7 +34,7 @@ public class InsertTest extends BaseTest {
         userMapper.insert(student);
 
         want.number(student.getId()).isGt(1L);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .age.values(23)
             .userName.values("tom mike")
         );
@@ -51,7 +51,7 @@ public class InsertTest extends BaseTest {
 
     @Test
     public void testInsert_NoAutoId() {
-        db.table(ATM.Table.noAutoId).clean();
+        db.table(ATM.table.noAutoId).clean();
         idMapper.insertWithPk(new NoAutoIdEntity()
             .setId("test-id-1")
             .setColumn1("test")
@@ -60,14 +60,14 @@ public class InsertTest extends BaseTest {
             .setId("test-id-2")
             .setColumn1("test")
         );
-        db.table(ATM.Table.noAutoId).query().eqDataMap(ATM.DataMap.noAutoId.table(2)
+        db.table(ATM.table.noAutoId).query().eqDataMap(ATM.dataMap.noAutoId.table(2)
             .id.values("test-id-1", "test-id-2")
         );
     }
 
     @Test
     public void testInsert_NoAutoId_conflict() {
-        db.table(ATM.Table.noAutoId).clean().insert(ATM.DataMap.noAutoId.initTable(1)
+        db.table(ATM.table.noAutoId).clean().insert(ATM.dataMap.noAutoId.initTable(1)
             .id.values("test-id-1")
             .column1.values("test")
         );
@@ -81,12 +81,12 @@ public class InsertTest extends BaseTest {
 
     @Test
     public void test_insert_noPrimary() {
-        db.table(ATM.Table.noPrimary).clean();
+        db.table(ATM.table.noPrimary).clean();
         noPrimaryMapper.insert(new NoPrimaryEntity()
             .setColumn1(23)
             .setColumn2("test")
         );
-        db.table(ATM.Table.noPrimary).query().eqDataMap(ATM.DataMap.noPrimary.table(1)
+        db.table(ATM.table.noPrimary).query().eqDataMap(ATM.dataMap.noPrimary.table(1)
             .column1.values(23)
             .column2.values("test")
         );

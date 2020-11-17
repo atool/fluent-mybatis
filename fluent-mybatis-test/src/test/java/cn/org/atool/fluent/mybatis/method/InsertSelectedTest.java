@@ -19,12 +19,12 @@ public class InsertSelectedTest extends BaseTest {
 
     @Test
     void testInsert() {
-        db.table(ATM.Table.student).clean();
+        db.table(ATM.table.student).clean();
         StudentEntity student = new StudentEntity()
             .setAge(23)
             .setUserName("tom mike");
         userMapper.insert(student);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .age.values(23)
             .userName.values("tom mike")
         );
@@ -36,13 +36,13 @@ public class InsertSelectedTest extends BaseTest {
 
     @Test
     void testInsert_withId() {
-        db.table(ATM.Table.student).clean();
+        db.table(ATM.table.student).clean();
         StudentEntity student = new StudentEntity()
             .setUserName("tom mike")
             .setId(100L)
             .setHomeAddressId(200L);
         userMapper.insertWithPk(student);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(100)
             .userName.values("tom mike")
             .homeAddressId.values(200)

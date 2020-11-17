@@ -34,7 +34,7 @@ public class SelectPagedListTest extends BaseTest {
     @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
     @Test
     public void test_select_paged_list() throws Exception {
-        ATM.DataMap.student.initTable(100)
+        ATM.dataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))
@@ -61,7 +61,7 @@ public class SelectPagedListTest extends BaseTest {
 
     @Test
     public void test_select_paged_list2() throws Exception {
-        ATM.DataMap.student.initTable(100)
+        ATM.dataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
             .age.generate((index) -> new Random().nextInt(100))

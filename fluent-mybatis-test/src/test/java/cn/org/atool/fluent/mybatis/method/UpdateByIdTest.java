@@ -20,7 +20,7 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -35,7 +35,7 @@ public class UpdateByIdTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
 
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
@@ -44,7 +44,7 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate_gmtCreate() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -60,7 +60,7 @@ public class UpdateByIdTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET gmt_created = ?, gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
 
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
@@ -69,7 +69,7 @@ public class UpdateByIdTest extends BaseTest {
 
     @Test
     public void testUpdate2() {
-        ATM.DataMap.student.initTable(2)
+        ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
@@ -85,7 +85,7 @@ public class UpdateByIdTest extends BaseTest {
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET gmt_created = ?, gmt_modified = ?, is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(2)
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)

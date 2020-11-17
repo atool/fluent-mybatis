@@ -13,9 +13,9 @@ public class RichEntityTest extends BaseTest {
 
     @Test
     void testSave() {
-        ATM.DataMap.student.table(0).clean();
+        ATM.dataMap.student.table(0).clean();
         StudentEntity entity = new StudentEntity().setUserName("FluentMybatis").save();
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("FluentMybatis")
             .id.values(entity.getId())
             .eqTable();
@@ -23,13 +23,13 @@ public class RichEntityTest extends BaseTest {
 
     @Test
     void testUpdateById() {
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(1)
             .userName.values("test1")
             .cleanAndInsert();
         StudentEntity entity = new StudentEntity().setId(1L).setUserName("test2").updateById();
         db.sqlList().wantFirstSql().eq("UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?");
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test2")
             .id.values(entity.getId())
             .eqTable();
@@ -44,7 +44,7 @@ public class RichEntityTest extends BaseTest {
 
     @Test
     void testFindById() {
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(1)
             .userName.values("test1")
             .cleanAndInsert();
@@ -54,7 +54,7 @@ public class RichEntityTest extends BaseTest {
             }
         }.findById();
         db.sqlList().wantFirstSql().end("FROM student WHERE id = ?");
-        want.object(entity).eqDataMap(ATM.DataMap.student.entity(1).userName.values("test1"));
+        want.object(entity).eqDataMap(ATM.dataMap.student.entity(1).userName.values("test1"));
     }
 
     @Test
@@ -74,13 +74,13 @@ public class RichEntityTest extends BaseTest {
 
     @Test
     void testDeleteById() {
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(1)
             .userName.values("test1")
             .cleanAndInsert();
         new StudentEntity().setId(1L).deleteById();
         db.sqlList().wantFirstSql().end("DELETE FROM student WHERE id = ?");
-        db.table(ATM.Table.student).count().isEqualTo(0);
+        db.table(ATM.table.student).count().isEqualTo(0);
     }
 
     @Test
@@ -92,14 +92,14 @@ public class RichEntityTest extends BaseTest {
 
     @Test
     void testListByNotNull() {
-        ATM.DataMap.student.table(3)
+        ATM.dataMap.student.table(3)
             .id.values(3, 4, 6)
             .userName.values("test1")
             .tenant.values(123L)
             .cleanAndInsert();
         List<StudentEntity> list = new StudentEntity().setUserName("test1").setTenant(123L).listByNotNull();
         db.sqlList().wantFirstSql().end("FROM student WHERE user_name = ? AND tenant = ?");
-        want.list(list).eqDataMap(ATM.DataMap.student.entity(3)
+        want.list(list).eqDataMap(ATM.dataMap.student.entity(3)
             .id.values(3, 4, 6)
             .userName.values("test1")
             .tenant.values(123L)

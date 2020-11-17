@@ -16,7 +16,7 @@ public class ExistPkTest extends BaseTest {
 
     @Test
     public void test_exist() {
-        ATM.DataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(1, 3)
             .env.values("test_env")
             .isDeleted.values(0)

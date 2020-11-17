@@ -17,7 +17,7 @@ public class EntityTest extends Test4J {
             .setAge(3)
             .setVersion("1.3.0")
             .copy();
-        want.object(student).eqDataMap(ATM.DataMap.student.entity()
+        want.object(student).eqDataMap(ATM.dataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
@@ -30,7 +30,7 @@ public class EntityTest extends Test4J {
             .setAge(3)
             .setVersion("1.3.0")
             .toEntityMap();
-        want.object(student).eqDataMap(ATM.DataMap.student.entity()
+        want.object(student).eqDataMap(ATM.dataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
@@ -43,7 +43,7 @@ public class EntityTest extends Test4J {
             .setAge(3)
             .setVersion("1.3.0")
             .toColumnMap();
-        want.object(student).eqDataMap(ATM.DataMap.student.table()
+        want.object(student).eqDataMap(ATM.dataMap.student.table()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));
@@ -57,7 +57,7 @@ public class EntityTest extends Test4J {
         map.put("version", "1.3.0");
 
         StudentEntity student = EntityHelperFactory.getInstance(StudentEntity.class).toEntity(map);
-        want.object(student).eqDataMap(ATM.DataMap.student.entity()
+        want.object(student).eqDataMap(ATM.dataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
             .version.values("1.3.0"));

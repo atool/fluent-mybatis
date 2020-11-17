@@ -30,6 +30,8 @@ import lombok.experimental.Accessors;
 public class NoAutoIdEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
+  /**
+   */
   @TableId(
       value = "id",
       auto = false,
@@ -37,6 +39,8 @@ public class NoAutoIdEntity extends RichEntity {
   )
   private String id;
 
+  /**
+   */
   @TableField("column_1")
   private String column1;
 

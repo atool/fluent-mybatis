@@ -14,9 +14,9 @@ public class NotMapperTest extends BaseTest {
 
     @Test
     public void existPK() {
-        ATM.DataMap.student.table().clean();
+        ATM.dataMap.student.table().clean();
         want.bool(mapper.existPk(1L)).is(false);
-        ATM.DataMap.student.table(1).id.values(1).insert();
+        ATM.dataMap.student.table(1).id.values(1).insert();
         want.bool(mapper.existPk(1L)).is(true);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE id = ? LIMIT ?, ?");
     }
@@ -24,9 +24,9 @@ public class NotMapperTest extends BaseTest {
     @DisplayName("验证save()和insert()方法")
     @Test
     public void save() {
-        ATM.DataMap.student.table().clean();
+        ATM.dataMap.student.table().clean();
         mapper.save(new StudentEntity().setId(1L).setUserName("test1"));
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test1")
             .tenant.values(234567)
             .env.values("test_env")
@@ -34,7 +34,7 @@ public class NotMapperTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, env, tenant, user_name) VALUES (?, now(), now(), 0, ?, ?, ?)");
 
         mapper.insertWithPk(new StudentEntity().setId(2L).setUserName("test1"));
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test1")
             .tenant.values(null)
             .env.values(null)
@@ -44,20 +44,20 @@ public class NotMapperTest extends BaseTest {
 
     @Test
     public void saveOrUpdate() {
-        ATM.DataMap.student.table().clean();
+        ATM.dataMap.student.table().clean();
         StudentEntity student = new StudentEntity().setUserName("test1");
         mapper.saveOrUpdate(student);
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test1")
             .tenant.values(234567)
             .env.values("test_env")
             .eqTable();
 
         mapper.saveOrUpdate(student.setUserName("test2"));
-        ATM.DataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .userName.values("test2")
             .eqTable();
         mapper.saveOrUpdate(student.setUserName("test1").setId(student.getId() + 1));
-        ATM.DataMap.student.table(2).userName.values("test2", "test1").eqTable();
+        ATM.dataMap.student.table(2).userName.values("test2", "test1").eqTable();
     }
 }

@@ -18,7 +18,7 @@ public class SelectFieldsTest extends BaseTest {
 
     @Test
     public void test_selectFields() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();

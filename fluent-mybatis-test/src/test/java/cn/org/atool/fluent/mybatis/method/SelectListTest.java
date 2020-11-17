@@ -21,8 +21,8 @@ public class SelectListTest extends BaseTest {
 
     @Test
     public void test_selectList() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -30,14 +30,14 @@ public class SelectListTest extends BaseTest {
             .where.id().eq(24L).end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE id = ?");
-        want.list(users).eqDataMap(ATM.DataMap.student.entity(1)
+        want.list(users).eqDataMap(ATM.dataMap.student.entity(1)
             .userName.values("u2"));
     }
 
     @Test
     public void test_selectList_hasMultiple() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -45,14 +45,14 @@ public class SelectListTest extends BaseTest {
             .where.userName().eq("u2").end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ?");
-        want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
+        want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
     }
 
     @Test
     public void test_selectList_limit() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -60,15 +60,15 @@ public class SelectListTest extends BaseTest {
             .where.userName().eq("u2").end()
             .limit(2);
         List<StudentEntity> users = mapper.listEntity(query);
-        want.list(users).eqDataMap(ATM.DataMap.student.entity(2)
+        want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
         db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE user_name = ? LIMIT ?, ?");
     }
 
     @Test
     public void test_selectList_limit2() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
@@ -82,8 +82,8 @@ public class SelectListTest extends BaseTest {
 
     @Test
     public void test_selectList_withTimeRange() throws Exception {
-        db.table(ATM.Table.student).clean()
-            .insert(ATM.DataMap.student.initTable(4)
+        db.table(ATM.table.student).clean()
+            .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
                 .gmtCreated.values(new Date(1604140000000L), new Date(1604150000000L), new Date(1604160000000L), new Date(1604170000000L))
             );
@@ -92,6 +92,6 @@ public class SelectListTest extends BaseTest {
             .and.gmtCreated().le(new Date(1604170000000L)).end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT").end("FROM student WHERE gmt_created > ? AND gmt_created <= ?");
-        want.list(users).eqDataMap(ATM.DataMap.student.entity(3));
+        want.list(users).eqDataMap(ATM.dataMap.student.entity(3));
     }
 }

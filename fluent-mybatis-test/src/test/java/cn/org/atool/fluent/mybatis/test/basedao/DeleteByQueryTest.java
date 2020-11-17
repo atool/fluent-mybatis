@@ -13,12 +13,12 @@ public class DeleteByQueryTest extends BaseTest {
 
     @Test
     public void test_deleteByQuery() throws Exception {
-        ATM.DataMap.student.initTable(10)
+        ATM.dataMap.student.initTable(10)
             .userName.values(DataGenerator.increase("username_%d"))
             .env.values("test_env")
             .cleanAndInsert();
         dao.deleteByQuery("username_4", "username_5", "username_7");
-        db.table(ATM.Table.student).count().eq(7);
+        db.table(ATM.table.student).count().eq(7);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM student " +
                 "WHERE is_deleted = ? AND env = ? AND user_name IN (?, ?, ?)", StringMode.SameAsSpace);

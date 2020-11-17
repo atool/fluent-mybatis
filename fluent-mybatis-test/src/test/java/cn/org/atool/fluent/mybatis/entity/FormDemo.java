@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class FormDemo extends BaseTest {
     @Test
     public void formDemo() {
-        ATM.DataMap.student.table().clean();
+        ATM.dataMap.student.table().clean();
         // 新增表单
         StudentEntity student = new StudentEntity()
             .setUserName("I am FluentMybatis")
@@ -30,9 +30,9 @@ public class FormDemo extends BaseTest {
         Stream.of(new Object[10]).forEach(o -> student.setId(null).save());
 
         StdPagedList<StudentEntity> list = (StdPagedList)query.limit(10).paged();
-        want.list(list.getData()).eqDataMap(ATM.DataMap.student.entity(10)
+        want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(10)
             .userName.values("I am FluentMybatis")
         );
-        db.table(ATM.Table.student).count().isEqualTo(11);
+        db.table(ATM.table.student).count().isEqualTo(11);
     }
 }

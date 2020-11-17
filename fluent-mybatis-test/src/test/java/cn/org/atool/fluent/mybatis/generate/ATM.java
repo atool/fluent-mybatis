@@ -1,11 +1,27 @@
 package cn.org.atool.fluent.mybatis.generate;
 
-import cn.org.atool.fluent.mybatis.generate.dm.*;
-import cn.org.atool.fluent.mybatis.generate.mix.*;
-import org.test4j.module.database.IDataSourceScript;
-import org.test4j.module.spec.annotations.Mix;
-
+import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberLoveDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
+import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentTableMix;
+import java.lang.Class;
+import java.lang.Override;
+import java.lang.String;
 import java.util.List;
+import org.test4j.module.database.IDataSourceScript;
+import org.test4j.module.spec.internal.MixProxy;
 
 /**
  * ATM: Application Table Manager
@@ -13,76 +29,73 @@ import java.util.List;
  * @author Powered By Test4J
  */
 public interface ATM {
+  DataMap dataMap = new DataMap();
+
+  Table table = new Table();
+
+  Mixes mixes = new Mixes();
+
   /**
    * 应用表名
    */
-  interface Table {
-    String noAutoId = "no_auto_id";
+  class Table {
+    public final String noAutoId = "no_auto_id";
 
-    String noPrimary = "no_primary";
+    public final String noPrimary = "no_primary";
 
-    String studentScore = "student_score";
+    public final String studentScore = "student_score";
 
-    String homeAddress = "home_address";
+    public final String homeAddress = "home_address";
 
-    String student = "student";
+    public final String student = "student";
 
-    String memberFavorite = "t_member_favorite";
+    public final String memberFavorite = "t_member_favorite";
 
-    String memberLove = "t_member_love";
+    public final String memberLove = "t_member_love";
 
-    String member = "t_member";
+    public final String member = "t_member";
   }
 
   /**
    * table or entity data构造器
    */
-  interface DataMap {
-    NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
+  class DataMap {
+    public final NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
 
-    NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
+    public final NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
 
-    StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
+    public final StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
 
-    HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
+    public final HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
 
-    StudentDataMap.Factory student = new StudentDataMap.Factory();
+    public final StudentDataMap.Factory student = new StudentDataMap.Factory();
 
-    MemberFavoriteDataMap.Factory memberFavorite = new MemberFavoriteDataMap.Factory();
+    public final MemberFavoriteDataMap.Factory memberFavorite = new MemberFavoriteDataMap.Factory();
 
-    MemberLoveDataMap.Factory memberLove = new MemberLoveDataMap.Factory();
+    public final MemberLoveDataMap.Factory memberLove = new MemberLoveDataMap.Factory();
 
-    MemberDataMap.Factory member = new MemberDataMap.Factory();
+    public final MemberDataMap.Factory member = new MemberDataMap.Factory();
   }
 
   /**
    * 应用表数据操作
    */
-  @org.test4j.module.spec.annotations.Mixes
   class Mixes {
-    @Mix
-    public NoAutoIdTableMix noAutoIdTableMix;
+    public final NoAutoIdTableMix noAutoIdTableMix = MixProxy.proxy(NoAutoIdTableMix.class);
 
-    @Mix
-    public NoPrimaryTableMix noPrimaryTableMix;
+    public final NoPrimaryTableMix noPrimaryTableMix = MixProxy.proxy(NoPrimaryTableMix.class);
 
-    @Mix
-    public StudentScoreTableMix studentScoreTableMix;
+    public final StudentScoreTableMix studentScoreTableMix = MixProxy.proxy(StudentScoreTableMix.class);
 
-    @Mix
-    public HomeAddressTableMix homeAddressTableMix;
+    public final HomeAddressTableMix homeAddressTableMix = MixProxy.proxy(HomeAddressTableMix.class);
 
-    @Mix
-    public StudentTableMix studentTableMix;
+    public final StudentTableMix studentTableMix = MixProxy.proxy(StudentTableMix.class);
 
-    @Mix
-    public MemberFavoriteTableMix memberFavoriteTableMix;
+    public final MemberFavoriteTableMix memberFavoriteTableMix = MixProxy.proxy(MemberFavoriteTableMix.class);
 
-    @Mix
-    public MemberLoveTableMix memberLoveTableMix;
+    public final MemberLoveTableMix memberLoveTableMix = MixProxy.proxy(MemberLoveTableMix.class);
 
-    @Mix
-    public MemberTableMix memberTableMix;
+    public final MemberTableMix memberTableMix = MixProxy.proxy(MemberTableMix.class);
 
     public void cleanAllTable() {
       this.noAutoIdTableMix.cleanNoAutoIdTable();
