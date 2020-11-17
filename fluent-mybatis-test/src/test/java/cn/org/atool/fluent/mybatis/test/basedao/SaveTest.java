@@ -25,8 +25,10 @@ public class SaveTest extends BaseTest {
     @Test
     public void test_save_noPk() throws Exception {
         db.table(ATM.Table.student).clean();
-        dao.save(new StudentEntity().setUserName("test name").setAge(43));
+        StudentEntity entity = new StudentEntity().setUserName("test name").setAge(43);
+        dao.save(entity);
         ATM.DataMap.student.table(1)
+            .id.values(entity.getId())
             .userName.values("test name")
             .age.values(43)
             .eqTable();
@@ -52,7 +54,7 @@ public class SaveTest extends BaseTest {
                 new StudentEntity().setUserName("test name1").setAge(43),
                 new StudentEntity().setUserName("test name2").setAge(43).setId(5L)
             )), FluentMybatisException.class, MyBatisSystemException.class
-        ).contains("The primary key of the list instance must be assigned to all or none");
+        ).contains("the pk of insert entity can't be null.");
     }
 
     @Test
@@ -76,11 +78,12 @@ public class SaveTest extends BaseTest {
             new StudentEntity().setUserName("test name2").setAge(43)
         );
         dao.save(list);
+        want.number(list.get(0).getId()).notNull();
+        want.number(list.get(1).getId()).notNull();
         ATM.DataMap.student.table(2)
+            .id.values(list.get(0).getId(), list.get(1).getId())
             .userName.values("test name1", "test name2")
             .age.values(43)
             .eqTable();
-        want.number(list.get(0).getId()).isNull();
-        want.number(list.get(1).getId()).isNull();
     }
 }

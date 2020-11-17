@@ -80,7 +80,15 @@ public interface FluentConst {
 
     String M_Insert = "insert";
 
+    String M_Insert_With_Pk = "insertWithPk";
+
+    String M_Insert_Entity = "insertEntity";
+
+    String M_Insert_Batch_Entity = "insertBatchEntity";
+
     String M_InsertBatch = "insertBatch";
+
+    String M_InsertBatch_With_Pk = "insertBatchWithPk";
 
     String M_DeleteById = "deleteById";
 

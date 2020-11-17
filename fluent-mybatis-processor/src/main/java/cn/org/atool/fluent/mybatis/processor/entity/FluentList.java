@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
+import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.RefsFile;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.*;
 import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
 import cn.org.atool.generator.javafile.AbstractFile;
 import cn.org.atool.generator.util.GeneratorHelper;
-import com.squareup.javapoet.JavaFile;
 import lombok.Getter;
 
 import javax.annotation.processing.Filer;
@@ -61,9 +61,9 @@ public class FluentList {
         fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
         for (FluentEntity fluent : FluentList.getFluents()) {
             try {
-                List<JavaFile> javaFiles = generateJavaFile(fluent);
-                for (JavaFile javaFile : javaFiles) {
-                    javaFile.writeTo(filer);
+                List<AbstractFiler> javaFiles = generateJavaFile(fluent);
+                for (AbstractFiler javaFile : javaFiles) {
+                    javaFile.javaFile().writeTo(filer);
                 }
             } catch (Exception e) {
                 logger.accept("FluentEntityInfo:" + fluent + "\n" + GeneratorHelper.toString(e));
@@ -99,17 +99,18 @@ public class FluentList {
      *
      * @param fluent
      */
-    private static List<JavaFile> generateJavaFile(FluentEntity fluent) {
+    private static List<AbstractFiler> generateJavaFile(FluentEntity fluent) {
         return Arrays.asList(
-            new MapperFiler(fluent).javaFile(),
-            new MappingFiler(fluent).javaFile(),
-            new EntityHelperFiler(fluent).javaFile(),
-            new SqlProviderFiler(fluent).javaFile(),
-            new WrapperHelperFiler(fluent).javaFile(),
-            new QueryFiler(fluent).javaFile(),
-            new UpdaterFiler(fluent).javaFile(),
-            new BaseDaoFiler(fluent).javaFile(),
-            new DefaultsFiler(fluent).javaFile()
+            new MapperFiler(fluent),
+            new MappingFiler(fluent),
+            new EntityHelperFiler(fluent),
+            new SqlProviderFiler(fluent),
+            new WrapperHelperFiler(fluent),
+            new QueryFiler(fluent),
+            new UpdaterFiler(fluent),
+            new BaseDaoFiler(fluent),
+            new DefaultsFiler(fluent),
+            new FormSetterFiler(fluent)
         );
     }
 }

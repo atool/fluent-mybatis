@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -21,8 +20,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  */
 public interface IEntityMapper<E extends IEntity> extends IMapper {
     /**
-     * 插入一条记录
-     * 和 {@link IDaoMapper#save(IEntity)}区别，insert方法不会根据{@link IDefaultSetter#setInsertDefault(IEntity)}设置默认值
+     * 插入一条记录, 主键字段为空
      *
      * @param entity
      * @return
@@ -30,12 +28,28 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
     int insert(E entity);
 
     /**
-     * 批量插入数据，实例的主键必须全部赋值
+     * 插入一条记录, 主键字段不为空
+     *
+     * @param entity
+     * @return
+     */
+    int insertWithPk(E entity);
+
+    /**
+     * 批量插入数据，实例主键必须全部未赋值
      *
      * @param entities
      * @return
      */
     int insertBatch(List<E> entities);
+
+    /**
+     * 批量插入数据，实例主键必须全部已赋值
+     *
+     * @param entities
+     * @return
+     */
+    int insertBatchWithPk(List<E> entities);
 
     /**
      * 根据id删除记录

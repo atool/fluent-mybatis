@@ -46,10 +46,11 @@ public class FormRefFiler extends AbstractFile {
     }
 
     private FieldSpec f_formSetter(FluentEntity fluent) {
+        ClassName cn = fluent.formSetter();
         return FieldSpec.builder(
-            parameterizedType(ClassName.get(FormApply.class),fluent.entity(), fluent.formSetter())
+            parameterizedType(ClassName.get(FormApply.class), cn)
             , fluent.lowerNoSuffix(), Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("$T::by", fluent.formSetter())
+            .initializer("new $T<>($T::byEntity, $T::byMap)", FormApply.class, cn, cn)
             .build();
     }
 

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.dao;
 
-import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -239,5 +239,5 @@ public interface IProtectedDao<E extends IEntity> {
      *
      * @return
      */
-    IDaoMapper mapper();
+    IRichMapper mapper();
 }

@@ -15,7 +15,7 @@ public interface IEntity extends Serializable {
      * @return 主键
      */
     default Serializable findPk() {
-        throw new RuntimeException("not implement");
+        return null;
     }
 
     /**

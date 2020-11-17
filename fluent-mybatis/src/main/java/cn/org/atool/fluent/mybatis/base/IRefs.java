@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
-import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -273,7 +273,7 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
 
     private Map<String, Method> refMethods = new ConcurrentHashMap<>(32);
 
-    protected final Map<Class<? extends IEntity>, IDaoMapper> entityMappers = new HashMap<>(16);
+    protected final Map<Class<? extends IEntity>, IRichMapper> entityMappers = new HashMap<>(16);
 
     /**
      * 返回标注@FluentMybatis注解Entity类
@@ -293,11 +293,11 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
         }
     }
 
-    public IDaoMapper findMapper(IEntity entity) {
+    public IRichMapper findMapper(IEntity entity) {
         return this.findMapper(entity.getClass());
     }
 
-    public IDaoMapper findMapper(Class<? extends IEntity> clazz) {
+    public IRichMapper findMapper(Class<? extends IEntity> clazz) {
         Class entityClazz = this.findFluentEntityClass(clazz);
         return this.entityMappers.get(entityClazz);
     }

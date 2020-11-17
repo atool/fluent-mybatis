@@ -20,7 +20,7 @@ public class UserAutoIdTest extends BaseTest {
         StudentEntity student = new StudentEntity()
             .setId(124L)
             .setUserName("fluent mybatis");
-        int count = mapper.insert(student);
+        int count = mapper.insertWithPk(student);
         want.number(count).isEqualTo(1);
         want.number(student.getId()).eq(124L);
         ATM.DataMap.student

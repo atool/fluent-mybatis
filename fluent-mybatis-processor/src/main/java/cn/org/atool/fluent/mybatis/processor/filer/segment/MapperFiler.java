@@ -2,8 +2,9 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
@@ -60,7 +61,8 @@ public class MapperFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addSuperinterface(this.superMapperClass())
-            .addSuperinterface(parameterizedType(ClassName.get(IDaoMapper.class), fluent.entity(), fluent.query(), fluent.updater()))
+            .addSuperinterface(parameterizedType(ClassName.get(IRichMapper.class), fluent.entity()))
+            .addSuperinterface(parameterizedType(ClassName.get(IWrapperMapper.class), fluent.entity()))
             .addAnnotation(ClassNames.Mybatis_Mapper)
             .addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
                 .addMember("value", "$S", getMapperName(this.fluent)).build()
@@ -71,7 +73,9 @@ public class MapperFiler extends AbstractFiler {
             .build()
         );
         spec.addMethod(this.m_insert())
+            .addMethod(this.m_insertWithPk())
             .addMethod(this.m_insertBatch())
+            .addMethod(this.m_insertBatchWithPk())
             .addMethod(this.m_deleteById())
             .addMethod(this.m_deleteByMap())
             .addMethod(this.m_delete())
@@ -93,8 +97,7 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_defaultQuery())
             .addMethod(this.m_defaultUpdater())
             .addMethod(this.m_primaryField())
-            .addMethod(this.m_entityClass())
-        ;
+            .addMethod(this.m_entityClass());
     }
 
     private MethodSpec m_entityClass() {
@@ -289,8 +292,22 @@ public class MapperFiler extends AbstractFiler {
     }
 
     public MethodSpec m_insertBatch() {
-        return this.mapperMethod(InsertProvider.class, M_InsertBatch)
-            .addParameter(parameterizedType(ClassName.get(List.class), fluent.entity()), "entities")
+        MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch);
+        if (fluent.getPrimary() != null) {
+            if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
+                this.addOptions(builder);
+            } else {
+                this.addSelectKey(builder);
+            }
+        }
+        return builder.addParameter(parameterizedType(ClassName.get(List.class), fluent.entity()), "entities")
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_insertBatchWithPk() {
+        MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
+        return builder.addParameter(parameterizedType(ClassName.get(List.class), fluent.entity()), "entities")
             .returns(TypeName.INT)
             .build();
     }
@@ -304,6 +321,14 @@ public class MapperFiler extends AbstractFiler {
                 this.addSelectKey(builder);
             }
         }
+        return builder
+            .addParameter(fluent.entity(), "entity")
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_insertWithPk() {
+        MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert_With_Pk);
         return builder
             .addParameter(fluent.entity(), "entity")
             .returns(TypeName.INT)

@@ -1,27 +1,11 @@
 package cn.org.atool.fluent.mybatis.generate;
 
-import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.MemberLoveDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
-import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
-import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.MemberTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
-import cn.org.atool.fluent.mybatis.generate.mix.StudentTableMix;
-import java.lang.Class;
-import java.lang.Override;
-import java.lang.String;
-import java.util.List;
+import cn.org.atool.fluent.mybatis.generate.dm.*;
+import cn.org.atool.fluent.mybatis.generate.mix.*;
 import org.test4j.module.database.IDataSourceScript;
 import org.test4j.module.spec.annotations.Mix;
+
+import java.util.List;
 
 /**
  * ATM: Application Table Manager

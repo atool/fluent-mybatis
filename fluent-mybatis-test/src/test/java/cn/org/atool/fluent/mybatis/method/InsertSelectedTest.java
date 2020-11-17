@@ -41,7 +41,7 @@ public class InsertSelectedTest extends BaseTest {
             .setUserName("tom mike")
             .setId(100L)
             .setHomeAddressId(200L);
-        userMapper.insert(student);
+        userMapper.insertWithPk(student);
         db.table(ATM.Table.student).query().eqDataMap(ATM.DataMap.student.table(1)
             .id.values(100)
             .userName.values("tom mike")

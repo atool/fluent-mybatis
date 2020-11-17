@@ -13,24 +13,23 @@ import java.util.Map;
 /**
  * 通用的Form形式查询
  *
- * @param <E>
  * @param <S>
  * @author darui.wu
  */
-public class FormQuery<E extends IEntity, S extends FormSetter<E, S>> implements IFormQuery<E, S> {
+public class FormQuery<S extends FormSetter<S>> implements IFormQuery<S> {
     private final Class<? extends IEntity> entityClazz;
     private final Map<String, Object> form;
-    private final IQuery<E, ?> query;
-    private final FormSetter<E, S> setter;
+    private final IQuery query;
+    private final FormSetter<S> setter;
 
-    public FormQuery(@NonNull E entity, @NonNull IQuery<E, ?> query, @NonNull S setter) {
+    public FormQuery(@NonNull IEntity entity, @NonNull IQuery query, @NonNull S setter) {
         this.form = entity.toEntityMap();
         this.query = query;
         this.setter = setter;
         this.entityClazz = setter.entityClass();
     }
 
-    public FormQuery(@NonNull IQuery<E, ?> query, @NonNull Map form, @NonNull S setter) {
+    public FormQuery(@NonNull IQuery query, @NonNull Map form, @NonNull S setter) {
         this.form = form;
         this.query = query;
         this.setter = setter;
@@ -49,37 +48,37 @@ public class FormQuery<E extends IEntity, S extends FormSetter<E, S>> implements
     }
 
     @Override
-    public IFormQuery<E, S> distinct() {
+    public IFormQuery<S> distinct() {
         this.query.distinct();
         return this;
     }
 
     @Override
-    public IFormQuery<E, S> selectAll() {
+    public IFormQuery<S> selectAll() {
         this.query.selectAll();
         return this;
     }
 
     @Override
-    public IFormQuery<E, S> selectId() {
+    public IFormQuery<S> selectId() {
         this.query.selectId();
         return this;
     }
 
     @Override
-    public IFormQuery<E, S> limit(int limit) {
+    public IFormQuery<S> limit(int limit) {
         this.query.limit(limit);
         return this;
     }
 
     @Override
-    public IFormQuery<E, S> limit(int start, int limit) {
+    public IFormQuery<S> limit(int start, int limit) {
         this.query.limit(start, limit);
         return this;
     }
 
     @Override
-    public IFormQuery<E, S> last(String lastSql) {
+    public IFormQuery<S> last(String lastSql) {
         this.query.last(lastSql);
         return this;
     }

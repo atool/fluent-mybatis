@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.mapper.IDaoMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -146,5 +146,5 @@ public interface IBaseDao<E extends IEntity> {
      *
      * @return
      */
-    IDaoMapper mapper();
+    IRichMapper mapper();
 }

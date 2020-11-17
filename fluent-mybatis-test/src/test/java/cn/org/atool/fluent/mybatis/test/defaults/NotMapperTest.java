@@ -33,7 +33,7 @@ public class NotMapperTest extends BaseTest {
             .eqQuery("id=1");
         db.sqlList().wantFirstSql().eq("INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, env, tenant, user_name) VALUES (?, now(), now(), 0, ?, ?, ?)");
 
-        mapper.insert(new StudentEntity().setId(2L).setUserName("test1"));
+        mapper.insertWithPk(new StudentEntity().setId(2L).setUserName("test1"));
         ATM.DataMap.student.table(1)
             .userName.values("test1")
             .tenant.values(null)

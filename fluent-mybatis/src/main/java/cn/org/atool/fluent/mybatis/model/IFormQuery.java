@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.model;
 
-import cn.org.atool.fluent.mybatis.base.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
-import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
@@ -12,12 +12,10 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 /**
  * 简单表单查询
  *
- * @param <E>
  * @param <S>
  * @author wudarui
  */
-public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>>
-    extends IQuery<E, IFormQuery<E, S>> {
+public interface IFormQuery<S extends FormSetter<S>> extends IQuery<IEntity, IFormQuery<S>> {
     /**
      * 对应的实体Entity类型
      *
@@ -55,6 +53,24 @@ public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>>
         return this.op(OP_LIKE);
     }
 
+    @Override
+    IFormQuery<S> distinct();
+
+    @Override
+    IFormQuery<S> selectAll();
+
+    @Override
+    IFormQuery<S> selectId();
+
+    @Override
+    IFormQuery<S> limit(int limit);
+
+    @Override
+    IFormQuery<S> limit(int start, int limit);
+
+    @Override
+    IFormQuery<S> last(String lastSql);
+
     /**
      * 是否存在对应条件数据
      *
@@ -71,7 +87,7 @@ public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>>
      *
      * @return
      */
-    default <P extends IPagedList<E>> P paged() {
-        return (P) FormHelper.paged(this);
+    default IPagedList paged() {
+        return FormHelper.paged(this);
     }
 }

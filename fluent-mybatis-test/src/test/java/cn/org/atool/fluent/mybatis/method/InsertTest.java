@@ -41,13 +41,22 @@ public class InsertTest extends BaseTest {
     }
 
     @Test
+    public void testInsert_NoIdError() {
+        want.exception(() -> idMapper.insert(new NoAutoIdEntity()
+                .setId("test-id-1")
+                .setColumn1("test")),
+            MyBatisSystemException.class
+        ).contains("the pk of insert entity must be null");
+    }
+
+    @Test
     public void testInsert_NoAutoId() {
         db.table(ATM.Table.noAutoId).clean();
-        idMapper.insert(new NoAutoIdEntity()
+        idMapper.insertWithPk(new NoAutoIdEntity()
             .setId("test-id-1")
             .setColumn1("test")
         );
-        idMapper.insert(new NoAutoIdEntity()
+        idMapper.insertWithPk(new NoAutoIdEntity()
             .setId("test-id-2")
             .setColumn1("test")
         );

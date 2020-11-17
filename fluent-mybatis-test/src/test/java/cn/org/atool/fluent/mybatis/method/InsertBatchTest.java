@@ -29,8 +29,8 @@ public class InsertBatchTest extends BaseTest {
                 .age.values(23, 24)
                 .userName.values("name1", "name2")
             );
-        want.number(list.get(0).getId()).isNull();
-        want.number(list.get(1).getId()).isNull();
+        want.number(list.get(0).getId()).notNull();
+        want.number(list.get(1).getId()).notNull();
     }
 
     @Test
@@ -39,7 +39,7 @@ public class InsertBatchTest extends BaseTest {
         List<StudentEntity> list = list(
             new StudentEntity().setId(23L).setUserName("name1").setAge(23).setTenant(0L),
             new StudentEntity().setId(24L).setUserName("name2").setAge(24).setTenant(0L));
-        mapper.insertBatch(list);
+        mapper.insertBatchWithPk(list);
         db.table(ATM.Table.student).count().eq(2);
         db.table(ATM.Table.student).query().print()
             .eqDataMap(ATM.DataMap.student.table(2)
@@ -58,7 +58,7 @@ public class InsertBatchTest extends BaseTest {
             new StudentEntity().setUserName("name1").setAge(23).setId(101L).setTenant(0L),
             new StudentEntity().setUserName("name2").setAge(24).setTenant(0L));
         want.exception(() -> mapper.insertBatch(list), FluentMybatisException.class, MyBatisSystemException.class)
-            .contains("The primary key of the list instance must be assigned to all or none");
+            .contains("the pk of insert entity must be null.");
         db.table(ATM.Table.student).count().eq(0);
     }
 }

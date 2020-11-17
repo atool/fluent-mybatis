@@ -19,15 +19,13 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_SET_ENTITY_BY_DEFAULT;
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.listIndexEl;
 import static cn.org.atool.generator.util.ClassNames.*;
-import static java.util.stream.Collectors.joining;
 
 /**
  * SqlProviderGenerator: *SqlProvider文件生成
@@ -62,10 +60,12 @@ public class SqlProviderFiler extends AbstractFiler {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(BaseSqlProvider.class);
+        spec.superclass(parameterizedType(ClassName.get(BaseSqlProvider.class), fluent.entity()));
         // provider method
-        spec.addMethod(this.m_insert());
-        spec.addMethod(this.m_insertBatch());
+        spec.addMethod(this.m_primaryIsNull());
+        spec.addMethod(this.m_primaryNotNull());
+        spec.addMethod(this.m_insertEntity());
+        spec.addMethod(this.m_insertBatchEntity());
         spec.addMethod(this.m_updateById());
 
         //Override method
@@ -121,58 +121,67 @@ public class SqlProviderFiler extends AbstractFiler {
         return spec.addStatement("return sql.toString()").build();
     }
 
-    private MethodSpec m_insert() {
-        MethodSpec.Builder spec = super.publicMethod(M_Insert, false, String.class)
+    private MethodSpec m_primaryIsNull() {
+        MethodSpec.Builder spec = super.publicMethod("primaryIsNull", true, ClassName.BOOLEAN)
             .addParameter(fluent.entity(), Param_Entity);
-
-        spec.addStatement("assertNotNull(Param_Entity, entity)")
-            .addStatement("this.setEntityByDefault(entity)")
-            .addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("sql.INSERT_INTO(this.tableName())")
-            .addCode("$T inserts = new InsertList()", InsertList.class);
-        for (CommonField field : this.fluent.getFields()) {
-            spec.addCode("\n\t.add($L, entity.$L(), $S)",
-                field.getName(), field.getMethodName(), field.getInsert());
+        if (fluent.getPrimary() == null) {
+            spec.addStatement("return true");
+        } else {
+            spec.addStatement("return entity.$L() == null", fluent.getPrimary().getMethodName());
         }
-        spec.addCode(";\n");
-        spec.addStatement("sql.INSERT_COLUMNS(inserts.columns)")
-            .addStatement("sql.VALUES()")
-            .addStatement("sql.INSERT_VALUES(inserts.values)");
-
-        return spec.addStatement("return sql.toString()").build();
+        return spec.build();
     }
 
-    private MethodSpec m_insertBatch() {
-        MethodSpec.Builder builder = super.publicMethod(M_InsertBatch, false, String.class)
-            .addParameter(ClassName.get(Map.class), Param_Map);
+    private MethodSpec m_primaryNotNull() {
+        MethodSpec.Builder spec = super.publicMethod("primaryNotNull", true, ClassName.BOOLEAN)
+            .addParameter(fluent.entity(), Param_Entity);
+        if (fluent.getPrimary() == null) {
+            spec.addStatement("return true");
+        } else {
+            spec.addStatement("return entity.$L() != null", fluent.getPrimary().getMethodName());
+        }
+        return spec.build();
+    }
 
-        builder.addStatement("assertNotEmpty(Param_List, map)");
-        builder.addStatement("$T sql = new MapperSql()", MapperSql.class)
-            .addStatement("$T<$T> entities = getParas(map, Param_List)", List.class, fluent.entity())
-            .addStatement("super.validateInsertBatch(entities)")
-            .addStatement("sql.INSERT_INTO(this.tableName())")
-            .addStatement("sql.INSERT_COLUMNS(this.allFields())")
-            .addStatement("sql.VALUES()");
+    private MethodSpec m_insertEntity() {
+        MethodSpec.Builder spec = super.protectedMethod(M_Insert_Entity, true, null)
+            .addParameter(InsertList.class, "inserts")
+            .addParameter(fluent.entity(), Param_Entity)
+            .addParameter(ClassName.BOOLEAN, "withPk");
 
-        String values = this.fluent.getFields().stream()
-            .map(field -> {
-                String variable = listIndexEl("list", field.getName(), "index");
-                if (notBlank(field.getInsert())) {
-                    return String.format("entities.get(index).%s() == null ? %s : %s",
-                        field.getMethodName(), '"' + field.getInsert() + '"', variable);
-                } else {
-                    return variable;
-                }
-            }).collect(joining(",\n\t"));
+        for (CommonField field : this.fluent.getFields()) {
+            if (field.isPrimary()) {
+                spec.addCode("if (withPk) {\n")
+                    .addStatement("\tinserts.add($L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getInsert())
+                    .addCode("}\n");
+            } else {
+                spec.addStatement("inserts.add($L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getInsert());
+            }
+        }
+        return spec.build();
+    }
 
-        builder.addCode("for (int index = 0; index < entities.size(); index++) {\n");
-        builder.addCode("\tif (index > 0) {\n");
-        builder.addStatement("\t\tsql.APPEND($S)", ", ");
-        builder.addCode("\t}\n");
-        builder.addStatement("\tsql.INSERT_VALUES(\n\t$L\n)", values);
-        builder.addCode("}\n");
+    private MethodSpec m_insertBatchEntity() {
+        MethodSpec.Builder spec = super.protectedMethod(M_Insert_Batch_Entity, true, CN_List_Str)
+            .addParameter(ClassName.INT, "index")
+            .addParameter(fluent.entity(), Param_Entity)
+            .addParameter(ClassName.BOOLEAN, "withPk")
+            .addStatement("$T<String> values = new $T<>()", List.class, ArrayList.class);
 
-        return builder.addStatement("return sql.toString()").build();
+        for (CommonField field : this.fluent.getFields()) {
+            if (field.isPrimary()) {
+                spec.addCode("if (withPk) {\n")
+                    .addStatement("\tvalues.add($S + index + \"].$L}\")", "#{list[", field.getName())
+                    .addCode("}\n");
+            } else if (notBlank(field.getInsert())) {
+                spec.addStatement("values.add(entity.$L() == null ? $S : $S + index + \"].$L}\")",
+                    field.getMethodName(), field.getInsert(), "#{list[", field.getName());
+            } else {
+                spec.addStatement("values.add($S + index + \"].$L}\")", "#{list[", field.getName());
+            }
+        }
+        spec.addStatement("return values");
+        return spec.build();
     }
 
     private MethodSpec m_tableName() {
@@ -192,9 +201,30 @@ public class SqlProviderFiler extends AbstractFiler {
     }
 
     private MethodSpec m_allFields() {
-        return super.publicMethod("allFields", true, String.class)
-            .addStatement("return ALL_JOIN_COLUMNS")
-            .build();
+        MethodSpec.Builder spec = super.publicMethod("allFields", true, String.class)
+            .addParameter(ClassName.BOOLEAN, "withPk");
+        spec.addCode("if (withPk) {\n")
+            .addStatement("\treturn $S", this.getFields(true))
+            .addCode("} else {\n")
+            .addStatement("\treturn $S", this.getFields(false))
+            .addCode("}");
+        return spec.build();
+    }
+
+    private String getFields(boolean withPk) {
+        StringBuffer fields = new StringBuffer();
+        boolean first = true;
+        for (CommonField field : fluent.getFields()) {
+            if (field.isPrimary() && !withPk) {
+                continue;
+            }
+            if (!first) {
+                fields.append(", ");
+            }
+            first = false;
+            fields.append(field.getColumn());
+        }
+        return fields.toString();
     }
 
     private MethodSpec m_dbType() {
