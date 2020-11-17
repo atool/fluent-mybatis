@@ -31,8 +31,7 @@ public class FormDemo extends BaseTest {
 
         StdPagedList<StudentEntity> list = query
             .limit(10)
-            .execute()
-            .stdPagedEntity();
+            .of().stdPagedEntity();
 
         want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(10)
             .userName.values("I am FluentMybatis")

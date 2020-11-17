@@ -5,9 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -60,15 +58,15 @@ public interface IQuery<
      */
     Q limit(int start, int limit);
 
-    default QueryExecutor<E> execute() {
+    default QueryExecutor<E> of() {
         Class entityClass = this.getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
         IRichMapper mapper = IRefs.instance().findMapper(entityClass);
         return new QueryExecutor<E>(mapper, this);
     }
 
-    default QueryExecutor<E> executeBy(IRichMapper<E> mapper) {
-        return new QueryExecutor<E>(mapper, this);
+    default QueryExecutor<E> of(IRichMapper<E> mapper) {
+        return new QueryExecutor<>(mapper, this);
     }
 
     /**
@@ -77,22 +75,10 @@ public interface IQuery<
      * @param executor 具体查询操作
      * @param <R>      结果类型
      * @return 结果
+     * @deprecated replaced by {@link #of(IRichMapper)}
      */
+    @Deprecated
     default <R> R execute(Function<Q, R> executor) {
         return executor.apply((Q) this);
-    }
-
-    /**
-     * 执行查询操作， 对返回列表元素逐一调用extractor处理
-     *
-     * @param executor  具体查询操作
-     * @param extractor 对查询结果处理
-     * @param <R>
-     * @param <R2>
-     * @return ignore
-     */
-    default <R, R2> List<R2> execute(Function<Q, List<R>> executor, Function<R, R2> extractor) {
-        List<R> list = executor.apply((Q) this);
-        return list.stream().map(extractor::apply).collect(Collectors.toList());
     }
 }
