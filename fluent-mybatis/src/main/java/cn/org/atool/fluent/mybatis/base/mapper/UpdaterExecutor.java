@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 
 public class UpdaterExecutor {

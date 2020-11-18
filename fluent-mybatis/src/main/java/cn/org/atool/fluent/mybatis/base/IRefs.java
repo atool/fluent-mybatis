@@ -11,7 +11,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
@@ -41,9 +44,13 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      */
     public static IRefs instance() {
         if (INSTANCE == null) {
-            throw new RuntimeException("the Refs must be defined as a spring bean.");
+            throw springNotInitException();
         }
         return INSTANCE;
+    }
+
+    protected static RuntimeException springNotInitException() {
+        return new RuntimeException("the Refs must be defined as a spring bean.");
     }
 
     /**
@@ -175,14 +182,14 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
             throw new RuntimeException("the sub of IRefs must be a spring bean.");
         }
         Class entity = clazz;
-        while (!all.contains(entity) && entity != Object.class) {
-            entity = entity.getSuperclass();
+        while (entity != Object.class) {
+            if (all.contains(entity)) {
+                return entity;
+            } else {
+                entity = entity.getSuperclass();
+            }
         }
-        if (all.contains(entity)) {
-            return entity;
-        } else {
-            throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
-        }
+        throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity.");
     }
 
     /**

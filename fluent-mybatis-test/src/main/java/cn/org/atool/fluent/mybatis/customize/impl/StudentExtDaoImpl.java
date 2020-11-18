@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.generate.refs.FieldRef;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,18 +16,16 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     @Override
     public int count(String userName) {
         return super.defaultQuery()
-            .where.userName().eq(userName)
-            .end()
+            .where.userName().eq(userName).end()
             .to().count();
     }
 
     @Override
     public List<String> selectFields(Long... ids) {
-        return super.listEntity(
-            super.defaultQuery()
-                .where.id().in(ids)
-                .end()
-        ).stream()
+        return super.defaultQuery()
+            .where.id().in(ids).end()
+            .to().listEntity()
+            .stream()
             .map(StudentEntity::getUserName)
             .collect(Collectors.toList());
     }
@@ -40,22 +39,20 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public List<String> selectObjs(Long... ids) {
-        return super.listPoJos(
-            super.defaultQuery()
-                .select.apply(StudentMapping.userName).end()
-                .where.id().in(ids).end(),
-            (map) -> (String) map.get(StudentMapping.userName.column)
-        );
+        return super.defaultQuery()
+            .select.apply(StudentMapping.userName).end()
+            .where.id().in(ids).end()
+            .to().listPoJo(
+                (map) -> (String) map.get(FieldRef.Student.userName.column));
     }
 
     @Override
     public List<String> selectObjs2(Long... ids) {
-        return super.listPoJos(
-            super.defaultQuery()
-                .select.apply(StudentMapping.userName, StudentMapping.age).end()
-                .where.id().in(ids).end(),
-            (map) -> (String) map.get(StudentMapping.userName.column)
-        );
+        return super.defaultQuery()
+            .select.apply(StudentMapping.userName, StudentMapping.age).end()
+            .where.id().in(ids).end()
+            .to().listPoJo(
+                (map) -> (String) map.get(StudentMapping.userName.column));
     }
 
     @Override
@@ -93,6 +90,6 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
         super.defaultUpdater()
             .update.userName().is(newUserName).end()
             .where.id().eq(id).end()
-            .execute(super::updateBy);
+            .to().updateBy();
     }
 }

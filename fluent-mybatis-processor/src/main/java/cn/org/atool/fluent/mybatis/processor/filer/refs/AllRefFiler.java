@@ -73,6 +73,9 @@ public class AllRefFiler extends AbstractFile {
         return MethodSpec.methodBuilder("mapper")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .returns(MapperRefFiler.getClassName())
+            .beginControlFlow("if (mappers == null)")
+            .addStatement("throw springNotInitException()")
+            .endControlFlow()
             .addStatement("return mappers")
             .build();
     }
@@ -91,7 +94,7 @@ public class AllRefFiler extends AbstractFile {
         MethodSpec.Builder spec = MethodSpec.methodBuilder("initEntityMapper")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.FINAL, Modifier.PROTECTED);
-        spec.addStatement("mappers = new $T(this.applicationContext)", MapperRefFiler.getClassName());
+        spec.addStatement("mappers = $T.instance(this.applicationContext)", MapperRefFiler.getClassName());
         return spec.build();
     }
 
