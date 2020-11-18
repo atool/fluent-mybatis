@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class QueryExecutor<E extends IEntity> {
     private final IRichMapper mapper;
@@ -24,8 +25,8 @@ public class QueryExecutor<E extends IEntity> {
         return this.mapper.delete(this.query);
     }
 
-    public E findOne() {
-        return (E) this.mapper.findOne(this.query);
+    public Optional<E> findOne() {
+        return Optional.ofNullable((E) this.mapper.findOne(this.query));
     }
 
     public List<E> listEntity() {
@@ -50,6 +51,12 @@ public class QueryExecutor<E extends IEntity> {
 
     public <POJO> Optional<POJO> findOne(MapFunction<POJO> mapFunction) {
         return this.mapper.findOne(this.query, mapFunction);
+    }
+
+    public <POJO> Optional<POJO> findOne(Function<E, POJO> mapFunction) {
+        E entity = (E) this.mapper.findOne(this.query);
+        POJO value = entity == null ? null : mapFunction.apply(entity);
+        return Optional.ofNullable(value);
     }
 
     public <POJO> Optional<POJO> findOne(Class<POJO> clazz) {

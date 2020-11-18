@@ -17,7 +17,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
         return super.defaultQuery()
             .where.userName().eq(userName)
             .end()
-            .execute(super::count);
+            .to().count();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     public List<StudentEntity> selectList(Long... ids) {
         return super.defaultQuery()
             .where.id().in(ids).end()
-            .execute(super::listEntity);
+            .to().listEntity();
     }
 
     @Override
@@ -63,30 +63,29 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
         return super.defaultQuery()
             .where.userName().like(likeName)
             .end()
-            .execute(super::findOne)
+            .to().findOne()
             .orElse(null);
     }
 
     @Override
     public String selectOne(long id) {
-        return super.findOne(super.defaultQuery()
-            .where.id().eq(id).end())
-            .map(StudentEntity::getUserName)
-            .orElse(null);
+        return super.defaultQuery()
+            .where.id().eq(id).end()
+            .to().findOne(StudentEntity::getUserName).orElse(null);
     }
 
     @Override
     public void deleteByQuery(String username) {
         super.defaultQuery()
             .where.userName().eq(username).end()
-            .execute(super::deleteBy);
+            .to().delete();
     }
 
     @Override
     public void deleteByQuery(String... userNames) {
         super.defaultQuery()
             .where.userName().in(userNames).end()
-            .execute(super::deleteBy);
+            .to().delete();
     }
 
     @Override

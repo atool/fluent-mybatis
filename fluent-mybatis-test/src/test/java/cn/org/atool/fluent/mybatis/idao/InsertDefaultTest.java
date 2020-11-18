@@ -18,7 +18,7 @@ public class InsertDefaultTest extends BaseTest {
     @Test
     void testDefaultInsert() {
         ATM.dataMap.student.table().clean();
-        dao.save(new StudentEntity().setUserName("FluentMybatis"));
+        new StudentEntity().setUserName("FluentMybatis").save();
         ATM.dataMap.student.table(1)
             .userName.values("FluentMybatis")
             .env.values("test_env")

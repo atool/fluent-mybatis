@@ -21,7 +21,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 public class FormHelper {
 
     public static <E extends IEntity> IPagedList<E> paged(IFormQuery query) {
-        return IRefs.instance().findMapper(query.entityClass()).stdPagedEntity(query);
+        return IRefs.instance().mapper(query.entityClass()).stdPagedEntity(query);
     }
 
     /**
@@ -51,12 +51,12 @@ public class FormHelper {
             if (condition.getCurrPage() != null) {
                 int from = condition.getPageSize() * (condition.getCurrPage() - 1);
                 query.limit(from, condition.getPageSize());
-                return IRefs.instance().findMapper(clazz).stdPagedEntity(query);
+                return IRefs.mapper(clazz).stdPagedEntity(query);
             } else {
                 String column = IRefs.instance().findPrimaryColumn(clazz);
                 where.and.apply(column, SqlOp.GE, condition.getNextId());
                 query.limit(condition.getPageSize());
-                return IRefs.instance().findMapper(clazz).tagPagedEntity(query);
+                return IRefs.mapper(clazz).tagPagedEntity(query);
             }
         }
     }

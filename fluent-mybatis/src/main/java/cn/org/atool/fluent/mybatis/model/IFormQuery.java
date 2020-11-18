@@ -77,7 +77,7 @@ public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>> exten
      * @return
      */
     default boolean exists() {
-        IEntityMapper mapper = IRefs.instance().findMapper(this.entityClass());
+        IEntityMapper mapper = IRefs.instance().mapper(this.entityClass());
         int count = mapper.count(this);
         return count > 0;
     }

@@ -85,12 +85,12 @@ public class FluentList {
 
     private static List<AbstractFile> refFiles() {
         return Arrays.asList(
-            new EntityHelperRefFiler(),
-            new MapperRefFiler(),
+            new AllRefFiler(),
             new MappingRefFiler(),
             new QueryRefFiler(),
             new FormRefFiler(),
-            new RefsFile()
+            new RefsFile(),
+            new MapperRefFiler()
         );
     }
 

@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.MapperRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.AllRefFiler;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -39,7 +39,7 @@ public class RefsFile extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(MapperRefFiler.getClassName())
+        spec.superclass(AllRefFiler.getClassName())
             .addModifiers(Modifier.ABSTRACT)
             .addMethod(this.m_instance());
         for (FluentEntity fluent : FluentList.getFluents()) {
@@ -76,7 +76,7 @@ public class RefsFile extends AbstractFile {
             .returns(refField.getJavaType())
             .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getName());
         String method = refField.returnList() ? "listEntity" : "findOne";
-        spec.addCode("return $LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
+        spec.addCode("return mapper().$LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
         int index = 0;
         for (Map.Entry<String, String> pair : refField.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")

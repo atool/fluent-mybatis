@@ -1,22 +1,19 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
+import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
+import java.util.HashMap;
 
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
-import static cn.org.atool.generator.util.ClassNames.Lombok_Getter;
-import static cn.org.atool.generator.util.ClassNames.Spring_Autowired;
+import static cn.org.atool.generator.util.ClassNames.*;
 
 /**
  * IMapperRef 文件构造
@@ -38,73 +35,58 @@ public class MapperRefFiler extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(IRefs.class)
-            .addModifiers(Modifier.ABSTRACT);
+        spec.addField(this.f_allMappers());
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_mapper(fluent));
         }
-        spec.addMethod(m_findColumnByField(true))
-            .addMethod(m_findPrimaryColumn(true))
-            .addMethod(m_findDefaultGetter(true))
-            .addMethod(m_defaultQuery(true))
-            .addMethod(m_defaultUpdater(true))
-            .addMethod(m_setEntityByDefault(true))
-            .addMethod(this.m_entityHelper())
-            .addMethod(this.m_initEntityMapper());
-        spec.addType(this.class_mapping())
-            .addType(this.class_query())
-            .addType(this.class_setter());
+        spec.addMethod(this.m_constructor())
+            .addMethod(this.m_mapper())
+            .addMethod(this.m_allEntityClass());
+    }
+
+    private MethodSpec m_mapper() {
+        return MethodSpec.methodBuilder("mapper")
+            .addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
+            .addParameter(CN_Class_IEntity, "entityClass")
+            .returns(IRichMapper.class)
+            .addStatement("return allMappers.get(entityClass)")
+            .build();
+    }
+
+    private MethodSpec m_allEntityClass() {
+        return MethodSpec.methodBuilder("allEntityClass")
+            .addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
+            .returns(parameterizedType(CN_Set, CN_Class_IEntity))
+            .addStatement("return allMappers.keySet()")
+            .build();
+    }
+
+    private FieldSpec f_allMappers() {
+        return FieldSpec.builder(
+            parameterizedType(CN_Map, CN_Class_IEntity, FM_IRichMapper),
+            "allMappers", Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+            .initializer("new $T<>()", HashMap.class)
+            .build();
     }
 
     private FieldSpec f_mapper(FluentEntity fluent) {
         return FieldSpec.builder(fluent.mapper(), fluent.lowerNoSuffix() + "Mapper",
-            Modifier.PROTECTED)
-            .addAnnotation(Lombok_Getter)
-            .addAnnotation(Spring_Autowired)
-            .build();
+            Modifier.PUBLIC, Modifier.FINAL).build();
     }
 
-    private MethodSpec m_entityHelper() {
-        return MethodSpec.methodBuilder("entityHelper")
-            .addParameter(Class.class, "clazz")
-            .returns(IEntityHelper.class)
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PROTECTED)
-            .addStatement("return $T.entityHelper(findFluentEntityClass(clazz))", EntityHelperRefFiler.getClassName())
-            .build();
-    }
-
-    private MethodSpec m_initEntityMapper() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("initEntityMapper")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.FINAL, Modifier.PROTECTED);
+    private MethodSpec m_constructor() {
+        MethodSpec.Builder spec = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
+            .addParameter(ClassNames.Spring_BeanFactory, "factory");
 
         for (FluentEntity fluent : FluentList.getFluents()) {
-            builder.addStatement("this.entityMappers.put($T.class, this.$LMapper)", fluent.entity(), fluent.lowerNoSuffix());
+            spec.addStatement("this.$LMapper = factory.getBean($T.class)",
+                fluent.lowerNoSuffix(), fluent.mapper());
         }
-        return builder.build();
-    }
-
-
-    private TypeSpec class_mapping() {
-        return TypeSpec.classBuilder("Column")
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(MappingRefFiler.getClassName())
-            .build();
-    }
-
-    private TypeSpec class_query() {
-        return TypeSpec.classBuilder("Query")
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(QueryRefFiler.getClassName())
-            .build();
-    }
-
-    private TypeSpec class_setter() {
-        return TypeSpec.classBuilder("Form")
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .addSuperinterface(FormRefFiler.getClassName())
-            .build();
+        for (FluentEntity fluent : FluentList.getFluents()) {
+            spec.addStatement("allMappers.put($T.class, this.$LMapper);",
+                fluent.entity(), fluent.lowerNoSuffix());
+        }
+        return spec.build();
     }
 
     @Override

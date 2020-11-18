@@ -30,6 +30,6 @@ public class AppRichRefs extends Refs {
             .and.env().eq(entity.getEnv())
             .end()
             .limit(1);
-        return studentScoreMapper.findOne(query);
+        return mapper().studentScoreMapper.findOne(query);
     }
 }

@@ -3,10 +3,7 @@ package cn.org.atool.fluent.mybatis.mapper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -37,14 +34,8 @@ public class EntityHelperFactory {
             if (INSTANCES.containsKey(clazz)) {
                 return INSTANCES.get(clazz);
             }
-            List<ClassLoader> classLoaders = new ArrayList<ClassLoader>(3);
-            classLoaders.add(clazz.getClassLoader());
-
-            if (Thread.currentThread().getContextClassLoader() != null) {
-                classLoaders.add(Thread.currentThread().getContextClassLoader());
-            }
-            classLoaders.add(IEntityHelper.class.getClassLoader());
-            IEntityHelper helper = getEntityHelper(clazz, classLoaders);
+            Set<ClassLoader> classLoaders = getClassLoaders(clazz);
+            IEntityHelper helper = loadEntityHelper(clazz, classLoaders);
             INSTANCES.put(clazz, helper);
             return helper;
         } catch (ClassNotFoundException e) {
@@ -54,21 +45,37 @@ public class EntityHelperFactory {
         }
     }
 
-    private static IEntityHelper getEntityHelper(Class<? extends IEntity> clazz, List<ClassLoader> classLoaders) throws ClassNotFoundException {
+    protected static Set<ClassLoader> getClassLoaders(Class<? extends IEntity> clazz) {
+        Set<ClassLoader> classLoaders = new HashSet<>(3);
+        classLoaders.add(clazz.getClassLoader());
+
+        if (Thread.currentThread().getContextClassLoader() != null) {
+            classLoaders.add(Thread.currentThread().getContextClassLoader());
+        }
+        classLoaders.add(IEntityHelper.class.getClassLoader());
+        return classLoaders;
+    }
+
+    /**
+     * 加载entityClass对应的Helper类
+     *
+     * @param entityClass
+     * @param classLoaders
+     * @return
+     */
+    private static IEntityHelper loadEntityHelper(Class<? extends IEntity> entityClass, Set<ClassLoader> classLoaders) throws ClassNotFoundException {
+        String helperName = entityClass.getName() + Suffix_EntityHelper;
         for (ClassLoader classLoader : classLoaders) {
-            IEntityHelper helper = doGetEntityHelper(clazz, classLoader);
+            IEntityHelper helper = null;
+            try {
+                helper = (IEntityHelper) classLoader.loadClass(helperName).getConstructor().newInstance();
+            } catch (Exception e) {
+                helper = null;
+            }
             if (helper != null) {
                 return helper;
             }
         }
-        throw new ClassNotFoundException("Cannot find entity helper for " + clazz.getName());
-    }
-
-    private static IEntityHelper doGetEntityHelper(Class<? extends IEntity> clazz, ClassLoader classLoader) {
-        try {
-            return (IEntityHelper) classLoader.loadClass(clazz.getName() + Suffix_EntityHelper).newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        throw new ClassNotFoundException("Cannot find entity helper class: " + helperName);
     }
 }

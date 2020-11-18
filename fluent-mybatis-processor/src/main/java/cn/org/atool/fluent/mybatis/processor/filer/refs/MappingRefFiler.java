@@ -21,7 +21,7 @@ import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT
  * @author darui.wu
  */
 public class MappingRefFiler extends AbstractFile {
-    private static String MappingRef = "MappingRef";
+    private static String MappingRef = "FieldRef";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), MappingRef);

@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
@@ -13,10 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
@@ -35,11 +30,7 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
     private static IRefs INSTANCE;
 
     public static IEntityHelper findEntityHelper(Class clazz) {
-        if (INSTANCE == null) {
-            return EntityHelperFactory.getInstance(clazz);
-        } else {
-            return INSTANCE.entityHelper(clazz);
-        }
+        return EntityHelperFactory.getInstance(clazz);
     }
 
     /**
@@ -72,23 +63,6 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
     public abstract IUpdate defaultUpdater(Class<? extends IEntity> clazz);
 
     /**
-     * 按默认值设置entity属性
-     * 默认值值设置见 {@link IDefaultSetter#setInsertDefault(IEntity)}
-     *
-     * @param clazz  entity类型
-     * @param entity
-     */
-    public abstract void setEntityByDefault(Class clazz, IEntity entity);
-
-    /**
-     * entity默认设置器
-     *
-     * @param clazz
-     * @return
-     */
-    public abstract IDefaultGetter findDefaultGetter(Class clazz);
-
-    /**
      * 返回clazz属性field对应的数据库字段名称
      *
      * @param clazz
@@ -105,38 +79,7 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      */
     public abstract String findPrimaryColumn(Class clazz);
 
-    /**
-     * 返回entity class对应的Helper类
-     *
-     * @param clazz
-     * @return
-     */
-    protected abstract IEntityHelper entityHelper(Class clazz);
-
     private Map<String, Method> methodsOfService = new ConcurrentHashMap<>(32);
-
-    /**
-     * 实现entityClass#methodName方法, 显式指定method的具体实现bean类型: serviceType
-     *
-     * @param entityClass Entity类类型
-     * @param methodName  method name
-     * @param serviceType 实现method的bean service
-     * @param args        方法入参(第一个参数是entity)
-     * @param <T>
-     * @return
-     */
-    public <T> T invoke(Class entityClass, String methodName, Class serviceType, Object[] args) {
-        Object bean = this.findBean(serviceType);
-        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentEntityClass(entityClass));
-        if (!methodsOfService.containsKey(methodOfEntity)) {
-            this.loadRequiredMethod(methodOfEntity, serviceType, methodName, args);
-        }
-        try {
-            return (T) methodsOfService.get(methodOfEntity).invoke(bean, args);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * 查找对应的 serviceType#methodName 方法实现
@@ -176,15 +119,22 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
         String methodOfEntity = methodNameOfEntity(methodName, this.findFluentEntityClass(entityClass));
         switch (methodName) {
             case Rich_Entity_Save:
-                return (T) this.saveEntity(entity);
+                this.mapper(entity).save(entity);
+                return (T) entity;
             case Rich_Entity_UpdateById:
-                return (T) this.updateEntityById(entity);
+                this.mapper(entity).updateById(entity);
+                return (T) entity;
             case Rich_Entity_FindById:
-                return (T) this.findEntityById(entity);
+                IEntity result = this.mapper(entity).findById(entity.findPk());
+                return (T) result;
             case Rich_Entity_DeleteById:
-                return this.deleteEntityById(entity);
+                this.mapper(entity).deleteById(entity.findPk());
+                return null;
             case RichEntity_ListByNotNull:
-                return this.listByEntity(entity);
+                Map<String, Object> where = entity.toColumnMap();
+                assertNotEmpty("the property of entity can't be all empty.", where);
+                List list = this.mapper(entity).listByMap(where);
+                return (T) list;
             default:
                 return this.invokeRefMethod(methodOfEntity, args);
         }
@@ -211,69 +161,7 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
         }
     }
 
-    /**
-     * 根据entity非空属性查询表数据
-     *
-     * @param entity
-     * @param <T>
-     * @return
-     */
-    protected <T> T listByEntity(IEntity entity) {
-        Map<String, Object> where = entity.toColumnMap();
-        assertNotEmpty("where", where);
-        List list = this.findMapper(entity).listByMap(where);
-        return (T) list;
-    }
-
-    /**
-     * 根据id物理删除实例
-     *
-     * @param entity
-     * @param <T>
-     * @return
-     */
-    protected <T> T deleteEntityById(IEntity entity) {
-        this.findMapper(entity).deleteById(entity.findPk());
-        return null;
-    }
-
-    /**
-     * 根据id查找实例
-     *
-     * @param entity
-     * @return
-     */
-    protected IEntity findEntityById(IEntity entity) {
-        IEntity result = this.findMapper(entity).findById(entity.findPk());
-        return result;
-    }
-
-    /**
-     * 按id更新实例
-     *
-     * @param entity
-     * @return
-     */
-    protected IEntity updateEntityById(IEntity entity) {
-        this.findMapper(entity).updateById(entity);
-        return entity;
-    }
-
-    /**
-     * 插入entity
-     *
-     * @param entity
-     * @return
-     */
-    protected IEntity saveEntity(IEntity entity) {
-        this.findDefaultGetter(entity.getClass()).setEntityByDefault(entity);
-        this.findMapper(entity).insert(entity);
-        return entity;
-    }
-
     private Map<String, Method> refMethods = new ConcurrentHashMap<>(32);
-
-    protected final Map<Class<? extends IEntity>, IRichMapper> entityMappers = new HashMap<>(16);
 
     /**
      * 返回标注@FluentMybatis注解Entity类
@@ -282,25 +170,49 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      * @return
      */
     public Class<? extends IEntity> findFluentEntityClass(Class clazz) {
+        Set<Class<? extends IEntity>> all = this.allEntityClass();
+        if (all.isEmpty()) {
+            throw new RuntimeException("the sub of IRefs must be a spring bean.");
+        }
         Class entity = clazz;
-        while (!this.entityMappers.containsKey(entity) && entity != Object.class) {
+        while (!all.contains(entity) && entity != Object.class) {
             entity = entity.getSuperclass();
         }
-        if (this.entityMappers.containsKey(entity)) {
+        if (all.contains(entity)) {
             return entity;
         } else {
             throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
         }
     }
 
-    public IRichMapper findMapper(IEntity entity) {
-        return this.findMapper(entity.getClass());
+    /**
+     * 所有Entity Class
+     *
+     * @return
+     */
+    protected abstract Set<Class<? extends IEntity>> allEntityClass();
+
+    /**
+     * 返回spring管理对应的mapper bean
+     *
+     * @param entity
+     * @return
+     */
+    public static IRichMapper mapper(IEntity entity) {
+        return instance().mapper(entity.getClass());
     }
 
-    public IRichMapper findMapper(Class<? extends IEntity> clazz) {
-        Class entityClazz = this.findFluentEntityClass(clazz);
-        return this.entityMappers.get(entityClazz);
+    /**
+     * 返回spring管理对应的mapper bean
+     *
+     * @param clazz
+     * @return
+     */
+    public static IRichMapper mapper(Class<? extends IEntity> clazz) {
+        return instance().getMapper(clazz);
     }
+
+    protected abstract IRichMapper getMapper(Class<? extends IEntity> clazz);
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -318,16 +230,15 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
         INSTANCE = this;
     }
 
+    /**
+     * 初始化 entity mapper
+     */
     protected abstract void initEntityMapper();
 
-    private ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
-    }
-
-    private Object findBean(Class requiredType) {
-        return applicationContext.getBean(requiredType);
     }
 }

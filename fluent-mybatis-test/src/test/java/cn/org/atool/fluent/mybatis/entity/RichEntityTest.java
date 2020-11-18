@@ -109,6 +109,6 @@ public class RichEntityTest extends BaseTest {
     @Test
     void testListByNotNull_AllNull() {
         want.exception(() -> new StudentEntity().listByNotNull(), FluentMybatisException.class)
-            .contains("the parameter[where] can't be empty");
+            .contains("the property of entity can't be all empty");
     }
 }

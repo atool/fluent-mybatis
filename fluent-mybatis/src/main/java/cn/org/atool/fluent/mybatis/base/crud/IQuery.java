@@ -58,14 +58,14 @@ public interface IQuery<
      */
     Q limit(int start, int limit);
 
-    default QueryExecutor<E> of() {
+    default QueryExecutor<E> to() {
         Class entityClass = this.getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
-        IRichMapper mapper = IRefs.instance().findMapper(entityClass);
+        IRichMapper mapper = IRefs.instance().mapper(entityClass);
         return new QueryExecutor<E>(mapper, this);
     }
 
-    default QueryExecutor<E> of(IRichMapper<E> mapper) {
+    default QueryExecutor<E> to(IRichMapper<E> mapper) {
         return new QueryExecutor<>(mapper, this);
     }
 
@@ -75,7 +75,7 @@ public interface IQuery<
      * @param executor 具体查询操作
      * @param <R>      结果类型
      * @return 结果
-     * @deprecated replaced by {@link #of(IRichMapper)}
+     * @deprecated replaced by {@link #to(IRichMapper)}
      */
     @Deprecated
     default <R> R execute(Function<Q, R> executor) {
