@@ -4,6 +4,7 @@ import java.lang.Boolean;
 import java.lang.String;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -76,24 +77,24 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
   /**
    * DataMap数据和表[no_primary]数据比较
    */
-  public NoPrimaryDataMap eqTable() {
-    IDatabase.db.table("no_primary").query().eqDataMap(this);
+  public NoPrimaryDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("no_primary").query().eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[no_primary]数据比较
    */
-  public NoPrimaryDataMap eqQuery(String query) {
-    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this);
+  public NoPrimaryDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[no_primary]数据比较
    */
-  public NoPrimaryDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this);
+  public NoPrimaryDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 

@@ -2,8 +2,11 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Override;
 import java.lang.String;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,4 +40,9 @@ public class NoPrimaryEntity extends RichEntity {
    */
   @TableField("column_2")
   private String column2;
+
+  @Override
+  public final Class<? extends IEntity> entityClass() {
+    return NoPrimaryEntity.class;
+  }
 }

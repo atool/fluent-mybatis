@@ -5,6 +5,7 @@ import java.lang.String;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -106,24 +107,24 @@ public class MemberFavoriteDataMap extends DataMap<MemberFavoriteDataMap> {
   /**
    * DataMap数据和表[t_member_favorite]数据比较
    */
-  public MemberFavoriteDataMap eqTable() {
-    IDatabase.db.table("t_member_favorite").query().eqDataMap(this);
+  public MemberFavoriteDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("t_member_favorite").query().eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[t_member_favorite]数据比较
    */
-  public MemberFavoriteDataMap eqQuery(String query) {
-    IDatabase.db.table("t_member_favorite").queryWhere(query).eqDataMap(this);
+  public MemberFavoriteDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("t_member_favorite").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[t_member_favorite]数据比较
    */
-  public MemberFavoriteDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("t_member_favorite").queryWhere(query).eqDataMap(this);
+  public MemberFavoriteDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("t_member_favorite").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 

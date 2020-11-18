@@ -4,6 +4,7 @@ import java.lang.Boolean;
 import java.lang.String;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -77,24 +78,24 @@ public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
   /**
    * DataMap数据和表[no_auto_id]数据比较
    */
-  public NoAutoIdDataMap eqTable() {
-    IDatabase.db.table("no_auto_id").query().eqDataMap(this);
+  public NoAutoIdDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("no_auto_id").query().eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[no_auto_id]数据比较
    */
-  public NoAutoIdDataMap eqQuery(String query) {
-    IDatabase.db.table("no_auto_id").queryWhere(query).eqDataMap(this);
+  public NoAutoIdDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("no_auto_id").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[no_auto_id]数据比较
    */
-  public NoAutoIdDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("no_auto_id").queryWhere(query).eqDataMap(this);
+  public NoAutoIdDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("no_auto_id").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 

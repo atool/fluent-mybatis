@@ -5,6 +5,7 @@ import java.lang.String;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -137,24 +138,24 @@ public class HomeAddressDataMap extends DataMap<HomeAddressDataMap> {
   /**
    * DataMap数据和表[home_address]数据比较
    */
-  public HomeAddressDataMap eqTable() {
-    IDatabase.db.table("home_address").query().eqDataMap(this);
+  public HomeAddressDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("home_address").query().eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[home_address]数据比较
    */
-  public HomeAddressDataMap eqQuery(String query) {
-    IDatabase.db.table("home_address").queryWhere(query).eqDataMap(this);
+  public HomeAddressDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("home_address").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[home_address]数据比较
    */
-  public HomeAddressDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("home_address").queryWhere(query).eqDataMap(this);
+  public HomeAddressDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("home_address").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 

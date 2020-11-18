@@ -4,11 +4,13 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
+import java.lang.Class;
 import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
@@ -145,6 +147,11 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   @Override
   public Serializable findPk() {
     return this.id;
+  }
+
+  @Override
+  public final Class<? extends IEntity> entityClass() {
+    return StudentEntity.class;
   }
 
   /**

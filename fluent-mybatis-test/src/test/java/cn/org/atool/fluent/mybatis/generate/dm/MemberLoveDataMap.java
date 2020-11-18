@@ -5,6 +5,7 @@ import java.lang.String;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -112,24 +113,24 @@ public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
   /**
    * DataMap数据和表[t_member_love]数据比较
    */
-  public MemberLoveDataMap eqTable() {
-    IDatabase.db.table("t_member_love").query().eqDataMap(this);
+  public MemberLoveDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("t_member_love").query().eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[t_member_love]数据比较
    */
-  public MemberLoveDataMap eqQuery(String query) {
-    IDatabase.db.table("t_member_love").queryWhere(query).eqDataMap(this);
+  public MemberLoveDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("t_member_love").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[t_member_love]数据比较
    */
-  public MemberLoveDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("t_member_love").queryWhere(query).eqDataMap(this);
+  public MemberLoveDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("t_member_love").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 

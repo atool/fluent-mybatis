@@ -3,11 +3,13 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import java.io.Serializable;
 import java.lang.Boolean;
+import java.lang.Class;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -104,5 +106,10 @@ public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddres
   @Override
   public Serializable findPk() {
     return this.id;
+  }
+
+  @Override
+  public final Class<? extends IEntity> entityClass() {
+    return HomeAddressEntity.class;
   }
 }

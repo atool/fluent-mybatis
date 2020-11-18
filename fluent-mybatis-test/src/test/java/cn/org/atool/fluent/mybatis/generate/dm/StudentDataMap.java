@@ -5,6 +5,7 @@ import java.lang.String;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.ICore.DataMap;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -179,24 +180,24 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
   /**
    * DataMap数据和表[student]数据比较
    */
-  public StudentDataMap eqTable() {
-    IDatabase.db.table("student").query().eqDataMap(this);
+  public StudentDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("student").query().eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[student]数据比较
    */
-  public StudentDataMap eqQuery(String query) {
-    IDatabase.db.table("student").queryWhere(query).eqDataMap(this);
+  public StudentDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("student").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
   /**
    * DataMap数据和表[student]数据比较
    */
-  public StudentDataMap eqQuery(IDataMap query) {
-    IDatabase.db.table("student").queryWhere(query).eqDataMap(this);
+  public StudentDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("student").queryWhere(query).eqDataMap(this, modes);
     return this;
   }
 
