@@ -1,10 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder1;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder2;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
@@ -26,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  * @param <QL>
  */
 public class JoinQuery<QL extends BaseQuery<?, QL>>
-    implements IQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL>, JoinBuilder2<QL> {
+    implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL>, JoinBuilder2<QL> {
     /**
      * 主查询类型
      */
@@ -151,8 +148,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public IQuery<?, QL> build() {
-        return (IQuery) this;
+    public IQuery build() {
+        return this;
     }
 
     @Override

@@ -15,10 +15,10 @@ import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
  */
 public abstract class BaseUpdate<
     E extends IEntity,
-    U extends IUpdate<E, U, NQ>,
-    NQ extends IQuery<E, NQ>>
+    U extends IBaseUpdate<E, U, NQ>,
+    NQ extends IBaseQuery<E, NQ>>
     extends BaseWrapper<E, U, NQ>
-    implements IUpdate<E, U, NQ> {
+    implements IBaseUpdate<E, U, NQ> {
 
     protected BaseUpdate(String table, Class entityClass, Class queryClass) {
         super(table, entityClass, queryClass);
@@ -27,6 +27,12 @@ public abstract class BaseUpdate<
     @Override
     public U limit(int limit) {
         this.wrapperData.setPaged(new PagedOffset(0, limit));
+        return (U) this;
+    }
+
+    @Override
+    public U last(String lastSql) {
+        this.wrapperData.last(lastSql);
         return (U) this;
     }
 }

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 
 public interface ObjectWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IQuery<?, NQ>
+    NQ extends IBaseQuery<?, NQ>
     > extends BaseWhere<WHERE, NQ> {
 
     /**
@@ -186,7 +186,7 @@ public interface ObjectWhere<
      * @param <NQ>  嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query);
+    <NQ extends IBaseQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query);
 
     /**
      * in (select ... )
@@ -197,7 +197,7 @@ public interface ObjectWhere<
      * @param <NQ>      嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query);
+    <NQ extends IBaseQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query);
 
     /**
      * not in (values)
@@ -266,7 +266,7 @@ public interface ObjectWhere<
      * @param <NQ>       嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query);
+    <NQ extends IBaseQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query);
 
     /**
      * not in (select ... )
@@ -277,7 +277,7 @@ public interface ObjectWhere<
      * @param <NQ>       嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, QFunction<NQ> query);
+    <NQ extends IBaseQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, QFunction<NQ> query);
 
     /**
      * @param value1 条件值

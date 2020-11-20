@@ -75,5 +75,5 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      *
      * @return
      */
-    IQuery<?, QL> build();
+    IQuery build();
 }

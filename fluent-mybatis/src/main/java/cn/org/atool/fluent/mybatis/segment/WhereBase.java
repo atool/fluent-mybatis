@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -31,7 +31,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
 public abstract class WhereBase<
     WHERE extends WhereBase<WHERE, WRAPPER, NestedQ>,
     WRAPPER extends IWrapper<?, WRAPPER, NestedQ>,
-    NestedQ extends IQuery<?, NestedQ>
+    NestedQ extends IBaseQuery<?, NestedQ>
     >
     extends BaseSegment<WhereApply<WHERE, NestedQ>, WRAPPER> {
 
@@ -122,7 +122,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE exists(String select, Object... values) {
-        wrapper.getWrapperData().apply(currOp, EMPTY, select, EXISTS, values);
+        wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, select, values);
         return this.and;
     }
 
@@ -173,11 +173,11 @@ public abstract class WhereBase<
      * @param query      嵌套查询
      * @return self
      */
-    public <ANQ extends IQuery<?, ANQ>> WHERE exists(Class<ANQ> queryClass, QFunction<ANQ> query) {
+    public <ANQ extends IBaseQuery<?, ANQ>> WHERE exists(Class<ANQ> queryClass, QFunction<ANQ> query) {
         Parameters parameters = wrapper.getWrapperData().getParameters();
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
-        wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), EXISTS);
+        wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, nestQuery.getWrapperData().getQuerySql());
         return this.and;
     }
 
@@ -190,7 +190,7 @@ public abstract class WhereBase<
      * @param <ANQ>
      * @return
      */
-    public <ANQ extends IQuery<?, ANQ>> WHERE exists(boolean condition, Class<ANQ> queryClass, QFunction<ANQ> query) {
+    public <ANQ extends IBaseQuery<?, ANQ>> WHERE exists(boolean condition, Class<ANQ> queryClass, QFunction<ANQ> query) {
         return condition ? this.exists(queryClass, query) : this.and;
     }
 
@@ -204,7 +204,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE notExists(String select, Object... values) {
-        wrapper.getWrapperData().apply(currOp, EMPTY, select, NOT_EXISTS, values);
+        wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, select, values);
         return this.and;
     }
 
@@ -256,11 +256,11 @@ public abstract class WhereBase<
      * @param query      嵌套查询
      * @return self
      */
-    public <ANQ extends IQuery> WHERE notExists(Class<ANQ> queryClass, QFunction<ANQ> query) {
+    public <ANQ extends IBaseQuery> WHERE notExists(Class<ANQ> queryClass, QFunction<ANQ> query) {
         Parameters parameters = wrapper.getWrapperData().getParameters();
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
-        wrapper.getWrapperData().apply(currOp, EMPTY, nestQuery.getWrapperData().getQuerySql(), NOT_EXISTS);
+        wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, nestQuery.getWrapperData().getQuerySql());
         return this.and;
     }
 
@@ -274,7 +274,7 @@ public abstract class WhereBase<
      * @param query      嵌套查询
      * @return self
      */
-    public <ANQ extends IQuery> WHERE notExists(
+    public <ANQ extends IBaseQuery> WHERE notExists(
         boolean condition, Class<ANQ> queryClass, QFunction<ANQ> query
     ) {
         return condition ? this.notExists(queryClass, query) : this.and;
@@ -292,7 +292,7 @@ public abstract class WhereBase<
      * @return children
      */
     public WHERE apply(String applySql, Object... paras) {
-        wrapper.getWrapperData().apply(this.currOp, EMPTY, applySql, RETAIN, paras);
+        wrapper.getWrapperData().apply(this.currOp, EMPTY, RETAIN, applySql, paras);
         return this.and;
     }
 
@@ -317,14 +317,14 @@ public abstract class WhereBase<
     /**
      * column op (format(sql, args))
      *
-     * @param column
-     * @param sql
-     * @param op
-     * @param args
+     * @param column     字段
+     * @param op         条件操作
+     * @param expression 函数或sql片段
+     * @param args       参数
      * @return
      */
-    WHERE apply(FieldMapping column, String sql, SqlOp op, Object... args) {
-        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), sql, op, args);
+    WHERE apply(FieldMapping column, SqlOp op, String expression, Object... args) {
+        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, expression, args);
         return this.and;
     }
 
@@ -360,7 +360,7 @@ public abstract class WhereBase<
         query.apply(nested);
         String sql = nested.getWrapperData().getMergeSql();
         if (sql != null && !sql.trim().isEmpty()) {
-            wrapper.getWrapperData().apply(andOr, EMPTY, sql, BRACKET);
+            wrapper.getWrapperData().apply(andOr, EMPTY, BRACKET, sql);
         }
         return this.and;
     }

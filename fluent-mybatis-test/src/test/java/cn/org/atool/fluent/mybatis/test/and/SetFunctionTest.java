@@ -25,8 +25,8 @@ public class SetFunctionTest extends BaseTest {
             .age.values(23)
             .cleanAndInsert();
         StudentUpdate update = new StudentUpdate()
-            .update.userName().apply("concat(user_name, ?)", "_aaa")
-            .set.age().apply("age+1").end()
+            .update.userName().applyFunc("concat(user_name, ?)", "_aaa")
+            .set.age().applyFunc("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
         ATM.dataMap.student.table(1)

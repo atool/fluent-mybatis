@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
@@ -16,12 +16,8 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
  */
 public interface BaseWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IQuery<?, NQ>
+    NQ extends IBaseQuery<?, NQ>
     > {
-
-    <T> WHERE apply(SqlOp op, T... args);
-
-    <T> WHERE apply(boolean condition, SqlOp op, T... args);
 
     /**
      * is null
@@ -104,15 +100,37 @@ public interface BaseWhere<
         return this.apply(when.test(value), NE, value);
     }
 
+    <T> WHERE apply(SqlOp op, T... args);
+
+    <T> WHERE apply(boolean condition, SqlOp op, T... args);
+
     /**
      * where 自定义条件(包括操作符在内）
      * 比如 where.age().apply("=34").end()
-     * <p>
-     * ！！！慎用！！！！
-     * 有sql注入风险
      *
      * @param opArgs 自定义比较语句
      * @return 查询器或更新器
      */
     WHERE apply(String opArgs);
+
+    /**
+     * 自定义 函数或表达式
+     *
+     * @param op         比较符号
+     * @param expression 函数或表达式
+     * @param args       函数或表达式的参数
+     * @return
+     */
+    WHERE applyFunc(SqlOp op, String expression, Object... args);
+
+    /**
+     * 自定义 函数或表达式
+     *
+     * @param condition  true时成立
+     * @param op         比较符号
+     * @param expression 函数或表达式
+     * @param args       函数或表达式的参数
+     * @return
+     */
+    WHERE applyFunc(boolean condition, SqlOp op, String expression, Object... args);
 }

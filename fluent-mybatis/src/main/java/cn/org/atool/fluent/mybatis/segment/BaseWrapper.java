@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
@@ -26,7 +26,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
 public abstract class BaseWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,
-    NQ extends IQuery<E, NQ>
+    NQ extends IBaseQuery<E, NQ>
     >
     implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
@@ -47,12 +47,6 @@ public abstract class BaseWrapper<
     protected BaseWrapper(String table, Parameters parameters, Class<E> entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.wrapperData = new WrapperData(table, parameters, entityClass, queryClass);
-    }
-
-    @Override
-    public W last(String lastSql) {
-        this.wrapperData.last(lastSql);
-        return (W) this;
     }
 
     /**

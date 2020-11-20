@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
 
 import java.util.function.Predicate;
 
@@ -14,7 +14,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
  */
 public class UpdateApply<
     S extends UpdateBase<S, U>,
-    U extends IUpdate<?, U, ?>
+    U extends IBaseUpdate<?, U, ?>
     > extends BaseApply<S, U> {
 
     public UpdateApply(S setter) {
@@ -55,8 +55,6 @@ public class UpdateApply<
         return when.test(value) ? this.is(value) : this.segment;
     }
 
-    //function
-
     /**
      * 按函数function更新, 示例
      * apply( "concat('abc', ?)", "xyz"): 将字段赋值为 abc连接value("xyz")
@@ -65,13 +63,9 @@ public class UpdateApply<
      * @param args     函数参数列表
      * @return 更新器
      */
-    public S apply(String function, Object... args) {
+    public S applyFunc(String function, Object... args) {
         assertNotBlank("function", function);
-        if (args == null || args.length == 0) {
-            this.segment.wrapperData().updateSql(this.current().column, function, args);
-        } else {
-            this.segment.wrapperData().updateSql(this.current().column, function, args);
-        }
+        this.segment.wrapperData().updateSql(this.current().column, function, args);
         return this.segment;
     }
 
@@ -84,9 +78,9 @@ public class UpdateApply<
      * @param args      函数参数列表
      * @return 更新器
      */
-    public S apply_If(boolean condition, String function, Object... args) {
+    public S applyFunc(boolean condition, String function, Object... args) {
         if (condition) {
-            this.apply(function, args);
+            this.applyFunc(function, args);
         }
         return this.segment;
     }

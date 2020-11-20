@@ -157,7 +157,7 @@ public class WrapperData implements IWrapperData {
      * @param paras    条件参数（填充 operator 中占位符?)
      */
     public void apply(KeyWordSegment keyWord, String column, SqlOp operator, Object... paras) {
-        this.apply(keyWord, column, null, operator, paras);
+        this.apply(keyWord, column, operator, null, paras);
     }
 
     /**
@@ -176,11 +176,11 @@ public class WrapperData implements IWrapperData {
      *
      * @param keyWord  or and
      * @param column   设置条件的字段
-     * @param format   格式化sql语句
      * @param operator 条件操作
+     * @param format   格式化sql语句
      * @param args     条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, String column, String format, SqlOp operator, Object... args) {
+    public void apply(KeyWordSegment keyWord, String column, SqlOp operator, String format, Object... args) {
         if (keyWord == null) {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }

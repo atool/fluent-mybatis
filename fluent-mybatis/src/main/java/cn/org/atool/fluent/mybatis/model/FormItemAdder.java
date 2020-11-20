@@ -26,7 +26,7 @@ public class FormItemAdder {
      * @param value
      * @return
      */
-    private Form item(String key, String op, Object... value) {
+    public Form item(String key, String op, Object... value) {
         this.form.getItems().add(new FormItem(key, op, value));
         return form;
     }

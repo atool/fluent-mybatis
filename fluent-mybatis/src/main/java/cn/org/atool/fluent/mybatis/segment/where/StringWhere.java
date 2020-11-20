@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.mapper.SqlLike;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
@@ -17,7 +17,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_LIKE;
  */
 public interface StringWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IQuery<?, NQ>
+    NQ extends IBaseQuery<?, NQ>
     > extends ObjectWhere<WHERE, NQ> {
 
     /**

@@ -15,7 +15,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
  * @param <S>
  * @author wudarui
  */
-public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>> extends IQuery<E, IFormQuery<E, S>> {
+public interface IFormQuery<E extends IEntity, S extends FormSetter> extends IQuery<E> {
     /**
      * 对应的实体Entity类型
      *
@@ -81,13 +81,4 @@ public interface IFormQuery<E extends IEntity, S extends FormSetter<E, S>> exten
         int count = mapper.count(this);
         return count > 0;
     }
-
-//    /**
-//     * 分页查询数据
-//     *
-//     * @return
-//     */
-//    default IPagedList paged() {
-//        return FormHelper.paged(this);
-//    }
 }

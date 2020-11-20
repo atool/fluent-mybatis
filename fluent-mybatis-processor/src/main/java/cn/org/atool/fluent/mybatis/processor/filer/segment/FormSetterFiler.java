@@ -1,21 +1,19 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.model.FormQuery;
-import cn.org.atool.fluent.mybatis.model.IFormQuery;
+import cn.org.atool.fluent.mybatis.functions.FormApply;
+import cn.org.atool.fluent.mybatis.model.Form;
+import cn.org.atool.fluent.mybatis.model.IFormApply;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.Map;
+import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityFormSetter;
@@ -45,22 +43,21 @@ public class FormSetterFiler extends AbstractFiler {
 
     @Override
     protected void build(TypeSpec.Builder builder) {
+        TypeName applyName = parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), fluent.formSetter());
         builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(super.parameterizedType(ClassName.get(FormSetter.class), fluent.entity(), fluent.formSetter()))
-            .addSuperinterface(super.parameterizedType(
-                fluent.segment(),
-                super.parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter())
-            ))
+            .superclass(FormSetter.class)
+            .addSuperinterface(super.parameterizedType(fluent.segment(), applyName))
             .addMethod(this.constructor1())
             .addMethod(this.m_entityClass())
-            .addMethod(this.m_byEntity())
-            .addMethod(this.m_byMap())
+            .addMethod(this.m_byObject())
         ;
     }
 
     private MethodSpec constructor1() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PRIVATE)
+            .addParameter(FormApply.class, "apply")
+            .addStatement("super.formApply = apply")
             .build();
     }
 
@@ -70,27 +67,16 @@ public class FormSetterFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_byEntity() {
-        return super.publicMethod("byEntity", false,
-            parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter()))
+    private MethodSpec m_byObject() {
+        return super.publicMethod("by", false,
+            parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), fluent.formSetter()))
             .addModifiers(Modifier.STATIC)
-            .addParameter(IEntity.class, "entity")
-            .addStatement("assertNotNull($S, entity)", "entity")
-            .addStatement("$T setter = new $T()", fluent.formSetter(), fluent.formSetter())
-            .addStatement("$T q = $T.INSTANCE.defaultQuery()", IQuery.class, fluent.defaults())
-            .addStatement("return setter.setQuery(new $T(entity, q, setter))", FormQuery.class)
-            .build();
-    }
-
-    private MethodSpec m_byMap() {
-        return super.publicMethod("byMap", false,
-            parameterizedType(ClassName.get(IFormQuery.class), fluent.entity(), fluent.formSetter()))
-            .addModifiers(Modifier.STATIC)
-            .addParameter(Map.class, "map")
-            .addStatement("assertNotNull($S, map)", "map")
-            .addStatement("$T setter = new $T()", fluent.formSetter(), fluent.formSetter())
-            .addStatement("$T q = $T.INSTANCE.defaultQuery()", IQuery.class, fluent.defaults())
-            .addStatement("return setter.setQuery(new $T(q, map, setter))", FormQuery.class)
+            .addParameter(Object.class, "object")
+            .addParameter(Form.class, "form")
+            .addStatement("assertNotNull($S, object)", "object")
+            .addStatement("$T map = $T.toMap(object)", Map.class, PoJoHelper.class)
+            .addStatement("$T<FormApply, FormSetter> apply = $T::new", Function.class, fluent.formSetter())
+            .addStatement("return new $T<>(apply, map, form)", FormApply.class)
             .build();
     }
 

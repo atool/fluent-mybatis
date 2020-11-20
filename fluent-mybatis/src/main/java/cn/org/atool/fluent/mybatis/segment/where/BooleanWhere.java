@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
@@ -13,7 +13,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  */
 public interface BooleanWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IQuery<?, NQ>
+    NQ extends IBaseQuery<?, NQ>
     > extends BaseWhere<WHERE, NQ> {
     /**
      * 等于 true

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
@@ -25,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
  */
 public class WhereApply<
     WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IQuery<?, NQ>
+    NQ extends IBaseQuery<?, NQ>
     >
     extends BaseApply<WHERE, NQ>
     implements
@@ -71,9 +71,9 @@ public class WhereApply<
     @Override
     public <O> WHERE in(String select, O... args) {
         if (isCollection(args)) {
-            return this.segment.apply(this.current(), select, IN, ((Collection) args[0]).toArray());
+            return this.segment.apply(this.current(), IN, select, ((Collection) args[0]).toArray());
         } else {
-            return this.segment.apply(this.current(), select, IN, args);
+            return this.segment.apply(this.current(), IN, select, args);
         }
     }
 
@@ -107,14 +107,14 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     @Override
-    public <NQ extends IQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query) {
+    public <NQ extends IBaseQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query) {
         NQ nested = NestedQueryFactory.nested(klass, this.segment.getParameters());
         query.apply(nested);
-        return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), IN);
+        return this.segment.apply(this.current(), IN, nested.getWrapperData().getQuerySql());
     }
 
     @Override
-    public <NQ extends IQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query) {
+    public <NQ extends IBaseQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query) {
         return condition ? this.in(klass, query) : this.segment;
     }
 
@@ -143,31 +143,34 @@ public class WhereApply<
      * @return 查询器或更新器
      */
     @Override
-    public <NQ extends IQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query) {
+    public <NQ extends IBaseQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query) {
         NQ nested = NestedQueryFactory.nested(queryClass, this.segment.getParameters());
         query.apply(nested);
-        return this.segment.apply(this.current(), nested.getWrapperData().getQuerySql(), NOT_IN);
+        return this.segment.apply(this.current(), NOT_IN, nested.getWrapperData().getQuerySql());
     }
 
     @Override
-    public <NQ extends IQuery<?, NQ>> WHERE notIn(
+    public <NQ extends IBaseQuery<?, NQ>> WHERE notIn(
         boolean condition, Class<NQ> queryClass, QFunction<NQ> query
     ) {
         return condition ? this.notIn(queryClass, query) : this.segment;
     }
 
-    /**
-     * where 自定义条件(包括操作符在内）
-     * 比如 where.age().apply("=34").end()
-     * <p>
-     * ！！！慎用！！！！
-     * 有sql注入风险
-     *
-     * @param opArgs 自定义比较语句
-     * @return 查询器或更新器
-     */
     @Override
     public WHERE apply(String opArgs) {
-        return this.segment.apply(this.current(), opArgs, RETAIN);
+        return this.segment.apply(this.current(), RETAIN, opArgs);
+    }
+
+    @Override
+    public WHERE applyFunc(SqlOp op, String expression, Object... args) {
+        return this.segment.apply(this.current(), op, expression, args);
+    }
+
+    @Override
+    public WHERE applyFunc(boolean condition, SqlOp op, String expression, Object... args) {
+        if (condition) {
+            this.apply(op, expression, args);
+        }
+        return this.segment.and;
     }
 }

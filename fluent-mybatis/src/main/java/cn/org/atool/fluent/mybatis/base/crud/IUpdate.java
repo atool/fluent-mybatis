@@ -4,31 +4,46 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.UpdaterExecutor;
+import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
-/**
- * IEntityUpdate: 更新接口
- *
- * @param <E>  对应的实体类
- * @param <U>  更新器
- * @param <NQ> 对应的嵌套查询器
- * @author darui.wu
- */
-public interface IUpdate<
-    E extends IEntity,
-    U extends IWrapper<E, U, NQ>,
-    NQ extends IQuery<E, NQ>>
-    extends IWrapper<E, U, NQ> {
+public interface IUpdate<E extends IEntity> {
     /**
      * 设置limit值
      *
      * @param limit
      * @return
      */
-    U limit(int limit);
+    <U extends IUpdate<E>> U limit(int limit);
+
+    /**
+     * 追加在sql语句的末尾
+     * !!!慎用!!!
+     * 有sql注入风险
+     *
+     * @param lastSql
+     * @return
+     */
+    <U extends IUpdate<E>> U last(String lastSql);
+
+    /**
+     * 返回where
+     *
+     * @return
+     */
+    WhereBase where();
+
+    /**
+     * 返回查询器或更新器对应的xml数据
+     * 系统方法, 请勿调用
+     *
+     * @return
+     */
+    WrapperData getWrapperData();
 
     /**
      * 根据Updater定义执行后续操作
@@ -36,11 +51,12 @@ public interface IUpdate<
      * @return
      */
     default UpdaterExecutor to() {
-        Class entityClass = this.getWrapperData().getEntityClass();
+        Class entityClass = ((IBaseUpdate) this).getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
         IRichMapper mapper = IRefs.instance().mapper(entityClass);
-        return new UpdaterExecutor(mapper, this);
+        return new UpdaterExecutor(mapper, (IBaseUpdate) this);
     }
+
 
     /**
      * 根据Updater定义执行后续操作
@@ -49,7 +65,7 @@ public interface IUpdate<
      * @return
      */
     default UpdaterExecutor of(IRichMapper<E> mapper) {
-        return new UpdaterExecutor(mapper, this);
+        return new UpdaterExecutor(mapper, (IBaseUpdate) this);
     }
 
     /**
@@ -60,7 +76,7 @@ public interface IUpdate<
      * @deprecated replaced by {@link #of(IRichMapper)}
      */
     @Deprecated
-    default int execute(Function<U, Integer> executor) {
-        return executor.apply((U) this);
+    default int execute(Function<IUpdate<E>, Integer> executor) {
+        return executor.apply(this);
     }
 }

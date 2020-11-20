@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,7 +18,7 @@ public abstract class RichEntity implements IEntity, IRichEntity {
      * 数据缓存, 避免多次查询
      */
     @NotField
-    protected transient Map<String, Object> cached = new ConcurrentHashMap<>(4);
+    protected transient Map<String, Optional<Object>> cached = new ConcurrentHashMap<>(4);
 
     /**
      * 加载关联信息
@@ -30,14 +31,14 @@ public abstract class RichEntity implements IEntity, IRichEntity {
     private <T> T invoke(boolean cached, String methodName, Object[] args) {
         if (cached) {
             if (this.cached.containsKey(methodName)) {
-                return (T) this.cached.get(methodName);
+                return (T) this.cached.get(methodName).orElse(null);
             }
             synchronized (this) {
                 if (this.cached.containsKey(methodName)) {
-                    return (T) this.cached.get(methodName);
+                    return (T) this.cached.get(methodName).orElse(null);
                 }
                 T result = IRefs.instance().invoke(this.getClass(), methodName, reArgs(args));
-                this.cached.put(methodName, result);
+                this.cached.put(methodName, Optional.ofNullable(result));
                 return result;
             }
         } else {

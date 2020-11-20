@@ -157,7 +157,7 @@ public abstract class OrderByBase<
     private void applyField(String column, boolean isAsc) {
         if (notBlank(column)) {
             String segment = column + SPACE + (isAsc ? ASC : DESC);
-            this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY, segment, RETAIN);
+            this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY, RETAIN, segment);
         }
     }
 

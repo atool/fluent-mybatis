@@ -29,7 +29,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 条件
      * @return 删除记录数
      */
-    default int deleteBy(IQuery query) {
+    default int deleteBy(IQuery<E> query) {
         return this.mapper().delete(query);
     }
 
@@ -39,7 +39,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param update 更新条件
      * @return 更新成功记录数
      */
-    default int updateBy(IUpdate update) {
+    default int updateBy(IUpdate<E> update) {
         return this.mapper().updateBy(update);
     }
 
@@ -49,7 +49,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 实例列表
      */
-    default List<E> listEntity(IQuery query) {
+    default List<E> listEntity(IQuery<E> query) {
         return this.mapper().listEntity(query);
     }
 
@@ -59,7 +59,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return map list
      */
-    default List<Map<String, Object>> listMaps(IQuery query) {
+    default List<Map<String, Object>> listMaps(IQuery<E> query) {
         return this.mapper().listMaps(query);
     }
 
@@ -71,7 +71,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO>      POJO实体类型
      * @return POJO list
      */
-    default <POJO> List<POJO> listPoJos(IQuery query, MapFunction<POJO> mapFunction) {
+    default <POJO> List<POJO> listPoJos(IQuery<E> query, MapFunction<POJO> mapFunction) {
         return this.mapper().listPoJo(query, mapFunction);
     }
 
@@ -85,7 +85,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO> PoJo对象类型
      * @return PoJo列表
      */
-    default <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery query) {
+    default <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery<E> query) {
         return this.mapper().listPoJo(clazz, query);
     }
 
@@ -95,7 +95,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    default StdPagedList<E> stdPagedEntity(IQuery query) {
+    default StdPagedList<E> stdPagedEntity(IQuery<E> query) {
         return this.mapper().stdPagedEntity(query);
     }
 
@@ -105,7 +105,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    default StdPagedList<Map<String, Object>> stdPagedMap(IQuery query) {
+    default StdPagedList<Map<String, Object>> stdPagedMap(IQuery<E> query) {
         return this.mapper().stdPagedMap(query);
     }
 
@@ -117,7 +117,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO>      Object实体类型
      * @return 分页查询结果
      */
-    default <POJO> StdPagedList<POJO> stdPagedPoJo(IQuery query, MapFunction<POJO> mapFunction) {
+    default <POJO> StdPagedList<POJO> stdPagedPoJo(IQuery<E> query, MapFunction<POJO> mapFunction) {
         return this.mapper().stdPagedPoJo(query, mapFunction);
     }
 
@@ -129,7 +129,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO> Object类型
      * @return 分页查询结果
      */
-    default <POJO> StdPagedList<POJO> stdPagedPoJo(Class<POJO> clazz, IQuery query) {
+    default <POJO> StdPagedList<POJO> stdPagedPoJo(Class<POJO> clazz, IQuery<E> query) {
         return this.mapper().stdPagedPoJo(clazz, query);
     }
 
@@ -139,7 +139,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    default TagPagedList<E> tagPagedEntity(IQuery query) {
+    default TagPagedList<E> tagPagedEntity(IQuery<E> query) {
         return this.mapper().tagPagedEntity(query);
     }
 
@@ -149,7 +149,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 分页查询结果
      */
-    default TagPagedList<Map<String, Object>> tagPagedMap(IQuery query) {
+    default TagPagedList<Map<String, Object>> tagPagedMap(IQuery<E> query) {
         return this.mapper().tagPagedMap(query);
     }
 
@@ -161,7 +161,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO>      Object实体类型
      * @return 分页查询结果
      */
-    default <POJO> TagPagedList<POJO> tagPagedPoJo(IQuery query, MapFunction<POJO> mapFunction) {
+    default <POJO> TagPagedList<POJO> tagPagedPoJo(IQuery<E> query, MapFunction<POJO> mapFunction) {
         return this.mapper().tagPagedPoJo(query, mapFunction);
     }
 
@@ -173,7 +173,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO> Object类型
      * @return 分页查询结果
      */
-    default <POJO> TagPagedList<POJO> tagPagedPoJo(Class<POJO> clazz, IQuery query) {
+    default <POJO> TagPagedList<POJO> tagPagedPoJo(Class<POJO> clazz, IQuery<E> query) {
         return this.mapper().tagPagedPoJo(clazz, query);
     }
 
@@ -184,8 +184,8 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 满足条件的一条记录
      */
-    default Optional<E> findOne(IQuery query) {
-        E one = (E)this.mapper().findOne(query);
+    default Optional<E> findOne(IQuery<E> query) {
+        E one = this.mapper().findOne(query);
         return Optional.ofNullable(one);
     }
 
@@ -196,7 +196,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 满足条件的一条记录
      */
-    default Optional<Map<String, Object>> findOneMap(IQuery query) {
+    default Optional<Map<String, Object>> findOneMap(IQuery<E> query) {
         return this.mapper().findOneMap(query);
     }
 
@@ -208,7 +208,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO>      Object类型
      * @return Object实例
      */
-    default <POJO> Optional<POJO> findOne(IQuery query, MapFunction<POJO> mapFunction) {
+    default <POJO> Optional<POJO> findOne(IQuery<E> query, MapFunction<POJO> mapFunction) {
         return this.mapper().findOne(query, mapFunction);
     }
 
@@ -220,7 +220,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param <POJO> Object类型
      * @return Object实例
      */
-    default <POJO> Optional<POJO> findOne(Class<POJO> clazz, IQuery query) {
+    default <POJO> Optional<POJO> findOne(Class<POJO> clazz, IQuery<E> query) {
         return this.mapper().findOne(clazz, query);
     }
 
@@ -230,7 +230,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param query 查询条件
      * @return 符合条件的记录数
      */
-    default int count(IQuery query) {
+    default int count(IQuery<E> query) {
         return this.mapper().count(query);
     }
 
@@ -239,5 +239,5 @@ public interface IProtectedDao<E extends IEntity> {
      *
      * @return
      */
-    IRichMapper mapper();
+    IRichMapper<E> mapper();
 }

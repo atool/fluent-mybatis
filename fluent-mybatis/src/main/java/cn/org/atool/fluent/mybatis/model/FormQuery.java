@@ -17,11 +17,11 @@ import java.util.Map;
  * @param <S>
  * @author darui.wu
  */
-public class FormQuery<E extends IEntity, S extends FormSetter<E, S>> implements IFormQuery<E, S> {
+public class FormQuery<E extends IEntity, S extends FormSetter> implements IFormQuery<E, S> {
     private final Class<? extends IEntity> entityClazz;
     private final Map<String, Object> form;
     private final IQuery query;
-    private final FormSetter<E, S> setter;
+    private final FormSetter setter;
 
     public FormQuery(@NonNull IEntity entity, @NonNull IQuery query, @NonNull S setter) {
         this.form = entity.toEntityMap();

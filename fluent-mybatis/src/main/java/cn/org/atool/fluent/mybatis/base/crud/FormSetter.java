@@ -1,31 +1,23 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.model.IFormQuery;
+import cn.org.atool.fluent.mybatis.functions.FormApply;
+import cn.org.atool.fluent.mybatis.model.IFormApply;
 
 import java.util.function.Consumer;
 
 /**
  * 字段设置
  *
- * @param <S>
  * @author darui.wu
  */
-public abstract class FormSetter<E extends IEntity, S extends FormSetter<E, S>> {
-    /**
-     * IFormQuery
-     */
-    private IFormQuery<E, S> query;
+public abstract class FormSetter {
 
-    private Consumer<FieldMapping> apply;
+    protected FormApply formApply;
+
+    protected Consumer<FieldMapping> apply;
 
     protected FormSetter() {
-    }
-
-    protected IFormQuery<E, S> setQuery(IFormQuery query) {
-        this.query = query;
-        return this.query;
     }
 
     public void set(Consumer<FieldMapping> apply) {
@@ -38,10 +30,10 @@ public abstract class FormSetter<E extends IEntity, S extends FormSetter<E, S>> 
      * @param field
      * @return
      */
-    public IFormQuery<E, S> set(FieldMapping field) {
-        this.apply.accept(field);
-        return this.query;
+    public IFormApply set(FieldMapping field) {
+        this.formApply.set(field);
+        return this.formApply;
     }
 
-    public abstract Class<? extends IEntity> entityClass();
+    public abstract Class entityClass();
 }

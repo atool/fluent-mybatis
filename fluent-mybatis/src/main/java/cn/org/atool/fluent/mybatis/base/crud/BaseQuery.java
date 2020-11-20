@@ -26,7 +26,7 @@ public abstract class BaseQuery<
     Q extends BaseQuery<E, Q>
     >
     extends BaseWrapper<E, Q, Q>
-    implements IQuery<E, Q> {
+    implements IBaseQuery<E, Q> {
 
     protected BaseQuery(String table, Class entityClass, Class queryClass) {
         super(table, entityClass, queryClass);
@@ -86,6 +86,12 @@ public abstract class BaseQuery<
     @Override
     public Q limit(int from, int limit) {
         this.wrapperData.setPaged(new PagedOffset(from, limit));
+        return (Q) this;
+    }
+
+    @Override
+    public Q last(String lastSql) {
+        this.wrapperData.last(lastSql);
         return (Q) this;
     }
 

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.functions.FormApply;
+import cn.org.atool.fluent.mybatis.functions.FormFunction;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -47,10 +47,9 @@ public class FormRefFiler extends AbstractFile {
 
     private FieldSpec f_formSetter(FluentEntity fluent) {
         ClassName cn = fluent.formSetter();
-        return FieldSpec.builder(
-            parameterizedType(ClassName.get(FormApply.class), fluent.entity(), cn)
+        return FieldSpec.builder(parameterizedType(ClassName.get(FormFunction.class), fluent.entity(), cn)
             , fluent.lowerNoSuffix(), Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("new $T<>($T::byEntity, $T::byMap)", FormApply.class, cn, cn)
+            .initializer("(obj, form) -> $T.by(obj, form)", cn)
             .build();
     }
 

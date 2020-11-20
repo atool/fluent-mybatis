@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
@@ -15,7 +15,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
  */
 public abstract class HavingBase<
     H extends HavingBase<H, Q>,
-    Q extends IQuery<?, Q>
+    Q extends IBaseQuery<?, Q>
     >
     extends AggregateSegment<H, Q, HavingOperator<H>> {
 

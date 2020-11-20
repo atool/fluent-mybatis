@@ -2,9 +2,7 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 /**
@@ -15,11 +13,11 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 public interface IWrapperMapper<E extends IEntity> {
     /**
      * 构造设置了默认条件的Query
-     * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setUpdateDefault(IUpdate)}
+     * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setQueryDefault(IQuery)}
      *
      * @return
      */
-    <Q extends IQuery<E, Q>> Q defaultQuery();
+    <Q extends IBaseQuery<E, Q>> Q defaultQuery();
 
     /**
      * 构造设置了默认条件的Updater
@@ -27,21 +25,21 @@ public interface IWrapperMapper<E extends IEntity> {
      *
      * @return
      */
-    <U extends IUpdate<E, U, ?>> U defaultUpdater();
+    <U extends IBaseUpdate<E, U, ?>> U defaultUpdater();
 
     /**
      * 构造空查询条件
      *
      * @return
      */
-    <Q extends IQuery<E, Q>> Q query();
+    <Q extends IBaseQuery<E, Q>> Q query();
 
     /**
      * 构造空更新条件
      *
      * @return
      */
-    <U extends IUpdate<E, U, ?>> U updater();
+    <U extends IBaseUpdate<E, U, ?>> U updater();
 
     /**
      * 主键字段名称

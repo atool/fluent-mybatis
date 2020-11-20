@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.function.Predicate;
@@ -17,7 +17,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
  */
 public interface NumericWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IQuery<?, NQ>
+    NQ extends IBaseQuery<?, NQ>
     > extends ObjectWhere<WHERE, NQ> {
     /**
      * in (values)

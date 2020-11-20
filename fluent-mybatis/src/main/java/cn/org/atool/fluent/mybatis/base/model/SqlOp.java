@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.QUESTION_MARK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.STR_FORMAT;
 import static java.util.stream.Collectors.joining;
@@ -28,43 +29,43 @@ public enum SqlOp {
     /**
      * 等于
      */
-    EQ("= ?", 1),
+    EQ("= ?", "= %s", 1),
     /**
      * 不等于
      */
-    NE("<> ?", 1),
+    NE("<> ?", "<> %s", 1),
     /**
      * 大于
      */
-    GT("> ?", 1),
+    GT("> ?", "> %s", 1),
     /**
      * 大于等于
      */
-    GE(">= ?", 1),
+    GE(">= ?", ">= %s", 1),
     /**
      * 小于
      */
-    LT("< ?", 1),
+    LT("< ?", "< %s", 1),
     /**
      * 小于等于
      */
-    LE("<= ?", 1),
+    LE("<= ?", "<= %s", 1),
     /**
      * 在...之间
      */
-    BETWEEN("BETWEEN ? AND ?", 2),
+    BETWEEN("BETWEEN ? AND ?", "BETWEEN %s", 2),
     /**
      * 不在...之间
      */
-    NOT_BETWEEN("NOT BETWEEN ? AND ?", 2),
+    NOT_BETWEEN("NOT BETWEEN ? AND ?", "NOT BETWEEN %s", 2),
     /**
      * like
      */
-    LIKE("LIKE ?", 1),
+    LIKE("LIKE ?", "LIKE %s", 1),
     /**
      * not like
      */
-    NOT_LIKE("NOT LIKE ?", 1),
+    NOT_LIKE("NOT LIKE ?", "NOT LIKE %s", 1),
     /**
      * 在...之中
      */
@@ -90,7 +91,9 @@ public enum SqlOp {
      */
     RETAIN("%s", -1);
 
-    private final String keyWord;
+    private final String placeHolder;
+
+    private final String format;
     /**
      * 参数个数
      * 0: 无can
@@ -99,40 +102,47 @@ public enum SqlOp {
     @Getter
     private final int argSize;
 
-    SqlOp(final String keyWord, int argSize) {
-        this.keyWord = keyWord;
+    SqlOp(final String placeHolder, int argSize) {
+        this.placeHolder = placeHolder;
+        this.format = placeHolder;
+        this.argSize = argSize;
+    }
+
+    SqlOp(final String placeHolder, String format, int argSize) {
+        this.placeHolder = placeHolder;
+        this.format = format;
         this.argSize = argSize;
     }
 
     /**
      * sql 操作符
+     * 如果自定义函数expression不为空, 则按自定义函数形式处理
+     * 如果无自定义函数, 且是不定项参数方式(placeHolder中有%s), 则先处理不定项参数项为占位符'?'
+     * <p/>
+     * 最后根据占位符'?'和参数值, 给每个'?'分配具体的表达式项
      *
      * @param parameters 查询语句中所有的变量
-     * @param format     格式化SQL
+     * @param expression 自定义函数或SQL片段
      * @param paras      参数列表
      * @return sql片段
      */
-    public String operator(Parameters parameters, String format, Object... paras) {
-        String sql = this.keyWord;
-        if (format != null) {
-            sql = String.format(this.keyWord, format);
-        } else if (this.keyWord.contains(STR_FORMAT)) {
-            sql = this.placeHolder(paras);
+    public String operator(Parameters parameters, String expression, Object... paras) {
+        String sql = this.placeHolder;
+        if (notBlank(expression)) {
+            sql = String.format(this.format, expression);
+        } else if (this.placeHolder.contains(STR_FORMAT)) {
+            sql = this.setPlaceHolder(paras);
         }
-        if (isEmpty(paras)) {
-            return sql;
-        } else {
-            return parameters.paramSql(sql, paras);
-        }
+        return isEmpty(paras) ? sql : parameters.paramSql(sql, paras);
     }
 
     /**
-     * 占位符形式格式化
+     * 根据参数个数多少, 将"%s"替换为"?, ?"占位符串
      *
      * @param values 参数列表
      * @return sql片段
      */
-    private String placeHolder(Object... values) {
+    private String setPlaceHolder(Object... values) {
         String placeHolder = "";
         if (values.length == 1 && values[0] instanceof Collection) {
             Collection list = (Collection) values[0];
@@ -140,6 +150,6 @@ public enum SqlOp {
         } else {
             placeHolder = Stream.of(values).map(v -> QUESTION_MARK).collect(joining(", "));
         }
-        return String.format(this.keyWord, placeHolder);
+        return String.format(this.placeHolder, placeHolder);
     }
 }

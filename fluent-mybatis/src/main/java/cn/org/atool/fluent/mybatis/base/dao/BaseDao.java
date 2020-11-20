@@ -18,26 +18,26 @@ public abstract class BaseDao<E extends IEntity> implements IBaseDao<E>, IProtec
      *
      * @return
      */
-    protected abstract IQuery<E, ?> query();
+    protected abstract IQuery<E> query();
 
     /**
      * 无任何设置的更新器
      *
      * @return
      */
-    protected abstract IUpdate<E, ?, ?> updater();
+    protected abstract IUpdate<E> updater();
 
     /**
      * 构造默认查询条件
      *
      * @return
      */
-    protected abstract <Q extends IQuery<E, Q>> Q defaultQuery();
+    protected abstract <Q extends IQuery<E>> Q defaultQuery();
 
     /**
      * 构造默认更新条件
      *
      * @return
      */
-    protected abstract <U extends IUpdate<E, U, ?>> U defaultUpdater();
+    protected abstract <U extends IUpdate<E>> U defaultUpdater();
 }

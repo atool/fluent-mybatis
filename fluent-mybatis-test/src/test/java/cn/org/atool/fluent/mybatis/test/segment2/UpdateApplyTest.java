@@ -69,7 +69,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void apply() {
         mapper.updateBy(new StudentUpdate()
-            .update.userName().apply("concat('user_name', '_abc')").end()
+            .update.userName().applyFunc("concat('user_name', '_abc')").end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -79,8 +79,8 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void apply_If() {
         mapper.updateBy(new StudentUpdate()
-            .update.userName().apply_If(false, "concat('user_name', '_abc')")
-            .set.age().apply_If(true, "age+1").end()
+            .update.userName().applyFunc(false, "concat('user_name', '_abc')")
+            .set.age().applyFunc(true, "age+1").end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()

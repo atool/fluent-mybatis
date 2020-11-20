@@ -29,6 +29,24 @@ public class QueryExecutor<E extends IEntity> {
         return Optional.ofNullable((E) this.mapper.findOne(this.query));
     }
 
+    public <POJO> Optional<POJO> findOne(Function<E, POJO> mapFunction) {
+        E entity = (E) this.mapper.findOne(this.query);
+        POJO value = entity == null ? null : mapFunction.apply(entity);
+        return Optional.ofNullable(value);
+    }
+
+    public <POJO> Optional<POJO> findOne(Class<POJO> clazz) {
+        return this.mapper.findOne(clazz, this.query);
+    }
+
+    public Optional<Map<String, Object>> findOneMap() {
+        return this.mapper.findOneMap(this.query);
+    }
+
+    public <POJO> Optional<POJO> findOneMap(MapFunction<POJO> mapFunction) {
+        return this.mapper.findOne(this.query, mapFunction);
+    }
+
     public List<E> listEntity() {
         return this.mapper.listEntity(this.query);
     }
@@ -47,24 +65,6 @@ public class QueryExecutor<E extends IEntity> {
 
     public List listObjs() {
         return this.mapper.listObjs(this.query);
-    }
-
-    public <POJO> Optional<POJO> findOne(MapFunction<POJO> mapFunction) {
-        return this.mapper.findOne(this.query, mapFunction);
-    }
-
-    public <POJO> Optional<POJO> findOne(Function<E, POJO> mapFunction) {
-        E entity = (E) this.mapper.findOne(this.query);
-        POJO value = entity == null ? null : mapFunction.apply(entity);
-        return Optional.ofNullable(value);
-    }
-
-    public <POJO> Optional<POJO> findOne(Class<POJO> clazz) {
-        return this.mapper.findOne(clazz, this.query);
-    }
-
-    public Optional<Map<String, Object>> findOneMap() {
-        return this.mapper.findOneMap(this.query);
     }
 
     public <POJO> List<POJO> listPoJo(MapFunction<POJO> mapFunction) {

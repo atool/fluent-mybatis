@@ -17,19 +17,9 @@ import java.io.Serializable;
 public interface IWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,
-    NQ extends IQuery<E, NQ>>
+    NQ extends IBaseQuery<E, NQ>>
     extends Serializable {
-
-    /**
-     * 追加在sql语句的末尾
-     * !!!慎用!!!
-     * 有sql注入风险
-     *
-     * @param lastSql
-     * @return
-     */
-    W last(String lastSql);
-
+    
     /**
      * 返回where
      *

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.ColumnSegment;
 import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
@@ -20,7 +20,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
  */
 public abstract class GroupByBase<
     G extends GroupByBase<G, Q>,
-    Q extends IQuery<?, Q>
+    Q extends IBaseQuery<?, Q>
     >
     extends BaseSegment<G, Q> {
 

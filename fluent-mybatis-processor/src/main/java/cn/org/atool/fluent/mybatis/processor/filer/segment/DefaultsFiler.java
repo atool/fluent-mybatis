@@ -44,8 +44,10 @@ public class DefaultsFiler extends AbstractFiler {
                 .build())
             .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
             .addMethod(this.m_setEntityByDefault())
+            .addMethod(this.m_emptyQuery())
             .addMethod(this.m_defaultQuery())
-            .addMethod(this.m_newUpdater())
+            .addMethod(this.m_emptyUpdater())
+            .addMethod(this.m_defaultUpdater())
             .addMethod(this.m_aliasQuery_0())
             .addMethod(this.m_aliasQuery_1())
             .addMethod(this.m_aliasWith_1())
@@ -73,6 +75,12 @@ public class DefaultsFiler extends AbstractFiler {
         return super.publicMethod(M_SET_ENTITY_BY_DEFAULT, true, (TypeName) null)
             .addParameter(IEntity.class, "entity")
             .addStatement("this.setInsertDefault(entity)")
+            .build();
+    }
+
+    private MethodSpec m_emptyQuery() {
+        return super.publicMethod(M_NEW_QUERY, true, fluent.query())
+            .addStatement("return new $T()", fluent.query())
             .build();
     }
 
@@ -126,7 +134,13 @@ public class DefaultsFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_newUpdater() {
+    private MethodSpec m_emptyUpdater() {
+        return super.publicMethod(M_NEW_UPDATER, true, fluent.updater())
+            .addStatement("return new $T()", fluent.updater())
+            .build();
+    }
+
+    private MethodSpec m_defaultUpdater() {
         return super.publicMethod(M_DEFAULT_UPDATER, true, fluent.updater())
             .addStatement("$T updater = new $T()", fluent.updater(), fluent.updater())
             .addStatement("this.setUpdateDefault(updater)")

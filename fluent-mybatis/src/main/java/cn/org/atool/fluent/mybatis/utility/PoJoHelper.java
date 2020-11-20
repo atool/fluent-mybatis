@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
@@ -10,9 +11,11 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -71,11 +74,61 @@ public class PoJoHelper {
             MetaObject metaObject = MetaObject.forObject(target, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String name = MybatisUtil.underlineToCamel(entry.getKey(), false);
-                metaObject.setValue(name, entry.getValue());
+
+                Object value = entry.getValue();
+                if (value == null) {
+                    metaObject.setValue(name, null);
+                }
+                Class<?> type = metaObject.getSetterType(name);
+                if (type.isAssignableFrom(value.getClass())) {
+                    metaObject.setValue(name, value);
+                } else {
+                    setDefaultType(type, metaObject, name, value);
+                }
             }
             return target;
         } catch (Exception e) {
             throw new RuntimeException("convert map to object[type=" + clazz.getName() + "] error: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 将object对象转换为map
+     *
+     * @param object
+     * @return
+     */
+    public static Map toMap(Object object) {
+        assertNotNull("object", object);
+        Map map = new HashMap();
+        if (object instanceof IEntity) {
+            map = ((IEntity) object).toEntityMap();
+        } else if (object instanceof Map) {
+            map.putAll((Map) object);
+        } else {
+            MetaObject metaObject = MetaObject.forObject(object, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
+            for (String field : metaObject.getGetterNames()) {
+                map.put(field, metaObject.getValue(field));
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 进行默认类型的转换
+     *
+     * @param type
+     * @param metaObject
+     * @param name
+     * @param value
+     */
+    private static void setDefaultType(Class type, MetaObject metaObject, String name, Object value) {
+        if (type == Long.class) {
+            metaObject.setValue(name, Long.parseLong(value.toString()));
+        } else if (type == Integer.class) {
+            metaObject.setValue(name, Integer.parseInt(value.toString()));
+        } else {
+            metaObject.setValue(name, value);
         }
     }
 

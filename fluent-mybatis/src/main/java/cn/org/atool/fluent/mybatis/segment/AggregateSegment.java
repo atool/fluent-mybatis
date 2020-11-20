@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
 
 public abstract class AggregateSegment<
     S extends AggregateSegment<S, Q, R>,
-    Q extends IQuery<?, Q>,
+    Q extends IBaseQuery<?, Q>,
     R
     >
     extends BaseSegment<R, Q> {

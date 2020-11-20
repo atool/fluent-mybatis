@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.generate.entity.StudentScoreEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentScoreMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +18,6 @@ public class StudentRelationTest extends BaseTest {
     @Autowired
     StudentScoreMapper studentScoreMapper;
 
-    @BeforeEach
     public void setup() {
         ATM.dataMap.student.initTable(1)
             .id.values(1)
@@ -36,6 +34,7 @@ public class StudentRelationTest extends BaseTest {
 
     @Test
     void testListStudentScore() {
+        this.setup();
         StudentEntity student = studentMapper.findById(1L);
         want.object(student).notNull();
         List<StudentScoreEntity> scores = student.findStudentScoreList();
@@ -49,11 +48,26 @@ public class StudentRelationTest extends BaseTest {
 
     @Test
     void testFindStudent() {
+        this.setup();
         StudentScoreEntity score = studentScoreMapper.findById(1);
         StudentEntity student = score.findStudent();
         want.object(student).eqDataMap(ATM.dataMap.student.entity(1)
             .id.values(1)
             .userName.values("test")
         );
+    }
+
+    @Test
+    void testFindStudent_returnNull() {
+        ATM.dataMap.student.table().clean();
+        ATM.dataMap.studentScore.initTable(2)
+            .id.values(1, 2)
+            .studentId.values(1, 1)
+            .score.values(70, 80)
+            .env.values("test_env")
+            .cleanAndInsert();
+        StudentScoreEntity score = studentScoreMapper.findById(1);
+        StudentEntity student = score.findStudent();
+        want.object(student).isNull();
     }
 }

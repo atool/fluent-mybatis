@@ -1,6 +1,12 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
+import cn.org.atool.fluent.mybatis.functions.FormFunction;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -35,20 +41,24 @@ public class Form implements Serializable {
     /**
      * Tag分页时, 当前页id值
      */
-    private String nextId;
+    private Serializable nextId;
     /**
      * 查询一页的数量
      */
     private int pageSize = 1;
 
-    /**
-     * 分页查询数据
-     *
-     * @param clazz
-     * @param <E>
-     * @return
-     */
-    public <E extends IEntity, P extends IPagedList<E>> P paged(Class<E> clazz) {
-        return (P) FormHelper.paged(clazz, this);
+    public <E extends IEntity> QueryExecutor<E> to(Class<E> entityClass) {
+        IRichMapper mapper = IRefs.instance().mapper(entityClass);
+        IQuery query = FormHelper.toQuery(entityClass, this);
+        return new QueryExecutor(mapper, query);
+    }
+
+    public <E extends IEntity> IQuery<E> query(Class<E> entityClass) {
+        return FormHelper.toQuery(entityClass, this);
+    }
+
+    public <E extends IEntity, S extends FormSetter> IFormApply<E, S>
+    add(FormFunction<E, S> apply, Object value) {
+        return apply.apply(value, this);
     }
 }

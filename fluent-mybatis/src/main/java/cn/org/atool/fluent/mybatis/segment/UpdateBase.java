@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public abstract class UpdateBase<
     S extends UpdateBase<S, U>,
-    U extends IUpdate<?, U, ?>
+    U extends IBaseUpdate<?, U, ?>
     >
     extends BaseSegment<UpdateApply<S, U>, U> {
 

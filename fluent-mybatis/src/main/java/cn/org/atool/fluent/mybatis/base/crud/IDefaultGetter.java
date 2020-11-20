@@ -17,12 +17,28 @@ public interface IDefaultGetter {
     void setEntityByDefault(IEntity entity);
 
     /**
+     * 创建一个空查询器(不包括{@link IDefaultSetter#setQueryDefault(IQuery)} 设置的默认条件)
+     *
+     * @param <Q>
+     * @return
+     */
+    <Q extends IQuery> Q query();
+
+    /**
      * 实例化查询构造器
      * o - 设置默认查询条件
      *
      * @return 查询构造器
      */
     <Q extends IQuery> Q defaultQuery();
+
+    /**
+     * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
+     *
+     * @param <U>
+     * @return
+     */
+    <U extends IUpdate> U updater();
 
     /**
      * 实例化更新构造器
