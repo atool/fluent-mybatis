@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 
+import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.el;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 
 /**
  * Mapper SQL组装
@@ -24,20 +26,21 @@ public class MapperSql {
         return buffer.toString().trim();
     }
 
-
     public MapperSql SELECT(String table, String columns) {
         buffer.append("SELECT ").append(columns).append(" FROM ").append(table);
         return this;
     }
 
     public MapperSql COUNT(String table, WrapperData data) {
-        buffer.append("SELECT COUNT(");
-        if (isBlank(data.getSqlSelect())) {
-            buffer.append("*");
-        } else {
-            buffer.append(data.getSqlSelect());
-        }
-        buffer.append(") FROM ").append(table);
+        this.hint(data, HintType.Before_All);
+        buffer.append("SELECT ");
+        this.hint(data, HintType.After_CrudKey);
+        buffer.append("COUNT(");
+        buffer.append(isBlank(data.getSqlSelect()) ? "*" : data.getSqlSelect());
+        buffer.append(") FROM ");
+        this.hint(data, HintType.Before_Table);
+        buffer.append(table);
+        this.hint(data, HintType.After_Table);
         return this;
     }
 
@@ -61,23 +64,33 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql INSERT_VALUES(String... columns) {
-        buffer.append("(").append(String.join(", ", columns)).append(")");
-        return this;
-    }
-
     public MapperSql INSERT_VALUES(List<String> columns) {
         buffer.append("(").append(String.join(", ", columns)).append(")");
         return this;
     }
 
-    public MapperSql DELETE_FROM(String table) {
-        buffer.append(" DELETE FROM " + table);
+    public MapperSql DELETE_FROM(String table, WrapperData data) {
+        this.hint(data, HintType.Before_All);
+        buffer.append(" DELETE ");
+        this.hint(data, HintType.After_CrudKey);
+        buffer.append(" FROM ");
+        this.hint(data, HintType.Before_Table);
+        buffer.append(table);
+        this.hint(data, HintType.After_Table);
         return this;
     }
 
     public MapperSql UPDATE(String table) {
-        buffer.append(" UPDATE " + table);
+        return this.UPDATE(table, null);
+    }
+
+    public MapperSql UPDATE(String table, WrapperData data) {
+        this.hint(data, HintType.Before_All);
+        buffer.append(" UPDATE ");
+        this.hint(data, HintType.After_CrudKey);
+        this.hint(data, HintType.Before_Table);
+        buffer.append(table);
+        this.hint(data, HintType.After_Table);
         return this;
     }
 
@@ -160,15 +173,15 @@ public class MapperSql {
     }
 
     public MapperSql SELECT(String table, WrapperData data, String defaultColumns) {
+        this.hint(data, HintType.Before_All);
         buffer.append("SELECT ");
-        if (data.isDistinct()) {
-            this.APPEND("DISTINCT ");
-        }
-        if (isBlank(data.getSqlSelect())) {
-            buffer.append(defaultColumns).append(" FROM ").append(table);
-        } else {
-            buffer.append(data.getSqlSelect()).append(" FROM ").append(table);
-        }
+        this.hint(data, HintType.After_CrudKey);
+        this.APPEND(data.isDistinct() ? "DISTINCT " : SPACE);
+        buffer.append(isBlank(data.getSqlSelect()) ? defaultColumns : data.getSqlSelect());
+        buffer.append(" FROM ");
+        this.hint(data, HintType.Before_Table);
+        buffer.append(table);
+        this.hint(data, HintType.After_Table);
         return this;
     }
 
@@ -189,5 +202,11 @@ public class MapperSql {
             this.APPEND(" LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}");
         }
         return this;
+    }
+
+    private void hint(WrapperData data, HintType hintType) {
+        if (data != null) {
+            buffer.append(data.hint(hintType));
+        }
     }
 }

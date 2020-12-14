@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ public interface IWrapper<
     W extends IWrapper<E, W, NQ>,
     NQ extends IBaseQuery<E, NQ>>
     extends Serializable {
-    
+
     /**
      * 返回where
      *
@@ -34,4 +35,13 @@ public interface IWrapper<
      * @return
      */
     WrapperData getWrapperData();
+
+    default W hint(HintType type, String hint) {
+        this.getWrapperData().hint(type, hint);
+        return (W) this;
+    }
+
+    default W hint(String hint) {
+        return this.hint(HintType.Before_All, hint);
+    }
 }

@@ -272,7 +272,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String deleteById(Serializable id) {
         MybatisUtil.assertNotNull("PrimaryKey", id);
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName());
+        sql.DELETE_FROM(this.tableName(), null);
         sql.WHERE(format("%s = #{value}", this.idColumn()));
         return sql.toString();
     }
@@ -287,7 +287,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         Collection ids = getParas(map, Param_Coll);
         assertNotEmpty("PrimaryKeyList", ids);
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName());
+        sql.DELETE_FROM(this.tableName(), null);
         sql.WHERE_PK_IN(this.idColumn(), ids.size());
         return sql.toString();
     }
@@ -301,7 +301,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String deleteByMap(Map<String, Object> map) {
         Map<String, Object> cm = getParas(map, Param_CM);
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName());
+        sql.DELETE_FROM(this.tableName(), null);
         List<String> where = new ArrayList<>();
         for (String key : cm.keySet()) {
             where.add(format("%s = #{%s.%s}", key, Param_CM, key));
@@ -319,7 +319,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String delete(Map map) {
         WrapperData data = getWrapperData(map, Param_EW);
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName());
+        sql.DELETE_FROM(this.tableName(), data);
         sql.WHERE_GROUP_ORDER_BY(data);
         return sql.toString();
     }
@@ -336,7 +336,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty("updates", updates);
 
         MapperSql sql = new MapperSql();
-        sql.UPDATE(this.tableName());
+        sql.UPDATE(this.tableName(), data);
         List<String> sets = this.updateDefaults(updates);
         sets.add(data.getUpdateStr());
         sql.SET(sets);

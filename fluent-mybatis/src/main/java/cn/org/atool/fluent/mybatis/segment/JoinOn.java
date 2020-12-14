@@ -39,6 +39,18 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     }
 
     /**
+     * 自由设置连接关系, 设置时需要加上表别名
+     * 比如: t1.id = t2.id AND t1.is_deleted = t2.is_deleted
+     *
+     * @param condition
+     * @return
+     */
+    public JB on(String condition) {
+        this.joinQuery.getWrapperData().addTable(onBuilder.table() + " ON " + condition);
+        return (JB) this.joinQuery;
+    }
+
+    /**
      * 关联关系设置
      *
      * @param l 左查询条件

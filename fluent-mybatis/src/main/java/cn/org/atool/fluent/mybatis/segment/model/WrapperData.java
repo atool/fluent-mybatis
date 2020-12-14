@@ -5,10 +5,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -56,6 +53,10 @@ public class WrapperData implements IWrapperData {
      * SQL 更新字段内容，例如：name='1', age=2
      */
     private final Map<String, String> updates = new LinkedHashMap<>(16);
+    /**
+     * sql 中 hint 维护
+     */
+    private final Map<HintType, String> hints = new HashMap<>(4);
     /**
      * 实体类型
      */
@@ -227,5 +228,16 @@ public class WrapperData implements IWrapperData {
         if (notBlank(functionSql)) {
             updates.put(column, this.paramSql(functionSql, values));
         }
+    }
+
+    public void hint(HintType type, String hint) {
+        if (notBlank(hint)) {
+            this.hints.put(type, hint);
+        }
+    }
+
+    public String hint(HintType type) {
+        String hint = this.hints.get(type);
+        return isBlank(hint) ? SPACE : SPACE + hint + SPACE;
     }
 }
