@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,7 +34,11 @@ public class WrapperData implements IWrapperData {
     /**
      * 表名
      */
+    @Getter(AccessLevel.NONE)
     protected String table;
+
+    @Setter
+    private String alias;
     /**
      * 自定义参数列表
      */
@@ -73,12 +78,17 @@ public class WrapperData implements IWrapperData {
         this.entityClass = null;
     }
 
-    public WrapperData(String table, Parameters parameters, Class entityClass, Class queryClass) {
+    public WrapperData(String table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
+        this.alias = alias;
         this.parameters = parameters;
         this.entityClass = entityClass;
         this.queryClass = queryClass;
+    }
+
+    public String getTable() {
+        return isBlank(alias) ? this.table : this.table + " " + this.alias;
     }
 
     @Override

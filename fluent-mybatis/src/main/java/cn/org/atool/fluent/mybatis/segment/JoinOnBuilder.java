@@ -38,8 +38,8 @@ public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, 
      */
     public JoinOnBuilder<QL, QR> on(BaseWhere left, BaseWhere right) {
         return this.on(
-            ((WhereApply) left).current().alias(this.queryLeft.getAlias()),
-            ((WhereApply) right).current().alias(this.queryRight.getAlias())
+            BaseWrapperHelper.appendAlias(((WhereApply) left).current().column, this.queryLeft),
+            BaseWrapperHelper.appendAlias(((WhereApply) right).current().column, this.queryRight)
         );
     }
 
@@ -56,8 +56,8 @@ public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, 
     }
 
     public String table() {
-        String joinTable = String.format("%s %s %s",
-            this.joinType.join(), this.queryRight.getWrapperData().getTable(), this.queryRight.getAlias()
+        String joinTable = String.format("%s %s",
+            this.joinType.join(), this.queryRight.wrapperData.getTable()
         );
         if (this.ons.isEmpty()) {
             return joinTable;

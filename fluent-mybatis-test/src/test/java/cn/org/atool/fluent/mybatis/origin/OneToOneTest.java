@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.tools.datagen.DataMap;
 
 public class OneToOneTest extends BaseTest {
     @Autowired

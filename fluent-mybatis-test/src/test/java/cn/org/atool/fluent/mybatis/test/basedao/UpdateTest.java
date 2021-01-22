@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.tools.datagen.DataGenerator;
 
 /**
  * TODO:类说明

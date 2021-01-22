@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.functions.OnConsumer;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
@@ -22,8 +23,16 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
         this.joinQuery = joinQuery;
         this.onBuilder = new JoinOnBuilder(qLeft, joinType, qRight);
-        this.onLeft = newEmptyQuery(qLeftClass);
-        this.onRight = newEmptyQuery(qRightClass);
+        if (qLeft instanceof FreeQuery) {
+            this.onLeft = (QL) ((FreeQuery) qLeft).emptyQuery();
+        } else {
+            this.onLeft = newEmptyQuery(qLeftClass);
+        }
+        if (qRight instanceof FreeQuery) {
+            this.onRight = (QR) ((FreeQuery) qRight).emptyQuery();
+        } else {
+            this.onRight = newEmptyQuery(qRightClass);
+        }
     }
 
     /**

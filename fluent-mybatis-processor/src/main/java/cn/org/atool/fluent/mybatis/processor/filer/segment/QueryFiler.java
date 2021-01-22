@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -40,11 +41,12 @@ public class QueryFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(If.class, "notBlank");
+        spec.addStaticImport(StrConstant.class, "EMPTY");
     }
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        builder.superclass(this.superKlass())
+        builder.superclass(this.superClass())
             .addField(this.f_select())
             .addField(this.f_groupBy())
             .addField(this.f_having())
@@ -211,11 +213,7 @@ public class QueryFiler extends AbstractFiler {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(ClassName.get(Parameters.class), "parameters")
-            .addStatement("super($T.Table_Name, parameters, $T.class, $T.class)",
-                fluent.mapping(),
-                fluent.entity(),
-                fluent.query()
-            )
+            .addStatement("this(EMPTY, parameters)")
             .build();
     }
 
@@ -229,8 +227,11 @@ public class QueryFiler extends AbstractFiler {
             .addModifiers(Modifier.PUBLIC)
             .addParameter(ClassName.get(String.class), "alias")
             .addParameter(ClassName.get(Parameters.class), "parameters")
-            .addStatement("this(parameters)")
-            .addStatement("super.alias = alias")
+            .addStatement("super($T.Table_Name, alias, parameters, $T.class, $T.class)",
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query()
+            )
             .build();
     }
 
@@ -245,7 +246,7 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
-    private ParameterizedTypeName superKlass() {
+    private ParameterizedTypeName superClass() {
         ClassName base = ClassName.get(BaseQuery.class);
         ClassName entity = fluent.entity();
         ClassName query = fluent.query();

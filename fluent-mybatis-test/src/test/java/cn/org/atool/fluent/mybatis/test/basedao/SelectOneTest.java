@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
+import org.test4j.tools.datagen.DataGenerator;
 
 /**
  * @author darui.wu

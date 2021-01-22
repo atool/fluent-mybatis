@@ -8,8 +8,7 @@ import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 
 /**
  * BaseSelector: 查询字段构造
@@ -69,7 +68,13 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S applyAs(String customized, String alias) {
-        String select = customized + (isBlank(alias) ? EMPTY : AS + alias);
+        String select = customized;
+        if (notBlank(this.wrapper.alias) && BaseWrapperHelper.isColumnName(customized)) {
+            select = this.wrapper.alias + "." + customized;
+        }
+        if (notBlank(alias)) {
+            select = select + AS + alias;
+        }
         this.wrapperData().addSelectColumn(select);
         return (S) this;
     }

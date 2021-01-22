@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-
 /**
  * 联合查询条件
  *
@@ -106,7 +104,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      */
     private <QR extends BaseQuery<?, QR>> void assertQueryAlias(QR query) {
         MybatisUtil.assertNotNull("query", query);
-        if (isBlank(query.getAlias())) {
+        if (BaseWrapperHelper.isBlankAlias(query)) {
             String err = String.format("the alias in the join query table must be set, " +
                 "please use constructor: new %s(String alias, Parameters parameters)", query.getClass().getSimpleName());
             throw new RuntimeException(err);

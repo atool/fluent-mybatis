@@ -12,7 +12,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.userName;
-import static org.test4j.tools.datagen.AbstractDataGenerator.increase;
+import static org.test4j.tools.datagen.DataGenerator.increase;
 
 /**
  * @author darui.wu

@@ -29,7 +29,7 @@ public class JoinWrapperData extends WrapperData {
         this.query = query;
         this.queries = queries;
         this.parameters = query.wrapperData.getParameters();
-        this.tables.add(this.query.wrapperData.getTable() + " " + this.query.getAlias());
+        this.tables.add(this.query.wrapperData.getTable());
     }
 
     private List<String> tables = new ArrayList<>();

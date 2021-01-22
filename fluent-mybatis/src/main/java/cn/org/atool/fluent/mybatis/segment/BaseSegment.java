@@ -41,7 +41,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * @return
      */
     protected String columnWithAlias(FieldMapping column) {
-        return column.alias(this.wrapper.getAlias());
+        return BaseWrapperHelper.appendAlias(column.column, this.wrapper);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      */
     protected String columnWithAlias(String column) {
         if (FieldMapping.isColumnName(column)) {
-            return FieldMapping.alias(this.wrapper.getAlias(), column);
+            return BaseWrapperHelper.appendAlias(column, this.wrapper);
         } else {
             return column;
         }

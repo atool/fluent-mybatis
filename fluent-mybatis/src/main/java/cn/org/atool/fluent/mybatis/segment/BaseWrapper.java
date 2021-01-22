@@ -12,7 +12,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
 
 /**
@@ -31,22 +33,24 @@ public abstract class BaseWrapper<
     implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
 
+    protected final String table;
     /**
      * 表别名
      */
-    @Getter
-    protected String alias = "";
+    protected final String alias;
 
     @Getter
     protected final WrapperData wrapperData;
 
-    protected BaseWrapper(String table, Class<E> entityClass, Class queryClass) {
-        this(table, new Parameters(), entityClass, queryClass);
+    protected BaseWrapper(String table, String alias, Class<E> entityClass, Class queryClass) {
+        this(table, alias, new Parameters(), entityClass, queryClass);
     }
 
-    protected BaseWrapper(String table, Parameters parameters, Class<E> entityClass, Class queryClass) {
+    protected BaseWrapper(String table, String alias, Parameters parameters, Class<E> entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
-        this.wrapperData = new WrapperData(table, parameters, entityClass, queryClass);
+        this.table = table;
+        this.alias = isBlank(alias) ? EMPTY : alias.trim();
+        this.wrapperData = new WrapperData(table, this.alias, parameters, entityClass, queryClass);
     }
 
     /**
@@ -81,5 +85,21 @@ public abstract class BaseWrapper<
 
     protected TableMeta getTableMeta() {
         return TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass());
+    }
+
+    /**
+     * 给字段名称追加上表别名
+     *
+     * @param column
+     * @return
+     */
+    protected String appendAlias(String column) {
+        if (isBlank(this.alias)) {
+            return column;
+        } else if (column.startsWith(alias + ".")) {
+            return column;
+        } else {
+            return alias + "." + column;
+        }
     }
 }
