@@ -1,6 +1,5 @@
 # Fluent-Mybatis介绍
-- 微信交流群
-![-w330](image/wechat.png)
+
 
 [FluentMybatis文档](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
     
@@ -11,6 +10,9 @@
 
 ## FluentMybatis原理
 ![-w930](image/fluent-mybatis-driver.png)
+
+## 微信交流群
+![-w330](image/wechat.png)
 
 ## 运行测试
 `fluent-mybatis-test`测试需要本地提前运行MySQL并导入测试表，可使用Docker镜像快速部署测试库
