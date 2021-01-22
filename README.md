@@ -11,7 +11,7 @@
 ## FluentMybatis原理
 ![-w930](image/fluent-mybatis-driver.png)
 
-## 微信交流群
+## 微信交流
 ![-w330](image/wechat.png)
 
 ## 运行测试
