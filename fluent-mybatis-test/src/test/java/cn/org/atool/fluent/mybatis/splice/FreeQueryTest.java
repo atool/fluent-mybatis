@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.template;
+package cn.org.atool.fluent.mybatis.splice;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
