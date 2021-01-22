@@ -1,4 +1,5 @@
 # Fluent-Mybatis介绍
+[微信交流群](image/wechat.png)
 
 [FluentMybatis文档](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
     
