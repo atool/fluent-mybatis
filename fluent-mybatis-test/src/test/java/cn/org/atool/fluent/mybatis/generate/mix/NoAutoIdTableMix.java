@@ -25,20 +25,21 @@ public class NoAutoIdTableMix implements IMix {
   }
 
   @Step("验证表[no_auto_id]有全表数据{1}")
-  public NoAutoIdTableMix checkNoAutoIdTable(NoAutoIdDataMap data) {
-    db.table("no_auto_id").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+  public NoAutoIdTableMix checkNoAutoIdTable(NoAutoIdDataMap data, EqMode... modes) {
+    db.table("no_auto_id").query().eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[no_auto_id]有符合条件{1}的数据{2}")
-  public NoAutoIdTableMix checkNoAutoIdTable(String where, NoAutoIdDataMap data) {
-    db.table("no_auto_id").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public NoAutoIdTableMix checkNoAutoIdTable(String where, NoAutoIdDataMap data, EqMode... modes) {
+    db.table("no_auto_id").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[no_auto_id]有符合条件{1}的数据{2}")
-  public NoAutoIdTableMix checkNoAutoIdTable(NoAutoIdDataMap where, NoAutoIdDataMap data) {
-    db.table("no_auto_id").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public NoAutoIdTableMix checkNoAutoIdTable(NoAutoIdDataMap where, NoAutoIdDataMap data,
+      EqMode... modes) {
+    db.table("no_auto_id").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 

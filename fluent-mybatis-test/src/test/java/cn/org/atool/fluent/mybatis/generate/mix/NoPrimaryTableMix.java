@@ -25,20 +25,22 @@ public class NoPrimaryTableMix implements IMix {
   }
 
   @Step("验证表[no_primary]有全表数据{1}")
-  public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap data) {
-    db.table("no_primary").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+  public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap data, EqMode... modes) {
+    db.table("no_primary").query().eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[no_primary]有符合条件{1}的数据{2}")
-  public NoPrimaryTableMix checkNoPrimaryTable(String where, NoPrimaryDataMap data) {
-    db.table("no_primary").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public NoPrimaryTableMix checkNoPrimaryTable(String where, NoPrimaryDataMap data,
+      EqMode... modes) {
+    db.table("no_primary").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[no_primary]有符合条件{1}的数据{2}")
-  public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap where, NoPrimaryDataMap data) {
-    db.table("no_primary").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap where, NoPrimaryDataMap data,
+      EqMode... modes) {
+    db.table("no_primary").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 

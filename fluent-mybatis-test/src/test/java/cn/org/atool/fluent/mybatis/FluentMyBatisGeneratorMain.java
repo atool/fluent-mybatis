@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis;
 
-import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
+import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import cn.org.atool.generator.FileGenerator;
 import cn.org.atool.generator.annotation.*;
+import org.test4j.module.database.proxy.DataSourceCreatorFactory;
 
 public class FluentMyBatisGeneratorMain {
     static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
@@ -20,6 +21,7 @@ public class FluentMyBatisGeneratorMain {
      * @param args
      */
     public static void main(String[] args) {
+        DataSourceCreatorFactory.create("dataSource");
         FileGenerator.build(
             Empty1.class,
             Empty2.class,

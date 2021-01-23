@@ -25,21 +25,23 @@ public class MemberFavoriteTableMix implements IMix {
   }
 
   @Step("验证表[t_member_favorite]有全表数据{1}")
-  public MemberFavoriteTableMix checkMemberFavoriteTable(MemberFavoriteDataMap data) {
-    db.table("t_member_favorite").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+  public MemberFavoriteTableMix checkMemberFavoriteTable(MemberFavoriteDataMap data,
+      EqMode... modes) {
+    db.table("t_member_favorite").query().eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[t_member_favorite]有符合条件{1}的数据{2}")
-  public MemberFavoriteTableMix checkMemberFavoriteTable(String where, MemberFavoriteDataMap data) {
-    db.table("t_member_favorite").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public MemberFavoriteTableMix checkMemberFavoriteTable(String where, MemberFavoriteDataMap data,
+      EqMode... modes) {
+    db.table("t_member_favorite").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[t_member_favorite]有符合条件{1}的数据{2}")
   public MemberFavoriteTableMix checkMemberFavoriteTable(MemberFavoriteDataMap where,
-      MemberFavoriteDataMap data) {
-    db.table("t_member_favorite").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+      MemberFavoriteDataMap data, EqMode... modes) {
+    db.table("t_member_favorite").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 

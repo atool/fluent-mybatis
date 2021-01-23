@@ -25,21 +25,22 @@ public class HomeAddressTableMix implements IMix {
   }
 
   @Step("验证表[home_address]有全表数据{1}")
-  public HomeAddressTableMix checkHomeAddressTable(HomeAddressDataMap data) {
-    db.table("home_address").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+  public HomeAddressTableMix checkHomeAddressTable(HomeAddressDataMap data, EqMode... modes) {
+    db.table("home_address").query().eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[home_address]有符合条件{1}的数据{2}")
-  public HomeAddressTableMix checkHomeAddressTable(String where, HomeAddressDataMap data) {
-    db.table("home_address").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public HomeAddressTableMix checkHomeAddressTable(String where, HomeAddressDataMap data,
+      EqMode... modes) {
+    db.table("home_address").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[home_address]有符合条件{1}的数据{2}")
   public HomeAddressTableMix checkHomeAddressTable(HomeAddressDataMap where,
-      HomeAddressDataMap data) {
-    db.table("home_address").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+      HomeAddressDataMap data, EqMode... modes) {
+    db.table("home_address").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 

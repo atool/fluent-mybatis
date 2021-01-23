@@ -25,21 +25,22 @@ public class StudentScoreTableMix implements IMix {
   }
 
   @Step("验证表[student_score]有全表数据{1}")
-  public StudentScoreTableMix checkStudentScoreTable(StudentScoreDataMap data) {
-    db.table("student_score").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+  public StudentScoreTableMix checkStudentScoreTable(StudentScoreDataMap data, EqMode... modes) {
+    db.table("student_score").query().eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[student_score]有符合条件{1}的数据{2}")
-  public StudentScoreTableMix checkStudentScoreTable(String where, StudentScoreDataMap data) {
-    db.table("student_score").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public StudentScoreTableMix checkStudentScoreTable(String where, StudentScoreDataMap data,
+      EqMode... modes) {
+    db.table("student_score").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[student_score]有符合条件{1}的数据{2}")
   public StudentScoreTableMix checkStudentScoreTable(StudentScoreDataMap where,
-      StudentScoreDataMap data) {
-    db.table("student_score").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+      StudentScoreDataMap data, EqMode... modes) {
+    db.table("student_score").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 

@@ -25,20 +25,20 @@ public class MemberTableMix implements IMix {
   }
 
   @Step("验证表[t_member]有全表数据{1}")
-  public MemberTableMix checkMemberTable(MemberDataMap data) {
-    db.table("t_member").query().eqDataMap(data, EqMode.IGNORE_ORDER);
+  public MemberTableMix checkMemberTable(MemberDataMap data, EqMode... modes) {
+    db.table("t_member").query().eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[t_member]有符合条件{1}的数据{2}")
-  public MemberTableMix checkMemberTable(String where, MemberDataMap data) {
-    db.table("t_member").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public MemberTableMix checkMemberTable(String where, MemberDataMap data, EqMode... modes) {
+    db.table("t_member").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
   @Step("验证表[t_member]有符合条件{1}的数据{2}")
-  public MemberTableMix checkMemberTable(MemberDataMap where, MemberDataMap data) {
-    db.table("t_member").queryWhere(where).eqDataMap(data, EqMode.IGNORE_ORDER);
+  public MemberTableMix checkMemberTable(MemberDataMap where, MemberDataMap data, EqMode... modes) {
+    db.table("t_member").queryWhere(where).eqDataMap(data, modes);
     return this;
   }
 
