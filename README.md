@@ -14,9 +14,6 @@
 ## 微信交流
 ![-w330](image/wechat.png)
 
-## 运行测试
-`fluent-mybatis-test`测试需要本地提前运行MySQL并导入测试表，可使用Docker镜像快速部署测试库
-
 ## Fluent-Mybatis 历程
 - 1.4.3 版本, 支持java 9+编译生成代码
 - 1.4.2 版本, 增加一对一, 一对多和多对多支持
