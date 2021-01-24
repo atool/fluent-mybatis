@@ -1,17 +1,18 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -293,6 +294,13 @@ public abstract class WhereBase<
      */
     public WHERE apply(String applySql, Object... paras) {
         wrapper.getWrapperData().apply(this.currOp, EMPTY, RETAIN, applySql, paras);
+        return this.and;
+    }
+
+    public WHERE apply(String applySql, Supplier<Boolean> condition, Object... paras) {
+        if (condition.get()) {
+            wrapper.getWrapperData().apply(this.currOp, EMPTY, RETAIN, applySql, paras);
+        }
         return this.and;
     }
 
