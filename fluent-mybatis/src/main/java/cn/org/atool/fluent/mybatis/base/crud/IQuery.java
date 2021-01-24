@@ -106,7 +106,6 @@ public interface IQuery<E extends IEntity> {
      * @return 结果
      * @deprecated replaced by {@link #of(IRichMapper)}
      */
-    @Deprecated
     default <R> R execute(Function<IQuery<E>, R> executor) {
         return executor.apply(this);
     }
