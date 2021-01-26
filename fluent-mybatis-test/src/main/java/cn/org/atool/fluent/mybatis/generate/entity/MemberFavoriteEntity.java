@@ -35,11 +35,13 @@ public class MemberFavoriteEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
+   * 主键id
    */
   @TableId("id")
   private Long id;
 
   /**
+   * 更新时间
    */
   @TableField(
       value = "gmt_modified",
@@ -49,6 +51,7 @@ public class MemberFavoriteEntity extends RichEntity {
   private Date gmtModified;
 
   /**
+   * 是否逻辑删除
    */
   @TableField(
       value = "is_deleted",
@@ -57,16 +60,19 @@ public class MemberFavoriteEntity extends RichEntity {
   private Boolean isDeleted;
 
   /**
+   * 爱好: 电影, 爬山, 徒步...
    */
   @TableField("favorite")
   private String favorite;
 
   /**
+   * 创建时间
    */
   @TableField("gmt_created")
   private Date gmtCreated;
 
   /**
+   * member表外键
    */
   @TableField("member_id")
   private Long memberId;

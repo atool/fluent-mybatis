@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.GroupBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Having;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Selector;
-import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.List;
 
@@ -67,7 +66,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     }
 
     @Override
-    public WhereBase where() {
+    public QueryWhere where() {
         return new QueryWhere(this);
     }
 }

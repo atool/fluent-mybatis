@@ -41,11 +41,13 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   private static final long serialVersionUID = 1L;
 
   /**
+   * 主键ID
    */
   @TableId("id")
   private Long id;
 
   /**
+   * 记录创建时间
    */
   @TableField(
       value = "gmt_created",
@@ -54,6 +56,7 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   private Date gmtCreated;
 
   /**
+   * 记录最后修改时间
    */
   @TableField(
       value = "gmt_modified",
@@ -63,6 +66,7 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   private Date gmtModified;
 
   /**
+   * 逻辑删除标识
    */
   @TableField(
       value = "is_deleted",
@@ -71,36 +75,43 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   private Boolean isDeleted;
 
   /**
+   * 数据隔离环境
    */
   @TableField("env")
   private String env;
 
   /**
+   * 性别, 0:女; 1:男
    */
   @TableField("gender_man")
   private Integer genderMan;
 
   /**
+   * 学期
    */
   @TableField("school_term")
   private Integer schoolTerm;
 
   /**
+   * 成绩
    */
   @TableField("score")
   private Integer score;
 
   /**
+   * 学号
    */
   @TableField("student_id")
   private Long studentId;
 
   /**
+   * 学科
    */
   @TableField("subject")
   private String subject;
 
   /**
+   * 租户标识
    */
   @TableField("tenant")
   private Long tenant;

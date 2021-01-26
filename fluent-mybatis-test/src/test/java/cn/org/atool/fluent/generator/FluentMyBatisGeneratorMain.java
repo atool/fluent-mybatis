@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis;
+package cn.org.atool.fluent.generator;
 
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;

@@ -33,6 +33,11 @@ public class NoPrimaryEntity extends RichEntity {
 
   /**
    */
+  @TableField("alias")
+  private String alias;
+
+  /**
+   */
   @TableField("column_1")
   private Integer column1;
 

@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
@@ -341,6 +341,9 @@ public class MapperFiler extends AbstractFiler {
         if (notBlank(fluent.getPrimary().getSeqName())) {
             seqName = fluent.getPrimary().getSeqName();
             before = fluent.getPrimary().isSeqIsBeforeOrder();
+        }
+        if (isBlank(seqName)) {
+            return;
         }
         builder.addAnnotation(AnnotationSpec.builder(SelectKey.class)
             .addMember("resultType", "$T.class", fluent.getPrimary().getJavaType())

@@ -208,9 +208,9 @@ public class WrapperHelperFiler extends AbstractFiler {
             builder.addMethod(MethodSpec
                 .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(String.class, "alias")
+                .addParameter(String.class, "_alias_")
                 .returns(fluent.selector())
-                .addStatement("return this.process($L, alias)", fc.getName())
+                .addStatement("return this.process($L, _alias_)", fc.getName())
                 .build()
             );
         }

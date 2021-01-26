@@ -20,11 +20,12 @@ public class FreeQueryTest extends BaseTest {
 
     @Test
     void test() {
-        FreeQuery query = new FreeQuery("t_member");
-        query.select("id", "gmt_modified")
-            .where().apply("id", EQ, "1").end()
-        ;
+        FreeQuery query = new FreeQuery("t_member")
+            .select("id", "gmt_modified")
+            .where.apply("id", EQ, "1").end()
+            .groupBy.apply("id").end();
         mapper.findOne(query);
+        db.sqlList().wantFirstSql().eq("SELECT id, gmt_modified FROM t_member WHERE id = ? GROUP BY id");
     }
 
     @Test
@@ -40,11 +41,11 @@ public class FreeQueryTest extends BaseTest {
     void test_join() {
         FreeQuery query1 = new FreeQuery("t_member", "t1");
         query1.select("t1.id", "t1.gmt_modified")
-            .where().apply("id", EQ, "1").end();
+            .where.apply("id", EQ, "1").end();
 
         FreeQuery query2 = new FreeQuery("t_member", "t2", query1);
         query1.select("t2.id", "t2.gmt_modified")
-            .where().apply("id", EQ, "1").end();
+            .where.apply("id", EQ, "1").end();
 
         JoinBuilder query = JoinBuilder
             .from(query1)

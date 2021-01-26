@@ -40,7 +40,8 @@ drop table if exists no_primary;
 create table no_primary
 (
     column_1 int          NULL,
-    column_2 varchar(100) NULL
+    column_2 varchar(100) NULL,
+    `alias`     varchar (20)                        DEFAULT NULL
 ) ENGINE = InnoDB
   charset = utf8 COMMENT = '无主键表';
 

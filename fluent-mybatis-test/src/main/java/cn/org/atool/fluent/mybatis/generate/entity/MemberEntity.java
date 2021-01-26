@@ -38,11 +38,13 @@ public class MemberEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
+   * 主键id
    */
   @TableId("id")
   private Long id;
 
   /**
+   * 更新时间
    */
   @TableField(
       value = "gmt_modified",
@@ -52,6 +54,7 @@ public class MemberEntity extends RichEntity {
   private Date gmtModified;
 
   /**
+   * 是否逻辑删除
    */
   @TableField(
       value = "is_deleted",
@@ -60,26 +63,31 @@ public class MemberEntity extends RichEntity {
   private Boolean isDeleted;
 
   /**
+   * 年龄
    */
   @TableField("age")
   private Integer age;
 
   /**
+   * 创建时间
    */
   @TableField("gmt_created")
   private Date gmtCreated;
 
   /**
+   * 0:男孩; 1:女孩
    */
   @TableField("is_girl")
   private Boolean isGirl;
 
   /**
+   * 学校
    */
   @TableField("school")
   private String school;
 
   /**
+   * 名字
    */
   @TableField("user_name")
   private String userName;

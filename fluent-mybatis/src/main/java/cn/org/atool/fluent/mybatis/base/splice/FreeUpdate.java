@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.base.splice;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateSetter;
-import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
     }
 
     @Override
-    public WhereBase<?, FreeUpdate, FreeQuery> where() {
+    public UpdateWhere where() {
         return this.where;
     }
 }

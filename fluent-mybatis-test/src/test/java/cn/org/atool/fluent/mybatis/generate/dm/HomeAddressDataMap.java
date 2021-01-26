@@ -1,5 +1,10 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
+import java.lang.Boolean;
+import java.lang.String;
+import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -7,10 +12,6 @@ import org.test4j.module.database.annotations.ScriptTable;
 import org.test4j.tools.datagen.DataMap;
 import org.test4j.tools.datagen.IDataMap;
 import org.test4j.tools.datagen.KeyValue;
-
-import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * HomeAddressDataMap: 表(实体)数据对比(插入)构造器
