@@ -104,8 +104,9 @@ public interface IQuery<E extends IEntity> {
      * @param executor 具体查询操作
      * @param <R>      结果类型
      * @return 结果
-     * @deprecated replaced by {@link #of(IRichMapper)}
+     * @deprecated replaced by {@link #of(IRichMapper).method(...)}
      */
+    @Deprecated
     default <R> R execute(Function<IQuery<E>, R> executor) {
         return executor.apply(this);
     }

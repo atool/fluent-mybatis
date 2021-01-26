@@ -73,8 +73,9 @@ public interface IUpdate<E extends IEntity> {
      *
      * @param executor 具体更新操作
      * @return 返回更新的记录数
-     * @deprecated replaced by {@link #of(IRichMapper)}
+     * @deprecated replaced by {@link #of(IRichMapper).method(...)}
      */
+    @Deprecated
     default int execute(Function<IUpdate<E>, Integer> executor) {
         return executor.apply(this);
     }
