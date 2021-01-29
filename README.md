@@ -1,5 +1,6 @@
 # Fluent-Mybatis介绍
 
+## QQ交流群: 312885450
 
 [FluentMybatis文档](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
     
@@ -10,9 +11,6 @@
 
 ## FluentMybatis原理
 ![-w930](image/fluent-mybatis-driver.png)
-
-## 微信交流
-![-w330](image/wechat.png)
 
 ## Fluent-Mybatis 历程
 - 1.4.3 版本, 支持java 9+编译生成代码
