@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
+import cn.org.atool.fluent.mybatis.model.Pair;
 
 import java.util.function.Predicate;
 
@@ -53,6 +55,30 @@ public class UpdateApply<
      */
     public <O> S is(O value, Predicate<O> when) {
         return when.test(value) ? this.is(value) : this.segment;
+    }
+
+    /**
+     * 按分支条件更新
+     *
+     * @param ifs
+     * @param <O>
+     * @return
+     */
+    public <O> S is(Ifs<O> ifs) {
+        /** 重载（实际入参为null）时兼容处理 **/
+        if (ifs == null) {
+            return this.is((Object) null);
+        }
+        for (Pair<Predicate, Object> pair : ifs.switches) {
+            if (pair.getKey().test(pair.getValue())) {
+                this.is(pair.getValue());
+                return this.segment;
+            }
+        }
+        if (ifs.isHasOther()) {
+            this.is(ifs.getOther());
+        }
+        return this.segment;
     }
 
     /**

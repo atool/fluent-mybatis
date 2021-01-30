@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
+import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -69,6 +70,17 @@ public interface BaseWhere<
     }
 
     /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE eq(Ifs<T> ifs) {
+        return this.apply(EQ, ifs);
+    }
+
+    /**
      * 等于 =, 值不为空时成立
      *
      * @param value 条件值
@@ -100,7 +112,28 @@ public interface BaseWhere<
         return this.apply(when.test(value), NE, value);
     }
 
+    /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE ne(Ifs<T> ifs) {
+        return this.apply(NE, ifs);
+    }
+
     <T> WHERE apply(SqlOp op, T... args);
+
+    /**
+     * 多条件操作
+     *
+     * @param op
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    <T> WHERE apply(SqlOp op, Ifs<T> ifs);
 
     <T> WHERE apply(boolean condition, SqlOp op, T... args);
 

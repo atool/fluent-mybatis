@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
@@ -242,6 +244,7 @@ public class MapperFiler extends AbstractFiler {
         return this.mapperMethod(UpdateProvider.class, M_updateBy)
             .addParameter(ParameterSpec.builder(IUpdate.class, "update")
                 .addAnnotation(annotation_Param("Param_EW"))
+                .addJavadoc(" {@link $T#updateBy($T)}", fluent.sqlProvider(), Map.class)
                 .build())
             .returns(TypeName.INT)
             .build();
@@ -324,6 +327,7 @@ public class MapperFiler extends AbstractFiler {
         return builder
             .addParameter(fluent.entity(), "entity")
             .returns(TypeName.INT)
+            .addJavadoc("{@link $T#insert($T)}", BaseSqlProvider.class, IEntity.class)
             .build();
     }
 

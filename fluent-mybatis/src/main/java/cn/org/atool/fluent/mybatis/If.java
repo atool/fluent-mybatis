@@ -181,4 +181,13 @@ public interface If {
     static boolean notNull(Object object) {
         return !isNull(object);
     }
+
+    /**
+     * 多条件选择
+     *
+     * @return
+     */
+    static <T> Ifs<T> test() {
+        return new Ifs<>();
+    }
 }

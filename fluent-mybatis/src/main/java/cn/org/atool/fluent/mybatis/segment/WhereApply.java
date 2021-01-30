@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.functions.QFunction;
+import cn.org.atool.fluent.mybatis.model.Pair;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
@@ -11,6 +13,7 @@ import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -57,6 +60,28 @@ public class WhereApply<
         }
     }
 
+    @Override
+    public <T> WHERE apply(SqlOp op, Ifs<T> ifs) {
+        /** 重载（实际入参为null）时兼容处理 **/
+        if (ifs == null) {
+            return this.apply(op, (Object) null);
+        }
+        if (op.getArgSize() > 1) {
+            throw new IllegalArgumentException("Ifs condition does not apply to the operation:" + op.name());
+        }
+        for (Pair<Predicate, Object> pair : ifs.switches) {
+            if (pair.getKey().test(pair.getValue())) {
+                return this.apply(op, pair.getValue());
+            }
+        }
+        if (ifs.isHasOther()) {
+            return this.apply(op, ifs.getOther());
+        } else {
+            return segment;
+        }
+    }
+
+    @Override
     public <O> WHERE apply(boolean condition, SqlOp op, O... args) {
         return condition ? this.apply(op, args) : segment;
     }
