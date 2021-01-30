@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
+import java.util.Collection;
+
 public class ApplyFuncTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -100,14 +102,14 @@ public class ApplyFuncTest extends BaseTest {
         long id = 2L;
         StudentUpdate update = new StudentUpdate()
             .update.address().is(If.test()
-                .when("address 1", v -> id == 1)
-                .when("address 2", v -> id == 2)
+                .when(v -> id == 1, "address 1")
+                .when(v -> id == 2, "address 2")
                 .other("address3")
             )
             .end()
             .where.id().eq(If.test()
-                .when(1, v -> id == 1)
-                .when(2, v -> id == 2))
+                .when(v -> id == 1, 1)
+                .when(v -> id == 2, 2))
             .end();
 
         mapper.updateBy(update);
@@ -118,5 +120,27 @@ public class ApplyFuncTest extends BaseTest {
                 StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address 2", 2L});
+    }
+
+
+    @Test
+    public void test_applyFunc6() throws Exception {
+        long id = 2L;
+        StudentUpdate update = new StudentUpdate()
+            .update.address().is("address")
+            .end()
+            .where.id().in(If.test(Collection.class)
+                .when(list -> list.contains(1), 1, 3)
+                .when(list -> list.contains(2), 2, 3))
+            .end();
+
+        mapper.updateBy(update);
+
+        // 验证SQL语句
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE id IN (?, ?)",
+                StringMode.SameAsSpace);
+        // 验证参数
+        db.sqlList().wantFirstPara().eqReflect(new Object[]{"address", 1L, 3L});
     }
 }

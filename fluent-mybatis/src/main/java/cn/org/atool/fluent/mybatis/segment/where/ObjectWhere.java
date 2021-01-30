@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
+import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -37,6 +38,17 @@ public interface ObjectWhere<
     }
 
     /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE gt(Ifs<T> ifs) {
+        return this.apply(GT, ifs);
+    }
+
+    /**
      * 大于等于
      *
      * @param value 条件值
@@ -55,6 +67,17 @@ public interface ObjectWhere<
      */
     default <T> WHERE ge(T value, Predicate<T> when) {
         return this.apply(when.test(value), GE, value);
+    }
+
+    /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE ge(Ifs<T> ifs) {
+        return this.apply(GE, ifs);
     }
 
     /**
@@ -79,6 +102,17 @@ public interface ObjectWhere<
     }
 
     /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE lt(Ifs<T> ifs) {
+        return this.apply(LT, ifs);
+    }
+
+    /**
      * 小于等于
      *
      * @param value 条件值
@@ -97,6 +131,17 @@ public interface ObjectWhere<
      */
     default <T> WHERE le(T value, Predicate<T> when) {
         return this.apply(when.test(value), LE, value);
+    }
+
+    /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE le(Ifs<T> ifs) {
+        return this.apply(LE, ifs);
     }
 
     /**
@@ -139,6 +184,16 @@ public interface ObjectWhere<
      */
     default WHERE in(Collection values, Predicate<Collection> when) {
         return this.apply(when.test(values), IN, values == null ? new Object[0] : values.toArray());
+    }
+
+    /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @return
+     */
+    default WHERE in(Ifs<Collection> ifs) {
+        return (WHERE) this.apply(IN, ifs);
     }
 
     /**

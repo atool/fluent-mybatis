@@ -190,4 +190,13 @@ public interface If {
     static <T> Ifs<T> test() {
         return new Ifs<>();
     }
+
+    /**
+     * 多条件选择
+     *
+     * @return
+     */
+    static <T> Ifs<T> test(Class<T> clazz) {
+        return new Ifs<>();
+    }
 }

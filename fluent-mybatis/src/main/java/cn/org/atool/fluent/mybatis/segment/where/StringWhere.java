@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
+import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.mapper.SqlLike;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -42,6 +43,17 @@ public interface StringWhere<
     }
 
     /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE like(Ifs<String> ifs) {
+        return this.apply(LIKE, ifs);
+    }
+
+    /**
      * not like '%value%'
      *
      * @param value 条件值
@@ -60,6 +72,17 @@ public interface StringWhere<
      */
     default WHERE notLike(String value, Predicate<String> when) {
         return this.apply(when.test(value), NOT_LIKE, SqlLike.like(value));
+    }
+
+    /**
+     * 按Ifs条件设置where值
+     *
+     * @param ifs
+     * @param <T>
+     * @return
+     */
+    default <T> WHERE notLike(Ifs<String> ifs) {
+        return this.apply(NOT_LIKE, ifs);
     }
 
     /**

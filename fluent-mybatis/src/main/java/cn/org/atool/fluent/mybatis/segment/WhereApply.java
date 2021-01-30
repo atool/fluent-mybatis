@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.model.Pair;
+import cn.org.atool.fluent.mybatis.model.IfsPredicate;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
@@ -53,11 +53,20 @@ public class WhereApply<
         if (op.getArgSize() == -1) {
             assertNotEmpty(this.current().name, args);
         }
-        if (op == IN && args.length == 1) {
-            return this.segment.apply(this.current(), EQ, args[0]);
-        } else {
+        if (op == IN && args.length > 1) {
             return this.segment.apply(this.current(), op, args);
         }
+        Object value = args[0];
+        if (value instanceof Collection) {
+            Collection list = (Collection) value;
+            assertNotEmpty(this.current().name, list);
+            if (list.size() > 1) {
+                return this.segment.apply(this.current(), op, list.toArray());
+            } else {
+                value = list.iterator().next();
+            }
+        }
+        return this.segment.apply(this.current(), EQ, value);
     }
 
     @Override
@@ -69,16 +78,13 @@ public class WhereApply<
         if (op.getArgSize() > 1) {
             throw new IllegalArgumentException("Ifs condition does not apply to the operation:" + op.name());
         }
-        for (Pair<Predicate, Object> pair : ifs.switches) {
-            if (pair.getKey().test(pair.getValue())) {
-                return this.apply(op, pair.getValue());
+        for (IfsPredicate<Predicate, Object> predicate : ifs.predicates) {
+            Object value = predicate.value(op);
+            if (predicate.predicate.test(value)) {
+                return this.apply(op, value);
             }
         }
-        if (ifs.isHasOther()) {
-            return this.apply(op, ifs.getOther());
-        } else {
-            return segment;
-        }
+        return segment;
     }
 
     @Override
