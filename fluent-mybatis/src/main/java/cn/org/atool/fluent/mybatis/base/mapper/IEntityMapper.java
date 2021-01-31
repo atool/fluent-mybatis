@@ -94,6 +94,11 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
     /**
      * 根据update对象更新记录
      *
+     * <pre>
+     * 传入多个Update时, 需要数据库支持
+     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * </pre>
+     *
      * @param updates
      * @return
      */

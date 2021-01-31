@@ -40,7 +40,7 @@ public @interface TableField {
     boolean notLarge() default true;
 
     /**
-     * JDBC类型 (该默认值不代表会按照该值生效)
+     * JDBC类型
      */
     JdbcType jdbcType() default JdbcType.UNDEFINED;
 

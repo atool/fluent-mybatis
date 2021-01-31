@@ -350,7 +350,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             index++;
             list.add(sql);
         }
-        return list.stream().collect(Collectors.joining(";\n"));
+        String text = list.stream().collect(Collectors.joining(";\n"));
+        return text;
     }
 
     private String getUpdaterSql(IUpdate updater) {
@@ -360,7 +361,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty("updates", updates);
 
         MapperSql sql = new MapperSql();
-        sql.UPDATE(this.tableName(), data);
+        sql.UPDATE(data.getTable(), data);
         List<String> sets = this.updateDefaults(updates);
         sets.add(data.getUpdateStr());
         sql.SET(sets);
