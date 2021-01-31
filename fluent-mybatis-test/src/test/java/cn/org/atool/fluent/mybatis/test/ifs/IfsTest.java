@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.test.segment1;
+package cn.org.atool.fluent.mybatis.test.ifs;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
-public class ApplyFuncTest extends BaseTest {
+public class IfsTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
