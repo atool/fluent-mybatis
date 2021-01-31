@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -126,29 +126,5 @@ public class TableMetaHelper {
         if (tableMeta.getPrimary() == null) {
             log.warn(String.format("Warn: Could not find @TableId in Class: %s.", clazz.getName()));
         }
-    }
-
-    /**
-     * 根据mapper接口定义，提前对应的Entity类型
-     * 如果是多泛型的时候，需要将Entity泛型放在第一位
-     *
-     * @param mapperClass mapper 接口
-     * @return mapper 泛型
-     */
-    public static Class<?> extractEntity(Class<?> mapperClass) {
-        Type[] types = mapperClass.getGenericInterfaces();
-        for (Type type : types) {
-            if (!(type instanceof ParameterizedType)) {
-                continue;
-            }
-            // 对第一个泛型进行处理
-            Type[] array = ((ParameterizedType) type).getActualTypeArguments();
-            if (array == null || array.length == 0 || array[0] instanceof TypeVariable || array[0] instanceof WildcardType) {
-                return null;
-            } else {
-                return (Class<?>) array[0];
-            }
-        }
-        return null;
     }
 }

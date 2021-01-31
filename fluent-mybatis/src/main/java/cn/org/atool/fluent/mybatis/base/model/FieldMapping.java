@@ -44,16 +44,6 @@ public class FieldMapping {
     }
 
     /**
-     * column = #{prefix.field}
-     *
-     * @param prefix
-     * @return
-     */
-    public String placeholder(String prefix) {
-        return placeholder(prefix, this.name);
-    }
-
-    /**
      * alias.column
      *
      * @param alias 表别名

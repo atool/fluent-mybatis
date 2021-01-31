@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContextAware;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -85,32 +84,6 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
      * @return
      */
     public abstract String findPrimaryColumn(Class clazz);
-
-    private Map<String, Method> methodsOfService = new ConcurrentHashMap<>(32);
-
-    /**
-     * 查找对应的 serviceType#methodName 方法实现
-     *
-     * @param methodOfEntity
-     * @param serviceType    实现methodName方法的service类型
-     * @param methodName     方法名称
-     * @param args           方法入参(第一个参数是entity)
-     * @return
-     */
-    private void loadRequiredMethod(String methodOfEntity, Class serviceType, String methodName, Object[] args) {
-        synchronized (serviceType) {
-            for (Method method : serviceType.getMethods()) {
-                if (!Objects.equals(method.getName(), methodName)) {
-                    continue;
-                }
-                if (method.getParameterCount() != args.length) {
-                    throw new RuntimeException("Wrong number of method[" + serviceType.getSimpleName() + "#" + methodName + "] parameters");
-                }
-                methodsOfService.put(methodOfEntity, method);
-            }
-            throw new RuntimeException("The method[" + serviceType.getSimpleName() + "#" + methodName + "] not found.");
-        }
-    }
 
     /**
      * 实现entityClass#methodName方法

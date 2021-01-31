@@ -4,9 +4,6 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -358,23 +355,6 @@ public class MybatisUtil {
             return name.substring(0, 1).toLowerCase() + name.substring(1);
         } else {
             return "";
-        }
-    }
-
-
-    /**
-     * 将异常日志转换为字符串
-     *
-     * @param e
-     * @return
-     */
-    public static String toString(Throwable e) {
-        try (StringWriter writer = new StringWriter(); PrintWriter print = new PrintWriter(writer)) {
-            e.printStackTrace(print);
-            return writer.toString();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
         }
     }
 

@@ -48,10 +48,6 @@ public class TableFieldMeta extends FieldMeta {
      */
     protected String insert;
 
-    public TableFieldMeta(String column, Field field) {
-        super(column, field);
-    }
-
     /**
      * 全新的 存在 TableField 注解时使用的构造函数
      */

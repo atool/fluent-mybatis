@@ -38,7 +38,7 @@ public interface If {
      * @param coll 入参
      * @return boolean
      */
-    static boolean isEmpty(Collection<?> coll) {
+    static boolean isEmpty(Collection coll) {
         return (coll == null || coll.isEmpty());
     }
 
@@ -48,7 +48,7 @@ public interface If {
      * @param coll 入参
      * @return boolean
      */
-    static boolean notEmpty(Collection<?> coll) {
+    static boolean notEmpty(Collection coll) {
         return !isEmpty(coll);
     }
 
@@ -58,7 +58,7 @@ public interface If {
      * @param map 入参
      * @return boolean
      */
-    static boolean isEmpty(Map<?, ?> map) {
+    static boolean isEmpty(Map map) {
         return (map == null || map.isEmpty());
     }
 
@@ -68,7 +68,7 @@ public interface If {
      * @param map 入参
      * @return boolean
      */
-    static boolean notEmpty(Map<?, ?> map) {
+    static boolean notEmpty(Map map) {
         return !isEmpty(map);
     }
 

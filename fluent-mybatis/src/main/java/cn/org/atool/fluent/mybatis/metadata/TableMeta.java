@@ -44,23 +44,8 @@ public class TableMeta implements StrConstant {
     @Getter(AccessLevel.NONE)
     private String allSqlSelect;
 
-    public TableMeta() {
-    }
-
-    public TableMeta(Class<?> entityType) {
+    public TableMeta(Class entityType) {
         this.entityType = entityType;
-    }
-
-    /**
-     * 获取包含主键及字段的 select sql 片段
-     *
-     * @return sql 片段
-     */
-    public String getAllSqlSelect() {
-        if (allSqlSelect == null) {
-            allSqlSelect = filter(true, f -> true);
-        }
-        return allSqlSelect;
     }
 
     /**
@@ -77,22 +62,5 @@ public class TableMeta implements StrConstant {
         }
         fields.stream().filter(predicate).forEach(f -> columns.add(f.getColumn()));
         return columns.stream().collect(joining(COMMA_SPACE));
-    }
-
-    public String getKeyProperty() {
-        return this.primary == null ? null : this.primary.getProperty();
-    }
-
-    public String getKeyColumn() {
-        return this.primary == null ? null : this.primary.getColumn();
-    }
-
-    /**
-     * 设置默认值，避免出错
-     *
-     * @return
-     */
-    public Class getKeyType() {
-        return this.primary == null ? Long.class : this.primary.getPropertyType();
     }
 }

@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
-import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.OP_NOT_LIKE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
