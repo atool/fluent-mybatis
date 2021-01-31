@@ -37,7 +37,8 @@ class TestSpringConfig {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
         bean.setMapperLocations(
-            new ClassPathResource("mapper/MyXmlMapper.xml")
+            new ClassPathResource("mapper/MyXmlMapper.xml"),
+            new ClassPathResource("mapper/BatchUpdate.xml")
         );
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setLazyLoadingEnabled(true);

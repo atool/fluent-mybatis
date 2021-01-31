@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.ifs;
 
+import cn.org.atool.fluent.mybatis.customize.mapper.StudentBatchMapper;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -7,9 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+
 public class CaseFuncTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
+
+    @Autowired
+    private StudentBatchMapper batchMapper;
 
     @Test
     public void test_applyFunc() throws Exception {
@@ -31,7 +40,23 @@ public class CaseFuncTest extends BaseTest {
     }
 
     @Test
-    public void test_applyFunc2() throws Exception {
+    public void test_mybatis_batch() {
+        batchMapper.updateBatchByIds(Arrays.asList(
+            new StudentEntity().setId(1L).setAddress("address 1").setAge(23),
+            new StudentEntity().setId(2L).setAddress("address 2").setAge(24),
+            new StudentEntity().setId(3L).setAddress("address 3").setAge(25)
+        ));
+        /** 验证执行的SQL语句 **/
+        db.sqlList().wantFirstSql().eq("" +
+                "update student " +
+                "set address =case id when ? then ? when ? then ? when ? then ? end, " +
+                "age =case id when ? then ? when ? then ? when ? then ? end " +
+                "where id in ( ? , ? , ? )"
+            , StringMode.SameAsSpace);
+    }
+
+    @Test
+    public void test_fluentMybatisBatch() throws Exception {
         final String CaseWhen = "case id " +
             "when 1 then ? " +
             "when 2 then ? " +
@@ -40,7 +65,7 @@ public class CaseFuncTest extends BaseTest {
             .update.address().applyFunc(CaseWhen, "address 1", "address 2", "address 3")
             .set.age().applyFunc(CaseWhen, 23, 24, 25)
             .end()
-            .where.id().in(new int[]{1, 2, 3}).end();
+            .where.id().in(new long[]{1L, 2L, 3L}).end();
         mapper.updateBy(update);
         // 验证SQL语句
         db.sqlList().wantFirstSql()
@@ -52,6 +77,39 @@ public class CaseFuncTest extends BaseTest {
                 StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara()
-            .eqReflect(new Object[]{"address 1", "address 2", "address 3", 23, 24, 25, 1, 2, 3});
+            .eqReflect(new Object[]{"address 1", "address 2", "address 3", 23, 24, 25, 1L, 2L, 3L});
+    }
+
+    @Test
+    public void test_fluentMybatisBatch2() throws Exception {
+        List<StudentEntity> students = Arrays.asList(
+            new StudentEntity().setId(1L).setAddress("address 1").setAge(23),
+            new StudentEntity().setId(2L).setAddress("address 2").setAge(24),
+            new StudentEntity().setId(3L).setAddress("address 3").setAge(25));
+        final String CaseWhen = "case id " +
+            "when 1 then ? " +
+            "when 2 then ? " +
+            "else ? end";
+        StudentUpdate update = new StudentUpdate()
+            .update.address().applyFunc(CaseWhen, getFields(students, StudentEntity::getAddress))
+            .set.age().applyFunc(CaseWhen, getFields(students, StudentEntity::getAge))
+            .end()
+            .where.id().in(getFields(students, StudentEntity::getId)).end();
+        mapper.updateBy(update);
+        // 验证SQL语句
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student " +
+                    "SET gmt_modified = now(), " +
+                    "address = case id when 1 then ? when 2 then ? else ? end, " +
+                    "age = case id when 1 then ? when 2 then ? else ? end " +
+                    "WHERE id IN (?, ?, ?)",
+                StringMode.SameAsSpace);
+        // 验证参数
+        db.sqlList().wantFirstPara()
+            .eqReflect(new Object[]{"address 1", "address 2", "address 3", 23, 24, 25, 1L, 2L, 3L});
+    }
+
+    private Object[] getFields(List<StudentEntity> students, Function<StudentEntity, Object> getField) {
+        return students.stream().map(getField).toArray(Object[]::new);
     }
 }
