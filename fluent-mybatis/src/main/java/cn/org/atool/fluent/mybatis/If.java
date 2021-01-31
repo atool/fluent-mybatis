@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.ifs.InIfs;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
@@ -33,107 +34,34 @@ public interface If {
     }
 
     /**
-     * 校验集合是否为空
+     * 判断数据对象(Collection, Map, Array)是否不为空
      *
-     * @param coll 入参
-     * @return boolean
-     */
-    static boolean isEmpty(Collection coll) {
-        return (coll == null || coll.isEmpty());
-    }
-
-    /**
-     * 校验集合是否不为空
-     *
-     * @param coll 入参
-     * @return boolean
-     */
-    static boolean notEmpty(Collection coll) {
-        return !isEmpty(coll);
-    }
-
-    /**
-     * 判断Map是否为空
-     *
-     * @param map 入参
-     * @return boolean
-     */
-    static boolean isEmpty(Map map) {
-        return (map == null || map.isEmpty());
-    }
-
-    /**
-     * 判断Map是否不为空
-     *
-     * @param map 入参
-     * @return boolean
-     */
-    static boolean notEmpty(Map map) {
-        return !isEmpty(map);
-    }
-
-    /**
-     * 判断数据是否为空
-     *
-     * @param array 长度
-     * @return 数组对象为null或者长度为 0 时，返回 false
-     */
-    static boolean isEmpty(Object[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
+     * @param value Collection, Map, Array
      * @return 数组对象内含有任意对象时返回 true
-     * @see If#isEmpty(Object[])
+     * @see If#isEmpty(Object)
      */
-    static boolean notEmpty(Object[] array) {
-        return !isEmpty(array);
+    static boolean notEmpty(Object value) {
+        return !isEmpty(value);
     }
 
     /**
-     * 判断数据是否为空
+     * 判断数据对象(Collection, Map, Array)是否为空
      *
-     * @param array 长度
-     * @return 数组对象为null或者长度为 0 时，返回 false
+     * @param value Collection, Map, Array
+     * @return
      */
-    static boolean isEmpty(int[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see If#isEmpty(Object[])
-     */
-    static boolean notEmpty(int[] array) {
-        return !isEmpty(array);
-    }
-
-    /**
-     * 判断数据是否为空
-     *
-     * @param array 长度
-     * @return 数组对象为null或者长度为 0 时，返回 false
-     */
-    static boolean isEmpty(long[] array) {
-        return array == null || array.length == 0;
-    }
-
-
-    /**
-     * 判断数组是否不为空
-     *
-     * @param array 数组
-     * @return 数组对象内含有任意对象时返回 true
-     * @see If#isEmpty(Object[])
-     */
-    static boolean notEmpty(long[] array) {
-        return !isEmpty(array);
+    static boolean isEmpty(Object value) {
+        if (value == null) {
+            return true;
+        } else if (value instanceof Collection) {
+            return ((Collection) value).isEmpty();
+        } else if (value instanceof Map) {
+            return ((Map) value).isEmpty();
+        } else if (value.getClass().isArray()) {
+            return Array.getLength(value) == 0;
+        } else {
+            return false;
+        }
     }
 
     /**
