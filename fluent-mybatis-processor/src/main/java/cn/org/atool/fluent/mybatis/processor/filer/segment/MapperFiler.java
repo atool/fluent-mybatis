@@ -242,10 +242,12 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_updateBy() {
         return this.mapperMethod(UpdateProvider.class, M_updateBy)
-            .addParameter(ParameterSpec.builder(IUpdate.class, "update")
+            .addParameter(ParameterSpec
+                .builder(ArrayTypeName.of(IUpdate.class), "updates")
                 .addAnnotation(annotation_Param("Param_EW"))
                 .addJavadoc(" {@link $T#updateBy($T)}", fluent.sqlProvider(), Map.class)
                 .build())
+            .varargs(true)
             .returns(TypeName.INT)
             .build();
     }

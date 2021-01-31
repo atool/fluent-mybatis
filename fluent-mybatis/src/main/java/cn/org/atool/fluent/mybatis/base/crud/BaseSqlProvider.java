@@ -2,20 +2,22 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * SqlProvider: 动态SQL构造基类
@@ -324,6 +326,10 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         return sql.toString();
     }
 
+    final static String Para_Regex = "#\\{ew\\.wrapperData\\.parameters\\.";
+
+    final static String Para_Format = "#{ew[%d].wrapperData.parameters.";
+
     /**
      * update(IQuery) SQL构造
      *
@@ -331,7 +337,25 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String updateBy(Map<String, Object> map) {
-        WrapperData data = getWrapperData(map, Param_EW);
+        IUpdate[] updaters = (IUpdate[]) map.get(Param_EW);
+        assertNotEmpty(Param_EW, updaters);
+        List<String> list = new ArrayList<>(updaters.length);
+        int index = 0;
+        for (IUpdate updater : updaters) {
+            String sql = this.getUpdaterSql(updater);
+            /**
+             * 替换变量占位符, 数组下标方式
+             */
+            sql = sql.replaceAll(Para_Regex, format(Para_Format, index));
+            index++;
+            list.add(sql);
+        }
+        return list.stream().collect(Collectors.joining(";\n"));
+    }
+
+    private String getUpdaterSql(IUpdate updater) {
+        WrapperData data = updater.getWrapperData();
+        assertNotNull("wrapperData of updater", data);
         Map<String, String> updates = data.getUpdates();
         assertNotEmpty("updates", updates);
 
@@ -343,22 +367,6 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         sql.WHERE_GROUP_ORDER_BY(data);
         sql.LIMIT(data, true);
         return sql.toString();
-    }
-
-    /**
-     * 校验批量插入的数据合法性和设置默认值
-     *
-     * @param list
-     */
-    protected void validateInsertBatch(List<? extends IEntity> list) {
-        Set pks = list.stream()
-            .map(IEntity::findPk)
-            .filter(pk -> pk != null)
-            .collect(toSet());
-        if (!pks.isEmpty() && pks.size() != list.size()) {
-            throw FluentMybatisException.instance("The primary key of the list instance must be assigned to all or none");
-        }
-        list.forEach(this::setEntityByDefault);
     }
 
     /**

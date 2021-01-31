@@ -94,10 +94,10 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
     /**
      * 根据update对象更新记录
      *
-     * @param update
+     * @param updates
      * @return
      */
-    int updateBy(@Param(Param_EW) IUpdate update);
+    int updateBy(@Param(Param_EW) IUpdate... updates);
 
     /**
      * 根据 ID 查询
