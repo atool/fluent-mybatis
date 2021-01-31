@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import cn.org.atool.fluent.mybatis.If;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
@@ -22,6 +22,18 @@ public class WhereObjectTest_In extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE age IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
+    }
+
+    @Test
+    public void in_str() {
+        StudentQuery query = new StudentQuery()
+            .where.address().in(new String[]{"a1", "a2"})
+            .end();
+        mapper.count(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT COUNT(*) FROM student WHERE address IN (?, ?)"
+                , StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqReflect(new String[]{"a1", "a2"});
     }
 
     @Test
