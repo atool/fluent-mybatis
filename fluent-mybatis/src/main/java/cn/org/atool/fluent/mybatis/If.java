@@ -1,5 +1,8 @@
 package cn.org.atool.fluent.mybatis;
 
+import cn.org.atool.fluent.mybatis.ifs.Ifs;
+import cn.org.atool.fluent.mybatis.ifs.InIfs;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -196,7 +199,7 @@ public interface If {
      *
      * @return
      */
-    static <T> Ifs<T> test(Class<T> clazz) {
-        return new Ifs<>();
+    static <T> InIfs<T> testIn() {
+        return new InIfs<T>();
     }
 }

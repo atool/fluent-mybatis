@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.model.IfsPredicate;
+import cn.org.atool.fluent.mybatis.ifs.Ifs;
+import cn.org.atool.fluent.mybatis.ifs.IfsPredicate;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
@@ -13,7 +13,6 @@ import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -79,7 +78,7 @@ public class WhereApply<
         if (op.getArgSize() > 1) {
             throw new IllegalArgumentException("Ifs condition does not apply to the operation:" + op.name());
         }
-        for (IfsPredicate<Predicate, Object> predicate : ifs.predicates) {
+        for (IfsPredicate predicate : ifs.predicates) {
             Object value = predicate.value(op);
             if (predicate.predicate.test(value)) {
                 return this.apply(op, value);

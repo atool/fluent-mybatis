@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
-import java.util.Collection;
-
 public class ApplyFuncTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -125,13 +123,14 @@ public class ApplyFuncTest extends BaseTest {
 
     @Test
     public void test_applyFunc6() throws Exception {
-        long id = 2L;
+        int[] ids = {2, 3};
         StudentUpdate update = new StudentUpdate()
             .update.address().is("address")
             .end()
-            .where.id().in(If.test(Collection.class)
-                .when(list -> list.contains(1), 1, 3)
-                .when(list -> list.contains(2), 2, 3))
+            .where.id().in(If.testIn()
+                .when(list -> list.contains(1), ids)
+                .when(list -> list.contains(2), ids)
+                .other(ids))
             .end();
 
         mapper.updateBy(update);
@@ -141,6 +140,6 @@ public class ApplyFuncTest extends BaseTest {
             .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE id IN (?, ?)",
                 StringMode.SameAsSpace);
         // 验证参数
-        db.sqlList().wantFirstPara().eqReflect(new Object[]{"address", 1L, 3L});
+        db.sqlList().wantFirstPara().eqReflect(new Object[]{"address", 2, 3});
     }
 }

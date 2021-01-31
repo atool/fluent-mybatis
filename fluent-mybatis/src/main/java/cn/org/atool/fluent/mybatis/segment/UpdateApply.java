@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.Ifs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
-import cn.org.atool.fluent.mybatis.model.IfsPredicate;
+import cn.org.atool.fluent.mybatis.ifs.Ifs;
+import cn.org.atool.fluent.mybatis.ifs.IfsPredicate;
 
 import java.util.function.Predicate;
 
@@ -69,7 +69,7 @@ public class UpdateApply<
         if (ifs == null) {
             return this.is((Object) null);
         }
-        for (IfsPredicate<Predicate, Object> predicate : ifs.predicates) {
+        for (IfsPredicate predicate : ifs.predicates) {
             Object value = predicate.value(null);
             if (predicate.predicate.test(value)) {
                 this.is(value);
