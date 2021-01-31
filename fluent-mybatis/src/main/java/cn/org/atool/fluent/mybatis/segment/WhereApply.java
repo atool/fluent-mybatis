@@ -53,20 +53,21 @@ public class WhereApply<
         if (op.getArgSize() == -1) {
             assertNotEmpty(this.current().name, args);
         }
-        if (op == IN && args.length > 1) {
+        if (op == IN && args.length == 1) {
+            Object value = args[0];
+            if (value instanceof Collection) {
+                Object[] arr = ((Collection) value).toArray();
+                assertNotEmpty(this.current().name, arr);
+                if (arr.length > 1) {
+                    return this.segment.apply(this.current(), IN, arr);
+                } else {
+                    value = arr[0];
+                }
+            }
+            return this.segment.apply(this.current(), EQ, value);
+        } else {
             return this.segment.apply(this.current(), op, args);
         }
-        Object value = args[0];
-        if (value instanceof Collection) {
-            Collection list = (Collection) value;
-            assertNotEmpty(this.current().name, list);
-            if (list.size() > 1) {
-                return this.segment.apply(this.current(), op, list.toArray());
-            } else {
-                value = list.iterator().next();
-            }
-        }
-        return this.segment.apply(this.current(), EQ, value);
     }
 
     @Override
