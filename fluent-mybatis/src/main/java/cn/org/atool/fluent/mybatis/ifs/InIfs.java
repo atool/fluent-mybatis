@@ -18,4 +18,15 @@ public class InIfs<T> extends Ifs<Collection> {
         this.predicates.add(new IfsPredicate(v -> true, values));
         return this;
     }
+
+    @Override
+    public InIfs<T> when(Predicate<Collection> predicate, Collection value) {
+        this.predicates.add(new IfsPredicate(predicate, value == null ? null : value.toArray()));
+        return this;
+    }
+
+    @Override
+    public InIfs<T> other(Collection value) {
+        return this.when(v -> true, value);
+    }
 }

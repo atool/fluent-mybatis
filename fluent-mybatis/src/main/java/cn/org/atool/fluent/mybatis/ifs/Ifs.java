@@ -30,7 +30,6 @@ public class Ifs<T> {
     }
 
     public Ifs<T> other(T value) {
-        this.predicates.add(new IfsPredicate(v -> true, value));
-        return this;
+        return this.when(v -> true, value);
     }
 }

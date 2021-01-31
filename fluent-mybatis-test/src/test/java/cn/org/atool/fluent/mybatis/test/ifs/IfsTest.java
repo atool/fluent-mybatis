@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class IfsTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -76,10 +79,32 @@ public class IfsTest extends BaseTest {
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address 2", 2L});
     }
 
+    @Test
+    public void test_InIfs() throws Exception {
+        int[] ids = {2, 3};
+        StudentUpdate update = new StudentUpdate()
+            .update.address().is("address")
+            .end()
+            .where.id().in(If.testIn()
+                .when(list -> list.contains(1), ids)
+                .when(list -> list.contains(2), ids)
+                .other(ids))
+            .end();
+
+        mapper.updateBy(update);
+
+        // 验证SQL语句
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE id IN (?, ?)",
+                StringMode.SameAsSpace);
+        // 验证参数
+        db.sqlList().wantFirstPara().eqReflect(new Object[]{"address", 2, 3});
+    }
+
 
     @Test
-    public void test_Ifs3() throws Exception {
-        int[] ids = {2, 3};
+    public void test_InIfs2() throws Exception {
+        List ids = Arrays.asList(2, 3);
         StudentUpdate update = new StudentUpdate()
             .update.address().is("address")
             .end()
