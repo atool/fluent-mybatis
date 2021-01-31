@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -337,21 +339,37 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String updateBy(Map<String, Object> map) {
-        IUpdate[] updaters = (IUpdate[]) map.get(Param_EW);
-        assertNotEmpty(Param_EW, updaters);
-        List<String> list = new ArrayList<>(updaters.length);
-        int index = 0;
-        for (IUpdate updater : updaters) {
-            String sql = this.getUpdaterSql(updater);
-            /**
-             * 替换变量占位符, 数组下标方式
-             */
-            sql = sql.replaceAll(Para_Regex, format(Para_Format, index));
-            index++;
-            list.add(sql);
+        Object wrapper = map.get(Param_EW);
+        if (If.isEmpty(wrapper)) {
+            throw FluentMybatisException.instance("the parameter[%s] can't be empty.", Param_EW);
         }
-        String text = list.stream().collect(Collectors.joining(";\n"));
-        return text;
+        if (wrapper instanceof IUpdate) {
+            /**
+             * v1.4.11 升级兼容
+             * 兼容应用升级了,但生产代码的独立jar没有升级场景
+             * 后续可以去掉
+             * **/
+            IUpdate updater = (IUpdate) wrapper;
+            String sql = this.getUpdaterSql(updater);
+            return sql;
+        } else if (wrapper instanceof IUpdate[]) {
+            IUpdate[] updaters = (IUpdate[]) wrapper;
+            List<String> list = new ArrayList<>(updaters.length);
+            int index = 0;
+            for (IUpdate updater : updaters) {
+                String sql = this.getUpdaterSql(updater);
+                /**
+                 * 替换变量占位符, 数组下标方式
+                 */
+                sql = sql.replaceAll(Para_Regex, format(Para_Format, index));
+                index++;
+                list.add(sql);
+            }
+            String text = list.stream().collect(Collectors.joining(";\n"));
+            return text;
+        } else {
+            throw new IllegalArgumentException(format("the parameter[%s] type illegal.", Param_EW));
+        }
     }
 
     private String getUpdaterSql(IUpdate updater) {
