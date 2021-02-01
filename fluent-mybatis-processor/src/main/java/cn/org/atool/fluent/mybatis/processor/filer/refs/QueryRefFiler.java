@@ -62,7 +62,8 @@ public class QueryRefFiler extends AbstractFile {
             .returns(IQuery.class);
         if (isRef) {
             spec.addAnnotation(Override.class)
-                .addStatement("return $T.defaultQuery(clazz)", getClassName());
+                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
+                .addStatement("return $T.defaultQuery(entityClass)", getClassName());
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Query实例")
@@ -78,7 +79,8 @@ public class QueryRefFiler extends AbstractFile {
             .returns(IUpdate.class);
         if (isRef) {
             spec.addAnnotation(Override.class)
-                .addStatement("return $T.defaultUpdater(clazz)", getClassName());
+                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
+                .addStatement("return $T.defaultUpdater(entityClass)", getClassName());
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Query实例")

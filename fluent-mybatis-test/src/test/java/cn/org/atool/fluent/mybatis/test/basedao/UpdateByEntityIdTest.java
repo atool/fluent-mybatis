@@ -30,4 +30,21 @@ public class UpdateByEntityIdTest extends BaseTest {
                 .age.values(30)
             );
     }
+
+    @Test
+    public void test_byEntityId2() throws Exception {
+        ATM.dataMap.student.initTable(5)
+            .cleanAndInsert();
+
+        dao.updateById(
+            new StudentEntity().setId(2L).setUserName("test2").setAge(20),
+            new StudentEntity().setId(3L).setUserName("test3").setAge(30));
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student SET gmt_modified = now(), age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+        db.table(ATM.table.student).queryWhere("id=2")
+            .eqDataMap(ATM.dataMap.student.table(1)
+                .userName.values("test3")
+                .age.values(30)
+            );
+    }
 }

@@ -103,13 +103,13 @@ public interface IBaseDao<E extends IEntity> {
         }
         List<IUpdate> updates = new ArrayList<>(entities.length);
         for (E entity : entities) {
-            IUpdate update = IRefs.instance().defaultUpdater(entity.getClass());//TODO
+            IUpdate update = IRefs.instance().defaultUpdater(entity.getClass());
             String primary = ((BaseWrapper) update).primary();
             Map<String, Object> map = entity.toColumnMap();
             boolean hasPrimaryId = false;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 if (Objects.equals(entry.getKey(), primary)) {
-                    update.where().apply(primary, entry.getValue());
+                    update.where().apply(primary = "?", entry.getValue());
                     hasPrimaryId = true;
                 } else {
                     update.updateSet(entry.getKey(), entry.getValue());
