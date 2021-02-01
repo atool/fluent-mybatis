@@ -1,12 +1,11 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * IBaseDao Dao基本操作方法
@@ -101,14 +100,28 @@ public interface IBaseDao<E extends IEntity> {
     default boolean updateById(E... entities) {
         if (entities.length == 1) {
             return this.mapper().updateById(entities[0]) > 0;
-        } else {
-            for (E entity : entities) {
-                entity.toColumnMap();
-
-
-            }
-            return false;//TODO
         }
+        List<IUpdate> updates = new ArrayList<>(entities.length);
+        for (E entity : entities) {
+            IUpdate update = IRefs.instance().defaultUpdater(entity.getClass());//TODO
+            String primary = ((BaseWrapper) update).primary();
+            Map<String, Object> map = entity.toColumnMap();
+            boolean hasPrimaryId = false;
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (Objects.equals(entry.getKey(), primary)) {
+                    update.where().apply(primary, entry.getValue());
+                    hasPrimaryId = true;
+                } else {
+                    update.updateSet(entry.getKey(), entry.getValue());
+                }
+            }
+            if (hasPrimaryId) {
+                updates.add(update);
+            } else {
+                throw new RuntimeException("primary value not found.");
+            }
+        }
+        return this.mapper().updateBy(updates.toArray(new IUpdate[0])) > 0;
     }
 
     /**

@@ -86,7 +86,7 @@ public abstract class AbstractFiler {
     protected MethodSpec m_primary() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("primary")
             .addAnnotation(Override.class)
-            .addModifiers(Modifier.PROTECTED)
+            .addModifiers(Modifier.PUBLIC)
             .returns(String.class);
         if (fluent.getPrimary() == null) {
             builder.addStatement("return null");

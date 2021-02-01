@@ -13,6 +13,19 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 public interface IUpdate<E extends IEntity> {
     /**
+     * 设置更新值
+     *
+     * @param column 更新字段
+     * @param value  更新值
+     * @param <U>
+     * @return
+     */
+    default <U extends IUpdate<E>> U updateSet(String column, Object value) {
+        this.getWrapperData().updateSet(column, value);
+        return (U) this;
+    }
+
+    /**
      * 设置limit值
      *
      * @param limit

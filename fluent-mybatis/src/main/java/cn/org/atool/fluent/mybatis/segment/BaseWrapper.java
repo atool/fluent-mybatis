@@ -59,7 +59,7 @@ public abstract class BaseWrapper<
      *
      * @return 主键字段
      */
-    protected String primary() {
+    public String primary() {
         return null;
     }
 
