@@ -22,6 +22,14 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
+    public void test_deleteById2() throws Exception {
+        ATM.dataMap.student.initTable(10).cleanAndInsert();
+        dao.deleteById(4L, 5L, 6L);
+        db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE id IN (?, ?, ?)");
+        db.table(ATM.table.student).count().eq(7);
+    }
+
+    @Test
     public void test_deleteByIds() throws Exception {
         ATM.dataMap.student.initTable(10).cleanAndInsert();
         dao.deleteByIds(Arrays.asList(4L, 6L, 9L));

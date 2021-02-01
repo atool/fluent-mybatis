@@ -41,7 +41,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param entities
      * @return
      */
-    int insertBatch(List<E> entities);
+    int insertBatch(Collection<E> entities);
 
     /**
      * 批量插入数据，实例主键必须全部已赋值
@@ -49,7 +49,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper {
      * @param entities
      * @return
      */
-    int insertBatchWithPk(List<E> entities);
+    int insertBatchWithPk(Collection<E> entities);
 
     /**
      * 根据id删除记录

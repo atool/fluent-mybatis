@@ -30,6 +30,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.generator.util.ClassNames.CN_List;
 import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
 
 /**
@@ -38,6 +39,8 @@ import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
  * @author darui.wu
  */
 public class MapperFiler extends AbstractFiler {
+
+    private static final ClassName CN_Collection = ClassName.get(Collection.class);
 
     public MapperFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
@@ -218,7 +221,7 @@ public class MapperFiler extends AbstractFiler {
             .addParameter(ParameterSpec.builder(Collection.class, "ids")
                 .addAnnotation(annotation_Param("Param_Coll"))
                 .build())
-            .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
+            .returns(parameterizedType(CN_List, fluent.entity()))
             .build();
     }
 
@@ -305,14 +308,14 @@ public class MapperFiler extends AbstractFiler {
                 this.addSelectKey(builder);
             }
         }
-        return builder.addParameter(parameterizedType(ClassName.get(List.class), fluent.entity()), "entities")
+        return builder.addParameter(parameterizedType(CN_Collection, fluent.entity()), "entities")
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_insertBatchWithPk() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
-        return builder.addParameter(parameterizedType(ClassName.get(List.class), fluent.entity()), "entities")
+        return builder.addParameter(parameterizedType(CN_Collection, fluent.entity()), "entities")
             .returns(TypeName.INT)
             .build();
     }

@@ -25,4 +25,6 @@ public interface StudentDao extends IBaseDao<StudentEntity> {
      * @return
      */
     List<StudentEntity> findStudentsByName(String name);
+
+    void updateAddressAndAgeById(StudentEntity... entities);
 }

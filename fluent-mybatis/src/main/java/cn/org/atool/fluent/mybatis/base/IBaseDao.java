@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param list 实体对象列表
      * @return 插入记录数
      */
-    default int save(List<E> list) {
+    default int save(Collection<E> list) {
         return this.mapper().save(list);
     }
 
@@ -94,11 +95,20 @@ public interface IBaseDao<E extends IEntity> {
     /**
      * 根据entity的主键修改entity中非null属性
      *
-     * @param entity 实体对象
+     * @param entities 实体对象列表
      * @return 是否更新成功
      */
-    default boolean updateById(E entity) {
-        return this.mapper().updateById(entity) > 0;
+    default boolean updateById(E... entities) {
+        if (entities.length == 1) {
+            return this.mapper().updateById(entities[0]) > 0;
+        } else {
+            for (E entity : entities) {
+                entity.toColumnMap();
+
+
+            }
+            return false;//TODO
+        }
     }
 
     /**
@@ -108,6 +118,16 @@ public interface IBaseDao<E extends IEntity> {
      * @return 被执行的记录数
      */
     default int deleteByEntityIds(Collection<E> entities) {
+        return this.mapper().deleteByEntityIds(entities);
+    }
+
+    /**
+     * 根据entities中的id值，批量删除记录
+     *
+     * @param entities
+     * @return 被执行的记录数
+     */
+    default int deleteByEntityIds(E... entities) {
         return this.mapper().deleteByEntityIds(entities);
     }
 
@@ -124,11 +144,16 @@ public interface IBaseDao<E extends IEntity> {
     /**
      * 根据id删除记录
      *
-     * @param id 主键值
+     * @param ids 主键值
      * @return 是否删除成功
      */
-    default boolean deleteById(Serializable id) {
-        return this.mapper().deleteById(id) > 0;
+    default boolean deleteById(Serializable... ids) {
+        if (ids.length == 1) {
+            return this.mapper().deleteById(ids[0]) > 0;
+        } else {
+            List list = Arrays.asList(ids);
+            return this.mapper().deleteByIds(list) > 0;
+        }
     }
 
     /**

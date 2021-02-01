@@ -11,7 +11,8 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
+
+import static cn.org.atool.fluent.mybatis.utility.PoJoHelper.getFields;
 
 public class CaseFuncTest extends BaseTest {
     @Autowired
@@ -107,9 +108,5 @@ public class CaseFuncTest extends BaseTest {
         // 验证参数
         db.sqlList().wantFirstPara()
             .eqReflect(new Object[]{"address 1", "address 2", "address 3", 23, 24, 25, 1L, 2L, 3L});
-    }
-
-    private Object[] getFields(List<StudentEntity> students, Function<StudentEntity, Object> getField) {
-        return students.stream().map(getField).toArray(Object[]::new);
     }
 }

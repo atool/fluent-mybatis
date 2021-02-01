@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,11 +37,21 @@ public interface IProtectedDao<E extends IEntity> {
     /**
      * 根据update设置更新记录
      *
-     * @param update 更新条件
-     * @return 更新成功记录数
+     * @param updates 更新条件
+     * @return 最后一个更新, 成功记录数
      */
-    default int updateBy(IUpdate<E> update) {
-        return this.mapper().updateBy(update);
+    default int updateBy(IUpdate... updates) {
+        return this.mapper().updateBy(updates);
+    }
+
+    /**
+     * 根据update设置更新记录
+     *
+     * @param updates 更新条件
+     * @return 最后一个更新, 成功记录数
+     */
+    default int updateBy(Collection<IUpdate> updates) {
+        return this.mapper().updateBy(updates.toArray(new IUpdate[0]));
     }
 
     /**

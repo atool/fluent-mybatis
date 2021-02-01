@@ -11,10 +11,7 @@ import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import lombok.NonNull;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 import static java.util.stream.Collectors.toList;
@@ -82,7 +79,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param list 实体对象列表
      * @return 插入记录数
      */
-    default int save(List<E> list) {
+    default int save(Collection<E> list) {
         boolean hasPk = false;
         for (E entity : list) {
             if (entity.findPk() != null) {
@@ -321,5 +318,15 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
             .map(IEntity::findPk)
             .collect(toList());
         return this.deleteByIds(ids);
+    }
+
+    /**
+     * 根据entities中的id值，批量删除记录
+     *
+     * @param entities
+     * @return 被执行的记录数
+     */
+    default int deleteByEntityIds(E... entities) {
+        return this.deleteByEntityIds(Arrays.asList(entities));
     }
 }

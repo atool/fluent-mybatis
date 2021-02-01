@@ -14,6 +14,7 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.util.stream.Collectors.toList;
@@ -147,5 +148,17 @@ public class PoJoHelper {
             throw new FluentMybatisException("The offset of TagList should from zero, please use method: limit(size) or limit(0, size) .");
         }
         return paged.getLimit();
+    }
+
+    /**
+     * 返回list对象属性值数组
+     *
+     * @param list
+     * @param getFunc 获取list元素对应属性方法
+     * @param <T>
+     * @return 属性值数组
+     */
+    public static <T> Object[] getFields(List<T> list, Function<T, Object> getFunc) {
+        return list.stream().map(getFunc).toArray(Object[]::new);
     }
 }
