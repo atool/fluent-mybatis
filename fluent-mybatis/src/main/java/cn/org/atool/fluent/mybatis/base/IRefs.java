@@ -61,12 +61,28 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
     public abstract IQuery defaultQuery(Class<? extends IEntity> clazz);
 
     /**
+     * 返回clazz实体对应的空Query实例
+     *
+     * @param clazz
+     * @return
+     */
+    public abstract IQuery emptyQuery(Class<? extends IEntity> clazz);
+
+    /**
      * 返回clazz实体对应的默认Updater实例
      *
      * @param clazz
      * @return
      */
     public abstract IUpdate defaultUpdater(Class<? extends IEntity> clazz);
+
+    /**
+     * 返回clazz实体对应的空Updater实例
+     *
+     * @param clazz
+     * @return
+     */
+    public abstract IUpdate emptyUpdater(Class<? extends IEntity> clazz);
 
     /**
      * 返回clazz属性field对应的数据库字段名称

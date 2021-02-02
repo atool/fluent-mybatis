@@ -2,14 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-test-parent</artifactId>
         <version>1.0.1</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-test</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <properties>
         <fluent-mybatis.version>1.4.12</fluent-mybatis.version>
         <fluent-mock.version>1.0.8</fluent-mock.version>
@@ -21,6 +24,12 @@
             <artifactId>test4j-junit5</artifactId>
             <version>${test4j-junit5.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis-processor</artifactId>
+            <version>${fluent-mybatis.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

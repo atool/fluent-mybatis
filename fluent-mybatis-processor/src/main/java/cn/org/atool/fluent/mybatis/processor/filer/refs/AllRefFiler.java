@@ -13,8 +13,7 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.m_defaultQuery;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.m_defaultUpdater;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
 import static cn.org.atool.generator.util.ClassNames.CN_Class_IEntity;
 import static cn.org.atool.generator.util.ClassNames.CN_Set;
 
@@ -47,7 +46,9 @@ public class AllRefFiler extends AbstractFile {
             .addMethod(m_findColumnByField(true))
             .addMethod(m_findPrimaryColumn(true))
             .addMethod(m_defaultQuery(true))
+            .addMethod(m_emptyQuery(true))
             .addMethod(m_defaultUpdater(true))
+            .addMethod(m_emptyUpdater(true))
             .addMethod(this.m_allEntityClass())
             .addMethod(this.m_initEntityMapper());
         spec.addType(this.class_field())

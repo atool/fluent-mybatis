@@ -44,7 +44,9 @@ public class QueryRefFiler extends AbstractFile {
         spec.addField(this.f_allQuerySupplier())
             .addStaticBlock(this.m_initSupplier())
             .addMethod(m_defaultQuery(false))
+            .addMethod(m_emptyQuery(false))
             .addMethod(m_defaultUpdater(false))
+            .addMethod(m_emptyUpdater(false))
             .addMethod(this.m_findDefaultGetter());
     }
 
@@ -72,6 +74,23 @@ public class QueryRefFiler extends AbstractFile {
         return spec.build();
     }
 
+    public static MethodSpec m_emptyQuery(boolean isRef) {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder("emptyQuery")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addParameter(Class.class, "clazz")
+            .returns(IQuery.class);
+        if (isRef) {
+            spec.addAnnotation(Override.class)
+                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
+                .addStatement("return $T.emptyQuery(entityClass)", getClassName());
+        } else {
+            spec.addModifiers(Modifier.STATIC)
+                .addJavadoc("返回clazz实体对应的空Query实例")
+                .addStatement("\treturn findDefault(clazz).query()");
+        }
+        return spec.build();
+    }
+
     public static MethodSpec m_defaultUpdater(boolean isRef) {
         MethodSpec.Builder spec = MethodSpec.methodBuilder("defaultUpdater")
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
@@ -83,8 +102,25 @@ public class QueryRefFiler extends AbstractFile {
                 .addStatement("return $T.defaultUpdater(entityClass)", getClassName());
         } else {
             spec.addModifiers(Modifier.STATIC)
-                .addJavadoc("返回clazz实体对应的默认Query实例")
+                .addJavadoc("返回clazz实体对应的默认Updater实例")
                 .addStatement("\treturn findDefault(clazz).defaultUpdater()");
+        }
+        return spec.build();
+    }
+
+    public static MethodSpec m_emptyUpdater(boolean isRef) {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder("emptyUpdater")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addParameter(Class.class, "clazz")
+            .returns(IUpdate.class);
+        if (isRef) {
+            spec.addAnnotation(Override.class)
+                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
+                .addStatement("return $T.emptyUpdater(entityClass)", getClassName());
+        } else {
+            spec.addModifiers(Modifier.STATIC)
+                .addJavadoc("返回clazz实体对应的空Updater实例")
+                .addStatement("\treturn findDefault(clazz).updater()");
         }
         return spec.build();
     }

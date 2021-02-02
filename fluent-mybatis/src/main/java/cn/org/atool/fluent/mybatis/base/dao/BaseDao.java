@@ -5,6 +5,9 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * BaseDaoImpl
  *
@@ -40,4 +43,22 @@ public abstract class BaseDao<E extends IEntity> implements IBaseDao<E>, IProtec
      * @return
      */
     protected abstract <U extends IUpdate<E>> U defaultUpdater();
+
+    @Override
+    public boolean updateEntityByIds(E... entities) {
+        List<IUpdate> updates = new ArrayList<>(entities.length);
+        for (IEntity entity : entities) {
+            IUpdate update = DaoHelper.buildUpdateEntityById(this::updater, entity);
+            updates.add(update);
+        }
+        int count = this.mapper().updateBy(updates.toArray(new IUpdate[0]));
+        return count > 0;
+    }
+
+    @Override
+    public int updateBy(E updateNoN, E whereNoN) {
+        IUpdate updater = DaoHelper.buildUpdateByEntityNoN(this::defaultUpdater, updateNoN, whereNoN);
+        int count = this.updateBy(updater);
+        return count;
+    }
 }

@@ -45,4 +45,17 @@ public class SelectByIdTest extends BaseTest {
             .userName.values("username_3", "username_5")
         );
     }
+
+    @Test
+    public void test_selectByIds2() throws Exception {
+        ATM.dataMap.student.initTable(10)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .cleanAndInsert();
+        List<StudentEntity> users = dao.selectByIds(3L, 5L);
+        db.sqlList().wantFirstSql()
+            .where().eq("id IN (?, ?)");
+        want.object(users).eqDataMap(ATM.dataMap.student.entity(2)
+            .userName.values("username_3", "username_5")
+        );
+    }
 }
