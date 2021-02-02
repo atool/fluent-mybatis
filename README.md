@@ -13,6 +13,9 @@
 ![-w930](image/fluent-mybatis-driver.png)
 
 ## Fluent-Mybatis 历程
+
+[release note](release/v1.4.x.md)
+
 - 1.4.3 版本, 支持java 9+编译生成代码
 - 1.4.2 版本, 增加一对一, 一对多和多对多支持
 - 1.4.1 版本, 特性升级, 增加join, left join, right join连表查询; 支持自定义默认查询条件，更新条件。

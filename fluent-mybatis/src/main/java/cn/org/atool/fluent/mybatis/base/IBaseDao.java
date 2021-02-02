@@ -117,6 +117,16 @@ public interface IBaseDao<E extends IEntity> {
     boolean updateEntityByIds(E... entities);
 
     /**
+     * 根据entity的主键批量修改entity中非null属性
+     *
+     * @param entities 实体对象列表
+     * @return 是否更新成功
+     */
+    default boolean updateEntityByIds(Collection<E> entities) {
+        return this.updateEntityByIds((E[]) entities.toArray());
+    }
+
+    /**
      * 根据whereNoN非空属性作为相等条件, 更新updateNoN非空属性字段
      *
      * @param updateNoN

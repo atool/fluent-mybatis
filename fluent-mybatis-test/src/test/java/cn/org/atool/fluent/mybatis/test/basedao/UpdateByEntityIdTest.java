@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
+import java.util.Arrays;
+
 /**
  * @author darui.wu
  * @create 2019/10/29 9:35 下午
@@ -39,6 +41,25 @@ public class UpdateByEntityIdTest extends BaseTest {
         dao.updateEntityByIds(
             new StudentEntity().setId(2L).setUserName("test2").setAge(20),
             new StudentEntity().setId(3L).setUserName("test3").setAge(30));
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? WHERE id = ?; " +
+            "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? WHERE id = ?", StringMode.SameAsSpace);
+        db.table(ATM.table.student).queryWhere("id in (2, 3)")
+            .eqDataMap(ATM.dataMap.student.table(2)
+                .userName.values("test2", "test3")
+                .age.values(20, 30)
+            );
+    }
+
+
+    @Test
+    public void test_byEntityId_Collection() throws Exception {
+        ATM.dataMap.student.initTable(5)
+            .cleanAndInsert();
+
+        dao.updateEntityByIds(Arrays.asList(
+            new StudentEntity().setId(2L).setUserName("test2").setAge(20),
+            new StudentEntity().setId(3L).setUserName("test3").setAge(30)));
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? WHERE id = ?; " +
             "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? WHERE id = ?", StringMode.SameAsSpace);
