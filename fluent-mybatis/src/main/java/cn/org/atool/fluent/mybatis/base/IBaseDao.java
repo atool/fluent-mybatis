@@ -109,6 +109,16 @@ public interface IBaseDao<E extends IEntity> {
     }
 
     /**
+     * 根据entity的主键修改entity中非null属性
+     *
+     * @param entity 实体对象
+     * @return 是否更新成功
+     */
+    default boolean updateById(E entity) {
+        return this.mapper().updateById(entity) > 0;
+    }
+
+    /**
      * 根据entity的主键批量修改entity中非null属性
      *
      * @param entities 实体对象列表
