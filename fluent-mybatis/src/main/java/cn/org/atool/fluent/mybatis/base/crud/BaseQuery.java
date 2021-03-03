@@ -62,6 +62,7 @@ public abstract class BaseQuery<
      *
      * @return
      */
+    @Override
     public Q selectAll() {
         this.allFields().stream().map(c -> alias(this.alias, c)).forEach(this::select);
         return (Q) this;
@@ -107,5 +108,6 @@ public abstract class BaseQuery<
         return (Q) this;
     }
 
+    @Override
     public abstract List<String> allFields();
 }

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.splice;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
+import cn.org.atool.fluent.mybatis.generate.helper.MemberMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import lombok.Setter;
@@ -31,10 +32,12 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test_alias() {
         FreeQuery query = new FreeQuery("t_member", "t1");
-        query.select("id", "gmt_modified")
-            .where().apply("id", EQ, "1").end()
-        ;
+        query.select
+            .apply("id")
+            .applyAs(MemberMapping.gmtModified , "modifiedDate").end()
+            .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
+        db.sqlList().wantFirstSql().eq("SELECT id, gmt_modified AS modifiedDate FROM t_member t1 WHERE id = ?");
     }
 
     @Test
