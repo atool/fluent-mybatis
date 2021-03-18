@@ -79,11 +79,11 @@ public class SqlProviderUtils {
             case SQL_SERVER2005:
                 throw new RuntimeException("not support");
             case HSQL:
+            case POSTGRE_SQL:
                 return sql + String.format(" LIMIT %s OFFSET %s", Wrapper_Paged_Size, Wrapper_Paged_Offset);
             case MYSQL:
             case MARIADB:
             case SQLITE:
-            case POSTGRE_SQL:
             case H2:
             default:
                 return sql + String.format(" LIMIT %s, %s ", Wrapper_Paged_Offset, Wrapper_Paged_Size);
