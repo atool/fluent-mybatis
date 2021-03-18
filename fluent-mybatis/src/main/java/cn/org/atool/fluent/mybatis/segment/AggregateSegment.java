@@ -12,6 +12,10 @@ public abstract class AggregateSegment<
     >
     extends BaseSegment<R, Q> {
     public final S and = (S) this;
+    /**
+     * 聚合对象max,min,sum...等实例的原始实例来源(aggregate=null)
+     */
+    protected S origin;
 
     protected final IAggregate aggregate;
 
@@ -44,9 +48,10 @@ public abstract class AggregateSegment<
             .init(group_concat);
     }
 
-    protected AggregateSegment(S segment, IAggregate aggregate) {
-        super((Q) segment.wrapper);
+    protected AggregateSegment(S origin, IAggregate aggregate) {
+        super((Q) origin.wrapper);
         this.aggregate = aggregate;
+        this.origin = origin;
     }
 
     S init(S selector) {
@@ -66,4 +71,8 @@ public abstract class AggregateSegment<
      * @return
      */
     protected abstract S aggregateSegment(IAggregate aggregate);
+
+    protected S getOrigin() {
+        return this.aggregate == null || this.origin == null ? (S) this : this.origin;
+    }
 }

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
@@ -65,7 +66,6 @@ public abstract class BaseWrapper<
 
     /**
      * 判断字段是否在范围内
-     *
      * @param column 字段
      * @return 如果不是合法字段，抛出异常
      * @throws FluentMybatisException 字段校验异常
@@ -94,12 +94,10 @@ public abstract class BaseWrapper<
      * @return
      */
     protected String appendAlias(String column) {
-        if (isBlank(this.alias)) {
-            return column;
-        } else if (column.startsWith(alias + ".")) {
-            return column;
-        } else {
+        if (notBlank(this.alias) && FieldMapping.isColumnName(column)) {
             return alias + "." + column;
+        } else {
+            return column;
         }
     }
 }

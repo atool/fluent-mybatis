@@ -14,7 +14,7 @@
     <artifactId>fluent-mybatis-test</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <properties>
-        <fluent-mybatis.version>1.4.13</fluent-mybatis.version>
+        <fluent-mybatis.version>1.4.14</fluent-mybatis.version>
         <fluent-mock.version>1.0.8</fluent-mock.version>
         <test4j-junit5.version>2.7.3</test4j-junit5.version>
     </properties>

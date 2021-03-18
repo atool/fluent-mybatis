@@ -19,7 +19,7 @@ public abstract class HavingBase<
     >
     extends AggregateSegment<H, Q, HavingOperator<H>> {
 
-    protected final HavingOperator<H> operator = new HavingOperator<>((H) this);
+    protected final HavingOperator<H> operator = new HavingOperator<>(super.getOrigin());
 
     protected HavingBase(Q query) {
         super(query);
@@ -69,7 +69,12 @@ public abstract class HavingBase<
      * @return Having条件判断
      */
     public HavingOperator<H> apply(String aggregate) {
-        return this.operator.aggregate(null, (c) -> aggregate);
+        if (this.aggregate == null) {
+            return this.operator.aggregate(null, (c) -> aggregate);
+        } else {
+            this.operator.aggregate(this.columnWithAlias(aggregate), this.aggregate);
+            return this.operator;
+        }
     }
 
     @Override

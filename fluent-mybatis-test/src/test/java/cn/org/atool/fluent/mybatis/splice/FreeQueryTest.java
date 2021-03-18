@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -54,6 +55,46 @@ public class FreeQueryTest extends BaseTest {
             .limit(20);
 
         mapper.findOne(query.build());
+    }
+
+    @DisplayName("三表关联")
+    @Test
+    void test_join3() {
+        FreeQuery query1 = new FreeQuery("t_member", "t1");
+        query1.select("t1.id", "t1.gmt_modified")
+            .where.apply("id", EQ, "1").end();
+
+        FreeQuery query2 = new FreeQuery("t_member", "t2", query1);
+        query1.select("t2.id", "t2.gmt_modified")
+            .where.apply("id", EQ, "1").end();
+
+        FreeQuery query3 = new FreeQuery("t_member2", "t3", query1);
+        query1.select("t3.id", "t3.gmt_modified")
+            .where.apply("id", EQ, "1").end();
+
+        JoinBuilder query = JoinBuilder
+            .from(query1)
+            .join(query2)
+            .on("t1.id = t2.id")
+            .leftJoin(query3)
+            .on("t1.id=t3.id")
+            .limit(20);
+
+        try {
+            mapper.findOne(query.distinct().build());
+            want.fail();
+        } catch (Exception e) {
+            db.sqlList().wantFirstSql().eq("" +
+                "SELECT DISTINCT t1.id, t1.gmt_modified, t2.id, t2.gmt_modified, t3.id, t3.gmt_modified " +
+                "FROM  t_member t1 JOIN t_member t2 " +
+                "ON t1.id = t2.id " +
+                "LEFT JOIN t_member2 t3 " +
+                "ON t1.id=t3.id  " +
+                "WHERE t1.id = ?  " +
+                "AND  t1.id = ?  " +
+                "AND  t1.id = ? " +
+                "LIMIT ?, ?", StringMode.SameAsSpace);
+        }
     }
 
     IQuery buildFreeJoin(QueryModel bean) {

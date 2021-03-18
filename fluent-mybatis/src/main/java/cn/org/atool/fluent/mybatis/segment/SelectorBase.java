@@ -26,8 +26,8 @@ public abstract class SelectorBase<
         super(query);
     }
 
-    protected SelectorBase(S selector, IAggregate aggregate) {
-        super(selector, aggregate);
+    protected SelectorBase(S origin, IAggregate aggregate) {
+        super(origin, aggregate);
     }
 
     /**
@@ -37,11 +37,19 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S apply(String column, String... columns) {
-        this.wrapperData().addSelectColumn(column);
-        if (If.notEmpty(columns)) {
-            Stream.of(columns).forEach(this.wrapperData()::addSelectColumn);
+        if (this.aggregate != null) {
+            if (columns == null || columns.length > 0) {
+                throw new RuntimeException("Aggregate functions allow only one column.");
+            }
+            String expression = aggregate.aggregate(column);
+            return this.applyAs(expression, null);
+        } else {
+            this.wrapperData().addSelectColumn(column);
+            if (If.notEmpty(columns)) {
+                Stream.of(columns).forEach(this.wrapperData()::addSelectColumn);
+            }
+            return super.getOrigin();
         }
-        return (S) this;
     }
 
     /**
@@ -51,13 +59,22 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S apply(FieldMapping... columns) {
-        if (If.notEmpty(columns)) {
+        if (columns == null || columns.length == 0) {
+            throw new RuntimeException("Apply column missing.");
+        }
+        if (this.aggregate != null) {
+            if (columns.length != 1) {
+                throw new RuntimeException("Aggregate functions allow only one column.");
+            }
+            this.current = columns[0];
+            return this.apply(this.aggregate, null);
+        } else {
             Stream.of(columns)
                 .filter(c -> c != null)
                 .map(this::columnWithAlias)
                 .forEach(this.wrapperData()::addSelectColumn);
+            return super.getOrigin();
         }
-        return (S) this;
     }
 
     /**
@@ -76,7 +93,7 @@ public abstract class SelectorBase<
             select = select + AS + alias;
         }
         this.wrapperData().addSelectColumn(select);
-        return (S) this;
+        return super.getOrigin();
     }
 
     /**
@@ -102,7 +119,7 @@ public abstract class SelectorBase<
     public S apply(FieldPredicate predicate) {
         String select = this.wrapper.getTableMeta().filter(false, predicate);
         this.wrapperData().addSelectColumn(select);
-        return (S) this;
+        return super.getOrigin();
     }
 
     @Override
@@ -131,7 +148,7 @@ public abstract class SelectorBase<
      */
     private S apply(IAggregate aggregate, String alias) {
         if (this.current == null) {
-            return (S) this;
+            return this.origin == null ? (S) this : this.origin;
         }
         String expression = aggregate == null ? this.currentWithAlias() : aggregate.aggregate(this.currentWithAlias());
         return this.applyAs(expression, alias);
