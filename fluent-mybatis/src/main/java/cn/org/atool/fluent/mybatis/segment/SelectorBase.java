@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -70,7 +71,7 @@ public abstract class SelectorBase<
             return this.apply(this.aggregate, null);
         } else {
             Stream.of(columns)
-                .filter(c -> c != null)
+                .filter(Objects::nonNull)
                 .map(this::columnWithAlias)
                 .forEach(this.wrapperData()::addSelectColumn);
             return super.getOrigin();
@@ -78,16 +79,27 @@ public abstract class SelectorBase<
     }
 
     /**
-     * select customized as alias
+     * 增加带别名的查询字段
      *
-     * @param customized 字段或函数
-     * @param alias      别名, 为空时没有别名
+     * @param field   查询字段
+     * @param alias   别名, 为空时没有别名
      * @return 查询字段选择器
      */
-    public S applyAs(String customized, String alias) {
-        String select = customized;
-        if (notBlank(this.wrapper.alias) && BaseWrapperHelper.isColumnName(customized)) {
-            select = this.wrapper.alias + "." + customized;
+    public S applyAs(FieldMapping field, String alias) {
+        return applyAs(field.column, alias);
+    }
+
+    /**
+     * 增加带别名的查询字段
+     *
+     * @param column  查询字段
+     * @param alias   别名, 为空时没有别名
+     * @return 查询字段选择器
+     */
+    public S applyAs(String column, String alias) {
+        String select = column;
+        if (notBlank(this.wrapper.alias) && BaseWrapperHelper.isColumnName(column)) {
+            select = this.wrapper.alias + "." + column;
         }
         if (notBlank(alias)) {
             select = select + AS + alias;
