@@ -38,20 +38,20 @@ public abstract class BaseWrapper<
     /**
      * 表别名
      */
-    protected final String alias;
+    protected final String tableAlias;
 
     @Getter
     protected final WrapperData wrapperData;
 
-    protected BaseWrapper(String table, String alias, Class<E> entityClass, Class queryClass) {
-        this(table, alias, new Parameters(), entityClass, queryClass);
+    protected BaseWrapper(String table, String tableAlias, Class<E> entityClass, Class queryClass) {
+        this(table, tableAlias, new Parameters(), entityClass, queryClass);
     }
 
-    protected BaseWrapper(String table, String alias, Parameters parameters, Class<E> entityClass, Class queryClass) {
+    protected BaseWrapper(String table, String tableAlias, Parameters parameters, Class<E> entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
-        this.alias = isBlank(alias) ? EMPTY : alias.trim();
-        this.wrapperData = new WrapperData(table, this.alias, parameters, entityClass, queryClass);
+        this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();
+        this.wrapperData = new WrapperData(table, this.tableAlias, parameters, entityClass, queryClass);
     }
 
     /**
@@ -94,8 +94,8 @@ public abstract class BaseWrapper<
      * @return
      */
     protected String appendAlias(String column) {
-        if (notBlank(this.alias) && FieldMapping.isColumnName(column)) {
-            return alias + "." + column;
+        if (notBlank(this.tableAlias) && FieldMapping.isColumnName(column)) {
+            return tableAlias + "." + column;
         } else {
             return column;
         }

@@ -57,7 +57,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     }
 
     public FreeQuery emptyQuery() {
-        return new FreeQuery(super.table, super.alias);
+        return new FreeQuery(super.table, super.tableAlias);
     }
 
     @Override

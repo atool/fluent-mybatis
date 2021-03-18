@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.segment.BaseWrapperHelper.isColumnName;
 
 /**
  * BaseSelector: 查询字段构造
@@ -42,12 +43,11 @@ public abstract class SelectorBase<
             if (columns == null || columns.length > 0) {
                 throw new RuntimeException("Aggregate functions allow only one column.");
             }
-            String expression = aggregate.aggregate(column);
-            return this.applyAs(expression, null);
+            return this.applyAs(column, null);
         } else {
-            this.wrapperData().addSelectColumn(column);
+            this.applyAs(column, null);
             if (If.notEmpty(columns)) {
-                Stream.of(columns).forEach(this.wrapperData()::addSelectColumn);
+                Stream.of(columns).forEach(c -> this.applyAs(c, null));
             }
             return super.getOrigin();
         }
@@ -68,7 +68,7 @@ public abstract class SelectorBase<
                 throw new RuntimeException("Aggregate functions allow only one column.");
             }
             this.current = columns[0];
-            return this.apply(this.aggregate, null);
+            return this.applyAs(columns[0].column, null);
         } else {
             Stream.of(columns)
                 .filter(Objects::nonNull)
@@ -81,8 +81,8 @@ public abstract class SelectorBase<
     /**
      * 增加带别名的查询字段
      *
-     * @param field   查询字段
-     * @param alias   别名, 为空时没有别名
+     * @param field 查询字段
+     * @param alias 别名, 为空时没有别名
      * @return 查询字段选择器
      */
     public S applyAs(FieldMapping field, String alias) {
@@ -92,14 +92,17 @@ public abstract class SelectorBase<
     /**
      * 增加带别名的查询字段
      *
-     * @param column  查询字段
-     * @param alias   别名, 为空时没有别名
+     * @param column 查询字段
+     * @param alias  别名, 为空时没有别名
      * @return 查询字段选择器
      */
-    public S applyAs(String column, String alias) {
+    public S applyAs(final String column, final String alias) {
         String select = column;
-        if (notBlank(this.wrapper.alias) && BaseWrapperHelper.isColumnName(column)) {
-            select = this.wrapper.alias + "." + column;
+        if (notBlank(this.wrapper.tableAlias) && isColumnName(column)) {
+            select = this.wrapper.tableAlias + "." + column;
+        }
+        if (this.aggregate != null) {
+            select = aggregate.aggregate(select);
         }
         if (notBlank(alias)) {
             select = select + AS + alias;
@@ -136,7 +139,7 @@ public abstract class SelectorBase<
 
     @Override
     protected S apply() {
-        return this.apply(this.aggregate, null);
+        return this.applyAs(this.current.column, null);
     }
 
     /**
@@ -148,7 +151,7 @@ public abstract class SelectorBase<
      */
     protected S process(FieldMapping field, String alias) {
         this.current = field;
-        return this.apply(this.aggregate, alias);
+        return this.applyAs(field, alias);
     }
 
     /**

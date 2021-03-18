@@ -57,9 +57,9 @@ public class JoinWrapperData extends WrapperData {
         if (!this.sqlSelect.isEmpty()) {
             return super.getSqlSelect();
         }
-        this.query.allFields().forEach(c -> this.sqlSelect.add(alias(query.alias, (String) c)));
+        this.query.allFields().forEach(c -> this.sqlSelect.add(alias(query.tableAlias, (String) c)));
         for (BaseQuery query : this.queries) {
-            query.allFields().forEach(c -> this.sqlSelect.add(alias(query.alias, (String) c)));
+            query.allFields().forEach(c -> this.sqlSelect.add(alias(query.tableAlias, (String) c)));
         }
         selectMerged = true;
         return super.getSqlSelect();

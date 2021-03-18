@@ -64,7 +64,7 @@ public abstract class BaseQuery<
      */
     @Override
     public Q selectAll() {
-        this.allFields().stream().map(c -> alias(this.alias, c)).forEach(this::select);
+        this.allFields().stream().map(c -> alias(this.tableAlias, c)).forEach(this::select);
         return (Q) this;
     }
 
@@ -73,7 +73,7 @@ public abstract class BaseQuery<
         if (this.primary() == null) {
             throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
         } else {
-            return this.select(alias(this.alias, this.primary()));
+            return this.select(alias(this.tableAlias, this.primary()));
         }
     }
 

@@ -21,7 +21,7 @@ public class BaseWrapperHelper {
      * @return
      */
     public static boolean isBlankAlias(BaseWrapper wrapper) {
-        return isBlank(wrapper.alias);
+        return isBlank(wrapper.tableAlias);
     }
 
     public static boolean isColumnName(String word) {

@@ -38,7 +38,18 @@ public class FreeQueryTest extends BaseTest {
             .applyAs(MemberMapping.gmtModified , "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
-        db.sqlList().wantFirstSql().eq("SELECT id, gmt_modified AS modifiedDate FROM t_member t1 WHERE id = ?");
+        db.sqlList().wantFirstSql().eq("SELECT t1.id, t1.gmt_modified AS modifiedDate FROM t_member t1 WHERE t1.id = ?");
+    }
+
+    @Test
+    void test_sum_alias() {
+        FreeQuery query = new FreeQuery("t_member", "t1");
+        query.select
+            .apply("id")
+            .max.applyAs(MemberMapping.gmtModified , "modifiedDate").end()
+            .where().apply("id", EQ, "1").end();
+        mapper.findOne(query);
+        db.sqlList().wantFirstSql().eq("SELECT t1.id, MAX(t1.gmt_modified) AS modifiedDate FROM t_member t1 WHERE t1.id = ?");
     }
 
     @Test
