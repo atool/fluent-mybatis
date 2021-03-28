@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -30,17 +31,17 @@ public abstract class BaseQuery<
     implements IBaseQuery<E, Q> {
 
     protected BaseQuery(String table, Class entityClass, Class queryClass) {
-        super(table, EMPTY, entityClass, queryClass);
+        super(() -> table, EMPTY, entityClass, queryClass);
     }
 
-    protected BaseQuery(String table, String alias, Class entityClass, Class queryClass) {
+    protected BaseQuery(Supplier<String> table, String alias, Class entityClass, Class queryClass) {
         super(table, alias, entityClass, queryClass);
     }
 
     /**
      * 非对外公开的构造方法,只用于生产嵌套 sql
      */
-    protected BaseQuery(String table, Parameters parameters, Class entityClass, Class queryClass) {
+    protected BaseQuery(Supplier<String> table, Parameters parameters, Class entityClass, Class queryClass) {
         super(table, EMPTY, parameters, entityClass, queryClass);
     }
 
@@ -48,6 +49,10 @@ public abstract class BaseQuery<
      * 非对外公开的构造方法,只用于生产嵌套 sql
      */
     protected BaseQuery(String table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
+        super(() -> table, alias, parameters, entityClass, queryClass);
+    }
+
+    protected BaseQuery(Supplier<String> table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
         super(table, alias, parameters, entityClass, queryClass);
     }
 

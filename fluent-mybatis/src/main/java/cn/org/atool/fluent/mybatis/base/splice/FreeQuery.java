@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Selector;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhere;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
@@ -49,11 +50,25 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     }
 
     public FreeQuery(String table, String alias) {
+        super(() -> table, alias, EmptyEntity.class, FreeQuery.class);
+    }
+
+    public FreeQuery(Supplier<String> table, String alias) {
         super(table, alias, EmptyEntity.class, FreeQuery.class);
     }
 
     public FreeQuery(String table, String alias, IQuery join) {
-        super(table, alias, join.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
+        super(() -> table, alias, join.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
+    }
+
+    /**
+     * 嵌套子查询 select * from (select * ...) alias;
+     *
+     * @param child
+     * @param alias
+     */
+    public FreeQuery(IQuery child, String alias) {
+        super(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias, child.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
     }
 
     public FreeQuery emptyQuery() {

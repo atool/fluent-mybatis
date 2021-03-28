@@ -70,23 +70,32 @@ public class PoJoHelper {
      * @return 根据Map值设置后的对象
      */
     public static <POJO> POJO toPoJo(@NonNull Class<POJO> clazz, @NonNull Map<String, Object> map) {
-        try {
-            POJO target = clazz.getDeclaredConstructor().newInstance();
-            MetaObject metaObject = MetaObject.forObject(target, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String name = MybatisUtil.underlineToCamel(entry.getKey(), false);
-
+        POJO target = newInstance(clazz);
+        MetaObject metaObject = MetaObject.forObject(target, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String name = MybatisUtil.underlineToCamel(entry.getKey(), false);
+            Class<?> type = metaObject.getSetterType(name);
+            try {
                 Object value = entry.getValue();
                 if (value == null) {
                     metaObject.setValue(name, null);
                 }
-                Class<?> type = metaObject.getSetterType(name);
+
                 if (type.isAssignableFrom(value.getClass())) {
                     metaObject.setValue(name, value);
                 } else {
                     setDefaultType(type, metaObject, name, value);
                 }
+            } catch (Exception e) {
+                throw new RuntimeException("convert map to object[type=" + clazz.getName() + ", property=" + entry.getKey() + ", type=" + type.getName() + "] error: " + e.getMessage(), e);
             }
+        }
+        return target;
+    }
+
+    private static <POJO> POJO newInstance(Class<POJO> clazz) {
+        try {
+            POJO target = clazz.getDeclaredConstructor().newInstance();
             return target;
         } catch (Exception e) {
             throw new RuntimeException("convert map to object[type=" + clazz.getName() + "] error: " + e.getMessage(), e);
@@ -128,6 +137,8 @@ public class PoJoHelper {
             metaObject.setValue(name, Long.parseLong(value.toString()));
         } else if (type == Integer.class) {
             metaObject.setValue(name, Integer.parseInt(value.toString()));
+        } else if (type == Boolean.class) {
+            metaObject.setValue(name, ObjectArray.toBoolean(value));
         } else {
             metaObject.setValue(name, value);
         }

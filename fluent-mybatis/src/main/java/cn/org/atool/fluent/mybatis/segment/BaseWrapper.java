@@ -12,6 +12,7 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -34,7 +35,7 @@ public abstract class BaseWrapper<
     implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
 
-    protected final String table;
+    protected final Supplier<String> table;
     /**
      * 表别名
      */
@@ -43,11 +44,11 @@ public abstract class BaseWrapper<
     @Getter
     protected final WrapperData wrapperData;
 
-    protected BaseWrapper(String table, String tableAlias, Class<E> entityClass, Class queryClass) {
+    protected BaseWrapper(Supplier<String> table, String tableAlias, Class<E> entityClass, Class queryClass) {
         this(table, tableAlias, new Parameters(), entityClass, queryClass);
     }
 
-    protected BaseWrapper(String table, String tableAlias, Parameters parameters, Class<E> entityClass, Class queryClass) {
+    protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();

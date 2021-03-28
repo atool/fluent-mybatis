@@ -23,7 +23,7 @@ public abstract class BaseUpdate<
     implements IBaseUpdate<E, U, NQ> {
 
     protected BaseUpdate(String table, Class entityClass, Class queryClass) {
-        super(table, EMPTY, entityClass, queryClass);
+        super(() -> table, EMPTY, entityClass, queryClass);
     }
 
     @Override

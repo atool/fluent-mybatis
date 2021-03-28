@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -35,7 +36,7 @@ public class WrapperData implements IWrapperData {
      * 表名
      */
     @Getter(AccessLevel.NONE)
-    protected String table;
+    protected Supplier<String> table;
 
     @Setter
     private String alias;
@@ -78,7 +79,7 @@ public class WrapperData implements IWrapperData {
         this.entityClass = null;
     }
 
-    public WrapperData(String table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
+    public WrapperData(Supplier<String> table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.alias = alias;
@@ -88,7 +89,7 @@ public class WrapperData implements IWrapperData {
     }
 
     public String getTable() {
-        return isBlank(alias) ? this.table : this.table + " " + this.alias;
+        return isBlank(alias) ? this.table.get() : this.table.get() + " " + this.alias;
     }
 
     @Override
@@ -108,7 +109,7 @@ public class WrapperData implements IWrapperData {
     @Override
     public String getQuerySql() {
         String select = this.getSqlSelect();
-        String sql = String.format(SELECT_FROM_WHERE, select == null ? ASTERISK : select, this.table, this.getMergeSql());
+        String sql = String.format(SELECT_FROM_WHERE, select == null ? ASTERISK : select, this.getTable(), this.getMergeSql());
         return isBlank(sql) ? null : sql.trim();
     }
 

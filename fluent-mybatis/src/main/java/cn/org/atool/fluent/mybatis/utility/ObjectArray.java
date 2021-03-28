@@ -112,4 +112,17 @@ public class ObjectArray {
             throw new RuntimeException("object isn't an array.");
         }
     }
+
+    public static Boolean toBoolean(Object value) {
+        if (value == null) {
+            return null;
+        } else {
+            String _value = String.valueOf(value).trim();
+            if (_value.matches("\\-?\\d+")) {
+                return !_value.equals("0");
+            } else {
+                return _value.equalsIgnoreCase("true");
+            }
+        }
+    }
 }
