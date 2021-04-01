@@ -2,8 +2,9 @@ package cn.org.atool.fluent.mybatis.processor.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Getter;
 import lombok.ToString;
@@ -43,6 +44,10 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      * 默认值实现
      */
     private String defaults;
+    /**
+     * 自定义的通用mapper基类
+     */
+    private String superMapper;
     /**
      * 表名称前缀
      */
@@ -89,11 +94,12 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      * @param fluentMyBatis
      * @return
      */
-    public FluentEntity setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults) {
+    public FluentEntity setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults, String superMapper) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
         this.noSuffix = this.className.replace(this.suffix, "");
         this.defaults = isBlank(defaults) ? IDefaultSetter.class.getName() : defaults;
+        this.superMapper = isBlank(superMapper) ? IMapper.class.getName() : superMapper;
         this.tableName = fluentMyBatis.table();
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());

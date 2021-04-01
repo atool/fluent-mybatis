@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.processor.scanner;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
+import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -13,6 +15,9 @@ import javax.lang.model.element.*;
 import javax.lang.model.util.ElementScanner8;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_DEFAULTS;
+import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
 
 public class FluentScanner extends ElementScanner8<Void, Void> {
     final Consumer<String> logger;
@@ -31,8 +36,9 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         ClassName className = ClassNames.getClassName(entity.getQualifiedName().toString());
         this.fluent.setClassName(className.packageName(), className.simpleName());
         FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
-        String defaults = DaoInterfaceParser.getDefaults(entity);
-        this.fluent.setFluentMyBatis(fluentMybatis, defaults);
+        String defaults = ClassAttrParser.getClassAttr(entity, ATTR_DEFAULTS, IDefaultSetter.class);
+        String superMapper = ClassAttrParser.getClassAttr(entity, ATTR_SUPER_MAPPER, IMapper.class);
+        this.fluent.setFluentMyBatis(fluentMybatis, defaults, superMapper);
         return super.visitType(entity, aVoid);
     }
 

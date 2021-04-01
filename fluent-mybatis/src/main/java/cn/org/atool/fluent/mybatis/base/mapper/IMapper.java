@@ -1,10 +1,12 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
+
 /**
  * IMapper: mapper标识接口
  *
  * @Author darui.wu
  * @Date 2019-06-25 14:00
  */
-public interface IMapper {
+public interface IMapper<E extends IEntity> {
 }

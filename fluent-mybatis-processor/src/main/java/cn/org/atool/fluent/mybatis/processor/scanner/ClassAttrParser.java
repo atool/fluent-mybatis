@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.scanner;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -17,8 +16,10 @@ import java.util.Map;
  *
  * @author darui.wu
  */
-public class DaoInterfaceParser {
-    private static final String ATTR_DEFAULTS = "defaults()";
+public class ClassAttrParser {
+    public static final String ATTR_DEFAULTS = "defaults()";
+
+    public static final String ATTR_SUPER_MAPPER = "superMapper()";
 
     /**
      * 获取@FluentMyBatis上定义的 iDao() 属性值
@@ -26,23 +27,23 @@ public class DaoInterfaceParser {
      * @param entity
      * @return key: @DaoInterface value值, value: @DaoInterface args值
      */
-    public static String getDefaults(TypeElement entity) {
+    public static String getClassAttr(TypeElement entity, String methodName, Class defaultValue) {
         AnnotationMirror mirror = getFluentMyBatisMirror(entity);
         if (mirror == null) {
-            return IDefaultSetter.class.getName();
+            return defaultValue.getName();
         }
 
         Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = mirror.getElementValues();
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
             ExecutableElement method = entry.getKey();
             AnnotationValue value = entry.getValue();
-            if (!method.toString().contains(ATTR_DEFAULTS)) {
+            if (!method.toString().contains(methodName)) {
                 continue;
             }
             DeclaredType aClass = (DeclaredType) value.getValue();
             return aClass.toString();
         }
-        return IDefaultSetter.class.getName();
+        return defaultValue.getName();
     }
 
     private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity) {

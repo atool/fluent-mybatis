@@ -46,7 +46,10 @@ public class FreeQueryAggregateTest extends BaseTest {
     void count_apply() {
         FreeQuery query1 = new FreeQuery("t_member", "t1");
         query1.select.apply("t1.id").count.apply("t1.gmt_modified").end()
-            .where.apply("id", EQ, "1").end()
+            .where
+            .applyIf(args -> args[0].equals("1"), "id", EQ, "1")
+            .applyIf(args -> args[0].equals("1"), "id", EQ, "2")
+            .end()
             .groupBy.apply("t1.id").end()
         ;
 

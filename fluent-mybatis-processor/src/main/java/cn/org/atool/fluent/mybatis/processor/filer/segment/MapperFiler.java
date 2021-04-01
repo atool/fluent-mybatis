@@ -68,6 +68,7 @@ public class MapperFiler extends AbstractFiler {
         spec.addSuperinterface(this.superMapperClass())
             .addSuperinterface(parameterizedType(ClassName.get(IRichMapper.class), fluent.entity()))
             .addSuperinterface(parameterizedType(ClassName.get(IWrapperMapper.class), fluent.entity()))
+            .addSuperinterface(parameterizedType(ClassNames.getClassName(fluent.getSuperMapper()), fluent.entity()))
             .addAnnotation(ClassNames.Mybatis_Mapper)
             .addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
                 .addMember("value", "$S", getMapperName(this.fluent)).build()

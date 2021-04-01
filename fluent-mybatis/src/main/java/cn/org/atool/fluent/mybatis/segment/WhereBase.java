@@ -12,7 +12,7 @@ import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -297,9 +297,17 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    public WHERE apply(String applySql, Supplier<Boolean> condition, Object... paras) {
-        if (condition.get()) {
-            wrapper.getWrapperData().apply(this.currOp, EMPTY, RETAIN, applySql, paras);
+    /**
+     * 根据条件拼接 sql
+     *
+     * @param predicate 为真是拼接sql
+     * @param applySql
+     * @param paras
+     * @return
+     */
+    public WHERE applyIf(Predicate<Object[]> predicate, String applySql, Object... paras) {
+        if (predicate.test(paras)) {
+            this.apply(applySql, paras);
         }
         return this.and;
     }
@@ -317,9 +325,27 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    public WHERE apply(FieldMapping column, SqlOp op, Object... paras) {
-        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, paras);
+    public WHERE applyIf(Predicate<Object[]> predicate, String column, SqlOp op, Object... paras) {
+        if (predicate.test(paras)) {
+            this.apply(column, op, paras);
+        }
         return this.and;
+    }
+
+    /**
+     * 增加and[or]条件
+     *
+     * @param column 字段
+     * @param op     操作
+     * @param paras  操作参数
+     * @return 条件设置器
+     */
+    public WHERE apply(FieldMapping column, SqlOp op, Object... paras) {
+        return this.apply(column.column, op, paras);
+    }
+
+    public WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, SqlOp op, Object... paras) {
+        return this.applyIf(predicate, column.column, op, paras);
     }
 
     /**
@@ -333,6 +359,13 @@ public abstract class WhereBase<
      */
     WHERE apply(FieldMapping column, SqlOp op, String expression, Object... args) {
         this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, expression, args);
+        return this.and;
+    }
+
+    WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, SqlOp op, String expression, Object... args) {
+        if (predicate.test(args)) {
+            this.apply(column, op, expression, args);
+        }
         return this.and;
     }
 

@@ -3,7 +3,10 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.mapping.StatementType;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -18,7 +21,17 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  * @Author darui.wu
  * @Date 2019-06-25 14:00
  */
-public interface IEntityMapper<E extends IEntity> extends IMapper {
+public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
+    /**
+     * 调用存储过程
+     *
+     * @param procedure 存储过程及参数, 比如: countRecord(#{p.minId, mode=IN, jdbcType=INTEGER}, #{p.total, mode=OUT, jdbcType=INTEGER})
+     * @param parameter 存储过程引用的入参和出参设置对象, 以前缀 "p." 引用属性
+     */
+    @Options(statementType = StatementType.CALLABLE)
+    @Select("CALL ${procedure}")
+    void callProcedure(@Param("procedure") String procedure, @Param("p") Object parameter);
+
     /**
      * 插入一条记录, 主键字段为空
      *

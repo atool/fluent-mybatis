@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate;
 
+import cn.org.atool.fluent.mybatis.generate.dm.BlobValueDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
@@ -8,6 +9,7 @@ import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
+import cn.org.atool.fluent.mybatis.generate.mix.BlobValueTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
@@ -54,6 +56,8 @@ public interface ATM {
     public final String memberLove = "t_member_love";
 
     public final String member = "t_member";
+
+    public final String blobValue = "blob_value";
   }
 
   /**
@@ -75,6 +79,8 @@ public interface ATM {
     public final MemberLoveDataMap.Factory memberLove = new MemberLoveDataMap.Factory();
 
     public final MemberDataMap.Factory member = new MemberDataMap.Factory();
+
+    public final BlobValueDataMap.Factory blobValue = new BlobValueDataMap.Factory();
   }
 
   /**
@@ -97,6 +103,8 @@ public interface ATM {
 
     public final MemberTableMix memberTableMix = MixProxy.proxy(MemberTableMix.class);
 
+    public final BlobValueTableMix blobValueTableMix = MixProxy.proxy(BlobValueTableMix.class);
+
     public void cleanAllTable() {
       this.noAutoIdTableMix.cleanNoAutoIdTable();
       this.noPrimaryTableMix.cleanNoPrimaryTable();
@@ -106,6 +114,7 @@ public interface ATM {
       this.memberFavoriteTableMix.cleanMemberFavoriteTable();
       this.memberLoveTableMix.cleanMemberLoveTable();
       this.memberTableMix.cleanMemberTable();
+      this.blobValueTableMix.cleanBlobValueTable();
     }
   }
 
@@ -123,7 +132,8 @@ public interface ATM {
       	StudentDataMap.class,
       	MemberFavoriteDataMap.class,
       	MemberLoveDataMap.class,
-      	MemberDataMap.class
+      	MemberDataMap.class,
+      	BlobValueDataMap.class
       );
     }
 

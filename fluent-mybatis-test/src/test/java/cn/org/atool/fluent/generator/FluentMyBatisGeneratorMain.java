@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.generator;
 
+import cn.org.atool.fluent.mybatis.customize.ICustomizedMapper;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import cn.org.atool.generator.FileGenerator;
 import cn.org.atool.generator.annotation.*;
+import org.apache.ibatis.type.BlobTypeHandler;
 import org.test4j.module.database.proxy.DataSourceCreatorFactory;
 
 public class FluentMyBatisGeneratorMain {
@@ -25,7 +27,8 @@ public class FluentMyBatisGeneratorMain {
         FileGenerator.build(
             Empty1.class,
             Empty2.class,
-            Empty3.class
+            Empty3.class,
+            Empty4.class
         );
     }
 
@@ -74,5 +77,15 @@ public class FluentMyBatisGeneratorMain {
         }
     )
     static class Empty3 {
+    }
+
+    @Tables(url = URL, username = "root", password = "password",
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        tables = {
+            @Table(value = "blob_value",
+                columns = @Column(value = "blob_value", typeHandler = BlobTypeHandler.class),
+                superMapper = ICustomizedMapper.class)
+        })
+    static class Empty4 {
     }
 }
