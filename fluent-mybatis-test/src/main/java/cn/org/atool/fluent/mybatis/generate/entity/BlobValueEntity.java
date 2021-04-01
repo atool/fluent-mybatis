@@ -36,6 +36,7 @@ public class BlobValueEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
+   * 主键id
    */
   @TableId("id")
   private Long id;

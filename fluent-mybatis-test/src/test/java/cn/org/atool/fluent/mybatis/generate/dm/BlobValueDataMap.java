@@ -25,7 +25,7 @@ public class BlobValueDataMap extends DataMap<BlobValueDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(20)",
+      type = "bigint(21) unsigned",
       primary = true,
       autoIncrease = true
   )
