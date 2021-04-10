@@ -25,11 +25,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     /**
      * 调用存储过程
      *
-     * @param procedure 存储过程及参数, 比如: countRecord(#{p.minId, mode=IN, jdbcType=INTEGER}, #{p.total, mode=OUT, jdbcType=INTEGER})
+     * @param procedure 存储过程及参数, 比如:
+     *                  procedureName(#{p.input1, mode=IN, jdbcType=INTEGER}, #{p.output1, mode=OUT, jdbcType=INTEGER})
      * @param parameter 存储过程引用的入参和出参设置对象, 以前缀 "p." 引用属性
      */
     @Options(statementType = StatementType.CALLABLE)
-    @Select("CALL ${procedure}")
+    @Select("{CALL ${procedure}}")
     void callProcedure(@Param("procedure") String procedure, @Param("p") Object parameter);
 
     /**

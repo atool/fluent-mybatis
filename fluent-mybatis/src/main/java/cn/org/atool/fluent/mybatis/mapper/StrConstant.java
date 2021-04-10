@@ -65,5 +65,5 @@ public interface StrConstant {
     /**
      * select ... from ... where ...
      */
-    String SELECT_FROM_WHERE = "SELECT %s FROM %s WHERE %s";
+    String SELECT_FROM_WHERE = "SELECT %s FROM %s %s";
 }

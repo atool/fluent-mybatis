@@ -62,6 +62,19 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     }
 
     /**
+     * 子查询嵌套
+     * select * from (child query) alias
+     * 同时变量池和join公用一个变量池
+     *
+     * @param child
+     * @param alias
+     * @param join
+     */
+    public FreeQuery(IQuery child, String alias, IQuery join) {
+        super(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias, join.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
+    }
+
+    /**
      * 嵌套子查询 select * from (select * ...) alias;
      *
      * @param child

@@ -78,6 +78,13 @@ public class MergeSegments extends BaseSegmentList {
         return sql.trim() + last();
     }
 
+    public String where() {
+        String sql = where.sql();
+        sql = isBlank(sql) ? EMPTY : "WHERE " + sql + SPACE;
+        sql = sql + groupBy.sql() + having.sql() + orderBy.sql();
+        return sql.trim() + last();
+    }
+
     public String last() {
         return isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim();
     }
