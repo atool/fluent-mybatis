@@ -35,25 +35,37 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      */
     private final List<BaseQuery> queries = new ArrayList<>();
 
-    private final Parameters parameters;
+    private final Parameters parameters = new Parameters();
+    ;
 
     @Getter
     private JoinWrapperData wrapperData;
 
+    /**
+     * 如果有必要，需要显式设置query表别名
+     *
+     * @param query
+     */
     public JoinQuery(QL query) {
         this.assertQueryAlias(query);
         this.query = query;
         this.queryClass = (Class<QL>) query.getClass();
-        this.parameters = query.getWrapperData().getParameters();
-        this.wrapperData = new JoinWrapperData(this.query, this.queries);
+        this.query.getWrapperData().getParameters().setSharedParameter(this.parameters);
+        this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
     }
 
+    /**
+     * 框架自动设置query的表别名
+     *
+     * @param queryClass
+     * @param query
+     */
     public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
         this.queryClass = queryClass;
-        this.parameters = new Parameters();
-        this.query = newQuery(queryClass, parameters.alias(), this.parameters);
+        this.query = newQuery(queryClass, Parameters.alias());
+        this.query.getWrapperData().getParameters().setSharedParameter(this.parameters);
         query.apply(this.query);
-        this.wrapperData = new JoinWrapperData(this.query, this.queries);
+        this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
     }
 
     @Override
@@ -89,9 +101,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(
         JoinType joinType, QR query) {
         this.assertQueryAlias(query);
-        if (query.getWrapperData().getParameters() != this.query.getWrapperData().getParameters()) {
-            throw new RuntimeException("the parameters in join query table must be same.");
-        }
+        query.getWrapperData().getParameters().setSharedParameter(this.query.getWrapperData().getParameters());
+
         this.queries.add(query);
         return new JoinOn<>(this, this.queryClass, this.query, joinType, (Class<QR>) query.getClass(), query);
     }
@@ -114,8 +125,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(
         JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
     ) {
-        Parameters parameters = this.query.wrapperData.getParameters();
-        QR query = newQuery(queryClass, parameters.alias(), parameters);
+        QR query = newQuery(queryClass, Parameters.alias());
+        query.getWrapperData().getParameters().setSharedParameter(this.parameters);
         this.queries.add(query);
         apply.apply(query);
         return new JoinOn<>(this, this.queryClass, this.query, joinType, queryClass, query);
@@ -167,12 +178,12 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
 
     private static Map<Class, Constructor> QueryAliasConstructors = new HashMap<>(128);
 
-    private static <Q extends BaseQuery<?, Q>> Q newQuery(Class<Q> queryClass, String alias, Parameters parameters) {
+    private static <Q extends BaseQuery<?, Q>> Q newQuery(Class<Q> queryClass, String alias) {
         try {
             if (!QueryAliasConstructors.containsKey(queryClass)) {
                 QueryAliasConstructors.put(queryClass, queryClass.getConstructor(String.class, Parameters.class));
             }
-            return (Q) QueryAliasConstructors.get(queryClass).newInstance(alias, parameters);
+            return (Q) QueryAliasConstructors.get(queryClass).newInstance(alias, new Parameters());
         } catch (Exception e) {
             throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
                 queryClass.getSimpleName(), e.getMessage()), e);

@@ -25,10 +25,10 @@ public class JoinWrapperData extends WrapperData {
     @Getter
     private final Parameters parameters;
 
-    public JoinWrapperData(BaseQuery query, List<BaseQuery> queries) {
+    public JoinWrapperData(BaseQuery query, List<BaseQuery> queries, Parameters shared) {
         this.query = query;
         this.queries = queries;
-        this.parameters = query.wrapperData.getParameters();
+        this.parameters = shared;
         this.tables.add(this.query.wrapperData.getTable());
     }
 

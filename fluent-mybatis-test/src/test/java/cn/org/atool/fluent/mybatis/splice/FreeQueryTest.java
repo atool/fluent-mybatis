@@ -58,7 +58,7 @@ public class FreeQueryTest extends BaseTest {
         query1.select("t1.id", "t1.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
-        FreeQuery query2 = new FreeQuery("t_member", "t2", query1);
+        FreeQuery query2 = new FreeQuery("t_member", "t2");
         query1.select("t2.id", "t2.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
@@ -78,11 +78,11 @@ public class FreeQueryTest extends BaseTest {
         query1.select("t1.id", "t1.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
-        FreeQuery query2 = new FreeQuery("t_member", "t2", query1);
+        FreeQuery query2 = new FreeQuery("t_member", "t2");
         query1.select("t2.id", "t2.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
-        FreeQuery query3 = new FreeQuery("t_member2", "t3", query1);
+        FreeQuery query3 = new FreeQuery("t_member2", "t3");
         query1.select("t3.id", "t3.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
@@ -120,7 +120,7 @@ public class FreeQueryTest extends BaseTest {
             .apply("gmt_create", LE, "2020-12-01 23:59:59")
             .end();
 
-        FreeQuery query2 = new FreeQuery(bean.table2, "t2", query1);
+        FreeQuery query2 = new FreeQuery(bean.table2, "t2");
         query2.select
             .applyAs("product_id", "productId").end()
             .where

@@ -23,7 +23,7 @@ public class FreeQueryAggregateTest extends BaseTest {
             .groupBy.apply("t1.id").end()
         ;
 
-        FreeQuery query2 = new FreeQuery("t_member", "t2", query1);
+        FreeQuery query2 = new FreeQuery("t_member", "t2");
         query2.select("t2.id", "sum(t2.gmt_modified)")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("t2.id").end();
@@ -54,7 +54,7 @@ public class FreeQueryAggregateTest extends BaseTest {
             .groupBy.apply("t1.id").end()
         ;
 
-        FreeQuery query2 = new FreeQuery("t_member", "t2", query1);
+        FreeQuery query2 = new FreeQuery("t_member", "t2");
         query2.select.apply("t2.id").sum.apply("t2.gmt_modified")
             .end()
             .where.apply("id", EQ, "1").end()
@@ -85,7 +85,7 @@ public class FreeQueryAggregateTest extends BaseTest {
             .groupBy.apply("t1.id").end()
         ;
 
-        FreeQuery query2 = new FreeQuery(new MemberQuery().groupBy.id().end(), "t2", query1);
+        FreeQuery query2 = new FreeQuery(new MemberQuery().groupBy.id().end(), "t2");
         query2.select.apply("t2.id").sum.apply("t2.gmt_modified")
             .end()
             .where.apply("id", EQ, "1").end()

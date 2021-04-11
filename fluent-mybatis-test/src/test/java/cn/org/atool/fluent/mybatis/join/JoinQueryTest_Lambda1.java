@@ -62,7 +62,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end()
-            .groupBy.age().apply("t1.id").end()
+            .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end();
         QFunction<HomeAddressQuery> aq = q -> q
             .select.studentId().end()

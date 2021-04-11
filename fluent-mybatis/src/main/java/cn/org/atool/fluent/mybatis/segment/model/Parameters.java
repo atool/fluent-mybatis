@@ -4,7 +4,9 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.WRAPPER_PARAM_FORMAT;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.Wrapper_Data;
@@ -18,22 +20,29 @@ import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.Wrapper_Data;
  */
 public class Parameters extends HashMap<String, Object> {
     /**
-     * 自定义参数序号
+     * 全局实例化的Parameters序号
      */
-    private final AtomicInteger sequence = new AtomicInteger();
+    private static final AtomicLong globalSeq = new AtomicLong(0);
     /**
      * join表别名序号
      */
-    private final AtomicInteger alias = new AtomicInteger();
+    private static final AtomicLong alias = new AtomicLong(0);
+    /**
+     * 当前实例序号, 具有全局唯一性, 保证变量的唯一性
+     */
+    private final long instanceNo = globalSeq.incrementAndGet();
+    /**
+     * 自定义参数序号
+     */
+    private final AtomicInteger sequence = new AtomicInteger();
 
     /**
      * 自动分配表别名
      *
      * @return
      */
-    public String alias() {
-        int index = alias.incrementAndGet();
-        return "t" + index;
+    public static String alias() {
+        return "t" + alias.incrementAndGet();
     }
 
     public Parameters() {
@@ -88,7 +97,7 @@ public class Parameters extends HashMap<String, Object> {
      * @return 占位符
      */
     private String parseParameter(Object para) {
-        String paramName = WRAPPER_PARAM + this.sequence.incrementAndGet();
+        String paramName = WRAPPER_PARAM + this.instanceNo + "_" + this.sequence.incrementAndGet();
         String placeholder = String.format(WRAPPER_PARAM_FORMAT, Wrapper_Data, paramName);
         this.put(paramName, para);
         return placeholder;
@@ -100,4 +109,38 @@ public class Parameters extends HashMap<String, Object> {
      * 变量名称格式, 前缀+序号
      */
     private static final String WRAPPER_PARAM = "variable_";
+
+    /**
+     * 共享变量
+     */
+    private Parameters sharedParameter;
+
+    @Override
+    public Object put(String key, Object value) {
+        Object obj = super.put(key, value);
+        if (sharedParameter != null) {
+            sharedParameter.put(key, value);
+        }
+        return obj;
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ?> m) {
+        super.putAll(m);
+        if (sharedParameter != null) {
+            sharedParameter.putAll(m);
+        }
+    }
+
+    /**
+     * 设置join查询（或子查询）的共享变量
+     *
+     * @param shared
+     */
+    public void setSharedParameter(Parameters shared) {
+        if (this != shared && this.sharedParameter != shared) {
+            this.sharedParameter = shared;
+            shared.putAll(this);
+        }
+    }
 }

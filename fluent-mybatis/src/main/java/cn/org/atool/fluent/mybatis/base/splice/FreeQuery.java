@@ -57,21 +57,12 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
         super(table, alias, EmptyEntity.class, FreeQuery.class);
     }
 
+    /**
+     * use {@link FreeQuery#FreeQuery(String, String)} directly
+     */
+    @Deprecated
     public FreeQuery(String table, String alias, IQuery join) {
         super(() -> table, alias, join.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
-    }
-
-    /**
-     * 子查询嵌套
-     * select * from (child query) alias
-     * 同时变量池和join公用一个变量池
-     *
-     * @param child
-     * @param alias
-     * @param join
-     */
-    public FreeQuery(IQuery child, String alias, IQuery join) {
-        super(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias, join.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
     }
 
     /**

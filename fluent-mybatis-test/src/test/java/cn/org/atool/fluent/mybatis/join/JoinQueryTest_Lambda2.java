@@ -29,8 +29,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
             .id.values(3, 4)
             .address.values("address_1", "address_2")
             .cleanAndInsert();
-        QFunction<StudentQuery> uq = q ->
-            q.selectAll()
+        QFunction<StudentQuery> uq = q -> q.selectAll()
                 .where.age().eq(34).end();
         QFunction<HomeAddressQuery> aq = q -> q
             .where.address().like("address").end();

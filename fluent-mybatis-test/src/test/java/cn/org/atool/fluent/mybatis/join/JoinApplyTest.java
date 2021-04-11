@@ -9,41 +9,47 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static java.lang.String.format;
+
 public class JoinApplyTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Refs.Query.student.aliasQuery()
-            .select.age().end()
+        StudentQuery studentQuery = Refs.Query.student.aliasQuery();
+        String alias1 = studentQuery.getTableAlias();
+        studentQuery.select.age().end()
             .where.age().isNull().end()
-            .groupBy.age().apply("t1.id").end()
+            .groupBy.age().apply(alias1 + ".id").end()
             .having.max.age().gt(1L).end();
         HomeAddressQuery addressQuery = Refs.Query.homeAddress.aliasWith(studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();
+
+        String alias2 = addressQuery.getTableAlias();
+
         JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .join(addressQuery)
-            .on("t1.id = t2.id OR t1.age = t2.student_id")
+            .on(format("%s.id = %s.id OR %s.age = %s.student_id", alias1, alias2, alias1, alias2))
             .limit(20);
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(
-            "SELECT t1.age, t2.student_id " +
-                "FROM student t1 " +
-                "JOIN home_address t2 " +
-                "ON t1.id = t2.id " +
-                "OR t1.age = t2.student_id " +
-                "WHERE t1.is_deleted = ? " +
-                "AND t1.env = ? " +
-                "AND t1.age IS NULL " +
-                "AND t2.is_deleted = ? " +
-                "AND t2.env = ? " +
-                "AND t2.address LIKE ? " +
-                "GROUP BY t1.age, t1.id, t2.student_id " +
-                "HAVING MAX(t1.age) > ? " +
+            format("SELECT %s.age, %s.student_id ", alias1, alias2) +
+                format("FROM student %s ", alias1) +
+                format("JOIN home_address %s ", alias2) +
+                format("ON %s.id = %s.id ", alias1, alias2) +
+                format("OR %s.age = %s.student_id ", alias1, alias2) +
+                format("WHERE %s.is_deleted = ? ", alias1) +
+                format("AND %s.env = ? ", alias1) +
+                format("AND %s.age IS NULL ", alias1) +
+                format("AND %s.is_deleted = ? ", alias2) +
+                format("AND %s.env = ? ", alias2) +
+                format("AND %s.address LIKE ? ", alias2) +
+                format("GROUP BY %s.age, %s.id, %s.student_id ", alias1, alias1, alias2) +
+                format("HAVING MAX(%s.age) > ? ", alias1) +
                 "LIMIT ?, ?");
     }
 }

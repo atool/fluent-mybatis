@@ -39,6 +39,7 @@ public abstract class BaseWrapper<
     /**
      * 表别名
      */
+    @Getter
     protected final String tableAlias;
 
     @Getter
