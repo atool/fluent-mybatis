@@ -36,10 +36,19 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private final List<BaseQuery> queries = new ArrayList<>();
 
     private final Parameters parameters = new Parameters();
-    ;
 
     @Getter
     private JoinWrapperData wrapperData;
+
+    /**
+     * 别名列表
+     */
+    private List<String> alias = new ArrayList<>(8);
+
+    @Override
+    public String[] getAlias() {
+        return this.alias.toArray(new String[0]);
+    }
 
     /**
      * 如果有必要，需要显式设置query表别名
@@ -52,6 +61,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         this.queryClass = (Class<QL>) query.getClass();
         this.query.getWrapperData().getParameters().setSharedParameter(this.parameters);
         this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
+        this.alias.add(this.query.tableAlias);
     }
 
     /**
@@ -66,6 +76,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         this.query.getWrapperData().getParameters().setSharedParameter(this.parameters);
         query.apply(this.query);
         this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
+        this.alias.add(this.query.tableAlias);
     }
 
     @Override
@@ -104,6 +115,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         query.getWrapperData().getParameters().setSharedParameter(this.query.getWrapperData().getParameters());
 
         this.queries.add(query);
+        this.alias.add(query.tableAlias);
         return new JoinOn<>(this, this.queryClass, this.query, joinType, (Class<QR>) query.getClass(), query);
     }
 
@@ -129,6 +141,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         query.getWrapperData().getParameters().setSharedParameter(this.parameters);
         this.queries.add(query);
         apply.apply(query);
+        this.alias.add(query.tableAlias);
         return new JoinOn<>(this, this.queryClass, this.query, joinType, queryClass, query);
     }
 

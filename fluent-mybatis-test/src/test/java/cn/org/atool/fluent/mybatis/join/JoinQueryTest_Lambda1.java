@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
@@ -10,6 +9,8 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static java.lang.String.format;
 
 public class JoinQueryTest_Lambda1 extends BaseTest {
     @Autowired
@@ -22,7 +23,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end()
-            .groupBy.age().apply("t1.id").end()
+            .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
         QFunction<HomeAddressQuery> addressQuery = q -> q
@@ -39,19 +40,20 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .on(l -> l.where.age(), r -> r.where.studentId()).endJoin()
             .limit(20);
         mapper.listMaps(query.build());
+        String[] a = query.getAlias();
         db.sqlList().wantFirstSql().eq(
-            "SELECT t1.age, t2.student_id " +
-                "FROM student t1 " +
-                "JOIN home_address t2 " +
-                "ON t1.id = t2.id " +
-                "AND t1.age = t2.student_id " +
-                "WHERE t1.is_deleted = ? " +
-                "AND t1.age IS NULL " +
-                "AND t2.is_deleted = ? " +
-                "AND t2.address LIKE ? " +
-                "GROUP BY t1.age, t1.id, t2.student_id " +
-                "HAVING MAX(t1.age) > ? " +
-                "ORDER BY t1.id DESC, t2.id ASC " +
+            format("SELECT %s.age, %s.student_id ", a[0], a[1]) +
+                format("FROM student %s ", a[0]) +
+                format("JOIN home_address %s ", a[1]) +
+                format("ON %s.id = %s.id ", a[0], a[1]) +
+                format("AND %s.age = %s.student_id ", a[0], a[1]) +
+                format("WHERE %s.is_deleted = ? ", a[0]) +
+                format("AND %s.age IS NULL ", a[0]) +
+                format("AND %s.is_deleted = ? ", a[1]) +
+                format("AND %s.address LIKE ? ", a[1]) +
+                format("GROUP BY %s.age, %s.id, %s.student_id ", a[0], a[0], a[1]) +
+                format("HAVING MAX(%s.age) > ? ", a[0]) +
+                format("ORDER BY %s.id DESC, %s.id ASC ", a[0], a[1]) +
                 "LIMIT ?, ?");
     }
 
@@ -78,18 +80,19 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .distinct()
             .limit(20);
         mapper.listMaps(query.build());
+        String[] a = query.getAlias();
         db.sqlList().wantFirstSql().eq(
-            "SELECT DISTINCT t1.age, t2.student_id " +
-                "FROM student t1 " +
-                "LEFT JOIN home_address t2 " +
-                "ON t1.id = t2.id " +
-                "AND t1.age = t2.student_id " +
-                "WHERE t1.is_deleted = ? " +
-                "AND t1.age IS NULL " +
-                "AND t2.is_deleted = ? " +
-                "AND t2.address LIKE ? " +
-                "GROUP BY t1.age, t1.id, t2.student_id " +
-                "HAVING MAX(t1.age) > ? " +
+            format("SELECT DISTINCT %s.age, %s.student_id ", a[0], a[1]) +
+                format("FROM student %s ", a[0]) +
+                format("LEFT JOIN home_address %s ", a[1]) +
+                format("ON %s.id = %s.id ", a[0], a[1]) +
+                format("AND %s.age = %s.student_id ", a[0], a[1]) +
+                format("WHERE %s.is_deleted = ? ", a[0]) +
+                format("AND %s.age IS NULL ", a[0]) +
+                format("AND %s.is_deleted = ? ", a[1]) +
+                format("AND %s.address LIKE ? ", a[1]) +
+                format("GROUP BY %s.age, %s.id, %s.student_id ", a[0], a[0], a[1]) +
+                format("HAVING MAX(%s.age) > ? ", a[0]) +
                 "LIMIT ?, ?");
     }
 
@@ -109,13 +112,14 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .on(l -> l.where.id(), r -> r.where.id())
             .endJoin();
         mapper.listMaps(query.build());
+        String[] a = query.getAlias();
         db.sqlList().wantFirstSql()
-            .end("FROM student t1 RIGHT JOIN home_address t2 " +
-                "ON t1.id = t2.id " +
-                "WHERE t1.is_deleted = ? " +
-                "AND t1.age IS NULL " +
-                "AND t2.is_deleted = ? " +
-                "AND t2.address LIKE ?");
+            .end(format("FROM student %s RIGHT JOIN home_address %s ", a[0], a[1]) +
+                format("ON %s.id = %s.id ", a[0], a[1]) +
+                format("WHERE %s.is_deleted = ? ", a[0]) +
+                format("AND %s.age IS NULL ", a[0]) +
+                format("AND %s.is_deleted = ? ", a[1]) +
+                format("AND %s.address LIKE ?", a[1]));
     }
 
     @Test
@@ -124,22 +128,22 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.age().eq(3).end();
         QFunction<HomeAddressQuery> aq = q -> q
             .where.address().like("xxx").end();
-        IQuery query = JoinBuilder
+        JoinBuilder query = JoinBuilder
             .from(StudentQuery.class, uq)
             .leftJoin(HomeAddressQuery.class, aq)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .leftJoin(StudentScoreQuery.class, q -> q
                 .where.subject().in(new String[]{"a", "b", "c"}).end())
-            .on(l -> l.where.id(), r -> r.where.studentId()).endJoin()
-            .build();
-        mapper.listMaps(query);
+            .on(l -> l.where.id(), r -> r.where.studentId()).endJoin();
+        mapper.listMaps(query.build());
+        String[] a = query.getAlias();
         db.sqlList().wantFirstSql()
-            .contains(new String[]{"t1.id", "t2.id", "t3.id"})
-            .end("FROM student t1 LEFT JOIN home_address t2 " +
-                "ON t1.home_address_id = t2.id " +
-                "LEFT JOIN student_score t3 ON t1.id = t3.student_id " +
-                "WHERE t1.age = ? " +
-                "AND t2.address LIKE ? " +
-                "AND t3.subject IN (?, ?, ?)");
+            .contains(new String[]{a[0] + ".id", a[1] + ".id", a[2] + ".id"})
+            .end(format("FROM student %s LEFT JOIN home_address %s ", a[0], a[1]) +
+                format("ON %s.home_address_id = %s.id ", a[0], a[1]) +
+                format("LEFT JOIN student_score %s ON %s.id = %s.student_id ", a[2], a[0], a[2]) +
+                format("WHERE %s.age = ? ", a[0]) +
+                format("AND %s.address LIKE ? ", a[1]) +
+                format("AND %s.subject IN (?, ?, ?)", a[2]));
     }
 }

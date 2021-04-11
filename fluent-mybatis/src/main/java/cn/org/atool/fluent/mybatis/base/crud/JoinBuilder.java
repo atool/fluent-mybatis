@@ -76,4 +76,6 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @return
      */
     IQuery build();
+
+    String[] getAlias();
 }
