@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.functions.OnConsumer;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
@@ -11,6 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * 关联查询on条件设置
+ *
+ * @param <QL> 关联左查询类型
+ * @param <QR> 关联右查询类型
+ * @param <JB> JoinBuilder
+ * @author darui.wu
+ */
 public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB> {
     private JoinQuery<QL> joinQuery;
 
@@ -39,7 +48,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * 关联关系设置
      *
      * @param join
-     * @return
+     * @return JoinOn
      */
     public JB on(OnConsumer<QL, QR> join) {
         join.accept(this.onBuilder, this.onLeft, this.onRight);
@@ -52,7 +61,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * 比如: t1.id = t2.id AND t1.is_deleted = t2.is_deleted
      *
      * @param condition
-     * @return
+     * @return JoinOn
      */
     public JB on(String condition) {
         this.joinQuery.getWrapperData().addTable(onBuilder.table() + " ON " + condition);
@@ -64,13 +73,42 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      *
      * @param l 左查询条件
      * @param r 右查询条件
-     * @return
+     * @return JoinOn
      */
     public JoinOn<QL, QR, JB> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
         this.onBuilder.on(l.apply(this.onLeft), r.apply(this.onRight));
         return this;
     }
 
+    /**
+     * 关联关系设置
+     *
+     * @param l 左关联字段
+     * @param r 右关联字段
+     * @return JoinOn
+     */
+    public JoinOn<QL, QR, JB> on(String l, String r) {
+        this.onBuilder.on(l, r);
+        return this;
+    }
+
+    /**
+     * 关联关系设置
+     *
+     * @param l 左关联字段
+     * @param r 右关联字段
+     * @return JoinOn
+     */
+    public JoinOn<QL, QR, JB> on(FieldMapping l, FieldMapping r) {
+        this.onBuilder.on(l.column, r.column);
+        return this;
+    }
+
+    /**
+     * 结束关联设置
+     *
+     * @return JoinBuilder
+     */
     public JB endJoin() {
         this.joinQuery.getWrapperData().addTable(onBuilder.table());
         return (JB) this.joinQuery;

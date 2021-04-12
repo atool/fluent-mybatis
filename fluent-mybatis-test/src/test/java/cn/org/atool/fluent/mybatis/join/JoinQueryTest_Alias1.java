@@ -35,7 +35,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .from(studentQuery)
             .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
-            .on(l -> l.where.age(), r -> r.where.studentId()).endJoin()
+            .on("age", "student_id").endJoin()
             .limit(20);
         mapper.listMaps(query.build());
         String a1 = studentQuery.getTableAlias();
@@ -63,7 +63,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         StudentQuery studentQuery = Refs.Query.student.aliasQuery("t1")
             .select.age().end()
             .where.age().isNull().end()
-            .groupBy.age().apply("t1.id").end()
+            .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end();
         HomeAddressQuery addressQuery = Refs.Query.homeAddress.aliasWith("t2", studentQuery)
             .select.studentId().end()

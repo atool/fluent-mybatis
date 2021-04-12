@@ -53,9 +53,9 @@ public class QueryFiler extends AbstractFiler {
             .addField(this.f_orderBy())
             .addField(this.f_where());
         builder
+            .addMethod(this.constructor1_String())
             .addMethod(this.constructor0())
             .addMethod(this.constructor2_String_Parameter())
-            .addMethod(this.constructor1_Parameter())
             .addMethod(this.m_where())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
@@ -196,24 +196,23 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("super($T.Table_Name, $T.class, $T.class)",
-                fluent.mapping(),
-                fluent.entity(),
-                fluent.query()
-            )
+            .addStatement("this(null)")
             .build();
     }
 
     /**
-     * public XyzQuery(ParameterPair parameters) {}
+     * public XyzQuery(String alias) {}
      *
      * @return
      */
-    private MethodSpec constructor1_Parameter() {
+    private MethodSpec constructor1_String() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(ClassName.get(Parameters.class), "parameters")
-            .addStatement("this(EMPTY, parameters)")
+            .addParameter(String.class, "alias")
+            .addStatement("super(()->$T.Table_Name, alias, $T.class, $T.class)",
+                fluent.mapping(),
+                fluent.entity(),
+                fluent.query())
             .build();
     }
 
@@ -225,13 +224,11 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec constructor2_String_Parameter() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(ClassName.get(String.class), "alias")
-            .addParameter(ClassName.get(Parameters.class), "parameters")
-            .addStatement("super($T.Table_Name, alias, parameters, $T.class, $T.class)",
-                fluent.mapping(),
-                fluent.entity(),
-                fluent.query()
-            )
+            .addAnnotation(Deprecated.class)
+            .addParameter(String.class, "alias")
+            .addParameter(Parameters.class, "parameters")
+            .addStatement("this(alias)")
+            .addStatement("this.setSharedParameter(parameters)")
             .build();
     }
 

@@ -58,8 +58,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     public JoinQuery(QL query) {
         this.assertQueryAlias(query);
         this.query = query;
+        this.query.setSharedParameter(this.parameters);
         this.queryClass = (Class<QL>) query.getClass();
-        this.query.getWrapperData().getParameters().setSharedParameter(this.parameters);
         this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
         this.alias.add(this.query.tableAlias);
     }
@@ -73,7 +73,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
         this.queryClass = queryClass;
         this.query = newQuery(queryClass, Parameters.alias());
-        this.query.getWrapperData().getParameters().setSharedParameter(this.parameters);
+        this.query.setSharedParameter(this.parameters);
         query.apply(this.query);
         this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
         this.alias.add(this.query.tableAlias);
@@ -112,7 +112,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(
         JoinType joinType, QR query) {
         this.assertQueryAlias(query);
-        query.getWrapperData().getParameters().setSharedParameter(this.query.getWrapperData().getParameters());
+        query.setSharedParameter(this.query);
 
         this.queries.add(query);
         this.alias.add(query.tableAlias);
@@ -138,7 +138,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
     ) {
         QR query = newQuery(queryClass, Parameters.alias());
-        query.getWrapperData().getParameters().setSharedParameter(this.parameters);
+        query.setSharedParameter(this.parameters);
         this.queries.add(query);
         apply.apply(query);
         this.alias.add(query.tableAlias);
@@ -194,9 +194,9 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private static <Q extends BaseQuery<?, Q>> Q newQuery(Class<Q> queryClass, String alias) {
         try {
             if (!QueryAliasConstructors.containsKey(queryClass)) {
-                QueryAliasConstructors.put(queryClass, queryClass.getConstructor(String.class, Parameters.class));
+                QueryAliasConstructors.put(queryClass, queryClass.getConstructor(String.class));
             }
-            return (Q) QueryAliasConstructors.get(queryClass).newInstance(alias, new Parameters());
+            return (Q) QueryAliasConstructors.get(queryClass).newInstance(alias);
         } catch (Exception e) {
             throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
                 queryClass.getSimpleName(), e.getMessage()), e);

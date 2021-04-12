@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhere;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * 字符串形式自由拼接查询器构造
@@ -45,24 +44,16 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      */
     public final QueryWhere where = new QueryWhere(this);
 
-    public FreeQuery(String table) {
-        this(table, EMPTY);
-    }
-
-    public FreeQuery(String table, String alias) {
-        super(() -> table, alias, EmptyEntity.class, FreeQuery.class);
-    }
-
-    public FreeQuery(Supplier<String> table, String alias) {
+    private FreeQuery(Supplier<String> table, String alias) {
         super(table, alias, EmptyEntity.class, FreeQuery.class);
     }
 
-    /**
-     * use {@link FreeQuery#FreeQuery(String, String)} directly
-     */
-    @Deprecated
-    public FreeQuery(String table, String alias, IQuery join) {
-        super(() -> table, alias, join.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
+    public FreeQuery(String table) {
+        this(() -> table, null);
+    }
+
+    public FreeQuery(String table, String alias) {
+        this(() -> table, alias);
     }
 
     /**
@@ -72,7 +63,16 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @param alias
      */
     public FreeQuery(IQuery child, String alias) {
-        super(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias, child.getWrapperData().getParameters(), EmptyEntity.class, FreeQuery.class);
+        this(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias);
+        this.setSharedParameter(child.getWrapperData().getParameters());
+    }
+
+    /**
+     * use {@link FreeQuery#FreeQuery(String, String)} directly
+     */
+    @Deprecated
+    public FreeQuery(String table, String alias, IQuery join) {
+        this(table, alias);
     }
 
     public FreeQuery emptyQuery() {

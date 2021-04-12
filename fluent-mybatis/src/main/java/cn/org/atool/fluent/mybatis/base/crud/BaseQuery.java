@@ -5,15 +5,12 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * AbstractQueryWrapper
@@ -30,30 +27,8 @@ public abstract class BaseQuery<
     extends BaseWrapper<E, Q, Q>
     implements IBaseQuery<E, Q> {
 
-    protected BaseQuery(String table, Class entityClass, Class queryClass) {
-        super(() -> table, EMPTY, entityClass, queryClass);
-    }
-
     protected BaseQuery(Supplier<String> table, String alias, Class entityClass, Class queryClass) {
         super(table, alias, entityClass, queryClass);
-    }
-
-    /**
-     * 非对外公开的构造方法,只用于生产嵌套 sql
-     */
-    protected BaseQuery(Supplier<String> table, Parameters parameters, Class entityClass, Class queryClass) {
-        super(table, EMPTY, parameters, entityClass, queryClass);
-    }
-
-    /**
-     * 非对外公开的构造方法,只用于生产嵌套 sql
-     */
-    protected BaseQuery(String table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
-        super(() -> table, alias, parameters, entityClass, queryClass);
-    }
-
-    protected BaseQuery(Supplier<String> table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
-        super(table, alias, parameters, entityClass, queryClass);
     }
 
     @Override
@@ -65,7 +40,7 @@ public abstract class BaseQuery<
     /**
      * 显式指定查询所有字段, 在join查询中有用
      *
-     * @return
+     * @return Query
      */
     @Override
     public Q selectAll() {
@@ -85,12 +60,13 @@ public abstract class BaseQuery<
     /**
      * 查询指定字段
      *
-     * @param columns
-     * @return
+     * @param columns 字段列表
+     * @return Query
      */
     public Q select(String... columns) {
         if (If.notEmpty(columns)) {
-            Stream.of(columns).filter(s -> notBlank(s)).forEach(this.wrapperData::addSelectColumn);
+            Stream.of(columns).filter(If::notBlank)
+                .forEach(this.wrapperData::addSelectColumn);
         }
         return (Q) this;
     }

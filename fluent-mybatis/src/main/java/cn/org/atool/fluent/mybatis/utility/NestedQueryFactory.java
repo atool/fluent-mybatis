@@ -27,14 +27,16 @@ public class NestedQueryFactory {
     public static <Q extends IBaseQuery> Q nested(Class klass, Parameters parameters) {
         if (!Query_Constructor.containsKey(klass)) {
             try {
-                Constructor constructor = klass.getConstructor(Parameters.class);
+                Constructor constructor = klass.getConstructor();
                 Query_Constructor.put(klass, constructor);
             } catch (Exception e) {
                 throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.", e);
             }
         }
         try {
-            return (Q) Query_Constructor.get(klass).newInstance(parameters);
+            Q query = (Q) Query_Constructor.get(klass).newInstance();
+            query.getWrapperData().getParameters().setSharedParameter(parameters);
+            return query;
         } catch (Exception e) {
             throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.", e);
         }

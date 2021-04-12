@@ -68,6 +68,7 @@ public abstract class BaseWrapper<
 
     /**
      * 判断字段是否在范围内
+     *
      * @param column 字段
      * @return 如果不是合法字段，抛出异常
      * @throws FluentMybatisException 字段校验异常
@@ -101,5 +102,23 @@ public abstract class BaseWrapper<
         } else {
             return column;
         }
+    }
+
+    /**
+     * 通过Wrapper直接设置变量共享关系
+     *
+     * @param parameters
+     */
+    protected void setSharedParameter(Parameters parameters) {
+        this.wrapperData.getParameters().setSharedParameter(parameters);
+    }
+
+    /**
+     * 通过Wrapper直接设置变量共享关系
+     *
+     * @param wrapper
+     */
+    protected void setSharedParameter(BaseWrapper wrapper) {
+        this.wrapperData.getParameters().setSharedParameter(wrapper.getWrapperData().getParameters());
     }
 }
