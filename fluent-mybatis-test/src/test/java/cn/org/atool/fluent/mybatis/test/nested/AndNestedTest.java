@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.test.and;
+package cn.org.atool.fluent.mybatis.test.nested;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
