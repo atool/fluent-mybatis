@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
@@ -125,6 +126,12 @@ public class WhereApply<
     }
 
     @Override
+    public WHERE in(IQuery query) {
+        ((BaseWrapper) query).setSharedParameter(this.segment.wrapper);
+        return this.segment.apply(this.current(), IN, query.getWrapperData().getQuerySql());
+    }
+
+    @Override
     public WHERE in(boolean condition, QFunction<NQ> query) {
         return condition ? this.in(query) : this.segment;
     }
@@ -158,6 +165,12 @@ public class WhereApply<
     @Override
     public WHERE notIn(QFunction<NQ> query) {
         return (WHERE) this.notIn(this.segment.queryClass(), query);
+    }
+
+    @Override
+    public WHERE notIn(IQuery query) {
+        ((BaseWrapper) query).setSharedParameter(this.segment.getParameters());
+        return this.segment.apply(this.current(), NOT_IN, query.getWrapperData().getQuerySql());
     }
 
     @Override

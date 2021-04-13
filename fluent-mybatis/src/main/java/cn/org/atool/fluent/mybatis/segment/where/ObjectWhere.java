@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -227,6 +228,13 @@ public interface ObjectWhere<
     /**
      * in (select ... )
      *
+     * @param query 嵌套查询
+     * @return 查询器或更新器
+     */
+    WHERE in(IQuery query);
+    /**
+     * in (select ... )
+     *
      * @param condition true时条件成立
      * @param query     嵌套查询
      * @return 查询器或更新器
@@ -303,6 +311,8 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     WHERE notIn(QFunction<NQ> query);
+
+    WHERE notIn(IQuery query);
 
     /**
      * not in (select ... )

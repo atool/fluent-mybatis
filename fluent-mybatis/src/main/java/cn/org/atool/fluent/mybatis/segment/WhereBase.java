@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -179,6 +181,12 @@ public abstract class WhereBase<
         ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
         query.apply(nestQuery);
         wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, nestQuery.getWrapperData().getQuerySql());
+        return this.and;
+    }
+
+    public WHERE exists(IQuery query) {
+        ((BaseWrapper) query).setSharedParameter(wrapper);
+        wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
         return this.and;
     }
 
@@ -382,6 +390,20 @@ public abstract class WhereBase<
         return this.nestedWhere(AND, query);
     }
 
+    /**
+     * and (子条件)
+     *
+     * @param query 子查询
+     * @return WHERE
+     */
+    public WHERE and(IQuery query) {
+        ((BaseWrapper) query).setSharedParameter(this.wrapper);
+        String sql = query.getWrapperData().getMergeSql();
+        if (If.notBlank(sql)) {
+            wrapper.getWrapperData().apply(AND, EMPTY, BRACKET, sql);
+        }
+        return this.and;
+    }
 
     /**
      * 嵌套查询
@@ -400,7 +422,7 @@ public abstract class WhereBase<
         final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
         query.apply(nested);
         String sql = nested.getWrapperData().getMergeSql();
-        if (sql != null && !sql.trim().isEmpty()) {
+        if (If.notBlank(sql)) {
             wrapper.getWrapperData().apply(andOr, EMPTY, BRACKET, sql);
         }
         return this.and;

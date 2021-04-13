@@ -34,6 +34,22 @@ public class AndNestedTest extends BaseTest {
             .eq("SELECT COUNT(*) FROM student WHERE id IN (SELECT id FROM student WHERE id = ?) AND ( age = ? AND id = ? )");
     }
 
+    @Test
+    void test_and_nested_query() {
+        StudentQuery query = new StudentQuery()
+            .where.id().in(new StudentQuery()
+                .selectId()
+                .where.id().eq(3L).end())
+            .and(new StudentQuery()
+                .where.age().eq(24)
+                .and.id().eq(3L).end()
+            )
+            .end();
+        mapper.count(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT COUNT(*) FROM student WHERE id IN (SELECT id FROM student WHERE id = ?) AND ( age = ? AND id = ? )");
+    }
+
     @DisplayName("And嵌套查询为空的场景")
     @Test
     void test_and_nested_is_null() {
