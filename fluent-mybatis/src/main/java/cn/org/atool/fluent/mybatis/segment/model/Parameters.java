@@ -3,8 +3,8 @@ package cn.org.atool.fluent.mybatis.segment.model;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.ref.WeakReference;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -113,13 +113,18 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 共享变量
      */
-    private Parameters sharedParameter;
+    private List<WeakReference<Parameters>> shared = new ArrayList<>();
 
     @Override
     public Object put(String key, Object value) {
         Object obj = super.put(key, value);
-        if (sharedParameter != null) {
-            sharedParameter.put(key, value);
+        for (Iterator<WeakReference<Parameters>> it = shared.iterator(); it.hasNext(); ) {
+            Parameters parameter = it.next().get();
+            if (parameter == null) {
+                it.remove();
+            } else {
+                parameter.put(key, value);
+            }
         }
         return obj;
     }
@@ -127,8 +132,13 @@ public class Parameters extends HashMap<String, Object> {
     @Override
     public void putAll(Map<? extends String, ?> m) {
         super.putAll(m);
-        if (sharedParameter != null) {
-            sharedParameter.putAll(m);
+        for (Iterator<WeakReference<Parameters>> it = shared.iterator(); it.hasNext(); ) {
+            Parameters parameter = it.next().get();
+            if (parameter == null) {
+                it.remove();
+            } else {
+                parameter.putAll(m);
+            }
         }
     }
 
@@ -138,8 +148,8 @@ public class Parameters extends HashMap<String, Object> {
      * @param shared
      */
     public void setSharedParameter(Parameters shared) {
-        if (this != shared && this.sharedParameter != shared) {
-            this.sharedParameter = shared;
+        if (this != shared && this.shared != shared) {
+            this.shared.add(new WeakReference<>(shared));
             shared.putAll(this);
         }
     }
