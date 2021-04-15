@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
@@ -30,17 +32,18 @@ import static java.lang.String.format;
  */
 public abstract class BaseSqlProvider<E extends IEntity> {
     /**
-     * 批量更新, 插入, 删除操作
+     * 批量更新, 插入, 删除操作语句构造
+     * {@link IEntityMapper#batchCrud(BatchCrud)}
      *
      * @param map
      * @return
      */
-    public static String batchUpdate(Map map) {
+    public static String batchCrud(Map map) {
         IWrapper wrapper = getWrapper(map, Param_EW);
-        if (!(wrapper instanceof BatchUpdaterImpl)) {
+        if (!(wrapper instanceof BatchCrudImpl)) {
             throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
         }
-        return ((BatchUpdaterImpl) wrapper).batchSql();
+        return ((BatchCrudImpl) wrapper).batchSql();
     }
 
     /**

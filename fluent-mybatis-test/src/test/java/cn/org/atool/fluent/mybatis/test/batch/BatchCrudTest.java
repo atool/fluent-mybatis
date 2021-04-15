@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.batch;
 
-import cn.org.atool.fluent.mybatis.base.BatchUpdater;
+import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
-public class BatchUpdateTest extends BaseTest {
+public class BatchCrudTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
@@ -40,7 +40,7 @@ public class BatchUpdateTest extends BaseTest {
         HomeAddressUpdate update2 = new HomeAddressUpdate()
             .update.address().is("address 24").end()
             .where.id().eq(24L).end();
-        mapper.batchUpdate(BatchUpdater.newBatch()
+        mapper.batchCrud(BatchCrud.batch()
             .addInsert(
                 new StudentEntity().setId(100L).setUserName("user 100"),
                 new HomeAddressEntity().setAddress("address 100").setStudentId(100L))

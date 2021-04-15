@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.mybatis.base.BatchUpdater;
+import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -15,7 +15,12 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class BatchUpdaterImpl implements BatchUpdater {
+/**
+ * 批量增删改语句构造实现
+ *
+ * @author wudarui
+ */
+public class BatchCrudImpl implements BatchCrud {
     @Getter
     protected final WrapperData wrapperData = new WrapperData();
 
@@ -26,7 +31,7 @@ public class BatchUpdaterImpl implements BatchUpdater {
     }
 
     @Override
-    public BatchUpdater addUpdate(IBaseUpdate... updates) {
+    public BatchCrud addUpdate(IBaseUpdate... updates) {
         for (IBaseUpdate updater : updates) {
             if (!(updater instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
@@ -40,8 +45,8 @@ public class BatchUpdaterImpl implements BatchUpdater {
     }
 
     @Override
-    public BatchUpdater addDelete(IBaseQuery... queries) {
-        for (IBaseQuery query : queries) {
+    public BatchCrud addDelete(IBaseQuery... deletes) {
+        for (IBaseQuery query : deletes) {
             if (!(query instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
@@ -87,7 +92,7 @@ public class BatchUpdaterImpl implements BatchUpdater {
     private static final String ENTITY_LIST_KEY = "list";
 
     @Override
-    public BatchUpdater addInsert(IEntity... entities) {
+    public BatchCrud addInsert(IEntity... entities) {
         for (IEntity entity : entities) {
             if (entity == null) {
                 continue;

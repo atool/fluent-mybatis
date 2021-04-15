@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
-import cn.org.atool.fluent.mybatis.base.BatchUpdater;
+import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -36,11 +36,21 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     @Select("{CALL ${procedure}}")
     void callProcedure(@Param("procedure") String procedure, @Param("p") Object parameter);
 
+    /**
+     * 批量执行增删改操作
+     *
+     * <pre>
+     * 传入多个操作时, 需要数据库支持
+     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * </pre>
+     *
+     * @param crud 增删改操作
+     */
     @UpdateProvider(
         type = BaseSqlProvider.class,
-        method = "batchUpdate"
+        method = "batchCrud"
     )
-    void batchUpdate(@Param(Param_EW)BatchUpdater updater);
+    void batchCrud(@Param(Param_EW) BatchCrud crud);
 
     /**
      * 插入一条记录, 主键字段为空
