@@ -24,7 +24,7 @@ public class NestedQueryTest extends BaseTest {
     void test_or_nested() {
         StudentQuery query = new StudentQuery()
             .selectId()
-            .where.exists(HomeAddressQuery.class, q -> q
+            .where.exists(new HomeAddressQuery()
                 .where.address().like("u")
                 .and.id().apply("=student.home_address_id").end())
             .end();
@@ -63,7 +63,7 @@ public class NestedQueryTest extends BaseTest {
     @Test
     void test_nested_query_address_like() {
         StudentQuery query = new StudentQuery()
-            .where.id().in(HomeAddressQuery.class, q -> q
+            .where.id().in(new HomeAddressQuery()
                 .select.apply(studentId).end()
                 .where.address().like("杭州滨江").end())
             .end();

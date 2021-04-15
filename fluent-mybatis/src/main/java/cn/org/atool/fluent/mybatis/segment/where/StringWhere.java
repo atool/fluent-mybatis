@@ -39,7 +39,7 @@ public interface StringWhere<
      * @return self
      */
     default WHERE like(String value, Predicate<String> when) {
-        return this.apply(when.test(value), LIKE, SqlLike.like(value));
+        return this.apply(args -> when.test(value), LIKE, SqlLike.like(value));
     }
 
     /**
@@ -71,7 +71,7 @@ public interface StringWhere<
      * @return self
      */
     default WHERE notLike(String value, Predicate<String> when) {
-        return this.apply(when.test(value), NOT_LIKE, SqlLike.like(value));
+        return this.apply(args -> when.test(value), NOT_LIKE, SqlLike.like(value));
     }
 
     /**
@@ -103,7 +103,7 @@ public interface StringWhere<
      * @return where
      */
     default WHERE likeLeft(String value, Predicate<String> when) {
-        return this.apply(when.test(value), LIKE, SqlLike.left(value));
+        return this.apply(args -> when.test(value), LIKE, SqlLike.left(value));
     }
 
     /**
@@ -124,6 +124,6 @@ public interface StringWhere<
      * @return where
      */
     default WHERE likeRight(String value, Predicate<String> when) {
-        return this.apply(when.test(value), LIKE, SqlLike.right(value));
+        return this.apply(args -> when.test(value), LIKE, SqlLike.right(value));
     }
 }

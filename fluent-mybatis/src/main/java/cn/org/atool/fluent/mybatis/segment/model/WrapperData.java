@@ -73,7 +73,7 @@ public class WrapperData implements IWrapperData {
      */
     private final Class queryClass;
 
-    protected WrapperData() {
+    public WrapperData() {
         this.parameters = new Parameters();
         this.queryClass = null;
         this.entityClass = null;
@@ -251,5 +251,13 @@ public class WrapperData implements IWrapperData {
     public String hint(HintType type) {
         String hint = this.hints.get(type);
         return isBlank(hint) ? SPACE : SPACE + hint + SPACE;
+    }
+
+    public void setSharedParameter(WrapperData wrapperData) {
+        this.getParameters().setSharedParameter(wrapperData.getParameters());
+    }
+
+    public void setSharedParameter(Parameters parameters) {
+        this.getParameters().setSharedParameter(parameters);
     }
 }

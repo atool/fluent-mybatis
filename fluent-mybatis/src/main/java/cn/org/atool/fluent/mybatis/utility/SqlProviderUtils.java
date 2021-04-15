@@ -30,14 +30,19 @@ public class SqlProviderUtils {
     public static final String Wrapper_Paged_End_Offset = format("#{%s.paged.endOffset}", Wrapper_Data);
 
     public static WrapperData getWrapperData(Map map, String paraName) {
-        IWrapper wrapper = (IWrapper) map.get(paraName);
-        if (wrapper == null) {
-            throw new RuntimeException("param[" + paraName + "] not found.");
-        }
+        IWrapper wrapper = getWrapper(map, paraName);
         if (wrapper.getWrapperData() == null) {
             throw new RuntimeException("no query condition found.");
         }
         return wrapper.getWrapperData();
+    }
+
+    public static IWrapper getWrapper(Map map, String paraName) {
+        IWrapper wrapper = (IWrapper) map.get(paraName);
+        if (wrapper == null) {
+            throw new RuntimeException("param[" + paraName + "] not found.");
+        }
+        return wrapper;
     }
 
     public static <O> O getParas(Map map, String paraName) {

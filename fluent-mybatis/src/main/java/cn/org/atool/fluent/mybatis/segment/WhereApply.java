@@ -14,6 +14,7 @@ import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -89,8 +90,8 @@ public class WhereApply<
     }
 
     @Override
-    public <O> WHERE apply(boolean condition, SqlOp op, O... args) {
-        return condition ? this.apply(op, args) : segment;
+    public <O> WHERE apply(Predicate<Object[]> predicate, SqlOp op, O... args) {
+        return predicate.test(args) ? this.apply(op, args) : segment;
     }
 
     /**
@@ -122,12 +123,14 @@ public class WhereApply<
      */
     @Override
     public WHERE in(QFunction<NQ> query) {
-        return (WHERE) this.in(this.segment.queryClass(), query);
+        NQ nested = NestedQueryFactory.nested(this.segment.queryClass());
+        query.apply(nested);
+        return this.in(nested);
     }
 
     @Override
     public WHERE in(IQuery query) {
-        ((BaseWrapper) query).setSharedParameter(this.segment.wrapper);
+        ((BaseWrapper) query).setSharedParameter(this.segment.getParameters());
         return this.segment.apply(this.current(), IN, query.getWrapperData().getQuerySql());
     }
 
@@ -136,24 +139,9 @@ public class WhereApply<
         return condition ? this.in(query) : this.segment;
     }
 
-    /**
-     * in (select ... )
-     *
-     * @param klass 嵌套查询类
-     * @param query 嵌套查询
-     * @param <NQ>  嵌套查询类
-     * @return 查询器或更新器
-     */
     @Override
-    public <NQ extends IBaseQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(klass, this.segment.getParameters());
-        query.apply(nested);
-        return this.segment.apply(this.current(), IN, nested.getWrapperData().getQuerySql());
-    }
-
-    @Override
-    public <NQ extends IBaseQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query) {
-        return condition ? this.in(klass, query) : this.segment;
+    public WHERE in(boolean condition, IQuery query) {
+        return condition ? this.in(query) : this.segment;
     }
 
     /**
@@ -164,7 +152,9 @@ public class WhereApply<
      */
     @Override
     public WHERE notIn(QFunction<NQ> query) {
-        return (WHERE) this.notIn(this.segment.queryClass(), query);
+        NQ nested = NestedQueryFactory.nested(this.segment.queryClass());
+        query.apply(nested);
+        return this.notIn(nested);
     }
 
     @Override
@@ -178,26 +168,9 @@ public class WhereApply<
         return condition ? this.notIn(query) : this.segment;
     }
 
-    /**
-     * not in (select ... )
-     *
-     * @param queryClass 嵌套查询类
-     * @param query      嵌套查询
-     * @param <NQ>       嵌套查询类
-     * @return 查询器或更新器
-     */
     @Override
-    public <NQ extends IBaseQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(queryClass, this.segment.getParameters());
-        query.apply(nested);
-        return this.segment.apply(this.current(), NOT_IN, nested.getWrapperData().getQuerySql());
-    }
-
-    @Override
-    public <NQ extends IBaseQuery<?, NQ>> WHERE notIn(
-        boolean condition, Class<NQ> queryClass, QFunction<NQ> query
-    ) {
-        return condition ? this.notIn(queryClass, query) : this.segment;
+    public WHERE notIn(boolean condition, IQuery query) {
+        return condition ? this.notIn(query) : this.segment;
     }
 
     @Override
@@ -211,8 +184,8 @@ public class WhereApply<
     }
 
     @Override
-    public WHERE applyFunc(boolean condition, SqlOp op, String expression, Object... args) {
-        if (condition) {
+    public WHERE applyFunc(Predicate<Object[]> predicate, SqlOp op, String expression, Object... args) {
+        if (predicate.test(args)) {
             this.apply(op, expression, args);
         }
         return this.segment.and;

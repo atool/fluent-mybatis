@@ -37,7 +37,7 @@ public interface NumericWhere<
      * @return 查询器或更新器
      */
     default WHERE in(int[] values, Predicate<int[]> when) {
-        return this.apply(when.test(values), IN, toArray(values));
+        return this.apply(args -> when.test(values), IN, toArray(values));
     }
 
     /**
@@ -58,7 +58,7 @@ public interface NumericWhere<
      * @return 查询器或更新器
      */
     default WHERE in(long[] values, Predicate<long[]> when) {
-        return this.apply(when.test(values), IN, toArray(values));
+        return this.apply(args -> when.test(values), IN, toArray(values));
     }
 
     /**
@@ -79,7 +79,7 @@ public interface NumericWhere<
      * @return 查询器或更新器
      */
     default WHERE notIn(int[] values, Predicate<int[]> when) {
-        return this.apply(when.test(values), NOT_IN, toArray(values));
+        return this.apply(args -> when.test(values), NOT_IN, toArray(values));
     }
 
     /**
@@ -101,6 +101,6 @@ public interface NumericWhere<
      * @return 查询器或更新器
      */
     default WHERE notIn(long[] values, Predicate<long[]> when) {
-        return this.apply(when.test(values), NOT_IN, toArray(values));
+        return this.apply(args -> when.test(values), NOT_IN, toArray(values));
     }
 }

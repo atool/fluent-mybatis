@@ -115,14 +115,22 @@ public class Parameters extends HashMap<String, Object> {
      */
     private List<WeakReference<Parameters>> shared = new ArrayList<>();
 
+    private Parameters nextShared(Iterator<WeakReference<Parameters>> it) {
+        WeakReference<Parameters> ref = it.next();
+        if (ref == null || ref.get() == null) {
+            it.remove();
+            return null;
+        } else {
+            return ref.get();
+        }
+    }
+
     @Override
     public Object put(String key, Object value) {
         Object obj = super.put(key, value);
         for (Iterator<WeakReference<Parameters>> it = shared.iterator(); it.hasNext(); ) {
-            Parameters parameter = it.next().get();
-            if (parameter == null) {
-                it.remove();
-            } else {
+            Parameters parameter = this.nextShared(it);
+            if (parameter != null) {
                 parameter.put(key, value);
             }
         }
@@ -133,10 +141,8 @@ public class Parameters extends HashMap<String, Object> {
     public void putAll(Map<? extends String, ?> m) {
         super.putAll(m);
         for (Iterator<WeakReference<Parameters>> it = shared.iterator(); it.hasNext(); ) {
-            Parameters parameter = it.next().get();
-            if (parameter == null) {
-                it.remove();
-            } else {
+            Parameters parameter = this.nextShared(it);
+            if (parameter != null) {
                 parameter.putAll(m);
             }
         }
@@ -148,9 +154,16 @@ public class Parameters extends HashMap<String, Object> {
      * @param shared
      */
     public void setSharedParameter(Parameters shared) {
-        if (this != shared && this.shared != shared) {
-            this.shared.add(new WeakReference<>(shared));
-            shared.putAll(this);
+        if (this == shared) {
+            return;
         }
+        // 已设置过共享
+        for (WeakReference<Parameters> item : this.shared) {
+            if (item.get() == shared) {
+                return;
+            }
+        }
+        this.shared.add(new WeakReference<>(shared));
+        shared.putAll(this);
     }
 }

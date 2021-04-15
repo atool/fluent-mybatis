@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.test.ifs;
+package cn.org.atool.fluent.mybatis.test.batch;
 
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.customize.mapper.StudentBatchMapper;
@@ -87,7 +87,6 @@ public class UpdateBatchTest extends BaseTest {
     @DisplayName("批量更新不同表")
     @Test
     public void testUpdateBatch_different() {
-
         StudentUpdate update1 = new StudentUpdate()
             .update.userName().is("user name23").end()
             .where.id().eq(23L).end();

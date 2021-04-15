@@ -17,8 +17,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
+import static java.lang.Integer.min;
 import static java.lang.String.format;
 
 /**
@@ -28,13 +30,27 @@ import static java.lang.String.format;
  */
 public abstract class BaseSqlProvider<E extends IEntity> {
     /**
+     * 批量更新, 插入, 删除操作
+     *
+     * @param map
+     * @return
+     */
+    public static String batchUpdate(Map map) {
+        IWrapper wrapper = getWrapper(map, Param_EW);
+        if (!(wrapper instanceof BatchUpdaterImpl)) {
+            throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
+        }
+        return ((BatchUpdaterImpl) wrapper).batchSql();
+    }
+
+    /**
      * 插入id未赋值的entity
      *
      * @param entity
      * @return
      */
     public String insert(E entity) {
-        return insertEntity(entity, false);
+        return buildInsertSql(EMPTY, entity, false);
     }
 
     /**
@@ -44,7 +60,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String insertWithPk(E entity) {
-        return insertEntity(entity, true);
+        return buildInsertSql(EMPTY, entity, true);
     }
 
     public String insertBatch(Map map) {
@@ -57,19 +73,6 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty(Param_List, map);
         List<E> entities = getParas(map, Param_List);
         return this.insertBatch(entities, true);
-    }
-
-    private String insertEntity(E entity, boolean withPk) {
-        assertNotNull(Param_Entity, entity);
-        this.validateInsertEntity(entity, withPk);
-        MapperSql sql = new MapperSql();
-        sql.INSERT_INTO(this.tableName());
-        InsertList inserts = new InsertList();
-        this.insertEntity(inserts, entity, withPk);
-        sql.INSERT_COLUMNS(inserts.columns);
-        sql.VALUES();
-        sql.INSERT_VALUES(inserts.values);
-        return sql.toString();
     }
 
     private String insertBatch(List<E> entities, boolean withPk) {
@@ -111,7 +114,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param entity
      * @param withPk
      */
-    protected abstract void insertEntity(InsertList inserts, E entity, boolean withPk);
+    protected abstract void insertEntity(InsertList inserts, String prefix, E entity, boolean withPk);
 
     /**
      * 批量插入时，第index个实例VALUES SQL构造
@@ -322,15 +325,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String delete(Map map) {
         WrapperData data = getWrapperData(map, Param_EW);
-        MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName(), data);
-        sql.WHERE_GROUP_ORDER_BY(data);
-        return sql.toString();
+        return buildDeleteSql(data);
     }
-
-    final static String Para_Regex = "#\\{ew\\.wrapperData\\.parameters\\.";
-
-    final static String Para_Format = "#{ew[%d].wrapperData.parameters.";
 
     /**
      * update(IQuery) SQL构造
@@ -343,49 +339,52 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         if (If.isEmpty(wrapper)) {
             throw FluentMybatisException.instance("the parameter[%s] can't be empty.", Param_EW);
         }
-        if (wrapper instanceof IUpdate) {
-            /**
-             * v1.4.11 升级兼容
-             * 兼容应用升级了,但生产代码的独立jar没有升级场景
-             * 后续可以去掉
-             * **/
-            IUpdate updater = (IUpdate) wrapper;
-            String sql = this.getUpdaterSql(updater);
-            return sql;
-        } else if (wrapper instanceof IUpdate[]) {
-            IUpdate[] updaters = (IUpdate[]) wrapper;
-            List<String> list = new ArrayList<>(updaters.length);
-            int index = 0;
-            for (IUpdate updater : updaters) {
-                String sql = this.getUpdaterSql(updater);
-                /**
-                 * 替换变量占位符, 数组下标方式
-                 */
-                sql = sql.replaceAll(Para_Regex, format(Para_Format, index));
-                index++;
-                list.add(sql);
-            }
-            String text = list.stream().collect(Collectors.joining(";\n"));
-            return text;
-        } else {
-            throw new IllegalArgumentException(format("the parameter[%s] type illegal.", Param_EW));
+        if (!(wrapper instanceof IUpdate[])) {
+            throw new IllegalArgumentException("the parameter should be an array of IUpdate");
         }
+        IUpdate[] updaters = (IUpdate[]) wrapper;
+        List<String> list = new ArrayList<>(updaters.length);
+        int index = 0;
+        for (IUpdate updater : updaters) {
+            String sql = this.buildUpdaterSql(updater.getWrapperData());
+            sql = this.addEwParaIndex(sql, format("[%d]", index));
+            index++;
+            list.add(sql);
+        }
+        String text = list.stream().collect(Collectors.joining(";\n"));
+        return text;
     }
 
-    private String getUpdaterSql(IUpdate updater) {
-        WrapperData data = updater.getWrapperData();
-        assertNotNull("wrapperData of updater", data);
-        Map<String, String> updates = data.getUpdates();
-        assertNotEmpty("updates", updates);
+    private final static char[] EW_CONST = "#{ew.".toCharArray();
 
-        MapperSql sql = new MapperSql();
-        sql.UPDATE(data.getTable(), data);
-        List<String> sets = this.updateDefaults(updates);
-        sets.add(data.getUpdateStr());
-        sql.SET(sets);
-        sql.WHERE_GROUP_ORDER_BY(data);
-        sql.LIMIT(data, true);
-        return sql.toString();
+    private final static String sub = ".wrapperData.parameters.";
+
+    /**
+     * 替换变量占位符, 增加ew数组下标
+     * #{ew.wrapperData.parameters.xxx}替换为#{ew[0].wrapperData.parameters.xxx}
+     * 不采用正则表达式方式替换, 是编码方式替换简单，一次字符串扫描即可完成
+     *
+     * @param sql
+     * @param aIndex
+     * @return
+     */
+    static String addEwParaIndex(String sql, String aIndex) {
+        StringBuilder buff = new StringBuilder();
+        int match = 0;
+        int len = sql.length();
+        for (int loop = 0; loop < sql.length(); loop++) {
+            char ch = sql.charAt(loop);
+            if (match == 4) {
+                if (sql.substring(loop, min(sub.length() + loop, len)).equals(sub)) {
+                    buff.append(aIndex);
+                }
+                match = 0;
+            } else {
+                match = EW_CONST[match] == ch ? match + 1 : 0;
+            }
+            buff.append(ch);
+        }
+        return buff.toString();
     }
 
     /**
@@ -431,4 +430,59 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     protected abstract DbType dbType();
+
+    /**
+     * 构建插入语句
+     *
+     * @param prefix entity变量前缀
+     * @param entity
+     * @param withPk 包含主键?
+     * @return
+     */
+    public String buildInsertSql(String prefix, E entity, boolean withPk) {
+        assertNotNull(Param_Entity, entity);
+        this.validateInsertEntity(entity, withPk);
+        MapperSql sql = new MapperSql();
+        sql.INSERT_INTO(this.tableName());
+        InsertList inserts = new InsertList();
+        this.insertEntity(inserts, prefix, entity, withPk);
+        sql.INSERT_COLUMNS(inserts.columns);
+        sql.VALUES();
+        sql.INSERT_VALUES(inserts.values);
+        return sql.toString();
+    }
+
+    /**
+     * 根据WrapperData设置构建更新语句
+     *
+     * @param data
+     * @return
+     */
+    public String buildUpdaterSql(WrapperData data) {
+        assertNotNull("wrapperData of updater", data);
+        Map<String, String> updates = data.getUpdates();
+        assertNotEmpty("updates", updates);
+
+        MapperSql sql = new MapperSql();
+        sql.UPDATE(data.getTable(), data);
+        List<String> sets = this.updateDefaults(updates);
+        sets.add(data.getUpdateStr());
+        sql.SET(sets);
+        sql.WHERE_GROUP_ORDER_BY(data);
+        sql.LIMIT(data, true);
+        return sql.toString();
+    }
+
+    /**
+     * 根据WrapperData设置构建删除语句
+     *
+     * @param data
+     * @return
+     */
+    public String buildDeleteSql(WrapperData data) {
+        MapperSql sql = new MapperSql();
+        sql.DELETE_FROM(this.tableName(), data);
+        sql.WHERE_GROUP_ORDER_BY(data);
+        return sql.toString();
+    }
 }

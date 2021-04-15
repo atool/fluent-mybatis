@@ -146,16 +146,17 @@ public class SqlProviderFiler extends AbstractFiler {
     private MethodSpec m_insertEntity() {
         MethodSpec.Builder spec = super.protectedMethod(M_Insert_Entity, true, null)
             .addParameter(InsertList.class, "inserts")
+            .addParameter(String.class, "prefix")
             .addParameter(fluent.entity(), Param_Entity)
             .addParameter(ClassName.BOOLEAN, "withPk");
 
         for (CommonField field : this.fluent.getFields()) {
             if (field.isPrimary()) {
                 spec.addCode("if (withPk) {\n")
-                    .addStatement("\tinserts.add($L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getInsert())
+                    .addStatement("\tinserts.add(prefix, $L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getInsert())
                     .addCode("}\n");
             } else {
-                spec.addStatement("inserts.add($L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getInsert());
+                spec.addStatement("inserts.add(prefix, $L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getInsert());
             }
         }
         return spec.build();

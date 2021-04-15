@@ -23,14 +23,15 @@ public class InsertList {
     /**
      * insert字段表达式
      *
+     * @param prefix   前置
      * @param field    对象字段
      * @param value    对象属性值
      * @param _default insert默认值
      */
-    public InsertList add(FieldMapping field, Object value, String _default) {
+    public InsertList add(String prefix, FieldMapping field, Object value, String _default) {
         if (value != null) {
             this.columns.add(field.column);
-            this.values.add("#{" + field.name + "}");
+            this.values.add("#{" + prefix + field.name + "}");
         } else if (notBlank(_default)) {
             this.columns.add(field.column);
             this.values.add(_default);

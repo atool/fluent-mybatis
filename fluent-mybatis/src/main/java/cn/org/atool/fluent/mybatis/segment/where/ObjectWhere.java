@@ -35,7 +35,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE gt(T value, Predicate<T> when) {
-        return this.apply(when.test(value), GT, value);
+        return this.apply(args -> when.test(value), GT, value);
     }
 
     /**
@@ -67,7 +67,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE ge(T value, Predicate<T> when) {
-        return this.apply(when.test(value), GE, value);
+        return this.apply(args -> when.test(value), GE, value);
     }
 
     /**
@@ -99,7 +99,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE lt(T value, Predicate<T> when) {
-        return this.apply(when.test(value), LT, value);
+        return this.apply(args -> when.test(value), LT, value);
     }
 
     /**
@@ -131,7 +131,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE le(T value, Predicate<T> when) {
-        return this.apply(when.test(value), LE, value);
+        return this.apply(args -> when.test(value), LE, value);
     }
 
     /**
@@ -163,7 +163,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE in(T[] values, Predicate<T[]> when) {
-        return this.apply(when.test(values), IN, values);
+        return this.apply(args -> when.test(values), IN, values);
     }
 
     /**
@@ -184,7 +184,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default WHERE in(Collection values, Predicate<Collection> when) {
-        return this.apply(when.test(values), IN, values == null ? new Object[0] : values.toArray());
+        return this.apply(args -> when.test(values), IN, values == null ? new Object[0] : values.toArray());
     }
 
     /**
@@ -232,6 +232,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     WHERE in(IQuery query);
+
     /**
      * in (select ... )
      *
@@ -244,23 +245,11 @@ public interface ObjectWhere<
     /**
      * in (select ... )
      *
-     * @param klass 嵌套查询类
-     * @param query 嵌套查询
-     * @param <NQ>  嵌套查询类
-     * @return 查询器或更新器
-     */
-    <NQ extends IBaseQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query);
-
-    /**
-     * in (select ... )
-     *
      * @param condition true时条件成立
-     * @param klass     嵌套查询类
      * @param query     嵌套查询
-     * @param <NQ>      嵌套查询类
      * @return 查询器或更新器
      */
-    <NQ extends IBaseQuery> WHERE in(boolean condition, Class<NQ> klass, QFunction<NQ> query);
+    WHERE in(boolean condition, IQuery query);
 
     /**
      * not in (values)
@@ -280,7 +269,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE notIn(T[] values, Predicate<T[]> when) {
-        return this.apply(when.test(values), NOT_IN, values);
+        return this.apply(args -> when.test(values), NOT_IN, values);
     }
 
     /**
@@ -301,7 +290,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default WHERE notIn(Collection values, Predicate<Collection> when) {
-        return this.apply(when.test(values), NOT_IN, values == null ? new Object[0] : values.toArray());
+        return this.apply(args -> when.test(values), NOT_IN, values == null ? new Object[0] : values.toArray());
     }
 
     /**
@@ -326,23 +315,11 @@ public interface ObjectWhere<
     /**
      * not in (select ... )
      *
-     * @param queryClass 嵌套查询类
-     * @param query      嵌套查询
-     * @param <NQ>       嵌套查询类
+     * @param condition true时条件成立
+     * @param query     嵌套查询
      * @return 查询器或更新器
      */
-    <NQ extends IBaseQuery<?, NQ>> WHERE notIn(Class<NQ> queryClass, QFunction<NQ> query);
-
-    /**
-     * not in (select ... )
-     *
-     * @param condition  true时条件成立
-     * @param queryClass 嵌套查询类
-     * @param query      嵌套查询
-     * @param <NQ>       嵌套查询类
-     * @return 查询器或更新器
-     */
-    <NQ extends IBaseQuery<?, NQ>> WHERE notIn(boolean condition, Class<NQ> queryClass, QFunction<NQ> query);
+    WHERE notIn(boolean condition, IQuery query);
 
     /**
      * @param value1 条件值
@@ -360,7 +337,7 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE between(T value1, T value2, BiPredicate<T, T> when) {
-        return this.apply(when.test(value1, value2), BETWEEN, value1, value2);
+        return this.apply(args -> when.test(value1, value2), BETWEEN, value1, value2);
     }
 
     /**
@@ -379,6 +356,6 @@ public interface ObjectWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE notBetween(T value1, T value2, BiPredicate<T, T> when) {
-        return this.apply(when.test(value1, value2), NOT_BETWEEN, value1, value2);
+        return this.apply(args -> when.test(value1, value2), NOT_BETWEEN, value1, value2);
     }
 }

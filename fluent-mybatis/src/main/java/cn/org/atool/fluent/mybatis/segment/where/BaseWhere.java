@@ -36,7 +36,7 @@ public interface BaseWhere<
      * @return 查询器或更新器
      */
     default WHERE isNull(boolean condition) {
-        return this.apply(condition, IS_NULL);
+        return this.apply(args -> condition, IS_NULL);
     }
 
 
@@ -56,7 +56,7 @@ public interface BaseWhere<
      * @return 查询器或更新器
      */
     default WHERE notNull(boolean condition) {
-        return this.apply(condition, NOT_NULL);
+        return this.apply(args -> condition, NOT_NULL);
     }
 
     /**
@@ -88,7 +88,7 @@ public interface BaseWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE eq(T value, Predicate<T> when) {
-        return this.apply(when.test(value), EQ, value);
+        return this.apply(args -> when.test(value), EQ, value);
     }
 
     /**
@@ -109,7 +109,7 @@ public interface BaseWhere<
      * @return 查询器或更新器
      */
     default <T> WHERE ne(T value, Predicate<T> when) {
-        return this.apply(when.test(value), NE, value);
+        return this.apply(args -> when.test(value), NE, value);
     }
 
     /**
@@ -135,7 +135,7 @@ public interface BaseWhere<
      */
     <T> WHERE apply(SqlOp op, Ifs<T> ifs);
 
-    <T> WHERE apply(boolean condition, SqlOp op, T... args);
+    <T> WHERE apply(Predicate<Object[]> predicate, SqlOp op, T... args);
 
     /**
      * where 自定义条件(包括操作符在内）
@@ -159,11 +159,11 @@ public interface BaseWhere<
     /**
      * 自定义 函数或表达式
      *
-     * @param condition  true时成立
+     * @param predicate  true时成立
      * @param op         比较符号
      * @param expression 函数或表达式
      * @param args       函数或表达式的参数
      * @return
      */
-    WHERE applyFunc(boolean condition, SqlOp op, String expression, Object... args);
+    WHERE applyFunc(Predicate<Object[]> predicate, SqlOp op, String expression, Object... args);
 }

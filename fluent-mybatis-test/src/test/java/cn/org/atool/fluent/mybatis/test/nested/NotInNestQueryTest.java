@@ -33,7 +33,7 @@ public class NotInNestQueryTest extends BaseTest {
     void test_and_in_nested2() {
         HomeAddressQuery query = new HomeAddressQuery().
             selectId()
-            .where.id().notIn(StudentQuery.class, q -> q
+            .where.id().notIn(new StudentQuery()
                 .select.homeAddressId().end()
                 .where.age().eq(24).end())
             .end();

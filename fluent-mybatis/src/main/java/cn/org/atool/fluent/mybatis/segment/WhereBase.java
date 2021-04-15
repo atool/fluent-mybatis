@@ -134,13 +134,13 @@ public abstract class WhereBase<
      *
      * <p>例: EXISTS("select id from table where age = 1")</p>
      *
-     * @param condition true时条件成立
+     * @param predicate true时条件成立
      * @param select    exists sql语句
      * @param values    参数, 对应 select 语句中的 "?" 占位符
      * @return self
      */
-    public WHERE exists(boolean condition, String select, Object... values) {
-        return condition ? this.exists(select, values) : this.and;
+    public WHERE exists(Predicate<Object[]> predicate, String select, Object... values) {
+        return predicate.test(values) ? this.exists(select, values) : this.and;
     }
 
     /**
@@ -152,7 +152,9 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE exists(QFunction<NestedQ> query) {
-        return (WHERE) this.exists(wrapper.getWrapperData().getQueryClass(), query);
+        NestedQ nestQuery = NestedQueryFactory.nested(this.queryClass());
+        query.apply(nestQuery);
+        return this.exists(nestQuery);
     }
 
     /**
@@ -172,18 +174,9 @@ public abstract class WhereBase<
      *
      * <p>例: EXISTS("select id from table where age = 1")</p>
      *
-     * @param queryClass 嵌套查询对应的类
-     * @param query      嵌套查询
+     * @param query 嵌套查询
      * @return self
      */
-    public <ANQ extends IBaseQuery<?, ANQ>> WHERE exists(Class<ANQ> queryClass, QFunction<ANQ> query) {
-        Parameters parameters = wrapper.getWrapperData().getParameters();
-        ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
-        query.apply(nestQuery);
-        wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, nestQuery.getWrapperData().getQuerySql());
-        return this.and;
-    }
-
     public WHERE exists(IQuery query) {
         ((BaseWrapper) query).setSharedParameter(wrapper);
         wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
@@ -193,14 +186,16 @@ public abstract class WhereBase<
     /**
      * EXISTS ( sql语句 )
      *
-     * @param condition  条件为真时成立
-     * @param queryClass
-     * @param query
-     * @param <ANQ>
-     * @return
+     * @param condition 条件为真时成立
+     * @param query     子查询
+     * @return WHERE
      */
-    public <ANQ extends IBaseQuery<?, ANQ>> WHERE exists(boolean condition, Class<ANQ> queryClass, QFunction<ANQ> query) {
-        return condition ? this.exists(queryClass, query) : this.and;
+    public WHERE exists(boolean condition, IQuery query) {
+        if (condition) {
+            ((BaseWrapper) query).setSharedParameter(wrapper);
+            wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
+        }
+        return this.and;
     }
 
     /**
@@ -222,13 +217,13 @@ public abstract class WhereBase<
      *
      * <p>例: NOT EXISTS("select id from table where age = 1")</p>
      *
-     * @param condition true时条件成立
+     * @param predicate true时条件成立
      * @param select    not exists sql语句
      * @param values    select语句参数, 对应notExistsSql语句中的 "?" 占位符
      * @return self
      */
-    public WHERE notExists(boolean condition, String select, Object... values) {
-        return condition ? this.notExists(select, values) : this.and;
+    public WHERE notExists(Predicate<Object[]> predicate, String select, Object... values) {
+        return predicate.test(values) ? this.notExists(select, values) : this.and;
     }
 
     /**
@@ -240,7 +235,9 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE notExists(QFunction<NestedQ> query) {
-        return (WHERE) this.notExists(wrapper.getWrapperData().getQueryClass(), query);
+        NestedQ nestQuery = NestedQueryFactory.nested(this.queryClass());
+        query.apply(nestQuery);
+        return this.notExists(nestQuery);
     }
 
     /**
@@ -261,15 +258,12 @@ public abstract class WhereBase<
      *
      * <p>例: NOT EXISTS("select id from table where age = 1")</p>
      *
-     * @param queryClass 嵌套查询对应的类
-     * @param query      嵌套查询
+     * @param query 子查询
      * @return self
      */
-    public <ANQ extends IBaseQuery> WHERE notExists(Class<ANQ> queryClass, QFunction<ANQ> query) {
-        Parameters parameters = wrapper.getWrapperData().getParameters();
-        ANQ nestQuery = NestedQueryFactory.nested(queryClass, parameters);
-        query.apply(nestQuery);
-        wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, nestQuery.getWrapperData().getQuerySql());
+    public WHERE notExists(IQuery query) {
+        ((BaseWrapper) query).setSharedParameter(wrapper);
+        wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, query.getWrapperData().getQuerySql());
         return this.and;
     }
 
@@ -278,15 +272,12 @@ public abstract class WhereBase<
      *
      * <p>例: NOT EXISTS("select id from table where age = 1")</p>
      *
-     * @param condition  true时条件成立
-     * @param queryClass 嵌套查询对应的类
-     * @param query      嵌套查询
+     * @param condition true时条件成立
+     * @param query     嵌套查询
      * @return self
      */
-    public <ANQ extends IBaseQuery> WHERE notExists(
-        boolean condition, Class<ANQ> queryClass, QFunction<ANQ> query
-    ) {
-        return condition ? this.notExists(queryClass, query) : this.and;
+    public WHERE notExists(boolean condition, IQuery query) {
+        return condition ? this.notExists(query) : this.and;
     }
 
     /**
@@ -391,21 +382,6 @@ public abstract class WhereBase<
     }
 
     /**
-     * and (子条件)
-     *
-     * @param query 子查询
-     * @return WHERE
-     */
-    public WHERE and(IQuery query) {
-        ((BaseWrapper) query).setSharedParameter(this.wrapper);
-        String sql = query.getWrapperData().getMergeSql();
-        if (If.notBlank(sql)) {
-            wrapper.getWrapperData().apply(AND, EMPTY, BRACKET, sql);
-        }
-        return this.and;
-    }
-
-    /**
      * 嵌套查询
      * <p>
      * 例: or(i -&gt; i.eq("name", "value1").ne("status", "status1"))
@@ -418,11 +394,36 @@ public abstract class WhereBase<
         return this.nestedWhere(OR, query);
     }
 
+    /**
+     * and (子条件)
+     *
+     * @param query 子查询
+     * @return WHERE
+     */
+    public WHERE and(IQuery query) {
+        return nestedWhere(AND, query);
+    }
+
+    /**
+     * or (子条件)
+     *
+     * @param query 子查询
+     * @return WHERE
+     */
+    public WHERE or(IQuery query) {
+        return nestedWhere(OR, query);
+    }
+
     private WHERE nestedWhere(KeyWordSegment andOr, QFunction<WRAPPER> query) {
-        final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), wrapper.getWrapperData().getParameters());
+        final WRAPPER nested = NestedQueryFactory.nested(this.queryClass());
         query.apply(nested);
-        String sql = nested.getWrapperData().getMergeSql();
+        return this.nestedWhere(andOr, (IQuery) nested);
+    }
+
+    private WHERE nestedWhere(KeyWordSegment andOr, IQuery query) {
+        String sql = query.getWrapperData().getMergeSql();
         if (If.notBlank(sql)) {
+            ((BaseWrapper) query).setSharedParameter(this.wrapper);
             wrapper.getWrapperData().apply(andOr, EMPTY, BRACKET, sql);
         }
         return this.and;

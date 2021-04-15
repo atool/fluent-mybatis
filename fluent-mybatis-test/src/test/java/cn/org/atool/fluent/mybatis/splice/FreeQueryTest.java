@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.dao.DataAccessException;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -141,7 +141,7 @@ public class FreeQueryTest extends BaseTest {
             .setT1column1("close_duration")
             .setT1column2("gmt_closed")
             .setTable2("dim_metric_product_super_df"));
-        want.exception(() -> mapper.findOne(query), BadSqlGrammarException.class);
+        want.exception(() -> mapper.findOne(query), DataAccessException.class);
         db.sqlList().wantFirstSql().eq("" +
                 "SELECT AVG(t1.close_duration) AS value, t2.product_id AS productId " +
                 "FROM  dwd_metric_bug_df t1 " +

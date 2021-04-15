@@ -1,11 +1,14 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
+import cn.org.atool.fluent.mybatis.base.BatchUpdater;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.mapping.StatementType;
 
 import java.io.Serializable;
@@ -32,6 +35,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     @Options(statementType = StatementType.CALLABLE)
     @Select("{CALL ${procedure}}")
     void callProcedure(@Param("procedure") String procedure, @Param("p") Object parameter);
+
+    @UpdateProvider(
+        type = BaseSqlProvider.class,
+        method = "batchUpdate"
+    )
+    void batchUpdate(@Param(Param_EW)BatchUpdater updater);
 
     /**
      * 插入一条记录, 主键字段为空

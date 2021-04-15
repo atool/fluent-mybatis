@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.test.segment2;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
-import cn.org.atool.fluent.mybatis.If;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -398,7 +398,7 @@ class WhereApplyTest extends BaseTest {
         mapper.listEntity(new StudentQuery()
             .where
             .userName().apply(SqlOp.EQ, "abc'")
-            .age().apply(true, SqlOp.LT, 12)
+            .age().apply(args -> (int) args[0] == 12, SqlOp.LT, 12)
             .end()
         );
         db.sqlList().wantFirstSql()
