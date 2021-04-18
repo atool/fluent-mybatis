@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
 import java.util.Collection;
 import java.util.function.BiPredicate;
@@ -226,6 +227,16 @@ public interface ObjectWhere<
     WHERE in(QFunction<NQ> query);
 
     /**
+     * use {@link #in(IQuery)}
+     */
+    @Deprecated
+    default <NQ extends IBaseQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query) {
+        NQ nested = NestedQueryFactory.nested(klass);
+        query.apply(nested);
+        return this.in(nested);
+    }
+
+    /**
      * in (select ... )
      *
      * @param query 嵌套查询
@@ -301,6 +312,22 @@ public interface ObjectWhere<
      */
     WHERE notIn(QFunction<NQ> query);
 
+    /**
+     * use {@link #notIn(IQuery)}
+     */
+    @Deprecated
+    default <NQ extends IBaseQuery> WHERE notIn(Class<NQ> klass, QFunction<NQ> query) {
+        NQ nested = NestedQueryFactory.nested(klass);
+        query.apply(nested);
+        return this.notIn(nested);
+    }
+
+    /**
+     * not in (select ... )
+     *
+     * @param query 嵌套查询
+     * @return WHERE
+     */
     WHERE notIn(IQuery query);
 
     /**
