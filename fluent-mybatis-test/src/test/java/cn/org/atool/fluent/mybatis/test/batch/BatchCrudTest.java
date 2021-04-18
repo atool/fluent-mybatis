@@ -40,13 +40,14 @@ public class BatchCrudTest extends BaseTest {
         HomeAddressUpdate update2 = new HomeAddressUpdate()
             .update.address().is("address 24").end()
             .where.id().eq(24L).end();
-        mapper.batchCrud(BatchCrud.batch()
+        int count = mapper.batchCrud(BatchCrud.batch()
             .addInsert(
                 new StudentEntity().setId(100L).setUserName("user 100"),
                 new HomeAddressEntity().setAddress("address 100").setStudentId(100L))
             .addUpdate(update1, update2)
             .addDelete(new HomeAddressQuery().where.id().gt(24).end())
         );
+        want.number(count).eq(1);
         db.sqlList().wantFirstSql()
             .eq("" +
                     "INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, env, tenant, user_name) " +

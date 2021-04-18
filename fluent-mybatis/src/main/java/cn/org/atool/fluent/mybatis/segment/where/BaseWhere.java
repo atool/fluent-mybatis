@@ -135,6 +135,14 @@ public interface BaseWhere<
      */
     <T> WHERE apply(SqlOp op, Ifs<T> ifs);
 
+    /**
+     * {@link #apply(Predicate, SqlOp, Object[])}
+     */
+    @Deprecated
+    default <O> WHERE apply(boolean condition, SqlOp op, O... args) {
+        return this.apply(a -> condition, op, args);
+    }
+
     <T> WHERE apply(Predicate<Object[]> predicate, SqlOp op, T... args);
 
     /**
@@ -155,6 +163,14 @@ public interface BaseWhere<
      * @return
      */
     WHERE applyFunc(SqlOp op, String expression, Object... args);
+
+    /**
+     * use {@link #applyFunc(Predicate, SqlOp, String, Object...)}
+     */
+    @Deprecated
+    default WHERE applyFunc(boolean condition, SqlOp op, String expression, Object... args) {
+        return this.applyFunc(a -> condition, op, expression, args);
+    }
 
     /**
      * 自定义 函数或表达式

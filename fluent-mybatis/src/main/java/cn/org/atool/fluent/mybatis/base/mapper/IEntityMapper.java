@@ -50,7 +50,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
         type = BaseSqlProvider.class,
         method = "batchCrud"
     )
-    void batchCrud(@Param(Param_EW) BatchCrud crud);
+    int batchCrud(@Param(Param_EW) BatchCrud crud);
 
     /**
      * 插入一条记录, 主键字段为空

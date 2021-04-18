@@ -130,6 +130,14 @@ public abstract class WhereBase<
     }
 
     /**
+     * use {@link #exists(Predicate, String, Object...)}
+     */
+    @Deprecated
+    public WHERE exists(boolean condition, String select, Object... values) {
+        return this.exists(a -> condition, select, values);
+    }
+
+    /**
      * EXISTS ( sql语句 )
      *
      * <p>例: EXISTS("select id from table where age = 1")</p>
@@ -210,6 +218,14 @@ public abstract class WhereBase<
     public WHERE notExists(String select, Object... values) {
         wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, select, values);
         return this.and;
+    }
+
+    /**
+     * use {@link #notExists(Predicate, String, Object...)}
+     */
+    @Deprecated
+    public WHERE notExists(boolean condition, String select, Object... values) {
+        return this.notExists(a -> condition, select, values);
     }
 
     /**
