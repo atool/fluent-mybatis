@@ -82,6 +82,7 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertWithPk())
             .addMethod(this.m_insertBatch())
             .addMethod(this.m_insertBatchWithPk())
+            .addMethod(this.m_insertSelect())
             .addMethod(this.m_deleteById())
             .addMethod(this.m_deleteByMap())
             .addMethod(this.m_delete())
@@ -267,6 +268,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_deleteByIds() {
         return this.mapperMethod(DeleteProvider.class, M_deleteByIds)
+            .addJavadoc("@see $T#deleteByIds(Map)", fluent.sqlProvider())
             .addParameter(ParameterSpec.builder(parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable")), "idList")
                 .addAnnotation(annotation_Param("Param_Coll"))
                 .build())
@@ -276,6 +278,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_delete() {
         return this.mapperMethod(DeleteProvider.class, M_Delete)
+            .addJavadoc("@see $T#delete(Map)", fluent.sqlProvider())
             .addParameter(ParameterSpec.builder(IQuery.class, "wrapper")
                 .addAnnotation(annotation_Param("Param_EW"))
                 .build())
@@ -285,6 +288,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_deleteByMap() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteByMap)
+            .addJavadoc("@see $T#deleteByMap(Map)", fluent.sqlProvider())
             .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
                 .addAnnotation(annotation_Param("Param_CM"))
                 .build())
@@ -292,9 +296,9 @@ public class MapperFiler extends AbstractFiler {
             .build();
     }
 
-
     public MethodSpec m_deleteById() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteById)
+            .addJavadoc("@see $T#deleteById(Serializable)", fluent.sqlProvider())
             .addParameter(ClassName.get(Serializable.class), "id")
             .returns(TypeName.INT)
             .build();
@@ -317,6 +321,22 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_insertBatchWithPk() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
         return builder.addParameter(parameterizedType(CN_Collection, fluent.entity()), "entities")
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_insertSelect() {
+        MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertSelect);
+        return builder
+            .addJavadoc("@see $T#insertSelect(Map)", fluent.sqlProvider())
+            .addParameter(
+                ParameterSpec.builder(String[].class, Param_Fields)
+                    .addAnnotation(annotation_Param("Param_Fields"))
+                    .build())
+            .addParameter(
+                ParameterSpec.builder(IQuery.class, Param_EW)
+                    .addAnnotation(annotation_Param("Param_EW"))
+                    .build())
             .returns(TypeName.INT)
             .build();
     }

@@ -47,6 +47,16 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     }
 
     /**
+     * 构造{@link IEntityMapper#insertSelect(String[], IQuery)}SQL语句
+     *
+     * @param map
+     * @return
+     */
+    public String insertSelect(Map map) {
+        return "";
+    }
+
+    /**
      * 插入id未赋值的entity
      *
      * @param entity

@@ -67,6 +67,8 @@ public interface FluentConst {
 
     String Param_ET = "et";
 
+    String Param_Fields = "fields";
+
     String Param_Entity = "entity";
 
     /**
@@ -89,6 +91,8 @@ public interface FluentConst {
     String M_InsertBatch = "insertBatch";
 
     String M_InsertBatch_With_Pk = "insertBatchWithPk";
+
+    String M_InsertSelect = "insertSelect";
 
     String M_DeleteById = "deleteById";
 

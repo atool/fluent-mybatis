@@ -5,10 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
 
 import java.io.Serializable;
@@ -83,6 +80,15 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return
      */
     int insertBatchWithPk(Collection<E> entities);
+
+    /**
+     * insert into a_table(fields) select fields from b_table;
+     *
+     * @param fields 要插入的字段
+     * @param query  select数据
+     * @return 拷贝插入的记录数
+     */
+    int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
     /**
      * 根据id删除记录
