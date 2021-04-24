@@ -330,13 +330,14 @@ public class MapperFiler extends AbstractFiler {
         return builder
             .addJavadoc("@see $T#insertSelect(Map)", fluent.sqlProvider())
             .addParameter(
-                ParameterSpec.builder(String[].class, Param_Fields)
-                    .addAnnotation(annotation_Param("Param_Fields"))
-                    .build())
-            .addParameter(
                 ParameterSpec.builder(IQuery.class, Param_EW)
                     .addAnnotation(annotation_Param("Param_EW"))
                     .build())
+            .addParameter(
+                ParameterSpec.builder(String[].class, Param_Fields)
+                    .addAnnotation(annotation_Param("Param_Fields"))
+                    .build())
+            .varargs(true)
             .returns(TypeName.INT)
             .build();
     }
