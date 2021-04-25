@@ -86,28 +86,4 @@ public class FieldMapping {
     public static String placeholder(String prefix, String field) {
         return "#{" + (isBlank(prefix) ? field : prefix + "." + field) + "}";
     }
-
-    /**
-     * 判断是否是数据库表字段名称
-     * 非全数字, 只包含数字+字母+下划线组成
-     *
-     * @param input
-     * @return
-     */
-    public static boolean isColumnName(String input) {
-        if (isBlank(input)) {
-            return false;
-        }
-        boolean is_digit = true;
-        for (char ch : input.toCharArray()) {
-            if (Character.isDigit(ch)) {
-                continue;
-            } else if (Character.isLetter(ch) || ch == '_') {
-                is_digit = false;
-                continue;
-            }
-            return false;
-        }
-        return !is_digit;
-    }
 }

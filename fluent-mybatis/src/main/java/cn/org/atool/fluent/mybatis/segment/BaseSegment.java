@@ -6,6 +6,8 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
+
 /**
  * BaseSegment
  *
@@ -51,7 +53,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * @return
      */
     protected String columnWithAlias(String column) {
-        if (FieldMapping.isColumnName(column)) {
+        if (isColumnName(column)) {
             return BaseWrapperHelper.appendAlias(column, this.wrapper);
         } else {
             return column;

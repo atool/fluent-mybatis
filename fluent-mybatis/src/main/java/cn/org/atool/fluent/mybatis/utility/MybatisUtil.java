@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
@@ -289,18 +290,18 @@ public class MybatisUtil {
     /**
      * 下划线转驼峰命名
      *
-     * @param string
+     * @param input
      * @param firstCapital true: 首字母大写, false:首字母小写
      * @return
      */
-    public static String underlineToCamel(String string, boolean firstCapital) {
-        if (If.isBlank(string)) {
+    public static String underlineToCamel(String input, boolean firstCapital) {
+        if (If.isBlank(input)) {
             return "";
         }
         boolean first = true;
         boolean underline = false;
-        StringBuilder buff = new StringBuilder(string.length());
-        for (char ch : string.toCharArray()) {
+        StringBuilder buff = new StringBuilder(input.length());
+        for (char ch : input.toCharArray()) {
             if (ch == '_') {
                 if (!first) {
                     underline = true;
@@ -388,6 +389,54 @@ public class MybatisUtil {
      */
     public static RuntimeException notFluentMybatisException(Class clazz) {
         return new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
+    }
+
+
+    /**
+     * 判断是否是数据库表字段名称
+     * 非全数字, 只包含数字+字母+下划线组成
+     *
+     * @param input
+     * @return
+     */
+    public static boolean isColumnName(String input) {
+        if (isBlank(input)) {
+            return false;
+        }
+
+        int len = input.length();
+        if (input.charAt(0) == '`' && input.charAt(len - 1) == '`') {
+            len--;
+        } else if (!isLetter(input.charAt(0))) {
+            return false;
+        }
+        for (int index = 1; index < len; index++) {
+            char ch = input.charAt(index);
+            if (!isLetter(ch) && !isDigit(ch)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 字母 a-z, A-Z, 或 '_'
+     *
+     * @param ch
+     * @return
+     */
+    public static boolean isLetter(char ch) {
+        return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_';
+    }
+
+    /**
+     * 数字
+     *
+     * @param ch
+     * @return
+     */
+    public static boolean isDigit(char ch) {
+        return ch >= '0' && ch <= '9';
     }
 
     /**

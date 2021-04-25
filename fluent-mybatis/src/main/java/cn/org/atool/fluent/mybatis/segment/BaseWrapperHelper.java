@@ -23,15 +23,4 @@ public class BaseWrapperHelper {
     public static boolean isBlankAlias(BaseWrapper wrapper) {
         return isBlank(wrapper.tableAlias);
     }
-
-    public static boolean isColumnName(String word) {
-        if (isBlank(word)) {
-            return false;
-        }
-        String _word = word.trim();
-        if (word.matches("[`'\\\"].*") && word.matches(".*[`'\\\"]")) {
-            _word = word.substring(1, word.length() - 1);
-        }
-        return !_word.matches("\\d+") && _word.matches("[\\d\\w_\\-]+");
-    }
 }

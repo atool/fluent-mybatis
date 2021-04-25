@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.segment.BaseWrapperHelper.isColumnName;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 
 /**
  * BaseSelector: 查询字段构造
