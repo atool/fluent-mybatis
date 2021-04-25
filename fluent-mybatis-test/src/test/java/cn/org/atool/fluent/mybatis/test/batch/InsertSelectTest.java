@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 public class InsertSelectTest extends BaseTest {
     @Autowired
@@ -40,22 +41,32 @@ public class InsertSelectTest extends BaseTest {
         ATM.dataMap.student.table().clean();
         mapper.batchCrud(BatchCrud.batch()
             .addInsert(newStudent("user1"), newStudent("user2"), newStudent("test1"))
-            .addInsertSelect(ATM.table.student, new FieldMapping[]{StudentMapping.userName},
-                new StudentQuery().select.userName().end()
+            .addInsertSelect(ATM.table.student,
+                new FieldMapping[]{
+                    StudentMapping.userName,
+                    StudentMapping.age,
+                    StudentMapping.address},
+                new StudentQuery().select.userName().apply("40", "'test address'").end()
                     .where.userName().likeRight("user").end())
         );
 
         db.sqlList().wantFirstSql()
-            .containsInOrder("INSERT INTO student(gmt_created, gmt_modified, is_deleted, env, tenant, user_name)",
-                "INSERT INTO student(gmt_created, gmt_modified, is_deleted, env, tenant, user_name)",
-                "INSERT INTO student(gmt_created, gmt_modified, is_deleted, env, tenant, user_name)",
-                "INSERT INTO student (user_name) SELECT user_name FROM student WHERE user_name LIKE ?");
+            .containsInOrder("INSERT INTO student(gmt_created, gmt_modified, is_deleted, address, age, env, tenant, user_name)",
+                "INSERT INTO student(gmt_created, gmt_modified, is_deleted, address, age, env, tenant, user_name)",
+                "INSERT INTO student(gmt_created, gmt_modified, is_deleted, address, age, env, tenant, user_name)")
+            .end("INSERT INTO student (user_name,age,address) " +
+                    "SELECT user_name, 40, 'test address' " +
+                    "FROM student " +
+                    "WHERE user_name LIKE ?",
+                StringMode.SameAsSpace);
         ATM.dataMap.student.table(5)
             .userName.values("user1", "user2", "test1", "user1", "user2")
+            .age.values(20, 20, 20, 40, 40)
+            .address.values("addr", "addr", "addr", "test address", "test address")
             .eqTable();
     }
 
     private StudentEntity newStudent(String name) {
-        return new StudentEntity().setUserName(name);
+        return new StudentEntity().setUserName(name).setAge(20).setAddress("addr");
     }
 }
