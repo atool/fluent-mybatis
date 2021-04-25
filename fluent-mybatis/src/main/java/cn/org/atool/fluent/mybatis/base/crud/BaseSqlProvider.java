@@ -47,7 +47,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     }
 
     /**
-     * 构造{@link IEntityMapper#insertSelect(IQuery, String[])}SQL语句
+     * 构造{@link IEntityMapper#insertSelect(String[], IQuery)}SQL语句
      *
      * @param map
      * @return
@@ -55,10 +55,15 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String insertSelect(Map map) {
         String[] fields = (String[]) map.get(Param_Fields);
         IQuery query = (IQuery) map.get(Param_EW);
+        return buildInsertSelect(this.tableName(), fields, query);
+    }
+
+    public static String buildInsertSelect(String tableName, String[] fields, IQuery query) {
+        assertNotBlank("tableName", tableName);
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
         StringBuilder buff = new StringBuilder("INSERT INTO ")
-            .append(this.tableName())
+            .append(tableName)
             .append(" (")
             .append(String.join(",", fields))
             .append(") ")

@@ -50,7 +50,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
         type = BaseSqlProvider.class,
         method = "batchCrud"
     )
-    int batchCrud(@Param(Param_EW) BatchCrud crud);
+    void batchCrud(@Param(Param_EW) BatchCrud crud);
 
     /**
      * 插入一条记录, 主键字段为空
@@ -87,11 +87,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     /**
      * insert into a_table(fields) select fields from b_table;
      *
-     * @param query  select数据
      * @param fields 要插入的字段
+     * @param query  select数据
      * @return 拷贝插入的记录数
+     * @see BaseSqlProvider#insertSelect(Map)
      */
-    int insertSelect(@Param(Param_EW) IQuery query, @Param(Param_Fields) String... fields);
+    int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
     /**
      * 根据id删除记录

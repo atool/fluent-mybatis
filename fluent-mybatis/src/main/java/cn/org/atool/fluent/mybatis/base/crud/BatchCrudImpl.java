@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
 
 /**
@@ -108,6 +109,15 @@ public class BatchCrudImpl implements BatchCrud {
             String sql = provider.buildInsertSql(prefix, entity, entity.findPk() != null);
             list.add(sql);
         }
+        return this;
+    }
+
+    @Override
+    public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
+        assertNotNull("query", query);
+        query.getWrapperData().setSharedParameter(wrapperData);
+        String sql = BaseSqlProvider.buildInsertSelect(insertTable, fields, query);
+        list.add(sql);
         return this;
     }
 
