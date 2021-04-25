@@ -1,9 +1,12 @@
 package cn.org.atool.fluent.mybatis.base.dao;
 
+import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -12,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * IDaoProtected: 被限制在Dao类中使用的方法, 只允许在子类中调用，不暴露给更高层的Service外部直接访问
@@ -24,6 +28,44 @@ import java.util.Optional;
  * @author Created by darui.wu on 2020/6/24.
  */
 public interface IProtectedDao<E extends IEntity> {
+    /**
+     * insert into a_table(fields) select fields from b_table;
+     *
+     * @param fields 要插入的字段
+     * @param query  select数据
+     * @return 拷贝插入的记录数
+     * @see BaseSqlProvider#insertSelect(Map)
+     */
+    default int insertSelect(String[] fields, IQuery query) {
+        return this.mapper().insertSelect(fields, query);
+    }
+
+    /**
+     * insert into a_table(fields) select fields from b_table;
+     *
+     * @param fields 要插入的字段
+     * @param query  select数据
+     * @return 拷贝插入的记录数
+     * @see BaseSqlProvider#insertSelect(Map)
+     */
+    default int insertSelect(FieldMapping[] fields, IQuery query) {
+        return this.insertSelect(Stream.of(fields).map(c -> c.column).toArray(String[]::new), query);
+    }
+
+    /**
+     * 批量执行增删改操作
+     *
+     * <pre>
+     * 传入多个操作时, 需要数据库支持
+     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * </pre>
+     *
+     * @param crud 增删改操作
+     */
+    default void batchCrud(BatchCrud crud) {
+        this.mapper().batchCrud(crud);
+    }
+
     /**
      * 根据条件query删除记录
      *
