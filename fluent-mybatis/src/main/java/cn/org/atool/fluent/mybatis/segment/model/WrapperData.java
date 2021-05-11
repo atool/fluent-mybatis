@@ -31,7 +31,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 查询字段
      */
-    protected Set<String> sqlSelect = new LinkedHashSet<>(8);
+    protected List<String> sqlSelect = new ArrayList<>(8);
     /**
      * 表名
      */
@@ -102,7 +102,7 @@ public class WrapperData implements IWrapperData {
         }
     }
 
-    public Set<String> sqlSelect() {
+    public List<String> sqlSelect() {
         return this.sqlSelect;
     }
 
@@ -179,7 +179,7 @@ public class WrapperData implements IWrapperData {
      * @param column
      */
     public void addSelectColumn(String column) {
-        if (notBlank(column) && !this.sqlSelect.contains(column)) {
+        if (notBlank(column)) {
             this.sqlSelect.add(column);
         }
     }

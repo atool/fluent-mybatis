@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
+import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.JoinQuery;
 
@@ -22,6 +23,18 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
     }
 
     /**
+     * ... from (select query) alias
+     *
+     * @param query
+     * @param alias
+     * @param <QL>
+     * @return
+     */
+    static <QL extends BaseQuery<?, QL>> JoinBuilder1<QL> from(QL query, String alias) {
+        return new JoinQuery<>((QL) new FreeQuery(query, alias));
+    }
+
+    /**
      * 关联查询构造方式二: 使用lambda表达式,由框架自动设置query别名和关联参数
      * <p>
      * 注: 在有些场景下, IDE对lambda表达式的代码提示不够智能
@@ -35,6 +48,14 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
     static <QL extends BaseQuery<?, QL>> JoinBuilder2<QL> from(Class<QL> clazz, QFunction<QL> query) {
         return new JoinQuery<>(clazz, query);
     }
+
+    /**
+     * 显式指定查询字段
+     *
+     * @param columns
+     * @return
+     */
+    JoinBuilder<QL> select(String... columns);
 
     /**
      * distinct

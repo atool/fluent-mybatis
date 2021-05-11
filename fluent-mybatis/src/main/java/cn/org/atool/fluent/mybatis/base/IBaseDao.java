@@ -133,7 +133,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 是否更新成功
      */
     default boolean updateEntityByIds(Collection<E> entities) {
-        return this.updateEntityByIds((E[]) entities.toArray());
+        return this.updateEntityByIds((E[]) entities.toArray(new IEntity[0]));
     }
 
     /**

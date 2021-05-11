@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
+import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
 
 /**
@@ -19,6 +20,18 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query);
 
     /**
+     * from table1 join (select query) alias ...
+     *
+     * @param query 子查询
+     * @param alias 子查询别名
+     * @param <QR>
+     * @return
+     */
+    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query, String alias) {
+        return this.join((QR) new FreeQuery(query, alias));
+    }
+
+    /**
      * from left.table left join right.table on condition
      *
      * @param query 关联查询右表及右表条件设置
@@ -28,6 +41,18 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query);
 
     /**
+     * from table1 left join (select query) alias ...
+     *
+     * @param query 子查询
+     * @param alias 子查询别名
+     * @param <QR>
+     * @return
+     */
+    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query, String alias) {
+        return this.leftJoin((QR) new FreeQuery(query, alias));
+    }
+
+    /**
      * from left.table right join right.table on condition
      *
      * @param query 关联查询右表及右表条件设置
@@ -35,4 +60,16 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @return
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query);
+
+    /**
+     * from table1 right join (select query) alias ...
+     *
+     * @param query 子查询
+     * @param alias 子查询别名
+     * @param <QR>
+     * @return
+     */
+    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query, String alias) {
+        return this.rightJoin((QR) new FreeQuery(query, alias));
+    }
 }

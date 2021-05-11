@@ -32,7 +32,7 @@ public class SelectorTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, home_address_id, 1, MAX(age) AS max, SUM(age) FROM student WHERE id = ? GROUP BY id");
+            .eq("SELECT id, home_address_id, 1, id, MAX(age) AS max, SUM(age) FROM student WHERE id = ? GROUP BY id");
     }
 
     @Test

@@ -146,6 +146,14 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
+    public JoinBuilder<QL> select(String... columns) {
+        for (String column : columns) {
+            this.wrapperData.addSelectColumn(column);
+        }
+        return this;
+    }
+
+    @Override
     public JoinQuery<QL> distinct() {
         this.wrapperData.setDistinct(true);
         return this;
