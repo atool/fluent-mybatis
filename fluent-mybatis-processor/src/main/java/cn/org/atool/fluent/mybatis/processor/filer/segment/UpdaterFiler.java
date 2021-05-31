@@ -43,6 +43,7 @@ public class UpdaterFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superKlass())
+            .addField(this.f_update())
             .addField(this.f_setter())
             .addField(this.f_where())
             .addField(this.f_orderBy())
@@ -60,10 +61,19 @@ public class UpdaterFiler extends AbstractFiler {
      *
      * @return
      */
-    private FieldSpec f_setter() {
+    private FieldSpec f_update() {
         return FieldSpec.builder(fluent.updateSetter(),
             "update", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new UpdateSetter(this)")
+            .addJavadoc("same as {@link #set}")
+            .build();
+    }
+
+    private FieldSpec f_setter() {
+        return FieldSpec.builder(fluent.updateSetter(),
+            "set", Modifier.PUBLIC, Modifier.FINAL)
+            .initializer("update")
+            .addJavadoc("same as {@link #update}")
             .build();
     }
 
