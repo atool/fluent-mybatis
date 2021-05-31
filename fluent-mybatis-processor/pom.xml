@@ -12,7 +12,7 @@
 
     <artifactId>fluent-mybatis-processor</artifactId>
     <properties>
-        <atool.generator.version>1.0.9</atool.generator.version>
+        <atool.generator.version>1.1.0</atool.generator.version>
         <mysql.version>8.0.20</mysql.version>
         <skipTests>true</skipTests>
     </properties>
