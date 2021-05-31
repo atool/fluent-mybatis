@@ -54,6 +54,10 @@ public interface StrConstant {
      * 空格
      */
     String SPACE = " ";
+
+    String UNION = "UNION";
+
+    String UNION_ALL = "UNION ALL";
     /**
      * 换行
      */

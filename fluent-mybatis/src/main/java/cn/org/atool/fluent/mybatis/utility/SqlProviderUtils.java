@@ -23,12 +23,6 @@ public class SqlProviderUtils {
 
     public static final String Wrapper_Data = format("%s.wrapperData", Param_EW);
 
-    public static final String Wrapper_Paged_Offset = format("#{%s.paged.offset}", Wrapper_Data);
-
-    public static final String Wrapper_Paged_Size = format("#{%s.paged.limit}", Wrapper_Data);
-
-    public static final String Wrapper_Paged_End_Offset = format("#{%s.paged.endOffset}", Wrapper_Data);
-
     public static WrapperData getWrapperData(Map map, String paraName) {
         IWrapper wrapper = getWrapper(map, paraName);
         if (wrapper.getWrapperData() == null) {
@@ -64,6 +58,9 @@ public class SqlProviderUtils {
         if (data.getPaged() == null) {
             return sql;
         }
+        String pagedOffset = data.getParameters().putParameter(data.getPaged().getOffset());
+        String pagedEndOffset = data.getParameters().putParameter(data.getPaged().getEndOffset());
+        String pagedSize = data.getParameters().putParameter(data.getPaged().getLimit());
         switch (dbType) {
             case ORACLE:
                 return new StringBuilder(sql.length() + 200)
@@ -71,27 +68,27 @@ public class SqlProviderUtils {
                     .append(" SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( ")
                     .append(sql)
                     .append(" ) TMP_PAGE)")
-                    .append(String.format(" WHERE ROW_ID > %s AND ROW_ID <= %s ", Wrapper_Paged_Offset, Wrapper_Paged_End_Offset))
+                    .append(String.format(" WHERE ROW_ID > %s AND ROW_ID <= %s ", pagedOffset, pagedEndOffset))
                     .toString();
             case DB2:
                 return new StringBuilder(sql.length() + 200)
                     .append("SELECT * FROM (SELECT TMP_PAGE.*,ROWNUMBER() OVER() AS ROW_ID FROM ( ")
                     .append(sql)
                     .append(" ) AS TMP_PAGE) TMP_PAGE WHERE ROW_ID")
-                    .append(String.format(" BETWEEN %s AND %s", Wrapper_Paged_Offset, Wrapper_Paged_Size))
+                    .append(String.format(" BETWEEN %s AND %s", pagedOffset, pagedSize))
                     .toString();
             case SQL_SERVER:
             case SQL_SERVER2005:
                 throw new RuntimeException("not support");
             case HSQL:
             case POSTGRE_SQL:
-                return sql + String.format(" LIMIT %s OFFSET %s", Wrapper_Paged_Size, Wrapper_Paged_Offset);
+                return sql + String.format(" LIMIT %s OFFSET %s", pagedSize, pagedOffset);
             case MYSQL:
             case MARIADB:
             case SQLITE:
             case H2:
             default:
-                return sql + String.format(" LIMIT %s, %s ", Wrapper_Paged_Offset, Wrapper_Paged_Size);
+                return sql + String.format(" LIMIT %s, %s ", pagedOffset, pagedSize);
         }
     }
 }

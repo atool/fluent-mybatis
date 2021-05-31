@@ -35,7 +35,8 @@ public abstract class BaseWrapper<
     implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
 
-    protected final Supplier<String> table;
+    @Getter
+    protected Supplier<String> table;
     /**
      * 表别名
      */

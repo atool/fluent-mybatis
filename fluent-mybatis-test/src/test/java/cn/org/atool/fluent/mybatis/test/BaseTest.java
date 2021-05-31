@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.test4j.junit5.Test4J;
 
@@ -36,10 +38,12 @@ class TestSpringConfig {
     public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
-        bean.setMapperLocations(
-            new ClassPathResource("mapper/MyXmlMapper.xml"),
-            new ClassPathResource("mapper/BatchUpdate.xml")
-        );
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        bean.setMapperLocations(resolver.getResources("classpath*:mapper/*.xml"));
+//        bean.setMapperLocations(
+//            new ClassPathResource("mapper/MyXmlMapper.xml"),
+//            new ClassPathResource("mapper/BatchUpdate.xml")
+//        );
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setLazyLoadingEnabled(true);
         configuration.setAggressiveLazyLoading(false);

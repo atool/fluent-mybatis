@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
@@ -19,10 +21,13 @@ public class NestedQueryFactory {
     /**
      * 构造查询对象
      *
-     * @param klass      嵌套查询对象类
+     * @param klass 嵌套查询对象类
      * @return 嵌套查询对象
      */
-    public static <Q extends IBaseQuery> Q nested(Class klass) {
+    public static <Q extends IBaseQuery> Q nested(Class klass, BaseWrapper wrapper) {
+        if (FreeQuery.class.isAssignableFrom(klass)) {
+            return (Q) new FreeQuery(wrapper.getTable(), wrapper.getTableAlias());
+        }
         if (!Query_Constructor.containsKey(klass)) {
             try {
                 Constructor constructor = klass.getConstructor();

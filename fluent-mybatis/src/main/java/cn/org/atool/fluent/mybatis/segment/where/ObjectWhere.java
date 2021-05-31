@@ -231,7 +231,7 @@ public interface ObjectWhere<
      */
     @Deprecated
     default <NQ extends IBaseQuery> WHERE in(Class<NQ> klass, QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(klass);
+        NQ nested = NestedQueryFactory.nested(klass, null);
         query.apply(nested);
         return this.in(nested);
     }
@@ -317,7 +317,7 @@ public interface ObjectWhere<
      */
     @Deprecated
     default <NQ extends IBaseQuery> WHERE notIn(Class<NQ> klass, QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(klass);
+        NQ nested = NestedQueryFactory.nested(klass, null);
         query.apply(nested);
         return this.notIn(nested);
     }

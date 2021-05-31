@@ -60,6 +60,7 @@ public interface IWrapperData {
 
     /**
      * select ... from table where ...
+     * 不包含分页部分
      *
      * @return select ... from table where ...
      */

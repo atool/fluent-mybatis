@@ -72,7 +72,7 @@ public class Parameters extends HashMap<String, Object> {
                 if (prev == char_backslash) {
                     buff.append(/** 字符 '?' 的反义处理 **/char_question);
                 } else if (index < params.length) {
-                    buff.append(this.parseParameter(params[index++]));
+                    buff.append(this.putParameter(params[index++]));
                 } else {
                     throw new FluentMybatisException("占位符和参数个数不匹配:" + sqlStr);
                 }
@@ -96,7 +96,7 @@ public class Parameters extends HashMap<String, Object> {
      * @param para 变量
      * @return 占位符
      */
-    private String parseParameter(Object para) {
+    public String putParameter(Object para) {
         String paramName = WRAPPER_PARAM + this.instanceNo + "_" + this.sequence.incrementAndGet();
         String placeholder = String.format(WRAPPER_PARAM_FORMAT, Wrapper_Data, paramName);
         this.put(paramName, para);

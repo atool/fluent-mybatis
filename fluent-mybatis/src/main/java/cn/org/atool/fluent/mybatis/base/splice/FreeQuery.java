@@ -7,12 +7,10 @@ import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Having;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Selector;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhere;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 
 /**
  * 字符串形式自由拼接查询器构造
@@ -46,7 +44,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      */
     public final QueryWhere where = new QueryWhere(this);
 
-    private FreeQuery(Supplier<String> table, String alias) {
+    public FreeQuery(Supplier<String> table, String alias) {
         super(table, alias, EmptyEntity.class, FreeQuery.class);
     }
 
@@ -83,7 +81,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
 
     @Override
     public List<String> allFields() {
-        return Arrays.asList(ASTERISK);
+        throw new RuntimeException("not support by FreeQuery.");
     }
 
     @Override

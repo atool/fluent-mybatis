@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 
 /**
  * AbstractQueryWrapper
@@ -73,12 +74,14 @@ public abstract class BaseQuery<
 
     @Override
     public Q limit(int limit) {
-        this.wrapperData.setPaged(new PagedOffset(0, limit));
-        return (Q) this;
+        return this.limit(0, limit);
     }
 
     @Override
     public Q limit(int from, int limit) {
+        if (setUnion) {
+            throw new RuntimeException("Limit syntax is not supported for union queries.");
+        }
         this.wrapperData.setPaged(new PagedOffset(from, limit));
         return (Q) this;
     }
@@ -91,4 +94,46 @@ public abstract class BaseQuery<
 
     @Override
     public abstract List<String> allFields();
+
+    /**
+     * select * from a where...
+     * UNION
+     * select * from b where...
+     *
+     * @param queries
+     * @return
+     */
+    public Q union(IBaseQuery... queries) {
+        return this.union(UNION, queries);
+    }
+
+    /**
+     * select * from a where...
+     * UNION ALL
+     * select * from b where...
+     *
+     * @param queries
+     * @return
+     */
+    public Q unionAll(IBaseQuery... queries) {
+        return this.union(UNION_ALL, queries);
+    }
+
+    private boolean setUnion = false;
+
+    private Q union(String key, IBaseQuery... queries) {
+        if (this.wrapperData.getPaged() != null) {
+            throw new RuntimeException("Limit syntax is not supported for union queries.");
+        }
+        if (queries == null || queries.length == 0) {
+            throw new IllegalArgumentException("The size of parameter[queries] should be greater than zero.");
+        }
+        this.setUnion = true;
+        for (IBaseQuery query : queries) {
+            String sql = query.getWrapperData().getQuerySql();
+            this.last(SPACE + key + SPACE + sql);
+            query.getWrapperData().setSharedParameter(this.wrapperData);
+        }
+        return (Q) this;
+    }
 }

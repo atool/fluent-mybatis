@@ -31,7 +31,7 @@ public class MergeSegments extends BaseSegmentList {
     private String lastSql = EMPTY;
 
     public MergeSegments setLastSql(String lastSql) {
-        this.lastSql = lastSql;
+        this.lastSql = isBlank(this.lastSql) ? lastSql : this.lastSql + SPACE + lastSql;
         return this;
     }
 
