@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.op.SqlOpFactory;
 import cn.org.atool.fluent.mybatis.functions.FormApply;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.FormItem;
@@ -55,7 +56,7 @@ public class FormHelper {
                     where.and.apply(column, SqlOp.NOT_LIKE, "%" + item.getValue()[0] + "%");
                     break;
                 default:
-                    where.and.apply(column, SqlOp.valueOf(item.getOp()), item.getValue());
+                    where.and.apply(column, SqlOpFactory.get(item.getOp()), item.getValue());
             }
         }
         if (form.getCurrPage() != null) {

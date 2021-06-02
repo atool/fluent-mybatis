@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.model;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.op.SqlOpFactory;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.NonNull;
@@ -44,7 +44,7 @@ public class FormQuery<E extends IEntity, S extends FormSetter> implements IForm
 
     @Override
     public S op(String op) {
-        this.setter.set(c -> this.query.where().apply(c.column, SqlOp.valueOf(op), form.get(c.name)));
+        this.setter.set(c -> this.query.where().apply(c.column, SqlOpFactory.get(op), form.get(c.name)));
         return (S) setter;
     }
 

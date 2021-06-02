@@ -91,7 +91,7 @@ public enum SqlOp implements ISqlOp {
     private final String placeHolder;
 
     @Getter
-    private final String format;
+    private final String expression;
     /**
      * 参数个数
      * 0: 无can
@@ -102,13 +102,13 @@ public enum SqlOp implements ISqlOp {
 
     SqlOp(final String placeHolder, int argSize) {
         this.placeHolder = placeHolder;
-        this.format = placeHolder;
+        this.expression = placeHolder;
         this.argSize = argSize;
     }
 
-    SqlOp(final String placeHolder, String format, int argSize) {
+    SqlOp(final String placeHolder, String expression, int argSize) {
         this.placeHolder = placeHolder;
-        this.format = format;
+        this.expression = expression;
         this.argSize = argSize;
     }
 

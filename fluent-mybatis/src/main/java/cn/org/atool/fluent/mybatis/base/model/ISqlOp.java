@@ -2,51 +2,43 @@ package cn.org.atool.fluent.mybatis.base.model;
 
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.STR_FORMAT;
 
+/**
+ * 操作符定义接口类
+ *
+ * @author wudarui
+ */
 public interface ISqlOp {
+    /**
+     * 操作符名称
+     *
+     * @return
+     */
+    String name();
+
+    /**
+     * 操作符字符拼接表达式
+     *
+     * @return
+     */
+    String getExpression();
+
+    /**
+     * 操作符参数占位符表达式
+     *
+     * @return
+     */
+    String getPlaceHolder();
+
     /**
      * 操作参数个数
      *
      * @return
      */
     int getArgSize();
-
-    /**
-     * 注册新的自定义操作符
-     *
-     * @param sqlOp
-     */
-    static void register(ISqlOp sqlOp) {
-        registers.add(sqlOp);
-    }
-
-    /**
-     * 返回匹配的操作符实例
-     *
-     * @param op
-     * @return
-     */
-    static ISqlOp get(String op) {
-        try {
-            return SqlOp.valueOf(op);
-        } catch (IllegalArgumentException e) {
-            for (ISqlOp item : registers) {
-                if (Objects.equals(item.name(), op)) {
-                    return item;
-                }
-            }
-            throw e;
-        }
-    }
-
-    List<ISqlOp> registers = new ArrayList<>();
 
     /**
      * sql 操作符
@@ -64,16 +56,10 @@ public interface ISqlOp {
         final String placeHolder = this.getPlaceHolder();
         String sql = placeHolder;
         if (notBlank(expression)) {
-            sql = String.format(this.getFormat(), expression);
+            sql = String.format(this.getExpression(), expression);
         } else if (placeHolder.contains(STR_FORMAT)) {
             sql = SqlOp.placeHolder(placeHolder, paras);
         }
         return isEmpty(paras) ? sql : parameters.paramSql(sql, paras);
     }
-
-    String getFormat();
-
-    String getPlaceHolder();
-
-    String name();
 }
