@@ -1,15 +1,11 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
-import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import lombok.Getter;
 
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.If.isEmpty;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.QUESTION_MARK;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.STR_FORMAT;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -17,7 +13,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @author darui.wu
  */
-public enum SqlOp {
+public enum SqlOp implements ISqlOp {
     /**
      * is null
      */
@@ -91,8 +87,10 @@ public enum SqlOp {
      */
     RETAIN("%s", -1);
 
+    @Getter
     private final String placeHolder;
 
+    @Getter
     private final String format;
     /**
      * 参数个数
@@ -115,41 +113,19 @@ public enum SqlOp {
     }
 
     /**
-     * sql 操作符
-     * 如果自定义函数expression不为空, 则按自定义函数形式处理
-     * 如果无自定义函数, 且是不定项参数方式(placeHolder中有%s), 则先处理不定项参数项为占位符'?'
-     * <p/>
-     * 最后根据占位符'?'和参数值, 给每个'?'分配具体的表达式项
-     *
-     * @param parameters 查询语句中所有的变量
-     * @param expression 自定义函数或SQL片段
-     * @param paras      参数列表
-     * @return sql片段
-     */
-    public String operator(Parameters parameters, String expression, Object... paras) {
-        String sql = this.placeHolder;
-        if (notBlank(expression)) {
-            sql = String.format(this.format, expression);
-        } else if (this.placeHolder.contains(STR_FORMAT)) {
-            sql = this.setPlaceHolder(paras);
-        }
-        return isEmpty(paras) ? sql : parameters.paramSql(sql, paras);
-    }
-
-    /**
      * 根据参数个数多少, 将"%s"替换为"?, ?"占位符串
      *
      * @param values 参数列表
      * @return sql片段
      */
-    private String setPlaceHolder(Object... values) {
-        String placeHolder = "";
+    static String placeHolder(String placeHolder, Object... values) {
+        String replacedStr = "";
         if (values.length == 1 && values[0] instanceof Collection) {
             Collection list = (Collection) values[0];
-            placeHolder = (String) list.stream().map(v -> QUESTION_MARK).collect(joining(", "));
+            replacedStr = (String) list.stream().map(v -> QUESTION_MARK).collect(joining(", "));
         } else {
-            placeHolder = Stream.of(values).map(v -> QUESTION_MARK).collect(joining(", "));
+            replacedStr = Stream.of(values).map(v -> QUESTION_MARK).collect(joining(", "));
         }
-        return String.format(this.placeHolder, placeHolder);
+        return String.format(placeHolder, replacedStr);
     }
 }

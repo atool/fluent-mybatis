@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.ifs;
 
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.utility.ObjectArray;
 
@@ -37,15 +38,14 @@ public class IfsPredicate {
         }
     }
 
-    public Object value(SqlOp op) {
+    public Object value(ISqlOp op) {
         if (op == null || values == null) {
             return this.firstValue();
         }
-        switch (op) {
-            case IN:
-                return Arrays.stream(values).collect(toList());
-            default:
-                return this.firstValue();
+        if (SqlOp.IN.equals(op)) {
+            return Arrays.stream(values).collect(toList());
+        } else {
+            return this.firstValue();
         }
     }
 

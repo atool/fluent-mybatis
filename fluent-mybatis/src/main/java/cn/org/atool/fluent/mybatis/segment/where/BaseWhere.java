@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.where;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
@@ -123,7 +123,7 @@ public interface BaseWhere<
         return this.apply(NE, ifs);
     }
 
-    <T> WHERE apply(SqlOp op, T... args);
+    <T> WHERE apply(ISqlOp op, T... args);
 
     /**
      * 多条件操作
@@ -133,17 +133,17 @@ public interface BaseWhere<
      * @param <T>
      * @return
      */
-    <T> WHERE apply(SqlOp op, Ifs<T> ifs);
+    <T> WHERE apply(ISqlOp op, Ifs<T> ifs);
 
     /**
-     * {@link #apply(Predicate, SqlOp, Object[])}
+     * {@link #apply(Predicate, ISqlOp, Object[])}
      */
     @Deprecated
-    default <O> WHERE apply(boolean condition, SqlOp op, O... args) {
+    default <O> WHERE apply(boolean condition, ISqlOp op, O... args) {
         return this.apply(a -> condition, op, args);
     }
 
-    <T> WHERE apply(Predicate<Object[]> predicate, SqlOp op, T... args);
+    <T> WHERE apply(Predicate<Object[]> predicate, ISqlOp op, T... args);
 
     /**
      * where 自定义条件(包括操作符在内）
@@ -162,13 +162,13 @@ public interface BaseWhere<
      * @param args       函数或表达式的参数
      * @return
      */
-    WHERE applyFunc(SqlOp op, String expression, Object... args);
+    WHERE applyFunc(ISqlOp op, String expression, Object... args);
 
     /**
-     * use {@link #applyFunc(Predicate, SqlOp, String, Object...)}
+     * use {@link #applyFunc(Predicate, ISqlOp, String, Object...)}
      */
     @Deprecated
-    default WHERE applyFunc(boolean condition, SqlOp op, String expression, Object... args) {
+    default WHERE applyFunc(boolean condition, ISqlOp op, String expression, Object... args) {
         return this.applyFunc(a -> condition, op, expression, args);
     }
 
@@ -181,5 +181,5 @@ public interface BaseWhere<
      * @param args       函数或表达式的参数
      * @return
      */
-    WHERE applyFunc(Predicate<Object[]> predicate, SqlOp op, String expression, Object... args);
+    WHERE applyFunc(Predicate<Object[]> predicate, ISqlOp op, String expression, Object... args);
 }

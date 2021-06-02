@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -335,12 +335,12 @@ public abstract class WhereBase<
      * @param paras  操作参数
      * @return 条件设置器
      */
-    public WHERE apply(String column, SqlOp op, Object... paras) {
+    public WHERE apply(String column, ISqlOp op, Object... paras) {
         this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, paras);
         return this.and;
     }
 
-    public WHERE applyIf(Predicate<Object[]> predicate, String column, SqlOp op, Object... paras) {
+    public WHERE applyIf(Predicate<Object[]> predicate, String column, ISqlOp op, Object... paras) {
         if (predicate.test(paras)) {
             this.apply(column, op, paras);
         }
@@ -355,11 +355,11 @@ public abstract class WhereBase<
      * @param paras  操作参数
      * @return 条件设置器
      */
-    public WHERE apply(FieldMapping column, SqlOp op, Object... paras) {
+    public WHERE apply(FieldMapping column, ISqlOp op, Object... paras) {
         return this.apply(column.column, op, paras);
     }
 
-    public WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, SqlOp op, Object... paras) {
+    public WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, ISqlOp op, Object... paras) {
         return this.applyIf(predicate, column.column, op, paras);
     }
 
@@ -372,12 +372,12 @@ public abstract class WhereBase<
      * @param args       参数
      * @return
      */
-    WHERE apply(FieldMapping column, SqlOp op, String expression, Object... args) {
+    WHERE apply(FieldMapping column, ISqlOp op, String expression, Object... args) {
         this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, expression, args);
         return this.and;
     }
 
-    WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, SqlOp op, String expression, Object... args) {
+    WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, ISqlOp op, String expression, Object... args) {
         if (predicate.test(args)) {
             this.apply(column, op, expression, args);
         }

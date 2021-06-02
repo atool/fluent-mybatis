@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -169,7 +169,7 @@ public class WrapperData implements IWrapperData {
      * @param operator 条件操作
      * @param paras    条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, String column, SqlOp operator, Object... paras) {
+    public void apply(KeyWordSegment keyWord, String column, ISqlOp operator, Object... paras) {
         this.apply(keyWord, column, operator, null, paras);
     }
 
@@ -193,7 +193,7 @@ public class WrapperData implements IWrapperData {
      * @param format   格式化sql语句
      * @param args     条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, String column, SqlOp operator, String format, Object... args) {
+    public void apply(KeyWordSegment keyWord, String column, ISqlOp operator, String format, Object... args) {
         if (keyWord == null) {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }

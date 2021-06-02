@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 
 import java.util.Collection;
 
@@ -21,7 +21,7 @@ public interface IOperator<R> {
      * @param args
      * @return
      */
-    <O> R apply(SqlOp op, O... args);
+    <O> R apply(ISqlOp op, O... args);
 
     /**
      * 等于 =

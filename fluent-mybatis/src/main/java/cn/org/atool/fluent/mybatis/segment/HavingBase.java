@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
@@ -37,7 +37,7 @@ public abstract class HavingBase<
      * @param args      参数列表
      * @return Having设置器
      */
-    H aggregate(String aggregate, SqlOp op, Object... args) {
+    H aggregate(String aggregate, ISqlOp op, Object... args) {
         this.wrapper.getWrapperData().apply(HAVING, aggregate, op, args);
         return (H) this;
     }

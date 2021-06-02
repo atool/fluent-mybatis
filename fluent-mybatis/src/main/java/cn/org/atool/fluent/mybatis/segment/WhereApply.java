@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
@@ -43,7 +44,7 @@ public class WhereApply<
     }
 
     @Override
-    public <O> WHERE apply(SqlOp op, O... args) {
+    public <O> WHERE apply(ISqlOp op, O... args) {
         if (op.getArgSize() > 0) {
             assertNotEmpty(this.current().name, args);
             if (args.length != op.getArgSize()) {
@@ -72,7 +73,7 @@ public class WhereApply<
     }
 
     @Override
-    public <T> WHERE apply(SqlOp op, Ifs<T> ifs) {
+    public <T> WHERE apply(ISqlOp op, Ifs<T> ifs) {
         /** 重载（实际入参为null）时兼容处理 **/
         if (ifs == null) {
             return this.apply(op, (Object) null);
@@ -90,7 +91,7 @@ public class WhereApply<
     }
 
     @Override
-    public <O> WHERE apply(Predicate<Object[]> predicate, SqlOp op, O... args) {
+    public <O> WHERE apply(Predicate<Object[]> predicate, ISqlOp op, O... args) {
         return predicate.test(args) ? this.apply(op, args) : segment;
     }
 
@@ -179,12 +180,12 @@ public class WhereApply<
     }
 
     @Override
-    public WHERE applyFunc(SqlOp op, String expression, Object... args) {
+    public WHERE applyFunc(ISqlOp op, String expression, Object... args) {
         return this.segment.apply(this.current(), op, expression, args);
     }
 
     @Override
-    public WHERE applyFunc(Predicate<Object[]> predicate, SqlOp op, String expression, Object... args) {
+    public WHERE applyFunc(Predicate<Object[]> predicate, ISqlOp op, String expression, Object... args) {
         if (predicate.test(args)) {
             this.apply(op, expression, args);
         }

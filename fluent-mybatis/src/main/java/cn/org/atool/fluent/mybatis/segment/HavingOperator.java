@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 
@@ -26,7 +26,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
     }
 
     @Override
-    public H apply(SqlOp op, Object... args) {
+    public H apply(ISqlOp op, Object... args) {
         assertNotBlank("expression", expression);
         return this.having.aggregate(expression, op, args);
     }
