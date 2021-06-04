@@ -15,7 +15,7 @@ public class PgILike extends BaseTest {
     void pgLike() {
         FreeQuery query = new FreeQuery("a")
             .select.apply("id", "name").end()
-            .where.apply("name", SqlOps.PG_ILike, "%name%")
+            .where.apply("name", SqlOps.ILike, "%name%")
             .end();
         try {
             mapper.listObjs(query);

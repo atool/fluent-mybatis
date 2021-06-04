@@ -60,8 +60,16 @@ public interface IUpdate<E extends IEntity> {
 
     /**
      * 根据Updater定义执行后续操作
+     * 要使用本方法，需要把编译时生成的 Refs 类加入spring bean定义中
+     * Refs类的抽象类, 请自定义
+     * <pre>
      *
      * @return
+     * @Service public class CustomizedRefs extends Refs{
+     * // ...
+     * }
+     * </pre>
+     * 否则，请使用 {@link #of(IRichMapper)} 方法
      */
     default UpdaterExecutor to() {
         Class entityClass = ((IBaseUpdate) this).getWrapperData().getEntityClass();

@@ -7,9 +7,9 @@ import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
  *
  * @author wudarui
  */
-public class PostgreSqlILike implements ISqlOp {
+public class ILike implements ISqlOp {
 
-    PostgreSqlILike() {
+    ILike() {
     }
 
     @Override

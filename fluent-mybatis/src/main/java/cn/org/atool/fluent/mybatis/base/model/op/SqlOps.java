@@ -20,10 +20,10 @@ public class SqlOps {
     /**
      * postgresql引擎,忽略大小写搜索英文
      */
-    public final static PostgreSqlILike PG_ILike = new PostgreSqlILike();
+    public final static ILike ILike = new ILike();
 
     static {
-        register(PG_ILike);
+        register(ILike);
     }
 
     /**
