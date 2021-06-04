@@ -186,7 +186,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE exists(IQuery query) {
-        ((BaseWrapper) query).setSharedParameter(wrapper);
+        ((BaseWrapper) query).sharedParameter(wrapper);
         wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
         return this.and;
     }
@@ -200,7 +200,7 @@ public abstract class WhereBase<
      */
     public WHERE exists(boolean condition, IQuery query) {
         if (condition) {
-            ((BaseWrapper) query).setSharedParameter(wrapper);
+            ((BaseWrapper) query).sharedParameter(wrapper);
             wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
         }
         return this.and;
@@ -278,7 +278,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE notExists(IQuery query) {
-        ((BaseWrapper) query).setSharedParameter(wrapper);
+        ((BaseWrapper) query).sharedParameter(wrapper);
         wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, query.getWrapperData().getQuerySql());
         return this.and;
     }
@@ -439,7 +439,7 @@ public abstract class WhereBase<
     private WHERE nestedWhere(KeyWordSegment andOr, IQuery query) {
         String sql = query.getWrapperData().getMergeSql();
         if (If.notBlank(sql)) {
-            ((BaseWrapper) query).setSharedParameter(this.wrapper);
+            ((BaseWrapper) query).sharedParameter(this.wrapper);
             wrapper.getWrapperData().apply(andOr, EMPTY, BRACKET, sql);
         }
         return this.and;

@@ -2,8 +2,10 @@ package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * StudentDao: 数据操作接口
@@ -27,4 +29,6 @@ public interface StudentDao extends IBaseDao<StudentEntity> {
     List<StudentEntity> findStudentsByName(String name);
 
     void updateAddressAndAgeById(StudentEntity... entities);
+
+    Optional<StudentEntity> findOne(StudentQuery query);
 }

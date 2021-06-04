@@ -4,10 +4,12 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
 import cn.org.atool.fluent.mybatis.generate.dao.intf.StudentDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,5 +39,10 @@ public class StudentDaoImpl extends StudentBaseDao implements StudentDao {
             .end()
         ).collect(Collectors.toList());
         super.updateBy(updates);
+    }
+
+    @Override
+    public Optional<StudentEntity> findOne(StudentQuery query) {
+        return super.findOne(StudentEntity.class, query);
     }
 }

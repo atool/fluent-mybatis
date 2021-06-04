@@ -39,7 +39,7 @@ public class BatchCrudImpl implements BatchCrud {
             }
             BaseSqlProvider provider = this.findSqlProvider(updater.getWrapperData().getEntityClass());
             String sql = provider.buildUpdaterSql(updater.getWrapperData());
-            updater.getWrapperData().setSharedParameter(wrapperData);
+            updater.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
         }
         return this;
@@ -53,7 +53,7 @@ public class BatchCrudImpl implements BatchCrud {
             }
             BaseSqlProvider provider = this.findSqlProvider(query.getWrapperData().getEntityClass());
             String sql = provider.buildDeleteSql(query.getWrapperData());
-            query.getWrapperData().setSharedParameter(wrapperData);
+            query.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
         }
         return this;
@@ -115,7 +115,7 @@ public class BatchCrudImpl implements BatchCrud {
     @Override
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
-        query.getWrapperData().setSharedParameter(wrapperData);
+        query.getWrapperData().sharedParameter(wrapperData);
         String sql = BaseSqlProvider.buildInsertSelect(insertTable, fields, query);
         list.add(sql);
         return this;

@@ -12,19 +12,18 @@ import java.util.Objects;
  *
  * @author wudarui
  */
-public class SqlOpFactory {
+public class SqlOps {
     /**
      * 扩展操作符
      */
     private final static List<ISqlOp> EXT_OPS = new ArrayList<>();
-
     /**
      * postgresql引擎,忽略大小写搜索英文
      */
-    public final static ILike ILike = new ILike();
+    public final static PostgreSqlILike PG_ILike = new PostgreSqlILike();
 
     static {
-        register(SqlOpFactory.ILike);
+        register(PG_ILike);
     }
 
     /**

@@ -228,7 +228,7 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "parameters")
             .addStatement("this(alias)")
-            .addStatement("this.setSharedParameter(parameters)")
+            .addStatement("this.sharedParameter(parameters)")
             .build();
     }
 

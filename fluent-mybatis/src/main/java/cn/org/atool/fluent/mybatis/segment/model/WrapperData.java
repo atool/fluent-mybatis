@@ -253,11 +253,11 @@ public class WrapperData implements IWrapperData {
         return isBlank(hint) ? SPACE : SPACE + hint + SPACE;
     }
 
-    public void setSharedParameter(WrapperData wrapperData) {
-        this.getParameters().setSharedParameter(wrapperData.getParameters());
+    public void sharedParameter(WrapperData wrapperData) {
+        this.getParameters().sharedParameter(wrapperData.getParameters());
     }
 
-    public void setSharedParameter(Parameters parameters) {
-        this.getParameters().setSharedParameter(parameters);
+    public void sharedParameter(Parameters parameters) {
+        this.getParameters().sharedParameter(parameters);
     }
 }

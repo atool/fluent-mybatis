@@ -4,10 +4,12 @@ import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 
 /**
  * postgresql引擎,忽略大小写搜索英文
+ *
+ * @author wudarui
  */
-public class ILike implements ISqlOp {
+public class PostgreSqlILike implements ISqlOp {
 
-    ILike() {
+    PostgreSqlILike() {
     }
 
     @Override

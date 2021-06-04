@@ -132,7 +132,7 @@ public abstract class BaseQuery<
         for (IBaseQuery query : queries) {
             String sql = query.getWrapperData().getQuerySql();
             this.last(SPACE + key + SPACE + sql);
-            query.getWrapperData().setSharedParameter(this.wrapperData);
+            query.getWrapperData().sharedParameter(this.wrapperData);
         }
         return (Q) this;
     }

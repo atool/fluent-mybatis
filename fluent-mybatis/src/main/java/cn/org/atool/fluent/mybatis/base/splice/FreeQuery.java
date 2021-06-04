@@ -64,7 +64,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      */
     public FreeQuery(IQuery child, String alias) {
         this(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias);
-        child.getWrapperData().setSharedParameter(this.wrapperData);
+        child.getWrapperData().sharedParameter(this.wrapperData);
     }
 
     /**

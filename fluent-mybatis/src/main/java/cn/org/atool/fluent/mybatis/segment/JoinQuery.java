@@ -58,7 +58,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     public JoinQuery(QL query) {
         this.assertQueryAlias(query);
         this.query = query;
-        this.query.setSharedParameter(this.parameters);
+        this.query.sharedParameter(this.parameters);
         this.queryClass = (Class<QL>) query.getClass();
         this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
         this.alias.add(this.query.tableAlias);
@@ -73,7 +73,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
         this.queryClass = queryClass;
         this.query = newQuery(queryClass, Parameters.alias());
-        this.query.setSharedParameter(this.parameters);
+        this.query.sharedParameter(this.parameters);
         query.apply(this.query);
         this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
         this.alias.add(this.query.tableAlias);
@@ -112,7 +112,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(
         JoinType joinType, QR query) {
         this.assertQueryAlias(query);
-        query.setSharedParameter(this.query);
+        query.sharedParameter(this.query);
 
         this.queries.add(query);
         this.alias.add(query.tableAlias);
@@ -138,7 +138,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
     ) {
         QR query = newQuery(queryClass, Parameters.alias());
-        query.setSharedParameter(this.parameters);
+        query.sharedParameter(this.parameters);
         this.queries.add(query);
         apply.apply(query);
         this.alias.add(query.tableAlias);

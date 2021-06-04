@@ -108,10 +108,21 @@ public abstract class BaseWrapper<
     /**
      * 通过Wrapper直接设置变量共享关系
      *
+     * @deprecated 避免使用set开头命名
      * @param parameters
      */
+    @Deprecated
     protected void setSharedParameter(Parameters parameters) {
-        this.wrapperData.getParameters().setSharedParameter(parameters);
+        this.sharedParameter(parameters);
+    }
+
+    /**
+     * 通过Wrapper直接设置变量共享关系
+     *
+     * @param parameters
+     */
+    protected void sharedParameter(Parameters parameters) {
+        this.wrapperData.getParameters().sharedParameter(parameters);
     }
 
     /**
@@ -119,7 +130,7 @@ public abstract class BaseWrapper<
      *
      * @param wrapper
      */
-    protected void setSharedParameter(BaseWrapper wrapper) {
-        this.wrapperData.getParameters().setSharedParameter(wrapper.getWrapperData().getParameters());
+    protected void sharedParameter(BaseWrapper wrapper) {
+        this.wrapperData.getParameters().sharedParameter(wrapper.getWrapperData().getParameters());
     }
 }

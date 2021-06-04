@@ -153,7 +153,7 @@ public class Parameters extends HashMap<String, Object> {
      *
      * @param shared
      */
-    public void setSharedParameter(Parameters shared) {
+    public void sharedParameter(Parameters shared) {
         if (this == shared) {
             return;
         }
