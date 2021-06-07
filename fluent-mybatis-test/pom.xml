@@ -81,7 +81,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.1.11</version>
+            <version>1.2.0</version>
         </dependency>
         <!-- test jar -->
         <dependency>
