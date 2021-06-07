@@ -18,20 +18,15 @@ public class FreeQueryAggregateTest extends BaseTest {
 
     @Test
     void count() {
-        FreeQuery query1 = new FreeQuery("t_member", "t1");
-        query1.select("t1.id", "count(t1.gmt_modified)")
+        JoinBuilder query = new FreeQuery("t_member", "t1")
+            .select("t1.id", "count(t1.gmt_modified)")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("t1.id").end()
-        ;
-
-        FreeQuery query2 = new FreeQuery("t_member", "t2");
-        query2.select("t2.id", "sum(t2.gmt_modified)")
-            .where.apply("id", EQ, "1").end()
-            .groupBy.apply("t2.id").end();
-
-        JoinBuilder query = JoinBuilder
-            .from(query1)
-            .join(query2)
+            .join(new FreeQuery("t_member", "t2")
+                .select("t2.id", "sum(t2.gmt_modified)")
+                .where.apply("id", EQ, "1").end()
+                .groupBy.apply("t2.id").end()
+            )
             .on("t1.id = t2.id");
         mapper.findOne(query.build());
         db.sqlList().wantFirstSql().eq("" +
@@ -80,10 +75,9 @@ public class FreeQueryAggregateTest extends BaseTest {
 
     @Test
     void joinNestedSelect() {
-        IQuery query = JoinBuilder
-            .from(new FreeQuery(new MemberQuery().where.age().gt(1).end(), "t1")
+        IQuery query = new FreeQuery(new MemberQuery().where.age().gt(1).end(), "t1")
                 .select.apply("id").count.apply("gmt_modified").end()
-                .groupBy.apply("id").end())
+                .groupBy.apply("id").end()
             .join(new FreeQuery(new MemberQuery().groupBy.id().end(), "t2")
                 .select.apply("id").sum.apply("gmt_modified").end()
                 .where.apply("id", EQ, "1").end()
