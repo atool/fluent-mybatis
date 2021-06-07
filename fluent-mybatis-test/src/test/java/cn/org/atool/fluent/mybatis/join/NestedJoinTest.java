@@ -1,0 +1,57 @@
+package cn.org.atool.fluent.mybatis.join;
+
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.metadata.JoinType;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class NestedJoinTest extends BaseTest {
+    @Autowired
+    StudentMapper mapper;
+
+    @DisplayName("子查询是join查询场景")
+    @Test
+    void issue_I3UPZ0() {
+        IQuery nested = JoinBuilder.from(new StudentQuery("a").select.id().end())
+            .join(new HomeAddressQuery("b").where.address().like("add").end())
+            .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
+            .build();
+
+        StudentQuery query = new StudentQuery()
+            .select.userName().end()
+            .where.id().in(nested).end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT user_name " +
+            "FROM student " +
+            "WHERE id IN (SELECT a.id FROM student a JOIN home_address b ON a.home_address_id = b.id WHERE b.address LIKE ?)");
+        db.sqlList().wantFirstPara().eq(new Object[]{"%add%"});
+    }
+
+    @DisplayName("对join查询进行count操作")
+    @Test
+    void issue_I3UPYD() {
+        IQuery query = new StudentQuery("t1").selectAll()
+            .join(JoinType.LeftJoin, new HomeAddressQuery("t2"))
+            .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
+            .limit(50, 10)
+            .build();
+        mapper.stdPagedEntity(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) " +
+            "FROM student t1 " +
+            "LEFT JOIN home_address t2 " +
+            "ON t1.home_address_id = t2.id");
+        db.sqlList().wantSql(1).end("" +
+            "FROM student t1 LEFT " +
+            "JOIN home_address t2 " +
+            "ON t1.home_address_id = t2.id LIMIT ?, ?");
+        db.sqlList().wantPara(1).eq(new Object[]{50, 10});
+    }
+}

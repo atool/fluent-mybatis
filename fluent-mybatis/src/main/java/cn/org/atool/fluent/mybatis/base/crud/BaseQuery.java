@@ -3,7 +3,9 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
+import cn.org.atool.fluent.mybatis.segment.JoinOn;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
 import java.util.List;
@@ -135,5 +137,39 @@ public abstract class BaseQuery<
             query.getWrapperData().sharedParameter(this.wrapperData);
         }
         return (Q) this;
+    }
+
+    /**
+     * <pre>
+     *  构造JoinBuild<左查询,右查询>
+     * </pre>
+     *
+     * @param query 右查询
+     * @param <QR>
+     * @return JoinOn
+     */
+    public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinBuilder1<Q>> join(QR query) {
+        return JoinBuilder.from((Q) this).join(query);
+    }
+
+    /**
+     * <pre>
+     *  构造JoinBuild<左查询,右查询>
+     * </pre>
+     *
+     * @param joinType 连接类型
+     * @param query    右查询
+     * @param <QR>
+     * @return JoinOn
+     */
+    public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinBuilder1<Q>> join(JoinType joinType, QR query) {
+        switch (joinType) {
+            case LeftJoin:
+                return JoinBuilder.from((Q) this).leftJoin(query);
+            case RightJoin:
+                return JoinBuilder.from((Q) this).rightJoin(query);
+            default:
+                return JoinBuilder.from((Q) this).join(query);
+        }
     }
 }

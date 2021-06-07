@@ -7,7 +7,6 @@ import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import lombok.Getter;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import java.util.Map;
  * @param <QL>
  */
 public class JoinQuery<QL extends BaseQuery<?, QL>>
+    extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
     implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL>, JoinBuilder2<QL> {
     /**
      * 主查询类型
@@ -36,9 +36,6 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private final List<BaseQuery> queries = new ArrayList<>();
 
     private final Parameters parameters = new Parameters();
-
-    @Getter
-    private JoinWrapperData wrapperData;
 
     /**
      * 别名列表
@@ -56,11 +53,12 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      * @param query
      */
     public JoinQuery(QL query) {
+        super(null);
         this.assertQueryAlias(query);
         this.query = query;
         this.query.sharedParameter(this.parameters);
         this.queryClass = (Class<QL>) query.getClass();
-        this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
+        super.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
         this.alias.add(this.query.tableAlias);
     }
 
@@ -71,11 +69,12 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      * @param query
      */
     public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
+        super(null);
         this.queryClass = queryClass;
         this.query = newQuery(queryClass, Parameters.alias());
         this.query.sharedParameter(this.parameters);
         query.apply(this.query);
-        this.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
+        super.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
         this.alias.add(this.query.tableAlias);
     }
 
@@ -209,5 +208,19 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
             throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
                 queryClass.getSimpleName(), e.getMessage()), e);
         }
+    }
+
+    @Override
+    public JoinWrapperData getWrapperData() {
+        return (JoinWrapperData) super.wrapperData;
+    }
+
+    @Override
+    protected List<String> allFields() {
+        List<String> all = new ArrayList<>();
+        for (BaseQuery query : this.queries) {
+            all.addAll(query.allFields());
+        }
+        return all;
     }
 }

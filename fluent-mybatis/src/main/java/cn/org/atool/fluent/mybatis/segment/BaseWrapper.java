@@ -44,7 +44,11 @@ public abstract class BaseWrapper<
     protected final String tableAlias;
 
     @Getter
-    protected final WrapperData wrapperData;
+    protected WrapperData wrapperData;
+
+    protected BaseWrapper(String tableAlias) {
+        this.tableAlias = tableAlias;
+    }
 
     protected BaseWrapper(Supplier<String> table, String tableAlias, Class<E> entityClass, Class queryClass) {
         this(table, tableAlias, new Parameters(), entityClass, queryClass);
@@ -108,8 +112,8 @@ public abstract class BaseWrapper<
     /**
      * 通过Wrapper直接设置变量共享关系
      *
-     * @deprecated 避免使用set开头命名
      * @param parameters
+     * @deprecated 避免使用set开头命名
      */
     @Deprecated
     protected void setSharedParameter(Parameters parameters) {

@@ -109,9 +109,18 @@ public class WrapperData implements IWrapperData {
     @Override
     public String getQuerySql() {
         String select = this.getSqlSelect();
-        String where = mergeSegments.where();
-        String sql = String.format(SELECT_FROM_WHERE, select == null ? ASTERISK : select, this.getTable(), where);
-        return isBlank(sql) ? null : sql.trim();
+        String where = this.getWhereSql();
+        String sql = new StringBuilder()
+            .append("SELECT").append(SPACE)
+            .append(isBlank(select) ? ASTERISK : select.trim()).append(SPACE)
+            .append("FROM").append(SPACE)
+            .append(this.getTable()).append(SPACE)
+            .append(isBlank(where) ? EMPTY : "WHERE " + where.trim()).append(SPACE)
+            .append(this.getGroupBy().trim()).append(SPACE)
+            .append(this.getOrderBy().trim()).append(SPACE)
+            .append(this.getLastSql().trim())
+            .toString();
+        return sql.trim();
     }
 
     @Override

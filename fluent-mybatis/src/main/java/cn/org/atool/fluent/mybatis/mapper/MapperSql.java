@@ -11,6 +11,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.el;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 
 /**
@@ -36,7 +37,9 @@ public class MapperSql {
         buffer.append("SELECT ");
         this.hint(data, HintType.After_CrudKey);
         buffer.append("COUNT(");
-        buffer.append(isBlank(data.getSqlSelect()) ? "*" : data.getSqlSelect());
+        String select = data.getSqlSelect();
+        // select 单字段和多字段判断
+        buffer.append(isBlank(select) || select.contains(",") ? ASTERISK : select.trim());
         buffer.append(") FROM ");
         this.hint(data, HintType.Before_Table);
         buffer.append(table);
