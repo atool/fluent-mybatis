@@ -32,11 +32,17 @@ public class SuperMapperTest extends BaseTest {
 
     @Test
     void callProcedure() {
+        // 准备数据
         ATM.dataMap.blobValue.table(3)
             .id.values(2, 3, 4)
             .cleanAndInsert();
+
         ProcedureDto dto = new ProcedureDto().setMinId(3);
         mapper.callProcedure("countRecord(#{p.minId, mode=IN, jdbcType=INTEGER}, #{p.total, mode=OUT, jdbcType=INTEGER})", dto);
+        // 验证数据
         want.number(dto.getTotal()).eq(2);
+        // 验证执行的sql语句
+        db.sqlList().wantFirstSql().eq("{CALL countRecord(?, ?)}");
+        db.sqlList().wantFirstPara().eq(new Object[]{3});
     }
 }

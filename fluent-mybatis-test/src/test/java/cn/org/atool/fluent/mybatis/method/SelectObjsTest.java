@@ -44,8 +44,7 @@ public class SelectObjsTest extends BaseTest {
                 .userName.values("u1", "u2", "u3", "u2")
             );
         StudentQuery query = new StudentQuery()
-            .select.apply(userName)
-            .end()
+            .select.userName().age().end()
             .where.userName().eq("u2")
             .end();
         List<String> users = mapper.listObjs(query);

@@ -2,9 +2,12 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.refs.QueryRef;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
@@ -51,9 +54,33 @@ public class QueryExecutorTest_FindOne extends BaseTest {
             .to().findOneMap(map -> new StudentEntity()
                 .setUserName((String) map.get("user_name"))
             ).orElse(null);
+
         want.object(o.getUserName()).eq("test1");
         db.sqlList().wantFirstSql().end("FROM student WHERE user_name = ?");
     }
+
+    @Autowired
+    StudentMapper mapper;
+
+    @Test
+    void findOne_33() {
+        // 准备测试数据
+        ATM.dataMap.student.table(1)
+            .userName.values("test1")
+            .cleanAndInsert();
+        // 构造条件
+        StudentQuery query = new StudentQuery()
+            .where.userName().eq("test1").end();
+
+        StudentEntity o = mapper.findOne(query,
+            map -> new StudentEntity()
+                .setUserName((String) map.get("user_name"))
+        ).orElse(null);
+        // 验证结果
+        want.object(o.getUserName()).eq("test1");
+        db.sqlList().wantFirstSql().end("FROM student WHERE user_name = ?");
+    }
+
 
     @Test
     void findOne_4() {

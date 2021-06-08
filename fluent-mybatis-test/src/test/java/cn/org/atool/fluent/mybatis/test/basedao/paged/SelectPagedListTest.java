@@ -67,7 +67,6 @@ public class SelectPagedListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
         StdPagedList<Map> list = daoProtected.stdPagedMap(new StudentQuery()
             .where.id().gt(20)
             .and.userName().like("user")
@@ -75,7 +74,10 @@ public class SelectPagedListTest extends BaseTest {
             .orderBy.id().asc().end()
             .limit(10)
         );
+        // 验证总记录数
         want.number(list.getTotal()).eq(80);
+        // 验证list结果值
+        MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
     }

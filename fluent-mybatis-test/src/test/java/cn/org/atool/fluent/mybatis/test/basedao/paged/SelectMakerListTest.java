@@ -63,7 +63,6 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
         TagPagedList<Map> list = dao.tagPagedMap(new StudentQuery()
             .selectId()
             .where.id().gt(20)
@@ -71,6 +70,8 @@ public class SelectMakerListTest extends BaseTest {
             .orderBy.id().asc().end()
             .limit(10)
         );
+
+        MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
         int next = list.parseNext(convert);

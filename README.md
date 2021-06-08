@@ -1,6 +1,7 @@
 # Fluent-Mybatis介绍
 
 ## QQ交流群: 312885450
+[语法手册, 完善中](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis)
 
 [FluentMybatis文档](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
     
