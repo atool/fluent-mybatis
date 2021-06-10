@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.and;
 
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,8 @@ public class WhereObjectTest_Eq extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.age().eq(34).end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE age = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) FROM student WHERE age = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 

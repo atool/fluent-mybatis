@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
+import java.util.List;
+
 public class InsertSelectTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -34,6 +36,38 @@ public class InsertSelectTest extends BaseTest {
             .address.values("address1", "address2", "address3", "address1", "address2", "address3")
             .age.values(34, 45, 55, 34, 45, 55)
             .eqTable();
+    }
+
+    @Test
+    void testSelect() {
+        ATM.dataMap.student.table(3)
+            .address.values("address1", "address2", "address3")
+            .age.values(34, 45, 55)
+            .cleanAndInsert();
+        List list = mapper.listMaps(
+            new StudentQuery()
+                .select.address().age().end()
+                .where.id().in(new long[]{1, 2, 3}).end()
+        );
+        db.sqlList().wantFirstSql()
+            .eq("SELECT address, age FROM student WHERE id IN (?, ?, ?)");
+        want.list(list).sizeEq(3);
+    }
+
+    @Test
+    void testSelect_alias() {
+        ATM.dataMap.student.table(3)
+            .address.values("address1", "address2", "address3")
+            .age.values(34, 45, 55)
+            .cleanAndInsert();
+        List list = mapper.listMaps(
+            new StudentQuery()
+                .select.address("address_alias").age().end()
+                .where.id().in(new long[]{1, 2, 3}).end()
+        );
+        db.sqlList().wantFirstSql()
+            .eq("SELECT address AS address_alias, age FROM student WHERE id IN (?, ?, ?)");
+        want.list(list).sizeEq(3);
     }
 
     @Test

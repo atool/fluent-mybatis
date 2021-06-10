@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.issue;
 
+import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -31,5 +32,13 @@ public class AliasTest extends BaseTest {
             "FROM student t " +
             "GROUP BY u " +
             "HAVING a > ?");
+    }
+
+    @Test
+    void testSelectAll() {
+        FreeQuery query = new FreeQuery(new StudentQuery().where.age().gt(30).end(), "aa")
+            .select.apply("*").end();
+        mapper.listMaps(query);
+        db.sqlList().wantFirstSql().eq("SELECT * FROM (SELECT * FROM student WHERE age > ?) aa");
     }
 }
