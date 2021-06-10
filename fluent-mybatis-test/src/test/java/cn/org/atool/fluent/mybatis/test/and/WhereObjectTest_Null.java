@@ -43,7 +43,8 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().notNull()
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE age IS NOT NULL");
+        db.sqlList().wantFirstSql()
+            .eq("SELECT COUNT(*) FROM student WHERE age IS NOT NULL");
     }
 
     @Test

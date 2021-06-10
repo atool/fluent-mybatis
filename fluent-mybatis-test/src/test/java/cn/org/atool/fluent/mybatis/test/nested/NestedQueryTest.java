@@ -56,7 +56,8 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student WHERE EXISTS (SELECT id FROM student WHERE id = ?)");
+            .eq("SELECT id FROM student " +
+                "WHERE EXISTS (SELECT id FROM student WHERE id = ?)");
     }
 
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")

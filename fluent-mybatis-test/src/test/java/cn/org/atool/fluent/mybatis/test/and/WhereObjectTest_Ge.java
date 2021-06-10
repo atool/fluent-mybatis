@@ -18,7 +18,8 @@ public class WhereObjectTest_Ge extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.age().ge(34).end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE age >= ?");
+        db.sqlList().wantFirstSql()
+            .eq("SELECT COUNT(*) FROM student WHERE age >= ?");
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
