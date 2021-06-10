@@ -40,7 +40,15 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(String... columns) {
-        Stream.of(columns).filter(If::notBlank).forEach(c -> apply.add(() -> columnWithAlias(c)));
+        Stream.of(columns)
+            .filter(If::notBlank)
+            .forEach(c -> {
+                if (wrapper.wrapperData.getFieldAlias().contains(c)) {
+                    apply.add(() -> c);
+                } else {
+                    apply.add(() -> columnWithAlias(c));
+                }
+            });
         return (G) this;
     }
 

@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
@@ -155,10 +155,16 @@ public abstract class OrderByBase<
      * @param isAsc 是否顺序
      */
     private void applyField(String column, boolean isAsc) {
-        if (notBlank(column)) {
-            String segment = this.columnWithAlias(column) + SPACE + (isAsc ? ASC : DESC);
-            this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY, RETAIN, segment);
+        if (isBlank(column)) {
+            return;
         }
+        String segment;
+        if (this.wrapper.wrapperData.getFieldAlias().contains(column)) {
+            segment = column + SPACE + (isAsc ? ASC : DESC);
+        } else {
+            segment = this.columnWithAlias(column) + SPACE + (isAsc ? ASC : DESC);
+        }
+        this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY, RETAIN, segment);
     }
 
     /**

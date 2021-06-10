@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -72,6 +72,11 @@ public class WrapperData implements IWrapperData {
      * 对应的嵌套查询类
      */
     private final Class queryClass;
+    /**
+     * 字段别名列表
+     */
+    @Getter
+    private final Set<String> fieldAlias = new HashSet<>();
 
     public WrapperData() {
         this.parameters = new Parameters();
@@ -190,7 +195,41 @@ public class WrapperData implements IWrapperData {
     public void addSelectColumn(String column) {
         if (notBlank(column)) {
             this.sqlSelect.add(column);
+            this.fieldAlias.addAll(parseAlias(column));
         }
+    }
+
+    /**
+     * 解析别名列表
+     *
+     * @param column
+     * @return
+     */
+    static List<String> parseAlias(String column) {
+        int pos = -1;
+        List<String> list = new ArrayList<>();
+        StringBuilder buff = new StringBuilder();
+        for (char c : (column + SPACE).toCharArray()) {
+            if (pos <= 0 && isSpace(c)) {
+                pos = 0;
+            } else if (pos == 0 && (c == 'a' || c == 'A')) {
+                pos = 1;
+            } else if (pos == 1 && (c == 's' || c == 'S')) {
+                pos = 2;
+            } else if ((pos == 2 || pos == 3) && isSpace(c)) {
+                pos = 3;
+            } else if (pos >= 3 && (isLetter(c) || isDigit(c))) {
+                pos = 4;
+                buff.append(c);
+            } else if (pos == 4 && (isSpace(c) || c == ',')) {
+                list.add(buff.toString());
+                buff = new StringBuilder();
+                pos = -1;
+            } else {
+                pos = -1;
+            }
+        }
+        return list;
     }
 
     /**

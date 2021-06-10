@@ -429,6 +429,10 @@ public class MybatisUtil {
         return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_';
     }
 
+    public static boolean isSpace(char ch) {
+        return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r';
+    }
+
     /**
      * 数字
      *
