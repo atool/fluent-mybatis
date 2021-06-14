@@ -8,10 +8,29 @@ import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.modes.EqMode;
 
 public class CustomizedUpdateTest extends BaseTest {
     @Autowired
     StudentMapper mapper;
+
+    @Test
+    void test_insert() {
+        ATM.dataMap.student.table().clean();
+        FreeUpdate updater = new FreeUpdate(null)
+            .customizedByPlaceholder("insert into student " +
+                    "(`user_name`, `age`) " +
+                    "values(#{userName}, #{age})",
+                new StudentEntity().setUserName("test").setAge(25));
+        mapper.updateBy(updater);
+        db.sqlList().wantFirstSql()
+            .eq("insert into student (`user_name`, `age`) values(?, ?)");
+        db.sqlList().wantFirstPara().eq(new Object[]{"test", 25});
+        ATM.dataMap.student.table(1)
+            .userName.values("test")
+            .age.values(25)
+            .eqTable(EqMode.EQ_STRING);
+    }
 
     @Test
     void test_insert_select() {
