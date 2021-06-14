@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -111,8 +113,26 @@ public class WrapperData implements IWrapperData {
         return this.sqlSelect;
     }
 
+    /**
+     * 用户完整自定义的sql语句
+     */
+    private String customizedSql = null;
+
+    /**
+     * 自定义的完整sql语句设置
+     *
+     * @param sql
+     * @param parameter
+     */
+    public void customizedSql(String sql, Object parameter) {
+        this.customizedSql = CustomizedSql.rewriteSql(sql, this.parameters, parameter);
+    }
+
     @Override
     public String getQuerySql() {
+        if (If.notBlank(customizedSql)) {
+            return customizedSql;
+        }
         String select = this.getSqlSelect();
         String where = this.getWhereSql();
         String sql = new StringBuilder()

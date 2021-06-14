@@ -394,7 +394,7 @@ class WhereApplyTest extends BaseTest {
     }
 
     @Test
-    void testApply() {
+    void testApply2() {
         mapper.listEntity(new StudentQuery()
             .where
             .userName().apply(SqlOp.EQ, "abc'")
@@ -403,5 +403,18 @@ class WhereApplyTest extends BaseTest {
         );
         db.sqlList().wantFirstSql()
             .end("WHERE user_name = ? AND age < ?");
+    }
+
+    @Test
+    void testApply() {
+        mapper.listEntity(new StudentQuery()
+            .where
+            .userName().apply(SqlOp.EQ, "abc'")
+            .age().apply(SqlOp.BETWEEN, 12, 50)
+            .end()
+        );
+        db.sqlList().wantFirstSql()
+            .end("WHERE user_name = ? " +
+                "AND age BETWEEN ? AND ?");
     }
 }

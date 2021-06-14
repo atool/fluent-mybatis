@@ -30,7 +30,8 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =student.home_address_id)");
+            .eq("SELECT id FROM student " +
+                "WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =student.home_address_id)");
     }
 
     @Test
@@ -44,7 +45,11 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student WHERE EXISTS (SELECT 1 FROM home_address WHERE address LIKE ? AND id =student.home_address_id)");
+            .eq("SELECT id FROM student " +
+                "WHERE EXISTS (SELECT 1 " +
+                "FROM home_address " +
+                "WHERE address LIKE ? " +
+                "AND id =student.home_address_id)");
     }
 
     @Test

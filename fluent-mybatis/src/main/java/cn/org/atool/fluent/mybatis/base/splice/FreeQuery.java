@@ -88,4 +88,28 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     public QueryWhere where() {
         return new QueryWhere(this);
     }
+
+    /**
+     * 完全自定义的sql
+     * 使用此方法, Query的其它设置(select,where,order,group,limit等)将无效
+     *
+     * @param sql       用户定义的完整sql语句
+     * @param parameter sql参数, 通过#{value} 或 #{field.field}占位
+     * @return self
+     */
+    public FreeQuery customized(String sql, Object parameter) {
+        this.wrapperData.customizedSql(sql, parameter);
+        return this;
+    }
+
+    /**
+     * 完全自定义的sql
+     * 使用此方法, Query的其它设置(select,where,order,group,limit等)将无效
+     *
+     * @param sql 用户定义的完整sql语句
+     * @return self
+     */
+    public FreeQuery customized(String sql) {
+        return this.customized(sql, null);
+    }
 }

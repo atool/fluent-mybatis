@@ -178,10 +178,13 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String countNoLimit(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
+        WrapperData ew = getWrapperData(map, Param_EW);
+        if (If.notBlank(ew.getCustomizedSql())) {
+            return ew.getCustomizedSql();
+        }
         MapperSql sql = new MapperSql();
-        sql.COUNT(data.getTable(), data);
-        sql.WHERE_GROUP_BY(data);
+        sql.COUNT(ew.getTable(), ew);
+        sql.WHERE_GROUP_BY(ew);
         return sql.toString();
     }
 
@@ -192,11 +195,25 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String count(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
+        WrapperData ew = getWrapperData(map, Param_EW);
+        if (If.notBlank(ew.getCustomizedSql())) {
+            return ew.getCustomizedSql();
+        }
         MapperSql sql = new MapperSql();
-        sql.COUNT(data.getTable(), data);
-        sql.WHERE_GROUP_ORDER_BY(data);
-        return byPaged(this.dbType(), data, sql.toString());
+        sql.COUNT(ew.getTable(), ew);
+        sql.WHERE_GROUP_ORDER_BY(ew);
+        return byPaged(this.dbType(), ew, sql.toString());
+    }
+
+    private String queryByWrapperData(Map map) {
+        WrapperData ew = getWrapperData(map, Param_EW);
+        if (If.notBlank(ew.getCustomizedSql())) {
+            return ew.getCustomizedSql();
+        }
+        MapperSql sql = new MapperSql();
+        sql.SELECT(ew.getTable(), ew, this.allFields(true));
+        sql.WHERE_GROUP_ORDER_BY(ew);
+        return byPaged(this.dbType(), ew, sql.toString());
     }
 
     /**
@@ -206,11 +223,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String listEntity(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
-        MapperSql sql = new MapperSql();
-        sql.SELECT(data.getTable(), data, this.allFields(true));
-        sql.WHERE_GROUP_ORDER_BY(data);
-        return byPaged(this.dbType(), data, sql.toString());
+        return this.queryByWrapperData(map);
     }
 
     /**
@@ -220,11 +233,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String listMaps(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
-        MapperSql sql = new MapperSql();
-        sql.SELECT(data.getTable(), data, this.allFields(true));
-        sql.WHERE_GROUP_ORDER_BY(data);
-        return byPaged(this.dbType(), data, sql.toString());
+        return this.queryByWrapperData(map);
     }
 
     /**
@@ -234,11 +243,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String listObjs(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
-        MapperSql sql = new MapperSql();
-        sql.SELECT(data.getTable(), data, this.allFields(true));
-        sql.WHERE_GROUP_ORDER_BY(data);
-        return byPaged(this.dbType(), data, sql.toString());
+        return this.queryByWrapperData(map);
     }
 
     /**
@@ -292,11 +297,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String findOne(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
-        MapperSql sql = new MapperSql();
-        sql.SELECT(data.getTable(), data, this.allFields(true));
-        sql.WHERE_GROUP_ORDER_BY(data);
-        return byPaged(this.dbType(), data, sql.toString());
+        return this.queryByWrapperData(map);
     }
 
     /**
@@ -353,8 +354,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String delete(Map map) {
-        WrapperData data = getWrapperData(map, Param_EW);
-        return buildDeleteSql(data);
+        WrapperData ew = getWrapperData(map, Param_EW);
+        return buildDeleteSql(ew);
     }
 
     /**
@@ -484,34 +485,40 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据WrapperData设置构建更新语句
      *
-     * @param data
+     * @param ew
      * @return
      */
-    public String buildUpdaterSql(WrapperData data) {
-        assertNotNull("wrapperData of updater", data);
-        Map<String, String> updates = data.getUpdates();
+    public String buildUpdaterSql(WrapperData ew) {
+        assertNotNull("wrapperData of updater", ew);
+        if (If.notBlank(ew.getCustomizedSql())) {
+            return ew.getCustomizedSql();
+        }
+        Map<String, String> updates = ew.getUpdates();
         assertNotEmpty("updates", updates);
 
         MapperSql sql = new MapperSql();
-        sql.UPDATE(data.getTable(), data);
+        sql.UPDATE(ew.getTable(), ew);
         List<String> sets = this.updateDefaults(updates);
-        sets.add(data.getUpdateStr());
+        sets.add(ew.getUpdateStr());
         sql.SET(sets);
-        sql.WHERE_GROUP_ORDER_BY(data);
-        sql.LIMIT(data, true);
+        sql.WHERE_GROUP_ORDER_BY(ew);
+        sql.LIMIT(ew, true);
         return sql.toString();
     }
 
     /**
      * 根据WrapperData设置构建删除语句
      *
-     * @param data
+     * @param ew
      * @return
      */
-    public String buildDeleteSql(WrapperData data) {
+    public String buildDeleteSql(WrapperData ew) {
+        if (If.notBlank(ew.getCustomizedSql())) {
+            return ew.getCustomizedSql();
+        }
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName(), data);
-        sql.WHERE_GROUP_ORDER_BY(data);
+        sql.DELETE_FROM(this.tableName(), ew);
+        sql.WHERE_GROUP_ORDER_BY(ew);
         return sql.toString();
     }
 }
