@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
@@ -24,6 +23,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
 import static java.lang.Integer.min;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 /**
  * SqlProvider: 动态SQL构造基类
@@ -110,7 +110,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             this.validateInsertEntity(entity, withPk);
         }
         sql.INSERT_INTO(this.tableName());
-        sql.INSERT_COLUMNS(dbType(), this.allFields(withPk).split(","));
+        sql.INSERT_COLUMNS(dbType(), this.allFields(withPk));
         sql.VALUES();
         for (int index = 0; index < entities.size(); index++) {
             if (index > 0) {
@@ -211,7 +211,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();
-        sql.SELECT(ew.getTable(), ew, this.allFields(true));
+        sql.SELECT(ew.getTable(), ew, this.joiningAllFields(true));
         sql.WHERE_GROUP_ORDER_BY(ew);
         return byPaged(this.dbType(), ew, sql.toString());
     }
@@ -256,7 +256,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         Map<String, Object> where = getParas(map, Param_CM);
         assertNotEmpty("where", where);
         MapperSql sql = new MapperSql();
-        sql.SELECT(this.tableName(), this.allFields(true));
+        sql.SELECT(this.tableName(), this.joiningAllFields(true));
         sql.WHERE(Param_CM, where);
         return sql.toString();
     }
@@ -271,7 +271,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         MapperSql sql = new MapperSql();
         Collection ids = getParas(map, Param_Coll);
         assertNotEmpty("PrimaryKeyList", ids);
-        sql.SELECT(this.tableName(), this.allFields(true));
+        sql.SELECT(this.tableName(), this.joiningAllFields(true));
         sql.WHERE_PK_IN(this.idColumn(), ids.size());
         return sql.toString();
     }
@@ -285,9 +285,15 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String findById(Serializable id) {
         assertNotNull("PrimaryKey", id);
         MapperSql sql = new MapperSql();
-        sql.SELECT(this.tableName(), this.allFields(true));
+        sql.SELECT(this.tableName(), this.joiningAllFields(true));
         sql.WHERE(format("%s = #{value}", this.idColumn()));
         return sql.toString();
+    }
+
+    private String joiningAllFields(boolean withPk) {
+        return this.allFields(withPk).stream()
+            .map(dbType()::wrap)
+            .collect(joining(", "));
     }
 
     /**
@@ -381,7 +387,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             index++;
             list.add(sql);
         }
-        String text = list.stream().collect(Collectors.joining(";\n"));
+        String text = list.stream().collect(joining(";\n"));
         return text;
     }
 
@@ -452,7 +458,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param withPk 是否包含主键字段
      * @return
      */
-    protected abstract String allFields(boolean withPk);
+    protected abstract List<String> allFields(boolean withPk);
 
     /**
      * 数据库类型

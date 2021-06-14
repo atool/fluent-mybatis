@@ -82,4 +82,8 @@ public interface StrConstant {
      * value字符常量
      */
     String STR_VALUE = "value";
+    /**
+     * 双引号
+     */
+    char DOUBLE_QUOTATION = '"';
 }

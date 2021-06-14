@@ -18,7 +18,7 @@ public class HintTest extends BaseTest {
             .hint("/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("/** hint **/ SELECT id");
+        db.sqlList().wantFirstSql().start("/** hint **/ SELECT `id`");
     }
 
     @Test
@@ -27,7 +27,7 @@ public class HintTest extends BaseTest {
             .hint(HintType.After_CrudKey, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT /** hint **/ id");
+        db.sqlList().wantFirstSql().start("SELECT /** hint **/ `id`");
     }
 
     @Test
@@ -36,7 +36,8 @@ public class HintTest extends BaseTest {
             .hint(HintType.Before_Table, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT id").contains("FROM /** hint **/ student");
+        db.sqlList().wantFirstSql()
+            .start("SELECT `id`").contains("FROM /** hint **/ student");
     }
 
     @Test
@@ -45,7 +46,9 @@ public class HintTest extends BaseTest {
             .hint(HintType.After_Table, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("SELECT id").contains("FROM student /** hint **/");
+        db.sqlList().wantFirstSql()
+            .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`,")
+            .contains("FROM student /** hint **/");
     }
 
     @Test

@@ -14,16 +14,19 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
+import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_SET_ENTITY_BY_DEFAULT;
 import static cn.org.atool.generator.util.ClassNames.*;
 
@@ -202,12 +205,12 @@ public class SqlProviderFiler extends AbstractFiler {
     }
 
     private MethodSpec m_allFields() {
-        MethodSpec.Builder spec = super.publicMethod("allFields", true, String.class)
+        MethodSpec.Builder spec = super.publicMethod("allFields", true, ClassNames.CN_List_Str)
             .addParameter(ClassName.BOOLEAN, "withPk");
         spec.addCode("if (withPk) {\n")
-            .addStatement("\treturn $S", this.getFields(true))
+            .addStatement("\treturn $T.asList($L)", Arrays.class, this.getFields(true))
             .addCode("} else {\n")
-            .addStatement("\treturn $S", this.getFields(false))
+            .addStatement("\treturn $T.asList($L)", Arrays.class, this.getFields(false))
             .addCode("}");
         return spec.build();
     }
@@ -223,7 +226,7 @@ public class SqlProviderFiler extends AbstractFiler {
                 fields.append(", ");
             }
             first = false;
-            fields.append(field.getColumn());
+            fields.append(DOUBLE_QUOTATION + field.getColumn() + DOUBLE_QUOTATION);
         }
         return fields.toString();
     }
