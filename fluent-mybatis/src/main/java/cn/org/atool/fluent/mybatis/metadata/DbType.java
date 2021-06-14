@@ -2,6 +2,8 @@ package cn.org.atool.fluent.mybatis.metadata;
 
 import lombok.Getter;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
+
 /**
  * DbType 数据库类型
  *
@@ -14,7 +16,7 @@ public enum DbType {
     MYSQL("mysql", "SELECT LAST_INSERT_ID() AS ID") {
         @Override
         public String wrap(String column) {
-            return "`" + column + "`";
+            return '`' + column + '`';
         }
     },
     /**
@@ -23,7 +25,7 @@ public enum DbType {
     MARIADB("mariadb", "SELECT LAST_INSERT_ID() AS ID") {
         @Override
         public String wrap(String column) {
-            return "`" + column + "`";
+            return '`' + column + '`';
         }
     },
     /**
@@ -32,12 +34,23 @@ public enum DbType {
     H2("h2"),
     /**
      * SQLITE
+     * https://www.sqlite.org/lang_keywords.html
      */
-    SQLITE("sqlite"),
+    SQLITE("sqlite") {
+        @Override
+        public String wrap(String column) {
+            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
+        }
+    },
     /**
      * ORACLE
      */
-    ORACLE("oracle", "select SEQ_USER_ID.nextval as id from dual", true),
+    ORACLE("oracle", "select SEQ_USER_ID.nextval as id from dual", true) {
+        @Override
+        public String wrap(String column) {
+            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
+        }
+    },
     /**
      * DB2
      */
@@ -45,19 +58,39 @@ public enum DbType {
     /**
      * HSQL
      */
-    HSQL("hsql"),
+    HSQL("hsql") {
+        @Override
+        public String wrap(String column) {
+            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
+        }
+    },
     /**
      * POSTGRE
      */
-    POSTGRE_SQL("postgresql"),
+    POSTGRE_SQL("postgresql") {
+        @Override
+        public String wrap(String column) {
+            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
+        }
+    },
     /**
      * SQLSERVER2005
      */
-    SQL_SERVER2005("sqlserver2005"),
+    SQL_SERVER2005("sqlserver2005") {
+        @Override
+        public String wrap(String column) {
+            return "[" + column + "]";
+        }
+    },
     /**
      * SQLSERVER
      */
-    SQL_SERVER("sqlserver"),
+    SQL_SERVER("sqlserver") {
+        @Override
+        public String wrap(String column) {
+            return "[" + column + "]";
+        }
+    },
     /**
      * 其它数据库, 按标准语法进行处理
      */
