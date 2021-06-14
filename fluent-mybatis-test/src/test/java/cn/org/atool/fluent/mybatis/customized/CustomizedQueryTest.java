@@ -15,30 +15,9 @@ public class CustomizedQueryTest extends BaseTest {
     private StudentMapper mapper;
 
     @Test
-    void test_insert_select() {
-        ATM.dataMap.student.table(3)
-            .address.values("address1", "address2", "address3")
-            .age.values(34, 45, 55)
-            .cleanAndInsert();
-        FreeQuery query = new FreeQuery(null)
-            .customized("" +
-                    "SELECT address, age FROM student " +
-                    "WHERE id IN (#{value[0]}, #{value[1]}, #{value[2]})",
-                new long[]{1, 2, 3});
-
-        mapper.insertSelect(new String[]{"address", "age"}, query);
-        db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO student (address,age) " +
-            "SELECT address, age " +
-            "FROM student " +
-            "WHERE id IN (?, ?, ?)");
-        db.sqlList().wantFirstPara().eq(new Object[]{1L, 2L, 3L});
-    }
-
-    @Test
     void test_count() {
         FreeQuery query = new FreeQuery(null)
-            .customized("" +
+            .customizedByPlaceholder("" +
                 "select count(1) from student " +
                 "where id < #{value}", 10);
         mapper.count(query);
@@ -51,7 +30,7 @@ public class CustomizedQueryTest extends BaseTest {
             .age.values(19, 45, 55)
             .cleanAndInsert();
         FreeQuery query = new FreeQuery(null)
-            .customized("" +
+            .customizedByPlaceholder("" +
                     "select * from student " +
                     "where user_name like #{userName} " +
                     "and age > #{age}",
@@ -64,5 +43,48 @@ public class CustomizedQueryTest extends BaseTest {
         db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
         want.list(list).eqByProperties("userName",
             new String[]{"xyz2", "xyz3"});
+    }
+
+    @Test
+    void test_list_maps() {
+        FreeQuery query = new FreeQuery(null)
+            .customizedByQuestion("" +
+                    "select * from student " +
+                    "where user_name like ? " +
+                    "and age > ?",
+                "xyz%", 20);
+        mapper.listMaps(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "select * from student where user_name like ? and age > ?");
+        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
+    }
+
+    @Test
+    void test_list_objs() {
+        FreeQuery query = new FreeQuery(null)
+            .customizedByQuestion("" +
+                    "select * from student " +
+                    "where user_name like ? " +
+                    "and age > ?",
+                "xyz%", 20);
+        mapper.listObjs(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "select * from student where user_name like ? and age > ?");
+        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
+    }
+
+
+    @Test
+    void test_findOne() {
+        FreeQuery query = new FreeQuery(null)
+            .customizedByQuestion("" +
+                    "select * from student " +
+                    "where user_name like ? " +
+                    "and age > ?",
+                "xyz%", 20);
+        mapper.findOne(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "select * from student where user_name like ? and age > ?");
+        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
     }
 }

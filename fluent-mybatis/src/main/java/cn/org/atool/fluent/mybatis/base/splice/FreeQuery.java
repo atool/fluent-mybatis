@@ -97,7 +97,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @param parameter sql参数, 通过#{value} 或 #{field.field}占位
      * @return self
      */
-    public FreeQuery customized(String sql, Object parameter) {
+    public FreeQuery customizedByPlaceholder(String sql, Object parameter) {
         this.wrapperData.customizedSql(sql, parameter);
         return this;
     }
@@ -106,10 +106,13 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * 完全自定义的sql
      * 使用此方法, Query的其它设置(select,where,order,group,limit等)将无效
      *
-     * @param sql 用户定义的完整sql语句
+     * @param sql   用户定义的完整sql语句
+     * @param paras sql参数, 通过sql中的'?'占位
      * @return self
      */
-    public FreeQuery customized(String sql) {
-        return this.customized(sql, null);
+    public FreeQuery customizedByQuestion(String sql, Object... paras) {
+        String placeholder = this.wrapperData.paramSql(sql, paras);
+        this.wrapperData.customizedSql(placeholder, null);
+        return this;
     }
 }

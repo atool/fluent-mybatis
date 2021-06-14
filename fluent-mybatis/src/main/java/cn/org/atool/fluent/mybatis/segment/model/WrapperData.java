@@ -125,7 +125,11 @@ public class WrapperData implements IWrapperData {
      * @param parameter
      */
     public void customizedSql(String sql, Object parameter) {
-        this.customizedSql = CustomizedSql.rewriteSql(sql, this.parameters, parameter);
+        if (parameter == null) {
+            this.customizedSql = sql;
+        } else {
+            this.customizedSql = CustomizedSql.rewriteSql(sql, this.parameters, parameter);
+        }
     }
 
     @Override
