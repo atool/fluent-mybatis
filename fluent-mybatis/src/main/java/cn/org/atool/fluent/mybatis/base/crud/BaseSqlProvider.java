@@ -65,7 +65,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         StringBuilder buff = new StringBuilder("INSERT INTO ")
             .append(tableName)
             .append(" (")
-            .append(String.join(",", fields))
+            .append(String.join(", ", fields))
             .append(") ")
             .append(query.getWrapperData().getQuerySql());
 
@@ -110,13 +110,13 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             this.validateInsertEntity(entity, withPk);
         }
         sql.INSERT_INTO(this.tableName());
-        sql.INSERT_COLUMNS(this.allFields(withPk));
+        sql.INSERT_COLUMNS(dbType(), this.allFields(withPk).split(","));
         sql.VALUES();
         for (int index = 0; index < entities.size(); index++) {
             if (index > 0) {
                 sql.APPEND(", ");
             }
-            sql.INSERT_COLUMNS(this.insertBatchEntity(index, entities.get(index), withPk));
+            sql.INSERT_VALUES(this.insertBatchEntity(index, entities.get(index), withPk));
         }
         return sql.toString();
     }
@@ -476,7 +476,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         sql.INSERT_INTO(this.tableName());
         InsertList inserts = new InsertList();
         this.insertEntity(inserts, prefix, entity, withPk);
-        sql.INSERT_COLUMNS(inserts.columns);
+        sql.INSERT_COLUMNS(dbType(), inserts.columns);
         sql.VALUES();
         sql.INSERT_VALUES(inserts.values);
         return sql.toString();

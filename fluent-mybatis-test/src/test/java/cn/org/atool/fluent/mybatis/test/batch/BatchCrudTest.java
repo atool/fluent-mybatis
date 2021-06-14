@@ -49,9 +49,9 @@ public class BatchCrudTest extends BaseTest {
         );
         db.sqlList().wantFirstSql()
             .eq("" +
-                    "INSERT INTO student(id, gmt_created, gmt_modified, is_deleted, env, tenant, user_name) " +
+                    "INSERT INTO student(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`, `user_name`) " +
                     "VALUES (?, now(), now(), 0, ?, ?, ?); " +
-                    "INSERT INTO home_address(gmt_created, gmt_modified, is_deleted, address, env, student_id, tenant) " +
+                    "INSERT INTO home_address(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
                     "VALUES (now(), now(), 0, ?, ?, ?, ?); " +
                     "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?; " +
                     "UPDATE home_address SET gmt_modified = now(), address = ? WHERE id = ?; " +

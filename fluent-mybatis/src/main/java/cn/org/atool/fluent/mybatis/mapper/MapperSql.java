@@ -1,18 +1,21 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.el;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Mapper SQL组装
@@ -52,23 +55,31 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql INSERT_COLUMNS(String... columns) {
-        buffer.append("(").append(String.join(", ", columns)).append(")");
-        return this;
-    }
-
     public MapperSql VALUES() {
         buffer.append(" VALUES ");
         return this;
     }
 
-    public MapperSql INSERT_COLUMNS(List<String> columns) {
-        buffer.append("(").append(String.join(", ", columns)).append(")");
+    public MapperSql INSERT_COLUMNS(DbType dbType, String... columns) {
+        String joining = Stream.of(columns)
+            .map(String::trim)
+            .map(dbType::wrap)
+            .collect(joining(", "));
+        buffer.append("(").append(joining).append(")");
         return this;
     }
 
-    public MapperSql INSERT_VALUES(List<String> columns) {
-        buffer.append("(").append(String.join(", ", columns)).append(")");
+    public MapperSql INSERT_COLUMNS(DbType dbType, List<String> columns) {
+        String joining = columns.stream()
+            .map(String::trim)
+            .map(dbType::wrap)
+            .collect(joining(", "));
+        buffer.append("(").append(joining).append(")");
+        return this;
+    }
+
+    public MapperSql INSERT_VALUES(List<String> values) {
+        buffer.append("(").append(String.join(", ", values)).append(")");
         return this;
     }
 

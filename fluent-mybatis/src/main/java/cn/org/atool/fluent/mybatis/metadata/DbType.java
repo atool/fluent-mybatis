@@ -11,11 +11,21 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql", "SELECT LAST_INSERT_ID() AS ID"),
+    MYSQL("mysql", "SELECT LAST_INSERT_ID() AS ID") {
+        @Override
+        public String wrap(String column) {
+            return "`" + column + "`";
+        }
+    },
     /**
      * MARIADB
      */
-    MARIADB("mariadb", "SELECT LAST_INSERT_ID() AS ID"),
+    MARIADB("mariadb", "SELECT LAST_INSERT_ID() AS ID") {
+        @Override
+        public String wrap(String column) {
+            return "`" + column + "`";
+        }
+    },
     /**
      * H2
      */
@@ -47,7 +57,11 @@ public enum DbType {
     /**
      * SQLSERVER
      */
-    SQL_SERVER("sqlserver");
+    SQL_SERVER("sqlserver"),
+    /**
+     * 其它数据库, 按标准语法进行处理
+     */
+    OTHER("other");
 
     @Getter
     private String alias;
@@ -71,5 +85,9 @@ public enum DbType {
         this.alias = alias;
         this.seq = seq;
         this.before = before;
+    }
+
+    public String wrap(String column) {
+        return column;
     }
 }
