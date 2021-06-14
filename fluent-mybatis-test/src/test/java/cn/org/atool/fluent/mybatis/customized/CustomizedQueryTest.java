@@ -33,14 +33,14 @@ public class CustomizedQueryTest extends BaseTest {
             .customizedByPlaceholder("" +
                     "select * from student " +
                     "where user_name like #{userName} " +
-                    "and age > #{age}",
+                    "and age > ${age}",
                 new StudentEntity()
                     .setUserName("xyz%")
                     .setAge(20));
         List<StudentEntity> list = mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
-            "select * from student where user_name like ? and age > ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
+            "select * from student where user_name like ? and age > 20");
+        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%"});
         want.list(list).eqByProperties("userName",
             new String[]{"xyz2", "xyz3"});
     }
