@@ -67,7 +67,19 @@ public interface StrConstant {
      */
     String COMMA_SPACE = COMMA + SPACE;
     /**
-     * select ... from ... where ...
+     * 右花括号
      */
-    String SELECT_FROM_WHERE = "SELECT %s FROM %s %s";
+    String RIGHT_CURLY_BRACKET = "}";
+    /**
+     * "#{"
+     */
+    String HASH_MARK_LEFT_CURLY = "#{";
+    /**
+     * "${"
+     */
+    String DOLLAR_LEFT_CURLY = "${";
+    /**
+     * value字符常量
+     */
+    String STR_VALUE = "value";
 }
