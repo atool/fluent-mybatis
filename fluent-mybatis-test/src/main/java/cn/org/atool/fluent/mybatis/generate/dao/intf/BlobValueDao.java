@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
-import cn.org.atool.fluent.mybatis.generate.entity.BlobValueEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.BlobValuePoJo;
 
 /**
  * BlobValueDao: 数据操作接口
@@ -10,5 +10,5 @@ import cn.org.atool.fluent.mybatis.generate.entity.BlobValueEntity;
  * 可以任意添加方法和实现, 更改作者和重定义类名
  * <p/>@author Powered By Fluent Mybatis
  */
-public interface BlobValueDao extends IBaseDao<BlobValueEntity> {
+public interface BlobValueDao extends IBaseDao<BlobValuePoJo> {
 }

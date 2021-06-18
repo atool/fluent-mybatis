@@ -85,7 +85,7 @@ public class FluentMyBatisGeneratorMain {
             @Table(value = "blob_value",
                 columns = @Column(value = "blob_value", typeHandler = BlobTypeHandler.class),
                 superMapper = ICustomizedMapper.class)
-        })
+        }, entitySuffix = "PoJo")
     static class Empty4 {
     }
 }

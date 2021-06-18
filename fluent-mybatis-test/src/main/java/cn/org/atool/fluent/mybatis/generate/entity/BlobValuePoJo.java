@@ -6,18 +6,16 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.ICustomizedMapper;
-import java.io.Serializable;
-import java.lang.Class;
-import java.lang.Long;
-import java.lang.Override;
-import java.sql.Blob;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.BlobTypeHandler;
 
+import java.io.Serializable;
+import java.sql.Blob;
+
 /**
- * BlobValueEntity: 数据映射实体定义
+ * BlobValuePoJo: 数据映射实体定义
  *
  * @author Powered By Fluent Mybatis
  */
@@ -30,9 +28,10 @@ import org.apache.ibatis.type.BlobTypeHandler;
 )
 @FluentMybatis(
     table = "blob_value",
-    superMapper = ICustomizedMapper.class
+    superMapper = ICustomizedMapper.class,
+    suffix = "PoJo"
 )
-public class BlobValueEntity extends RichEntity {
+public class BlobValuePoJo extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -56,6 +55,6 @@ public class BlobValueEntity extends RichEntity {
 
   @Override
   public final Class<? extends IEntity> entityClass() {
-    return BlobValueEntity.class;
+    return BlobValuePoJo.class;
   }
 }
