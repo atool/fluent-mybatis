@@ -248,7 +248,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param cm
      * @return
      */
-//    int logicDeleteByMap(@Param(Param_CM) Map<String, Object> cm);
+    int logicDeleteByMap(@Param(Param_CM) Map<String, Object> cm);
 
     /**
      * 根据wrapper删除记录

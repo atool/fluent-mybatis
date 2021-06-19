@@ -104,6 +104,8 @@ public interface FluentConst {
 
     String M_DeleteByMap = "deleteByMap";
 
+    String M_LogicDeleteByMap = "logicDeleteByMap";
+
     String M_Delete = "delete";
 
     String M_LogicDelete = "logicDelete";

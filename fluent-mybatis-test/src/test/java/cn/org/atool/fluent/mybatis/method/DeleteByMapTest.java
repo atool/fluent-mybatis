@@ -26,9 +26,22 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE user_name = ? AND id = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L).eqTable()
         );
+    }
+
+
+    @Test
+    public void testLogicDeleteByIds() {
+        mapper.logicDeleteByMap(new HashMap<String, Object>() {
+            {
+                this.put("id", 24);
+                this.put("user_name", "user2");
+            }
+        });
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student SET `is_deleted` = true WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
     }
 }

@@ -389,12 +389,36 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         Map<String, Object> cm = getParas(map, Param_CM);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
+        this.whereByMap(sql, cm);
+        return sql.toString();
+    }
+
+    /**
+     * 按map逻辑删除数据SQL构造
+     *
+     * @param map
+     * @return
+     */
+    public String logicDeleteByMap(Map<String, Object> map) {
+        Map<String, Object> cm = getParas(map, Param_CM);
+        MapperSql sql = new MapperSql();
+        this.logicDelete(sql);
+        this.whereByMap(sql, cm);
+        return sql.toString();
+    }
+
+    /**
+     * 按map构造条件语句
+     *
+     * @param sql sql构造器
+     * @param map key-value条件
+     */
+    private void whereByMap(MapperSql sql, Map<String, Object> map) {
         List<String> where = new ArrayList<>();
-        for (String key : cm.keySet()) {
-            where.add(format("%s = #{%s.%s}", key, Param_CM, key));
+        for (String key : map.keySet()) {
+            where.add(format("%s = #{%s.%s}", dbType().wrap(key), Param_CM, key));
         }
         sql.WHERE(where);
-        return sql.toString();
     }
 
     /**
