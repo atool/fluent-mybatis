@@ -14,8 +14,8 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
-import static cn.org.atool.generator.util.ClassNames.CN_Class_IEntity;
-import static cn.org.atool.generator.util.ClassNames.CN_Set;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set;
 
 /**
  * AllRef 文件构造

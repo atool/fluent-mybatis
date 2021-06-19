@@ -14,7 +14,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import cn.org.atool.generator.util.ClassNames;
+import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
@@ -30,8 +30,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.generator.util.ClassNames.CN_List;
-import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
 
 /**
  * 生成Entity对应的Mapper类
@@ -68,9 +68,9 @@ public class MapperFiler extends AbstractFiler {
         spec.addSuperinterface(this.superMapperClass())
             .addSuperinterface(parameterizedType(ClassName.get(IRichMapper.class), fluent.entity()))
             .addSuperinterface(parameterizedType(ClassName.get(IWrapperMapper.class), fluent.entity()))
-            .addSuperinterface(parameterizedType(ClassNames.getClassName(fluent.getSuperMapper()), fluent.entity()))
-            .addAnnotation(ClassNames.Mybatis_Mapper)
-            .addAnnotation(AnnotationSpec.builder(ClassNames.Spring_Component)
+            .addSuperinterface(parameterizedType(ClassNames2.getClassName(fluent.getSuperMapper()), fluent.entity()))
+            .addAnnotation(ClassNames2.Mybatis_Mapper)
+            .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Component)
                 .addMember("value", "$S", getMapperName(this.fluent)).build()
             );
         spec.addField(FieldSpec.builder(String.class, "ResultMap",

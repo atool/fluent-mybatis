@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
-import cn.org.atool.generator.util.ClassNames;
+import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import com.squareup.javapoet.ClassName;
 import lombok.Getter;
 
@@ -33,7 +33,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
 
     @Override
     public Void visitType(TypeElement entity, Void aVoid) {
-        ClassName className = ClassNames.getClassName(entity.getQualifiedName().toString());
+        ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
         this.fluent.setClassName(className.packageName(), className.simpleName());
         FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
         String defaults = ClassAttrParser.getClassAttr(entity, ATTR_DEFAULTS, IDefaultSetter.class);
@@ -110,7 +110,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
                 String method = entry.getKey().getSimpleName().toString();
                 AnnotationValue value = entry.getValue();
                 if ("typeHandler".equals(method)) {
-                    field.setTypeHandler(ClassNames.getClassName(value.getValue().toString()));
+                    field.setTypeHandler(ClassNames2.getClassName(value.getValue().toString()));
                 }
             }
         }

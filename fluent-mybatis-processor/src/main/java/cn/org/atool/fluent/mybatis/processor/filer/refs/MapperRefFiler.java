@@ -13,7 +13,7 @@ import javax.lang.model.element.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static cn.org.atool.generator.util.ClassNames.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 
 /**
  * IMapperRef 文件构造

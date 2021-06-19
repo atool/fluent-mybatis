@@ -11,7 +11,7 @@ import com.squareup.javapoet.*;
 
 import java.util.Map;
 
-import static cn.org.atool.generator.util.ClassNames.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityHelper;
 
 /**
