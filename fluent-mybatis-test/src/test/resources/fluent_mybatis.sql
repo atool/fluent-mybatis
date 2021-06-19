@@ -6,7 +6,8 @@ drop table if exists idcard;
 CREATE TABLE `idcard`
 (
     `id`   bigint(21) unsigned auto_increment primary key COMMENT '主键id',
-    `code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL
+    `code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `version` bigint(21) unsigned NOT NULL default 0 COMMENT '版本锁'
 ) ENGINE = InnoDB
   charset = utf8;
 

@@ -25,10 +25,11 @@ public class FluentMyBatisGeneratorMain {
     public static void main(String[] args) {
         DataSourceCreatorFactory.create("dataSource");
         FileGenerator.build(
-            Empty1.class,
-            Empty2.class,
-            Empty3.class,
-            Empty4.class
+            MapperPrefix.class,
+            RelationDef1.class,
+            RelationDef2.class,
+            EntitySuffix_TypeHandler_CustomizedMapper.class,
+            UpdateDefault.class
         );
     }
 
@@ -39,7 +40,7 @@ public class FluentMyBatisGeneratorMain {
             @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "SELECT LAST_INSERT_ID() AS ID"),
             @Table(value = "no_primary", mapperPrefix = "new")
         })
-    static class Empty1 {
+    static class MapperPrefix {
     }
 
     @Tables(url = URL, username = "root", password = "password",
@@ -57,7 +58,7 @@ public class FluentMyBatisGeneratorMain {
                 where = "id=student_id && env=env && is_deleted=is_deleted"),
             @Relation(method = "findEnglishScore", source = "student", target = "student_score", type = RelationType.OneWay_0_1)
         })
-    static class Empty2 {
+    static class RelationDef1 {
     }
 
     @Tables(
@@ -76,7 +77,7 @@ public class FluentMyBatisGeneratorMain {
             @Relation(method = "findCurrFriend", source = "t_member", target = "t_member", type = RelationType.OneWay_0_1)
         }
     )
-    static class Empty3 {
+    static class RelationDef2 {
     }
 
     @Tables(url = URL, username = "root", password = "password",
@@ -86,6 +87,15 @@ public class FluentMyBatisGeneratorMain {
                 columns = @Column(value = "blob_value", typeHandler = BlobTypeHandler.class),
                 superMapper = ICustomizedMapper.class)
         }, entitySuffix = "PoJo")
-    static class Empty4 {
+    static class EntitySuffix_TypeHandler_CustomizedMapper {
+    }
+
+    @Tables(url = URL, username = "root", password = "password",
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        tables = {
+            @Table(value = "idcard",
+                columns = @Column(value = "version", update = "version + 1"))
+        })
+    static class UpdateDefault {
     }
 }

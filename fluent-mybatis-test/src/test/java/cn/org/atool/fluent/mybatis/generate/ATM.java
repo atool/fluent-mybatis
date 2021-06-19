@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate;
 
 import cn.org.atool.fluent.mybatis.generate.dm.BlobValueDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.IdcardDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberLoveDataMap;
@@ -11,6 +12,7 @@ import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
 import cn.org.atool.fluent.mybatis.generate.mix.BlobValueTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.IdcardTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberTableMix;
@@ -58,6 +60,8 @@ public interface ATM {
     public final String member = "t_member";
 
     public final String blobValue = "blob_value";
+
+    public final String idcard = "idcard";
   }
 
   /**
@@ -81,6 +85,8 @@ public interface ATM {
     public final MemberDataMap.Factory member = new MemberDataMap.Factory();
 
     public final BlobValueDataMap.Factory blobValue = new BlobValueDataMap.Factory();
+
+    public final IdcardDataMap.Factory idcard = new IdcardDataMap.Factory();
   }
 
   /**
@@ -105,6 +111,8 @@ public interface ATM {
 
     public final BlobValueTableMix blobValueTableMix = MixProxy.proxy(BlobValueTableMix.class);
 
+    public final IdcardTableMix idcardTableMix = MixProxy.proxy(IdcardTableMix.class);
+
     public void cleanAllTable() {
       this.noAutoIdTableMix.cleanNoAutoIdTable();
       this.noPrimaryTableMix.cleanNoPrimaryTable();
@@ -115,6 +123,7 @@ public interface ATM {
       this.memberLoveTableMix.cleanMemberLoveTable();
       this.memberTableMix.cleanMemberTable();
       this.blobValueTableMix.cleanBlobValueTable();
+      this.idcardTableMix.cleanIdcardTable();
     }
   }
 
@@ -133,7 +142,8 @@ public interface ATM {
       	MemberFavoriteDataMap.class,
       	MemberLoveDataMap.class,
       	MemberDataMap.class,
-      	BlobValueDataMap.class
+      	BlobValueDataMap.class,
+      	IdcardDataMap.class
       );
     }
 
