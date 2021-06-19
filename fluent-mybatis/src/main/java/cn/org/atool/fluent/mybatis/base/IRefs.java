@@ -6,10 +6,10 @@ import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity
  *
  * @author darui.wu
  */
-public abstract class IRefs implements ApplicationContextAware, InitializingBean {
+public abstract class IRefs implements ApplicationContextAware {
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
      */
@@ -213,8 +213,13 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
 
     protected abstract IRichMapper getMapper(Class<? extends IEntity> clazz);
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    /**
+     * spring init-method
+     *
+     * @throws Exception
+     */
+    @PostConstruct
+    public void initMethod() throws Exception {
         Method[] methods = this.getClass().getMethods();
         for (Method method : methods) {
             if (method.getParameterCount() == 0) {
