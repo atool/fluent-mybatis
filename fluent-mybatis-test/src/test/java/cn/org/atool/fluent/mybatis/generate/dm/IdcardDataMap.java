@@ -32,6 +32,12 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
   public final transient KeyValue<IdcardDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
+      value = "is_deleted",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<IdcardDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+
+  @ColumnDef(
       value = "code",
       type = "varchar(18)"
   )

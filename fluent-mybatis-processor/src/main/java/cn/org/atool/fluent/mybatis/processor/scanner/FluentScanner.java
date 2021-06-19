@@ -78,7 +78,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
             this.fluent.addField(field);
             if (element.getAnnotation(LogicDelete.class) != null) {
                 this.fluent.setLogicDelete(field.getColumn());
-                this.fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType().toString(), CN_Long));
+                this.fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
             }
             if (element.getAnnotation(Version.class) != null) {
                 this.fluent.setVersionField(field.getColumn());

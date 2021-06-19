@@ -1,18 +1,16 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import java.io.Serializable;
-import java.lang.Class;
-import java.lang.Long;
-import java.lang.Override;
-import java.lang.String;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * IdcardEntity: 数据映射实体定义
@@ -37,6 +35,16 @@ public class IdcardEntity extends RichEntity {
    */
   @TableId("id")
   private Long id;
+
+  /**
+   * 是否逻辑删除
+   */
+  @TableField(
+      value = "is_deleted",
+      insert = "0"
+  )
+  @LogicDelete
+  private Long isDeleted;
 
   /**
    */
