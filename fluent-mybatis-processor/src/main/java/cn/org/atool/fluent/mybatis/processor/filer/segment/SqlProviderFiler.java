@@ -23,6 +23,7 @@ import com.squareup.javapoet.TypeSpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
@@ -123,16 +124,28 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addStatement("$T sql = new MapperSql()", MapperSql.class);
         spec.addStatement("sql.UPDATE(this.tableName())");
         spec.addCode("$T updates = new UpdateSet()", UpdateSet.class);
+
+        CommonField versionField = null;
         for (CommonField field : this.fluent.getFields()) {
-            if (!field.isPrimary()) {
-                spec.addCode("\n\t.add($L, entity.$L(), $S)",
-                    field.getName(), field.getMethodName(), field.getUpdate());
+            if (Objects.equals(field.getColumn(), fluent.getVersionField())) {
+                spec.addCode("\n\t.add($L, null, $S)", field.getName(), field.getUpdate());
+                versionField = field;
+            } else if (!field.isPrimary()) {
+                spec.addCode("\n\t.add($L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getUpdate());
             }
         }
         spec.addCode(";\n");
+        if (versionField != null) {
+            spec.addStatement("assertNotNull($S, entity.$L())",
+                String.format("lock version field(%s)", versionField.getName()),
+                versionField.getMethodName());
+        }
         spec.addStatement("sql.SET(updates.getUpdates())");
         spec.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getName());
-
+        if (versionField != null) {
+            spec.addStatement("sql.APPEND($S)", " AND ");
+            spec.addStatement("sql.APPEND($L.el(Param_ET))", versionField.getName());
+        }
         return spec.addStatement("return sql.toString()").build();
     }
 
