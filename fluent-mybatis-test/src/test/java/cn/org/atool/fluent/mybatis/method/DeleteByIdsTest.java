@@ -27,4 +27,13 @@ public class DeleteByIdsTest extends BaseTest {
             .userName.values("user1", "user2")
             .eqTable();
     }
+
+    @Test
+    public void testLogicDeleteByIds() {
+        mapper.logicDeleteByIds(Arrays.asList(24, 27, 25));
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student SET `is_deleted` = true WHERE `id` IN (?, ?, ?)",
+                StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eq(new Object[]{24, 27, 25});
+    }
 }
