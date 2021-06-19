@@ -25,7 +25,7 @@ public class FluentMyBatisGeneratorMain {
     public static void main(String[] args) {
         DataSourceCreatorFactory.create("dataSource");
         FileGenerator.build(
-            MapperPrefix.class,
+            MapperPrefix_Version.class,
             RelationDef1.class,
             RelationDef2.class,
             EntitySuffix_TypeHandler_CustomizedMapper.class,
@@ -37,10 +37,11 @@ public class FluentMyBatisGeneratorMain {
         srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
-            @Table(value = "no_auto_id", mapperPrefix = "new", seqName = "SELECT LAST_INSERT_ID() AS ID"),
+            @Table(value = "no_auto_id", mapperPrefix = "new",
+                seqName = "SELECT LAST_INSERT_ID() AS ID", version = "lock_version"),
             @Table(value = "no_primary", mapperPrefix = "new")
         })
-    static class MapperPrefix {
+    static class MapperPrefix_Version {
     }
 
     @Tables(url = URL, username = "root", password = "password",

@@ -5,8 +5,8 @@ fluent_mybatis;
 drop table if exists idcard;
 CREATE TABLE `idcard`
 (
-    `id`   bigint(21) unsigned auto_increment primary key COMMENT '主键id',
-    `code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `id`      bigint(21) unsigned auto_increment primary key COMMENT '主键id',
+    `code`    varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
     `version` bigint(21) unsigned NOT NULL default 0 COMMENT '版本锁'
 ) ENGINE = InnoDB
   charset = utf8;
@@ -30,11 +30,12 @@ create table nick_name
 ) ENGINE = InnoDB
   charset = utf8;
 
-drop table if exists no_auto_id;
-create table no_auto_id
+DROP TABLE IF EXISTS `no_auto_id`;
+create table `no_auto_id`
 (
-    id       varchar(50) NOT NULL primary key,
-    column_1 varchar(20) NULL
+    id           varchar(50) not null primary key,
+    column_1     varchar(20) null,
+    lock_version bigint(21) default 0 not null
 ) ENGINE = InnoDB
   charset = utf8 COMMENT = '非自增主键表';
 

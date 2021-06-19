@@ -36,6 +36,12 @@ public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
   )
   public final transient KeyValue<NoAutoIdDataMap> column1 = new KeyValue(this, "column_1", "column1", supplier);
 
+  @ColumnDef(
+      value = "lock_version",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<NoAutoIdDataMap> lockVersion = new KeyValue(this, "lock_version", "lockVersion", supplier);
+
   NoAutoIdDataMap(boolean isTable) {
     super();
     this.isTable = isTable;
