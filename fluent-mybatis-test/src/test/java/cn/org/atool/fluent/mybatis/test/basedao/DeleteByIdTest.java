@@ -22,6 +22,13 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
+    public void test_logicDeleteById() throws Exception {
+        dao.logicDeleteById(4L);
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student SET `is_deleted` = true WHERE `id` = ?");
+    }
+
+    @Test
     public void test_deleteById2() throws Exception {
         ATM.dataMap.student.initTable(10).cleanAndInsert();
         dao.deleteById(4L, 5L, 6L);
@@ -35,5 +42,13 @@ public class DeleteByIdTest extends BaseTest {
         dao.deleteByIds(Arrays.asList(4L, 6L, 9L));
         db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
         db.table(ATM.table.student).count().eq(7);
+    }
+
+    @Test
+    public void test_logicDeleteByIds() throws Exception {
+        dao.logicDeleteByIds(Arrays.asList(4L, 6L, 9L));
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student SET `is_deleted` = true WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eq(new Object[]{4L, 6L, 9L});
     }
 }

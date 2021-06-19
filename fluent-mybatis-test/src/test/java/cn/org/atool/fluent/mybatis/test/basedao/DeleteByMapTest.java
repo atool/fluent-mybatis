@@ -32,4 +32,17 @@ public class DeleteByMapTest extends BaseTest {
             .eq("DELETE FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
         db.table(ATM.table.student).count().eq(8);
     }
+
+    @Test
+    public void test_logicDeleteByMap() throws Exception {
+        dao.logicDeleteByMap(new HashMap<String, Object>() {
+            {
+                this.put(StudentMapping.userName.column, "test12");
+            }
+        });
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student SET `is_deleted` = true " +
+            "WHERE is_deleted = ? AND env = ? AND user_name = ?");
+        db.sqlList().wantFirstPara().eq(new Object[]{false, "test_env", "test12"});
+    }
 }

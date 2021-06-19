@@ -162,8 +162,30 @@ public interface IBaseDao<E extends IEntity> {
      * @param entities
      * @return 被执行的记录数
      */
+    default int logicDeleteByEntityIds(Collection<E> entities) {
+        int count = this.mapper().logicDeleteByEntityIds(entities);
+        return count;
+    }
+
+    /**
+     * 根据entities中的id值，批量删除记录
+     *
+     * @param entities
+     * @return 被执行的记录数
+     */
     default int deleteByEntityIds(E... entities) {
         int count = this.mapper().deleteByEntityIds(entities);
+        return count;
+    }
+
+    /**
+     * 根据entities中的id值，批量逻辑删除记录
+     *
+     * @param entities
+     * @return 被执行的记录数
+     */
+    default int logicDeleteByEntityIds(E... entities) {
+        int count = this.mapper().logicDeleteByEntityIds(entities);
         return count;
     }
 
@@ -179,6 +201,17 @@ public interface IBaseDao<E extends IEntity> {
     }
 
     /**
+     * 根据ids列表批量逻辑删除记录
+     *
+     * @param ids 主键列表
+     * @return 被执行的记录数
+     */
+    default int logicDeleteByIds(Collection<? extends Serializable> ids) {
+        int count = this.mapper().logicDeleteByIds(ids);
+        return count;
+    }
+
+    /**
      * 根据id删除记录
      *
      * @param ids 主键值
@@ -190,6 +223,17 @@ public interface IBaseDao<E extends IEntity> {
     }
 
     /**
+     * 根据id列表逻辑删除记录
+     *
+     * @param ids 主键值
+     * @return 是否删除成功
+     */
+    default boolean logicDeleteById(Serializable... ids) {
+        int count = this.mapper().logicDeleteById(ids);
+        return count > 0;
+    }
+
+    /**
      * 根据map构造条件删除记录
      *
      * @param map 条件, 忽略null值
@@ -197,6 +241,18 @@ public interface IBaseDao<E extends IEntity> {
      */
     default int deleteByMap(Map<String, Object> map) {
         int count = this.mapper().deleteByMapAndDefault(map);
+        return count;
+    }
+
+
+    /**
+     * 根据map构造条件逻辑删除记录
+     *
+     * @param map 条件, 忽略null值
+     * @return 被执行的记录数
+     */
+    default int logicDeleteByMap(Map<String, Object> map) {
+        int count = this.mapper().logicDeleteByMapAndDefault(map);
         return count;
     }
 

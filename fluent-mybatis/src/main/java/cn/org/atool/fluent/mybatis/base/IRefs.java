@@ -126,6 +126,9 @@ public abstract class IRefs implements ApplicationContextAware, InitializingBean
             case Rich_Entity_DeleteById:
                 this.mapper(entity).deleteById(entity.findPk());
                 return null;
+            case Rich_Entity_LogicDeleteById:
+                this.mapper(entity).logicDeleteById(entity.findPk());
+                return null;
             case RichEntity_ListByNotNull:
                 Map<String, Object> where = entity.toColumnMap();
                 assertNotEmpty("the property of entity can't be all empty.", where);

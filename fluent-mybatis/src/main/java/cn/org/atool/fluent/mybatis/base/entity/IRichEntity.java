@@ -62,6 +62,16 @@ public interface IRichEntity extends IRich, IEntity {
     }
 
     /**
+     * 逻辑删除entity, 调用 EntityMapper.logicDeleteById(id)方法
+     */
+    default void logicDeleteById() {
+        if (this.findPk() == null) {
+            throw new RuntimeException("the primary of entity can't be null.");
+        }
+        this.invoke(Rich_Entity_LogicDeleteById, false);
+    }
+
+    /**
      * entity非空字段作为条件查询列表, 调用 EntityMapper.listByMap(map)方法
      *
      * @param <E>

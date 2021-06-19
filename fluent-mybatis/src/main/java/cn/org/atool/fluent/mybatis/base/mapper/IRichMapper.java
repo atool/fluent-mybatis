@@ -308,6 +308,17 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     }
 
     /**
+     * 根据where key值 + 和默认条件删除数据
+     *
+     * @param where
+     * @return
+     */
+    default int logicDeleteByMapAndDefault(Map<String, Object> where) {
+        IQuery query = ((IWrapperMapper<E>) this).defaultQuery().where().eqNotNull(where).end();
+        return this.logicDelete(query);
+    }
+
+    /**
      * 根据entities中的id值，批量删除记录
      *
      * @param entities
@@ -321,6 +332,19 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     }
 
     /**
+     * 根据entities中的id值，批量逻辑删除记录
+     *
+     * @param entities
+     * @return 被执行的记录数
+     */
+    default int logicDeleteByEntityIds(Collection<E> entities) {
+        List<Serializable> ids = entities.stream()
+            .map(IEntity::findPk)
+            .collect(toList());
+        return this.logicDeleteByIds(ids);
+    }
+
+    /**
      * 根据entities中的id值，批量删除记录
      *
      * @param entities
@@ -328,5 +352,15 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default int deleteByEntityIds(E... entities) {
         return this.deleteByEntityIds(Arrays.asList(entities));
+    }
+
+    /**
+     * 根据entities中的id值，批量删除记录
+     *
+     * @param entities
+     * @return 被执行的记录数
+     */
+    default int logicDeleteByEntityIds(E... entities) {
+        return this.logicDeleteByEntityIds(Arrays.asList(entities));
     }
 }

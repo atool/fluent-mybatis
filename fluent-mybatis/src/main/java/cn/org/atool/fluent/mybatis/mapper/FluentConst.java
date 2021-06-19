@@ -149,6 +149,10 @@ public interface FluentConst {
      */
     String Rich_Entity_DeleteById = "deleteById";
     /**
+     * RichEntity logicDeleteById 方法
+     */
+    String Rich_Entity_LogicDeleteById = "logicDeleteById";
+    /**
      * RichEntity listByNotNull 方法
      */
     String RichEntity_ListByNotNull = "listByNotNull";

@@ -26,10 +26,26 @@ public class DeleteByEntityIdsTest extends BaseTest {
     }
 
     @Test
+    public void test_logicDeleteByEntityIds() throws Exception {
+        dao.logicDeleteByEntityIds(Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(5L)));
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student SET `is_deleted` = true WHERE `id` IN (?, ?)");
+        db.sqlList().wantFirstPara().eq(new Object[]{1L, 5L});
+    }
+
+    @Test
     public void test_deleteByEntityIds2() throws Exception {
         ATM.dataMap.student.initTable(10).cleanAndInsert();
         dao.deleteByEntityIds(new StudentEntity().setId(1L), new StudentEntity().setId(5L));
         db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE `id` IN (?, ?)");
         db.table(ATM.table.student).count().isEqualTo(8);
+    }
+
+    @Test
+    public void test_logicDeleteByEntityIds2() throws Exception {
+        dao.logicDeleteByEntityIds(new StudentEntity().setId(1L), new StudentEntity().setId(5L));
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student SET `is_deleted` = true WHERE `id` IN (?, ?)");
+        db.sqlList().wantFirstPara().eq(new Object[]{1L, 5L});
     }
 }
