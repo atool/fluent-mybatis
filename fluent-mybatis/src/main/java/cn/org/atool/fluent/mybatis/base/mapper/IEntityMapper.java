@@ -201,6 +201,14 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     int deleteById(Serializable... ids);
 
     /**
+     * 根据id列表批量删除
+     *
+     * @param idList id列表（值不能为null或者empty）
+     * @return
+     */
+    int deleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
+
+    /**
      * 根据 columnMap key值删除记录
      *
      * @param cm
@@ -215,14 +223,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return
      */
     int delete(@Param(Param_EW) IQuery wrapper);
-
-    /**
-     * 根据id列表批量删除
-     *
-     * @param idList id列表（值不能为null或者empty）
-     * @return
-     */
-    int deleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
     /**
      * 逻辑删除实现
      */
@@ -233,4 +233,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return
      */
     int logicDeleteById(Serializable... ids);
+
+    /**
+     * 根据id列表批量逻辑删除
+     *
+     * @param idList id列表（值不能为null或者empty）
+     * @return
+     */
+    int logicDeleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
 }

@@ -40,7 +40,7 @@ public class SelectByIdTest extends BaseTest {
             .cleanAndInsert();
         List<StudentEntity> users = dao.selectByIds(Arrays.asList(3L, 5L));
         db.sqlList().wantFirstSql()
-            .where().eq("id IN (?, ?)");
+            .where().eq("`id` IN (?, ?)");
         want.object(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("username_3", "username_5")
         );
@@ -53,7 +53,7 @@ public class SelectByIdTest extends BaseTest {
             .cleanAndInsert();
         List<StudentEntity> users = dao.selectByIds(3L, 5L);
         db.sqlList().wantFirstSql()
-            .where().eq("id IN (?, ?)");
+            .where().eq("`id` IN (?, ?)");
         want.object(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("username_3", "username_5")
         );

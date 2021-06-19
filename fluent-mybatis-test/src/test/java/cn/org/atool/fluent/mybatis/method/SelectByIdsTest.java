@@ -32,7 +32,7 @@ public class SelectByIdsTest extends BaseTest {
 
         List<StudentEntity> users = mapper.listByIds(Arrays.asList(3L, 1L));
         db.sqlList().wantFirstSql()
-            .where().eq("id IN (?, ?)");
+            .where().eq("`id` IN (?, ?)");
         want.list(users)
             .eqMap(ATM.dataMap.student.entity(2)
                 .userName.values("username_1", "username_3")

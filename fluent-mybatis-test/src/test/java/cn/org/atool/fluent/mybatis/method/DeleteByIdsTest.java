@@ -21,7 +21,7 @@ public class DeleteByIdsTest extends BaseTest {
             .cleanAndInsert();
         mapper.deleteByIds(Arrays.asList(24, 27, 25));
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE id IN (?, ?, ?)", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
         ATM.dataMap.student.table(2)
             .id.values(23L, 26L)
             .userName.values("user1", "user2")

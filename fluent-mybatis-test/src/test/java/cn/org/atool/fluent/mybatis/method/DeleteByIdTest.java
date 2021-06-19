@@ -72,11 +72,21 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
-    public void test_selectById_noPrimary() throws Exception {
+    public void test_deleteById_noPrimary() throws Exception {
         db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );
         want.exception(() -> noPrimaryMapper.deleteById(3L), MyBatisSystemException.class);
+    }
+
+    @Test
+    public void test_logicDeleteById_noLogicDeletedField() throws Exception {
+        db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
+            .column1.values(1, 2, 3)
+            .column2.values("c1", "c2", "c3")
+        );
+        want.exception(() -> noPrimaryMapper.logicDeleteById(3L), MyBatisSystemException.class)
+            .contains("the parameter[logical delete field of table(no_primary)] can't be null.");
     }
 }

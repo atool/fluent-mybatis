@@ -84,9 +84,10 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertSelect())
             .addMethod(this.m_deleteById())
             .addMethod(this.m_logicDeleteById())
+            .addMethod(this.m_deleteByIds())
+            .addMethod(this.m_logicDeleteByIds())
             .addMethod(this.m_deleteByMap())
             .addMethod(this.m_delete())
-            .addMethod(this.m_deleteByIds())
             .addMethod(this.m_updateById())
             .addMethod(this.m_updateBy())
             .addMethod(this.m_findById())
@@ -269,6 +270,16 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_deleteByIds() {
         return this.mapperMethod(DeleteProvider.class, M_deleteByIds)
             .addJavadoc("@see $T#deleteByIds(Map)", fluent.sqlProvider())
+            .addParameter(ParameterSpec.builder(parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable")), "idList")
+                .addAnnotation(annotation_Param("Param_Coll"))
+                .build())
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    public MethodSpec m_logicDeleteByIds() {
+        return this.mapperMethod(DeleteProvider.class, M_LogicDeleteByIds)
+            .addJavadoc("@see $T#logicDeleteByIds(Map)", fluent.sqlProvider())
             .addParameter(ParameterSpec.builder(parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable")), "idList")
                 .addAnnotation(annotation_Param("Param_Coll"))
                 .build())

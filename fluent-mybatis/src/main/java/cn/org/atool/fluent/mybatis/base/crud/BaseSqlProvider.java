@@ -271,7 +271,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         Collection ids = getParas(map, Param_Coll);
         assertNotEmpty("PrimaryKeyList", ids);
         sql.SELECT(this.tableName(), this.joiningAllFields(true));
-        sql.WHERE_PK_IN(this.idColumn(), ids.size());
+        sql.WHERE_PK_IN(this.dbType().wrap(this.idColumn()), ids.size());
         return sql.toString();
     }
 
@@ -363,10 +363,31 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String deleteByIds(Map map) {
         Collection ids = getParas(map, Param_Coll);
-        assertNotEmpty("PrimaryKeyList", ids);
+        assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
-        sql.WHERE_PK_IN(this.idColumn(), ids.size());
+        sql.WHERE_PK_IN(this.dbType().wrap(this.idColumn()), ids.size());
+        return sql.toString();
+    }
+
+    /**
+     * 根据主键列表逻辑删除数据SQL构造
+     *
+     * @param map
+     * @return
+     */
+    public String logicDeleteByIds(Map map) {
+        assertNotNull("logical delete field of table(" + this.tableName() + ")", this.logicDeleteField());
+        Collection ids = getParas(map, Param_Coll);
+        assertNotEmpty("ids", ids);
+        MapperSql sql = new MapperSql();
+        sql.UPDATE(this.tableName(), null);
+        if (this.longTypeOfLogicDelete()) {
+            sql.SET(String.format("%s = %d", dbType().wrap(this.logicDeleteField()), System.currentTimeMillis()));
+        } else {
+            sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
+        }
+        sql.WHERE_PK_IN(this.dbType().wrap(this.idColumn()), ids.size());
         return sql.toString();
     }
 
