@@ -32,7 +32,6 @@ public class DeleteByMapTest extends BaseTest {
         );
     }
 
-
     @Test
     public void testLogicDeleteByIds() {
         mapper.logicDeleteByMap(new HashMap<String, Object>() {
@@ -43,5 +42,6 @@ public class DeleteByMapTest extends BaseTest {
         });
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET `is_deleted` = true WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eq(new Object[]{"user2", 24});
     }
 }
