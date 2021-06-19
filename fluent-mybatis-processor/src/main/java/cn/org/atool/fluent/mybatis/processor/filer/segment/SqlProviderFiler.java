@@ -81,6 +81,7 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addMethod(this.m_dbType());
         spec.addMethod(this.m_versionField());
         spec.addMethod(this.m_logicDeleteField());
+        spec.addMethod(this.m_longTypeOfLogicDelete());
     }
 
     /**
@@ -102,6 +103,12 @@ public class SqlProviderFiler extends AbstractFiler {
     private MethodSpec m_logicDeleteField() {
         return super.protectedMethod("logicDeleteField", true, ClassNames2.CN_String)
             .addStatement("return $S", fluent.getLogicDelete())
+            .build();
+    }
+
+    private MethodSpec m_longTypeOfLogicDelete() {
+        return super.protectedMethod("longTypeOfLogicDelete", true, ClassName.BOOLEAN)
+            .addStatement("return $L", fluent.isLongTypeOfLogicDelete())
             .build();
     }
 

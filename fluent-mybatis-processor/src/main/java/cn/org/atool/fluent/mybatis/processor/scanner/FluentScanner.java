@@ -14,8 +14,10 @@ import lombok.Getter;
 import javax.lang.model.element.*;
 import javax.lang.model.util.ElementScanner8;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Long;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_DEFAULTS;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
 
@@ -76,6 +78,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
             this.fluent.addField(field);
             if (element.getAnnotation(LogicDelete.class) != null) {
                 this.fluent.setLogicDelete(field.getColumn());
+                this.fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType().toString(), CN_Long));
             }
             if (element.getAnnotation(Version.class) != null) {
                 this.fluent.setVersionField(field.getColumn());

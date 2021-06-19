@@ -76,6 +76,11 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     @Setter
     private String logicDelete;
     /**
+     * 逻辑删除字段时 Long 型
+     */
+    @Setter
+    private boolean longTypeOfLogicDelete = false;
+    /**
      * 乐观锁字段
      */
     @Setter

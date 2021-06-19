@@ -42,6 +42,8 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName CN_String = ClassName.get(String.class);
 
+    ClassName CN_Long = ClassName.get(Long.class);
+
     ClassName CN_Map = ClassName.get(Map.class);
 
     ClassName CN_Set = ClassName.get(Set.class);

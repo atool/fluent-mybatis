@@ -330,7 +330,11 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         sql.UPDATE(this.tableName(), null);
-        sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
+        if (this.longTypeOfLogicDelete()) {
+            sql.SET(String.format("%s = %d", dbType().wrap(this.logicDeleteField()), System.currentTimeMillis()));
+        } else {
+            sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
+        }
         this.whereEqIds(sql, ids);
         return sql.toString();
     }
@@ -587,4 +591,11 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     protected abstract String logicDeleteField();
+
+    /**
+     * 逻辑删除字段是否为 Long 型
+     *
+     * @return
+     */
+    protected abstract boolean longTypeOfLogicDelete();
 }
