@@ -52,7 +52,7 @@ public class BatchCrudImpl implements BatchCrud {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
             BaseSqlProvider provider = this.findSqlProvider(query.getWrapperData().getEntityClass());
-            String sql = provider.buildDeleteSql(query.getWrapperData());
+            String sql = provider.buildDeleteSql(query.getWrapperData(), false);
             query.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
         }

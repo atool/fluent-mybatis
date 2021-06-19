@@ -241,4 +241,20 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return
      */
     int logicDeleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
+
+    /**
+     * 根据 columnMap key值逻辑删除记录
+     *
+     * @param cm
+     * @return
+     */
+//    int logicDeleteByMap(@Param(Param_CM) Map<String, Object> cm);
+
+    /**
+     * 根据wrapper删除记录
+     *
+     * @param wrapper 实体对象封装操作类（属性条件可以为null）
+     * @return
+     */
+    int logicDelete(@Param(Param_EW) IQuery wrapper);
 }

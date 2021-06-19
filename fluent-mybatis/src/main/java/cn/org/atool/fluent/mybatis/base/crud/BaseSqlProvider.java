@@ -326,15 +326,9 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String logicDeleteById(Serializable[] ids) {
-        assertNotNull("logical delete field of table(" + this.tableName() + ")", this.logicDeleteField());
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
-        sql.UPDATE(this.tableName(), null);
-        if (this.longTypeOfLogicDelete()) {
-            sql.SET(String.format("%s = %d", dbType().wrap(this.logicDeleteField()), System.currentTimeMillis()));
-        } else {
-            sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
-        }
+        this.logicDelete(sql);
         this.whereEqIds(sql, ids);
         return sql.toString();
     }
@@ -377,16 +371,10 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String logicDeleteByIds(Map map) {
-        assertNotNull("logical delete field of table(" + this.tableName() + ")", this.logicDeleteField());
         Collection ids = getParas(map, Param_Coll);
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
-        sql.UPDATE(this.tableName(), null);
-        if (this.longTypeOfLogicDelete()) {
-            sql.SET(String.format("%s = %d", dbType().wrap(this.logicDeleteField()), System.currentTimeMillis()));
-        } else {
-            sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
-        }
+        this.logicDelete(sql);
         sql.WHERE_PK_IN(this.dbType().wrap(this.idColumn()), ids.size());
         return sql.toString();
     }
@@ -417,7 +405,18 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String delete(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return buildDeleteSql(ew);
+        return buildDeleteSql(ew, false);
+    }
+
+    /**
+     * 根据动态查询条件逻辑删除数据SQL构造
+     *
+     * @param map
+     * @return
+     */
+    public String logicDelete(Map map) {
+        WrapperData ew = getWrapperData(map, Param_EW);
+        return buildDeleteSql(ew, true);
     }
 
     /**
@@ -560,14 +559,33 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param ew
      * @return
      */
-    public String buildDeleteSql(WrapperData ew) {
+    public String buildDeleteSql(WrapperData ew, boolean isLogic) {
         if (If.notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName(), ew);
+        if (isLogic) {
+            this.logicDelete(sql);
+        } else {
+            sql.DELETE_FROM(this.tableName(), ew);
+        }
         sql.WHERE_GROUP_ORDER_BY(ew);
         return sql.toString();
+    }
+
+    /**
+     * 构造 UPDATE table SET logic_delete_field = true 语句
+     *
+     * @param sql sql构造器
+     */
+    private void logicDelete(MapperSql sql) {
+        assertNotNull("logical delete field of table(" + this.tableName() + ")", this.logicDeleteField());
+        sql.UPDATE(this.tableName(), null);
+        if (this.longTypeOfLogicDelete()) {
+            sql.SET(String.format("%s = %d", dbType().wrap(this.logicDeleteField()), System.currentTimeMillis()));
+        } else {
+            sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
+        }
     }
 
     /**
