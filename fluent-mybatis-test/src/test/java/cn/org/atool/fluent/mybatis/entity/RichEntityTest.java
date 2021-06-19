@@ -79,7 +79,7 @@ public class RichEntityTest extends BaseTest {
             .userName.values("test1")
             .cleanAndInsert();
         new StudentEntity().setId(1L).deleteById();
-        db.sqlList().wantFirstSql().end("DELETE FROM student WHERE id = ?");
+        db.sqlList().wantFirstSql().end("DELETE FROM student WHERE `id` = ?");
         db.table(ATM.table.student).count().isEqualTo(0);
     }
 

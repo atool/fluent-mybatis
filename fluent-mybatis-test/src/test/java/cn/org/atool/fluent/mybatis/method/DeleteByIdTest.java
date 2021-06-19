@@ -24,7 +24,7 @@ public class DeleteByIdTest extends BaseTest {
             .cleanAndInsert();
         mapper.deleteById(24);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE id = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
@@ -39,10 +39,11 @@ public class DeleteByIdTest extends BaseTest {
             .cleanAndInsert();
         mapper.logicDeleteById(24);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE id = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
-            .id.values(23L)
-            .userName.values("user1")
+            .eq("UPDATE student SET `is_deleted` = true WHERE `id` = ?", StringMode.SameAsSpace);
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+            .id.values(23L, 24L)
+            .userName.values("user1", "user2")
+            .isDeleted.values(0, 1)
         );
     }
 
@@ -54,12 +55,20 @@ public class DeleteByIdTest extends BaseTest {
             .cleanAndInsert();
         mapper.deleteById(24, 25);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE id IN (?, ?)", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE `id` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eq(new Object[]{24, 25});
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
         );
+    }
+
+    @Test
+    public void testLogicDeleteByIdArr() {
+        mapper.logicDeleteById(24, 25);
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE student SET `is_deleted` = true WHERE `id` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eq(new Object[]{24, 25});
     }
 
     @Test

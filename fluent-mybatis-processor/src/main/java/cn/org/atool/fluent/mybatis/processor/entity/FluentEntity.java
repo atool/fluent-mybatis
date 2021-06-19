@@ -71,6 +71,11 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      */
     private List<CommonField> fields = new ArrayList<>();
     /**
+     * 逻辑删除字段
+     */
+    @Setter
+    private String logicDelete;
+    /**
      * 乐观锁字段
      */
     @Setter

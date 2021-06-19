@@ -315,18 +315,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
-        if (ids.length == 1) {
-            sql.WHERE(format("%s = #{array[0]}", this.idColumn()));
-        } else {
-            StringBuilder values = new StringBuilder();
-            for (int index = 0; index < ids.length; index++) {
-                if (index > 0) {
-                    values.append(", ");
-                }
-                values.append("#{array[" + index + "]}");
-            }
-            sql.WHERE(format("%s IN (%s)", this.idColumn(), values));
-        }
+        this.whereEqIds(sql, ids);
         return sql.toString();
     }
 
@@ -337,11 +326,19 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String logicDeleteById(Serializable[] ids) {
+        assertNotNull("logical delete field of table(" + this.tableName() + ")", this.logicDeleteField());
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(this.tableName(), null);
+        sql.UPDATE(this.tableName(), null);
+        sql.SET(String.format("%s = true", dbType().wrap(this.logicDeleteField())));
+        this.whereEqIds(sql, ids);
+        return sql.toString();
+    }
+
+    private void whereEqIds(MapperSql sql, Serializable[] ids) {
+        String idColumn = this.dbType().wrap(this.idColumn());
         if (ids.length == 1) {
-            sql.WHERE(format("%s = #{array[0]}", this.idColumn()));
+            sql.WHERE(format("%s = #{array[0]}", idColumn));
         } else {
             StringBuilder values = new StringBuilder();
             for (int index = 0; index < ids.length; index++) {
@@ -350,9 +347,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
                 }
                 values.append("#{array[" + index + "]}");
             }
-            sql.WHERE(format("%s IN (%s)", this.idColumn(), values));
+            sql.WHERE(format("%s IN (%s)", idColumn, values));
         }
-        return sql.toString();
     }
 
     /**
@@ -474,35 +470,6 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     protected abstract List<String> updateDefaults(Map<String, String> updates);
 
     /**
-     * 返回表名
-     *
-     * @return
-     */
-    protected abstract String tableName();
-
-    /**
-     * 主键字段名
-     *
-     * @return
-     */
-    protected abstract String idColumn();
-
-    /**
-     * 所有字段列表(以逗号隔开)
-     *
-     * @param withPk 是否包含主键字段
-     * @return
-     */
-    protected abstract List<String> allFields(boolean withPk);
-
-    /**
-     * 数据库类型
-     *
-     * @return
-     */
-    protected abstract DbType dbType();
-
-    /**
      * 构建插入语句
      *
      * @param prefix entity变量前缀
@@ -548,7 +515,6 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         return sql.toString();
     }
 
-
     /**
      * 更新时, 检查乐观锁字段条件是否设置
      */
@@ -562,13 +528,6 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             throw new RuntimeException("The version lock field was explicitly set, but no version condition was found in the update condition.");
         }
     }
-
-    /**
-     * 乐观锁字段
-     *
-     * @return
-     */
-    protected abstract String versionField();
 
     /**
      * 根据WrapperData设置构建删除语句
@@ -585,4 +544,47 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         sql.WHERE_GROUP_ORDER_BY(ew);
         return sql.toString();
     }
+
+    /**
+     * 数据库类型
+     *
+     * @return
+     */
+    protected abstract DbType dbType();
+
+    /**
+     * 返回表名
+     *
+     * @return
+     */
+    protected abstract String tableName();
+
+    /**
+     * 所有字段列表(以逗号隔开)
+     *
+     * @param withPk 是否包含主键字段
+     * @return
+     */
+    protected abstract List<String> allFields(boolean withPk);
+
+    /**
+     * 主键字段名
+     *
+     * @return
+     */
+    protected abstract String idColumn();
+
+    /**
+     * 乐观锁字段
+     *
+     * @return
+     */
+    protected abstract String versionField();
+
+    /**
+     * 逻辑删除字段
+     *
+     * @return
+     */
+    protected abstract String logicDeleteField();
 }

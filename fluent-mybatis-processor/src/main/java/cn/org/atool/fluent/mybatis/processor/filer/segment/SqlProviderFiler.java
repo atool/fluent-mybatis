@@ -80,6 +80,7 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addMethod(this.m_setEntityByDefault());
         spec.addMethod(this.m_dbType());
         spec.addMethod(this.m_versionField());
+        spec.addMethod(this.m_logicDeleteField());
     }
 
     /**
@@ -90,6 +91,17 @@ public class SqlProviderFiler extends AbstractFiler {
     private MethodSpec m_versionField() {
         return super.protectedMethod("versionField", true, ClassNames2.CN_String)
             .addStatement("return $S", fluent.getVersionField())
+            .build();
+    }
+
+    /**
+     * 返回逻辑删除字段方法
+     *
+     * @return
+     */
+    private MethodSpec m_logicDeleteField() {
+        return super.protectedMethod("logicDeleteField", true, ClassNames2.CN_String)
+            .addStatement("return $S", fluent.getLogicDelete())
             .build();
     }
 
