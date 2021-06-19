@@ -1,10 +1,12 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.generator.util.ClassNames;
+import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.WildcardTypeName;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,8 @@ public interface ClassNames2 extends ClassNames {
     ParameterizedTypeName CN_List_Str = ParameterizedTypeName.get(List.class, String.class);
 
     ParameterizedTypeName CN_Class_IEntity = ParameterizedTypeName.get(CN_Class, WildcardTypeName.subtypeOf(FM_IEntity));
+
+    ArrayTypeName CN_SerializableArray = ArrayTypeName.of(Serializable.class);
 
     ClassName CN_String = ClassName.get(String.class);
 

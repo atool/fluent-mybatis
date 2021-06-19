@@ -185,13 +185,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 是否删除成功
      */
     default boolean deleteById(Serializable... ids) {
-        int count;
-        if (ids.length == 1) {
-            count = this.mapper().deleteById(ids[0]);
-        } else {
-            List list = Arrays.asList(ids);
-            count = this.mapper().deleteByIds(list);
-        }
+        int count = this.mapper().deleteById(ids);
         return count > 0;
     }
 

@@ -95,38 +95,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
     /**
-     * 根据id删除记录
-     *
-     * @param id
-     * @return
-     */
-    int deleteById(Serializable id);
-
-    /**
-     * 根据 columnMap key值删除记录
-     *
-     * @param cm
-     * @return
-     */
-    int deleteByMap(@Param(Param_CM) Map<String, Object> cm);
-
-    /**
-     * 根据wrapper删除记录
-     *
-     * @param wrapper 实体对象封装操作类（属性条件可以为null）
-     * @return
-     */
-    int delete(@Param(Param_EW) IQuery wrapper);
-
-    /**
-     * 根据id列表批量删除
-     *
-     * @param idList id列表（值不能为null或者empty）
-     * @return
-     */
-    int deleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
-
-    /**
      * 根据id修改
      *
      * @param entity 实体对象
@@ -221,4 +189,48 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return
      */
     Integer countNoLimit(@Param(Param_EW) IQuery query);
+    /**
+     * 物理删除实现
+     */
+    /**
+     * 根据id删除记录
+     *
+     * @param ids 主键列表
+     * @return
+     */
+    int deleteById(Serializable... ids);
+
+    /**
+     * 根据 columnMap key值删除记录
+     *
+     * @param cm
+     * @return
+     */
+    int deleteByMap(@Param(Param_CM) Map<String, Object> cm);
+
+    /**
+     * 根据wrapper删除记录
+     *
+     * @param wrapper 实体对象封装操作类（属性条件可以为null）
+     * @return
+     */
+    int delete(@Param(Param_EW) IQuery wrapper);
+
+    /**
+     * 根据id列表批量删除
+     *
+     * @param idList id列表（值不能为null或者empty）
+     * @return
+     */
+    int deleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
+    /**
+     * 逻辑删除实现
+     */
+    /**
+     * 根据id逻辑删除
+     *
+     * @param ids 主键值列表
+     * @return
+     */
+//    int logicDeleteById(Serializable... ids);
 }

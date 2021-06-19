@@ -13,8 +13,8 @@ import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
@@ -30,8 +30,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 
 /**
  * 生成Entity对应的Mapper类
@@ -298,8 +297,9 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_deleteById() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteById)
-            .addJavadoc("@see $T#deleteById(Serializable)", fluent.sqlProvider())
-            .addParameter(ClassName.get(Serializable.class), "id")
+            .addJavadoc("@see $T#deleteById(Serializable[])", fluent.sqlProvider())
+            .addParameter(CN_SerializableArray, "ids")
+            .varargs(true)
             .returns(TypeName.INT)
             .build();
     }

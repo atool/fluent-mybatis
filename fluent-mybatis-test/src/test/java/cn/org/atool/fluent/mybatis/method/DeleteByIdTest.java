@@ -32,6 +32,22 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
+    public void testDeleteByIdArr() {
+        ATM.dataMap.student.initTable(2)
+            .id.values(23L, 24L)
+            .userName.values("user1", "user2")
+            .cleanAndInsert();
+        mapper.deleteById(24, 25);
+        db.sqlList().wantFirstSql()
+            .eq("DELETE FROM student WHERE id IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eq(new Object[]{24, 25});
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+            .id.values(23L)
+            .userName.values("user1")
+        );
+    }
+
+    @Test
     public void test_selectById_noPrimary() throws Exception {
         db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)

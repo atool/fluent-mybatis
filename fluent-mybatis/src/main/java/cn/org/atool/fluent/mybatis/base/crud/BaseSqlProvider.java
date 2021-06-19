@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -309,14 +308,25 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据主键物理删除数据SQL构造
      *
-     * @param id 主键值
+     * @param ids 主键值
      * @return
      */
-    public String deleteById(Serializable id) {
-        MybatisUtil.assertNotNull("PrimaryKey", id);
+    public String deleteById(Serializable[] ids) {
+        assertNotEmpty("PrimaryKey", ids);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
-        sql.WHERE(format("%s = #{value}", this.idColumn()));
+        if (ids.length == 1) {
+            sql.WHERE(format("%s = #{array[0]}", this.idColumn()));
+        } else {
+            StringBuilder values = new StringBuilder();
+            for (int index = 0; index < ids.length; index++) {
+                if (index > 0) {
+                    values.append(", ");
+                }
+                values.append("#{array[" + index + "]}");
+            }
+            sql.WHERE(format("%s IN (%s)", this.idColumn(), values));
+        }
         return sql.toString();
     }
 
