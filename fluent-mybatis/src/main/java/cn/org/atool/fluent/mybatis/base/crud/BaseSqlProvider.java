@@ -504,13 +504,36 @@ public abstract class BaseSqlProvider<E extends IEntity> {
 
         MapperSql sql = new MapperSql();
         sql.UPDATE(ew.getTable(), ew);
-        List<String> sets = this.updateDefaults(updates);
-        sets.add(ew.getUpdateStr());
-        sql.SET(sets);
+        List<String> needDefaults = this.updateDefaults(updates);
+        needDefaults.add(ew.getUpdateStr());
+        sql.SET(needDefaults);
+        this.checkUpdateVersionWhere(ew.findWhereColumns());
         sql.WHERE_GROUP_ORDER_BY(ew);
         sql.LIMIT(ew, true);
         return sql.toString();
     }
+
+
+    /**
+     * 更新时, 检查乐观锁字段条件是否设置
+     */
+    protected void checkUpdateVersionWhere(List<String> wheres) {
+        String versionField = this.versionField();
+        if (If.isBlank(versionField)) {
+            return;
+        } else if (wheres.contains(versionField) || wheres.contains(this.dbType().wrap(versionField))) {
+            return;
+        } else {
+            throw new RuntimeException("The version lock field was explicitly set, but no version condition was found in the update condition.");
+        }
+    }
+
+    /**
+     * 乐观锁字段
+     *
+     * @return
+     */
+    protected abstract String versionField();
 
     /**
      * 根据WrapperData设置构建删除语句

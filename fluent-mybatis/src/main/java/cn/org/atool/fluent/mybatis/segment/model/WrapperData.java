@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment.model;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.segment.WhereSegmentList;
 import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -313,6 +314,26 @@ public class WrapperData implements IWrapperData {
             updates.put(column, this.paramSql(functionSql, values));
         }
     }
+
+    /**
+     * 获取where条件字段
+     *
+     * @return
+     */
+    public List<String> findWhereColumns() {
+        WhereSegmentList list = this.getMergeSegments().getWhere();
+        if (list == null || list.getSegments() == null) {
+            return Collections.EMPTY_LIST;
+        }
+        List<String> columns = new ArrayList<>();
+        for (ISqlSegment segment : list.getSegments()) {
+            if (segment instanceof ColumnSegment) {
+                columns.add(segment.getSqlSegment());
+            }
+        }
+        return columns;
+    }
+
 
     public void hint(HintType type, String hint) {
         if (notBlank(hint)) {

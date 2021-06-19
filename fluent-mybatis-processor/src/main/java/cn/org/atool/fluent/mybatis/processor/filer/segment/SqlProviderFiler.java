@@ -12,9 +12,9 @@ import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderUtils;
-import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -78,6 +78,18 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addMethod(this.m_allFields());
         spec.addMethod(this.m_setEntityByDefault());
         spec.addMethod(this.m_dbType());
+        spec.addMethod(this.m_versionField());
+    }
+
+    /**
+     * 返回乐观锁字段方法
+     *
+     * @return
+     */
+    private MethodSpec m_versionField() {
+        return super.protectedMethod("versionField", true, ClassNames2.CN_String)
+            .addStatement("return $S", fluent.getVersionField())
+            .build();
     }
 
     private MethodSpec m_setEntityByDefault() {

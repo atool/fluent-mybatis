@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -69,6 +70,11 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      * Entity类字段列表
      */
     private List<CommonField> fields = new ArrayList<>();
+    /**
+     * 乐观锁字段
+     */
+    @Setter
+    private String versionField;
     /**
      * Entity关联查询信息
      */

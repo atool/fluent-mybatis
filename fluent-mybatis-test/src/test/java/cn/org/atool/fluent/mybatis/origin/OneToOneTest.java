@@ -16,6 +16,7 @@ public class OneToOneTest extends BaseTest {
     public void setup() {
         db.table("idcard").clean().insert(new DataMap(2)
             .arr("id", 21, 22)
+            .arr("version", 0)
             .arr("code", "code1", "code2"));
         db.table("person").clean().insert(new DataMap(2)
             .arr("id", 1, 2)

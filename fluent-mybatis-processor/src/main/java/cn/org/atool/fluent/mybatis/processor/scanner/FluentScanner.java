@@ -71,10 +71,13 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         TableId tableId = element.getAnnotation(TableId.class);
         String fieldName = element.getSimpleName().toString();
 
-
         if (tableId == null) {
             CommonField field = parseCommonField(fieldName, element);
             this.fluent.addField(field);
+            Version version = element.getAnnotation(Version.class);
+            if (version != null) {
+                this.fluent.setVersionField(field.getColumn());
+            }
         } else {
             PrimaryField field = this.parsePrimaryField(fieldName, element, tableId);
             this.fluent.addField(field);
