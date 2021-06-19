@@ -32,6 +32,21 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
+    public void testLogicDeleteById() {
+        ATM.dataMap.student.initTable(2)
+            .id.values(23L, 24L)
+            .userName.values("user1", "user2")
+            .cleanAndInsert();
+        mapper.logicDeleteById(24);
+        db.sqlList().wantFirstSql()
+            .eq("DELETE FROM student WHERE id = ?", StringMode.SameAsSpace);
+        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+            .id.values(23L)
+            .userName.values("user1")
+        );
+    }
+
+    @Test
     public void testDeleteByIdArr() {
         ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)

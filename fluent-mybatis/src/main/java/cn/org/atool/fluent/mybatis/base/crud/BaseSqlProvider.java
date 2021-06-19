@@ -312,7 +312,32 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String deleteById(Serializable[] ids) {
-        assertNotEmpty("PrimaryKey", ids);
+        assertNotEmpty("ids", ids);
+        MapperSql sql = new MapperSql();
+        sql.DELETE_FROM(this.tableName(), null);
+        if (ids.length == 1) {
+            sql.WHERE(format("%s = #{array[0]}", this.idColumn()));
+        } else {
+            StringBuilder values = new StringBuilder();
+            for (int index = 0; index < ids.length; index++) {
+                if (index > 0) {
+                    values.append(", ");
+                }
+                values.append("#{array[" + index + "]}");
+            }
+            sql.WHERE(format("%s IN (%s)", this.idColumn(), values));
+        }
+        return sql.toString();
+    }
+
+    /**
+     * 根据主键逻辑删除数据SQL构造
+     *
+     * @param ids 主键值
+     * @return
+     */
+    public String logicDeleteById(Serializable[] ids) {
+        assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
         if (ids.length == 1) {

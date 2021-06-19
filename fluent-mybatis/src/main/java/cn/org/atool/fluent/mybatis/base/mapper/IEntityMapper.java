@@ -232,5 +232,5 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param ids 主键值列表
      * @return
      */
-//    int logicDeleteById(Serializable... ids);
+    int logicDeleteById(Serializable... ids);
 }

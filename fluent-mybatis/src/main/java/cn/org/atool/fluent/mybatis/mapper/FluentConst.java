@@ -96,6 +96,8 @@ public interface FluentConst {
 
     String M_DeleteById = "deleteById";
 
+    String M_LogicDeleteById = "logicDeleteById";
+
     String M_DeleteByMap = "deleteByMap";
 
     String M_Delete = "delete";

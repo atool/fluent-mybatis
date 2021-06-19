@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
@@ -72,6 +73,7 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
       value = "is_deleted",
       insert = "0"
   )
+  @LogicDelete
   private Boolean isDeleted;
 
   /**
