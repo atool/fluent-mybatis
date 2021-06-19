@@ -83,6 +83,7 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertBatchWithPk())
             .addMethod(this.m_insertSelect())
             .addMethod(this.m_deleteById())
+            .addMethod(this.m_logicDeleteById())
             .addMethod(this.m_deleteByMap())
             .addMethod(this.m_delete())
             .addMethod(this.m_deleteByIds())
@@ -298,6 +299,20 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_deleteById() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteById)
             .addJavadoc("@see $T#deleteById(Serializable[])", fluent.sqlProvider())
+            .addParameter(CN_SerializableArray, "ids")
+            .varargs(true)
+            .returns(TypeName.INT)
+            .build();
+    }
+
+    /**
+     * 根据id逻辑删除
+     *
+     * @return
+     */
+    public MethodSpec m_logicDeleteById() {
+        return this.mapperMethod(DeleteProvider.class, M_LogicDeleteById)
+            .addJavadoc("@see $T#logicDeleteById(Serializable[])", fluent.sqlProvider())
             .addParameter(CN_SerializableArray, "ids")
             .varargs(true)
             .returns(TypeName.INT)
