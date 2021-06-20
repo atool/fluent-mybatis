@@ -14,8 +14,6 @@
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-test</artifactId>
     <properties>
-        <fluent-mock.version>1.0.10</fluent-mock.version>
-        <test4j-junit5.version>2.7.5</test4j-junit5.version>
         <spring.verison>5.3.3</spring.verison>
         <spring-boot.version>2.4.2</spring-boot.version>
     </properties>
@@ -120,6 +118,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
             <version>${spring-boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.test4j</groupId>
+            <artifactId>fluent-assert</artifactId>
+            <version>1.0.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

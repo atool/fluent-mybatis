@@ -15,7 +15,7 @@ public interface IWrapperMapper<E extends IEntity> {
      * 构造设置了默认条件的Query
      * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setQueryDefault(IQuery)}
      *
-     * @return
+     * @return ignore
      */
     <Q extends IBaseQuery<E, Q>> Q defaultQuery();
 
@@ -23,35 +23,35 @@ public interface IWrapperMapper<E extends IEntity> {
      * 构造设置了默认条件的Updater
      * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setUpdateDefault(IUpdate)}
      *
-     * @return
+     * @return ignore
      */
     <U extends IBaseUpdate<E, U, ?>> U defaultUpdater();
 
     /**
      * 构造空查询条件
      *
-     * @return
+     * @return ignore
      */
     <Q extends IBaseQuery<E, Q>> Q query();
 
     /**
      * 构造空更新条件
      *
-     * @return
+     * @return ignore
      */
     <U extends IBaseUpdate<E, U, ?>> U updater();
 
     /**
      * 主键字段名称
      *
-     * @return
+     * @return ignore
      */
     FieldMapping primaryField();
 
     /**
      * 对应的entity class类
      *
-     * @return
+     * @return ignore
      */
     Class<E> entityClass();
 }

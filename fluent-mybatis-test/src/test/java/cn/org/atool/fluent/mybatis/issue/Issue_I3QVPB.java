@@ -115,6 +115,6 @@ public class Issue_I3QVPB extends BaseTest {
             "ON crs.repository_id = cr.identifier) ccsr " +
             "ORDER BY ccsr.total_sec_issue_count DESC " +
             "LIMIT ?, ?", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eq(new Object[]{"1", "2021-05-11 17:12:33.322", "1", "1", "2", 0, 10});
+        db.sqlList().wantFirstPara().eqList("1", "2021-05-11 17:12:33.322", "1", "1", "2", 0, 10);
     }
 }

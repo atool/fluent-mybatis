@@ -50,7 +50,7 @@ public class CustomizedUpdateTest extends BaseTest {
             "SELECT address, age " +
             "FROM student " +
             "WHERE id IN (?, ?, ?)");
-        db.sqlList().wantFirstPara().eq(new Object[]{1L, 2L, 3L});
+        db.sqlList().wantFirstPara().eqList(1L, 2L, 3L);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class CustomizedUpdateTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "update student set user_name=?, age=? where id=?; " +
             "update student set user_name=?, address=? where id=?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"test", 25, 3L, "test", "test", 4L});
+        db.sqlList().wantFirstPara().eqList("test", 25, 3L, "test", "test", 4L);
     }
 
     @Test

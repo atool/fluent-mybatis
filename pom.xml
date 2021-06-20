@@ -18,9 +18,9 @@
     <properties>
         <spring.version>5.2.0.RELEASE</spring.version>
         <mybatis.version>3.5.6</mybatis.version>
-        <fluent-mock.version>1.0.13</fluent-mock.version>
+        <fluent-mock.version>1.0.14</fluent-mock.version>
         <fluent-dbtest.version>1.0.3</fluent-dbtest.version>
-        <test4j-junit5.version>2.7.5</test4j-junit5.version>
+        <test4j-junit5.version>2.7.6</test4j-junit5.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>

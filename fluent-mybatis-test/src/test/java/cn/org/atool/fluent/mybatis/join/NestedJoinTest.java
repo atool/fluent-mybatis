@@ -52,6 +52,6 @@ public class NestedJoinTest extends BaseTest {
             "FROM student t1 LEFT " +
             "JOIN home_address t2 " +
             "ON t1.home_address_id = t2.id LIMIT ?, ?");
-        db.sqlList().wantPara(1).eq(new Object[]{50, 10});
+        db.sqlList().wantPara(1).eqList(50, 10);
     }
 }

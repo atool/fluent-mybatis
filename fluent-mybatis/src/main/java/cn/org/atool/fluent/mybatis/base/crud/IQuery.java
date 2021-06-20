@@ -11,6 +11,13 @@ import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
+/**
+ * 查询构造器基类
+ *
+ * @param <E> 实体类型
+ * @author wudarui
+ */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface IQuery<E extends IEntity> {
     /**
      * distinct 查询
@@ -22,7 +29,7 @@ public interface IQuery<E extends IEntity> {
     /**
      * 查询Entity所有字段
      *
-     * @return
+     * @return self
      */
     <Q extends IQuery<E>> Q selectAll();
 
@@ -55,15 +62,15 @@ public interface IQuery<E extends IEntity> {
      * !!!慎用!!!
      * 有sql注入风险
      *
-     * @param lastSql
-     * @return
+     * @param lastSql 追加SQL
+     * @return self
      */
     <Q extends IQuery<E>> Q last(String lastSql);
 
     /**
      * 返回where
      *
-     * @return
+     * @return self
      */
     WhereBase where();
 
@@ -71,19 +78,25 @@ public interface IQuery<E extends IEntity> {
      * 返回查询器或更新器对应的xml数据
      * 系统方法, 请勿调用
      *
-     * @return
+     * @return self
      */
     WrapperData getWrapperData();
 
     /**
      * 根据Query定义执行后续操作
+     * <pre>
+     *   要使用本方法
+     *   需要定义 {@link cn.org.atool.fluent.mybatis.spring.MapperFactory} spring bean
      *
-     * @return
+     *   same as  {@link #of(IRichMapper)} 方法
+     *  </pre>
+     *
+     * @return self
      */
     default QueryExecutor<E> to() {
         Class entityClass = this.getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
-        IRichMapper mapper = IRefs.instance().mapper(entityClass);
+        IRichMapper mapper = IRefs.mapper(entityClass);
         return new QueryExecutor<>(mapper, this);
     }
 
@@ -91,12 +104,11 @@ public interface IQuery<E extends IEntity> {
      * 根据Query定义执行后续操作
      *
      * @param mapper 执行操作的mapper
-     * @return
+     * @return QueryExecutor
      */
     default QueryExecutor<E> of(IRichMapper<E> mapper) {
         return new QueryExecutor<>(mapper, this);
     }
-
 
     /**
      * 执行查询操作

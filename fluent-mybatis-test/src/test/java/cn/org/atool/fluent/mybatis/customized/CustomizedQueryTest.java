@@ -40,7 +40,7 @@ public class CustomizedQueryTest extends BaseTest {
         List<StudentEntity> list = mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
             "select * from student where user_name like ? and age > 20");
-        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%"});
+        db.sqlList().wantFirstPara().eqList("xyz%");
         want.list(list).eqByProperties("userName",
             new String[]{"xyz2", "xyz3"});
     }
@@ -56,7 +56,7 @@ public class CustomizedQueryTest extends BaseTest {
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().eq("" +
             "select * from student where user_name like ? and age > ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
+        db.sqlList().wantFirstPara().eqList("xyz%", 20);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CustomizedQueryTest extends BaseTest {
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +
             "select * from student where user_name like ? and age > ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
+        db.sqlList().wantFirstPara().eqList("xyz%", 20);
     }
 
 
@@ -85,6 +85,6 @@ public class CustomizedQueryTest extends BaseTest {
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
             "select * from student where user_name like ? and age > ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"xyz%", 20});
+        db.sqlList().wantFirstPara().eqList("xyz%", 20);
     }
 }

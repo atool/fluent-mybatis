@@ -88,7 +88,7 @@ public class RichEntityTest extends BaseTest {
         new StudentEntity().setId(1L).logicDeleteById();
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student SET `is_deleted` = true WHERE `id` = ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{1L});
+        db.sqlList().wantFirstPara().eqList(1L);
     }
 
     @Test

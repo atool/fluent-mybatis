@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 判断主键id记录是否已经存在
@@ -59,9 +60,9 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * 将entity补充设置默认值后保存到数据库
      * 默认值设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setInsertDefault(IEntity)}
      *
-     * @param entity
-     * @param <PK>
-     * @return
+     * @param entity 实例
+     * @param <PK>   主键
+     * @return 主键
      */
     default <PK extends Serializable> PK save(E entity) {
         if (entity.findPk() == null) {
@@ -210,7 +211,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default <POJO> StdPagedList<POJO> stdPagedPoJo(IQuery query, @NonNull MapFunction<POJO> mapFunction) {
         StdPagedList<Map<String, Object>> paged = this.stdPagedMap(query);
-        if (mapFunction == null || paged == null || paged.getData() == null) {
+        if (paged == null || paged.getData() == null) {
             return (StdPagedList<POJO>) paged;
         } else {
             List<POJO> list = PoJoHelper.toPoJoList(paged.getData(), mapFunction);
@@ -299,8 +300,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据where key值 + 和默认条件删除数据
      *
-     * @param where
-     * @return
+     * @param where k-v条件
+     * @return 删除记录数
      */
     default int deleteByMapAndDefault(Map<String, Object> where) {
         IQuery query = ((IWrapperMapper<E>) this).defaultQuery().where().eqNotNull(where).end();
@@ -310,8 +311,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据where key值 + 和默认条件删除数据
      *
-     * @param where
-     * @return
+     * @param where k-v条件
+     * @return 逻辑删除记录数
      */
     default int logicDeleteByMapAndDefault(Map<String, Object> where) {
         IQuery query = ((IWrapperMapper<E>) this).defaultQuery().where().eqNotNull(where).end();
@@ -321,7 +322,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据entities中的id值，批量删除记录
      *
-     * @param entities
+     * @param entities 实例列表
      * @return 被执行的记录数
      */
     default int deleteByEntityIds(Collection<E> entities) {
@@ -334,7 +335,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据entities中的id值，批量逻辑删除记录
      *
-     * @param entities
+     * @param entities 实例列表
      * @return 被执行的记录数
      */
     default int logicDeleteByEntityIds(Collection<E> entities) {
@@ -347,7 +348,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据entities中的id值，批量删除记录
      *
-     * @param entities
+     * @param entities 实例列表
      * @return 被执行的记录数
      */
     default int deleteByEntityIds(E... entities) {
@@ -357,7 +358,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据entities中的id值，批量删除记录
      *
-     * @param entities
+     * @param entities 实例列表
      * @return 被执行的记录数
      */
     default int logicDeleteByEntityIds(E... entities) {

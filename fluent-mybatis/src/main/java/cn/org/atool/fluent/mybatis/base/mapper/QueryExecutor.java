@@ -11,6 +11,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * 查询条件执行器
+ *
+ * @param <E> 实例类型
+ * @author darui.wu
+ */
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class QueryExecutor<E extends IEntity> {
     private final IRichMapper mapper;
 

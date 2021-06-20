@@ -11,14 +11,21 @@ import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
+/**
+ * 更新构造器基类
+ *
+ * @param <E> 实体类型
+ * @author wudarui
+ */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface IUpdate<E extends IEntity> {
     /**
      * 设置更新值
      *
      * @param column 更新字段
      * @param value  更新值
-     * @param <U>
-     * @return
+     * @param <U>    更新器类型
+     * @return self
      */
     default <U extends IUpdate<E>> U updateSet(String column, Object value) {
         this.getWrapperData().updateSet(column, value);
@@ -28,8 +35,8 @@ public interface IUpdate<E extends IEntity> {
     /**
      * 设置limit值
      *
-     * @param limit
-     * @return
+     * @param limit limit
+     * @return self
      */
     <U extends IUpdate<E>> U limit(int limit);
 
@@ -38,15 +45,15 @@ public interface IUpdate<E extends IEntity> {
      * !!!慎用!!!
      * 有sql注入风险
      *
-     * @param lastSql
-     * @return
+     * @param lastSql 追加SQL
+     * @return self
      */
     <U extends IUpdate<E>> U last(String lastSql);
 
     /**
      * 返回where
      *
-     * @return
+     * @return self
      */
     WhereBase where();
 
@@ -54,39 +61,35 @@ public interface IUpdate<E extends IEntity> {
      * 返回查询器或更新器对应的xml数据
      * 系统方法, 请勿调用
      *
-     * @return
+     * @return WrapperData
      */
     WrapperData getWrapperData();
 
     /**
      * 根据Updater定义执行后续操作
-     * 要使用本方法，需要把编译时生成的 Refs 类加入spring bean定义中
-     * Refs类的抽象类, 请自定义
+     * <p>
      * <pre>
+     * 要使用本方法
+     * 需要定义 {@link cn.org.atool.fluent.mybatis.spring.MapperFactory} spring bean
      *
-     * @return
-     * @Service public class CustomizedRefs extends Refs{
-     * // ...
-     * }
+     * same as {@link #of(IRichMapper)} 方法
      * </pre>
-     * 否则，请使用 {@link #of(IRichMapper)} 方法
      */
     default UpdaterExecutor to() {
         Class entityClass = ((IBaseUpdate) this).getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
-        IRichMapper mapper = IRefs.instance().mapper(entityClass);
-        return new UpdaterExecutor(mapper, (IBaseUpdate) this);
+        IRichMapper mapper = IRefs.mapper(entityClass);
+        return new UpdaterExecutor(mapper, this);
     }
-
 
     /**
      * 根据Updater定义执行后续操作
      *
      * @param mapper 执行操作的mapper
-     * @return
+     * @return UpdaterExecutor
      */
     default UpdaterExecutor of(IRichMapper<E> mapper) {
-        return new UpdaterExecutor(mapper, (IBaseUpdate) this);
+        return new UpdaterExecutor(mapper, this);
     }
 
     /**

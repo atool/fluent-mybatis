@@ -5,8 +5,9 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 /**
  * IMapper: mapper标识接口
  *
- * @Author darui.wu
+ * @author darui.wu
  * @Date 2019-06-25 14:00
  */
+@SuppressWarnings({"unused"})
 public interface IMapper<E extends IEntity> {
 }
