@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.mapper.refs.FormRef;
-import cn.org.atool.fluent.mybatis.mapper.refs.QueryRef;
+import cn.org.atool.fluent.mybatis.refs.FormRef;
+import cn.org.atool.fluent.mybatis.refs.QueryRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 

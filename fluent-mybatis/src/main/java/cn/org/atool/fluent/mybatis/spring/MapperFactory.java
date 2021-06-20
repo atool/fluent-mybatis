@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.mapper;
+package cn.org.atool.fluent.mybatis.spring;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import org.springframework.beans.BeansException;

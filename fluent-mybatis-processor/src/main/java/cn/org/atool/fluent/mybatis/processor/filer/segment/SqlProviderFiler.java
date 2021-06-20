@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
@@ -122,14 +123,22 @@ public class SqlProviderFiler extends AbstractFiler {
     private MethodSpec m_updateDefaults() {
         MethodSpec.Builder builder = super.publicMethod("updateDefaults", true, CN_List_Str)
             .addParameter(CN_Map_StrStr, "updates")
-            .addCode("return new $T(updates)\n", UpdateDefault.class);
+            .addParameter(ClassName.BOOLEAN, "ignoreLockVersion");
+        builder.addStatement("UpdateDefault defaults = new $T(updates)", UpdateDefault.class);
 
         for (CommonField field : this.fluent.getFields()) {
-            if (notBlank(field.getUpdate())) {
-                builder.addCode("\t.add($L, $S)\n", field.getName(), field.getUpdate());
+            if (isBlank(field.getUpdate())) {
+                continue;
+            }
+            if (Objects.equals(field.getColumn(), fluent.getVersionField())) {
+                builder.addCode("if (!ignoreLockVersion) {\n");
+                builder.addStatement("\tdefaults.add($L, $S)", field.getName(), field.getUpdate());
+                builder.addCode("}\n");
+            } else {
+                builder.addStatement("defaults.add($L, $S)", field.getName(), field.getUpdate());
             }
         }
-        return builder.addCode("\t.getUpdateDefaults();").build();
+        return builder.addStatement("return defaults.getUpdateDefaults()").build();
     }
 
     private MethodSpec m_updateById() {

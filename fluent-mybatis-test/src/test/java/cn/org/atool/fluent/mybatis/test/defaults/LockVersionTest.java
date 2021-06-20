@@ -51,4 +51,15 @@ public class LockVersionTest extends BaseTest {
                 .where.id().eq("1").end()), MyBatisSystemException.class)
             .contains("The version lock field was explicitly set");
     }
+
+    @Test
+    void updateByUpdater_IgnoreLock() {
+        mapper.updateBy(new NoAutoIdUpdate()
+            .ignoreLockVersion()
+            .set.column1().is("new").end()
+            .where.id().eq("1").end());
+        db.sqlList().wantFirstSql()
+            .eq("UPDATE no_auto_id SET column_1 = ? WHERE id = ?");
+        db.sqlList().wantFirstPara().eq(new Object[]{"new", "1"});
+    }
 }

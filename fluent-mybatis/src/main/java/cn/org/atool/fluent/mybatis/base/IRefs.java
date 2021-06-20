@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
-import cn.org.atool.fluent.mybatis.mapper.MapperFactory;
+import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -25,8 +25,8 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity
  * @author darui.wu
  */
 public abstract class IRefs {
-    // Ref文件生成的固定路径
-    public static final String Fix_Package = "cn.org.atool.fluent.mybatis.mapper.refs";
+    // Ref 文件生成的固定路径
+    public static final String Fix_Package = "cn.org.atool.fluent.mybatis.refs";
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
      */

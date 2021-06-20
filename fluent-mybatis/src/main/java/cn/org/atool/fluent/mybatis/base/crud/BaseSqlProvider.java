@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
@@ -178,7 +179,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String countNoLimit(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        if (If.notBlank(ew.getCustomizedSql())) {
+        if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();
@@ -195,7 +196,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String count(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        if (If.notBlank(ew.getCustomizedSql())) {
+        if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();
@@ -206,7 +207,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
 
     private String queryByWrapperData(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        if (If.notBlank(ew.getCustomizedSql())) {
+        if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();
@@ -515,7 +516,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param updates 显式update字段
      * @return
      */
-    protected abstract List<String> updateDefaults(Map<String, String> updates);
+    protected abstract List<String> updateDefaults(Map<String, String> updates, boolean ignoreLockVersion);
 
     /**
      * 构建插入语句
@@ -546,7 +547,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String buildUpdaterSql(WrapperData ew) {
         assertNotNull("wrapperData of updater", ew);
-        if (If.notBlank(ew.getCustomizedSql())) {
+        if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
         Map<String, String> updates = ew.getUpdates();
@@ -554,10 +555,18 @@ public abstract class BaseSqlProvider<E extends IEntity> {
 
         MapperSql sql = new MapperSql();
         sql.UPDATE(ew.getTable(), ew);
-        List<String> needDefaults = this.updateDefaults(updates);
+        List<String> needDefaults = this.updateDefaults(updates, ew.isIgnoreLockVersion());
+        // 如果忽略版本锁, 则移除版本锁更新的默认值
+        String versionField = this.versionField();
+        if (ew.isIgnoreLockVersion() && notBlank(versionField)) {
+            needDefaults.remove(this.versionField());
+        }
         needDefaults.add(ew.getUpdateStr());
         sql.SET(needDefaults);
-        this.checkUpdateVersionWhere(ew.findWhereColumns());
+        // 如果忽略版本锁, 则跳过版本锁条件检查
+        if (!ew.isIgnoreLockVersion()) {
+            this.checkUpdateVersionWhere(ew.findWhereColumns());
+        }
         sql.WHERE_GROUP_ORDER_BY(ew);
         sql.LIMIT(ew, true);
         return sql.toString();
@@ -584,7 +593,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return
      */
     public String buildDeleteSql(WrapperData ew, boolean isLogic) {
-        if (If.notBlank(ew.getCustomizedSql())) {
+        if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();

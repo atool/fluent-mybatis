@@ -37,4 +37,15 @@ public abstract class BaseUpdate<
         this.wrapperData.last(lastSql);
         return (U) this;
     }
+
+
+    /**
+     * 按条件更新时, 忽略乐观锁
+     *
+     * @return self
+     */
+    public U ignoreLockVersion() {
+        this.wrapperData.setIgnoreLockVersion(true);
+        return (U) this;
+    }
 }

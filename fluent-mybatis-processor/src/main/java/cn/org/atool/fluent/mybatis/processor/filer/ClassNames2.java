@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
-import cn.org.atool.fluent.mybatis.mapper.MapperFactory;
+import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;

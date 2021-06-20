@@ -69,7 +69,6 @@ public class WrapperData implements IWrapperData {
     /**
      * 实体类型
      */
-    @Getter
     private final Class entityClass;
     /**
      * 对应的嵌套查询类
@@ -78,8 +77,13 @@ public class WrapperData implements IWrapperData {
     /**
      * 字段别名列表
      */
-    @Getter
     private final Set<String> fieldAlias = new HashSet<>();
+    /**
+     * 按条件更新时, 跳过检查乐观锁条件字段
+     * 默认必须有乐观锁
+     */
+    @Setter
+    private boolean ignoreLockVersion = false;
 
     public WrapperData() {
         this.parameters = new Parameters();
