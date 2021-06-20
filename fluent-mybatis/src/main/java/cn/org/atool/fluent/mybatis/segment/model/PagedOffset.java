@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
  * @author darui.wu
  * @create 2020/6/16 2:00 下午
  */
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 @Getter
 @Accessors(chain = true)
 public class PagedOffset {
@@ -30,12 +31,12 @@ public class PagedOffset {
     }
 
     public PagedOffset setOffset(int offset) {
-        this.offset = offset < 0 ? 0 : offset;
+        this.offset = Math.max(offset, 0);
         return this;
     }
 
     public PagedOffset setLimit(int limit) {
-        this.limit = limit < 1 ? 1 : limit;
+        this.limit = Math.max(limit, 1);
         return this;
     }
 

@@ -24,6 +24,7 @@ import static java.util.stream.Collectors.joining;
  * @author darui.wu
  * @create 2020/6/23 5:15 下午
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Getter
 public class WrapperData implements IWrapperData {
     /**
@@ -109,7 +110,7 @@ public class WrapperData implements IWrapperData {
         if (this.sqlSelect.isEmpty()) {
             return null;
         } else {
-            String sql = sqlSelect.stream().collect(joining(COMMA_SPACE));
+            String sql = String.join(COMMA_SPACE, sqlSelect);
             return isBlank(sql) ? null : sql.trim();
         }
     }
@@ -126,8 +127,8 @@ public class WrapperData implements IWrapperData {
     /**
      * 自定义的完整sql语句设置
      *
-     * @param sql
-     * @param parameter
+     * @param sql       sql
+     * @param parameter 参数
      */
     public void customizedSql(String sql, Object parameter) {
         if (parameter == null) {
@@ -144,16 +145,14 @@ public class WrapperData implements IWrapperData {
         }
         String select = this.getSqlSelect();
         String where = this.getWhereSql();
-        String sql = new StringBuilder()
-            .append("SELECT").append(SPACE)
-            .append(isBlank(select) ? ASTERISK : select.trim()).append(SPACE)
-            .append("FROM").append(SPACE)
-            .append(this.getTable()).append(SPACE)
-            .append(isBlank(where) ? EMPTY : "WHERE " + where.trim()).append(SPACE)
-            .append(this.getGroupBy().trim()).append(SPACE)
-            .append(this.getOrderBy().trim()).append(SPACE)
-            .append(this.getLastSql().trim())
-            .toString();
+        String sql = "SELECT" + SPACE +
+            (isBlank(select) ? ASTERISK : select.trim()) + SPACE +
+            "FROM" + SPACE +
+            this.getTable() + SPACE +
+            (isBlank(where) ? EMPTY : "WHERE " + where.trim()) + SPACE +
+            this.getGroupBy().trim() + SPACE +
+            this.getOrderBy().trim() + SPACE +
+            this.getLastSql().trim();
         return sql.trim();
     }
 
@@ -219,7 +218,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 增加查询字段
      *
-     * @param column
+     * @param column 字段
      */
     public void addSelectColumn(String column) {
         if (notBlank(column)) {
@@ -231,8 +230,8 @@ public class WrapperData implements IWrapperData {
     /**
      * 解析别名列表
      *
-     * @param column
-     * @return
+     * @param column 字段
+     * @return ignore
      */
     static List<String> parseAlias(String column) {
         int pos = -1;
@@ -322,7 +321,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 获取where条件字段
      *
-     * @return
+     * @return ignore
      */
     public List<String> findWhereColumns() {
         WhereSegmentList list = this.getMergeSegments().getWhere();

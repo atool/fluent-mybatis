@@ -27,6 +27,7 @@ import java.util.stream.Stream;
  * @param <E> 实体类
  * @author Created by darui.wu on 2020/6/24.
  */
+@SuppressWarnings({"rawtypes", "unused"})
 public interface IProtectedDao<E extends IEntity> {
     /**
      * insert into a_table(fields) select fields from b_table;
@@ -83,8 +84,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 最后一个更新, 成功记录数
      */
     default int updateBy(IUpdate... updates) {
-        int count = this.mapper().updateBy(updates);
-        return count;
+        return this.mapper().updateBy(updates);
     }
 
     /**
@@ -94,8 +94,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 最后一个更新, 成功记录数
      */
     default int updateBy(Collection<IUpdate> updates) {
-        int count = this.mapper().updateBy(updates.toArray(new IUpdate[0]));
-        return count;
+        return this.mapper().updateBy(updates.toArray(new IUpdate[0]));
     }
 
     /**
@@ -105,8 +104,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 实例列表
      */
     default List<E> listEntity(IQuery<E> query) {
-        List<E> list = this.mapper().listEntity(query);
-        return list;
+        return this.mapper().listEntity(query);
     }
 
     /**
@@ -116,8 +114,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return map list
      */
     default List<Map<String, Object>> listMaps(IQuery<E> query) {
-        List<Map<String, Object>> list = this.mapper().listMaps(query);
-        return list;
+        return this.mapper().listMaps(query);
     }
 
     /**
@@ -129,8 +126,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return POJO list
      */
     default <POJO> List<POJO> listPoJos(IQuery<E> query, MapFunction<POJO> mapFunction) {
-        List<POJO> list = this.mapper().listPoJo(query, mapFunction);
-        return list;
+        return this.mapper().listPoJo(query, mapFunction);
     }
 
     /**
@@ -144,8 +140,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return PoJo列表
      */
     default <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery<E> query) {
-        List<POJO> list = this.mapper().listPoJo(clazz, query);
-        return list;
+        return this.mapper().listPoJo(clazz, query);
     }
 
     /**
@@ -155,8 +150,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default StdPagedList<E> stdPagedEntity(IQuery<E> query) {
-        StdPagedList<E> paged = this.mapper().stdPagedEntity(query);
-        return paged;
+        return this.mapper().stdPagedEntity(query);
     }
 
     /**
@@ -166,8 +160,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default StdPagedList<Map<String, Object>> stdPagedMap(IQuery<E> query) {
-        StdPagedList<Map<String, Object>> paged = this.mapper().stdPagedMap(query);
-        return paged;
+        return this.mapper().stdPagedMap(query);
     }
 
     /**
@@ -179,8 +172,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default <POJO> StdPagedList<POJO> stdPagedPoJo(IQuery<E> query, MapFunction<POJO> mapFunction) {
-        StdPagedList<POJO> paged = this.mapper().stdPagedPoJo(query, mapFunction);
-        return paged;
+        return this.mapper().stdPagedPoJo(query, mapFunction);
     }
 
     /**
@@ -192,8 +184,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default <POJO> StdPagedList<POJO> stdPagedPoJo(Class<POJO> clazz, IQuery<E> query) {
-        StdPagedList<POJO> paged = this.mapper().stdPagedPoJo(clazz, query);
-        return paged;
+        return this.mapper().stdPagedPoJo(clazz, query);
     }
 
     /**
@@ -203,8 +194,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default TagPagedList<E> tagPagedEntity(IQuery<E> query) {
-        TagPagedList<E> paged = this.mapper().tagPagedEntity(query);
-        return paged;
+        return this.mapper().tagPagedEntity(query);
     }
 
     /**
@@ -214,8 +204,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default TagPagedList<Map<String, Object>> tagPagedMap(IQuery<E> query) {
-        TagPagedList<Map<String, Object>> paged = this.mapper().tagPagedMap(query);
-        return paged;
+        return this.mapper().tagPagedMap(query);
     }
 
     /**
@@ -227,8 +216,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default <POJO> TagPagedList<POJO> tagPagedPoJo(IQuery<E> query, MapFunction<POJO> mapFunction) {
-        TagPagedList<POJO> paged = this.mapper().tagPagedPoJo(query, mapFunction);
-        return paged;
+        return this.mapper().tagPagedPoJo(query, mapFunction);
     }
 
     /**
@@ -240,8 +228,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 分页查询结果
      */
     default <POJO> TagPagedList<POJO> tagPagedPoJo(Class<POJO> clazz, IQuery<E> query) {
-        TagPagedList<POJO> paged = this.mapper().tagPagedPoJo(clazz, query);
-        return paged;
+        return this.mapper().tagPagedPoJo(clazz, query);
     }
 
     /**
@@ -298,8 +285,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return 符合条件的记录数
      */
     default int count(IQuery<E> query) {
-        int count = this.mapper().count(query);
-        return count;
+        return this.mapper().count(query);
     }
 
     /**

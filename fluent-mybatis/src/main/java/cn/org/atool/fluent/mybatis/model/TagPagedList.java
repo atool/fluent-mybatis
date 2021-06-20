@@ -12,6 +12,7 @@ import java.util.function.Function;
  * @author darui.wu
  * @create 2020/6/24 10:45 上午
  */
+@SuppressWarnings({"unused"})
 @Getter
 public class TagPagedList<E> implements IPagedList<E> {
     /**

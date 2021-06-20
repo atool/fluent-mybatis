@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static cn.org.atool.fluent.mybatis.base.IRefs.Fix_Package;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 
 /**
@@ -68,7 +69,7 @@ public class FluentList {
                     javaFile.javaFile().writeTo(filer);
                 }
             } catch (Exception e) {
-                logger.accept("FluentEntityInfo:" + fluent + "\n" + GeneratorHelper.toString(e));
+                logger.accept("FluentEntityInfo:" + fluent + NEWLINE + GeneratorHelper.toString(e));
                 throw new RuntimeException(e);
             }
         }

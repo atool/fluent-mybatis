@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -22,8 +21,9 @@ import static java.util.stream.Collectors.joining;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class MapperSql {
-    private StringBuffer buffer = new StringBuffer();
+    private final StringBuffer buffer = new StringBuffer();
 
     @Override
     public String toString() {
@@ -57,15 +57,6 @@ public class MapperSql {
 
     public MapperSql VALUES() {
         buffer.append(" VALUES ");
-        return this;
-    }
-
-    public MapperSql INSERT_COLUMNS(DbType dbType, String... columns) {
-        String joining = Stream.of(columns)
-            .map(String::trim)
-            .map(dbType::wrap)
-            .collect(joining(", "));
-        buffer.append("(").append(joining).append(")");
         return this;
     }
 
@@ -109,22 +100,22 @@ public class MapperSql {
     }
 
     public MapperSql SET(String... sets) {
-        buffer.append(" SET " + String.join(",\n", sets));
+        buffer.append(" SET ").append(String.join(",\n", sets));
         return this;
     }
 
     public MapperSql SET(List<String> sets) {
-        buffer.append(" SET " + String.join(",\n", sets));
+        buffer.append(" SET ").append(String.join(",\n", sets));
         return this;
     }
 
     public MapperSql WHERE(String whereSql) {
-        buffer.append(" WHERE " + whereSql);
+        buffer.append(" WHERE ").append(whereSql);
         return this;
     }
 
     public MapperSql WHERE(List<String> where) {
-        buffer.append(" WHERE " + String.join(" AND ", where));
+        buffer.append(" WHERE ").append(String.join(" AND ", where));
         return this;
     }
 
@@ -175,14 +166,14 @@ public class MapperSql {
             if (index > 0) {
                 buffer.append(", ");
             }
-            buffer.append("#{coll[" + index + "]}");
+            buffer.append("#{coll[").append(index).append("]}");
         }
         buffer.append(")");
         return this;
     }
 
     public MapperSql APPEND(String sql) {
-        buffer.append(" " + sql + " ");
+        buffer.append(SPACE).append(sql).append(SPACE);
         return this;
     }
 
@@ -202,9 +193,9 @@ public class MapperSql {
     /**
      * 添加limit语句
      *
-     * @param data
+     * @param data           WrapperData
      * @param offsetEverZero 永远从0开始情况
-     * @return
+     * @return MapperSql
      */
     public MapperSql LIMIT(WrapperData data, boolean offsetEverZero) {
         if (data == null || data.getPaged() == null) {

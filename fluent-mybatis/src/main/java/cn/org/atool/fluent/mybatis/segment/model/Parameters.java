@@ -39,7 +39,7 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 自动分配表别名
      *
-     * @return
+     * @return ignore
      */
     public static String alias() {
         return "t" + alias.incrementAndGet();
@@ -113,7 +113,7 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 共享变量
      */
-    private List<WeakReference<Parameters>> shared = new ArrayList<>();
+    private final List<WeakReference<Parameters>> shared = new ArrayList<>();
 
     private Parameters nextShared(Iterator<WeakReference<Parameters>> it) {
         WeakReference<Parameters> ref = it.next();
@@ -151,7 +151,7 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 设置join查询（或子查询）的共享变量
      *
-     * @param shared
+     * @param shared 共享变量
      */
     public void sharedParameter(Parameters shared) {
         if (this == shared) {

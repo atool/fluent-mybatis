@@ -37,13 +37,13 @@ public enum KeyWordSegment implements ISqlSegment {
      * 代码片段
      */
     @Getter
-    private String sqlSegment;
+    private final String sqlSegment;
 
     /**
      * 该操作是否是AND或者OR
      */
     @Getter
-    private boolean isAndOr;
+    private final boolean isAndOr;
 
     KeyWordSegment(String keyWord) {
         this(keyWord, false);

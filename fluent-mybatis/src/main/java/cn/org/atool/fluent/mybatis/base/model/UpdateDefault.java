@@ -30,9 +30,9 @@ public class UpdateDefault {
      * 增加待追加更新的默认值
      * 如果没有显式指定更新，则追加更新默认值
      *
-     * @param field
-     * @param _default
-     * @return
+     * @param field    字段
+     * @param _default 默认值
+     * @return UpdateDefault
      */
     public UpdateDefault add(FieldMapping field, String _default) {
         if (!updates.containsKey(field.name)) {

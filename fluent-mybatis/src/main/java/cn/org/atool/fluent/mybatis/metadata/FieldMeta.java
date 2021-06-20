@@ -14,6 +14,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
  * @author darui.wu
  * @create 2020/5/27 6:46 下午
  */
+@SuppressWarnings({"unused"})
 @Getter
 public abstract class FieldMeta implements Comparable<FieldMeta> {
     /**
@@ -58,7 +59,7 @@ public abstract class FieldMeta implements Comparable<FieldMeta> {
     /**
      * 非大字段
      *
-     * @return
+     * @return true: 大字段
      */
     public boolean isNotLarge() {
         return true;

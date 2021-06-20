@@ -9,6 +9,7 @@ import java.util.function.Function;
  * @param <R>
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 @FunctionalInterface
 public interface MapFunction<R> extends Function<Map, R> {
 }

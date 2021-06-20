@@ -8,6 +8,7 @@ import java.util.function.Predicate;
  *
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public class InIfs<T> extends Ifs<Collection> {
     public InIfs<T> when(Predicate<Collection> predicate, T... values) {
         this.predicates.add(new IfsPredicate(predicate, values));

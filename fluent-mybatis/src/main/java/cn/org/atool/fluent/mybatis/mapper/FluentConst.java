@@ -53,8 +53,6 @@ public interface FluentConst {
 
     String Pack_Wrapper = "wrapper";
 
-    String Double_Quota_Str = String.valueOf('"');
-
     String Param_Map = "map";
 
     String Param_Coll = "coll";
@@ -70,15 +68,6 @@ public interface FluentConst {
     String Param_Fields = "fields";
 
     String Param_Entity = "entity";
-
-    /**
-     * 分库
-     */
-    String SPEC_COMMENT = "SPEC_COMMENT";
-    /**
-     * 分表
-     */
-    String SPEC_TABLE = "SPEC_TABLE";
 
     String M_Insert = "insert";
 

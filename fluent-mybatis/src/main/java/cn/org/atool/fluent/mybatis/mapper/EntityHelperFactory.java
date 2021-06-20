@@ -25,8 +25,8 @@ public class EntityHelperFactory {
     /**
      * 采用反射构造方式
      *
-     * @param clazz
-     * @return
+     * @param clazz 实例类型
+     * @return IEntityHelper
      */
     public static IEntityHelper getInstance(Class<? extends IEntity> clazz) {
         if (INSTANCES.containsKey(clazz)) {
@@ -62,14 +62,14 @@ public class EntityHelperFactory {
     /**
      * 加载entityClass对应的Helper类
      *
-     * @param entityClass
-     * @param classLoaders
-     * @return
+     * @param entityClass  实例类型
+     * @param classLoaders ClassLoader列表
+     * @return IEntityHelper
      */
     private static IEntityHelper loadEntityHelper(Class<? extends IEntity> entityClass, Set<ClassLoader> classLoaders) throws ClassNotFoundException {
         String helperName = entityClass.getName() + Suffix_EntityHelper;
         for (ClassLoader classLoader : classLoaders) {
-            IEntityHelper helper = null;
+            IEntityHelper helper;
             try {
                 helper = (IEntityHelper) classLoader.loadClass(helperName).getConstructor().newInstance();
             } catch (Exception e) {

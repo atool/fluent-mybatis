@@ -17,7 +17,7 @@ public enum JoinType {
      */
     RightJoin("RIGHT JOIN");
 
-    private String join;
+    private final String join;
 
     JoinType(String join) {
         this.join = join;

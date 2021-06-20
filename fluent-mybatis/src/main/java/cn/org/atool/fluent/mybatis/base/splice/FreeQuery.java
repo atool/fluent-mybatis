@@ -17,6 +17,7 @@ import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhe
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     /**
      * 指定查询字段, 默认无需设置
@@ -59,20 +60,12 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     /**
      * 嵌套子查询 select * from (select * ...) alias;
      *
-     * @param child
-     * @param alias
+     * @param child 子查询
+     * @param alias 别名
      */
     public FreeQuery(IQuery child, String alias) {
         this(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias);
         child.getWrapperData().sharedParameter(this.wrapperData);
-    }
-
-    /**
-     * use {@link FreeQuery#FreeQuery(String, String)} directly
-     */
-    @Deprecated
-    public FreeQuery(String table, String alias, IQuery join) {
-        this(table, alias);
     }
 
     public FreeQuery emptyQuery() {

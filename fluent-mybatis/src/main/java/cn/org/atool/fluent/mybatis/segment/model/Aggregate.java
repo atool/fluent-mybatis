@@ -33,7 +33,7 @@ public enum Aggregate implements IAggregate {
      */
     GROUP_CONCAT("GROUP_CONCAT(%s)");
 
-    private String expression;
+    private final String expression;
 
     Aggregate(String expression) {
         this.expression = expression;

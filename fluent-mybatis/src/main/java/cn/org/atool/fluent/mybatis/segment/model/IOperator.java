@@ -13,13 +13,14 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
  * @param <R>
  * @author wudarui
  */
+@SuppressWarnings({"unused", "rawtypes"})
 public interface IOperator<R> {
     /**
      * 执行比较操作
      *
-     * @param op
-     * @param args
-     * @return
+     * @param op   操作
+     * @param args 条件值
+     * @return ignore
      */
     <O> R apply(ISqlOp op, O... args);
 

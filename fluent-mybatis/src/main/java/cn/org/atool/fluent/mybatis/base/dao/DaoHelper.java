@@ -11,6 +11,12 @@ import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
 
+/**
+ * DaoHelper
+ *
+ * @author wudarui
+ */
+@SuppressWarnings({"rawtypes"})
 public class DaoHelper {
 
     public static IUpdate buildUpdateEntityById(Supplier<IUpdate> supplier, IEntity entity) {
@@ -40,10 +46,10 @@ public class DaoHelper {
     /**
      * 根据entity非空字段构建update和where条件
      *
-     * @param supplier
-     * @param update
-     * @param where
-     * @return
+     * @param supplier IUpdate supplier
+     * @param update   按Entity非空属性更新对应字段
+     * @param where    按Entity非空属性构造条件
+     * @return IUpdate
      */
     public static IUpdate buildUpdateByEntityNoN(Supplier<IUpdate> supplier, IEntity update, IEntity where) {
         IUpdate updater = supplier.get();

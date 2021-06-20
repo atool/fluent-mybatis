@@ -85,7 +85,7 @@ public class MergeSegments extends BaseSegmentList {
     /**
      * 返回where语句
      *
-     * @return
+     * @return ignore
      */
     public String whereSql() {
         return trim(where.sql());
@@ -94,7 +94,7 @@ public class MergeSegments extends BaseSegmentList {
     /**
      * groupBy... having... 部分
      *
-     * @return
+     * @return ignore
      */
     public String groupBy() {
         return trim(groupBy.sql() + having.sql());
@@ -103,7 +103,7 @@ public class MergeSegments extends BaseSegmentList {
     /**
      * orderBy... 部分
      *
-     * @return
+     * @return ignore
      */
     public String orderBy() {
         return trim(orderBy.sql());

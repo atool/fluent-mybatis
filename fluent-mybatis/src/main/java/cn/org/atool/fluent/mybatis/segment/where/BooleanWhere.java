@@ -11,6 +11,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  * @param <WHERE>
  * @param <NQ>
  */
+@SuppressWarnings({"unused"})
 public interface BooleanWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>

@@ -6,6 +6,7 @@ package cn.org.atool.fluent.mybatis.base.entity;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unused"})
 public interface IKeyGenerator {
 
     /**

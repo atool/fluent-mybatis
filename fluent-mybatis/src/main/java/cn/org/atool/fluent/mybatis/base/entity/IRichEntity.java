@@ -11,12 +11,13 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface IRichEntity extends IRich, IEntity {
     /**
      * 持久化entity到数据库, 调用 EntityMapper.insert(Entity)方法
      *
-     * @param <E>
-     * @return
+     * @param <E> IEntity类型
+     * @return ignore
      */
     default <E extends IEntity> E save() {
         this.invoke(Rich_Entity_Save, false);
@@ -26,8 +27,8 @@ public interface IRichEntity extends IRich, IEntity {
     /**
      * 按entity的主键更新entity非空字段, 调用 EntityMapper.updateById(id)方法
      *
-     * @param <E>
-     * @return
+     * @param <E> IEntity类型
+     * @return ignore
      */
     default <E extends IEntity> E updateById() {
         if (this.findPk() == null) {
@@ -40,8 +41,8 @@ public interface IRichEntity extends IRich, IEntity {
     /**
      * 根据id查找entity, 调用 EntityMapper.findById(id)方法
      *
-     * @param <E>
-     * @return
+     * @param <E> IEntity类型
+     * @return ignore
      */
     default <E extends IEntity> E findById() {
         if (this.findPk() == null) {
@@ -74,11 +75,10 @@ public interface IRichEntity extends IRich, IEntity {
     /**
      * entity非空字段作为条件查询列表, 调用 EntityMapper.listByMap(map)方法
      *
-     * @param <E>
-     * @return
+     * @param <E> IEntity类型
+     * @return ignore
      */
     default <E extends IEntity> List<E> listByNotNull() {
-        List list = this.invoke(RichEntity_ListByNotNull, false);
-        return list;
+        return this.<List>invoke(RichEntity_ListByNotNull, false);
     }
 }

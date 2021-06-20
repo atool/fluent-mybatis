@@ -11,10 +11,6 @@ public interface StrConstant {
      */
     String Entity_Suffix = "Entity";
     /**
-     * 未定义
-     */
-    String NOT_DEFINED = "$$NOT_DEFINED$$";
-    /**
      * 空串
      */
     String EMPTY = "";
@@ -22,10 +18,6 @@ public interface StrConstant {
      * where
      */
     String WHERE = "WHERE";
-    /**
-     * distinct
-     */
-    String DISTINCT = " DISTINCT ";
     /**
      * asc
      */

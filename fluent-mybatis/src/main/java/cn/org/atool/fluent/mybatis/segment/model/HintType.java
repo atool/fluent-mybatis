@@ -29,5 +29,5 @@ public enum HintType {
      * update table hint set ...
      * delete from table hint(...)
      */
-    After_Table;
+    After_Table
 }

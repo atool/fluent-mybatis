@@ -17,7 +17,7 @@ public class EntityToMap {
     private final boolean isProperty;
 
     @Getter
-    private Map<String, Object> map = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
 
     public EntityToMap(boolean isProperty) {
         this.isProperty = isProperty;

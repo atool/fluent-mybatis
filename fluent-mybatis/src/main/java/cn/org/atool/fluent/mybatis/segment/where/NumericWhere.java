@@ -15,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
  * @param <WHERE>
  * @param <NQ>
  */
+@SuppressWarnings({"unused"})
 public interface NumericWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>

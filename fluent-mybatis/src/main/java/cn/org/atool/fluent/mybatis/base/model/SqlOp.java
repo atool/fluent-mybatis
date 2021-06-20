@@ -13,6 +13,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public enum SqlOp implements ISqlOp {
     /**
      * is null
@@ -119,7 +120,7 @@ public enum SqlOp implements ISqlOp {
      * @return sql片段
      */
     static String placeHolder(String placeHolder, Object... values) {
-        String replacedStr = "";
+        String replacedStr;
         if (values.length == 1 && values[0] instanceof Collection) {
             Collection list = (Collection) values[0];
             replacedStr = (String) list.stream().map(v -> QUESTION_MARK).collect(joining(", "));

@@ -17,6 +17,7 @@ import java.util.Map;
  * @param <S>
  * @author darui.wu
  */
+@SuppressWarnings({"unused", "rawtypes", "unchecked"})
 public class FormQuery<E extends IEntity, S extends FormSetter> implements IFormQuery<E, S> {
     private final Class<? extends IEntity> entityClazz;
     private final Map<String, Object> form;

@@ -18,6 +18,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)

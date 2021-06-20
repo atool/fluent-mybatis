@@ -7,6 +7,8 @@ import javax.lang.model.element.Modifier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
+
 public abstract class AbstractFiler {
     protected FluentEntity fluent;
 
@@ -54,11 +56,11 @@ public abstract class AbstractFiler {
      * @return
      */
     protected CodeBlock codeBlock(String... lines) {
-        return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), "\n");
+        return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), NEWLINE);
     }
 
     protected CodeBlock codeBlock(CodeBlock... blocks) {
-        return CodeBlock.join(Stream.of(blocks).collect(Collectors.toList()), "\n");
+        return CodeBlock.join(Stream.of(blocks).collect(Collectors.toList()), NEWLINE);
     }
 
     protected abstract void build(TypeSpec.Builder builder);

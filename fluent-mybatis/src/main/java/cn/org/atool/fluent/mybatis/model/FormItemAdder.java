@@ -11,6 +11,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  *
  * @author wudarui
  */
+@SuppressWarnings({"unused"})
 public class FormItemAdder {
     private final Form form;
 
@@ -21,10 +22,10 @@ public class FormItemAdder {
     /**
      * 增加表单项
      *
-     * @param key
-     * @param op
-     * @param value
-     * @return
+     * @param key   key
+     * @param op    SqlOp操作符
+     * @param value value
+     * @return Form
      */
     public Form item(String key, String op, Object... value) {
         this.form.getItems().add(new FormItem(key, op, value));

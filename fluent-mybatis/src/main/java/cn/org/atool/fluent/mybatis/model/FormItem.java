@@ -15,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unused"})
 @Data
 @Accessors(chain = true)
 public class FormItem implements Serializable {

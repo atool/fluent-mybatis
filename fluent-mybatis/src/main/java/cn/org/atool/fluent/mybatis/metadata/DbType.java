@@ -7,7 +7,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 /**
  * DbType 数据库类型
  *
- * @author:darui.wu Created by darui.wu on 2020/6/16.
+ * @author darui.wu Created by darui.wu on 2020/6/16.
  */
 public enum DbType {
     /**
@@ -97,7 +97,7 @@ public enum DbType {
     OTHER("other");
 
     @Getter
-    private String alias;
+    private final String alias;
 
     @Getter
     private String seq;

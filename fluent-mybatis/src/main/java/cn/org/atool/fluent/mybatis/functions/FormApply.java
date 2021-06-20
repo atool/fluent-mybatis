@@ -17,19 +17,20 @@ import java.util.function.Function;
  * @param <S>
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public final class FormApply<E extends IEntity, S extends FormSetter> implements IFormApply<E, S> {
     /**
      * IDE智能提示对象
      */
-    private S setter;
+    private final S setter;
     /**
      * 源数据(可以是任何数据)
      */
-    private Map map;
+    private final Map map;
     /**
      * 要设置的表单
      */
-    private Form form;
+    private final Form form;
 
     public FormApply(Function<FormApply, FormSetter> setterApply, Map map, Form form) {
         this.setter = (S) setterApply.apply(this);

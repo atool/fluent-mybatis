@@ -15,11 +15,12 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
  * @param <S>
  * @author wudarui
  */
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public interface IFormQuery<E extends IEntity, S extends FormSetter> extends IQuery<E> {
     /**
      * 对应的实体Entity类型
      *
-     * @return
+     * @return 实体类类型
      */
     Class<? extends IEntity> entityClass();
 
@@ -74,10 +75,10 @@ public interface IFormQuery<E extends IEntity, S extends FormSetter> extends IQu
     /**
      * 是否存在对应条件数据
      *
-     * @return
+     * @return true: exist
      */
     default boolean exists() {
-        IEntityMapper mapper = IRefs.instance().mapper(this.entityClass());
+        IEntityMapper mapper = IRefs.mapper(this.entityClass());
         int count = mapper.count(this);
         return count > 0;
     }

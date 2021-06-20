@@ -15,28 +15,28 @@ public interface ISqlOp {
     /**
      * 操作符名称
      *
-     * @return
+     * @return 名称
      */
     String name();
 
     /**
      * 操作符字符拼接表达式
      *
-     * @return
+     * @return 字符串格式化表达式
      */
     String getExpression();
 
     /**
      * 操作符参数占位符表达式
      *
-     * @return
+     * @return 预编译表达式
      */
     String getPlaceHolder();
 
     /**
      * 操作参数个数
      *
-     * @return
+     * @return 参数个数
      */
     int getArgSize();
 

@@ -17,8 +17,8 @@ public interface IRich {
      *
      * @param method rich method方法名称
      * @param cache  结果是否缓存
-     * @param <T>
-     * @return
+     * @param <T>    ignore
+     * @return ignore
      */
     <T> T invoke(String method, boolean cache);
 }

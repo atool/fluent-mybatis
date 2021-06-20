@@ -26,7 +26,7 @@ public class FieldMapping {
     /**
      * 返回字段名称
      *
-     * @return
+     * @return ignore
      */
     @Override
     public String toString() {
@@ -36,8 +36,8 @@ public class FieldMapping {
     /**
      * column = #{prefix.field}
      *
-     * @param prefix
-     * @return
+     * @param prefix 前缀
+     * @return ignore
      */
     public String el(String prefix) {
         return el(this.column, prefix, this.name);
@@ -47,7 +47,7 @@ public class FieldMapping {
      * alias.column
      *
      * @param alias 表别名
-     * @return
+     * @return ignore
      */
     public String alias(String alias) {
         return alias(alias, column);
@@ -58,7 +58,7 @@ public class FieldMapping {
      *
      * @param alias  table别名
      * @param column 字段
-     * @return
+     * @return ignore
      */
     public static String alias(String alias, String column) {
         return isBlank(alias) ? column : alias + "." + column;
@@ -67,10 +67,10 @@ public class FieldMapping {
     /**
      * key = #{prefix.value}
      *
-     * @param key
-     * @param prefix
-     * @param value
-     * @return
+     * @param key    key
+     * @param prefix 前缀
+     * @param value  value
+     * @return key = #{prefix.value}
      */
     public static String el(String key, String prefix, String value) {
         return key + " = " + placeholder(prefix, value);
@@ -81,7 +81,7 @@ public class FieldMapping {
      *
      * @param prefix 前置
      * @param field  字段
-     * @return
+     * @return #{prefix.field}
      */
     public static String placeholder(String prefix, String field) {
         return "#{" + (isBlank(prefix) ? field : prefix + "." + field) + "}";

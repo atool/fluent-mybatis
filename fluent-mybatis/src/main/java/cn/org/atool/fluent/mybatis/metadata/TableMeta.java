@@ -11,13 +11,12 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.joining;
-
 /**
  * 数据库表反射信息
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 @Data
 @Accessors(chain = true)
 public class TableMeta implements StrConstant {
@@ -61,6 +60,6 @@ public class TableMeta implements StrConstant {
             columns.add(primary.getColumn());
         }
         fields.stream().filter(predicate).forEach(f -> columns.add(f.getColumn()));
-        return columns.stream().collect(joining(COMMA_SPACE));
+        return String.join(COMMA_SPACE, columns);
     }
 }

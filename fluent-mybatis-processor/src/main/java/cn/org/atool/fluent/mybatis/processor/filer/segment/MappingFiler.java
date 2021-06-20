@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapping;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -106,7 +107,7 @@ public class MappingFiler extends AbstractFiler {
         String statement = this.fluent.getFields().stream()
             .map(CommonField::getName)
             .map(field -> String.format("\t\tthis.put(%s.name, %s.column);", field, field))
-            .collect(joining("\n"));
+            .collect(joining(NEWLINE));
 
         return FieldSpec.builder(ParameterizedTypeName.get(Map.class, String.class, String.class),
             "Property2Column", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)

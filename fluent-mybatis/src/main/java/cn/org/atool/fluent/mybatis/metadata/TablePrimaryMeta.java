@@ -17,7 +17,7 @@ public class TablePrimaryMeta extends FieldMeta {
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
      */
-    private String el;
+    private final String el;
     /**
      * 主键ID是否自增
      */
@@ -26,7 +26,7 @@ public class TablePrimaryMeta extends FieldMeta {
     /**
      * 表主键ID Sequence
      */
-    private String seqName;
+    private final String seqName;
 
     public TablePrimaryMeta(Field field, TableId tableId) {
         super(tableId.value(), field);

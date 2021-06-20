@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public class IfsPredicate {
     public final Predicate predicate;
 

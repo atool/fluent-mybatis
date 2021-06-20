@@ -22,6 +22,7 @@ import java.util.List;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Data
 @Accessors(chain = true)
 public class Form implements Serializable {
@@ -48,7 +49,7 @@ public class Form implements Serializable {
     private int pageSize = 1;
 
     public <E extends IEntity> QueryExecutor<E> to(Class<E> entityClass) {
-        IRichMapper mapper = IRefs.instance().mapper(entityClass);
+        IRichMapper mapper = IRefs.mapper(entityClass);
         IQuery query = FormHelper.toQuery(entityClass, this);
         return new QueryExecutor(mapper, query);
     }

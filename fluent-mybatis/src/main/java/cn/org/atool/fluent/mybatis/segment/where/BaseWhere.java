@@ -15,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
  * @param <WHERE>
  * @param <NQ>
  */
+@SuppressWarnings({"unchecked", "unused"})
 public interface BaseWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
@@ -72,9 +73,9 @@ public interface BaseWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs 条件
+     * @param <T> 类型
+     * @return ignore
      */
     default <T> WHERE eq(Ifs<T> ifs) {
         return this.apply(EQ, ifs);
@@ -115,9 +116,9 @@ public interface BaseWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs 条件
+     * @param <T> 类型
+     * @return ignore
      */
     default <T> WHERE ne(Ifs<T> ifs) {
         return this.apply(NE, ifs);
@@ -128,10 +129,10 @@ public interface BaseWhere<
     /**
      * 多条件操作
      *
-     * @param op
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param op  操作符
+     * @param ifs 条件
+     * @param <T> 类型
+     * @return ignore
      */
     <T> WHERE apply(ISqlOp op, Ifs<T> ifs);
 
@@ -160,7 +161,7 @@ public interface BaseWhere<
      * @param op         比较符号
      * @param expression 函数或表达式
      * @param args       函数或表达式的参数
-     * @return
+     * @return ignore
      */
     WHERE applyFunc(ISqlOp op, String expression, Object... args);
 
@@ -179,7 +180,7 @@ public interface BaseWhere<
      * @param op         比较符号
      * @param expression 函数或表达式
      * @param args       函数或表达式的参数
-     * @return
+     * @return ignore
      */
     WHERE applyFunc(Predicate<Object[]> predicate, ISqlOp op, String expression, Object... args);
 }

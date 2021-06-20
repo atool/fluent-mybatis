@@ -9,7 +9,7 @@ public interface IWrapperData {
     /**
      * 是否distinct查询
      *
-     * @return
+     * @return ignore
      */
     boolean isDistinct();
 
@@ -40,21 +40,21 @@ public interface IWrapperData {
     /**
      * 返回where部分sql
      *
-     * @return
+     * @return ignore
      */
     String getWhereSql();
 
     /**
      * 返回 groupBy + having + orderBy + last 组合起来的语句
      *
-     * @return
+     * @return ignore
      */
     String getGroupBy();
 
     /**
      * 返回 groupBy + having + last 组合起来的语句
      *
-     * @return
+     * @return ignore
      */
     String getOrderBy();
 
@@ -69,7 +69,7 @@ public interface IWrapperData {
     /**
      * 返回last sql部分
      *
-     * @return
+     * @return ignore
      */
     String getLastSql();
 }

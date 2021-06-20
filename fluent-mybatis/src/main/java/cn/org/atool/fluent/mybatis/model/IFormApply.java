@@ -13,6 +13,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
  * @param <S>
  * @author wudarui
  */
+@SuppressWarnings({"unused"})
 public interface IFormApply<E extends IEntity, S extends FormSetter> {
 
     S op(String op);
@@ -52,14 +53,14 @@ public interface IFormApply<E extends IEntity, S extends FormSetter> {
     /**
      * 把表单转换查询对象
      *
-     * @return
+     * @return IQuery
      */
     IQuery<E> query();
 
     /**
      * 把表单直接转换为查询执行对象
      *
-     * @return
+     * @return QueryExecutor
      */
     default QueryExecutor<E> to() {
         return this.query().to();

@@ -13,6 +13,14 @@ import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 
+/**
+ * ObjectWhere
+ *
+ * @param <WHERE> WHERE
+ * @param <NQ>    子查询
+ * @author wudarui
+ */
+@SuppressWarnings({"unused", "unchecked", "rawtypes"})
 public interface ObjectWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
@@ -195,7 +203,7 @@ public interface ObjectWhere<
      * @return
      */
     default WHERE in(Ifs<Collection> ifs) {
-        return (WHERE) this.apply(IN, ifs);
+        return this.apply(IN, ifs);
     }
 
     /**

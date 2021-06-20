@@ -9,15 +9,15 @@ public interface IMapping {
     /**
      * 根据Entity属性换取数据库字段名称
      *
-     * @param field
-     * @return
+     * @param field 属性名称
+     * @return 字段名称
      */
     String findColumnByField(String field);
 
     /**
      * 返回主键字段名称
      *
-     * @return
+     * @return 主键字段名称
      */
     String findPrimaryColumn();
 }

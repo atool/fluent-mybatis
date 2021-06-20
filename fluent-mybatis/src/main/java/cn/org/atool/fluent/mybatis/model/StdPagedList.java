@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author wudarui
  */
+@SuppressWarnings({"unused"})
 @Getter
 @Setter
 @Accessors(chain = true)

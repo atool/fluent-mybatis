@@ -24,6 +24,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 @Slf4j
 public class TableMetaHelper {
     /**
@@ -57,7 +58,6 @@ public class TableMetaHelper {
      * </p>
      *
      * @param clazz Entity实体类
-     * @return 数据库表反射信息
      */
     synchronized static void initTableInfo(Class<?> clazz) {
         if (!TABLE_INFO_CACHE.containsKey(clazz)) {
