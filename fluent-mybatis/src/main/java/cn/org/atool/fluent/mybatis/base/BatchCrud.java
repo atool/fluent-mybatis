@@ -11,11 +11,12 @@ import java.util.stream.Stream;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes"})
 public interface BatchCrud extends IWrapper {
     /**
      * 构造批量增删改构造器
      *
-     * @return
+     * @return BatchCrud
      */
     static BatchCrud batch() {
         return new BatchCrudImpl();
@@ -24,8 +25,8 @@ public interface BatchCrud extends IWrapper {
     /**
      * 按顺序添加Insert语句
      *
-     * @param entities
-     * @return
+     * @param entities 实例列表
+     * @return BatchCrud
      */
     BatchCrud addInsert(IEntity... entities);
 
@@ -35,7 +36,7 @@ public interface BatchCrud extends IWrapper {
      * @param insertTable 要插入数据的表名, inset into insertTable
      * @param fields      要插入的字段列表, a_table fields
      * @param query       要插入的字段值, query: select xxx from b_table
-     * @return
+     * @return BatchCrud
      * @see IEntityMapper#insertSelect(String[], IQuery)
      */
     BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query);
@@ -46,7 +47,7 @@ public interface BatchCrud extends IWrapper {
      * @param insertTable 要插入数据的表名, inset into insertTable
      * @param fields      要插入的字段列表, a_table fields
      * @param query       要插入的字段值, query: select xxx from b_table
-     * @return
+     * @return BatchCrud
      * @see IEntityMapper#insertSelect(String[], IQuery)
      */
     default BatchCrud addInsertSelect(String insertTable, FieldMapping[] fields, IQuery query) {
@@ -56,16 +57,16 @@ public interface BatchCrud extends IWrapper {
     /**
      * 按顺序添加update语句
      *
-     * @param updates
-     * @return
+     * @param updates 更新列表
+     * @return BatchCrud
      */
     BatchCrud addUpdate(IBaseUpdate... updates);
 
     /**
      * 按顺序添加delete语句
      *
-     * @param deletes
-     * @return
+     * @param deletes 生成条件列表
+     * @return BatchCrud
      */
     BatchCrud addDelete(IBaseQuery... deletes);
 }

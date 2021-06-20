@@ -9,13 +9,14 @@ import cn.org.atool.fluent.mybatis.segment.JoinOn;
  * @param <QL> 查询表一
  * @author wudarui
  */
+@SuppressWarnings({"unchecked", "unused"})
 public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<QL> {
     /**
      * from left.table join right.table on condition
      *
      * @param query 关联查询右表及右表条件设置
      * @param <QR>  join right表类型
-     * @return
+     * @return ignore
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query);
 
@@ -24,8 +25,8 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      *
      * @param query 子查询
      * @param alias 子查询别名
-     * @param <QR>
-     * @return
+     * @param <QR>  右查询类型
+     * @return ignore
      */
     default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query, String alias) {
         return this.join((QR) new FreeQuery(query, alias));
@@ -36,7 +37,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      *
      * @param query 关联查询右表及右表条件设置
      * @param <QR>  join right 表类型
-     * @return
+     * @return ignore
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query);
 
@@ -45,8 +46,8 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      *
      * @param query 子查询
      * @param alias 子查询别名
-     * @param <QR>
-     * @return
+     * @param <QR>  右查询类型
+     * @return ignore
      */
     default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query, String alias) {
         return this.leftJoin((QR) new FreeQuery(query, alias));
@@ -57,7 +58,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      *
      * @param query 关联查询右表及右表条件设置
      * @param <QR>  join right 表类型
-     * @return
+     * @return ignore
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query);
 
@@ -66,8 +67,8 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      *
      * @param query 子查询
      * @param alias 子查询别名
-     * @param <QR>
-     * @return
+     * @param <QR>  右查询类型
+     * @return ignore
      */
     default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query, String alias) {
         return this.rightJoin((QR) new FreeQuery(query, alias));

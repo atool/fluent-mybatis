@@ -21,7 +21,7 @@ public interface IEntity extends Serializable {
     /**
      * 数据库实体对应的Entity类名称, 在具体的XyzEntity类中定义为final, 防止返回匿名子类名称
      *
-     * @return
+     * @return 实例类
      */
     default Class<? extends IEntity> entityClass() {
         return this.getClass();
@@ -48,10 +48,10 @@ public interface IEntity extends Serializable {
     /**
      * 拷贝对象
      *
-     * @param <E>
-     * @return
+     * @param <E> 实例类型
+     * @return 实例对象
      */
     default <E extends IEntity> E copy() {
-        return (E) IRefs.findEntityHelper(this.entityClass()).copy(this);
+        return IRefs.findEntityHelper(this.entityClass()).copy(this);
     }
 }

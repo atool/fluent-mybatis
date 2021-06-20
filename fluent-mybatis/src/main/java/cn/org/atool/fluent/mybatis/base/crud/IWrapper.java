@@ -15,6 +15,7 @@ import java.io.Serializable;
  * @param <NQ> 对应的嵌套查询器
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 public interface IWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,
@@ -24,7 +25,7 @@ public interface IWrapper<
     /**
      * 返回where
      *
-     * @return
+     * @return WhereBase
      */
     WhereBase<?, W, NQ> where();
 
@@ -32,7 +33,7 @@ public interface IWrapper<
      * 返回查询器或更新器对应的xml数据
      * 系统方法, 请勿调用
      *
-     * @return
+     * @return WrapperData
      */
     WrapperData getWrapperData();
 

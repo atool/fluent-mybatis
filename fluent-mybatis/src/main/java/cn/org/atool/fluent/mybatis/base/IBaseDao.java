@@ -12,9 +12,10 @@ import java.util.Map;
  * IBaseDao Dao基本操作方法
  *
  * @param <E> 实体类
- * @Author darui.wu
+ * @author darui.wu
  * @Date 2019-06-25 12:00
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public interface IBaseDao<E extends IEntity> {
     /**
      * 插入一条记录
@@ -24,8 +25,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 返回记录主键
      */
     default <PK extends Serializable> PK save(E entity) {
-        PK pk = (PK) this.mapper().save(entity);
-        return pk;
+        return (PK) this.mapper().save(entity);
     }
 
     /**
@@ -36,8 +36,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 插入记录数
      */
     default int save(Collection<E> list) {
-        int count = this.mapper().save(list);
-        return count;
+        return this.mapper().save(list);
     }
 
     /**
@@ -68,12 +67,11 @@ public interface IBaseDao<E extends IEntity> {
     /**
      * 根据id列表查询
      *
-     * @param ids
-     * @return
+     * @param ids 主键列表
+     * @return 对象列表
      */
     default List<E> selectByIds(Serializable... ids) {
-        List<E> list = this.mapper().listByIds(Arrays.asList(ids));
-        return list;
+        return (List<E>) this.mapper().listByIds(Arrays.asList(ids));
     }
 
     /**
@@ -83,8 +81,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 结果列表
      */
     default List<E> selectByIds(Collection<? extends Serializable> ids) {
-        List<E> list = this.mapper().listByIds(ids);
-        return list;
+        return (List<E>) this.mapper().listByIds(ids);
     }
 
     /**
@@ -94,8 +91,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 结果列表
      */
     default List<E> selectByMap(Map<String, Object> where) {
-        List<E> list = this.mapper().listByMapAndDefault(where);
-        return list;
+        return (List<E>) this.mapper().listByMapAndDefault(where);
     }
 
     /**
@@ -139,54 +135,50 @@ public interface IBaseDao<E extends IEntity> {
     /**
      * 根据whereNoN非空属性作为相等条件, 更新updateNoN非空属性字段
      *
-     * @param updateNoN
-     * @param whereNoN
-     * @return
+     * @param updateNoN k-v更新字段
+     * @param whereNoN  k-v更新条件
+     * @return 更新记录数
      */
     int updateBy(E updateNoN, E whereNoN);
 
     /**
      * 根据entities中的id值，批量删除记录
      *
-     * @param entities
+     * @param entities 删除实例列表
      * @return 被执行的记录数
      */
     default int deleteByEntityIds(Collection<E> entities) {
-        int count = this.mapper().deleteByEntityIds(entities);
-        return count;
+        return this.mapper().deleteByEntityIds(entities);
     }
 
     /**
      * 根据entities中的id值，批量删除记录
      *
-     * @param entities
+     * @param entities 逻辑删除实例
      * @return 被执行的记录数
      */
     default int logicDeleteByEntityIds(Collection<E> entities) {
-        int count = this.mapper().logicDeleteByEntityIds(entities);
-        return count;
+        return this.mapper().logicDeleteByEntityIds(entities);
     }
 
     /**
      * 根据entities中的id值，批量删除记录
      *
-     * @param entities
+     * @param entities 逻辑删除实例
      * @return 被执行的记录数
      */
     default int deleteByEntityIds(E... entities) {
-        int count = this.mapper().deleteByEntityIds(entities);
-        return count;
+        return this.mapper().deleteByEntityIds(entities);
     }
 
     /**
      * 根据entities中的id值，批量逻辑删除记录
      *
-     * @param entities
+     * @param entities 逻辑删除实例
      * @return 被执行的记录数
      */
     default int logicDeleteByEntityIds(E... entities) {
-        int count = this.mapper().logicDeleteByEntityIds(entities);
-        return count;
+        return this.mapper().logicDeleteByEntityIds(entities);
     }
 
     /**
@@ -196,8 +188,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 被执行的记录数
      */
     default int deleteByIds(Collection<? extends Serializable> ids) {
-        int count = this.mapper().deleteByIds(ids);
-        return count;
+        return this.mapper().deleteByIds(ids);
     }
 
     /**
@@ -207,8 +198,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 被执行的记录数
      */
     default int logicDeleteByIds(Collection<? extends Serializable> ids) {
-        int count = this.mapper().logicDeleteByIds(ids);
-        return count;
+        return this.mapper().logicDeleteByIds(ids);
     }
 
     /**
@@ -240,8 +230,7 @@ public interface IBaseDao<E extends IEntity> {
      * @return 被执行的记录数
      */
     default int deleteByMap(Map<String, Object> map) {
-        int count = this.mapper().deleteByMapAndDefault(map);
-        return count;
+        return this.mapper().deleteByMapAndDefault(map);
     }
 
 
@@ -252,14 +241,13 @@ public interface IBaseDao<E extends IEntity> {
      * @return 被执行的记录数
      */
     default int logicDeleteByMap(Map<String, Object> map) {
-        int count = this.mapper().logicDeleteByMapAndDefault(map);
-        return count;
+        return this.mapper().logicDeleteByMapAndDefault(map);
     }
 
     /**
      * 获取对应entity的BaseMapper
      *
-     * @return
+     * @return IRichMapper
      */
     IRichMapper mapper();
 }

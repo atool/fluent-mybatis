@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 public abstract class RichEntity implements IEntity, IRichEntity {
 
     /**
@@ -26,7 +27,7 @@ public abstract class RichEntity implements IEntity, IRichEntity {
      * @param cached     true: 进行缓存, false:直接查询
      * @param methodName method name of entity
      * @param args       方法参数
-     * @param <T>
+     * @param <T>        实例类型
      */
     private <T> T invoke(boolean cached, String methodName, Object[] args) {
         if (cached) {
@@ -49,34 +50,20 @@ public abstract class RichEntity implements IEntity, IRichEntity {
     /**
      * 加载关联信息
      *
-     * @param method method name
-     * @param clazz  entity class name
-     * @param <T>
-     * @return
-     * @deprecated used invoke(cache, method) directly
-     */
-    @Deprecated
-    protected <T> T loadCache(String method, Class clazz) {
-        return (T) this.invoke(true, method, new Object[0]);
-    }
-
-    /**
-     * 加载关联信息
-     *
      * @param method 方法名称
      * @param cached 是否缓存结果
-     * @param <T>
-     * @return
+     * @param <T>    实例类型
+     * @return ignore
      */
     public <T> T invoke(String method, boolean cached) {
-        return (T) this.invoke(cached, method, new Object[0]);
+        return this.invoke(cached, method, new Object[0]);
     }
 
     /**
      * 添加 entity实例 到参数列表作为第一个参数
      *
-     * @param args
-     * @return
+     * @param args 参数
+     * @return ignore
      */
     private Object[] reArgs(Object[] args) {
         if (args == null || args.length == 0) {
@@ -84,9 +71,7 @@ public abstract class RichEntity implements IEntity, IRichEntity {
         }
         Object[] reArgs = new Object[args.length + 1];
         reArgs[0] = this;
-        for (int index = 0; index < args.length; index++) {
-            reArgs[index + 1] = args[index];
-        }
+        System.arraycopy(args, 0, reArgs, 1, args.length);
         return reArgs;
     }
 }

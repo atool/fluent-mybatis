@@ -18,7 +18,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param clazz join right表类型
      * @param query 关联查询右表及右表条件设置
      * @param <QR>  join right表类型
-     * @return
+     * @return ignore
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query);
 
@@ -28,7 +28,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param clazz join right 表类型
      * @param query 关联查询右表及右表条件设置
      * @param <QR>  join right 表类型
-     * @return
+     * @return ignore
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query);
 
@@ -38,7 +38,7 @@ public interface JoinBuilder2<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param clazz join right 表类型
      * @param query 关联查询右表及右表条件设置
      * @param <QR>  join right 表类型
-     * @return
+     * @return ignore
      */
     <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query);
 }
