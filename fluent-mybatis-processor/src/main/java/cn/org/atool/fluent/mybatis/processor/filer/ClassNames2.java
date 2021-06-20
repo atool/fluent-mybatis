@@ -1,32 +1,31 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.mapper.MapperFactory;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.WildcardTypeName;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.squareup.javapoet.ClassName.get;
 
 /**
  * ClassName 定义
  */
 public interface ClassNames2 extends ClassNames {
-    ClassName FM_IRichMapper = get("cn.org.atool.fluent.mybatis.base.mapper", "IRichMapper");
+
+    ClassName Spring_Resource = ClassName.get(Resource.class);
+
+    ClassName FM_IRichMapper = ClassName.get(IRichMapper.class);
+
+    ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
 
     ClassName Spring_Component = ClassName.get("org.springframework.stereotype", "Component");
-
-    ClassName Spring_Resource = ClassName.get("javax.annotation", "Resource");
-
-    ClassName Spring_PostConstruct = ClassName.get("javax.annotation", "PostConstruct");
-
-    ClassName Spring_BeanFactory = ClassName.get("org.springframework.beans.factory", "BeanFactory");
 
     ClassName Mybatis_Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");
 
@@ -47,8 +46,6 @@ public interface ClassNames2 extends ClassNames {
     ClassName CN_Map = ClassName.get(Map.class);
 
     ClassName CN_Set = ClassName.get(Set.class);
-
-    ClassName CN_HashMap = ClassName.get(HashMap.class);
 
     ClassName CN_List = ClassName.get(List.class);
 

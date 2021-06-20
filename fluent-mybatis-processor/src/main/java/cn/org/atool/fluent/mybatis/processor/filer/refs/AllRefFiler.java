@@ -95,7 +95,7 @@ public class AllRefFiler extends AbstractFile {
         MethodSpec.Builder spec = MethodSpec.methodBuilder("initEntityMapper")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.FINAL, Modifier.PROTECTED);
-        spec.addStatement("mappers = $T.instance(this.applicationContext)", MapperRefFiler.getClassName());
+        spec.addStatement("mappers = $T.instance(super.mapperFactory)", MapperRefFiler.getClassName());
         return spec.build();
     }
 

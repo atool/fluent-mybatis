@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.test;
 
+import cn.org.atool.fluent.mybatis.mapper.MapperFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,5 +49,10 @@ class TestSpringConfig {
         configuration.setAggressiveLazyLoading(false);
         bean.setConfiguration(configuration);
         return bean;
+    }
+
+    @Bean
+    public MapperFactory mapperFactory() {
+        return new MapperFactory();
     }
 }

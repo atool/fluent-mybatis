@@ -92,7 +92,7 @@ public class MapperRefFiler extends AbstractFile {
 
     private MethodSpec m_constructor() {
         MethodSpec.Builder spec = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
-            .addParameter(Spring_BeanFactory, "factory");
+            .addParameter(FM_MapperFactory, "factory");
 
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addStatement("this.$LMapper = factory.getBean($T.class)",
@@ -109,7 +109,7 @@ public class MapperRefFiler extends AbstractFile {
     private MethodSpec m_instance() {
         return MethodSpec.methodBuilder("instance")
             .addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC, Modifier.SYNCHRONIZED)
-            .addParameter(Spring_BeanFactory, "factory")
+            .addParameter(FM_MapperFactory, "factory")
             .returns(getClassName())
             .beginControlFlow("if (instance == null)")
             .addStatement("instance = new MapperRef(factory)")

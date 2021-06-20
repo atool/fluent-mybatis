@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -9,7 +10,8 @@ import org.springframework.context.ApplicationContextAware;
  *
  * @author wudarui
  */
-public class FluentMybatisRegister implements ApplicationContextAware {
+public class MapperFactory implements ApplicationContextAware {
+
     private ApplicationContext applicationContext;
 
     @Override
@@ -17,7 +19,14 @@ public class FluentMybatisRegister implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
+    /**
+     * 返回Mapper实例
+     *
+     * @param mapperInterface
+     * @param <T>
+     * @return
+     */
+    public <T extends IEntityMapper> T getBean(Class<T> mapperInterface) {
+        return applicationContext.getBean(mapperInterface);
     }
 }
