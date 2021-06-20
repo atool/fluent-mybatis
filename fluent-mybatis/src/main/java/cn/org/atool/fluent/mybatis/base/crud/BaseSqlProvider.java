@@ -30,13 +30,14 @@ import static java.util.stream.Collectors.joining;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes", "unused"})
 public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 批量更新, 插入, 删除操作语句构造
      * {@link IEntityMapper#batchCrud(BatchCrud)}
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public static String batchCrud(Map map) {
         IWrapper wrapper = getWrapper(map, Param_EW);
@@ -49,8 +50,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 构造{@link IEntityMapper#insertSelect(String[], IQuery)}SQL语句
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String insertSelect(Map map) {
         String[] fields = (String[]) map.get(Param_Fields);
@@ -62,21 +63,17 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotBlank("tableName", tableName);
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
-        StringBuilder buff = new StringBuilder("INSERT INTO ")
-            .append(tableName)
-            .append(" (")
-            .append(String.join(", ", fields))
-            .append(") ")
-            .append(query.getWrapperData().getQuerySql());
-
-        return buff.toString();
+        return "INSERT INTO " + tableName + " (" +
+            String.join(", ", fields) +
+            ") " +
+            query.getWrapperData().getQuerySql();
     }
 
     /**
      * 插入id未赋值的entity
      *
-     * @param entity
-     * @return
+     * @param entity 实体实例
+     * @return sql
      */
     public String insert(E entity) {
         return buildInsertSql(EMPTY, entity, false);
@@ -85,8 +82,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 插入id已赋值的entity
      *
-     * @param entity
-     * @return
+     * @param entity 实体实例
+     * @return sql
      */
     public String insertWithPk(E entity) {
         return buildInsertSql(EMPTY, entity, true);
@@ -124,8 +121,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 设置默认值，校验pk设置是否合法
      *
-     * @param entity
-     * @param withPk
+     * @param entity 实体实例
+     * @param withPk true: 带id值插入; false: 不带id值插入
      */
     private void validateInsertEntity(E entity, boolean withPk) {
         this.setEntityByDefault(entity);
@@ -139,43 +136,43 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 单个插入时, insert字段和值
      *
-     * @param inserts
-     * @param entity
-     * @param withPk
+     * @param inserts 插入字段值对
+     * @param entity  实体实例
+     * @param withPk  true:with id; false: without id
      */
     protected abstract void insertEntity(InsertList inserts, String prefix, E entity, boolean withPk);
 
     /**
      * 批量插入时，第index个实例VALUES SQL构造
      *
-     * @param index
-     * @param entity
-     * @param withPk
-     * @return
+     * @param index  序号
+     * @param entity 实例
+     * @param withPk true:with id; false: without id
+     * @return ignore
      */
     protected abstract List<String> insertBatchEntity(int index, E entity, boolean withPk);
 
     /**
      * entity无主键或者主键值为null
      *
-     * @param entity
-     * @return
+     * @param entity 实体实例
+     * @return ignore
      */
     protected abstract boolean primaryIsNull(E entity);
 
     /**
      * entity无主键或者主键有值
      *
-     * @param entity
-     * @return
+     * @param entity 实体实例
+     * @return ignore
      */
     protected abstract boolean primaryNotNull(E entity);
 
     /**
      * 去掉limit部分 count(IQuery) SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String countNoLimit(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
@@ -191,8 +188,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * count(IQuery) SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String count(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
@@ -211,7 +208,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             return ew.getCustomizedSql();
         }
         MapperSql sql = new MapperSql();
-        sql.SELECT(ew.getTable(), ew, this.joiningAllFields(true));
+        sql.SELECT(ew.getTable(), ew, this.joiningAllFields());
         sql.WHERE_GROUP_ORDER_BY(ew);
         return byPaged(this.dbType(), ew, sql.toString());
     }
@@ -219,8 +216,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据动态条件查询Entity SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String listEntity(Map map) {
         return this.queryByWrapperData(map);
@@ -229,8 +226,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据动态条件查询Map列表 SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String listMaps(Map map) {
         return this.queryByWrapperData(map);
@@ -239,8 +236,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据动态条件查询单列数据列表 SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String listObjs(Map map) {
         return this.queryByWrapperData(map);
@@ -249,14 +246,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据Map查询数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String listByMap(Map map) {
         Map<String, Object> where = getParas(map, Param_CM);
         assertNotEmpty("where", where);
         MapperSql sql = new MapperSql();
-        sql.SELECT(this.tableName(), this.joiningAllFields(true));
+        sql.SELECT(this.tableName(), this.joiningAllFields());
         sql.WHERE(Param_CM, where);
         return sql.toString();
     }
@@ -264,14 +261,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据Id列表查询数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return sql
      */
     public String listByIds(Map map) {
         MapperSql sql = new MapperSql();
         Collection ids = getParas(map, Param_Coll);
         assertNotEmpty("PrimaryKeyList", ids);
-        sql.SELECT(this.tableName(), this.joiningAllFields(true));
+        sql.SELECT(this.tableName(), this.joiningAllFields());
         sql.WHERE_PK_IN(this.dbType().wrap(this.idColumn()), ids.size());
         return sql.toString();
     }
@@ -279,19 +276,19 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据主键查找数据SQL构造
      *
-     * @param id
-     * @return
+     * @param id 主键
+     * @return ignore
      */
     public String findById(Serializable id) {
         assertNotNull("PrimaryKey", id);
         MapperSql sql = new MapperSql();
-        sql.SELECT(this.tableName(), this.joiningAllFields(true));
+        sql.SELECT(this.tableName(), this.joiningAllFields());
         sql.WHERE(format("%s = #{value}", this.idColumn()));
         return sql.toString();
     }
 
-    private String joiningAllFields(boolean withPk) {
-        return this.allFields(withPk).stream()
+    private String joiningAllFields() {
+        return this.allFields(true).stream()
             .map(dbType()::wrap)
             .collect(joining(", "));
     }
@@ -299,8 +296,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据动态条件查询一条记录SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String findOne(Map map) {
         return this.queryByWrapperData(map);
@@ -310,7 +307,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * 根据主键物理删除数据SQL构造
      *
      * @param ids 主键值
-     * @return
+     * @return ignore
      */
     public String deleteById(Serializable[] ids) {
         assertNotEmpty("ids", ids);
@@ -324,7 +321,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * 根据主键逻辑删除数据SQL构造
      *
      * @param ids 主键值
-     * @return
+     * @return ignore
      */
     public String logicDeleteById(Serializable[] ids) {
         assertNotEmpty("ids", ids);
@@ -344,7 +341,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
                 if (index > 0) {
                     values.append(", ");
                 }
-                values.append("#{array[" + index + "]}");
+                values.append("#{array[").append(index).append("]}");
             }
             sql.WHERE(format("%s IN (%s)", idColumn, values));
         }
@@ -353,8 +350,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据主键列表物理删除数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String deleteByIds(Map map) {
         Collection ids = getParas(map, Param_Coll);
@@ -368,8 +365,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据主键列表逻辑删除数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String logicDeleteByIds(Map map) {
         Collection ids = getParas(map, Param_Coll);
@@ -383,8 +380,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 按map删除数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String deleteByMap(Map<String, Object> map) {
         Map<String, Object> cm = getParas(map, Param_CM);
@@ -397,8 +394,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 按map逻辑删除数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String logicDeleteByMap(Map<String, Object> map) {
         Map<String, Object> cm = getParas(map, Param_CM);
@@ -425,8 +422,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据动态查询条件物理删除数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String delete(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
@@ -436,8 +433,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据动态查询条件逻辑删除数据SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String logicDelete(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
@@ -447,8 +444,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * update(IQuery) SQL构造
      *
-     * @param map
-     * @return
+     * @param map k-v条件
+     * @return ignore
      */
     public String updateBy(Map<String, Object> map) {
         Object wrapper = map.get(Param_EW);
@@ -463,12 +460,11 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         int index = 0;
         for (IUpdate updater : updaters) {
             String sql = this.buildUpdaterSql(updater.getWrapperData());
-            sql = this.addEwParaIndex(sql, format("[%d]", index));
+            sql = addEwParaIndex(sql, format("[%d]", index));
             index++;
             list.add(sql);
         }
-        String text = list.stream().collect(joining(";\n"));
-        return text;
+        return String.join(";\n", list);
     }
 
     private final static char[] EW_CONST = "#{ew.".toCharArray();
@@ -480,9 +476,9 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * #{ew.wrapperData.parameters.xxx}替换为#{ew[0].wrapperData.parameters.xxx}
      * 不采用正则表达式方式替换, 是编码方式替换简单，一次字符串扫描即可完成
      *
-     * @param sql
-     * @param aIndex
-     * @return
+     * @param sql    sql语句
+     * @param aIndex 变量参数序号
+     * @return 改写后的sql
      */
     static String addEwParaIndex(String sql, String aIndex) {
         StringBuilder buff = new StringBuilder();
@@ -496,6 +492,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
                 }
                 match = 0;
             } else {
+                // 匹配字符串 "#{ew.", 完全匹配上 match=4
                 match = EW_CONST[match] == ch ? match + 1 : 0;
             }
             buff.append(ch);
@@ -506,7 +503,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据{@link cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter#setInsertDefault(IEntity)}设置默认值
      *
-     * @param entity
+     * @param entity 实体实例
      */
     protected abstract void setEntityByDefault(IEntity entity);
 
@@ -514,7 +511,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * 构造updates中没有显式设置的默认值构造
      *
      * @param updates 显式update字段
-     * @return
+     * @return ignore
      */
     protected abstract List<String> updateDefaults(Map<String, String> updates, boolean ignoreLockVersion);
 
@@ -522,9 +519,9 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * 构建插入语句
      *
      * @param prefix entity变量前缀
-     * @param entity
+     * @param entity 实体实例
      * @param withPk 包含主键?
-     * @return
+     * @return ignore
      */
     public String buildInsertSql(String prefix, E entity, boolean withPk) {
         assertNotNull(Param_Entity, entity);
@@ -542,8 +539,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据WrapperData设置构建更新语句
      *
-     * @param ew
-     * @return
+     * @param ew 更新/查询 构造数据
+     * @return sql
      */
     public String buildUpdaterSql(WrapperData ew) {
         assertNotNull("wrapperData of updater", ew);
@@ -577,11 +574,9 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     protected void checkUpdateVersionWhere(List<String> wheres) {
         String versionField = this.versionField();
-        if (If.isBlank(versionField)) {
-            return;
-        } else if (wheres.contains(versionField) || wheres.contains(this.dbType().wrap(versionField))) {
-            return;
-        } else {
+        if (If.notBlank(versionField) &&
+            !wheres.contains(versionField) &&
+            !wheres.contains(this.dbType().wrap(versionField))) {
             throw new RuntimeException("The version lock field was explicitly set, but no version condition was found in the update condition.");
         }
     }
@@ -589,8 +584,8 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据WrapperData设置构建删除语句
      *
-     * @param ew
-     * @return
+     * @param ew 更新/查询 构造数据
+     * @return sql
      */
     public String buildDeleteSql(WrapperData ew, boolean isLogic) {
         if (notBlank(ew.getCustomizedSql())) {
@@ -624,14 +619,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 数据库类型
      *
-     * @return
+     * @return ignore
      */
     protected abstract DbType dbType();
 
     /**
      * 返回表名
      *
-     * @return
+     * @return ignore
      */
     protected abstract String tableName();
 
@@ -639,35 +634,35 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * 所有字段列表(以逗号隔开)
      *
      * @param withPk 是否包含主键字段
-     * @return
+     * @return ignore
      */
     protected abstract List<String> allFields(boolean withPk);
 
     /**
      * 主键字段名
      *
-     * @return
+     * @return ignore
      */
     protected abstract String idColumn();
 
     /**
      * 乐观锁字段
      *
-     * @return
+     * @return ignore
      */
     protected abstract String versionField();
 
     /**
      * 逻辑删除字段
      *
-     * @return
+     * @return ignore
      */
     protected abstract String logicDeleteField();
 
     /**
      * 逻辑删除字段是否为 Long 型
      *
-     * @return
+     * @return ignore
      */
     protected abstract boolean longTypeOfLogicDelete();
 }

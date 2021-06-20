@@ -23,6 +23,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
  * @author darui.wu
  * @date 2020/6/17 3:13 下午
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class BaseQuery<
     E extends IEntity,
     Q extends BaseQuery<E, Q>
@@ -102,8 +103,8 @@ public abstract class BaseQuery<
      * UNION
      * select * from b where...
      *
-     * @param queries
-     * @return
+     * @param queries 查询条件列表
+     * @return ignore
      */
     public Q union(IBaseQuery... queries) {
         return this.union(UNION, queries);
@@ -114,8 +115,8 @@ public abstract class BaseQuery<
      * UNION ALL
      * select * from b where...
      *
-     * @param queries
-     * @return
+     * @param queries 查询条件列表
+     * @return ignore
      */
     public Q unionAll(IBaseQuery... queries) {
         return this.union(UNION_ALL, queries);
@@ -145,7 +146,7 @@ public abstract class BaseQuery<
      * </pre>
      *
      * @param query 右查询
-     * @param <QR>
+     * @param <QR>  右查询类型
      * @return JoinOn
      */
     public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinBuilder1<Q>> join(QR query) {
@@ -159,7 +160,7 @@ public abstract class BaseQuery<
      *
      * @param joinType 连接类型
      * @param query    右查询
-     * @param <QR>
+     * @param <QR>     右查询类型
      * @return JoinOn
      */
     public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinBuilder1<Q>> join(JoinType joinType, QR query) {

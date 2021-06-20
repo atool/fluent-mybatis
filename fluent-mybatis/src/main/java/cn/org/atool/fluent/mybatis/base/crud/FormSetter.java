@@ -11,6 +11,7 @@ import java.util.function.Consumer;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 public abstract class FormSetter {
 
     protected FormApply formApply;
@@ -27,8 +28,8 @@ public abstract class FormSetter {
     /**
      * 设置当前操作字段
      *
-     * @param field
-     * @return
+     * @param field 字段
+     * @return ignore
      */
     public IFormApply set(FieldMapping field) {
         this.formApply.set(field);

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
@@ -21,6 +20,7 @@ import static java.lang.String.format;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BatchCrudImpl implements BatchCrud {
     @Getter
     protected final WrapperData wrapperData = new WrapperData();
@@ -28,7 +28,7 @@ public class BatchCrudImpl implements BatchCrud {
     private final List<String> list = new ArrayList<>();
 
     public String batchSql() {
-        return list.stream().collect(Collectors.joining(";\n"));
+        return String.join(";\n", list);
     }
 
     @Override
@@ -86,8 +86,7 @@ public class BatchCrudImpl implements BatchCrud {
         pack = pack.substring(0, pack.length() - ".entity".length()) + ".helper";
         String name = klass.getSimpleName();
         name = name.substring(0, name.length() - "Entity".length()) + "SqlProvider";
-        String klassName = pack + "." + name;
-        return klassName;
+        return pack + "." + name;
     }
 
     private static final String ENTITY_LIST_KEY = "list";

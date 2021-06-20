@@ -15,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
  * @author darui.wu
  * @date 2020/6/17 4:24 下午
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class BaseUpdate<
     E extends IEntity,
     U extends IBaseUpdate<E, U, NQ>,

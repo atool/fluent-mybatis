@@ -7,20 +7,21 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes"})
 public interface IDefaultGetter {
     /**
      * 对entity设置默认值
      * 默认值行为根据 {@link IDefaultSetter#setInsertDefault(IEntity)}来
      *
-     * @param entity
+     * @param entity 实例
      */
     void setEntityByDefault(IEntity entity);
 
     /**
      * 创建一个空查询器(不包括{@link IDefaultSetter#setQueryDefault(IQuery)} 设置的默认条件)
      *
-     * @param <Q>
-     * @return
+     * @param <Q> IQuery类型
+     * @return IQuery
      */
     <Q extends IQuery> Q query();
 
@@ -35,8 +36,8 @@ public interface IDefaultGetter {
     /**
      * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
      *
-     * @param <U>
-     * @return
+     * @param <U> IUpdate类型
+     * @return IUpdate
      */
     <U extends IUpdate> U updater();
 
@@ -52,8 +53,8 @@ public interface IDefaultGetter {
      * 自动分配表别名查询构造器(join查询的时候需要定义表别名)
      * 如果要自定义别名, 使用方法 {@link #aliasQuery(String)}
      *
-     * @param <Q>
-     * @return
+     * @param <Q> IQuery类型
+     * @return IQuery
      */
     <Q extends IQuery> Q aliasQuery();
 
@@ -74,8 +75,8 @@ public interface IDefaultGetter {
      * o - 设置变量实例来自From查询实例
      *
      * @param fromQuery 关联查询时,from表查询对象
-     * @param <Q>
-     * @return
+     * @param <Q>       IQuery类型
+     * @return IQuery
      */
     <Q extends IQuery> Q aliasWith(BaseQuery fromQuery);
 
