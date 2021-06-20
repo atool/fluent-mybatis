@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
-import cn.org.atool.fluent.mybatis.generate.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.mapper.refs.FieldRef;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

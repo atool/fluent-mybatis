@@ -5,11 +5,10 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,9 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity
  *
  * @author darui.wu
  */
-public abstract class IRefs implements ApplicationContextAware {
+public abstract class IRefs {
+    //
+    public static final String Fix_Package = "cn.org.atool.fluent.mybatis.mapper.refs";
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
      */
@@ -239,10 +240,6 @@ public abstract class IRefs implements ApplicationContextAware {
      */
     protected abstract void initEntityMapper();
 
+    @Resource
     protected ApplicationContext applicationContext;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 }

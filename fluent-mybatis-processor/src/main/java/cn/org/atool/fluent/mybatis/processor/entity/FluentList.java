@@ -12,6 +12,7 @@ import javax.annotation.processing.Filer;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.base.IRefs.Fix_Package;
 import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 
 /**
@@ -44,7 +45,8 @@ public class FluentList {
     }
 
     public static String refsPackage() {
-        return getSamePackage() + ".refs";
+//        return getSamePackage() + ".refs";
+        return Fix_Package;
     }
 
     public static FluentEntity getFluentEntity(String entityName) {

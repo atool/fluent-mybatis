@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.generate.Refs;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.generate.refs.FieldRef;
-import cn.org.atool.fluent.mybatis.generate.refs.FormRef;
+import cn.org.atool.fluent.mybatis.mapper.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.mapper.refs.FormRef;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
