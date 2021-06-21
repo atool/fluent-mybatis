@@ -19,4 +19,15 @@ public class WhereApplyTest2 extends BaseTest {
         db.sqlList().wantFirstSql()
             .end("WHERE user_name = user_name+1");
     }
+
+    @Test
+    void apply_date() {
+        mapper.listEntity(new StudentQuery()
+            .where.gmtModified().applyFunc(SqlOp.GT, "DATE_ADD(gmt_created, INTERVAL ? DAY)", 10)
+            .end()
+        );
+        db.sqlList().wantFirstSql()
+            .end("FROM student WHERE gmt_modified > DATE_ADD(gmt_created, INTERVAL ? DAY)");
+        db.sqlList().wantFirstPara().eqList(10);
+    }
 }
