@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.generate.dm.IdcardDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.MemberLoveDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MyEnumTypeDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
@@ -16,6 +17,7 @@ import cn.org.atool.fluent.mybatis.generate.mix.IdcardTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.MemberTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MyEnumTypeTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
@@ -61,6 +63,8 @@ public interface ATM {
 
     public final String blobValue = "blob_value";
 
+    public final String myEnumType = "my_enum_type";
+
     public final String idcard = "idcard";
   }
 
@@ -85,6 +89,8 @@ public interface ATM {
     public final MemberDataMap.Factory member = new MemberDataMap.Factory();
 
     public final BlobValueDataMap.Factory blobValue = new BlobValueDataMap.Factory();
+
+    public final MyEnumTypeDataMap.Factory myEnumType = new MyEnumTypeDataMap.Factory();
 
     public final IdcardDataMap.Factory idcard = new IdcardDataMap.Factory();
   }
@@ -111,6 +117,8 @@ public interface ATM {
 
     public final BlobValueTableMix blobValueTableMix = MixProxy.proxy(BlobValueTableMix.class);
 
+    public final MyEnumTypeTableMix myEnumTypeTableMix = MixProxy.proxy(MyEnumTypeTableMix.class);
+
     public final IdcardTableMix idcardTableMix = MixProxy.proxy(IdcardTableMix.class);
 
     public void cleanAllTable() {
@@ -123,6 +131,7 @@ public interface ATM {
       this.memberLoveTableMix.cleanMemberLoveTable();
       this.memberTableMix.cleanMemberTable();
       this.blobValueTableMix.cleanBlobValueTable();
+      this.myEnumTypeTableMix.cleanMyEnumTypeTable();
       this.idcardTableMix.cleanIdcardTable();
     }
   }
@@ -143,6 +152,7 @@ public interface ATM {
       	MemberLoveDataMap.class,
       	MemberDataMap.class,
       	BlobValueDataMap.class,
+      	MyEnumTypeDataMap.class,
       	IdcardDataMap.class
       );
     }

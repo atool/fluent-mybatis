@@ -75,7 +75,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param entities 实例列表
      * @return ignore
      */
-    int insertBatch(Collection<E> entities);
+    int insertBatch(@Param("list") Collection<E> entities);
 
     /**
      * 批量插入数据，实例主键必须全部已赋值
@@ -83,7 +83,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param entities 实例列表
      * @return ignore
      */
-    int insertBatchWithPk(Collection<E> entities);
+    int insertBatchWithPk(@Param("list") Collection<E> entities);
 
     /**
      * insert into a_table(fields) select fields from b_table;

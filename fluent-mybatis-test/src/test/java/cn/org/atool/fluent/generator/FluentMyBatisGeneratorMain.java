@@ -3,9 +3,12 @@ package cn.org.atool.fluent.generator;
 import cn.org.atool.fluent.mybatis.customize.ICustomizedMapper;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
+import cn.org.atool.fluent.mybatis.customize.model.MyEnum;
 import cn.org.atool.generator.FileGenerator;
 import cn.org.atool.generator.annotation.*;
 import org.apache.ibatis.type.BlobTypeHandler;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
+import org.apache.ibatis.type.EnumTypeHandler;
 import org.test4j.module.database.proxy.DataSourceCreatorFactory;
 
 public class FluentMyBatisGeneratorMain {
@@ -86,7 +89,12 @@ public class FluentMyBatisGeneratorMain {
         tables = {
             @Table(value = "blob_value",
                 columns = @Column(value = "blob_value", typeHandler = BlobTypeHandler.class),
-                superMapper = ICustomizedMapper.class)
+                superMapper = ICustomizedMapper.class),
+            @Table(value = "my_enum_type",
+                columns = {
+                    @Column(value = "enum_string", javaType = MyEnum.class, typeHandler = EnumTypeHandler.class),
+                    @Column(value = "enum_num", javaType = MyEnum.class, typeHandler = EnumOrdinalTypeHandler.class)
+                })
         }, entitySuffix = "PoJo")
     static class EntitySuffix_TypeHandler_CustomizedMapper {
     }

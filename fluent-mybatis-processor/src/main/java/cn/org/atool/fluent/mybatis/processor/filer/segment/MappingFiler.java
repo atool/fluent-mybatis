@@ -78,11 +78,17 @@ public class MappingFiler extends AbstractFiler {
     }
 
     private FieldSpec f_Field(CommonField fc) {
-        return FieldSpec.builder(FieldMapping.class,
+        FieldSpec.Builder spec = FieldSpec.builder(FieldMapping.class,
             fc.getName(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", fc.getName(), fc.getColumn())
-            .initializer("new FieldMapping($S, $S)", fc.getName(), fc.getColumn())
-            .build();
+            .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", fc.getName(), fc.getColumn());
+        if (fc.getTypeHandler() == null) {
+            return spec.initializer("new FieldMapping($S, $S)", fc.getName(), fc.getColumn())
+                .build();
+        } else {
+            return spec.initializer("new FieldMapping($S, $S, $T.class, $T.class)",
+                fc.getName(), fc.getColumn(), fc.getJavaType(), fc.getTypeHandler())
+                .build();
+        }
     }
 
     @Override

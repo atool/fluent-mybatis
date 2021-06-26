@@ -1,22 +1,21 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import java.io.Serializable;
-import java.lang.Class;
-import java.lang.Long;
-import java.lang.Override;
-import java.lang.String;
+import cn.org.atool.fluent.mybatis.customize.model.MyEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
+import org.apache.ibatis.type.EnumTypeHandler;
+
+import java.io.Serializable;
 
 /**
- * IdcardEntity: 数据映射实体定义
+ * MyEnumTypePoJo: 数据映射实体定义
  *
  * @author Powered By Fluent Mybatis
  */
@@ -28,9 +27,10 @@ import lombok.experimental.Accessors;
     callSuper = false
 )
 @FluentMybatis(
-    table = "idcard"
+    table = "my_enum_type",
+    suffix = "PoJo"
 )
-public class IdcardEntity extends RichEntity {
+public class MyEnumTypePoJo extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -40,28 +40,22 @@ public class IdcardEntity extends RichEntity {
   private Long id;
 
   /**
-   * 是否逻辑删除
+   * 枚举类型, 序号
    */
   @TableField(
-      value = "is_deleted",
-      insert = "0"
+      value = "enum_num",
+      typeHandler = EnumOrdinalTypeHandler.class
   )
-  @LogicDelete
-  private Long isDeleted;
+  private MyEnum enumNum;
 
   /**
-   */
-  @TableField("code")
-  private String code;
-
-  /**
-   * 版本锁
+   * 枚举类型, 字符
    */
   @TableField(
-      value = "version",
-      update = "version + 1"
+      value = "enum_string",
+      typeHandler = EnumTypeHandler.class
   )
-  private Long version;
+  private MyEnum enumString;
 
   @Override
   public Serializable findPk() {
@@ -70,6 +64,6 @@ public class IdcardEntity extends RichEntity {
 
   @Override
   public final Class<? extends IEntity> entityClass() {
-    return IdcardEntity.class;
+    return MyEnumTypePoJo.class;
   }
 }

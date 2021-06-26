@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_SET_ENTITY_BY_DEFAULT;
@@ -61,6 +60,7 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addStaticImport(SqlProviderUtils.class, "*");
         spec.addStaticImport(FluentConst.class, "*");
         spec.addStaticImport(fluent.mapping(), "*");
+        spec.addStaticImport(InsertList.class, "el");
     }
 
     @Override
@@ -228,13 +228,12 @@ public class SqlProviderFiler extends AbstractFiler {
         for (CommonField field : this.fluent.getFields()) {
             if (field.isPrimary()) {
                 spec.addCode("if (withPk) {\n")
-                    .addStatement("\tvalues.add($S + index + \"].$L}\")", "#{list[", field.getName())
+                    .addStatement("\tvalues.add(el($S + index + $S, $L, entity.$L(), $S))",
+                        "list[", "].", field.getName(), field.getMethodName(), field.getInsert())
                     .addCode("}\n");
-            } else if (notBlank(field.getInsert())) {
-                spec.addStatement("values.add(entity.$L() == null ? $S : $S + index + \"].$L}\")",
-                    field.getMethodName(), field.getInsert(), "#{list[", field.getName());
             } else {
-                spec.addStatement("values.add($S + index + \"].$L}\")", "#{list[", field.getName());
+                spec.addStatement("values.add(el($S + index + $S, $L, entity.$L(), $S))",
+                    "list[", "].", field.getName(), field.getMethodName(), field.getInsert());
             }
         }
         spec.addStatement("return values");

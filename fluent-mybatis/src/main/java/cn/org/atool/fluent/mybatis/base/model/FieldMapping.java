@@ -18,9 +18,19 @@ public class FieldMapping {
      */
     public final String column;
 
+    public final Class javaType;
+
+    public final Class typeHandler;
+
     public FieldMapping(String name, String column) {
+        this(name, column, null, null);
+    }
+
+    public FieldMapping(String name, String column, Class javaType, Class typeHandler) {
         this.name = name;
         this.column = column;
+        this.javaType = javaType;
+        this.typeHandler = typeHandler;
     }
 
     /**

@@ -170,6 +170,16 @@ create table blob_value
 ) ENGINE = InnoDB
   CHARACTER SET = utf8;
 
+drop table if exists `my_enum_type`;
+create table my_enum_type
+(
+    id bigint auto_increment COMMENT '主键id',
+    enum_string varchar(20) null COMMENT '枚举类型, 字符',
+    enum_num int null COMMENT '枚举类型, 序号',
+    constraint my_enum_type_pk primary key (id)
+) ENGINE = InnoDB
+  CHARACTER SET = utf8;
+
 /**
 DROP PROCEDURE IF EXISTS `countRecord`;
 CREATE PROCEDURE `countRecord`(IN minId INT, OUT total INT)
