@@ -17,7 +17,6 @@ import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import lombok.experimental.Accessors;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -103,23 +102,13 @@ public abstract class WhereBase<
      * @return 查询器StudentQuery
      */
     public WHERE eqByEntity(IEntity entity, String... columns) {
-        assertNotNull("entity", entity);
-        boolean isNoN = columns == null || columns.length == 0;
-        Map<String, Object> map = entity.toColumnMap(isNoN);
-
-        List<String> list = Arrays.asList(columns);
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String column = entry.getKey();
-            if (!isNoN && !list.contains(column)) {
-                continue;
-            }
-            Object value = entry.getValue();
+        super.byEntity(entity, (column, value) -> {
             if (value == null) {
                 this.apply(column, IS_NULL);
             } else {
                 this.apply(column, EQ, value);
             }
-        }
+        }, true, Arrays.asList(columns));
         return this.and;
     }
 
@@ -152,6 +141,40 @@ public abstract class WhereBase<
         return this.eqByEntity(entity, arr);
     }
 
+    /**
+     * 根据entity(排除指定字段)设置where条件
+     *
+     * <pre>
+     * o 无指定字段时, 条件等于所有字段(包括null值)
+     * </pre>
+     *
+     * @param entity   实例
+     * @param excludes 排除设置条件的字段
+     * @return 查询器StudentQuery
+     */
+    public WHERE eqByExclude(IEntity entity, String... excludes) {
+        super.byExclude(entity, (column, value) -> {
+            if (value == null) {
+                this.apply(column, IS_NULL);
+            } else {
+                this.apply(column, EQ, value);
+            }
+        }, true, Arrays.asList(excludes));
+        return this.and;
+    }
+
+    public <E extends IEntity> WHERE eqByExclude(E entity, GetterFunc<E> exclude, GetterFunc<E>... excludes) {
+        assertNotNull("entity", entity);
+        Class klass = IRefs.instance().findFluentEntityClass(entity.getClass());
+        String[] arr = MappingKits.toColumns(klass, exclude, excludes);
+        return this.eqByExclude(entity, arr);
+    }
+
+    public WHERE eqByExclude(IEntity entity, FieldMapping exclude, FieldMapping... excludes) {
+        assertNotNull("entity", entity);
+        String[] arr = MappingKits.toColumns(exclude, excludes);
+        return this.eqByExclude(entity, arr);
+    }
 
     /**
      * map 所有非空属性等于 =

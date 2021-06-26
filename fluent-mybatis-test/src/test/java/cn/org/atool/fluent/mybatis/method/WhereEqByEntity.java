@@ -67,4 +67,71 @@ public class WhereEqByEntity extends BaseTest {
         db.sqlList().wantFirstPara()
             .eqList("test");
     }
+
+
+    @Test
+    void eqByExclude() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("address");
+
+        StudentQuery query = mapper.query()
+            .where.eqByExclude(student)
+            .end();
+
+        mapper.listEntity(query);
+
+        db.sqlList().wantFirstSql()
+            .contains("birthday IS NULL AND")
+            .contains("AND address = ? AND")
+            .contains("AND user_name = ? AND")
+            .contains("AND id = ? AND");
+        db.sqlList().wantFirstPara()
+            .eqList("address", "test", 1L);
+    }
+
+
+    @Test
+    void eqByExclude_IdIsNull() {
+        StudentEntity student = new StudentEntity()
+            .setUserName("test")
+            .setAddress("address");
+
+        StudentQuery query = mapper.query()
+            .where.eqByExclude(student)
+            .end();
+
+        mapper.listEntity(query);
+
+        db.sqlList().wantFirstSql()
+            .contains("birthday IS NULL AND")
+            .contains("AND address = ? AND")
+            .contains("AND user_name = ? AND")
+            .notContain("AND id IS NULL AND");
+        db.sqlList().wantFirstPara()
+            .eqList("address", "test");
+    }
+
+
+    @Test
+    void eqByExclude_Getter() {
+        StudentEntity student = new StudentEntity()
+            .setUserName("test")
+            .setAddress("address");
+
+        StudentQuery query = mapper.query()
+            .where.eqByExclude(student, StudentEntity::getAddress)
+            .end();
+
+        mapper.listEntity(query);
+
+        db.sqlList().wantFirstSql()
+            .contains("birthday IS NULL AND")
+            .contains("AND user_name = ? AND")
+            .notContain("AND address = ? AND")
+            .notContain("AND id IS NULL AND");
+        db.sqlList().wantFirstPara()
+            .eqList("test");
+    }
 }

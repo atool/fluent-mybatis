@@ -70,9 +70,34 @@ public class UpdateByEntity extends BaseTest {
         db.sqlList().wantFirstPara().eqList("test", null, 1);
     }
 
-    @DisplayName("按Entity排除字段更新")
+    @DisplayName("按Entity排除字段更新, 未指定排除")
     @Test
     void byEntity_Exclude() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test")
+            .setTenant(122L);
+
+        StudentUpdate updater = mapper.updater()
+            .set.byExclude(student).end()
+            .where.id().eq(1).end();
+        mapper.updateBy(updater);
+
+        db.sqlList().wantFirstSql()
+            .contains("user_name = ?,")
+            .contains("gmt_modified = ?,")
+            .contains("age = ?,")
+            .contains("birthday = ?,")
+            .notContain(", id = ?,")
+            .notContain("gmt_modified = now(),")
+            .end("WHERE id = ?")
+        ;
+    }
+
+    @DisplayName("按Entity排除字段更新")
+    @Test
+    void byEntity_ExcludeSpec() {
         StudentEntity student = new StudentEntity()
             .setId(1L)
             .setUserName("test")
@@ -82,6 +107,7 @@ public class UpdateByEntity extends BaseTest {
             .set.byExclude(student,
                 FieldRef.Student.id,
                 FieldRef.Student.address,
+                FieldRef.Student.tenant,
                 FieldRef.Student.birthday).end()
             .where.id().eq(1).end();
         mapper.updateBy(updater);
@@ -100,13 +126,12 @@ public class UpdateByEntity extends BaseTest {
     @Test
     void byEntity_ExcludeByGetter() {
         StudentEntity student = new StudentEntity()
-            .setId(1L)
             .setUserName("test")
+            .setTenant(124L)
             .setAddress("test");
 
         StudentUpdate updater = mapper.updater()
             .set.byExclude(student,
-                StudentEntity::getId,
                 StudentEntity::getAddress,
                 StudentEntity::getBirthday,
                 StudentEntity::getGmtModified).end()

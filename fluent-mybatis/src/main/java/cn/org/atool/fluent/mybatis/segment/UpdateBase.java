@@ -8,9 +8,7 @@ import cn.org.atool.fluent.mybatis.functions.GetterFunc;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -96,22 +94,7 @@ public abstract class UpdateBase<
      * @return self
      */
     public S byEntity(IEntity entity, String... columns) {
-        assertNotNull("entity", entity);
-        boolean isNoN = columns == null || columns.length == 0;
-        Map<String, Object> map = entity.toColumnMap(isNoN);
-        String pk = IRefs.instance().findPrimaryColumn(entity.getClass());
-        List<String> list = Arrays.asList(columns);
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            /**
-             * 非显式指定更新主键, 则跳过主键更新
-             */
-            if (Objects.equals(pk, entry.getKey()) && isNoN) {
-                continue;
-            }
-            if (isNoN || list.contains(entry.getKey())) {
-                this.wrapperData().updateSet(entry.getKey(), entry.getValue());
-            }
-        }
+        super.byEntity(entity, (column, value) -> this.wrapperData().updateSet(column, value), false, Arrays.asList(columns));
         return (S) this;
     }
 
@@ -143,22 +126,16 @@ public abstract class UpdateBase<
     }
 
     /**
-     * 根据entity字段(包括null字段), 但排除指定字段
+     * 更新除指定的排除字段外其它entity字段值(包括null字段)
+     * <p>
+     * 无排除字段时, 更新除主键外其它字段(包括null值字段)
      *
      * @param entity   实例
      * @param excludes 排除更新的字段
      * @return self
      */
     public S byExclude(IEntity entity, String... excludes) {
-        boolean isNoN = excludes == null || excludes.length == 0;
-        Map<String, Object> map = entity.toColumnMap(isNoN);
-        List columns = Arrays.asList(excludes);
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (!isNoN && columns.contains(entry.getKey())) {
-                continue;
-            }
-            this.wrapperData().updateSet(entry.getKey(), entry.getValue());
-        }
+        super.byExclude(entity, (column, value) -> this.wrapperData().updateSet(column, value), false, Arrays.asList(excludes));
         return (S) this;
     }
 
