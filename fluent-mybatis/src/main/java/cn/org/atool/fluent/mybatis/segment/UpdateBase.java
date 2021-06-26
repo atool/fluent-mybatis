@@ -7,7 +7,10 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.GetterFunc;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -58,8 +61,8 @@ public abstract class UpdateBase<
      */
     public S byEntity(IEntity entity, FieldMapping column, FieldMapping... columns) {
         assertNotNull("entity", entity);
-        List<String> list = MappingKits.toColumns(column, columns);
-        return this.byEntity(entity, list.toArray(new String[0]));
+        String[] arr = MappingKits.toColumns(column, columns);
+        return this.byEntity(entity, arr);
     }
 
     /**
@@ -76,8 +79,8 @@ public abstract class UpdateBase<
     public <E extends IEntity> S byEntity(E entity, GetterFunc<E> getter, GetterFunc<E>... getters) {
         assertNotNull("entity", entity);
         Class klass = IRefs.instance().findFluentEntityClass(entity.getClass());
-        List<String> list = MappingKits.toColumns(klass, getter, getters);
-        return this.byEntity(entity, list.toArray(new String[0]));
+        String[] arr = MappingKits.toColumns(klass, getter, getters);
+        return this.byEntity(entity, arr);
     }
 
 
@@ -94,18 +97,19 @@ public abstract class UpdateBase<
      */
     public S byEntity(IEntity entity, String... columns) {
         assertNotNull("entity", entity);
-        Map<String, Object> map = entity.toColumnMap(false);
-        if (columns == null || columns.length == 0) {
-            String pk = IRefs.instance().findPrimaryColumn(entity.getClass());
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if (entry.getValue() == null || Objects.equals(pk, entry.getKey())) {
-                    continue;
-                }
-                this.wrapperData().updateSet(entry.getKey(), entry.getValue());
+        boolean isNoN = columns == null || columns.length == 0;
+        Map<String, Object> map = entity.toColumnMap(isNoN);
+        String pk = IRefs.instance().findPrimaryColumn(entity.getClass());
+        List<String> list = Arrays.asList(columns);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            /**
+             * 非显式指定更新主键, 则跳过主键更新
+             */
+            if (Objects.equals(pk, entry.getKey()) && isNoN) {
+                continue;
             }
-        } else {
-            for (String column : columns) {
-                this.wrapperData().updateSet(column, map.get(column));
+            if (isNoN || list.contains(entry.getKey())) {
+                this.wrapperData().updateSet(entry.getKey(), entry.getValue());
             }
         }
         return (S) this;
@@ -119,8 +123,9 @@ public abstract class UpdateBase<
      * @return self
      */
     public S byExclude(IEntity entity, FieldMapping exclude, FieldMapping... excludes) {
-        List<String> list = MappingKits.toColumns(exclude, excludes);
-        return this.byExclude(entity, list.toArray(new String[0]));
+        assertNotNull("entity", entity);
+        String[] arr = MappingKits.toColumns(exclude, excludes);
+        return this.byExclude(entity, arr);
     }
 
     /**
@@ -133,8 +138,8 @@ public abstract class UpdateBase<
     public <E extends IEntity> S byExclude(E entity, GetterFunc<E> exclude, GetterFunc<E>... excludes) {
         assertNotNull("entity", entity);
         Class klass = IRefs.instance().findFluentEntityClass(entity.getClass());
-        List<String> list = MappingKits.toColumns(klass, exclude, excludes);
-        return this.byExclude(entity, list.toArray(new String[0]));
+        String[] arr = MappingKits.toColumns(klass, exclude, excludes);
+        return this.byExclude(entity, arr);
     }
 
     /**
@@ -145,11 +150,11 @@ public abstract class UpdateBase<
      * @return self
      */
     public S byExclude(IEntity entity, String... excludes) {
-        Map<String, Object> map = entity.toColumnMap(false);
-        Set<String> columns = new HashSet<>();
-        Collections.addAll(columns, excludes);
+        boolean isNoN = excludes == null || excludes.length == 0;
+        Map<String, Object> map = entity.toColumnMap(isNoN);
+        List columns = Arrays.asList(excludes);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (columns.contains(entry.getKey())) {
+            if (!isNoN && columns.contains(entry.getKey())) {
                 continue;
             }
             this.wrapperData().updateSet(entry.getKey(), entry.getValue());

@@ -10,26 +10,25 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * MappingKits
+ * MappingKits: Entity字段映射工具类
  *
  * @author wudarui
  */
 public class MappingKits {
-    public static <E extends IEntity> List<String> toColumns(Class<E> klass, GetterFunc<E> getter, GetterFunc<E>... getters) {
+    public static <E extends IEntity> String[] toColumns(Class<E> klass, GetterFunc<E> getter, GetterFunc<E>... getters) {
         List<String> list = new ArrayList<>(getters.length + 1);
         list.add(toColumn(klass, getter));
         for (GetterFunc func : getters) {
             list.add(toColumn(klass, func));
         }
-        return list;
+        return list.toArray(new String[0]);
     }
 
-
-    public static List<String> toColumns(FieldMapping column, FieldMapping... excludes) {
+    public static String[] toColumns(FieldMapping column, FieldMapping... excludes) {
         List<String> list = new ArrayList<>(excludes.length + 1);
         list.add(column.column);
         Stream.of(excludes).forEach(c -> list.add(c.column));
-        return list;
+        return list.toArray(new String[0]);
     }
 
     /**

@@ -69,4 +69,57 @@ public class UpdateByEntity extends BaseTest {
             "WHERE id = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);
     }
+
+    @DisplayName("按Entity排除字段更新")
+    @Test
+    void byEntity_Exclude() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test");
+
+        StudentUpdate updater = mapper.updater()
+            .set.byExclude(student,
+                FieldRef.Student.id,
+                FieldRef.Student.address,
+                FieldRef.Student.birthday).end()
+            .where.id().eq(1).end();
+        mapper.updateBy(updater);
+
+        db.sqlList().wantFirstSql()
+            .contains("user_name = ?,")
+            .contains("gmt_modified = ?,")
+            .notContain(", id = ?,")
+            .notContain("address = ?,")
+            .notContain("birthday = ?,")
+            .end("WHERE id = ?")
+        ;
+    }
+
+    @DisplayName("按Entity排除字段更新")
+    @Test
+    void byEntity_ExcludeByGetter() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test");
+
+        StudentUpdate updater = mapper.updater()
+            .set.byExclude(student,
+                StudentEntity::getId,
+                StudentEntity::getAddress,
+                StudentEntity::getBirthday,
+                StudentEntity::getGmtModified).end()
+            .where.id().eq(1).end();
+        mapper.updateBy(updater);
+
+        db.sqlList().wantFirstSql()
+            .contains("user_name = ?,")
+            .contains("gmt_modified = now(),")
+            .notContain(", id = ?,")
+            .notContain("address = ?,")
+            .notContain("birthday = ?,")
+            .end("WHERE id = ?")
+        ;
+    }
 }

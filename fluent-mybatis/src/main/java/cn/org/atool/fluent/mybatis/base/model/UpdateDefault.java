@@ -35,7 +35,7 @@ public class UpdateDefault {
      * @return UpdateDefault
      */
     public UpdateDefault add(FieldMapping field, String _default) {
-        if (!updates.containsKey(field.name)) {
+        if (!updates.containsKey(field.column)) {
             updateDefaults.add(field.column + " = " + _default);
         }
         return this;

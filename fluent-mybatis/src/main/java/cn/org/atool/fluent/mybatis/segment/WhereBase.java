@@ -2,17 +2,22 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
+import cn.org.atool.fluent.mybatis.functions.GetterFunc;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
+import cn.org.atool.fluent.mybatis.utility.MappingKits;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 import lombok.experimental.Accessors;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -21,6 +26,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * BaseQueryAnd: AND或者OR操作基类
@@ -74,7 +80,7 @@ public abstract class WhereBase<
     /**
      * 根据entity非空字段设置where条件
      * <p>
-     * replaced by {@link #eqByEntity(IEntity, FieldMapping...)}
+     * replaced by {@link #eqByEntity(IEntity, String...)}
      *
      * @param entity 实例
      * @return 查询器StudentQuery
@@ -96,22 +102,56 @@ public abstract class WhereBase<
      * @param columns 要设置条件的字段
      * @return 查询器StudentQuery
      */
-    public WHERE eqByEntity(IEntity entity, FieldMapping... columns) {
-        Map<String, Object> map = entity.toColumnMap(false);
-        if (columns == null || columns.length == 0) {
-            return this.eqMap(map, true);
-        } else {
-            for (FieldMapping fm : columns) {
-                Object value = map.get(fm.column);
-                if (value == null) {
-                    this.apply(fm, IS_NULL);
-                } else {
-                    this.apply(fm, EQ, value);
-                }
+    public WHERE eqByEntity(IEntity entity, String... columns) {
+        assertNotNull("entity", entity);
+        boolean isNoN = columns == null || columns.length == 0;
+        Map<String, Object> map = entity.toColumnMap(isNoN);
+
+        List<String> list = Arrays.asList(columns);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String column = entry.getKey();
+            if (!isNoN && !list.contains(column)) {
+                continue;
             }
-            return this.and;
+            Object value = entry.getValue();
+            if (value == null) {
+                this.apply(column, IS_NULL);
+            } else {
+                this.apply(column, EQ, value);
+            }
         }
+        return this.and;
     }
+
+    /**
+     * 根据entity指定字段(允许null)设置where条件
+     *
+     * @param entity  实例
+     * @param column  要设置条件的字段
+     * @param columns 要设置条件的字段
+     * @return 查询器StudentQuery
+     */
+    public WHERE eqByEntity(IEntity entity, FieldMapping column, FieldMapping... columns) {
+        assertNotNull("entity", entity);
+        String[] arr = MappingKits.toColumns(column, columns);
+        return this.eqByEntity(entity, arr);
+    }
+
+    /**
+     * 根据entity指定字段(允许null)设置where条件
+     *
+     * @param entity  实例
+     * @param column  要设置条件的字段
+     * @param columns 要设置条件的字段
+     * @return 查询器StudentQuery
+     */
+    public <E extends IEntity> WHERE eqByEntity(E entity, GetterFunc<E> column, GetterFunc<E>... columns) {
+        assertNotNull("entity", entity);
+        Class klass = IRefs.instance().findFluentEntityClass(entity.getClass());
+        String[] arr = MappingKits.toColumns(klass, column, columns);
+        return this.eqByEntity(entity, arr);
+    }
+
 
     /**
      * map 所有非空属性等于 =
