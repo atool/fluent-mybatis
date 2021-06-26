@@ -11,8 +11,8 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findColumnByField;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.MappingRefFiler.m_findPrimaryColumn;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findColumnByField;
+import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set;
@@ -102,7 +102,7 @@ public class AllRefFiler extends AbstractFile {
     private TypeSpec class_field() {
         return TypeSpec.classBuilder("Field")
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(MappingRefFiler.getClassName())
+            .superclass(FieldRefFiler.getClassName())
             .build();
     }
 

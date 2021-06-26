@@ -72,13 +72,45 @@ public abstract class WhereBase<
     protected abstract WHERE buildOr(WHERE and);
 
     /**
-     * where条件设置为entity对象非空属性
+     * 根据entity非空字段设置where条件
+     * <p>
+     * replaced by {@link #eqByEntity(IEntity, FieldMapping...)}
      *
-     * @param entity
+     * @param entity 实例
      * @return 查询器StudentQuery
      */
+    @Deprecated
     public WHERE eqNotNull(IEntity entity) {
-        return this.eqNotNull(entity.toColumnMap());
+        return this.eqByEntity(entity);
+    }
+
+    /**
+     * 根据entity设置where条件
+     *
+     * <pre>
+     * o 指定字段列表, 可以是 null 值
+     * o 无指定字段时, 所有非空entity字段
+     * </pre>
+     *
+     * @param entity  实例
+     * @param columns 要设置条件的字段
+     * @return 查询器StudentQuery
+     */
+    public WHERE eqByEntity(IEntity entity, FieldMapping... columns) {
+        Map<String, Object> map = entity.toColumnMap(false);
+        if (columns == null || columns.length == 0) {
+            return this.eqMap(map, true);
+        } else {
+            for (FieldMapping fm : columns) {
+                Object value = map.get(fm.column);
+                if (value == null) {
+                    this.apply(fm, IS_NULL);
+                } else {
+                    this.apply(fm, EQ, value);
+                }
+            }
+            return this.and;
+        }
     }
 
     /**

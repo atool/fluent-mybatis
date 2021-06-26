@@ -28,21 +28,41 @@ public interface IEntity extends Serializable {
     }
 
     /**
-     * 将实体对象转换为map对象
+     * 将实体对象转换为map对象, 不包括空字段
      *
      * @return map对象
      */
     default Map<String, Object> toEntityMap() {
-        return IRefs.findEntityHelper(this.entityClass()).toEntityMap(this);
+        return this.toEntityMap(true);
+    }
+
+    /**
+     * 将实体对象转换为map对象
+     *
+     * @param isNoN true:仅仅非空字段; false: 所有字段
+     * @return map对象
+     */
+    default Map<String, Object> toEntityMap(boolean isNoN) {
+        return IRefs.findEntityHelper(this.entityClass()).toEntityMap(this, isNoN);
+    }
+
+    /**
+     * 将实体对象转换为数据库字段为key的map对象, 不包括空字段
+     *
+     * @return map对象
+     */
+    default Map<String, Object> toColumnMap() {
+        return this.toColumnMap(true);
     }
 
     /**
      * 将实体对象转换为数据库字段为key的map对象
      *
+     * @param isNoN true:仅仅非空字段; false: 所有字段
      * @return map对象
      */
-    default Map<String, Object> toColumnMap() {
-        return IRefs.findEntityHelper(this.entityClass()).toColumnMap(this);
+    default Map<String, Object> toColumnMap(boolean isNoN) {
+        return IRefs.findEntityHelper(this.entityClass()).toColumnMap(this, isNoN);
     }
 
     /**

@@ -89,7 +89,7 @@ public class FluentList {
     private static List<AbstractFile> refFiles() {
         return Arrays.asList(
             new AllRefFiler(),
-            new MappingRefFiler(),
+            new FieldRefFiler(),
             new QueryRefFiler(),
             new FormRefFiler(),
             new RefsFile(),

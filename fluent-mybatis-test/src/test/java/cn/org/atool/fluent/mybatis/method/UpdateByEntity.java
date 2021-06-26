@@ -1,0 +1,72 @@
+package cn.org.atool.fluent.mybatis.method;
+
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@SuppressWarnings("unchecked")
+public class UpdateByEntity extends BaseTest {
+    @Autowired
+    StudentMapper mapper;
+
+    @Test
+    void byEntity() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test");
+        mapper.updateBy(mapper.updater()
+            .set.byEntity(student).end()
+            .where.id().eq(1).end()
+        );
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student " +
+            "SET gmt_modified = now(), address = ?, user_name = ? " +
+            "WHERE id = ?");
+        db.sqlList().wantFirstPara().eqList("test", "test", 1);
+    }
+
+    @DisplayName("按Entity指定字段列表更新")
+    @Test
+    void byEntity_spec() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test");
+
+        StudentUpdate updater = mapper.updater()
+            .set.byEntity(student, FieldRef.Student.userName, FieldRef.Student.grade).end()
+            .where.id().eq(1).end();
+        mapper.updateBy(updater);
+
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student " +
+            "SET gmt_modified = now(), user_name = ?, grade = ? " +
+            "WHERE id = ?");
+        db.sqlList().wantFirstPara().eqList("test", null, 1);
+    }
+
+    @Test
+    void byEntity_Getter() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test");
+
+        StudentUpdate updater = mapper.updater()
+            .set.byEntity(student, StudentEntity::getUserName, StudentEntity::getGrade).end()
+            .where.id().eq(1).end();
+        mapper.updateBy(updater);
+
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student " +
+            "SET gmt_modified = now(), user_name = ?, grade = ? " +
+            "WHERE id = ?");
+        db.sqlList().wantFirstPara().eqList("test", null, 1);
+    }
+}

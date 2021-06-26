@@ -44,10 +44,21 @@ public abstract class IRefs {
      * @return IRefs
      */
     public static IRefs instance() {
-        if (INSTANCE == null) {
-            throw springNotInitException();
+        if (INSTANCE != null) {
+            return INSTANCE;
         }
-        return INSTANCE;
+        synchronized (IRefs.class) {
+            if (INSTANCE != null) {
+                return INSTANCE;
+            }
+            try {
+                Class klass = Class.forName("cn.org.atool.fluent.mybatis.refs.AllRef");
+                INSTANCE = (IRefs) klass.getDeclaredConstructor().newInstance();
+                return INSTANCE;
+            } catch (Exception e) {
+                throw new RuntimeException("new AllRef error:" + e.getMessage(), e);
+            }
+        }
     }
 
     protected static RuntimeException springNotInitException() {
@@ -175,12 +186,12 @@ public abstract class IRefs {
         if (all.isEmpty()) {
             throw new RuntimeException("the sub of IRefs must be a spring bean.");
         }
-        Class entity = clazz;
-        while (entity != Object.class) {
-            if (all.contains(entity)) {
-                return entity;
+        Class aClass = clazz;
+        while (aClass != Object.class && aClass != RichEntity.class) {
+            if (all.contains(aClass)) {
+                return aClass;
             } else {
-                entity = entity.getSuperclass();
+                aClass = aClass.getSuperclass();
             }
         }
         throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity.");

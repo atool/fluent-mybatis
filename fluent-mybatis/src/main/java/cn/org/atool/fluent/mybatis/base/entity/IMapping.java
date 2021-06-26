@@ -16,6 +16,7 @@ public interface IMapping {
 
     /**
      * 返回主键字段名称
+     * 如果没有主键字段, 则返回null
      *
      * @return 主键字段名称
      */

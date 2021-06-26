@@ -20,11 +20,11 @@ import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT
  *
  * @author darui.wu
  */
-public class MappingRefFiler extends AbstractFile {
-    private static String MappingRef = "FieldRef";
+public class FieldRefFiler extends AbstractFile {
+    private static String FieldRef = "FieldRef";
 
     public static ClassName getClassName() {
-        return ClassName.get(FluentList.refsPackage(), MappingRef);
+        return ClassName.get(FluentList.refsPackage(), FieldRef);
     }
 
     @Override
@@ -33,9 +33,9 @@ public class MappingRefFiler extends AbstractFile {
         super.staticImport(builder);
     }
 
-    public MappingRefFiler() {
+    public FieldRefFiler() {
         this.packageName = FluentList.refsPackage();
-        this.klassName = MappingRef;
+        this.klassName = FieldRef;
         this.comment = "Entity所有Mapping引用";
     }
 

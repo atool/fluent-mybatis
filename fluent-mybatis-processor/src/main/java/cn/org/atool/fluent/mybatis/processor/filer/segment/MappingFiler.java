@@ -61,7 +61,8 @@ public class MappingFiler extends AbstractFiler {
         MethodSpec.Builder spec = super.publicMethod("findPrimaryColumn", true, String.class)
             .addModifiers(Modifier.DEFAULT);
         if (fluent.getPrimary() == null) {
-            throwPrimaryNoFound(spec);
+            // throwPrimaryNoFound(spec);
+            spec.addStatement("return null");
         } else {
             spec.addStatement("return $L.column", fluent.getPrimary().getName());
         }
