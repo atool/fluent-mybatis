@@ -69,6 +69,12 @@
             <artifactId>fluent-dbtest</artifactId>
             <version>${fluent-dbtest.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.atool</groupId>
+                    <artifactId>generator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
