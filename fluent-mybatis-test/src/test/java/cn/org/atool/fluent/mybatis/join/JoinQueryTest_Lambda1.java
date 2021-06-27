@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
-import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
@@ -18,7 +17,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     public void test_join() {
-        QFunction<StudentQuery> studentQuery = q -> q
+        StudentQuery studentQuery = new StudentQuery("t1")
             .select.age().end()
             .where.isDeleted().eq(true)
             .and.age().isNull()
@@ -26,7 +25,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        QFunction<HomeAddressQuery> addressQuery = q -> q
+        HomeAddressQuery addressQuery = new HomeAddressQuery("t2")
             .select.studentId().end()
             .where.isDeleted().eq(true)
             .and.address().like("vas")
@@ -34,10 +33,11 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .groupBy.studentId().end()
             .orderBy.id().asc().end();
         JoinBuilder<StudentQuery> query = JoinBuilder
-            .from(StudentQuery.class, studentQuery)
-            .join(HomeAddressQuery.class, addressQuery)
+            .from(studentQuery)
+            .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
-            .on(l -> l.where.age(), r -> r.where.studentId()).endJoin()
+            .on(l -> l.where.age(), r -> r.where.studentId())
+            .endJoin()
             .limit(20);
         mapper.listMaps(query.build());
         String[] a = query.getAlias();
@@ -59,22 +59,22 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        QFunction<StudentQuery> uq = q -> q
+        StudentQuery uq = new StudentQuery("t1")
             .select.age().end()
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end()
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end();
-        QFunction<HomeAddressQuery> aq = q -> q
+        HomeAddressQuery aq = new HomeAddressQuery("t2")
             .select.studentId().end()
             .where.isDeleted().eq(true)
             .and.address().like("vas")
             .end()
             .groupBy.studentId().end();
         JoinBuilder<StudentQuery> query = JoinBuilder
-            .from(StudentQuery.class, uq)
-            .leftJoin(HomeAddressQuery.class, aq)
+            .from(uq)
+            .leftJoin(aq)
             .on(l -> l.where.id(), r -> r.where.id())
             .on(l -> l.where.age(), r -> r.where.studentId()).endJoin()
             .distinct()
@@ -98,17 +98,17 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     public void test_right_join() {
-        QFunction<StudentQuery> uq = q -> q
+        StudentQuery uq = new StudentQuery("t1")
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end();
-        QFunction<HomeAddressQuery> aq = q -> q
+        HomeAddressQuery aq = new HomeAddressQuery("t2")
             .where.isDeleted().eq(true)
             .and.address().like("vas")
             .end();
         JoinBuilder<StudentQuery> query = JoinBuilder
-            .from(StudentQuery.class, uq)
-            .rightJoin(HomeAddressQuery.class, aq)
+            .from(uq)
+            .rightJoin(aq)
             .on(l -> l.where.id(), r -> r.where.id())
             .endJoin();
         mapper.listMaps(query.build());
@@ -124,15 +124,15 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     void three_join() {
-        QFunction<StudentQuery> uq = q -> q
+        StudentQuery uq = new StudentQuery("t1")
             .where.age().eq(3).end();
-        QFunction<HomeAddressQuery> aq = q -> q
+        HomeAddressQuery aq = new HomeAddressQuery("t2")
             .where.address().like("xxx").end();
         JoinBuilder query = JoinBuilder
-            .from(StudentQuery.class, uq)
-            .leftJoin(HomeAddressQuery.class, aq)
+            .from(uq)
+            .leftJoin(aq)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
-            .leftJoin(StudentScoreQuery.class, q -> q
+            .leftJoin(new StudentScoreQuery("t3")
                 .where.subject().in(new String[]{"a", "b", "c"}).end())
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin();
         mapper.listMaps(query.build());

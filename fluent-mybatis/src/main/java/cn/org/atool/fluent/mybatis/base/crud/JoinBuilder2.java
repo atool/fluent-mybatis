@@ -11,6 +11,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinOn;
  *
  * @param <QL>
  */
+@Deprecated
 public interface JoinBuilder2<QL extends BaseQuery<?, QL>> extends JoinBuilder<QL> {
     /**
      * from left.table join right.table on condition

@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class JoinQuery<QL extends BaseQuery<?, QL>>
     extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
-    implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL>, JoinBuilder2<QL> {
+    implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL> {
     /**
      * 主查询类型
      */
@@ -79,21 +79,6 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(Class<QR> clazz, QFunction<QR> query) {
-        return join(JoinType.Join, clazz, query);
-    }
-
-    @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> leftJoin(Class<QR> clazz, QFunction<QR> query) {
-        return join(JoinType.LeftJoin, clazz, query);
-    }
-
-    @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> rightJoin(Class<QR> clazz, QFunction<QR> query) {
-        return join(JoinType.RightJoin, clazz, query);
-    }
-
-    @Override
     public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query) {
         return join(JoinType.Join, query);
     }
@@ -131,17 +116,6 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
                 "please use constructor: new %s(String alias, Parameters parameters)", query.getClass().getSimpleName());
             throw new RuntimeException(err);
         }
-    }
-
-    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder2<QL>> join(
-        JoinType joinType, Class<QR> queryClass, QFunction<QR> apply
-    ) {
-        QR query = newQuery(queryClass, Parameters.alias());
-        query.sharedParameter(this.parameters);
-        this.queries.add(query);
-        apply.apply(query);
-        this.alias.add(query.tableAlias);
-        return new JoinOn<>(this, this.queryClass, this.query, joinType, queryClass, query);
     }
 
     @Override
