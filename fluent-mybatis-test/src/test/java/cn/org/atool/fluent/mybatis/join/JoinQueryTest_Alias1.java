@@ -3,11 +3,13 @@ package cn.org.atool.fluent.mybatis.join;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.Refs;
+import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
-import cn.org.atool.fluent.mybatis.segment.model.Parameters;
+import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +74,9 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .leftJoin(addressQuery)
-            .on((join, l, r) -> join
-                .on(l.where.id(), r.where.id())
-                .on(l.where.age(), r.where.studentId())
-            )
+            .onGetter(StudentEntity::getId, HomeAddressEntity::getId)
+            .onGetter(StudentEntity::getAge, HomeAddressEntity::getStudentId)
+            .endJoin()
             .distinct()
             .limit(20);
         mapper.listMaps(query.build());
@@ -98,19 +99,18 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_right_join() {
-        Parameters parameters = new Parameters();
-        JoinBuilder<StudentQuery> query = JoinBuilder
-            .from(new StudentQuery("t1", parameters)
-                .where.isDeleted().eq(true)
-                .and.age().isNull()
-                .end()
-            ).rightJoin(new HomeAddressQuery("t2", parameters)
+        IQuery query = new StudentQuery("t1")
+            .where.isDeleted().eq(true)
+            .and.age().isNull()
+            .end()
+            .join(JoinType.RightJoin, new HomeAddressQuery("t2")
                 .where.isDeleted().eq(true)
                 .and.address().like("vas")
                 .end())
             .on(l -> l.where.id(), r -> r.where.id())
-            .endJoin();
-        mapper.listMaps(query.build());
+            .endJoin()
+            .build();
+        mapper.listMaps(query);
         db.sqlList().wantFirstSql()
             .end("FROM student t1 RIGHT JOIN home_address t2 " +
                 "ON t1.id = t2.id " +
@@ -122,17 +122,17 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     void three_join() {
-        Parameters parameters = new Parameters();
+        StudentQuery query1 = new StudentQuery("t1")
+            .where.age().eq(3).end();
+        HomeAddressQuery query2 = new HomeAddressQuery("t2")
+            .where.address().like("xxx").end();
+        StudentScoreQuery query3 = new StudentScoreQuery("t3")
+            .where.subject().in(new String[]{"a", "b", "c"}).end();
         IQuery query = JoinBuilder
-            .from(new StudentQuery("t1", parameters)
-                .where.age().eq(3).end())
-            .leftJoin(new HomeAddressQuery("t2", parameters)
-                .where.address().like("xxx").end())
-            .on((join, l, r) -> join
-                .on(l.where.homeAddressId(), r.where.id())
-            )
-            .leftJoin(new StudentScoreQuery("t3", parameters)
-                .where.subject().in(new String[]{"a", "b", "c"}).end())
+            .from(query1)
+            .leftJoin(query2)
+            .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
+            .leftJoin(query3)
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin()
             .build();
         mapper.listMaps(query);

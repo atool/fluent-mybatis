@@ -1,16 +1,21 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
+import cn.org.atool.fluent.mybatis.functions.GetterFunc;
 import cn.org.atool.fluent.mybatis.functions.OnConsumer;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
+import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * 关联查询on条件设置
@@ -50,6 +55,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @param join
      * @return JoinOn
      */
+    @Deprecated
     public JB on(OnConsumer<QL, QR> join) {
         join.accept(this.onBuilder, this.onLeft, this.onRight);
         this.joinQuery.getWrapperData().addTable(onBuilder.table());
@@ -78,6 +84,23 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     public JoinOn<QL, QR, JB> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
         this.onBuilder.on(l.apply(this.onLeft), r.apply(this.onRight));
         return this;
+    }
+
+    /**
+     * 关联关系设置
+     *
+     * @param l 左查询条件
+     * @param r 右查询条件
+     * @return JoinOn
+     */
+    public <LE extends IEntity, RE extends IEntity> JoinOn<QL, QR, JB> onGetter(GetterFunc<LE> l, GetterFunc<RE> r) {
+        Class lKlass = this.onLeft.wrapperData.getEntityClass();
+        Class rKlass = this.onRight.wrapperData.getEntityClass();
+        assertNotNull("left query entity class", lKlass);
+        assertNotNull("right query entity class", rKlass);
+        String lField = MappingKits.toColumn(lKlass, l);
+        String rField = MappingKits.toColumn(rKlass, r);
+        return this.on(lField, rField);
     }
 
     /**

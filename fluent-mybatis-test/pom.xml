@@ -71,16 +71,6 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.2.0</version>
-        </dependency>
         <!-- test jar -->
         <dependency>
             <groupId>org.test4j</groupId>
@@ -106,6 +96,10 @@
                     <artifactId>mybatis</artifactId>
                     <groupId>org.mybatis</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>fluent-mock</artifactId>
+                    <groupId>org.test4j</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -125,6 +119,12 @@
             <artifactId>fluent-assert</artifactId>
             <version>1.0.3</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fluent-mock</artifactId>
+                    <groupId>org.test4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>

@@ -18,21 +18,39 @@
     <properties>
         <spring.version>5.2.0.RELEASE</spring.version>
         <mybatis.version>3.5.6</mybatis.version>
-        <fluent-mock.version>1.0.14</fluent-mock.version>
-        <fluent-dbtest.version>1.0.3</fluent-dbtest.version>
-        <test4j-junit5.version>2.7.6</test4j-junit5.version>
+        <fluent-mock.version>1.1.0</fluent-mock.version>
+        <fluent-dbtest.version>1.0.4</fluent-dbtest.version>
+        <test4j-junit5.version>2.7.7</test4j-junit5.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
         <module>fluent-mybatis-test</module>
     </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.30</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
 
         <!--test jar-->

@@ -18,7 +18,7 @@ public class FreeQueryAggregateTest extends BaseTest {
 
     @Test
     void count() {
-        JoinBuilder query = new FreeQuery("t_member", "t1")
+        IQuery query = new FreeQuery("t_member", "t1")
             .select("t1.id", "count(t1.gmt_modified)")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("t1.id").end()
@@ -27,8 +27,9 @@ public class FreeQueryAggregateTest extends BaseTest {
                 .where.apply("id", EQ, "1").end()
                 .groupBy.apply("t2.id").end()
             )
-            .on("t1.id = t2.id");
-        mapper.findOne(query.build());
+            .on("t1.id = t2.id")
+            .build();
+        mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
                 "SELECT t1.id, count(t1.gmt_modified), t2.id, sum(t2.gmt_modified) " +
                 "FROM t_member t1 " +
@@ -76,8 +77,8 @@ public class FreeQueryAggregateTest extends BaseTest {
     @Test
     void joinNestedSelect() {
         IQuery query = new FreeQuery(new MemberQuery().where.age().gt(1).end(), "t1")
-                .select.apply("id").count.apply("gmt_modified").end()
-                .groupBy.apply("id").end()
+            .select.apply("id").count.apply("gmt_modified").end()
+            .groupBy.apply("id").end()
             .join(new FreeQuery(new MemberQuery().groupBy.id().end(), "t2")
                 .select.apply("id").sum.apply("gmt_modified").end()
                 .where.apply("id", EQ, "1").end()
