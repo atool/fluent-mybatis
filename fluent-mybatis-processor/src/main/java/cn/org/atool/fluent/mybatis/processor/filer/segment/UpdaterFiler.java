@@ -11,7 +11,8 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NEW_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
 
 /**
@@ -43,8 +44,8 @@ public class UpdaterFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superKlass())
-            .addField(this.f_update())
             .addField(this.f_setter())
+            .addField(this.f_update())
             .addField(this.f_where())
             .addField(this.f_orderBy())
             .addMethod(this.constructor0())
@@ -64,15 +65,16 @@ public class UpdaterFiler extends AbstractFiler {
     private FieldSpec f_update() {
         return FieldSpec.builder(fluent.updateSetter(),
             "update", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new UpdateSetter(this)")
-            .addJavadoc("same as {@link #set}")
+            .initializer("set")
+            .addJavadoc("replaced by {@link #set}")
+            .addAnnotation(Deprecated.class)
             .build();
     }
 
     private FieldSpec f_setter() {
         return FieldSpec.builder(fluent.updateSetter(),
             "set", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("update")
+            .initializer("new UpdateSetter(this)")
             .addJavadoc("same as {@link #update}")
             .build();
     }

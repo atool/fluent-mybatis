@@ -19,7 +19,7 @@ public class SetObjectTest_IsTrue extends BaseTest {
     @Test
     public void isTrue() {
         StudentUpdate update = new StudentUpdate()
-            .update.userName().is("u2")
+            .set.userName().is("u2")
             .set.isDeleted().is(true)
             .set.homeAddressId().isNull().end()
             .where.isDeleted().eq(false).end();

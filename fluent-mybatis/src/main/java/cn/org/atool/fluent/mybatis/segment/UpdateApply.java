@@ -47,7 +47,7 @@ public class UpdateApply<
     }
 
     /**
-     * value不为null时更新
+     * 条件when成立时, 更新为value值
      *
      * @param value 更新值
      * @param when  当条件为真时设置更新
