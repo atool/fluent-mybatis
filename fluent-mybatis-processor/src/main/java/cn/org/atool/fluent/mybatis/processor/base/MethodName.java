@@ -11,6 +11,8 @@ public interface MethodName {
 
     String M_DEFAULT_UPDATER = "defaultUpdater";
 
+    String M_COLUMN = "column";
+
     String M_ALIAS_QUERY = "aliasQuery";
 
     String JavaDoc_Alias_Query_0 = "自动分配表别名查询构造器(join查询的时候需要定义表别名)\n" +

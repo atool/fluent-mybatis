@@ -51,6 +51,7 @@ public class MappingFiler extends AbstractFiler {
                 spec.addField(f_Field(field));
             });
         spec.addField(this.f_Property2Column())
+            .addField(this.f_Column2Mapping())
             .addField(this.f_ALL_COLUMNS())
             .addField(this.f_ALL_JOIN_COLUMNS())
             .addMethod(this.m_findColumnByField())
@@ -107,6 +108,25 @@ public class MappingFiler extends AbstractFiler {
         return FieldSpec.builder(String.class, "Entity_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
             .initializer("$S", fluent.getClassName())
             .addJavadoc(super.codeBlock("Entity名称"))
+            .build();
+    }
+
+    private FieldSpec f_Column2Mapping() {
+        String statement = this.fluent.getFields().stream()
+            .map(CommonField::getName)
+            .map(field -> String.format("\t\tthis.put(%s.column, %s);", field, field))
+            .collect(joining(NEWLINE));
+
+        return FieldSpec.builder(ParameterizedTypeName.get(Map.class, String.class, FieldMapping.class),
+            "Column2Mapping", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("数据库字段对应的FieldMapping")
+            .initializer(codeBlock(
+                CodeBlock.of("new $T<String, $T>() {", HashMap.class, FieldMapping.class),
+                CodeBlock.of("  {"),
+                CodeBlock.of(statement),
+                CodeBlock.of("  }"),
+                CodeBlock.of("}")
+            ))
             .build();
     }
 

@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -44,5 +45,15 @@ public interface IWrapper<
 
     default W hint(String hint) {
         return this.hint(HintType.Before_All, hint);
+    }
+
+    /**
+     * 返回字段对应的column映射
+     *
+     * @param column 数据库字段名称
+     * @return 字段映射
+     */
+    default FieldMapping column(String column) {
+        return null;
     }
 }

@@ -28,7 +28,12 @@ public interface IUpdate<E extends IEntity> {
      * @return self
      */
     default <U extends IUpdate<E>> U updateSet(String column, Object value) {
-        this.getWrapperData().updateSet(column, value);
+//        FieldMapping fm = ((IWrapper)this).column(column);
+//        if(fm!= null){
+//            this.getWrapperData().updateSet(fm, value);
+//        }else {
+            this.getWrapperData().updateSet(column, value);
+//        }
         return (U) this;
     }
 

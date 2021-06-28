@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -11,8 +12,7 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NEW_UPDATER;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
 
 /**
@@ -54,6 +54,7 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.m_allFields())
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_defaultUpdater())
+            .addMethod(this.m_column())
         ;
     }
 
@@ -149,6 +150,13 @@ public class UpdaterFiler extends AbstractFiler {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addStatement("return $T.INSTANCE.defaultUpdater()", fluent.defaults())
+            .build();
+    }
+
+    private MethodSpec m_column() {
+        return super.publicMethod(M_COLUMN, true, FieldMapping.class)
+            .addParameter(String.class, "column")
+            .addStatement("return $T.Column2Mapping.get(column)", fluent.mapping())
             .build();
     }
 

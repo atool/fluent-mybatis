@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -56,6 +57,7 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.constructor1_String())
             .addMethod(this.constructor0())
             .addMethod(this.constructor2_String_Parameter())
+            .addMethod(this.m_column())
             .addMethod(this.m_where())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
@@ -185,6 +187,14 @@ public class QueryFiler extends AbstractFiler {
         return FieldSpec.builder(fluent.queryWhere(), "where", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new QueryWhere(this)")
             .addJavadoc("查询条件 where ...")
+            .build();
+    }
+
+
+    private MethodSpec m_column() {
+        return super.publicMethod(M_COLUMN, true, FieldMapping.class)
+            .addParameter(String.class, "column")
+            .addStatement("return $T.Column2Mapping.get(column)", fluent.mapping())
             .build();
     }
 
