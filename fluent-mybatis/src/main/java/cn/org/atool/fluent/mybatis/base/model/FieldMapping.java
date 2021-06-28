@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
+import cn.org.atool.fluent.mybatis.mapper.StrConstant;
+
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -49,8 +51,26 @@ public class FieldMapping {
      * @param prefix 前缀
      * @return ignore
      */
-    public String el(String prefix) {
-        return el(this.column, prefix, this.name);
+    public String el(final String prefix) {
+        String _prefix = isBlank(prefix) ? StrConstant.EMPTY : prefix + ".";
+        if (typeHandler == null) {
+            return this.column + " = " + "#{" + _prefix + this.name + "}";
+        } else {
+            return String.format("%s = #{%s%s, javaType=%s, typeHandler=%s}",
+                this.column, _prefix, this.name, this.javaType.getName(), this.typeHandler.getName());
+        }
+    }
+
+    /**
+     * column = #{prefix.field}
+     *
+     * @param column column
+     * @param prefix 前缀
+     * @param field  field
+     * @return key = #{prefix.value}
+     */
+    public static String el(String column, String prefix, String field) {
+        return column + " = " + "#{" + (isBlank(prefix) ? field : prefix + "." + field) + "}";
     }
 
     /**
@@ -72,28 +92,5 @@ public class FieldMapping {
      */
     public static String alias(String alias, String column) {
         return isBlank(alias) ? column : alias + "." + column;
-    }
-
-    /**
-     * key = #{prefix.value}
-     *
-     * @param key    key
-     * @param prefix 前缀
-     * @param value  value
-     * @return key = #{prefix.value}
-     */
-    public static String el(String key, String prefix, String value) {
-        return key + " = " + placeholder(prefix, value);
-    }
-
-    /**
-     * 构造 #{prefix.field} 表达式
-     *
-     * @param prefix 前置
-     * @param field  字段
-     * @return #{prefix.field}
-     */
-    public static String placeholder(String prefix, String field) {
-        return "#{" + (isBlank(prefix) ? field : prefix + "." + field) + "}";
     }
 }

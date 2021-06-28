@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.customize.model.MyEnum;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.MyEnumTypePoJo;
 import cn.org.atool.fluent.mybatis.generate.mapper.MyEnumTypeMapper;
+import cn.org.atool.fluent.mybatis.generate.wrapper.MyEnumTypeQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,22 @@ public class EnumTypeTest extends BaseTest {
             .enumNum.values(2, 0)
             .enumString.values("test2", "test2")
             .eqTable();
+    }
+
+    @Test
+    void updateById() {
+        mapper.updateById(new MyEnumTypePoJo()
+            .setId(1L)
+            .setEnumNum(MyEnum.test1)
+            .setEnumString(MyEnum.test3));
+    }
+
+    @Test
+    void query() {
+        MyEnumTypeQuery query = MyEnumTypeQuery.query()
+            .where.enumNum().eq(MyEnum.test2)
+            .and.enumString().eq(MyEnum.test1)
+            .end();
+        mapper.listEntity(query);
     }
 }
