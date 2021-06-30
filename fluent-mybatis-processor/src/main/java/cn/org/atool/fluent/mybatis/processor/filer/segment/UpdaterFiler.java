@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
@@ -54,7 +55,7 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.m_allFields())
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_column())
+            .addMethod(this.m_column2mapping())
         ;
     }
 
@@ -153,10 +154,9 @@ public class UpdaterFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_column() {
-        return super.publicMethod(M_COLUMN, true, FieldMapping.class)
-            .addParameter(String.class, "column")
-            .addStatement("return $T.Column2Mapping.get(column)", fluent.mapping())
+    private MethodSpec m_column2mapping() {
+        return super.protectedMethod(M_COLUMN2MAPPING, true, ParameterizedTypeName.get(Map.class, String.class, FieldMapping.class))
+            .addStatement("return $T.Column2Mapping", fluent.mapping())
             .build();
     }
 

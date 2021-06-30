@@ -169,4 +169,14 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
             consumer.accept(column, entry.getValue());
         }
     }
+
+    /**
+     * 查找column对应的字段映射定义
+     *
+     * @param column
+     * @return
+     */
+    protected FieldMapping fieldMapping(String column) {
+        return this.wrapper.column(column);
+    }
 }

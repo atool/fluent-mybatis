@@ -29,7 +29,6 @@ public class WrapperHelperFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(fluent.mapping(), "*");
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
         super.staticImport(spec);
     }
@@ -63,7 +62,7 @@ public class WrapperHelperFiler extends AbstractFiler {
                 .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($L)", fc.getName())
+                .addStatement("return this.set($T.$L)", fluent.mapping(), fc.getName())
                 .build()
             );
         }
@@ -210,7 +209,7 @@ public class WrapperHelperFiler extends AbstractFiler {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "_alias_")
                 .returns(fluent.selector())
-                .addStatement("return this.process($L, _alias_)", fc.getName())
+                .addStatement("return this.process($T.$L, _alias_)", fluent.mapping(), fc.getName())
                 .build()
             );
         }
@@ -285,7 +284,7 @@ public class WrapperHelperFiler extends AbstractFiler {
             field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($L)", fc.getName());
+        field.addStatement("return this.set($T.$L)", fluent.mapping(), fc.getName());
         builder.addMethod(field.build());
     }
 

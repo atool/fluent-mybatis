@@ -3,14 +3,16 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
-import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -72,22 +74,9 @@ public abstract class BaseWrapper<
     }
 
     /**
-     * 判断字段是否在范围内
-     *
-     * @param column 字段
-     * @return 如果不是合法字段，抛出异常
-     * @throws FluentMybatisException 字段校验异常
-     */
-    protected void validateColumn(String column) throws FluentMybatisException {
-        if (notBlank(column) && !this.allFields().contains(column)) {
-            throw new FluentMybatisException("the column[" + column + "] was not found in table[" + this.wrapperData.getTable() + "].");
-        }
-    }
-
-    /**
      * 表所有字段列表
      *
-     * @return
+     * @return 所有字段
      */
     protected abstract List<String> allFields();
 
@@ -98,8 +87,8 @@ public abstract class BaseWrapper<
     /**
      * 给字段名称追加上表别名
      *
-     * @param column
-     * @return
+     * @param column 字段
+     * @return taleAlias.column
      */
     protected String appendAlias(String column) {
         if (notBlank(this.tableAlias) && isColumnName(column)) {
@@ -112,7 +101,7 @@ public abstract class BaseWrapper<
     /**
      * 通过Wrapper直接设置变量共享关系
      *
-     * @param parameters
+     * @param parameters 参数
      * @deprecated 避免使用set开头命名
      */
     @Deprecated
@@ -123,7 +112,7 @@ public abstract class BaseWrapper<
     /**
      * 通过Wrapper直接设置变量共享关系
      *
-     * @param parameters
+     * @param parameters 参数
      */
     protected void sharedParameter(Parameters parameters) {
         this.wrapperData.getParameters().sharedParameter(parameters);
@@ -132,9 +121,28 @@ public abstract class BaseWrapper<
     /**
      * 通过Wrapper直接设置变量共享关系
      *
-     * @param wrapper
+     * @param wrapper BaseWrapper
      */
     protected void sharedParameter(BaseWrapper wrapper) {
         this.wrapperData.getParameters().sharedParameter(wrapper.getWrapperData().getParameters());
+    }
+
+    /**
+     * 返回字段对应的column映射
+     *
+     * @param column 数据库字段名称
+     * @return 字段映射
+     */
+    public FieldMapping column(String column) {
+        return this.column2mapping().get(column);
+    }
+
+    /**
+     * 返回字段映射关系
+     *
+     * @return 字段映射
+     */
+    protected Map<String, FieldMapping> column2mapping() {
+        return new HashMap<>();
     }
 }

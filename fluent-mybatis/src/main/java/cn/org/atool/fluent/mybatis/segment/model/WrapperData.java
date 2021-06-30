@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.WhereSegmentList;
@@ -211,7 +212,7 @@ public class WrapperData implements IWrapperData {
      * @param operator 条件操作
      * @param paras    条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, String column, ISqlOp operator, Object... paras) {
+    public void apply(KeyWordSegment keyWord, Column column, ISqlOp operator, Object... paras) {
         this.apply(keyWord, column, operator, null, paras);
     }
 
@@ -269,12 +270,12 @@ public class WrapperData implements IWrapperData {
      * @param format   格式化sql语句
      * @param args     条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, String column, ISqlOp operator, String format, Object... args) {
+    public void apply(KeyWordSegment keyWord, Column column, ISqlOp operator, String format, Object... args) {
         if (keyWord == null) {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
-        String segment = operator.operator(this.getParameters(), format, args);
-        this.getMergeSegments().add(keyWord, ColumnSegment.column(column), () -> segment);
+        String segment = operator.operator(column, this.getParameters(), format, args);
+        this.getMergeSegments().add(keyWord, column.columnSegment(), () -> segment);
     }
 
     public void apply(KeyWordSegment keyWord, ISqlSegment... segments) {
@@ -287,21 +288,22 @@ public class WrapperData implements IWrapperData {
     /**
      * 根据函数和变量构建占位符和设置占位符对应的变量值
      *
+     * @param column      映射字段, 如果 = null, 表示非原始字段赋值
      * @param functionSql 函数
      * @param values      变量列表
      * @return 参数化后的sql
      */
-    public String paramSql(String functionSql, Object[] values) {
-        return this.parameters.paramSql(functionSql, values);
+    public String paramSql(Column column, String functionSql, Object[] values) {
+        return this.parameters.paramSql(column, functionSql, values);
     }
 
     /**
      * 更新column字段值
      *
-     * @param column 字段
+     * @param column 被更新字段
      * @param value  更新值
      */
-    public void updateSet(String column, Object value) {
+    public void updateSet(Column column, Object value) {
         this.updateSql(column, QUESTION_MARK, value);
     }
 
@@ -312,9 +314,9 @@ public class WrapperData implements IWrapperData {
      * @param functionSql set function sql
      * @param values      对应的参数
      */
-    public void updateSql(String column, String functionSql, Object... values) {
+    public void updateSql(Column column, String functionSql, Object... values) {
         if (notBlank(functionSql)) {
-            updates.put(column, this.paramSql(functionSql, values));
+            updates.put(column.getColumn(), this.paramSql(column, functionSql, values));
         }
     }
 

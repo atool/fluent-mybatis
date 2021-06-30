@@ -6,15 +6,13 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.ICustomizedMapper;
-import java.io.Serializable;
-import java.lang.Class;
-import java.lang.Long;
-import java.lang.Override;
-import java.sql.Blob;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.BlobTypeHandler;
+
+import java.io.Serializable;
+import java.sql.Blob;
 
 /**
  * BlobValuePoJo: 数据映射实体定义
@@ -49,6 +47,21 @@ public class BlobValuePoJo extends RichEntity {
       typeHandler = BlobTypeHandler.class
   )
   private Blob blobValue;
+
+  /**
+   */
+  @TableField("max")
+  private Long max;
+
+  /**
+   */
+  @TableField("min")
+  private Long min;
+
+  /**
+   */
+  @TableField("origin")
+  private String origin;
 
   @Override
   public Serializable findPk() {

@@ -47,12 +47,13 @@ public interface ISqlOp {
      * <p/>
      * 最后根据占位符'?'和参数值, 给每个'?'分配具体的表达式项
      *
+     * @param column     映射字段, 如果 = null, 表示非原始字段赋值
      * @param parameters 查询语句中所有的变量
      * @param expression 自定义函数或SQL片段
      * @param paras      参数列表
      * @return sql片段
      */
-    default String operator(Parameters parameters, String expression, Object... paras) {
+    default String operator(Column column, Parameters parameters, String expression, Object... paras) {
         final String placeHolder = this.getPlaceHolder();
         String sql = placeHolder;
         if (notBlank(expression)) {
@@ -60,6 +61,6 @@ public interface ISqlOp {
         } else if (placeHolder.contains(STR_FORMAT)) {
             sql = SqlOp.placeHolder(placeHolder, paras);
         }
-        return isEmpty(paras) ? sql : parameters.paramSql(sql, paras);
+        return isEmpty(paras) ? sql : parameters.paramSql(column, sql, paras);
     }
 }

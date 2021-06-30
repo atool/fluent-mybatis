@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.GetterFunc;
@@ -21,8 +22,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
+import static cn.org.atool.fluent.mybatis.base.model.Column.EMPTY_COLUMN;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -35,6 +36,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @param <NestedQ> WRAPPER 对应的嵌套查询器
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked", "unused"})
 @Accessors(chain = true)
 public abstract class WhereBase<
     WHERE extends WhereBase<WHERE, WRAPPER, NestedQ>,
@@ -182,7 +184,7 @@ public abstract class WhereBase<
      * value: 设置值, 忽略null值
      *
      * @param params map 类型的参数, key 是字段名, value 是字段值
-     * @param <V>
+     * @param <V>    值类型
      * @return self
      */
     public <V> WHERE eqNotNull(Map<String, V> params) {
@@ -200,11 +202,11 @@ public abstract class WhereBase<
      */
     public <V> WHERE eqMap(Map<String, V> params, boolean ignoreNull) {
         params.forEach((k, v) -> {
-            this.wrapper.validateColumn(k);
+            Column column = Column.column(k, this.wrapper);
             if (notNull(v)) {
-                this.wrapper.getWrapperData().apply(AND, k, EQ, v);
+                this.wrapper.getWrapperData().apply(AND, column, EQ, v);
             } else if (!ignoreNull) {
-                this.wrapper.getWrapperData().apply(AND, k, IS_NULL);
+                this.wrapper.getWrapperData().apply(AND, column, IS_NULL);
             }
         });
         return this.and;
@@ -220,7 +222,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE exists(String select, Object... values) {
-        wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, select, values);
+        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, select, values);
         return this.and;
     }
 
@@ -264,11 +266,10 @@ public abstract class WhereBase<
      * EXISTS ( sql语句 )
      *
      * @param condition 条件为真时成立
-     * @param query
-     * @param <T>
-     * @return
+     * @param query     子查询
+     * @return WHERE
      */
-    public <T> WHERE exists(boolean condition, QFunction<NestedQ> query) {
+    public WHERE exists(boolean condition, QFunction<NestedQ> query) {
         return condition ? this.exists(query) : this.and;
     }
 
@@ -282,7 +283,7 @@ public abstract class WhereBase<
      */
     public WHERE exists(IQuery query) {
         ((BaseWrapper) query).sharedParameter(wrapper);
-        wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
+        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().getQuerySql());
         return this.and;
     }
 
@@ -296,7 +297,7 @@ public abstract class WhereBase<
     public WHERE exists(boolean condition, IQuery query) {
         if (condition) {
             ((BaseWrapper) query).sharedParameter(wrapper);
-            wrapper.getWrapperData().apply(currOp, EMPTY, EXISTS, query.getWrapperData().getQuerySql());
+            wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().getQuerySql());
         }
         return this.and;
     }
@@ -311,7 +312,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE notExists(String select, Object... values) {
-        wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, select, values);
+        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, select, values);
         return this.and;
     }
 
@@ -374,7 +375,7 @@ public abstract class WhereBase<
      */
     public WHERE notExists(IQuery query) {
         ((BaseWrapper) query).sharedParameter(wrapper);
-        wrapper.getWrapperData().apply(currOp, EMPTY, NOT_EXISTS, query.getWrapperData().getQuerySql());
+        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, query.getWrapperData().getQuerySql());
         return this.and;
     }
 
@@ -403,17 +404,17 @@ public abstract class WhereBase<
      * @return children
      */
     public WHERE apply(String applySql, Object... paras) {
-        wrapper.getWrapperData().apply(this.currOp, EMPTY, RETAIN, applySql, paras);
+        wrapper.getWrapperData().apply(this.currOp, EMPTY_COLUMN, RETAIN, applySql, paras);
         return this.and;
     }
 
     /**
      * 根据条件拼接 sql
      *
-     * @param predicate 为真是拼接sql
-     * @param applySql
-     * @param paras
-     * @return
+     * @param predicate if true: 拼接applySql; false: 丢弃条件拼接
+     * @param applySql  要拼接的sql语句
+     * @param paras     sql参数
+     * @return WHERE
      */
     public WHERE applyIf(Predicate<Object[]> predicate, String applySql, Object... paras) {
         if (predicate.test(paras)) {
@@ -431,7 +432,8 @@ public abstract class WhereBase<
      * @return 条件设置器
      */
     public WHERE apply(String column, ISqlOp op, Object... paras) {
-        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, paras);
+        Column _column = Column.column(column, this.wrapper);
+        this.wrapper.getWrapperData().apply(this.currOp, _column, op, paras);
         return this.and;
     }
 
@@ -450,12 +452,16 @@ public abstract class WhereBase<
      * @param paras  操作参数
      * @return 条件设置器
      */
-    public WHERE apply(FieldMapping column, ISqlOp op, Object... paras) {
-        return this.apply(column.column, op, paras);
+    public WHERE apply(Column column, ISqlOp op, Object... paras) {
+        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
+        return this.and;
     }
 
-    public WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, ISqlOp op, Object... paras) {
-        return this.applyIf(predicate, column.column, op, paras);
+    public WHERE applyIf(Predicate<Object[]> predicate, Column column, ISqlOp op, Object... paras) {
+        if (predicate.test(paras)) {
+            this.apply(column, op, paras);
+        }
+        return this.and;
     }
 
     /**
@@ -465,14 +471,14 @@ public abstract class WhereBase<
      * @param op         条件操作
      * @param expression 函数或sql片段
      * @param args       参数
-     * @return
+     * @return WHERE
      */
-    WHERE apply(FieldMapping column, ISqlOp op, String expression, Object... args) {
-        this.wrapper.getWrapperData().apply(this.currOp, this.columnWithAlias(column), op, expression, args);
+    WHERE apply(Column column, ISqlOp op, String expression, Object... args) {
+        this.wrapper.getWrapperData().apply(this.currOp, column, op, expression, args);
         return this.and;
     }
 
-    WHERE applyIf(Predicate<Object[]> predicate, FieldMapping column, ISqlOp op, String expression, Object... args) {
+    WHERE applyIf(Predicate<Object[]> predicate, Column column, ISqlOp op, String expression, Object... args) {
         if (predicate.test(args)) {
             this.apply(column, op, expression, args);
         }
@@ -535,7 +541,7 @@ public abstract class WhereBase<
         String sql = query.getWrapperData().getMergeSql();
         if (If.notBlank(sql)) {
             ((BaseWrapper) query).sharedParameter(this.wrapper);
-            wrapper.getWrapperData().apply(andOr, EMPTY, BRACKET, sql);
+            wrapper.getWrapperData().apply(andOr, EMPTY_COLUMN, BRACKET, sql);
         }
         return this.and;
     }

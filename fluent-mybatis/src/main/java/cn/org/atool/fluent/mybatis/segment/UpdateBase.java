@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.GetterFunc;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
@@ -41,7 +42,10 @@ public abstract class UpdateBase<
      */
     public S byNotNull(Map<String, Object> values) {
         if (values != null) {
-            values.forEach((column, value) -> this.wrapperData().updateSet(column, value));
+            values.forEach((column, value) -> {
+                Column _column = Column.column(column, this.wrapper);
+                this.wrapperData().updateSet(_column, value);
+            });
         }
         return (S) this;
     }
@@ -94,7 +98,10 @@ public abstract class UpdateBase<
      * @return self
      */
     public S byEntity(IEntity entity, String... columns) {
-        super.byEntity(entity, (column, value) -> this.wrapperData().updateSet(column, value), false, Arrays.asList(columns));
+        super.byEntity(entity, (column, value) -> {
+            Column _column = Column.column(column, this.wrapper);
+            this.wrapperData().updateSet(_column, value);
+        }, false, Arrays.asList(columns));
         return (S) this;
     }
 
@@ -135,7 +142,10 @@ public abstract class UpdateBase<
      * @return self
      */
     public S byExclude(IEntity entity, String... excludes) {
-        super.byExclude(entity, (column, value) -> this.wrapperData().updateSet(column, value), false, Arrays.asList(excludes));
+        super.byExclude(entity, (column, value) -> {
+            Column _column = Column.column(column, this.wrapper);
+            this.wrapperData().updateSet(_column, value);
+        }, false, Arrays.asList(excludes));
         return (S) this;
     }
 

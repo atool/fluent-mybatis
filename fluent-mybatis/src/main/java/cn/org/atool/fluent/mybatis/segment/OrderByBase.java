@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.base.model.Column.EMPTY_COLUMN;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
@@ -17,6 +18,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
  * @param <O> 排序对象
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 public abstract class OrderByBase<
     O extends OrderByBase<O, W>,
     W extends IWrapper<?, W, ?>
@@ -164,7 +166,7 @@ public abstract class OrderByBase<
         } else {
             segment = this.columnWithAlias(column) + SPACE + (isAsc ? ASC : DESC);
         }
-        this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY, RETAIN, segment);
+        this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY_COLUMN, RETAIN, segment);
     }
 
     /**

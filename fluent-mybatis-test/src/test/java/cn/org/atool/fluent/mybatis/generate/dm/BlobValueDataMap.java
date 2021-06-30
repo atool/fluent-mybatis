@@ -37,6 +37,24 @@ public class BlobValueDataMap extends DataMap<BlobValueDataMap> {
   )
   public final transient KeyValue<BlobValueDataMap> blobValue = new KeyValue(this, "blob_value", "blobValue", supplier);
 
+  @ColumnDef(
+      value = "max",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<BlobValueDataMap> max = new KeyValue(this, "max", "max", supplier);
+
+  @ColumnDef(
+      value = "min",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<BlobValueDataMap> min = new KeyValue(this, "min", "min", supplier);
+
+  @ColumnDef(
+      value = "origin",
+      type = "varchar(20)"
+  )
+  public final transient KeyValue<BlobValueDataMap> origin = new KeyValue(this, "origin", "origin", supplier);
+
   BlobValueDataMap(boolean isTable) {
     super();
     this.isTable = isTable;

@@ -1,15 +1,13 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.WRAPPER_PARAM_FORMAT;
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.Wrapper_Data;
 
 
 /**
@@ -52,11 +50,12 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 参数化处理
      *
+     * @param column 映射字段, 如果 = null, 表示非原始字段赋值
      * @param sqlStr sql语句
      * @param params sql语句参数
      * @return 参数化的sql语句
      */
-    public String paramSql(String sqlStr, Object... params) {
+    public String paramSql(Column column, String sqlStr, Object... params) {
         if (If.isBlank(sqlStr)) {
             throw new FluentMybatisException("sql parameter can't be null.");
         }
@@ -72,7 +71,7 @@ public class Parameters extends HashMap<String, Object> {
                 if (prev == char_backslash) {
                     buff.append(/** 字符 '?' 的反义处理 **/char_question);
                 } else if (index < params.length) {
-                    buff.append(this.putParameter(params[index++]));
+                    buff.append(this.putParameter(column, params[index++]));
                 } else {
                     throw new FluentMybatisException("占位符和参数个数不匹配:" + sqlStr);
                 }
@@ -93,14 +92,14 @@ public class Parameters extends HashMap<String, Object> {
     /**
      * 构造参数占位变量，并设置占位符和变量值对应关系
      *
-     * @param para 变量
+     * @param column 被赋值字段
+     * @param para   变量
      * @return 占位符
      */
-    public String putParameter(Object para) {
+    public String putParameter(Column column, Object para) {
         String paramName = WRAPPER_PARAM + this.instanceNo + "_" + this.sequence.incrementAndGet();
-        String placeholder = String.format(WRAPPER_PARAM_FORMAT, Wrapper_Data, paramName);
         this.put(paramName, para);
-        return placeholder;
+        return Column.wrapColumn(column, paramName, para);
     }
 
     private static final char char_question = '?';

@@ -11,7 +11,7 @@ public interface MethodName {
 
     String M_DEFAULT_UPDATER = "defaultUpdater";
 
-    String M_COLUMN = "column";
+    String M_COLUMN2MAPPING = "column2mapping";
 
     String M_ALIAS_QUERY = "aliasQuery";
 

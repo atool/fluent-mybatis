@@ -58,7 +58,7 @@ public class CustomizedSql {
      * @return
      */
     public static String rewriteSql(String sql, Parameters parameters, Object variable) {
-        String prefix = getVarName(parameters.putParameter(variable));
+        String prefix = getVarName(parameters.putParameter(null, variable));
         List<String> segments = parse(sql);
         StringBuilder buff = new StringBuilder();
         for (String segment : segments) {

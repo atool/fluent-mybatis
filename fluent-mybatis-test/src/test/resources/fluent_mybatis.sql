@@ -166,16 +166,19 @@ drop table if exists `blob_value`;
 create table blob_value
 (
     id         bigint(21) unsigned auto_increment primary key COMMENT '主键id',
-    blob_value blob null
+    blob_value blob null,
+    origin     varchar(20),
+    `max`      bigint(21),
+    `min`      bigint(21)
 ) ENGINE = InnoDB
   CHARACTER SET = utf8;
 
 drop table if exists `my_enum_type`;
 create table my_enum_type
 (
-    id bigint auto_increment COMMENT '主键id',
+    id          bigint auto_increment COMMENT '主键id',
     enum_string varchar(20) null COMMENT '枚举类型, 字符',
-    enum_num int null COMMENT '枚举类型, 序号',
+    enum_num    int null COMMENT '枚举类型, 序号',
     constraint my_enum_type_pk primary key (id)
 ) ENGINE = InnoDB
   CHARACTER SET = utf8;

@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
@@ -38,7 +39,7 @@ public abstract class HavingBase<
      * @return Having设置器
      */
     H aggregate(String aggregate, ISqlOp op, Object... args) {
-        this.wrapper.getWrapperData().apply(HAVING, aggregate, op, args);
+        this.wrapper.getWrapperData().apply(HAVING, Column.column(aggregate, this.wrapper), op, args);
         return (H) this;
     }
 

@@ -60,14 +60,14 @@ public class WhereApply<
                 Object[] arr = ((Collection) value).toArray();
                 assertNotEmpty(this.current().name, arr);
                 if (arr.length > 1) {
-                    return this.segment.apply(this.current(), IN, arr);
+                    return this.segment.apply(this.column(), IN, arr);
                 } else {
                     value = arr[0];
                 }
             }
-            return this.segment.apply(this.current(), EQ, value);
+            return this.segment.apply(this.column(), EQ, value);
         } else {
-            return this.segment.apply(this.current(), op, args);
+            return this.segment.apply(this.column(), op, args);
         }
     }
 
@@ -104,9 +104,9 @@ public class WhereApply<
     @Override
     public <O> WHERE in(String select, O... args) {
         if (isCollection(args)) {
-            return this.segment.apply(this.current(), IN, select, ((Collection) args[0]).toArray());
+            return this.segment.apply(this.column(), IN, select, ((Collection) args[0]).toArray());
         } else {
-            return this.segment.apply(this.current(), IN, select, args);
+            return this.segment.apply(this.column(), IN, select, args);
         }
     }
 
@@ -131,7 +131,7 @@ public class WhereApply<
     @Override
     public WHERE in(IQuery query) {
         ((BaseWrapper) query).sharedParameter(this.segment.getParameters());
-        return this.segment.apply(this.current(), IN, query.getWrapperData().getQuerySql());
+        return this.segment.apply(this.column(), IN, query.getWrapperData().getQuerySql());
     }
 
     @Override
@@ -160,7 +160,7 @@ public class WhereApply<
     @Override
     public WHERE notIn(IQuery query) {
         ((BaseWrapper) query).sharedParameter(this.segment.getParameters());
-        return this.segment.apply(this.current(), NOT_IN, query.getWrapperData().getQuerySql());
+        return this.segment.apply(this.column(), NOT_IN, query.getWrapperData().getQuerySql());
     }
 
     @Override
@@ -175,12 +175,12 @@ public class WhereApply<
 
     @Override
     public WHERE apply(String opArgs) {
-        return this.segment.apply(this.current(), RETAIN, opArgs);
+        return this.segment.apply(this.column(), RETAIN, opArgs);
     }
 
     @Override
     public WHERE applyFunc(ISqlOp op, String expression, Object... args) {
-        return this.segment.apply(this.current(), op, expression, args);
+        return this.segment.apply(this.column(), op, expression, args);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
      * @return self
      */
     public FreeUpdate customizedByQuestion(String sql, Object... paras) {
-        String placeholder = this.wrapperData.paramSql(sql, paras);
+        String placeholder = this.wrapperData.paramSql(null, sql, paras);
         this.wrapperData.customizedSql(placeholder, null);
         return this;
     }

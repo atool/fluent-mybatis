@@ -6,23 +6,13 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_EW;
-import static java.lang.String.format;
-
 /**
  * SqlProvider帮助类
  *
  * @author wudarui
  */
+@SuppressWarnings("unchecked")
 public class SqlProviderUtils {
-    /**
-     * 变量在xml文件中的占位符全路径表达式
-     * 例子: #{ew.wrapperData.parameters.variable_1}
-     */
-    public static final String WRAPPER_PARAM_FORMAT = "#{%s.parameters.%s}";
-
-    public static final String Wrapper_Data = format("%s.wrapperData", Param_EW);
-
     public static WrapperData getWrapperData(Map map, String paraName) {
         IWrapper wrapper = getWrapper(map, paraName);
         if (wrapper.getWrapperData() == null) {
@@ -52,31 +42,27 @@ public class SqlProviderUtils {
      *
      * @param dbType 数据库类型
      * @param sql    非分页查询sql
-     * @return
+     * @return sql segment
      */
     public static String byPaged(DbType dbType, WrapperData data, String sql) {
         if (data.getPaged() == null) {
             return sql;
         }
-        String pagedOffset = data.getParameters().putParameter(data.getPaged().getOffset());
-        String pagedEndOffset = data.getParameters().putParameter(data.getPaged().getEndOffset());
-        String pagedSize = data.getParameters().putParameter(data.getPaged().getLimit());
+        String pagedOffset = data.getParameters().putParameter(null, data.getPaged().getOffset());
+        String pagedEndOffset = data.getParameters().putParameter(null, data.getPaged().getEndOffset());
+        String pagedSize = data.getParameters().putParameter(null, data.getPaged().getLimit());
         switch (dbType) {
             case ORACLE:
-                return new StringBuilder(sql.length() + 200)
-                    .append("SELECT * FROM ( ")
-                    .append(" SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( ")
-                    .append(sql)
-                    .append(" ) TMP_PAGE)")
-                    .append(String.format(" WHERE ROW_ID > %s AND ROW_ID <= %s ", pagedOffset, pagedEndOffset))
-                    .toString();
+                return "SELECT * FROM ( " +
+                    " SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( " +
+                    sql +
+                    " ) TMP_PAGE)" +
+                    String.format(" WHERE ROW_ID > %s AND ROW_ID <= %s ", pagedOffset, pagedEndOffset);
             case DB2:
-                return new StringBuilder(sql.length() + 200)
-                    .append("SELECT * FROM (SELECT TMP_PAGE.*,ROWNUMBER() OVER() AS ROW_ID FROM ( ")
-                    .append(sql)
-                    .append(" ) AS TMP_PAGE) TMP_PAGE WHERE ROW_ID")
-                    .append(String.format(" BETWEEN %s AND %s", pagedOffset, pagedSize))
-                    .toString();
+                return "SELECT * FROM (SELECT TMP_PAGE.*,ROWNUMBER() OVER() AS ROW_ID FROM ( " +
+                    sql +
+                    " ) AS TMP_PAGE) TMP_PAGE WHERE ROW_ID" +
+                    String.format(" BETWEEN %s AND %s", pagedOffset, pagedSize);
             case SQL_SERVER:
             case SQL_SERVER2005:
                 throw new RuntimeException("not support");

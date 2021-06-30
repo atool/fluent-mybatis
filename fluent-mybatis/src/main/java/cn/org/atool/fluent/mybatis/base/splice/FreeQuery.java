@@ -104,7 +104,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @return self
      */
     public FreeQuery customizedByQuestion(String sql, Object... paras) {
-        String placeholder = this.wrapperData.paramSql(sql, paras);
+        String placeholder = this.wrapperData.paramSql(null, sql, paras);
         this.wrapperData.customizedSql(placeholder, null);
         return this;
     }

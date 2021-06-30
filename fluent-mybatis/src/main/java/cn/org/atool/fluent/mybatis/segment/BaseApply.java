@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 /**
@@ -24,6 +25,15 @@ public abstract class BaseApply<
      */
     public FieldMapping current() {
         return this.segment.current;
+    }
+
+    /**
+     * 当前被操作的字段
+     *
+     * @return
+     */
+    public Column column() {
+        return Column.column(this.segment.current, this.segment.wrapper);
     }
 
     BaseApply(SEGMENT segment) {

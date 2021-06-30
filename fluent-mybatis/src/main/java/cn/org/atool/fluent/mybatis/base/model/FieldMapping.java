@@ -7,8 +7,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 /**
  * FieldMeta: 实体字段和数据库字段映射信息
  *
- * @author darui.wu
- * @create 2020/6/23 9:16 上午
+ * @author darui.wu  2020/6/23 9:16 上午
  */
 public class FieldMapping {
     /**
