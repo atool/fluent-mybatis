@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.ColumnSegment;
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_EW;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
@@ -47,15 +46,24 @@ public class Column {
      * @return 字段部分 t.column [AS alias]?
      */
     public ColumnSegment columnSegment() {
-        String columnAs = column + (isBlank(alias) ? EMPTY : " AS " + alias);
+        String columnAs = column;
+        if (notBlank(alias)) {
+            columnAs += " AS " + alias;
+        }
         String tAlias = EMPTY;
         /** 非别名字段 && 表别名非空**/
-        if (wrapper != null && notBlank(wrapper.getTableAlias()) &&
-            isColumnName(column) &&
-            !wrapper.getWrapperData().getFieldAlias().contains(column)) {
+        if (wrapper != null &&
+            notBlank(wrapper.getTableAlias()) &&
+            this.isColumnNameAndNotAlias()) {
             tAlias = wrapper.getTableAlias() + ".";
         }
         return ColumnSegment.column(tAlias + columnAs);
+    }
+
+
+    private boolean isColumnNameAndNotAlias() {
+        return isColumnName(column) &&
+            !wrapper.getWrapperData().getFieldAlias().contains(column);
     }
 
     public boolean isAssignableFrom(Object para) {
