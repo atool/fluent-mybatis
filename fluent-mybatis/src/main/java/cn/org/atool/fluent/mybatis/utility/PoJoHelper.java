@@ -79,12 +79,12 @@ public class PoJoHelper {
                 Object value = entry.getValue();
                 if (value == null) {
                     metaObject.setValue(name, null);
-                }
-
-                if (type.isAssignableFrom(value.getClass())) {
-                    metaObject.setValue(name, value);
                 } else {
-                    setDefaultType(type, metaObject, name, value);
+                    if (type.isAssignableFrom(value.getClass())) {
+                        metaObject.setValue(name, value);
+                    } else {
+                        setDefaultType(type, metaObject, name, value);
+                    }
                 }
             } catch (Exception e) {
                 throw new RuntimeException("convert map to object[type=" + clazz.getName() + ", property=" + entry.getKey() + ", type=" + type.getName() + "] error: " + e.getMessage(), e);
