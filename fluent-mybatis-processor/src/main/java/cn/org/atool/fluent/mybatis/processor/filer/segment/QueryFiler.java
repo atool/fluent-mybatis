@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -62,6 +63,7 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.m_where())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
+            .addMethod(this.m_dbType())
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_defaultQuery())
             .addMethod(this.m_aliasQuery_0())
@@ -129,10 +131,16 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
+    private MethodSpec m_dbType() {
+        return super.publicMethod("myDbType", true, DbType.class)
+            .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
+            .build();
+    }
+
     /**
      * public final Selector select = new Selector(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_select() {
         return FieldSpec.builder(fluent.selector(),
@@ -145,7 +153,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public final GroupBy groupBy = new GroupBy(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_groupBy() {
         return FieldSpec.builder(fluent.groupBy(), "groupBy", Modifier.PUBLIC, Modifier.FINAL)
@@ -158,7 +166,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public final GroupBy groupBy = new GroupBy(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_having() {
         return FieldSpec.builder(fluent.having(), "having", Modifier.PUBLIC, Modifier.FINAL)
@@ -170,7 +178,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public final GroupBy groupBy = new GroupBy(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_orderBy() {
         return FieldSpec.builder(fluent.queryOrderBy(), "orderBy", Modifier.PUBLIC, Modifier.FINAL)
@@ -182,7 +190,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public final QueryWhere where = new QueryWhere(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_where() {
         return FieldSpec.builder(fluent.queryWhere(), "where", Modifier.PUBLIC, Modifier.FINAL)
@@ -200,7 +208,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public EntityQuery() {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
@@ -212,7 +220,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public XyzQuery(String alias) {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec constructor1_String() {
         return MethodSpec.constructorBuilder()
@@ -228,7 +236,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public XyzQuery(String alias) {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec constructor2_String_Parameter() {
         return MethodSpec.constructorBuilder()
@@ -244,7 +252,7 @@ public class QueryFiler extends AbstractFiler {
     /**
      * public QueryWhere where() {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.queryWhere())

@@ -75,7 +75,7 @@ public class EnumTypeTest extends BaseTest {
             .end();
         List<MyEnumTypePoJo> list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("FROM my_enum_type WHERE enum_num = ? AND enum_string = ?");
+            .end("FROM my_enum_type WHERE `enum_num` = ? AND `enum_string` = ?");
         want.list(list).sizeEq(1);
     }
 }

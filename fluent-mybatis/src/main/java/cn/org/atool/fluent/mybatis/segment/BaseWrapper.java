@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -135,6 +137,20 @@ public abstract class BaseWrapper<
      */
     public FieldMapping column(String column) {
         return this.column2mapping().get(column);
+    }
+
+    /**
+     * 数据库类型
+     *
+     * @return DbType
+     */
+    public DbType dbType() {
+        DbType dbType = this.myDbType();
+        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
+    }
+
+    protected DbType myDbType() {
+        return null;
     }
 
     /**

@@ -19,14 +19,14 @@ public class FormQueryTest extends BaseTest {
             .setCurrPage(0)
             .to(StudentEntity.class).stdPagedEntity();
 
-        db.sqlList().wantFirstSql().end("WHERE is_deleted = ? " +
-            "AND env = ? " +
-            "AND user_name = ? " +
-            "AND age BETWEEN ? AND ?");
-        db.sqlList().wantSql(1).end("WHERE is_deleted = ? " +
-            "AND env = ? " +
-            "AND user_name = ? " +
-            "AND age BETWEEN ? AND ? " +
+        db.sqlList().wantFirstSql().end("WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ?");
+        db.sqlList().wantSql(1).end("WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ? " +
             "LIMIT ?, ?");
     }
 
@@ -41,12 +41,12 @@ public class FormQueryTest extends BaseTest {
             .query().to().tagPagedEntity();
 
         db.sqlList().wantFirstSql().end("FROM student " +
-            "WHERE is_deleted = ? " +
-            "AND env = ? " +
-            "AND user_name = ? " +
-            "AND age BETWEEN ? AND ? " +
-            "AND address LIKE ? " +
-            "AND id >= ? " +
+            "WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ? " +
+            "AND `address` LIKE ? " +
+            "AND `id` >= ? " +
             "LIMIT ?, ?");
     }
 }

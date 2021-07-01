@@ -38,6 +38,6 @@ public class SetFunctionTest extends BaseTest {
             "SET gmt_modified = now(), " +
             "user_name = concat(user_name, ?), " +
             "age = age+1 " +
-            "WHERE id = ?");
+            "WHERE `id` = ?");
     }
 }

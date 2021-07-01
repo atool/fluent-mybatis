@@ -19,7 +19,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), age = ? WHERE id = ?");
+            .eq("UPDATE student SET gmt_modified = now(), age = ? WHERE `id` = ?");
     }
 
     @Test
@@ -30,7 +30,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), age = ?, user_name = ? WHERE id = ?");
+            .end("SET gmt_modified = now(), age = ?, user_name = ? WHERE `id` = ?");
     }
 
     @Test
@@ -41,7 +41,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), user_name = ? WHERE id = ?");
+            .end("SET gmt_modified = now(), user_name = ? WHERE `id` = ?");
     }
 
     @Test
@@ -52,7 +52,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), age = ? WHERE id = ?");
+            .end("SET gmt_modified = now(), age = ? WHERE `id` = ?");
     }
 
     @Test
@@ -66,7 +66,7 @@ class UpdateApplyTest extends BaseTest {
             .and.address().like(address, If::notBlank).end()
         );
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE age = ? AND user_name = ?");
+            .end("FROM student WHERE `age` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara().eqList(43, "my name is fluent mybatis");
     }
 
@@ -88,7 +88,7 @@ class UpdateApplyTest extends BaseTest {
         }
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE age = ? AND user_name = ?");
+            .end("FROM student WHERE `age` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara().eqList(43, "my name is fluent mybatis");
     }
 
@@ -101,7 +101,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), version = ? WHERE id = ?");
+            .end("SET gmt_modified = now(), version = ? WHERE `id` = ?");
     }
 
     @Test
@@ -111,7 +111,8 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), user_name = concat('user_name', '_abc') WHERE id = ?");
+            .end("SET gmt_modified = now(), user_name = concat('user_name', '_abc') " +
+                "WHERE `id` = ?");
     }
 
     @Test
@@ -122,6 +123,6 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), age = age+1 WHERE id = ?");
+            .end("SET gmt_modified = now(), age = age+1 WHERE `id` = ?");
     }
 }

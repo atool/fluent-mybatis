@@ -23,7 +23,7 @@ public class LimitTest extends BaseTest {
             .limit(10, 20);
 
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().end("WHERE age = ? LIMIT ?, ?");
+        db.sqlList().wantFirstSql().end("WHERE `age` = ? LIMIT ?, ?");
     }
 
     @Test
@@ -34,6 +34,6 @@ public class LimitTest extends BaseTest {
             .limit(20);
 
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().end("WHERE age = ? LIMIT ?, ?");
+        db.sqlList().wantFirstSql().end("WHERE `age` = ? LIMIT ?, ?");
     }
 }

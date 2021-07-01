@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.ColumnSegment;
 import lombok.Getter;
@@ -14,52 +15,58 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 @Getter
 public class Column {
     public static final Column EMPTY_COLUMN = Column.column(EMPTY);
 
     private final String column;
 
-    private final String alias;
-
     private final BaseWrapper wrapper;
 
     private final FieldMapping mapping;
 
-    private Column(String column, String alias, BaseWrapper wrapper) {
+    private Column(String column, BaseWrapper wrapper) {
         this.column = column;
-        this.alias = alias;
         this.wrapper = wrapper;
         this.mapping = wrapper == null ? null : wrapper.column(column);
     }
 
-    public Column(FieldMapping mapping, String alias, BaseWrapper wrapper) {
+    public Column(FieldMapping mapping, BaseWrapper wrapper) {
         this.column = mapping.column;
-        this.alias = alias;
         this.wrapper = wrapper;
         this.mapping = mapping;
     }
 
     /**
-     * 字段部分 t.column [AS alias]?
+     * 字段部分 [t.]`column`
      *
-     * @return 字段部分 t.column [AS alias]?
+     * @return 字段部分 [t.]`column`
      */
-    public ColumnSegment columnSegment() {
+    public String wrapColumn() {
         String columnAs = column;
-        if (notBlank(alias)) {
-            columnAs += " AS " + alias;
+        if (wrapper != null && wrapper.dbType() != null && this.isColumnNameAndNotAlias()) {
+            columnAs = wrapper.dbType().wrap(column);
         }
         String tAlias = EMPTY;
-        /** 非别名字段 && 表别名非空**/
+        /** 非别名字段 && 表别名非空 **/
         if (wrapper != null &&
             notBlank(wrapper.getTableAlias()) &&
             this.isColumnNameAndNotAlias()) {
             tAlias = wrapper.getTableAlias() + ".";
         }
-        return ColumnSegment.column(tAlias + columnAs);
+        return tAlias + columnAs;
     }
 
+    /**
+     * 字段部分 [t.]`column`
+     *
+     * @return 字段部分 [t.]`column`
+     */
+    public ColumnSegment columnSegment() {
+        String columnAsAlias = this.wrapColumn();
+        return ColumnSegment.column(columnAsAlias);
+    }
 
     private boolean isColumnNameAndNotAlias() {
         return isColumnName(column) &&
@@ -82,7 +89,7 @@ public class Column {
      *
      * @param column 映射字段定义
      * @param para   参数值
-     * @return
+     * @return true: 字段类型和参数类型一样
      */
     public static boolean isFieldAndAssignableFrom(Column column, Object para) {
         return column != null && column.isAssignableFrom(para);
@@ -109,15 +116,15 @@ public class Column {
     static final String Wrapper_Para = ".wrapperData.parameters.";
 
     public static Column column(String column) {
-        return new Column(column, null, null);
+        return new Column(column, null);
     }
 
     public static Column column(String column, BaseWrapper wrapper) {
-        return new Column(column, null, wrapper);
+        return new Column(column, wrapper);
     }
 
     public static Column column(FieldMapping mapping, BaseWrapper wrapper) {
-        return new Column(mapping, null, wrapper);
+        return new Column(mapping, wrapper);
     }
 
     @Override

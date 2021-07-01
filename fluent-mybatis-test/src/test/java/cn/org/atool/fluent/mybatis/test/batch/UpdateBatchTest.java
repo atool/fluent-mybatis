@@ -43,9 +43,11 @@ public class UpdateBatchTest extends BaseTest {
             mapper.updateBy(update);
         }
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            "UPDATE student SET gmt_modified = now(), user_name = ? " +
+            "WHERE `id` = ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).eq("" +
-            "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            "UPDATE student SET gmt_modified = now(), user_name = ? " +
+            "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user name24")
@@ -72,8 +74,8 @@ public class UpdateBatchTest extends BaseTest {
         int count = mapper.updateBy(updates);
         /** 验证SQL语句 **/
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?; " +
-                "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?"
+                "UPDATE student SET gmt_modified = now(), user_name = ? WHERE `id` = ?; " +
+                "UPDATE student SET gmt_modified = now(), user_name = ? WHERE `id` = ?"
             , StringMode.SameAsSpace);
         /** 验证SQL参数 **/
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
@@ -96,8 +98,8 @@ public class UpdateBatchTest extends BaseTest {
         int count = mapper.updateBy(update1, update2);
         db.sqlList().wantFirstSql()
             .eq("" +
-                "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?; " +
-                "UPDATE home_address SET gmt_modified = now(), address = ? WHERE id = ?", StringMode.SameAsSpace);
+                "UPDATE student SET gmt_modified = now(), user_name = ? WHERE `id` = ?; " +
+                "UPDATE home_address SET gmt_modified = now(), address = ? WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user")

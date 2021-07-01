@@ -30,7 +30,11 @@ public class NestedJoinTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT user_name " +
             "FROM student " +
-            "WHERE id IN (SELECT a.id FROM student a JOIN home_address b ON a.home_address_id = b.id WHERE b.address LIKE ?)");
+            "WHERE `id` IN (SELECT a.id " +
+            "FROM student a " +
+            "JOIN home_address b " +
+            "ON a.home_address_id = b.id " +
+            "WHERE b.`address` LIKE ?)");
         db.sqlList().wantFirstPara().eq(new Object[]{"%add%"});
     }
 

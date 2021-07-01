@@ -23,7 +23,7 @@ public class CountTest extends BaseTest {
             .cleanAndInsert();
         int count = dao.count("test12");
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student " +
-            "WHERE is_deleted = ? AND env = ? AND user_name = ?", StringMode.SameAsSpace);
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?", StringMode.SameAsSpace);
         want.number(count).eq(2);
     }
 }

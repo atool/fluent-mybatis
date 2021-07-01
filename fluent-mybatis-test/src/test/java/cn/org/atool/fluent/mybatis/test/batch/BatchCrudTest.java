@@ -53,9 +53,9 @@ public class BatchCrudTest extends BaseTest {
                     "VALUES (?, now(), now(), 0, ?, ?, ?); " +
                     "INSERT INTO home_address(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
                     "VALUES (now(), now(), 0, ?, ?, ?, ?); " +
-                    "UPDATE student SET gmt_modified = now(), user_name = ? WHERE id = ?; " +
-                    "UPDATE home_address SET gmt_modified = now(), address = ? WHERE id = ?; " +
-                    "DELETE FROM home_address WHERE id >= ?"
+                    "UPDATE student SET gmt_modified = now(), user_name = ? WHERE `id` = ?; " +
+                    "UPDATE home_address SET gmt_modified = now(), address = ? WHERE `id` = ?; " +
+                    "DELETE FROM home_address WHERE `id` >= ?"
                 , StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(3)
             .id.values(23L, 24L, 100L)

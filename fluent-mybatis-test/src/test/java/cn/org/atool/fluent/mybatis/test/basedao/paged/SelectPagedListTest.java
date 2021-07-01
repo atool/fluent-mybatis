@@ -52,9 +52,9 @@ public class SelectPagedListTest extends BaseTest {
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
         db.sqlList().wantSql(0)
             .eq("SELECT COUNT(*) FROM student " +
-                "WHERE user_name LIKE ?");
+                "WHERE `user_name` LIKE ?");
         db.sqlList().wantSql(1).end("FROM student " +
-            "WHERE user_name LIKE ? " +
+            "WHERE `user_name` LIKE ? " +
             "ORDER BY id ASC " +
             "LIMIT ?, ?");
     }

@@ -22,7 +22,7 @@ public class WhereObjectTest_Eq extends BaseTest {
             .where.age().eq(34).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE age = ?", StringMode.SameAsSpace);
+            "SELECT COUNT(*) FROM student WHERE `age` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -40,7 +40,8 @@ public class WhereObjectTest_Eq extends BaseTest {
             .where.age().eq(34, o -> true)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE age = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) FROM student WHERE `age` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -60,7 +61,8 @@ public class WhereObjectTest_Eq extends BaseTest {
             .where.userName().eq("name", Objects::nonNull)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE user_name = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) FROM student WHERE `user_name` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"name"});
     }
 

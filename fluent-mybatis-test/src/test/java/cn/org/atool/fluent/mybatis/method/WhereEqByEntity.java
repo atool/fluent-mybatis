@@ -26,7 +26,7 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE address = ? AND user_name = ?");
+            .end("FROM student WHERE `address` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara()
             .eqList("address", "test");
     }
@@ -44,7 +44,7 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE user_name = ? AND age IS NULL");
+            .end("FROM student WHERE `user_name` = ? AND `age` IS NULL");
         db.sqlList().wantFirstPara()
             .eqList("test");
     }
@@ -63,7 +63,7 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE user_name = ? AND age IS NULL");
+            .end("FROM student WHERE `user_name` = ? AND `age` IS NULL");
         db.sqlList().wantFirstPara()
             .eqList("test");
     }
@@ -83,10 +83,10 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .contains("birthday IS NULL AND")
-            .contains("AND address = ? AND")
-            .contains("AND user_name = ? AND")
-            .contains("AND id = ? AND");
+            .contains("`birthday` IS NULL AND")
+            .contains("AND `address` = ? AND")
+            .contains("AND `user_name` = ? AND")
+            .contains("AND `id` = ? AND");
         db.sqlList().wantFirstPara()
             .eqList("address", "test", 1L);
     }
@@ -105,10 +105,10 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .contains("birthday IS NULL AND")
-            .contains("AND address = ? AND")
-            .contains("AND user_name = ? AND")
-            .notContain("AND id IS NULL AND");
+            .contains("`birthday` IS NULL AND")
+            .contains("AND `address` = ? AND")
+            .contains("AND `user_name` = ? AND")
+            .notContain("AND `id` IS NULL AND");
         db.sqlList().wantFirstPara()
             .eqList("address", "test");
     }
@@ -127,10 +127,10 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .contains("birthday IS NULL AND")
-            .contains("AND user_name = ? AND")
-            .notContain("AND address = ? AND")
-            .notContain("AND id IS NULL AND");
+            .contains("`birthday` IS NULL AND")
+            .contains("AND `user_name` = ? AND")
+            .notContain("AND `address` = ? AND")
+            .notContain("AND `id` IS NULL AND");
         db.sqlList().wantFirstPara()
             .eqList("test");
     }

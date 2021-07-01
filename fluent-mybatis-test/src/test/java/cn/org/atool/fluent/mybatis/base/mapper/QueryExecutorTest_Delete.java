@@ -19,7 +19,9 @@ class QueryExecutorTest_Delete extends BaseTest {
         QueryRef.student.defaultQuery()
             .where.userName().eq("test1").end()
             .to().delete();
-        db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "DELETE FROM student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         ATM.dataMap.student.table(1)
             .userName.values("test2")
             .eqTable();
@@ -37,7 +39,9 @@ class QueryExecutorTest_Delete extends BaseTest {
             .eq().userName()
             .to().delete();
 
-        db.sqlList().wantFirstSql().eq("DELETE FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "DELETE FROM student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         ATM.dataMap.student.table(1)
             .userName.values("test2")
             .eqTable();

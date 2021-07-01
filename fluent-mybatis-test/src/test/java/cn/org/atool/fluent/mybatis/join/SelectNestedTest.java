@@ -31,8 +31,9 @@ public class SelectNestedTest extends BaseTest {
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t2.id, t2._count " +
-            "FROM (SELECT id, COUNT(gmt_modified) AS _count FROM t_member WHERE id = ? GROUP BY id) t2 " +
-            "WHERE t2.id = ? GROUP BY t2.id", StringMode.SameAsSpace);
+            "FROM (SELECT id, COUNT(gmt_modified) AS _count " +
+            "   FROM t_member WHERE `id` = ? GROUP BY id) t2 " +
+            "WHERE t2.`id` = ? GROUP BY t2.id", StringMode.SameAsSpace);
     }
 
     @DisplayName("select子查询2")
@@ -51,7 +52,8 @@ public class SelectNestedTest extends BaseTest {
         mapper.findOne(query2);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t2.id, t2._count " +
-            "FROM (SELECT t1.id, count(t1.gmt_modified) as _count FROM t_member t1 WHERE t1.id = ? GROUP BY t1.id) t2 " +
-            "WHERE t2.id = ? GROUP BY t2.id", StringMode.SameAsSpace);
+            "FROM (SELECT t1.id, count(t1.gmt_modified) as _count " +
+            "   FROM t_member t1 WHERE t1.`id` = ? GROUP BY t1.id) t2 " +
+            "WHERE t2.`id` = ? GROUP BY t2.id", StringMode.SameAsSpace);
     }
 }

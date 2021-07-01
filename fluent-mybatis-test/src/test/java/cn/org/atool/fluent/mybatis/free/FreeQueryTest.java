@@ -40,7 +40,8 @@ public class FreeQueryTest extends BaseTest {
             mapper.listObjs(factQuery);
         } catch (Exception e) {
         }
-        db.sqlList().wantFirstSql().eq("SELECT id FROM a WHERE ( name LIKE ? OR age LIKE ? )");
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT id FROM a WHERE ( `name` LIKE ? OR `age` LIKE ? )");
         db.sqlList().wantFirstPara().eq(new String[]{"1-%", "2-%"});
     }
 }

@@ -27,7 +27,7 @@ public class UpdateByEntity extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
             "SET gmt_modified = now(), address = ?, user_name = ? " +
-            "WHERE id = ?");
+            "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", "test", 1);
     }
 
@@ -47,7 +47,7 @@ public class UpdateByEntity extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
             "SET gmt_modified = now(), user_name = ?, grade = ? " +
-            "WHERE id = ?");
+            "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);
     }
 
@@ -66,7 +66,7 @@ public class UpdateByEntity extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
             "SET gmt_modified = now(), user_name = ?, grade = ? " +
-            "WHERE id = ?");
+            "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);
     }
 
@@ -91,7 +91,7 @@ public class UpdateByEntity extends BaseTest {
             .contains("birthday = ?,")
             .notContain(", id = ?,")
             .notContain("gmt_modified = now(),")
-            .end("WHERE id = ?")
+            .end("WHERE `id` = ?")
         ;
     }
 
@@ -118,7 +118,7 @@ public class UpdateByEntity extends BaseTest {
             .notContain(", id = ?,")
             .notContain("address = ?,")
             .notContain("birthday = ?,")
-            .end("WHERE id = ?")
+            .end("WHERE `id` = ?")
         ;
     }
 
@@ -144,7 +144,7 @@ public class UpdateByEntity extends BaseTest {
             .notContain(", id = ?,")
             .notContain("address = ?,")
             .notContain("birthday = ?,")
-            .end("WHERE id = ?")
+            .end("WHERE `id` = ?")
         ;
     }
 }

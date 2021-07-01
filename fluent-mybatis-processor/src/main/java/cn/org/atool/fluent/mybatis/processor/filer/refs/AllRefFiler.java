@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
@@ -11,11 +12,11 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findColumnByField;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set;
 
 /**
  * AllRef 文件构造
@@ -37,10 +38,11 @@ public class AllRefFiler extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(IRefs.class)
-            .addModifiers(Modifier.ABSTRACT);
+        spec.superclass(IRefs.class);
+        // .addModifiers(Modifier.ABSTRACT);
 
         spec.addField(f_mappers())
+            .addMethod(this.m_constructor())
             .addMethod(this.m_mappers())
             .addMethod(this.m_getMapper())
             .addMethod(m_findColumnByField(true))
@@ -59,6 +61,13 @@ public class AllRefFiler extends AbstractFile {
     private FieldSpec f_mappers() {
         return FieldSpec.builder(MapperRefFiler.getClassName(), "mappers",
             Modifier.PRIVATE, Modifier.STATIC).build();
+    }
+
+    private MethodSpec m_constructor() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addStatement("super.setDefaultDbType($T.$L)", DbType.class, FluentList.getDbType())
+            .build();
     }
 
     private MethodSpec m_allEntityClass() {

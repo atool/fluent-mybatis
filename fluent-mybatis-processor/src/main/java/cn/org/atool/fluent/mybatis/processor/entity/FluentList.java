@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.RefsFile;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.*;
@@ -62,6 +63,7 @@ public class FluentList {
      */
     public static void generate(Filer filer, Consumer<String> logger) {
         fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
+        boolean first = true;
         for (FluentEntity fluent : FluentList.getFluents()) {
             try {
                 List<AbstractFiler> javaFiles = generateJavaFile(fluent);
@@ -72,6 +74,13 @@ public class FluentList {
                 logger.accept("FluentEntityInfo:" + fluent + NEWLINE + GeneratorHelper.toString(e));
                 throw new RuntimeException(e);
             }
+            if (first) {
+                dbType = fluent.getDbType();
+            } else if (dbType != null && !Objects.equals(dbType, fluent.getDbType())) {
+                // 如果有多个数据源, 设置为未知态
+                dbType = null;
+            }
+            first = false;
         }
         if (fluents.isEmpty()) {
             return;
@@ -115,5 +124,11 @@ public class FluentList {
             new DefaultsFiler(fluent),
             new FormSetterFiler(fluent)
         );
+    }
+
+    private static DbType dbType;
+
+    public static String getDbType() {
+        return dbType == null ? null : dbType.name();
     }
 }

@@ -36,7 +36,7 @@ public class CaseFuncTest extends BaseTest {
             .eq("UPDATE student " +
                     "SET gmt_modified = now(), " +
                     "address = case id when 1 then 'address 1' when 2 then 'address 2' else 'address 3' end " +
-                    "WHERE id = ?",
+                    "WHERE `id` = ?",
                 StringMode.SameAsSpace);
     }
 
@@ -74,7 +74,7 @@ public class CaseFuncTest extends BaseTest {
                     "SET gmt_modified = now(), " +
                     "address = case id when 1 then ? when 2 then ? else ? end, " +
                     "age = case id when 1 then ? when 2 then ? else ? end " +
-                    "WHERE id IN (?, ?, ?)",
+                    "WHERE `id` IN (?, ?, ?)",
                 StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara()
@@ -103,7 +103,7 @@ public class CaseFuncTest extends BaseTest {
                     "SET gmt_modified = now(), " +
                     "address = case id when 1 then ? when 2 then ? else ? end, " +
                     "age = case id when 1 then ? when 2 then ? else ? end " +
-                    "WHERE id IN (?, ?, ?)",
+                    "WHERE `id` IN (?, ?, ?)",
                 StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara()

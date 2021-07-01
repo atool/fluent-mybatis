@@ -23,6 +23,6 @@ class UpdateBaseTest extends BaseTest {
             }).end()
             .where.id().eq(2).end());
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), user_name = ?, age = ? WHERE id = ?");
+            .end("SET gmt_modified = now(), user_name = ?, age = ? WHERE `id` = ?");
     }
 }

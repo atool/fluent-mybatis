@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -53,6 +54,7 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.m_where())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
+            .addMethod(this.m_dbType())
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_defaultUpdater())
             .addMethod(this.m_column2mapping())
@@ -62,7 +64,7 @@ public class UpdaterFiler extends AbstractFiler {
     /**
      * public final UpdateSetter update = new UpdateSetter(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_update() {
         return FieldSpec.builder(fluent.updateSetter(),
@@ -84,7 +86,7 @@ public class UpdaterFiler extends AbstractFiler {
     /**
      * public final UpdateWhere where = new UpdateWhere(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_where() {
         return FieldSpec.builder(fluent.updateWhere(),
@@ -96,7 +98,7 @@ public class UpdaterFiler extends AbstractFiler {
     /**
      * public final UpdateOrderBy orderBy = new UpdateOrderBy(this);
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_orderBy() {
         return FieldSpec.builder(fluent.updateOrderBy(),
@@ -108,7 +110,7 @@ public class UpdaterFiler extends AbstractFiler {
     /**
      * public EntityUpdate() {}
      *
-     * @return
+     * @return FieldSpec
      */
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
@@ -132,7 +134,7 @@ public class UpdaterFiler extends AbstractFiler {
     /**
      * public QueryWhere where() {}
      *
-     * @return
+     * @return FieldSpec
      */
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.updateWhere())
@@ -165,6 +167,12 @@ public class UpdaterFiler extends AbstractFiler {
             .addModifiers(Modifier.PROTECTED)
             .returns(CN_List_Str)
             .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
+            .build();
+    }
+
+    private MethodSpec m_dbType() {
+        return super.publicMethod("myDbType", true, DbType.class)
+            .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
             .build();
     }
 

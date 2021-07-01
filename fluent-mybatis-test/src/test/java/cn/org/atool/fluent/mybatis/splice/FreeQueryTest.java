@@ -27,7 +27,8 @@ public class FreeQueryTest extends BaseTest {
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("id").end();
         mapper.findOne(query);
-        db.sqlList().wantFirstSql().eq("SELECT id, gmt_modified FROM t_member WHERE id = ? GROUP BY id");
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT id, gmt_modified FROM t_member WHERE `id` = ? GROUP BY id");
     }
 
     @Test
@@ -38,7 +39,9 @@ public class FreeQueryTest extends BaseTest {
             .applyAs(MemberMapping.gmtModified , "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
-        db.sqlList().wantFirstSql().eq("SELECT t1.id, t1.gmt_modified AS modifiedDate FROM t_member t1 WHERE t1.id = ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT t1.id, t1.gmt_modified AS modifiedDate " +
+            "FROM t_member t1 WHERE t1.`id` = ?");
     }
 
     @Test
@@ -49,7 +52,9 @@ public class FreeQueryTest extends BaseTest {
             .max.applyAs(MemberMapping.gmtModified , "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
-        db.sqlList().wantFirstSql().eq("SELECT t1.id, MAX(t1.gmt_modified) AS modifiedDate FROM t_member t1 WHERE t1.id = ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT t1.id, MAX(t1.gmt_modified) AS modifiedDate " +
+            "FROM t_member t1 WHERE t1.`id` = ?");
     }
 
     @Test
@@ -104,9 +109,9 @@ public class FreeQueryTest extends BaseTest {
                 "ON t1.id = t2.id " +
                 "LEFT JOIN t_member2 t3 " +
                 "ON t1.id=t3.id  " +
-                "WHERE t1.id = ?  " +
-                "AND  t1.id = ?  " +
-                "AND  t1.id = ? " +
+                "WHERE t1.`id` = ?  " +
+                "AND  t2.`id` = ?  " +
+                "AND  t3.`id` = ? " +
                 "LIMIT ?, ?", StringMode.SameAsSpace);
         }
     }
@@ -147,9 +152,9 @@ public class FreeQueryTest extends BaseTest {
                 "FROM  dwd_metric_bug_df t1 " +
                 "JOIN dim_metric_product_super_df t2 " +
                 "ON t1.product_id = t2.product_id " +
-                "WHERE t1.gmt_closed >= ? " +
-                "AND  t1.gmt_create <= ? " +
-                "AND  t2.super_id = ?"
+                "WHERE t1.`gmt_closed` >= ? " +
+                "AND  t1.`gmt_create` <= ? " +
+                "AND  t2.`super_id` = ?"
             , StringMode.SameAsSpace);
     }
 

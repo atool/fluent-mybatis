@@ -5,7 +5,9 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
+import lombok.Setter;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -32,6 +34,21 @@ public abstract class IRefs {
      * 单例变量, 需要被Spring容器初始化时赋值
      */
     private static IRefs INSTANCE;
+
+    @Setter
+    private DbType defaultDbType;
+
+    /**
+     * 返回框架默认的数据库类型
+     *
+     * @return
+     */
+    public DbType defaultDbType() {
+        if (instance().defaultDbType == null) {
+            throw new RuntimeException("please setDefaultDbType(dbType) first.");
+        }
+        return instance().defaultDbType;
+    }
 
     public static IEntityHelper findEntityHelper(Class clazz) {
         return EntityHelperFactory.getInstance(clazz);

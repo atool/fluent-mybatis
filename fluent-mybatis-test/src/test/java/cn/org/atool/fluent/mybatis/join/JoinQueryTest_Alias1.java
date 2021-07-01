@@ -48,12 +48,12 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 format("JOIN home_address %s ", a2) +
                 format("ON %s.id = %s.id ", a1, a2) +
                 format("AND %s.age = %s.student_id ", a1, a2) +
-                format("WHERE %s.is_deleted = ? ", a1) +
-                format("AND %s.env = ? ", a1) +
-                format("AND %s.age IS NULL ", a1) +
-                format("AND %s.is_deleted = ? ", a2) +
-                format("AND %s.env = ? ", a2) +
-                format("AND %s.address LIKE ? ", a2) +
+                format("WHERE %s.`is_deleted` = ? ", a1) +
+                format("AND %s.`env` = ? ", a1) +
+                format("AND %s.`age` IS NULL ", a1) +
+                format("AND %s.`is_deleted` = ? ", a2) +
+                format("AND %s.`env` = ? ", a2) +
+                format("AND %s.`address` LIKE ? ", a2) +
                 format("GROUP BY %s.age, %s.id, %s.student_id ", a1, a1, a2) +
                 format("HAVING MAX(%s.age) > ? ", a1) +
                 format("ORDER BY %s.id DESC, %s.id ASC ", a1, a2) +
@@ -86,12 +86,12 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "LEFT JOIN home_address t2 " +
                 "ON t1.id = t2.id " +
                 "AND t1.age = t2.student_id " +
-                "WHERE t1.is_deleted = ? " +
-                "AND t1.env = ? " +
-                "AND t1.age IS NULL " +
-                "AND t2.is_deleted = ? " +
-                "AND t2.env = ? " +
-                "AND t2.address LIKE ? " +
+                "WHERE t1.`is_deleted` = ? " +
+                "AND t1.`env` = ? " +
+                "AND t1.`age` IS NULL " +
+                "AND t2.`is_deleted` = ? " +
+                "AND t2.`env` = ? " +
+                "AND t2.`address` LIKE ? " +
                 "GROUP BY t1.age, t1.id, t2.student_id " +
                 "HAVING MAX(t1.age) > ? " +
                 "LIMIT ?, ?");
@@ -114,10 +114,10 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         db.sqlList().wantFirstSql()
             .end("FROM student t1 RIGHT JOIN home_address t2 " +
                 "ON t1.id = t2.id " +
-                "WHERE t1.is_deleted = ? " +
-                "AND t1.age IS NULL " +
-                "AND t2.is_deleted = ? " +
-                "AND t2.address LIKE ?");
+                "WHERE t1.`is_deleted` = ? " +
+                "AND t1.`age` IS NULL " +
+                "AND t2.`is_deleted` = ? " +
+                "AND t2.`address` LIKE ?");
     }
 
     @Test
@@ -141,8 +141,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .end("FROM student t1 LEFT JOIN home_address t2 " +
                 "ON t1.home_address_id = t2.id " +
                 "LEFT JOIN student_score t3 ON t1.id = t3.student_id " +
-                "WHERE t1.age = ? " +
-                "AND t2.address LIKE ? " +
-                "AND t3.subject IN (?, ?, ?)");
+                "WHERE t1.`age` = ? " +
+                "AND t2.`address` LIKE ? " +
+                "AND t3.`subject` IN (?, ?, ?)");
     }
 }

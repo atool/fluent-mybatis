@@ -28,8 +28,9 @@ public class DeleteByMapTest extends BaseTest {
                 this.put(StudentMapping.userName.column, "test12");
             }
         });
-        db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE is_deleted = ? AND env = ? AND user_name = ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "DELETE FROM student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         db.table(ATM.table.student).count().eq(8);
     }
 
@@ -42,7 +43,7 @@ public class DeleteByMapTest extends BaseTest {
         });
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student SET `is_deleted` = true " +
-            "WHERE is_deleted = ? AND env = ? AND user_name = ?");
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara().eq(new Object[]{false, "test_env", "test12"});
     }
 }

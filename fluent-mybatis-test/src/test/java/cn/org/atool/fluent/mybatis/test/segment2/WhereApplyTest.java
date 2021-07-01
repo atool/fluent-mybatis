@@ -21,7 +21,7 @@ class WhereApplyTest extends BaseTest {
             .where.age().apply("=1").end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age =1");
+            .end("WHERE `age` =1");
     }
 
     @Test
@@ -30,7 +30,7 @@ class WhereApplyTest extends BaseTest {
             .where.age().isNull().end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IS NULL");
+            .end("WHERE `age` IS NULL");
     }
 
     @Test
@@ -40,7 +40,7 @@ class WhereApplyTest extends BaseTest {
             .and.userName().isNull(false).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IS NULL");
+            .end("WHERE `age` IS NULL");
     }
 
     @Test
@@ -49,7 +49,7 @@ class WhereApplyTest extends BaseTest {
             .where.age().notNull().end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IS NOT NULL");
+            .end("WHERE `age` IS NOT NULL");
     }
 
     @Test
@@ -59,7 +59,7 @@ class WhereApplyTest extends BaseTest {
             .and.userName().notNull(false).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IS NOT NULL");
+            .end("WHERE `age` IS NOT NULL");
     }
 
     @Test
@@ -68,7 +68,7 @@ class WhereApplyTest extends BaseTest {
             .where.age().eq(34).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age = ?");
+            .end("WHERE `age` = ?");
     }
 
     @Test
@@ -78,7 +78,7 @@ class WhereApplyTest extends BaseTest {
             .and.userName().eq(null, Objects::nonNull).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age = ?");
+            .end("WHERE `age` = ?");
     }
 
     @Test
@@ -87,7 +87,7 @@ class WhereApplyTest extends BaseTest {
             .where.age().ne(34).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age <> ?");
+            .end("WHERE `age` <> ?");
     }
 
     @Test
@@ -97,7 +97,7 @@ class WhereApplyTest extends BaseTest {
             .and.userName().ne("", Objects::nonNull).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name <> ?");
+            .end("WHERE `user_name` <> ?");
     }
 
     @Test
@@ -106,7 +106,7 @@ class WhereApplyTest extends BaseTest {
             .where.age().gt(34).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age > ?");
+            .end("WHERE `age` > ?");
     }
 
     @Test
@@ -116,7 +116,7 @@ class WhereApplyTest extends BaseTest {
             .and.version().eq(null, Objects::nonNull).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age > ?");
+            .end("WHERE `age` > ?");
     }
 
     @Test
@@ -127,7 +127,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age >= ?");
+            .end("WHERE `age` >= ?");
     }
 
     @Test
@@ -139,7 +139,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age >= ?");
+            .end("WHERE `age` >= ?");
     }
 
     @Test
@@ -150,7 +150,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age < ?");
+            .end("WHERE `age` < ?");
     }
 
     @Test
@@ -162,7 +162,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age < ?");
+            .end("WHERE `age` < ?");
     }
 
     @Test
@@ -173,7 +173,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age <= ?");
+            .end("WHERE `age` <= ?");
     }
 
     @Test
@@ -185,7 +185,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age <= ?");
+            .end("WHERE `age` <= ?");
     }
 
     @Test
@@ -196,7 +196,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age BETWEEN ? AND ?");
+            .end("WHERE `age` BETWEEN ? AND ?");
     }
 
     @Test
@@ -207,7 +207,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age NOT BETWEEN ? AND ?");
+            .end("WHERE `age` NOT BETWEEN ? AND ?");
     }
 
     @Test
@@ -218,7 +218,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name = ?");
+            .end("WHERE `user_name` = ?");
     }
 
     @Test
@@ -229,7 +229,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name <> ?");
+            .end("WHERE `user_name` <> ?");
     }
 
     @Test
@@ -240,7 +240,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name > ?");
+            .end("WHERE `user_name` > ?");
     }
 
     @Test
@@ -251,7 +251,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name >= ?");
+            .end("WHERE `user_name` >= ?");
     }
 
     @Test
@@ -262,7 +262,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name < ?");
+            .end("WHERE `user_name` < ?");
     }
 
     @Test
@@ -273,7 +273,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name <= ?");
+            .end("WHERE `user_name` <= ?");
     }
 
     @Test
@@ -284,7 +284,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
     @Test
@@ -296,7 +296,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
     @Test
@@ -308,7 +308,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
     @Test
@@ -319,7 +319,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name NOT LIKE ?");
+            .end("WHERE `user_name` NOT LIKE ?");
     }
 
     @Test
@@ -331,7 +331,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name NOT LIKE ?");
+            .end("WHERE `user_name` NOT LIKE ?");
     }
 
     @Test
@@ -343,7 +343,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name NOT LIKE ?");
+            .end("WHERE `user_name` NOT LIKE ?");
     }
 
     @Test
@@ -354,7 +354,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
 
@@ -367,7 +367,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
     @Test
@@ -378,7 +378,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
     @Test
@@ -390,7 +390,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name LIKE ?");
+            .end("WHERE `user_name` LIKE ?");
     }
 
     @Test
@@ -402,7 +402,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name = ? AND age < ?");
+            .end("WHERE `user_name` = ? AND `age` < ?");
     }
 
     @Test
@@ -414,7 +414,7 @@ class WhereApplyTest extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE user_name = ? " +
-                "AND age BETWEEN ? AND ?");
+            .end("WHERE `user_name` = ? " +
+                "AND `age` BETWEEN ? AND ?");
     }
 }

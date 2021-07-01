@@ -23,7 +23,7 @@ public class DeleteTest extends BaseTest {
             .where.id().eq(24L).end();
         mapper.delete(query);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE id = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM student WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
@@ -35,7 +35,7 @@ public class DeleteTest extends BaseTest {
         mapper.logicDelete(new StudentQuery()
             .where.id().eq(24L).end());
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET `is_deleted` = true WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE student SET `is_deleted` = true WHERE `id` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eq(new Object[]{24L});
     }
 

@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 import static cn.org.atool.fluent.mybatis.generate.helper.HomeAddressMapping.studentId;
 
@@ -31,7 +32,8 @@ public class NestedQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM student " +
-                "WHERE EXISTS (SELECT * FROM home_address WHERE address LIKE ? AND id =student.home_address_id)");
+                "WHERE EXISTS (SELECT * FROM home_address " +
+                "   WHERE `address` LIKE ? AND `id` =student.home_address_id)", StringMode.SameAsSpace);
     }
 
     @Test
@@ -48,8 +50,8 @@ public class NestedQueryTest extends BaseTest {
             .eq("SELECT id FROM student " +
                 "WHERE EXISTS (SELECT 1 " +
                 "FROM home_address " +
-                "WHERE address LIKE ? " +
-                "AND id =student.home_address_id)");
+                "WHERE `address` LIKE ? " +
+                "AND `id` =student.home_address_id)");
     }
 
     @Test
@@ -62,7 +64,7 @@ public class NestedQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM student " +
-                "WHERE EXISTS (SELECT id FROM student WHERE id = ?)");
+                "WHERE EXISTS (SELECT id FROM student WHERE `id` = ?)");
     }
 
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
@@ -77,6 +79,7 @@ public class NestedQueryTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`,")
             .end("FROM student " +
-                "WHERE id IN (SELECT student_id FROM home_address WHERE address LIKE ?)");
+                "WHERE `id` IN (SELECT student_id " +
+                "   FROM home_address WHERE `address` LIKE ?)", StringMode.SameAsSpace);
     }
 }

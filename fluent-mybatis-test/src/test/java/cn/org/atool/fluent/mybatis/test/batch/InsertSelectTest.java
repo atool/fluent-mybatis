@@ -30,7 +30,8 @@ public class InsertSelectTest extends BaseTest {
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("INSERT INTO student (address, age) SELECT address, age FROM student WHERE id IN (?, ?, ?)");
+            .eq("INSERT INTO student (address, age) SELECT address, age " +
+                "FROM student WHERE `id` IN (?, ?, ?)");
         want.number(count).eq(3);
         ATM.dataMap.student.table(6)
             .address.values("address1", "address2", "address3", "address1", "address2", "address3")
@@ -50,7 +51,7 @@ public class InsertSelectTest extends BaseTest {
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("SELECT address, age FROM student WHERE id IN (?, ?, ?)");
+            .eq("SELECT address, age FROM student WHERE `id` IN (?, ?, ?)");
         want.list(list).sizeEq(3);
     }
 
@@ -66,7 +67,8 @@ public class InsertSelectTest extends BaseTest {
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("SELECT address AS address_alias, age FROM student WHERE id IN (?, ?, ?)");
+            .eq("SELECT address AS address_alias, age " +
+                "FROM student WHERE `id` IN (?, ?, ?)");
         want.list(list).sizeEq(3);
     }
 
@@ -92,7 +94,7 @@ public class InsertSelectTest extends BaseTest {
             .end("INSERT INTO student (user_name, age, address) " +
                     "SELECT user_name, 40, 'test address' " +
                     "FROM student " +
-                    "WHERE user_name LIKE ?",
+                    "WHERE `user_name` LIKE ?",
                 StringMode.SameAsSpace);
         ATM.dataMap.student.table(5)
             .userName.values("user1", "user2", "test1", "user1", "user2")

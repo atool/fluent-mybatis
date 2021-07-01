@@ -29,9 +29,9 @@ public class SelectOneTest extends BaseTest {
             .contains("Expected one result (or null) to be returned by selectOne(), but found");
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM student " +
-                "WHERE is_deleted = ? " +
-                "AND env = ? " +
-                "AND user_name LIKE ?", StringMode.SameAsSpace);
+                "WHERE `is_deleted` = ? " +
+                "AND `env` = ? " +
+                "AND `user_name` LIKE ?", StringMode.SameAsSpace);
     }
 
     @Test
@@ -45,8 +45,8 @@ public class SelectOneTest extends BaseTest {
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM student " +
-                "WHERE is_deleted = ? " +
-                "AND env = ? " +
-                "AND id = ?", StringMode.SameAsSpace);
+                "WHERE `is_deleted` = ? " +
+                "AND `env` = ? " +
+                "AND `id` = ?", StringMode.SameAsSpace);
     }
 }

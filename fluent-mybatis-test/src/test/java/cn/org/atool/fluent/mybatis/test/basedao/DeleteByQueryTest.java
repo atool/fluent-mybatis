@@ -22,6 +22,6 @@ public class DeleteByQueryTest extends BaseTest {
         db.table(ATM.table.student).count().eq(7);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM student " +
-                "WHERE is_deleted = ? AND env = ? AND user_name IN (?, ?, ?)", StringMode.SameAsSpace);
+                "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` IN (?, ?, ?)", StringMode.SameAsSpace);
     }
 }

@@ -22,7 +22,7 @@ class WhereApplyTest_In extends BaseTest {
             .or.age().in(new int[]{1}).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IN (?, ?) AND age = ? OR age = ?");
+            .end("WHERE `age` IN (?, ?) AND `age` = ? OR `age` = ?");
     }
 
     @Test
@@ -32,7 +32,7 @@ class WhereApplyTest_In extends BaseTest {
             .and.age().in(new long[]{23, 34}, If::everTrue).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IN (?, ?) AND age IN (?, ?)");
+            .end("WHERE `age` IN (?, ?) AND `age` IN (?, ?)");
     }
 
     @Test
@@ -42,7 +42,7 @@ class WhereApplyTest_In extends BaseTest {
             .and.age().in(Arrays.asList(12), If::everTrue).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IN (?, ?) AND age = ?");
+            .end("WHERE `age` IN (?, ?) AND `age` = ?");
     }
 
     @Test
@@ -52,7 +52,7 @@ class WhereApplyTest_In extends BaseTest {
             .and.age().in(new long[]{23}, If::notEmpty).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age IN (?, ?) AND age = ?");
+            .end("WHERE `age` IN (?, ?) AND `age` = ?");
     }
 
     @Test
@@ -62,7 +62,7 @@ class WhereApplyTest_In extends BaseTest {
             .and.age().notIn(new long[]{23}, If::notEmpty).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age NOT IN (?, ?) AND age NOT IN (?)");
+            .end("WHERE `age` NOT IN (?, ?) AND `age` NOT IN (?)");
     }
 
 
@@ -73,6 +73,6 @@ class WhereApplyTest_In extends BaseTest {
             .and.age().notIn(Arrays.asList(1), If::notEmpty).end()
         );
         db.sqlList().wantFirstSql()
-            .end("WHERE age NOT IN (?, ?) AND age NOT IN (?)");
+            .end("WHERE `age` NOT IN (?, ?) AND `age` NOT IN (?)");
     }
 }

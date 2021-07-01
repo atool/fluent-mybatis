@@ -42,12 +42,12 @@ public class JoinApplyTest extends BaseTest {
                 format("JOIN home_address %s ", alias2) +
                 format("ON %s.id = %s.id ", alias1, alias2) +
                 format("OR %s.age = %s.student_id ", alias1, alias2) +
-                format("WHERE %s.is_deleted = ? ", alias1) +
-                format("AND %s.env = ? ", alias1) +
-                format("AND %s.age IS NULL ", alias1) +
-                format("AND %s.is_deleted = ? ", alias2) +
-                format("AND %s.env = ? ", alias2) +
-                format("AND %s.address LIKE ? ", alias2) +
+                format("WHERE %s.`is_deleted` = ? ", alias1) +
+                format("AND %s.`env` = ? ", alias1) +
+                format("AND %s.`age` IS NULL ", alias1) +
+                format("AND %s.`is_deleted` = ? ", alias2) +
+                format("AND %s.`env` = ? ", alias2) +
+                format("AND %s.`address` LIKE ? ", alias2) +
                 format("GROUP BY %s.age, %s.id, %s.student_id ", alias1, alias1, alias2) +
                 format("HAVING MAX(%s.age) > ? ", alias1) +
                 "LIMIT ?, ?");
