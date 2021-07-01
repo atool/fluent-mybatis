@@ -56,7 +56,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 format("AND %s.`address` LIKE ? ", a2) +
                 format("GROUP BY %s.age, %s.id, %s.student_id ", a1, a1, a2) +
                 format("HAVING MAX(%s.age) > ? ", a1) +
-                format("ORDER BY %s.id DESC, %s.id ASC ", a1, a2) +
+                format("ORDER BY %s.`id` DESC, %s.`id` ASC ", a1, a2) +
                 "LIMIT ?, ?");
     }
 

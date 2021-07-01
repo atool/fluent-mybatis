@@ -53,7 +53,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
                 format("AND %s.`address` LIKE ? ", a[1]) +
                 format("GROUP BY %s.age, %s.id, %s.student_id ", a[0], a[0], a[1]) +
                 format("HAVING MAX(%s.age) > ? ", a[0]) +
-                format("ORDER BY %s.id DESC, %s.id ASC ", a[0], a[1]) +
+                format("ORDER BY %s.`id` DESC, %s.`id` ASC ", a[0], a[1]) +
                 "LIMIT ?, ?");
     }
 

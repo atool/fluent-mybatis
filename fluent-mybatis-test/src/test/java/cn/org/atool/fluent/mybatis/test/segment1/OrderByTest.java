@@ -28,6 +28,6 @@ public class OrderByTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT id FROM student WHERE `id` = ? " +
-                "ORDER BY id ASC, age DESC", StringMode.SameAsSpace);
+                "ORDER BY `id` ASC, `age` DESC", StringMode.SameAsSpace);
     }
 }

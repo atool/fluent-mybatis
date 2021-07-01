@@ -20,7 +20,8 @@ public class OrderTest extends BaseTest {
             .desc("user_name", "id+0").end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().where().eq("`user_name` LIKE ?");
-        db.sqlList().wantFirstSql().end("ORDER BY id ASC, home_address_id DESC, user_name DESC, id+0 DESC");
+        db.sqlList().wantFirstSql().end("" +
+            "ORDER BY `id` ASC, `home_address_id` DESC, `user_name` DESC, id+0 DESC");
     }
 
     @Test
@@ -35,7 +36,8 @@ public class OrderTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().where().eq("`user_name` LIKE ?");
-        db.sqlList().wantFirstSql().end("ORDER BY id ASC, home_address_id ASC, user_name DESC, id+0 ASC");
+        db.sqlList().wantFirstSql().end("" +
+            "ORDER BY `id` ASC, `home_address_id` ASC, `user_name` DESC, id+0 ASC");
     }
 
     @Test
@@ -48,6 +50,7 @@ public class OrderTest extends BaseTest {
             .asc("id+0")
             .end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().end("ORDER BY id DESC, home_address_id DESC, id+0 ASC");
+        db.sqlList().wantFirstSql().end("" +
+            "ORDER BY `id` DESC, `home_address_id` DESC, id+0 ASC");
     }
 }

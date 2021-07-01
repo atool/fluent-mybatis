@@ -55,7 +55,7 @@ public class SelectPagedListTest extends BaseTest {
                 "WHERE `user_name` LIKE ?");
         db.sqlList().wantSql(1).end("FROM student " +
             "WHERE `user_name` LIKE ? " +
-            "ORDER BY id ASC " +
+            "ORDER BY `id` ASC " +
             "LIMIT ?, ?");
     }
 

@@ -20,6 +20,6 @@ class OrderByBaseTest extends BaseTest {
             .desc(StudentMapping.userName).end()
         );
         db.sqlList().wantFirstSql()
-            .end("FROM student ORDER BY id ASC, user_name DESC");
+            .end("FROM student ORDER BY `id` ASC, `user_name` DESC");
     }
 }

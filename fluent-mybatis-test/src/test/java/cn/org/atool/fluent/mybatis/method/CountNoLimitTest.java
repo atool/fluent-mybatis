@@ -28,7 +28,7 @@ public class CountNoLimitTest extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT(*)")
-            .end("FROM student WHERE `id` = ? ORDER BY user_name ASC LIMIT ?, ?");
+            .end("FROM student WHERE `id` = ? ORDER BY `user_name` ASC LIMIT ?, ?");
 
         mapper.countNoLimit(query);
         db.sqlList().wantSql(1).end("WHERE `id` = ?");
@@ -55,7 +55,7 @@ public class CountNoLimitTest extends BaseTest {
         List<StudentEntity> list = mapper.listEntity(query);
         db.sqlList().wantSql(1)
             .start("SELECT `id`, `gmt_created`, `gmt_modified`,")
-            .end("WHERE `age` = ? ORDER BY user_name ASC LIMIT ?, ?");
+            .end("WHERE `age` = ? ORDER BY `user_name` ASC LIMIT ?, ?");
         want.list(list).sizeEq(20);
     }
 }

@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
 import java.util.stream.Stream;
@@ -160,12 +161,8 @@ public abstract class OrderByBase<
         if (isBlank(column)) {
             return;
         }
-        String segment;
-        if (this.wrapper.wrapperData.getFieldAlias().contains(column)) {
-            segment = column + SPACE + (isAsc ? ASC : DESC);
-        } else {
-            segment = this.columnWithAlias(column) + SPACE + (isAsc ? ASC : DESC);
-        }
+        Column _column = Column.column(column, this.wrapper);
+        String segment = _column.wrapColumn() + SPACE + (isAsc ? ASC : DESC);
         this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY_COLUMN, RETAIN, segment);
     }
 
@@ -176,7 +173,7 @@ public abstract class OrderByBase<
      */
     void applyField(FieldMapping column, boolean isAsc) {
         if (column != null) {
-            this.applyField(this.columnWithAlias(column), isAsc);
+            this.applyField(column.column, isAsc);
         }
     }
 
