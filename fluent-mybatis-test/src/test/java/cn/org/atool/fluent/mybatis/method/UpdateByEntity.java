@@ -26,7 +26,7 @@ public class UpdateByEntity extends BaseTest {
         );
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
-            "SET gmt_modified = now(), address = ?, user_name = ? " +
+            "SET `gmt_modified` = now(), `address` = ?, `user_name` = ? " +
             "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", "test", 1);
     }
@@ -46,7 +46,7 @@ public class UpdateByEntity extends BaseTest {
 
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
-            "SET gmt_modified = now(), user_name = ?, grade = ? " +
+            "SET `gmt_modified` = now(), `user_name` = ?, `grade` = ? " +
             "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);
     }
@@ -65,7 +65,7 @@ public class UpdateByEntity extends BaseTest {
 
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
-            "SET gmt_modified = now(), user_name = ?, grade = ? " +
+            "SET `gmt_modified` = now(), `user_name` = ?, `grade` = ? " +
             "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);
     }
@@ -85,12 +85,12 @@ public class UpdateByEntity extends BaseTest {
         mapper.updateBy(updater);
 
         db.sqlList().wantFirstSql()
-            .contains("user_name = ?,")
-            .contains("gmt_modified = ?,")
-            .contains("age = ?,")
-            .contains("birthday = ?,")
-            .notContain(", id = ?,")
-            .notContain("gmt_modified = now(),")
+            .contains("`user_name` = ?,")
+            .contains("`gmt_modified` = ?,")
+            .contains("`age` = ?,")
+            .contains("`birthday` = ?,")
+            .notContain(", `id` = ?,")
+            .notContain("`gmt_modified` = now(),")
             .end("WHERE `id` = ?")
         ;
     }
@@ -113,11 +113,11 @@ public class UpdateByEntity extends BaseTest {
         mapper.updateBy(updater);
 
         db.sqlList().wantFirstSql()
-            .contains("user_name = ?,")
-            .contains("gmt_modified = ?,")
-            .notContain(", id = ?,")
-            .notContain("address = ?,")
-            .notContain("birthday = ?,")
+            .contains("`user_name` = ?,")
+            .contains("`gmt_modified` = ?,")
+            .notContain(", `id` = ?,")
+            .notContain("`address` = ?,")
+            .notContain("`birthday` = ?,")
             .end("WHERE `id` = ?")
         ;
     }
@@ -139,11 +139,11 @@ public class UpdateByEntity extends BaseTest {
         mapper.updateBy(updater);
 
         db.sqlList().wantFirstSql()
-            .contains("user_name = ?,")
-            .contains("gmt_modified = now(),")
-            .notContain(", id = ?,")
-            .notContain("address = ?,")
-            .notContain("birthday = ?,")
+            .contains("`user_name` = ?,")
+            .contains("`gmt_modified` = now(),")
+            .notContain(", `id` = ?,")
+            .notContain("`address` = ?,")
+            .notContain("`birthday` = ?,")
             .end("WHERE `id` = ?")
         ;
     }

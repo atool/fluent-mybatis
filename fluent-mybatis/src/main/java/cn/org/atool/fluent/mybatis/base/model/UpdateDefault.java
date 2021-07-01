@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -34,9 +35,11 @@ public class UpdateDefault {
      * @param _default 默认值
      * @return UpdateDefault
      */
-    public UpdateDefault add(FieldMapping field, String _default) {
-        if (!updates.containsKey(field.column)) {
-            updateDefaults.add(field.column + " = " + _default);
+    public UpdateDefault add(DbType dbType, FieldMapping field, String _default) {
+        String column = field.column;
+        String wrap = dbType == null ? column : dbType.wrap(column);
+        if (!updates.containsKey(column) && !updates.containsKey(wrap)) {
+            updateDefaults.add(wrap + " = " + _default);
         }
         return this;
     }

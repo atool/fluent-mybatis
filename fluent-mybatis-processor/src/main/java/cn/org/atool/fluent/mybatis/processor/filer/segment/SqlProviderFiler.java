@@ -132,10 +132,10 @@ public class SqlProviderFiler extends AbstractFiler {
             }
             if (Objects.equals(field.getColumn(), fluent.getVersionField())) {
                 builder.addCode("if (!ignoreLockVersion) {\n");
-                builder.addStatement("\tdefaults.add($L, $S)", field.getName(), field.getUpdate());
+                builder.addStatement("\tdefaults.add(dbType(), $L, $S)", field.getName(), field.getUpdate());
                 builder.addCode("}\n");
             } else {
-                builder.addStatement("defaults.add($L, $S)", field.getName(), field.getUpdate());
+                builder.addStatement("defaults.add(dbType(), $L, $S)", field.getName(), field.getUpdate());
             }
         }
         return builder.addStatement("return defaults.getUpdateDefaults()").build();

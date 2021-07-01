@@ -26,10 +26,10 @@ public class SetObjectTest_IsTrue extends BaseTest {
         mapper.updateBy(update);
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
-            "SET gmt_modified = now(), " +
-            "user_name = ?, " +
-            "is_deleted = ?, " +
-            "home_address_id = ? " +
+            "SET `gmt_modified` = now(), " +
+            "`user_name` = ?, " +
+            "`is_deleted` = ?, " +
+            "`home_address_id` = ? " +
             "WHERE `is_deleted` = ?");
     }
 }

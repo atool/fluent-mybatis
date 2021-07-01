@@ -23,8 +23,10 @@ public class UpdateByQueryTest extends BaseTest {
             .where.id().eq(24L)
             .apply("1=1").end();
         mapper.updateBy(update);
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), user_name = ? WHERE `id` = ? AND 1=1", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student " +
+            "SET `gmt_modified` = now(), `user_name` = ? " +
+            "WHERE `id` = ? AND 1=1", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user name2")
@@ -44,7 +46,7 @@ public class UpdateByQueryTest extends BaseTest {
             .or.apply("user_name=?", "xxx").end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), user_name = ? " +
+            .eq("UPDATE student SET `gmt_modified` = now(), `user_name` = ? " +
                 "WHERE `id` = ? " +
                 "AND user_name='user2' " +
                 "OR user_name=?", StringMode.SameAsSpace);

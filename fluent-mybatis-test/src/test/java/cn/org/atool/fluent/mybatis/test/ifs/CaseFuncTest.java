@@ -34,8 +34,8 @@ public class CaseFuncTest extends BaseTest {
         // 验证SQL语句
         db.sqlList().wantFirstSql()
             .eq("UPDATE student " +
-                    "SET gmt_modified = now(), " +
-                    "address = case id when 1 then 'address 1' when 2 then 'address 2' else 'address 3' end " +
+                    "SET `gmt_modified` = now(), " +
+                    "`address` = case id when 1 then 'address 1' when 2 then 'address 2' else 'address 3' end " +
                     "WHERE `id` = ?",
                 StringMode.SameAsSpace);
     }
@@ -71,9 +71,9 @@ public class CaseFuncTest extends BaseTest {
         // 验证SQL语句
         db.sqlList().wantFirstSql()
             .eq("UPDATE student " +
-                    "SET gmt_modified = now(), " +
-                    "address = case id when 1 then ? when 2 then ? else ? end, " +
-                    "age = case id when 1 then ? when 2 then ? else ? end " +
+                    "SET `gmt_modified` = now(), " +
+                    "`address` = case id when 1 then ? when 2 then ? else ? end, " +
+                    "`age` = case id when 1 then ? when 2 then ? else ? end " +
                     "WHERE `id` IN (?, ?, ?)",
                 StringMode.SameAsSpace);
         // 验证参数
@@ -100,9 +100,9 @@ public class CaseFuncTest extends BaseTest {
         // 验证SQL语句
         db.sqlList().wantFirstSql()
             .eq("UPDATE student " +
-                    "SET gmt_modified = now(), " +
-                    "address = case id when 1 then ? when 2 then ? else ? end, " +
-                    "age = case id when 1 then ? when 2 then ? else ? end " +
+                    "SET `gmt_modified` = now(), " +
+                    "`address` = case id when 1 then ? when 2 then ? else ? end, " +
+                    "`age` = case id when 1 then ? when 2 then ? else ? end " +
                     "WHERE `id` IN (?, ?, ?)",
                 StringMode.SameAsSpace);
         // 验证参数

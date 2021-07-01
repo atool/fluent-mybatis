@@ -27,9 +27,11 @@ public class IfsTest extends BaseTest {
 
         mapper.updateBy(update);
         // 验证SQL语句
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE `id` = ?",
-                StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE student " +
+                "SET `gmt_modified` = now(), `address` = ? " +
+                "WHERE `id` = ?",
+            StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address 2", 2L});
     }
@@ -47,9 +49,11 @@ public class IfsTest extends BaseTest {
 
         mapper.updateBy(update);
         // 验证SQL语句
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE `id` = ?",
-                StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE student " +
+                "SET `gmt_modified` = now(), `address` = ? " +
+                "WHERE `id` = ?",
+            StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address 2", 2L});
     }
@@ -72,9 +76,11 @@ public class IfsTest extends BaseTest {
         mapper.updateBy(update);
 
         // 验证SQL语句
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE `id` = ?",
-                StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE student " +
+                "SET `gmt_modified` = now(), `address` = ? " +
+                "WHERE `id` = ?",
+            StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address 2", 2L});
     }
@@ -94,9 +100,10 @@ public class IfsTest extends BaseTest {
         mapper.updateBy(update);
 
         // 验证SQL语句
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), address = ? WHERE `id` IN (?, ?)",
-                StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE student SET `gmt_modified` = now(), `address` = ? " +
+                "WHERE `id` IN (?, ?)",
+            StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address", 2, 3});
     }
@@ -119,8 +126,8 @@ public class IfsTest extends BaseTest {
         // 验证SQL语句
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE student " +
-                "SET gmt_modified = now(), address = ? WHERE `id` IN (?, ?)",
-                StringMode.SameAsSpace);
+                "SET `gmt_modified` = now(), `address` = ? WHERE `id` IN (?, ?)",
+            StringMode.SameAsSpace);
         // 验证参数
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"address", 2, 3});
     }

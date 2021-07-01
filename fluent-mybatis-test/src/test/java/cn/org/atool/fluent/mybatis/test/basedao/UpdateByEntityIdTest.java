@@ -25,7 +25,8 @@ public class UpdateByEntityIdTest extends BaseTest {
 
         dao.updateEntityByIds(new StudentEntity().setId(2L).setUserName("test3").setAge(30));
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), user_name = ?, age = ? " +
+            .eq("UPDATE student " +
+                "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).queryWhere("id=2")
             .eqDataMap(ATM.dataMap.student.table(1)
@@ -43,9 +44,11 @@ public class UpdateByEntityIdTest extends BaseTest {
             new StudentEntity().setId(2L).setUserName("test2").setAge(20),
             new StudentEntity().setId(3L).setUserName("test3").setAge(30));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? " +
+            "UPDATE student " +
+            "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `id` = ?; " +
-            "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? " +
+            "UPDATE student " +
+            "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).queryWhere("id in (2, 3)")
             .eqDataMap(ATM.dataMap.student.table(2)
@@ -64,9 +67,9 @@ public class UpdateByEntityIdTest extends BaseTest {
             new StudentEntity().setId(2L).setUserName("test2").setAge(20),
             new StudentEntity().setId(3L).setUserName("test3").setAge(30)));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? " +
+            "UPDATE student SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `id` = ?; " +
-            "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? " +
+            "UPDATE student SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).queryWhere("id in (2, 3)")
             .eqDataMap(ATM.dataMap.student.table(2)
@@ -86,7 +89,7 @@ public class UpdateByEntityIdTest extends BaseTest {
             new StudentEntity().setUserName("test2").setAge(20),
             new StudentEntity().setId(3L));
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student SET gmt_modified = now(), user_name = ?, age = ? " +
+                "UPDATE student SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
                 "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?"
             , StringMode.SameAsSpace);
         db.table(ATM.table.student).queryWhere("id = 3")

@@ -61,7 +61,7 @@ public class UpdateByDefaultTest extends BaseTest {
             .where.id().eq(1L)
             .and.version().eq(2L).end());
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET version = version + 1, code = ? " +
+            "UPDATE idcard SET `version` = version + 1, `code` = ? " +
             "WHERE `id` = ? AND `version` = ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"new", 1L, 2L});
     }

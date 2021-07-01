@@ -316,7 +316,7 @@ public class WrapperData implements IWrapperData {
      */
     public void updateSql(Column column, String functionSql, Object... values) {
         if (notBlank(functionSql)) {
-            updates.put(column.getColumn(), this.paramSql(column, functionSql, values));
+            updates.put(column.wrapColumn(), this.paramSql(column, functionSql, values));
         }
     }
 

@@ -26,7 +26,7 @@ public class UpdateTest extends BaseTest {
 
         dao.updateUserNameById("new_user_name", 4L);
         db.sqlList().wantFirstSql().eq("UPDATE student " +
-            "SET gmt_modified = now(), user_name = ? " +
+            "SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         db.table(ATM.table.student).queryWhere("id=4")
             .eqDataMap(ATM.dataMap.student.table(1)

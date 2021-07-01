@@ -27,7 +27,7 @@ public class QuestionMarkTest extends BaseTest {
             .age.values(23)
             .cleanAndInsert();
         StudentUpdate update = new StudentUpdate()
-            .update.userName().applyFunc("concat(user_name, concat('_\\\\\\?', ? ))", "_aaa")
+            .set.userName().applyFunc("concat(user_name, concat('_\\\\\\?', ? ))", "_aaa")
             .set.age().applyFunc("age+1").end()
             .where.id().eq(1L).end();
         mapper.updateBy(update);
@@ -37,9 +37,9 @@ public class QuestionMarkTest extends BaseTest {
             .eqTable();
         db.sqlList().wantFirstSql()
             .eq("UPDATE student " +
-                "SET gmt_modified = now(), " +
-                "user_name = concat(user_name, concat('_\\\\?', ? )), " +
-                "age = age+1 " +
+                "SET `gmt_modified` = now(), " +
+                "`user_name` = concat(user_name, concat('_\\\\?', ? )), " +
+                "`age` = age+1 " +
                 "WHERE `id` = ?");
     }
 }

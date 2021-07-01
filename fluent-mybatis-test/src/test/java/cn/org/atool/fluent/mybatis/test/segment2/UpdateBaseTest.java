@@ -15,7 +15,7 @@ class UpdateBaseTest extends BaseTest {
     @Test
     void eqByNotNull() {
         mapper.updateBy(new StudentUpdate()
-            .update.byNotNull(new HashMap<String, Object>() {
+            .set.byNotNull(new HashMap<String, Object>() {
                 {
                     this.put("age", 34);
                     this.put("user_name", "aaa");
@@ -23,6 +23,6 @@ class UpdateBaseTest extends BaseTest {
             }).end()
             .where.id().eq(2).end());
         db.sqlList().wantFirstSql()
-            .end("SET gmt_modified = now(), user_name = ?, age = ? WHERE `id` = ?");
+            .end("SET `gmt_modified` = now(), `user_name` = ?, `age` = ? WHERE `id` = ?");
     }
 }

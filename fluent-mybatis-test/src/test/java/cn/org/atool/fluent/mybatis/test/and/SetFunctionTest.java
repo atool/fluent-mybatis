@@ -35,9 +35,9 @@ public class SetFunctionTest extends BaseTest {
             .eqTable();
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
-            "SET gmt_modified = now(), " +
-            "user_name = concat(user_name, ?), " +
-            "age = age+1 " +
+            "SET `gmt_modified` = now(), " +
+            "`user_name` = concat(user_name, ?), " +
+            "`age` = age+1 " +
             "WHERE `id` = ?");
     }
 }
