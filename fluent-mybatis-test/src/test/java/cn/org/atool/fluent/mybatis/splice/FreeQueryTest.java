@@ -84,11 +84,11 @@ public class FreeQueryTest extends BaseTest {
             .where.apply("id", EQ, "1").end();
 
         FreeQuery query2 = new FreeQuery("t_member", "t2");
-        query1.select("t2.id", "t2.gmt_modified")
+        query2.select("t2.id", "t2.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         FreeQuery query3 = new FreeQuery("t_member2", "t3");
-        query1.select("t3.id", "t3.gmt_modified")
+        query3.select("t3.id", "t3.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         JoinBuilder query = JoinBuilder
