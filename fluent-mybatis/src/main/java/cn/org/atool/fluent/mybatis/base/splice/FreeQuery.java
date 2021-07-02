@@ -1,11 +1,15 @@
 package cn.org.atool.fluent.mybatis.base.splice;
 
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.GroupBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Having;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Selector;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -17,6 +21,7 @@ import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhe
  *
  * @author darui.wu
  */
+@Accessors(chain = true)
 @SuppressWarnings({"rawtypes"})
 public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     /**
@@ -107,5 +112,13 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
         String placeholder = this.wrapperData.paramSql(null, sql, paras);
         this.wrapperData.customizedSql(placeholder, null);
         return this;
+    }
+
+    @Setter
+    private DbType dbType;
+
+    @Override
+    public DbType dbType() {
+        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
     }
 }

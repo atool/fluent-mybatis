@@ -1,13 +1,23 @@
 package cn.org.atool.fluent.mybatis.base.splice;
 
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateSetter;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateOrderBy;
 import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateWhere;
 
+/**
+ * FreeUpdate
+ *
+ * @author wudarui
+ */
+@Accessors(chain = true)
 public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
     public final UpdateSetter update = new UpdateSetter(this);
 
@@ -54,5 +64,13 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
         String placeholder = this.wrapperData.paramSql(null, sql, paras);
         this.wrapperData.customizedSql(placeholder, null);
         return this;
+    }
+
+    @Setter
+    private DbType dbType;
+
+    @Override
+    public DbType dbType() {
+        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
     }
 }

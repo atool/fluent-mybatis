@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.Column;
@@ -99,17 +98,6 @@ public abstract class BaseWrapper<
      * 通过Wrapper直接设置变量共享关系
      *
      * @param parameters 参数
-     * @deprecated 避免使用set开头命名
-     */
-    @Deprecated
-    protected void setSharedParameter(Parameters parameters) {
-        this.sharedParameter(parameters);
-    }
-
-    /**
-     * 通过Wrapper直接设置变量共享关系
-     *
-     * @param parameters 参数
      */
     protected void sharedParameter(Parameters parameters) {
         this.wrapperData.getParameters().sharedParameter(parameters);
@@ -139,14 +127,7 @@ public abstract class BaseWrapper<
      *
      * @return DbType
      */
-    public DbType dbType() {
-        DbType dbType = this.myDbType();
-        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
-    }
-
-    protected DbType myDbType() {
-        return null;
-    }
+    public abstract DbType dbType();
 
     /**
      * 返回字段映射关系

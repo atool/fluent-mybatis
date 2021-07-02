@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -196,5 +197,10 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
             all.addAll(query.allFields());
         }
         return all;
+    }
+
+    @Override
+    public DbType dbType() {
+        return this.query.dbType();
     }
 }

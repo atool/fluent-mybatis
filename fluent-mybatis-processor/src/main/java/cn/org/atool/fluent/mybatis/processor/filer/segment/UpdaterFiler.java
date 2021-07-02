@@ -171,7 +171,7 @@ public class UpdaterFiler extends AbstractFiler {
     }
 
     private MethodSpec m_dbType() {
-        return super.publicMethod("myDbType", true, DbType.class)
+        return super.publicMethod("dbType", true, DbType.class)
             .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
             .build();
     }
