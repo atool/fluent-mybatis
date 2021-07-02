@@ -79,15 +79,11 @@ public interface StrConstant {
      */
     char DOUBLE_QUOTATION = '"';
     /**
-     * 单引号
-     */
-    char SINGLE_QUOTATION = '\'';
-    /**
      * 空格
      */
     char SPACE_CHAR = ' ';
     /**
      * 反引号
      */
-    char BACK_QUOTE = '\'';
+    char BACK_QUOTE = '`';
 }

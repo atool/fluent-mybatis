@@ -5,10 +5,6 @@ import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
-import java.lang.reflect.Constructor;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * NestedQueryFactory
  *
@@ -16,29 +12,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * @create 2020/6/19 8:34 下午
  */
 public class NestedQueryFactory {
-    final static Map<Class<? extends IBaseQuery>, Constructor> Query_Constructor = new ConcurrentHashMap<>();
-
     /**
      * 构造查询对象
      *
      * @param klass 嵌套查询对象类
      * @return 嵌套查询对象
      */
-    public static <Q extends IBaseQuery> Q nested(Class klass, BaseWrapper wrapper) {
+    public static <Q extends IBaseQuery> Q nested(Class klass, BaseWrapper wrapper, boolean sameAlias) {
         if (FreeQuery.class.isAssignableFrom(klass)) {
-            return (Q) new FreeQuery(wrapper.getTable(), wrapper.getTableAlias());
-        }
-        if (!Query_Constructor.containsKey(klass)) {
-            try {
-                Constructor constructor = klass.getConstructor();
-                Query_Constructor.put(klass, constructor);
-            } catch (Exception e) {
-                throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.", e);
-            }
+            return (Q) new FreeQuery(wrapper.getTable(), sameAlias ? wrapper.getTableAlias() : null);
         }
         try {
-            Q query = (Q) Query_Constructor.get(klass).newInstance();
-            return query;
+            if (sameAlias) {
+                return (Q) klass.getConstructor(String.class).newInstance(wrapper.getTableAlias());
+            } else {
+                return (Q) klass.getConstructor().newInstance();
+            }
         } catch (Exception e) {
             throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.", e);
         }

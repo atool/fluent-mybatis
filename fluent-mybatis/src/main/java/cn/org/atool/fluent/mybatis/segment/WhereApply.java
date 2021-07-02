@@ -123,7 +123,7 @@ public class WhereApply<
      */
     @Override
     public WHERE in(QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(this.segment.queryClass(), this.segment.wrapper);
+        NQ nested = NestedQueryFactory.nested(this.segment.queryClass(), this.segment.wrapper, false);
         query.apply(nested);
         return this.in(nested);
     }
@@ -152,7 +152,7 @@ public class WhereApply<
      */
     @Override
     public WHERE notIn(QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(this.segment.queryClass(), this.segment.wrapper);
+        NQ nested = NestedQueryFactory.nested(this.segment.queryClass(), this.segment.wrapper, false);
         query.apply(nested);
         return this.notIn(nested);
     }

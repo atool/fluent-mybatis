@@ -21,6 +21,22 @@ public class NestedQueryTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
+    @DisplayName(".and(子查询) 中lambda表达式别名问题")
+    @Test
+    void test_I3YX65() {
+        StudentQuery query = new StudentQuery("t1")
+            .selectId()
+            .where.id().in(new int[]{1, 3, 5})
+            .and(q -> q.where.address().like("kk").or.age().ge(20).end())
+            .end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT t1.`id` " +
+            "FROM student t1 " +
+            "WHERE t1.`id` IN (?, ?, ?) " +
+            "AND ( t1.`address` LIKE ? OR t1.`age` >= ? )", StringMode.SameAsSpace);
+    }
+
     @Test
     void test_or_nested() {
         StudentQuery query = new StudentQuery()
