@@ -1,25 +1,16 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
-import java.io.Serializable;
-import java.lang.Boolean;
-import java.lang.Class;
-import java.lang.Integer;
-import java.lang.Long;
-import java.lang.Override;
-import java.lang.String;
-import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * StudentScoreEntity: 数据映射实体定义
@@ -85,8 +76,8 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   /**
    * 性别, 0:女; 1:男
    */
-  @TableField("gender_man")
-  private Integer genderMan;
+  @TableField("gender")
+  private Integer gender;
 
   /**
    * 学期
