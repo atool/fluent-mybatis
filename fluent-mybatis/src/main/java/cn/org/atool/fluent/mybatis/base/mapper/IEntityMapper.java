@@ -75,7 +75,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param entities 实例列表
      * @return ignore
      */
-    int insertBatch(@Param("list") Collection<E> entities);
+    int insertBatch(@Param(Param_List) Collection<E> entities);
 
     /**
      * 批量插入数据，实例主键必须全部已赋值
@@ -83,7 +83,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param entities 实例列表
      * @return ignore
      */
-    int insertBatchWithPk(@Param("list") Collection<E> entities);
+    int insertBatchWithPk(@Param(Param_List) Collection<E> entities);
 
     /**
      * insert into a_table(fields) select fields from b_table;
@@ -138,7 +138,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param ids 主键ID列表(不能为 null 以及 empty)
      * @return ignore
      */
-    List<E> listByIds(@Param(Param_Coll) Collection ids);
+    List<E> listByIds(@Param(Param_List) Collection ids);
 
     /**
      * 查询（根据 columnMap 条件）
@@ -197,7 +197,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param ids 主键列表
      * @return ignore
      */
-    int deleteById(Serializable... ids);
+    int deleteById(@Param(Param_List) Serializable... ids);
 
     /**
      * 根据id列表批量删除
@@ -205,7 +205,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param idList id列表（值不能为null或者empty）
      * @return ignore
      */
-    int deleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
+    int deleteByIds(@Param(Param_List) Collection<? extends Serializable> idList);
 
     /**
      * 根据 columnMap key值删除记录
@@ -229,7 +229,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param ids 主键值列表
      * @return ignore
      */
-    int logicDeleteById(Serializable... ids);
+    int logicDeleteById(@Param(Param_List) Serializable... ids);
 
     /**
      * 根据id列表批量逻辑删除
@@ -237,7 +237,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param idList id列表（值不能为null或者empty）
      * @return ignore
      */
-    int logicDeleteByIds(@Param(Param_Coll) Collection<? extends Serializable> idList);
+    int logicDeleteByIds(@Param(Param_List) Collection<? extends Serializable> idList);
 
     /**
      * 根据 columnMap key值逻辑删除记录

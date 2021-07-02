@@ -266,7 +266,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String listByIds(Map map) {
         MapperSql sql = new MapperSql();
-        Collection ids = getParas(map, Param_Coll);
+        Collection ids = getParas(map, Param_List);
         assertNotEmpty("PrimaryKeyList", ids);
         sql.SELECT(this.tableName(), this.joiningAllFields());
         sql.WHERE_PK_IN(this.dbType().wrap(this.idColumn()), ids.size());
@@ -306,10 +306,11 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据主键物理删除数据SQL构造
      *
-     * @param ids 主键值
+     * @param map 主键值
      * @return ignore
      */
-    public String deleteById(Serializable[] ids) {
+    public String deleteById(Map map) {
+        Serializable[] ids = (Serializable[]) map.get(Param_List);
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
@@ -320,10 +321,11 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 根据主键逻辑删除数据SQL构造
      *
-     * @param ids 主键值
+     * @param map 参数
      * @return ignore
      */
-    public String logicDeleteById(Serializable[] ids) {
+    public String logicDeleteById(Map map) {
+        Serializable[] ids = (Serializable[]) map.get(Param_List);
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         this.logicDelete(sql);
@@ -334,14 +336,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     private void whereEqIds(MapperSql sql, Serializable[] ids) {
         String idColumn = this.dbType().wrap(this.idColumn());
         if (ids.length == 1) {
-            sql.WHERE(format("%s = #{array[0]}", idColumn));
+            sql.WHERE(format("%s = #{list[0]}", idColumn));
         } else {
             StringBuilder values = new StringBuilder();
             for (int index = 0; index < ids.length; index++) {
                 if (index > 0) {
                     values.append(", ");
                 }
-                values.append("#{array[").append(index).append("]}");
+                values.append("#{list[").append(index).append("]}");
             }
             sql.WHERE(format("%s IN (%s)", idColumn, values));
         }
@@ -354,7 +356,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return ignore
      */
     public String deleteByIds(Map map) {
-        Collection ids = getParas(map, Param_Coll);
+        Collection ids = getParas(map, Param_List);
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(this.tableName(), null);
@@ -369,7 +371,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return ignore
      */
     public String logicDeleteByIds(Map map) {
-        Collection ids = getParas(map, Param_Coll);
+        Collection ids = getParas(map, Param_List);
         assertNotEmpty("ids", ids);
         MapperSql sql = new MapperSql();
         this.logicDelete(sql);

@@ -55,8 +55,6 @@ public interface FluentConst {
 
     String Param_Map = "map";
 
-    String Param_Coll = "coll";
-
     String Param_List = "list";
 
     String Param_CM = "cm";

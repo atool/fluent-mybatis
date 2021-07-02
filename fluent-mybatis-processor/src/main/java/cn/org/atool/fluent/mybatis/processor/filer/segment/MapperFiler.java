@@ -37,6 +37,7 @@ import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
  *
  * @author darui.wu
  */
+@SuppressWarnings("rawtypes")
 public class MapperFiler extends AbstractFiler {
 
     private static final ClassName CN_Collection = ClassName.get(Collection.class);
@@ -121,7 +122,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = super.publicMethod("primaryField", true, FieldMapping.class)
             .addModifiers(Modifier.DEFAULT);
         if (fluent.getPrimary() == null) {
-            super.throwPrimaryNoFound(builder);
+            throwPrimaryNoFound(builder);
         } else {
             builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getName());
         }
@@ -162,27 +163,21 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_countNoLimit() {
         return this.mapperMethod(SelectProvider.class, M_countNoLimit)
-            .addParameter(ParameterSpec.builder(IQuery.class, "query")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("query"))
             .returns(Integer.class)
             .build();
     }
 
     public MethodSpec m_count() {
         return this.mapperMethod(SelectProvider.class, M_count)
-            .addParameter(ParameterSpec.builder(IQuery.class, "query")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("query"))
             .returns(Integer.class)
             .build();
     }
 
     public MethodSpec m_listObjs() {
         return this.mapperMethod(SelectProvider.class, M_listObjs)
-            .addParameter(ParameterSpec.builder(IQuery.class, "query")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("query"))
             .returns(parameterizedType(ClassName.get(List.class), TypeVariableName.get("O")))
             .addTypeVariable(TypeVariableName.get("O"))
             .build();
@@ -193,9 +188,7 @@ public class MapperFiler extends AbstractFiler {
             .addAnnotation(AnnotationSpec.builder(ResultType.class)
                 .addMember("value", "$T.class", Map.class)
                 .build())
-            .addParameter(ParameterSpec.builder(IQuery.class, "query")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("query"))
             .returns(parameterizedType(ClassName.get(List.class), CN_Map_StrObj))
             .build();
     }
@@ -203,9 +196,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_listEntity() {
         return this.mapperMethod(SelectProvider.class, M_listEntity)
             .addAnnotation(this.annotation_ResultMap())
-            .addParameter(ParameterSpec.builder(IQuery.class, "query")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("query"))
             .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
@@ -213,9 +204,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_listByMap() {
         return this.mapperMethod(SelectProvider.class, M_listByMap)
             .addAnnotation(this.annotation_ResultMap())
-            .addParameter(ParameterSpec.builder(CN_Map_StrObj, "columnMap")
-                .addAnnotation(annotation_Param("Param_CM"))
-                .build())
+            .addParameter(this.param(CN_Map_StrObj, "columnMap", "Param_CM"))
             .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
@@ -223,9 +212,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_listByIds() {
         return this.mapperMethod(SelectProvider.class, M_listByIds)
             .addAnnotation(this.annotation_ResultMap())
-            .addParameter(ParameterSpec.builder(Collection.class, "ids")
-                .addAnnotation(annotation_Param("Param_Coll"))
-                .build())
+            .addParameter(this.param(Collection.class, "ids", "Param_List"))
             .returns(parameterizedType(CN_List, fluent.entity()))
             .build();
     }
@@ -233,9 +220,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_findOne() {
         return this.mapperMethod(SelectProvider.class, M_findOne)
             .addAnnotation(this.annotation_ResultMap())
-            .addParameter(ParameterSpec.builder(IQuery.class, "query")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("query"))
             .returns(fluent.entity())
             .build();
     }
@@ -250,11 +235,8 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_updateBy() {
         return this.mapperMethod(UpdateProvider.class, M_updateBy)
-            .addParameter(ParameterSpec
-                .builder(ArrayTypeName.of(IUpdate.class), "updates")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .addJavadoc(" {@link $T#updateBy($T)}", fluent.sqlProvider(), Map.class)
-                .build())
+            .addParameter(this.param(ArrayTypeName.of(IUpdate.class), "updates", "Param_EW"))
+            .addJavadoc(" {@link $T#updateBy($T)}", fluent.sqlProvider(), Map.class)
             .varargs(true)
             .returns(TypeName.INT)
             .build();
@@ -262,29 +244,25 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_updateById() {
         return this.mapperMethod(UpdateProvider.class, M_updateById)
-            .addParameter(ParameterSpec.builder(fluent.entity(), "entity")
-                .addAnnotation(annotation_Param("Param_ET"))
-                .build())
+            .addParameter(this.param(fluent.entity(), "entity", "Param_ET"))
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_deleteByIds() {
+        TypeName typeName = parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
         return this.mapperMethod(DeleteProvider.class, M_deleteByIds)
             .addJavadoc("@see $T#deleteByIds(Map)", fluent.sqlProvider())
-            .addParameter(ParameterSpec.builder(parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable")), "idList")
-                .addAnnotation(annotation_Param("Param_Coll"))
-                .build())
+            .addParameter(this.param(typeName, "idList", "Param_List"))
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_logicDeleteByIds() {
+        TypeName typeName = parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
         return this.mapperMethod(DeleteProvider.class, M_LogicDeleteByIds)
             .addJavadoc("@see $T#logicDeleteByIds(Map)", fluent.sqlProvider())
-            .addParameter(ParameterSpec.builder(parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable")), "idList")
-                .addAnnotation(annotation_Param("Param_Coll"))
-                .build())
+            .addParameter(this.param(typeName, "idList", "Param_List"))
             .returns(TypeName.INT)
             .build();
     }
@@ -292,9 +270,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_delete() {
         return this.mapperMethod(DeleteProvider.class, M_Delete)
             .addJavadoc("@see $T#delete(Map)", fluent.sqlProvider())
-            .addParameter(ParameterSpec.builder(IQuery.class, "wrapper")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("wrapper"))
             .returns(TypeName.INT)
             .build();
     }
@@ -302,9 +278,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_logicDelete() {
         return this.mapperMethod(DeleteProvider.class, M_LogicDelete)
             .addJavadoc("@see $T#logicDelete(Map)", fluent.sqlProvider())
-            .addParameter(ParameterSpec.builder(IQuery.class, "wrapper")
-                .addAnnotation(annotation_Param("Param_EW"))
-                .build())
+            .addParameter(queryParam("wrapper"))
             .returns(TypeName.INT)
             .build();
     }
@@ -332,7 +306,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_deleteById() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteById)
             .addJavadoc("@see $T#deleteById(Serializable[])", fluent.sqlProvider())
-            .addParameter(CN_SerializableArray, "ids")
+            .addParameter(this.param(CN_SerializableArray, "ids", "Param_List"))
             .varargs(true)
             .returns(TypeName.INT)
             .build();
@@ -341,12 +315,12 @@ public class MapperFiler extends AbstractFiler {
     /**
      * 根据id逻辑删除
      *
-     * @return
+     * @return MethodSpec
      */
     public MethodSpec m_logicDeleteById() {
         return this.mapperMethod(DeleteProvider.class, M_LogicDeleteById)
             .addJavadoc("@see $T#logicDeleteById(Serializable[])", fluent.sqlProvider())
-            .addParameter(CN_SerializableArray, "ids")
+            .addParameter(this.param(CN_SerializableArray, "ids", "Param_List"))
             .varargs(true)
             .returns(TypeName.INT)
             .build();
@@ -361,14 +335,16 @@ public class MapperFiler extends AbstractFiler {
                 this.addSelectKey(builder);
             }
         }
-        return builder.addParameter(parameterizedType(CN_Collection, fluent.entity()), "entities")
+        TypeName listType = parameterizedType(CN_Collection, fluent.entity());
+        return builder.addParameter(this.param(listType, "entities", "Param_List"))
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_insertBatchWithPk() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
-        return builder.addParameter(parameterizedType(CN_Collection, fluent.entity()), "entities")
+        TypeName listType = parameterizedType(CN_Collection, fluent.entity());
+        return builder.addParameter(this.param(listType, "entities", "Param_List"))
             .returns(TypeName.INT)
             .build();
     }
@@ -377,14 +353,8 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertSelect);
         return builder
             .addJavadoc("@see $T#insertSelect(Map)", fluent.sqlProvider())
-            .addParameter(
-                ParameterSpec.builder(String[].class, Param_Fields)
-                    .addAnnotation(annotation_Param("Param_Fields"))
-                    .build())
-            .addParameter(
-                ParameterSpec.builder(IQuery.class, Param_EW)
-                    .addAnnotation(annotation_Param("Param_EW"))
-                    .build())
+            .addParameter(this.param(String[].class, Param_Fields, "Param_Fields"))
+            .addParameter(this.queryParam(Param_EW))
             .returns(TypeName.INT)
             .build();
     }
@@ -448,12 +418,11 @@ public class MapperFiler extends AbstractFiler {
     /**
      * 定义方式如下的方法
      * <pre>
-     * @Override
      * public abstract Xyz methodName(...);
      * </pre>
      *
-     * @param methodName
-     * @return
+     * @param methodName 方法名称
+     * @return MethodSpec
      */
     private MethodSpec.Builder mapperMethod(Class provider, String methodName) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
@@ -476,8 +445,8 @@ public class MapperFiler extends AbstractFiler {
     /**
      * 返回对应的Mapper Bean名称
      *
-     * @param fluentEntity
-     * @return
+     * @param fluentEntity 实体原数据
+     * @return mapper bean name
      */
     public static String getMapperName(FluentEntity fluentEntity) {
         String className = fluentEntity.getNoSuffix() + Suffix_Mapper;
@@ -493,7 +462,7 @@ public class MapperFiler extends AbstractFiler {
      *      @ResultMap("ResultMap")
      * </pre>
      *
-     * @return
+     * @return AnnotationSpec
      */
     private AnnotationSpec annotation_ResultMap() {
         return AnnotationSpec.builder(ResultMap.class).addMember("value", "ResultMap").build();
@@ -504,7 +473,7 @@ public class MapperFiler extends AbstractFiler {
      *      @Results(id="", value={@Result()}
      * </pre>
      *
-     * @return
+     * @return AnnotationSpec
      */
     private AnnotationSpec annotation_Results() {
         List<CodeBlock> results = new ArrayList<>();
@@ -537,10 +506,34 @@ public class MapperFiler extends AbstractFiler {
      *      @Param("value") 注解
      * </pre>
      *
-     * @param value
-     * @return
+     * @param value 注解属性值
+     * @return AnnotationSpec
      */
     private AnnotationSpec annotation_Param(String value) {
         return AnnotationSpec.builder(Param.class).addMember("value", "$L", value).build();
+    }
+
+    private ParameterSpec queryParam(String param_ew) {
+        return this.param(IQuery.class, param_ew, "Param_EW");
+    }
+
+    /**
+     * 声明  @Param("paraName") varName
+     *
+     * @param type     变量类型
+     * @param varName  变量名称
+     * @param paraName 注解名称
+     * @return @Param("paraName") varName
+     */
+    private ParameterSpec param(Class type, String varName, String paraName) {
+        return ParameterSpec.builder(type, varName)
+            .addAnnotation(annotation_Param(paraName))
+            .build();
+    }
+
+    private ParameterSpec param(TypeName type, String varName, String paraName) {
+        return ParameterSpec.builder(type, varName)
+            .addAnnotation(annotation_Param(paraName))
+            .build();
     }
 }

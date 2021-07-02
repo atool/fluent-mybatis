@@ -167,7 +167,7 @@ public class MapperSql {
             if (index > 0) {
                 buffer.append(", ");
             }
-            buffer.append("#{coll[").append(index).append("]}");
+            buffer.append("#{list[").append(index).append("]}");
         }
         buffer.append(")");
         return this;
