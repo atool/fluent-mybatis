@@ -86,4 +86,8 @@ public interface StrConstant {
      * 空格
      */
     char SPACE_CHAR = ' ';
+    /**
+     * 反引号
+     */
+    char BACK_QUOTE = '\'';
 }

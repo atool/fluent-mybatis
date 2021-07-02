@@ -13,15 +13,15 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql", '`', '`', "SELECT LAST_INSERT_ID() AS ID"),
+    MYSQL("mysql", BACK_QUOTE, BACK_QUOTE, "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * MARIADB
      */
-    MARIADB("mariadb", '`', '`', "SELECT LAST_INSERT_ID() AS ID"),
+    MARIADB("mariadb", BACK_QUOTE, BACK_QUOTE, "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * H2 '
      */
-    H2("h2", SINGLE_QUOTATION, SINGLE_QUOTATION),
+    H2("h2", BACK_QUOTE, BACK_QUOTE),
     /**
      * SQLITE
      * https://www.sqlite.org/lang_keywords.html
