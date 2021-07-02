@@ -78,4 +78,12 @@ public interface StrConstant {
      * 双引号
      */
     char DOUBLE_QUOTATION = '"';
+    /**
+     * 单引号
+     */
+    char SINGLE_QUOTATION = '\'';
+    /**
+     * 空格
+     */
+    char SPACE_CHAR = ' ';
 }

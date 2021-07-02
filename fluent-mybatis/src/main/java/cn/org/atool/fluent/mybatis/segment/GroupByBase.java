@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.ColumnSegment;
 import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
 
 /**
@@ -40,15 +41,12 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(String... columns) {
-        Stream.of(columns)
-            .filter(If::notBlank)
-            .forEach(c -> {
-                if (wrapper.wrapperData.getFieldAlias().contains(c)) {
-                    apply.add(() -> c);
-                } else {
-                    apply.add(() -> columnWithAlias(c));
-                }
-            });
+        for (String column : columns) {
+            if (notBlank(column)) {
+                Column _column = Column.column(column, this.wrapper);
+                apply.add(() -> _column.wrapColumn());
+            }
+        }
         return (G) this;
     }
 
@@ -70,10 +68,12 @@ public abstract class GroupByBase<
      * @return groupBy选择器
      */
     public G apply(FieldMapping... columns) {
-        Stream.of(columns).filter(c -> c != null)
-            .map(this::columnWithAlias)
-            .map(ColumnSegment::column)
-            .forEach(apply::add);
+        for (FieldMapping column : columns) {
+            if (column != null) {
+                Column _column = Column.column(column, this.wrapper);
+                apply.add(() -> _column.wrapColumn());
+            }
+        }
         return (G) this;
     }
 

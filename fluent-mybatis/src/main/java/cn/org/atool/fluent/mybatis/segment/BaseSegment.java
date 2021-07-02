@@ -14,16 +14,15 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 
 /**
  * BaseSegment
  *
  * @param <R>
  * @param <W>
- * @author darui.wu
- * @create 2020/6/22 10:47 上午
+ * @author darui.wu  2020/6/22 10:47 上午
  */
+@SuppressWarnings({"unchecked"})
 public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 当前查询（更新）器
@@ -38,7 +37,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 加上表别名的字段名称
      *
-     * @return
+     * @return [t.]column
      */
     protected String currentWithAlias() {
         return this.columnWithAlias(this.current);
@@ -47,25 +46,11 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 加上表别名的字段名称
      *
-     * @param column
-     * @return
+     * @param column [t.]column
+     * @return [t.]column
      */
     protected String columnWithAlias(FieldMapping column) {
         return BaseWrapperHelper.appendAlias(column.column, this.wrapper);
-    }
-
-    /**
-     * 判断是否是字段，如果是加上别名
-     *
-     * @param column
-     * @return
-     */
-    protected String columnWithAlias(String column) {
-        if (isColumnName(column)) {
-            return BaseWrapperHelper.appendAlias(column, this.wrapper);
-        } else {
-            return column;
-        }
     }
 
     protected BaseSegment(W wrapper) {
@@ -86,7 +71,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 当前字段
      *
-     * @return
+     * @return FieldMapping
      */
     public FieldMapping get() {
         return this.current;
@@ -106,7 +91,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 查询条件
      *
-     * @return
+     * @return WrapperData
      */
     WrapperData wrapperData() {
         return this.wrapper.getWrapperData();
@@ -122,7 +107,6 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      *
      * @param entity  实例
      * @param columns 要设置条件的字段
-     * @return 查询器StudentQuery
      */
     protected void byEntity(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> columns) {
         assertNotNull("entity", entity);
@@ -173,8 +157,8 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 查找column对应的字段映射定义
      *
-     * @param column
-     * @return
+     * @param column 字段
+     * @return WrapperData
      */
     protected FieldMapping fieldMapping(String column) {
         return this.wrapper.column(column);

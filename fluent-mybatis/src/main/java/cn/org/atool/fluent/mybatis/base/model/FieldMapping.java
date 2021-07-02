@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
@@ -50,26 +51,14 @@ public class FieldMapping {
      * @param prefix 前缀
      * @return ignore
      */
-    public String el(final String prefix) {
+    public String el(DbType dbType, final String prefix) {
         String _prefix = isBlank(prefix) ? StrConstant.EMPTY : prefix + ".";
         if (typeHandler == null) {
-            return this.column + " = " + "#{" + _prefix + this.name + "}";
+            return dbType.wrap(this.column) + " = " + "#{" + _prefix + this.name + "}";
         } else {
             return String.format("%s = #{%s%s, javaType=%s, typeHandler=%s}",
-                this.column, _prefix, this.name, this.javaType.getName(), this.typeHandler.getName());
+                dbType.wrap(this.column), _prefix, this.name, this.javaType.getName(), this.typeHandler.getName());
         }
-    }
-
-    /**
-     * column = #{prefix.field}
-     *
-     * @param column column
-     * @param prefix 前缀
-     * @param field  field
-     * @return key = #{prefix.value}
-     */
-    public static String el(String column, String prefix, String field) {
-        return column + " = " + "#{" + (isBlank(prefix) ? field : prefix + "." + field) + "}";
     }
 
     /**

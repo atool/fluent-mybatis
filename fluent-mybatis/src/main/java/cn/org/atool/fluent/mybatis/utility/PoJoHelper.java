@@ -11,6 +11,8 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 public class PoJoHelper {
     /**
      * 将Map转换为指定的PoJo对象
@@ -95,8 +98,7 @@ public class PoJoHelper {
 
     private static <POJO> POJO newInstance(Class<POJO> clazz) {
         try {
-            POJO target = clazz.getDeclaredConstructor().newInstance();
-            return target;
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException("convert map to object[type=" + clazz.getName() + "] error: " + e.getMessage(), e);
         }
@@ -105,8 +107,8 @@ public class PoJoHelper {
     /**
      * 将object对象转换为map
      *
-     * @param object
-     * @return
+     * @param object 转换对象
+     * @return Map
      */
     public static Map toMap(Object object) {
         assertNotNull("object", object);
@@ -127,10 +129,10 @@ public class PoJoHelper {
     /**
      * 进行默认类型的转换
      *
-     * @param type
-     * @param metaObject
-     * @param name
-     * @param value
+     * @param type       类型
+     * @param metaObject 元数据
+     * @param name       属性名称
+     * @param value      属性值
      */
     private static void setDefaultType(Class type, MetaObject metaObject, String name, Object value) {
         if (type == Long.class) {
@@ -139,6 +141,10 @@ public class PoJoHelper {
             metaObject.setValue(name, Integer.parseInt(value.toString()));
         } else if (type == Boolean.class) {
             metaObject.setValue(name, ObjectArray.toBoolean(value));
+        } else if (type == BigDecimal.class) {
+            metaObject.setValue(name, new BigDecimal(value.toString()));
+        } else if (type == BigInteger.class) {
+            metaObject.setValue(name, new BigInteger(value.toString()));
         } else {
             metaObject.setValue(name, value);
         }
@@ -164,9 +170,9 @@ public class PoJoHelper {
     /**
      * 返回list对象属性值数组
      *
-     * @param list
+     * @param list    对象列表
      * @param getFunc 获取list元素对应属性方法
-     * @param <T>
+     * @param <T>     转换对象类型
      * @return 属性值数组
      */
     public static <T> Object[] getFields(List<T> list, Function<T, Object> getFunc) {

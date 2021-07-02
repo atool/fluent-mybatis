@@ -254,7 +254,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty("where", where);
         MapperSql sql = new MapperSql();
         sql.SELECT(this.tableName(), this.joiningAllFields());
-        sql.WHERE(Param_CM, where);
+        sql.WHERE(dbType(), Param_CM, where);
         return sql.toString();
     }
 
@@ -283,7 +283,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotNull("PrimaryKey", id);
         MapperSql sql = new MapperSql();
         sql.SELECT(this.tableName(), this.joiningAllFields());
-        sql.WHERE(format("%s = #{value}", this.idColumn()));
+        sql.WHERE(format("%s = #{value}", dbType().wrap(this.idColumn())));
         return sql.toString();
     }
 

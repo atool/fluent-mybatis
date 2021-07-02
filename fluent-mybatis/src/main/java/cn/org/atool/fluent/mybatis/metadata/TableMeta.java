@@ -54,12 +54,12 @@ public class TableMeta implements StrConstant {
      * @param predicate      过滤条件
      * @return sql 片段
      */
-    public String filter(boolean includePrimary, FieldPredicate predicate) {
+    public List<String> filter(boolean includePrimary, FieldPredicate predicate) {
         List<String> columns = new ArrayList<>();
         if (primary != null && (includePrimary || predicate.test(primary))) {
             columns.add(primary.getColumn());
         }
         fields.stream().filter(predicate).forEach(f -> columns.add(f.getColumn()));
-        return String.join(COMMA_SPACE, columns);
+        return columns;
     }
 }

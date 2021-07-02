@@ -11,7 +11,6 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.el;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static java.util.stream.Collectors.joining;
@@ -119,13 +118,15 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql WHERE(String prefix, Map<String, Object> where) {
+    public MapperSql WHERE(DbType dbType, String prefix, Map<String, Object> where) {
         List<String> ands = new ArrayList<>();
         for (Map.Entry<String, Object> entry : where.entrySet()) {
             if (entry.getValue() == null) {
-                ands.add(entry.getKey() + " IS NULL");
+                ands.add(dbType.wrap(entry.getKey()) + " IS NULL");
             } else {
-                ands.add(el(entry.getKey(), prefix, entry.getKey()));
+                String column = entry.getKey();
+                String el = dbType.wrap(column) + " = " + "#{" + (isBlank(prefix) ? column : prefix + "." + column) + "}";
+                ands.add(el);
             }
         }
         return this.WHERE(ands);

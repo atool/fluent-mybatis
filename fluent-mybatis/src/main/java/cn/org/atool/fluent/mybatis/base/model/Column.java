@@ -18,7 +18,11 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 @SuppressWarnings({"unchecked"})
 @Getter
 public class Column {
-    public static final Column EMPTY_COLUMN = Column.column(EMPTY);
+    public static final Column EMPTY_COLUMN = new Column(EMPTY, null) {
+        protected DbType dbType() {
+            return DbType.OTHER;
+        }
+    };
 
     private final String column;
 
@@ -45,8 +49,8 @@ public class Column {
      */
     public String wrapColumn() {
         String columnAs = column;
-        if (wrapper != null && wrapper.dbType() != null && this.isColumnNameAndNotAlias()) {
-            columnAs = wrapper.dbType().wrap(column);
+        if (this.isColumnNameAndNotAlias()) {
+            columnAs = this.dbType().wrap(column);
         }
         String tAlias = EMPTY;
         /** 非别名字段 && 表别名非空 **/
@@ -56,6 +60,14 @@ public class Column {
             tAlias = wrapper.getTableAlias() + ".";
         }
         return tAlias + columnAs;
+    }
+
+    protected DbType dbType() {
+        if (wrapper != null && wrapper.dbType() != null) {
+            return wrapper.dbType();
+        } else {
+            return DbType.OTHER;
+        }
     }
 
     /**
@@ -69,8 +81,12 @@ public class Column {
     }
 
     private boolean isColumnNameAndNotAlias() {
-        return isColumnName(column) &&
-            !wrapper.getWrapperData().getFieldAlias().contains(column);
+        if (wrapper == null) {
+            return false;
+        }
+        String unWrapper = this.dbType().unwrap(column);
+        return isColumnName(unWrapper) &&
+            !wrapper.getWrapperData().getFieldAlias().contains(unWrapper);
     }
 
     public boolean isAssignableFrom(Object para) {
@@ -114,10 +130,6 @@ public class Column {
     }
 
     static final String Wrapper_Para = ".wrapperData.parameters.";
-
-    public static Column column(String column) {
-        return new Column(column, null);
-    }
 
     public static Column column(String column, BaseWrapper wrapper) {
         return new Column(column, wrapper);

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -10,7 +10,6 @@ import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
@@ -20,8 +19,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
  *
  * @param <E> 对应的实体类
  * @param <Q> 查询器
- * @author darui.wu
- * @date 2020/6/17 3:13 下午
+ * @author darui.wu 2020/6/17 3:13 下午
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class BaseQuery<
@@ -57,7 +55,7 @@ public abstract class BaseQuery<
         if (this.primary() == null) {
             throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
         } else {
-            return this.select(alias(this.tableAlias, this.primary()));
+            return this.select(this.primary());
         }
     }
 
@@ -68,9 +66,9 @@ public abstract class BaseQuery<
      * @return Query
      */
     public Q select(String... columns) {
-        if (If.notEmpty(columns)) {
-            Stream.of(columns).filter(If::notBlank)
-                .forEach(this.wrapperData::addSelectColumn);
+        for (String column : columns) {
+            Column _column = Column.column(column, this);
+            this.wrapperData.addSelectColumn(_column.wrapColumn());
         }
         return (Q) this;
     }

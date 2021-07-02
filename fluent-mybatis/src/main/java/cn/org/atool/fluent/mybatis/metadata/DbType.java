@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.metadata;
 
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 
 /**
  * DbType 数据库类型
@@ -13,44 +13,24 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql", "SELECT LAST_INSERT_ID() AS ID") {
-        @Override
-        public String wrap(String column) {
-            return '`' + column + '`';
-        }
-    },
+    MYSQL("mysql", '`', '`', "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * MARIADB
      */
-    MARIADB("mariadb", "SELECT LAST_INSERT_ID() AS ID") {
-        @Override
-        public String wrap(String column) {
-            return '`' + column + '`';
-        }
-    },
+    MARIADB("mariadb", '`', '`', "SELECT LAST_INSERT_ID() AS ID"),
     /**
-     * H2
+     * H2 '
      */
-    H2("h2"),
+    H2("h2", SINGLE_QUOTATION, SINGLE_QUOTATION),
     /**
      * SQLITE
      * https://www.sqlite.org/lang_keywords.html
      */
-    SQLITE("sqlite") {
-        @Override
-        public String wrap(String column) {
-            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
-        }
-    },
+    SQLITE("sqlite", DOUBLE_QUOTATION, DOUBLE_QUOTATION),
     /**
      * ORACLE
      */
-    ORACLE("oracle", "select SEQ_USER_ID.nextval as id from dual", true) {
-        @Override
-        public String wrap(String column) {
-            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
-        }
-    },
+    ORACLE("oracle", DOUBLE_QUOTATION, DOUBLE_QUOTATION, "select SEQ_USER_ID.nextval as id from dual", true),
     /**
      * DB2
      */
@@ -58,39 +38,19 @@ public enum DbType {
     /**
      * HSQL
      */
-    HSQL("hsql") {
-        @Override
-        public String wrap(String column) {
-            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
-        }
-    },
+    HSQL("hsql"),
     /**
      * POSTGRE
      */
-    POSTGRE_SQL("postgresql") {
-        @Override
-        public String wrap(String column) {
-            return DOUBLE_QUOTATION + column + DOUBLE_QUOTATION;
-        }
-    },
+    POSTGRE_SQL("postgresql", DOUBLE_QUOTATION, DOUBLE_QUOTATION),
     /**
      * SQLSERVER2005
      */
-    SQL_SERVER2005("sqlserver2005") {
-        @Override
-        public String wrap(String column) {
-            return "[" + column + "]";
-        }
-    },
+    SQL_SERVER2005("sqlserver2005", '[', ']'),
     /**
      * SQLSERVER
      */
-    SQL_SERVER("sqlserver") {
-        @Override
-        public String wrap(String column) {
-            return "[" + column + "]";
-        }
-    },
+    SQL_SERVER("sqlserver", '[', ']'),
     /**
      * 其它数据库, 按标准语法进行处理
      */
@@ -98,6 +58,10 @@ public enum DbType {
 
     @Getter
     private final String alias;
+
+    private char startWrapper;
+
+    private char endWrapper;
 
     @Getter
     private String seq;
@@ -107,20 +71,51 @@ public enum DbType {
 
     DbType(String alias) {
         this.alias = alias;
+        this.startWrapper = SPACE_CHAR;
+        this.endWrapper = SPACE_CHAR;
     }
 
-    DbType(String alias, String seq) {
+    DbType(String alias, char startWrapper, char endWrapper) {
+        this.alias = alias;
+        this.startWrapper = startWrapper;
+        this.endWrapper = endWrapper;
+    }
+
+    DbType(String alias, char startWrapper, char endWrapper, String seq) {
         this.alias = alias;
         this.seq = seq;
+        this.startWrapper = startWrapper;
+        this.endWrapper = endWrapper;
     }
 
-    DbType(String alias, String seq, boolean before) {
+    DbType(String alias, char startWrapper, char endWrapper, String seq, boolean before) {
         this.alias = alias;
         this.seq = seq;
         this.before = before;
+        this.startWrapper = startWrapper;
+        this.endWrapper = endWrapper;
     }
 
     public String wrap(String column) {
-        return column;
+        if (startWrapper != SPACE_CHAR) {
+            return startWrapper + column + endWrapper;
+        } else {
+            return column;
+        }
+    }
+
+    /**
+     * 去掉转义符
+     *
+     * @param column 可能带转义符的字段名称
+     * @return 去掉转义符后的名称
+     */
+    public String unwrap(String column) {
+        int len = column.length();
+        if (column.charAt(0) == startWrapper && column.charAt(len - 1) == endWrapper) {
+            return column.substring(1, len - 1);
+        } else {
+            return column;
+        }
     }
 }

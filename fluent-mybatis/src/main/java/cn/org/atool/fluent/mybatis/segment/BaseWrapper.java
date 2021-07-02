@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
@@ -18,9 +19,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
 
 /**
@@ -93,11 +92,7 @@ public abstract class BaseWrapper<
      * @return taleAlias.column
      */
     protected String appendAlias(String column) {
-        if (notBlank(this.tableAlias) && isColumnName(column)) {
-            return tableAlias + "." + column;
-        } else {
-            return column;
-        }
+        return Column.column(column, this).wrapColumn();
     }
 
     /**

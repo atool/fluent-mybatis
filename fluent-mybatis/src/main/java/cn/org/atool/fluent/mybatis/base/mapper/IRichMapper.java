@@ -2,12 +2,14 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import lombok.NonNull;
 
@@ -32,8 +34,9 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return true: 记录存在; false: 记录不存在
      */
     default boolean existPk(Serializable id) {
-        Column pk = Column.column(((IWrapperMapper<E>) this).primaryField(), null);
-        IQuery query = ((IWrapperMapper<E>) this).query().where().apply(pk, EQ, id).end().limit(1);
+        IBaseQuery<E, ?> query = ((IWrapperMapper<E>) this).query();
+        Column pk = Column.column(((IWrapperMapper<E>) this).primaryField(), (BaseWrapper) query);
+        query.where().apply(pk, EQ, id).end().limit(1);
         Integer count = this.count(query);
         return count != null && count > 0;
     }

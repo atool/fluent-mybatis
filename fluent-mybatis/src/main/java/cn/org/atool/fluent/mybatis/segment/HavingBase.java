@@ -51,7 +51,8 @@ public abstract class HavingBase<
      * @return Having条件判断
      */
     protected HavingOperator<H> apply(FieldMapping column, IAggregate aggregate) {
-        return this.operator.aggregate(this.columnWithAlias(column), aggregate);
+        Column _column = Column.column(column, this.wrapper);
+        return this.operator.aggregate(_column.wrapColumn(), aggregate);
     }
 
     /**
@@ -60,22 +61,19 @@ public abstract class HavingBase<
      * @return Having条件判断
      */
     public HavingOperator<H> count() {
-        return this.operator.aggregate(null, (c) -> "count(*)");
+        return this.operator.aggregate(null, (c) -> "count(1)");
     }
 
     /**
      * 执行聚合操作
      *
-     * @param aggregate 聚合操作, 比如 sum(column) 或者 select中聚合操作的别名
+     * @param column 聚合操作, 比如 sum(column) 或者 select中聚合操作的别名
      * @return Having条件判断
      */
-    public HavingOperator<H> apply(String aggregate) {
-        if (this.aggregate == null) {
-            return this.operator.aggregate(null, (c) -> aggregate);
-        } else {
-            this.operator.aggregate(this.columnWithAlias(aggregate), this.aggregate);
-            return this.operator;
-        }
+    public HavingOperator<H> apply(String column) {
+        Column _column = Column.column(column, this.wrapper);
+        return this.operator.aggregate(_column.wrapColumn(),
+            this.aggregate == null ? c -> c : this.aggregate);
     }
 
     @Override

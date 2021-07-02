@@ -156,10 +156,10 @@ public class SqlProviderFiler extends AbstractFiler {
         CommonField versionField = null;
         for (CommonField field : this.fluent.getFields()) {
             if (Objects.equals(field.getColumn(), fluent.getVersionField())) {
-                spec.addCode("\n\t.add($L, null, $S)", field.getName(), field.getUpdate());
+                spec.addCode("\n\t.add(this.dbType(), $L, null, $S)", field.getName(), field.getUpdate());
                 versionField = field;
             } else if (!field.isPrimary()) {
-                spec.addCode("\n\t.add($L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getUpdate());
+                spec.addCode("\n\t.add(this.dbType(), $L, entity.$L(), $S)", field.getName(), field.getMethodName(), field.getUpdate());
             }
         }
         spec.addCode(";\n");
@@ -169,10 +169,10 @@ public class SqlProviderFiler extends AbstractFiler {
                 versionField.getMethodName());
         }
         spec.addStatement("sql.SET(updates.getUpdates())");
-        spec.addStatement("sql.WHERE($L.el(Param_ET))", fluent.getPrimary().getName());
+        spec.addStatement("sql.WHERE($L.el(this.dbType(), Param_ET))", fluent.getPrimary().getName());
         if (versionField != null) {
             spec.addStatement("sql.APPEND($S)", " AND ");
-            spec.addStatement("sql.APPEND($L.el(Param_ET))", versionField.getName());
+            spec.addStatement("sql.APPEND($L.el(this.dbType(), Param_ET))", versionField.getName());
         }
         return spec.addStatement("return sql.toString()").build();
     }
