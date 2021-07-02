@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -115,7 +116,7 @@ public class BatchCrudImpl implements BatchCrud {
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
         query.getWrapperData().sharedParameter(wrapperData);
-        String sql = BaseSqlProvider.buildInsertSelect(insertTable, fields, query);
+        String sql = BaseSqlProvider.buildInsertSelect(IRefs.instance().defaultDbType(), insertTable, fields, query);
         list.add(sql);
         return this;
     }

@@ -30,7 +30,8 @@ public class InsertSelectTest extends BaseTest {
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("INSERT INTO student (`address`, `age`) SELECT `address`, `age` " +
+            .eq("INSERT INTO student (`address`, `age`) " +
+                "SELECT `address`, `age` " +
                 "FROM student WHERE `id` IN (?, ?, ?)");
         want.number(count).eq(3);
         ATM.dataMap.student.table(6)

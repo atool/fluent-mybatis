@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
@@ -56,16 +57,15 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String insertSelect(Map map) {
         String[] fields = (String[]) map.get(Param_Fields);
         IQuery query = (IQuery) map.get(Param_EW);
-        return buildInsertSelect(this.tableName(), fields, query);
+        return buildInsertSelect(dbType(), this.tableName(), fields, query);
     }
 
-    public static String buildInsertSelect(String tableName, String[] fields, IQuery query) {
+    public static String buildInsertSelect(DbType dbType, String tableName, String[] fields, IQuery query) {
         assertNotBlank("tableName", tableName);
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
-        return "INSERT INTO " + tableName + " (" +
-            String.join(", ", fields) +
-            ") " +
+        String columns = Stream.of(fields).map(c -> dbType.wrap(c)).collect(joining(", "));
+        return "INSERT INTO " + tableName + " (" + columns + ") " +
             query.getWrapperData().getQuerySql();
     }
 

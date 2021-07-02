@@ -46,7 +46,7 @@ public class CustomizedUpdateTest extends BaseTest {
 
         mapper.insertSelect(new String[]{"address", "age"}, query);
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO student (address, age) " +
+            "INSERT INTO student (`address`, `age`) " +
             "SELECT address, age " +
             "FROM student " +
             "WHERE id IN (?, ?, ?)");
