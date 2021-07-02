@@ -17,7 +17,7 @@ public class AliasTest extends BaseTest {
             .select.userName("u").end()
             .orderBy.desc("u").end();
         mapper.listObjs(query);
-        db.sqlList().wantFirstSql().eq("SELECT t.user_name AS u FROM student t ORDER BY u DESC");
+        db.sqlList().wantFirstSql().eq("SELECT t.`user_name` AS u FROM student t ORDER BY u DESC");
     }
 
     @Test
@@ -28,7 +28,7 @@ public class AliasTest extends BaseTest {
             .having.apply("a").gt(30).end();
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT t.user_name AS u, SUM(t.age) AS a " +
+            "SELECT t.`user_name` AS u, SUM(t.`age`) AS a " +
             "FROM student t " +
             "GROUP BY u " +
             "HAVING a > ?");

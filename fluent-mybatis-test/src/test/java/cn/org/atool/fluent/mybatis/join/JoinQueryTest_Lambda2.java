@@ -44,7 +44,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
         db.sqlList().wantFirstSql().end("" +
             "FROM student a1 " +
             "JOIN home_address a2 " +
-            "ON a1.home_address_id = a2.id " +
+            "ON a1.`home_address_id` = a2.`id` " +
             "WHERE a1.`age` = ? " +
             "AND a2.`address` LIKE ?");
         db.sqlList().wantFirstPara().eqList(34, "%address%");

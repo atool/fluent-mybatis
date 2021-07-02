@@ -33,7 +33,11 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE student " +
+                "SET `gmt_modified` = now(), " +
+                "`is_deleted` = ?, " +
+                "`age` = ?, `user_name` = ? " +
+                "WHERE `id` = ?", StringMode.SameAsSpace);
 
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
@@ -58,7 +62,10 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_created = ?, gmt_modified = now(), is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE student " +
+                "SET `gmt_created` = ?, `gmt_modified` = now(), " +
+                "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
+                "WHERE `id` = ?", StringMode.SameAsSpace);
 
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
@@ -84,7 +91,10 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET gmt_created = ?, gmt_modified = ?, is_deleted = ?, age = ?, user_name = ? WHERE id = ?", StringMode.SameAsSpace);
+            .eq("UPDATE student " +
+                "SET `gmt_created` = ?, `gmt_modified` = ?, " +
+                "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
+                "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")

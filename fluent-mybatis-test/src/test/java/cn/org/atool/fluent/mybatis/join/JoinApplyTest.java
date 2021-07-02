@@ -37,7 +37,7 @@ public class JoinApplyTest extends BaseTest {
             .limit(20);
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(
-            format("SELECT %s.age, %s.student_id ", alias1, alias2) +
+            format("SELECT %s.`age`, %s.`student_id` ", alias1, alias2) +
                 format("FROM student %s ", alias1) +
                 format("JOIN home_address %s ", alias2) +
                 format("ON %s.id = %s.id ", alias1, alias2) +
@@ -48,8 +48,8 @@ public class JoinApplyTest extends BaseTest {
                 format("AND %s.`is_deleted` = ? ", alias2) +
                 format("AND %s.`env` = ? ", alias2) +
                 format("AND %s.`address` LIKE ? ", alias2) +
-                format("GROUP BY %s.age, %s.id, %s.student_id ", alias1, alias1, alias2) +
-                format("HAVING MAX(%s.age) > ? ", alias1) +
+                format("GROUP BY %s.`age`, %s.id, %s.`student_id` ", alias1, alias1, alias2) +
+                format("HAVING MAX(%s.`age`) > ? ", alias1) +
                 "LIMIT ?, ?");
     }
 }

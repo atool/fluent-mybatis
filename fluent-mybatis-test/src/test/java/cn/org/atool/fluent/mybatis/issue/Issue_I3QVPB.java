@@ -61,15 +61,15 @@ public class Issue_I3QVPB extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM " +
             "(SELECT csr.* FROM " +
-            "(SELECT repository_id, COALESCE(total_sec_issue_count, 0) as total_sec_issue_count " +
+            "(SELECT `repository_id`, COALESCE(total_sec_issue_count, 0) as total_sec_issue_count " +
             "FROM code_repository_statistics " +
             "WHERE `repository_id` = ? " +
             "AND `gmt_create` = ? " +
             "AND `organization_id` = ?) crs " +
             "JOIN " +
-            "(SELECT identifier FROM code_repository " +
+            "(SELECT `identifier` FROM code_repository " +
             "WHERE `organization_id` = ? AND `project_report_value` = ?) cr " +
-            "ON crs.repository_id = cr.identifier) ccsr " +
+            "ON crs.`repository_id` = cr.`identifier`) ccsr " +
             "ORDER BY ccsr.`total_sec_issue_count` DESC " +
             "LIMIT ?, ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"1", "2021-05-11 17:12:33.322", "1", "1", "2", 0, 10});
@@ -104,15 +104,15 @@ public class Issue_I3QVPB extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM " +
             "(SELECT csr.* FROM " +
-            "(SELECT repository_id, COALESCE(total_sec_issue_count, 0) as total_sec_issue_count " +
+            "(SELECT `repository_id`, COALESCE(total_sec_issue_count, 0) as total_sec_issue_count " +
             "FROM code_repository_statistics " +
             "WHERE `repository_id` = ? " +
             "AND `gmt_create` = ? " +
             "AND `organization_id` = ?) crs " +
             "JOIN " +
-            "(SELECT identifier FROM code_repository " +
+            "(SELECT `identifier` FROM code_repository " +
             "WHERE `organization_id` = ? AND `project_report_value` = ?) cr " +
-            "ON crs.repository_id = cr.identifier) ccsr " +
+            "ON crs.`repository_id` = cr.`identifier`) ccsr " +
             "ORDER BY ccsr.`total_sec_issue_count` DESC " +
             "LIMIT ?, ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList("1", "2021-05-11 17:12:33.322", "1", "1", "2", 0, 10);

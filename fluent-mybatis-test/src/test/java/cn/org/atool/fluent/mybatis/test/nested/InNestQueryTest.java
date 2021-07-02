@@ -34,14 +34,14 @@ public class InNestQueryTest extends BaseTest {
             .having.sum.age().gt(2)
             .and.sum.age().le(4).end();
 
-        List list = mapper.listEntity(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id, SUM(age) FROM student " +
-                "WHERE `id` IN (SELECT id FROM student WHERE `id` = ?) " +
+            .eq("SELECT `id`, SUM(`age`) FROM student " +
+                "WHERE `id` IN (SELECT `id` FROM student WHERE `id` = ?) " +
                 "AND `user_name` LIKE ? " +
                 "AND `age` > ? " +
-                "GROUP BY id " +
-                "HAVING SUM(age) > ? AND SUM(age) <= ?", StringMode.SameAsSpace);
+                "GROUP BY `id` " +
+                "HAVING SUM(`age`) > ? AND SUM(`age`) <= ?", StringMode.SameAsSpace);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class InNestQueryTest extends BaseTest {
 
         List list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("WHERE `id` IN (SELECT id FROM student WHERE `id` = ?) " +
+            .end("WHERE `id` IN (SELECT `id` FROM student WHERE `id` = ?) " +
                 "AND `user_name` LIKE ?");
     }
 
@@ -66,8 +66,8 @@ public class InNestQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student " +
-                "WHERE `home_address_id` IN (SELECT id " +
+            .eq("SELECT `id` FROM student " +
+                "WHERE `home_address_id` IN (SELECT `id` " +
                 "   FROM home_address WHERE `id` IN (?, ?))", StringMode.SameAsSpace);
     }
 }

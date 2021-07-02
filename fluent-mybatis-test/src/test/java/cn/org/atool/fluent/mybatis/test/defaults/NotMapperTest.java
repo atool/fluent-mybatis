@@ -20,7 +20,8 @@ public class NotMapperTest extends BaseTest {
         ATM.dataMap.student.table(1).id.values(1).insert();
         want.bool(mapper.existPk(1L)).is(true);
 
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE id = ? LIMIT ?, ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) FROM student WHERE `id` = ? LIMIT ?, ?");
     }
 
     @DisplayName("验证save()和insert()方法")

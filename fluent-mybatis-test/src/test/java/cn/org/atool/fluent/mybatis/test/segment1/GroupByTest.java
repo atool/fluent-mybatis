@@ -29,8 +29,8 @@ public class GroupByTest extends BaseTest {
             .last("/** comment **/");
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student " +
-                "WHERE `id` = ? GROUP BY user_name, age /** comment **/");
+            .eq("SELECT `id` FROM student " +
+                "WHERE `id` = ? GROUP BY `user_name`, `age` /** comment **/");
     }
 
     @Test
@@ -41,8 +41,8 @@ public class GroupByTest extends BaseTest {
             .groupBy.apply(StudentMapping.userName, StudentMapping.age).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student " +
-                "WHERE `id` = ? GROUP BY user_name, age");
+            .eq("SELECT `id` FROM student " +
+                "WHERE `id` = ? GROUP BY `user_name`, `age`");
     }
 
     @Test
@@ -55,7 +55,7 @@ public class GroupByTest extends BaseTest {
             .apply(false, StudentMapping.age).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT id FROM student WHERE `id` = ? GROUP BY user_name");
+            .eq("SELECT `id` FROM student WHERE `id` = ? GROUP BY `user_name`");
     }
 
     @Test
@@ -72,8 +72,8 @@ public class GroupByTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT count(1), sum(1) FROM student " +
-                "WHERE `id` = ? GROUP BY user_name, age " +
-                "HAVING count(1) > ? AND SUM(age) > ?");
+                "WHERE `id` = ? GROUP BY `user_name`, `age` " +
+                "HAVING count(1) > ? AND SUM(`age`) > ?");
     }
 
     @DisplayName("按级别grade统计年龄在15和25之间的人数在10人以上，该条件内最大、最小和平均年龄")
@@ -95,10 +95,10 @@ public class GroupByTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT grade, COUNT(id), MAX(age), MIN(age), AVG(age) " +
+            .eq("SELECT `grade`, COUNT(`id`), MAX(`age`), MIN(`age`), AVG(`age`) " +
                 "FROM student " +
                 "WHERE `age` BETWEEN ? AND ? " +
-                "GROUP BY grade " +
-                "HAVING COUNT(id) > ?");
+                "GROUP BY `grade` " +
+                "HAVING COUNT(`id`) > ?");
     }
 }

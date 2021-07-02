@@ -24,16 +24,16 @@ public class AggregateTest extends BaseTest {
 
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT school_term, " +
-            "subject, " +
+            "SELECT `school_term`, " +
+            "`subject`, " +
             "count(*) AS count, " +
-            "MIN(score), " +
-            "MAX(score) AS max_score, " +
-            "AVG(score) AS avg_score, " +
-            "SUM(score), " +
-            "GROUP_CONCAT(score) " +
+            "MIN(`score`), " +
+            "MAX(`score`) AS max_score, " +
+            "AVG(`score`) AS avg_score, " +
+            "SUM(`score`), " +
+            "GROUP_CONCAT(`score`) " +
             "FROM student_score " +
-            "GROUP BY school_term, subject");
+            "GROUP BY `school_term`, `subject`");
     }
 
     @Test
@@ -46,10 +46,10 @@ public class AggregateTest extends BaseTest {
 
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT school_term, subject AS MySubject, " +
+            "SELECT `school_term`, `subject` AS MySubject, " +
             "min(score) as min_score, " +
             "group_concat(id order by id desc separator ';') " +
             "FROM student_score " +
-            "GROUP BY school_term, subject");
+            "GROUP BY `school_term`, `subject`");
     }
 }

@@ -70,7 +70,7 @@ public class FreeQueryAggregateTest extends BaseTest {
                 "ON t1.id = t2.id " +
                 "WHERE t1.`id` = ? AND t2.`id` = ? " +
                 "GROUP BY t1.id, t2.id " +
-                "HAVING COUNT(t2.id) > ?"
+                "HAVING COUNT(t2.`id`) > ?"
             , StringMode.SameAsSpace);
     }
 
@@ -88,13 +88,13 @@ public class FreeQueryAggregateTest extends BaseTest {
             .build();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
-                "SELECT t1.id, COUNT(t1.gmt_modified), t2.id, SUM(t2.gmt_modified) " +
+                "SELECT t1.`id`, COUNT(t1.`gmt_modified`), t2.`id`, SUM(t2.`gmt_modified`) " +
                 "FROM (SELECT * FROM t_member WHERE `age` > ?) t1 " +
-                "JOIN (SELECT * FROM t_member GROUP BY id) t2 " +
+                "JOIN (SELECT * FROM t_member GROUP BY `id`) t2 " +
                 "ON t1.id = t2.id " +
                 "WHERE t2.`id` = ? " +
-                "GROUP BY t1.id, t2.id " +
-                "HAVING COUNT(t2.id) > ?"
+                "GROUP BY t1.`id`, t2.`id` " +
+                "HAVING COUNT(t2.`id`) > ?"
             , StringMode.SameAsSpace);
     }
 }

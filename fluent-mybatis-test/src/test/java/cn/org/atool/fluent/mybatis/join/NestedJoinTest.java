@@ -28,12 +28,12 @@ public class NestedJoinTest extends BaseTest {
             .where.id().in(nested).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT user_name " +
+            "SELECT `user_name` " +
             "FROM student " +
-            "WHERE `id` IN (SELECT a.id " +
+            "WHERE `id` IN (SELECT a.`id` " +
             "FROM student a " +
             "JOIN home_address b " +
-            "ON a.home_address_id = b.id " +
+            "ON a.`home_address_id` = b.`id` " +
             "WHERE b.`address` LIKE ?)");
         db.sqlList().wantFirstPara().eq(new Object[]{"%add%"});
     }
@@ -51,11 +51,11 @@ public class NestedJoinTest extends BaseTest {
             "SELECT COUNT(*) " +
             "FROM student t1 " +
             "LEFT JOIN home_address t2 " +
-            "ON t1.home_address_id = t2.id");
+            "ON t1.`home_address_id` = t2.`id`");
         db.sqlList().wantSql(1).end("" +
             "FROM student t1 LEFT " +
             "JOIN home_address t2 " +
-            "ON t1.home_address_id = t2.id LIMIT ?, ?");
+            "ON t1.`home_address_id` = t2.`id` LIMIT ?, ?");
         db.sqlList().wantPara(1).eqList(50, 10);
     }
 }

@@ -36,14 +36,14 @@ public class HavingTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(age) AS avg, id FROM student WHERE `id` = ? " +
-                "GROUP BY id " +
-                "HAVING SUM(age) BETWEEN ? AND ? " +
-                "AND COUNT(id) > ? " +
-                "AND AVG(age) IN (?, ?) " +
-                "AND MIN(age) > ? " +
+            .eq("SELECT SUM(`age`) AS avg, `id` FROM student WHERE `id` = ? " +
+                "GROUP BY `id` " +
+                "HAVING SUM(`age`) BETWEEN ? AND ? " +
+                "AND COUNT(`id`) > ? " +
+                "AND AVG(`age`) IN (?, ?) " +
+                "AND MIN(`age`) > ? " +
                 "AND avg > ? " +
-                "AND MAX(age) < ?");
+                "AND MAX(`age`) < ?");
     }
 
     @Test
@@ -62,8 +62,8 @@ public class HavingTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(age) AS avg, id FROM student WHERE `id` = ? " +
-                "GROUP BY id " +
-                "HAVING MAX(age) < ? AND SUM(age) < ?");
+            .eq("SELECT SUM(`age`) AS avg, `id` FROM student WHERE `id` = ? " +
+                "GROUP BY `id` " +
+                "HAVING MAX(`age`) < ? AND SUM(age) < ?");
     }
 }

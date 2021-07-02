@@ -17,8 +17,8 @@ public class LockVersionTest extends BaseTest {
         mapper.updateById(new NoAutoIdEntity().setLockVersion(2L).setColumn1("new").setId("1"));
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE no_auto_id " +
-            "SET column_1 = ?, lock_version = `lock_version` + 1 " +
-            "WHERE id = ? AND lock_version = ?");
+            "SET `column_1` = ?, `lock_version` = `lock_version` + 1 " +
+            "WHERE `id` = ? AND `lock_version` = ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"new", "1", 2L});
     }
 

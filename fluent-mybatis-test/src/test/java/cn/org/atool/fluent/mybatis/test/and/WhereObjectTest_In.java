@@ -131,6 +131,6 @@ public class WhereObjectTest_In extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT(*) FROM student " +
-                "WHERE `id` IN (SELECT id FROM student WHERE `age` = ? AND `id` = ?)");
+                "WHERE `id` IN (SELECT `id` FROM student WHERE `age` = ? AND `id` = ?)");
     }
 }

@@ -28,7 +28,7 @@ public class SelectByIdTest extends BaseTest {
             .cleanAndInsert();
         StudentEntity student = mapper.findById(3L);
         db.sqlList().wantFirstSql()
-            .where().eq("id = ?");
+            .where().eq("`id` = ?");
         want.object(student)
             .eqMap(ATM.dataMap.student.entity()
                 .userName.values("username_3")

@@ -42,7 +42,7 @@ public class UpdateByDefaultTest extends BaseTest {
     void updateById() {
         mapper.updateById(new IdcardEntity().setId(1L).setCode("new"));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET code = ?, version = version + 1 WHERE id = ?");
+            "UPDATE idcard SET `code` = ?, `version` = version + 1 WHERE `id` = ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"new", 1L});
     }
 
@@ -50,7 +50,7 @@ public class UpdateByDefaultTest extends BaseTest {
     void updateById_EntityHasVersion() {
         mapper.updateById(new IdcardEntity().setId(1L).setCode("new").setVersion(3L));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET code = ?, version = ? WHERE id = ?");
+            "UPDATE idcard SET `code` = ?, `version` = ? WHERE `id` = ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"new", 3L, 1L});
     }
 

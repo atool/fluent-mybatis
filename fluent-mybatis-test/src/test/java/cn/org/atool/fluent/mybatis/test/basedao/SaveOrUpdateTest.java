@@ -22,8 +22,11 @@ public class SaveOrUpdateTest extends BaseTest {
             .cleanAndInsert();
         dao.saveOrUpdate(new StudentEntity().setId(3L).setUserName("test_111").setAge(30));
         // 验证执行的sql: 先判断主键记录有没有
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE id = ? LIMIT ?, ?", StringMode.SameAsSpace);
-        db.sqlList().wantSql(1).eq("UPDATE student SET gmt_modified = now(), age = ?, user_name = ? WHERE id = ?");
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) FROM student WHERE `id` = ? LIMIT ?, ?", StringMode.SameAsSpace);
+        db.sqlList().wantSql(1).eq("" +
+            "UPDATE student SET `gmt_modified` = now(), `age` = ?, `user_name` = ? " +
+            "WHERE `id` = ?");
         db.table(ATM.table.student).queryWhere("id=3")
             .eqDataMap(ATM.dataMap.student.table(1)
                 .userName.values("test_111")
@@ -36,7 +39,9 @@ public class SaveOrUpdateTest extends BaseTest {
         ATM.dataMap.student.initTable(3)
             .cleanAndInsert();
         dao.saveOrUpdate(new StudentEntity().setId(4L).setUserName("test_111").setAge(30));
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE id = ? LIMIT ?, ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) " +
+            "FROM student WHERE `id` = ? LIMIT ?, ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).contains("INSERT INTO student");
         db.table(ATM.table.student).count().eq(4);
         db.table(ATM.table.student).queryWhere("id=4")

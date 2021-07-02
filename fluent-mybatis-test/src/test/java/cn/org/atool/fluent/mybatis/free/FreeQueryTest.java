@@ -41,7 +41,7 @@ public class FreeQueryTest extends BaseTest {
         } catch (Exception e) {
         }
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT id FROM a WHERE ( `name` LIKE ? OR `age` LIKE ? )");
+            "SELECT `id` FROM a WHERE ( `name` LIKE ? OR `age` LIKE ? )");
         db.sqlList().wantFirstPara().eq(new String[]{"1-%", "2-%"});
     }
 }
