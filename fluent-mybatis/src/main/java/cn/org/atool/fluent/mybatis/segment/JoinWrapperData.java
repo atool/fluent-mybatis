@@ -16,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class JoinWrapperData extends WrapperData {
 
     private final BaseQuery query;
@@ -32,7 +33,7 @@ public class JoinWrapperData extends WrapperData {
         this.tables.add(this.query.wrapperData.getTable());
     }
 
-    private List<String> tables = new ArrayList<>();
+    private final List<String> tables = new ArrayList<>();
 
     public void addTable(String table) {
         tables.add(table);
@@ -71,13 +72,15 @@ public class JoinWrapperData extends WrapperData {
         if (whereMerged) {
             return super.getWhereSql();
         }
-        this.query.wrapperData.getMergeSegments().getWhere().getSegments().forEach(this.mergeSegments.getWhere()::addAll);
+        this.query.wrapperData.getMergeSegments().getWhere().getSegments()
+            .forEach(this.mergeSegments.getWhere()::addAll);
         for (BaseQuery query : this.queries) {
             if (!this.mergeSegments.getWhere().isEmpty() &&
                 !query.wrapperData.getMergeSegments().getWhere().getSegments().isEmpty()) {
                 this.mergeSegments.getWhere().addAll(KeyWordSegment.AND);
             }
-            query.wrapperData.getMergeSegments().getWhere().getSegments().forEach(this.mergeSegments.getWhere()::addAll);
+            query.wrapperData.getMergeSegments().getWhere().getSegments()
+                .forEach(this.mergeSegments.getWhere()::addAll);
         }
         whereMerged = true;
         return super.getWhereSql();

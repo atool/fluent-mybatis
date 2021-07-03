@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.*;
-import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
@@ -23,6 +22,7 @@ import java.util.Map;
  *
  * @param <QL>
  */
+@SuppressWarnings({"rawtypes", "unused", "unchecked"})
 @Accessors(chain = true)
 public class JoinQuery<QL extends BaseQuery<?, QL>>
     extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
@@ -40,12 +40,10 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      */
     private final List<BaseQuery> queries = new ArrayList<>();
 
-    private final Parameters parameters = new Parameters();
-
     /**
      * 别名列表
      */
-    private List<String> alias = new ArrayList<>(8);
+    private final List<String> alias = new ArrayList<>(8);
 
     @Override
     public String[] getAlias() {
@@ -55,31 +53,16 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     /**
      * 如果有必要，需要显式设置query表别名
      *
-     * @param query
+     * @param query 左查询
      */
     public JoinQuery(QL query) {
         super(null);
         this.assertQueryAlias(query);
         this.query = query;
-        this.query.sharedParameter(this.parameters);
+        Parameters parameters = new Parameters();
+        this.query.sharedParameter(parameters);
         this.queryClass = (Class<QL>) query.getClass();
-        super.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
-        this.alias.add(this.query.tableAlias);
-    }
-
-    /**
-     * 框架自动设置query的表别名
-     *
-     * @param queryClass
-     * @param query
-     */
-    public JoinQuery(Class<QL> queryClass, QFunction<QL> query) {
-        super(null);
-        this.queryClass = queryClass;
-        this.query = newQuery(queryClass, Parameters.alias());
-        this.query.sharedParameter(this.parameters);
-        query.apply(this.query);
-        super.wrapperData = new JoinWrapperData(this.query, this.queries, this.parameters);
+        super.wrapperData = new JoinWrapperData(this.query, this.queries, parameters);
         this.alias.add(this.query.tableAlias);
     }
 
@@ -111,8 +94,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     /**
      * 判断query查询表别名已经设置
      *
-     * @param query
-     * @param <QR>
+     * @param query 右查询
+     * @param <QR>  右查询类型
      */
     private <QR extends BaseQuery<?, QR>> void assertQueryAlias(QR query) {
         MybatisUtil.assertNotNull("query", query);
@@ -175,7 +158,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         throw new RuntimeException("not support");
     }
 
-    private static Map<Class, Constructor> QueryAliasConstructors = new HashMap<>(128);
+    private static final Map<Class, Constructor> QueryAliasConstructors = new HashMap<>(128);
 
     private static <Q extends BaseQuery<?, Q>> Q newQuery(Class<Q> queryClass, String alias) {
         try {
