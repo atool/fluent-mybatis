@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -8,6 +9,8 @@ import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.Map;
  *
  * @param <QL>
  */
+@Accessors(chain = true)
 public class JoinQuery<QL extends BaseQuery<?, QL>>
     extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
     implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL> {
@@ -113,8 +117,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     private <QR extends BaseQuery<?, QR>> void assertQueryAlias(QR query) {
         MybatisUtil.assertNotNull("query", query);
         if (BaseWrapperHelper.isBlankAlias(query)) {
-            String err = String.format("the alias in the join query table must be set, " +
-                "please use constructor: new %s(String alias, Parameters parameters)", query.getClass().getSimpleName());
+            String err = String.format("the table alias of join query must be set, " +
+                "please use constructor: new %s(String alias)", query.getClass().getSimpleName());
             throw new RuntimeException(err);
         }
     }
@@ -199,8 +203,25 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         return all;
     }
 
+    @Setter
+    private DbType dbType;
+
     @Override
     public DbType dbType() {
-        return this.query.dbType();
+        if (dbType != null) {
+            return dbType;
+        }
+        dbType = this.query.dbType();
+        if (dbType != null) {
+            return dbType;
+        }
+        for (IQuery query : this.queries) {
+            dbType = ((BaseWrapper) query).dbType();
+            if (dbType != null) {
+                return dbType;
+            }
+        }
+        dbType = IRefs.instance().defaultDbType();
+        return dbType;
     }
 }

@@ -40,14 +40,16 @@ class TestSpringConfig {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        // 路径正则表达式方式加载
         bean.setMapperLocations(resolver.getResources("classpath*:mapper/*.xml"));
-//        bean.setMapperLocations(
-//            new ClassPathResource("mapper/MyXmlMapper.xml"),
-//            new ClassPathResource("mapper/BatchUpdate.xml")
-//        );
+        // 一个个文件加载
+        // bean.setMapperLocations(
+        //      new ClassPathResource("mapper/MyXmlMapper.xml"),
+        //      new ClassPathResource("mapper/BatchUpdate.xml")
+        // );
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setLazyLoadingEnabled(true);
-        configuration.setAggressiveLazyLoading(false);
+        configuration.setMapUnderscoreToCamelCase(true);
         bean.setConfiguration(configuration);
         return bean;
     }
