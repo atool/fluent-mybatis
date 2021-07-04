@@ -1,5 +1,10 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
+import java.lang.Boolean;
+import java.lang.String;
+import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -7,10 +12,6 @@ import org.test4j.module.database.annotations.ScriptTable;
 import org.test4j.tools.datagen.DataMap;
 import org.test4j.tools.datagen.IDataMap;
 import org.test4j.tools.datagen.KeyValue;
-
-import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * StudentDataMap: 表(实体)数据对比(插入)构造器
@@ -72,6 +73,18 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
       type = "bigint(21)"
   )
   public final transient KeyValue<StudentDataMap> bonusPoints = new KeyValue(this, "bonus_points", "bonusPoints", supplier);
+
+  @ColumnDef(
+      value = "desk_mate_id",
+      type = "bigint(21)"
+  )
+  public final transient KeyValue<StudentDataMap> deskMateId = new KeyValue(this, "desk_mate_id", "deskMateId", supplier);
+
+  @ColumnDef(
+      value = "email",
+      type = "varchar(50)"
+  )
+  public final transient KeyValue<StudentDataMap> email = new KeyValue(this, "email", "email", supplier);
 
   @ColumnDef(
       value = "env",

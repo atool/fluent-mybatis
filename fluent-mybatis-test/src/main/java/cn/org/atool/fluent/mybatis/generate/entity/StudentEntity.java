@@ -93,6 +93,18 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   private Long bonusPoints;
 
   /**
+   * 同桌
+   */
+  @TableField("desk_mate_id")
+  private Long deskMateId;
+
+  /**
+   * 邮箱
+   */
+  @TableField("email")
+  private String email;
+
+  /**
    * 数据隔离环境
    */
   @TableField("env")
@@ -163,6 +175,14 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   @Override
   public final Class<? extends IEntity> entityClass() {
     return StudentEntity.class;
+  }
+
+  /**
+   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
+   */
+  @RefMethod("deskMateId = id")
+  public StudentEntity findDeskMate() {
+    return super.invoke("findDeskMate", true);
   }
 
   /**

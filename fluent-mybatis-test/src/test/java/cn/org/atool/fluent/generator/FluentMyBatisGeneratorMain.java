@@ -58,6 +58,8 @@ public class FluentMyBatisGeneratorMain {
                 columns = @Column(value = "version", isLarge = true)
             )},
         relations = {
+            @Relation(method = "findDeskMate", type = RelationType.OneWay_0_1,
+                source = "student", target = "student", where = "id=desk_mate_id"),
             @Relation(source = "student", target = "student_score", type = RelationType.TwoWay_1_N,
                 where = "id=student_id && env=env && is_deleted=is_deleted"),
             @Relation(method = "findEnglishScore", source = "student", target = "student_score", type = RelationType.OneWay_0_1)
@@ -78,7 +80,9 @@ public class FluentMyBatisGeneratorMain {
             @Relation(method = "findMyFavorite", source = "t_member", target = "t_member_favorite", type = RelationType.OneWay_0_N
                 , where = "id=member_id && is_deleted=is_deleted"),
             @Relation(method = "findExFriends", source = "t_member", target = "t_member", type = RelationType.OneWay_0_N),
-            @Relation(method = "findCurrFriend", source = "t_member", target = "t_member", type = RelationType.OneWay_0_1)
+            @Relation(method = "findCurrFriend", type = RelationType.OneWay_0_1,
+                source = "t_member", target = "t_member"
+            )
         }
     )
     static class RelationDef2 {

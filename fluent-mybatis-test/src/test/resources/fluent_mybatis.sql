@@ -71,6 +71,7 @@ create table student
 (
     id              bigint(21) unsigned auto_increment comment '主键id'
         primary key,
+    desk_mate_id    bigint(21) null comment '同桌',
     age             int null comment '年龄',
     grade           int null comment '年级',
     user_name       varchar(45) null comment '名字',
