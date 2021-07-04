@@ -36,7 +36,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @param <NestedQ> WRAPPER 对应的嵌套查询器
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "rawtypes"})
 @Accessors(chain = true)
 public abstract class WhereBase<
     WHERE extends WhereBase<WHERE, WRAPPER, NestedQ>,
