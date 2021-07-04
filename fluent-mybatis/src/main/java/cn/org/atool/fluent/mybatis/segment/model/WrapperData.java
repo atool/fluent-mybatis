@@ -358,4 +358,8 @@ public class WrapperData implements IWrapperData {
     public void sharedParameter(Parameters parameters) {
         this.getParameters().sharedParameter(parameters);
     }
+
+    public ISqlSegment[] whereSegments() {
+        return this.mergeSegments.getWhere().getSegments().toArray(new ISqlSegment[0]);
+    }
 }

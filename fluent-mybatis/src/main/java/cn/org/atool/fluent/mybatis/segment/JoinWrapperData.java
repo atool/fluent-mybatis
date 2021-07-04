@@ -72,15 +72,9 @@ public class JoinWrapperData extends WrapperData {
         if (whereMerged) {
             return super.getWhereSql();
         }
-        this.query.wrapperData.getMergeSegments().getWhere().getSegments()
-            .forEach(this.mergeSegments.getWhere()::addAll);
+        this.mergeSegments.getWhere().add(KeyWordSegment.AND, this.query.wrapperData.whereSegments());
         for (BaseQuery query : this.queries) {
-            if (!this.mergeSegments.getWhere().isEmpty() &&
-                !query.wrapperData.getMergeSegments().getWhere().getSegments().isEmpty()) {
-                this.mergeSegments.getWhere().addAll(KeyWordSegment.AND);
-            }
-            query.wrapperData.getMergeSegments().getWhere().getSegments()
-                .forEach(this.mergeSegments.getWhere()::addAll);
+            this.mergeSegments.getWhere().add(KeyWordSegment.AND, query.wrapperData.whereSegments());
         }
         whereMerged = true;
         return super.getWhereSql();

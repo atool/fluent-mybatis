@@ -139,7 +139,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public IQuery build() {
+    public JoinQuery<QL> build() {
         return this;
     }
 
@@ -153,9 +153,14 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         throw new RuntimeException("not support");
     }
 
+    /**
+     * 查询条件 where ...
+     */
+    public final JoinQueryWhere where = new JoinQueryWhere(this);
+
     @Override
-    public WhereBase<?, JoinQuery<QL>, JoinQuery<QL>> where() {
-        throw new RuntimeException("not support");
+    public JoinQueryWhere where() {
+        return this.where;
     }
 
     private static final Map<Class, Constructor> QueryAliasConstructors = new HashMap<>(128);
