@@ -3,7 +3,11 @@ package cn.org.atool.fluent.mybatis.customize.impl;
 import cn.org.atool.fluent.mybatis.generate.entity.MemberEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentScoreEntity;
+import cn.org.atool.fluent.mybatis.generate.entity.TeacherEntity;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentTeacherRelationQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.TeacherQuery;
 import cn.org.atool.fluent.mybatis.refs.IEntityRelation;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +34,29 @@ public class EntityRelation implements IEntityRelation {
             .and.env().eq(entity.getEnv()).end()
             .limit(1)
             .to().findOne().orElse(null);
+    }
+
+    @Override
+    public List<TeacherEntity> findTeacherListOfStudentEntity(StudentEntity student) {
+        return TeacherQuery.defaultQuery()
+            .where.id().in(
+                StudentTeacherRelationQuery.defaultQuery()
+                    .select.teacherId().end()
+                    .where.studentId().eq(student.getId())
+                    .end()
+            ).end()
+            .to().listEntity();
+    }
+
+    @Override
+    public List<StudentEntity> findStudentListOfTeacherEntity(TeacherEntity teacher) {
+        return StudentQuery.defaultQuery()
+            .where.id().in(
+                StudentTeacherRelationQuery.defaultQuery()
+                    .select.studentId().end()
+                    .where.teacherId().eq(teacher.getId())
+                    .end()
+            ).end()
+            .to().listEntity();
     }
 }

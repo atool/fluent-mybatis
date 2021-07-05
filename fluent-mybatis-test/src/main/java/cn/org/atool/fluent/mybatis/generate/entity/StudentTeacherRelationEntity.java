@@ -6,16 +6,12 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import cn.org.atool.fluent.mybatis.customize.MyEntity;
-import java.io.Serializable;
-import java.lang.Boolean;
-import java.lang.Class;
-import java.lang.Long;
-import java.lang.Override;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * StudentTeacherRelationEntity: 数据映射实体定义
@@ -30,11 +26,9 @@ import lombok.experimental.Accessors;
     callSuper = false
 )
 @FluentMybatis(
-    table = "student_teacher_relation",
-    mapperBeanPrefix = "my",
-    defaults = MyCustomerInterface.class
+    table = "student_teacher_relation"
 )
-public class StudentTeacherRelationEntity extends RichEntity implements MyEntity<StudentTeacherRelationEntity> {
+public class StudentTeacherRelationEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -43,6 +37,26 @@ public class StudentTeacherRelationEntity extends RichEntity implements MyEntity
   private Long id;
 
   /**
+   * 创建时间
+   */
+  @TableField(
+      value = "gmt_created",
+      insert = "now()"
+  )
+  private Date gmtCreated;
+
+  /**
+   * 更新时间
+   */
+  @TableField(
+      value = "gmt_modified",
+      insert = "now()",
+      update = "now()"
+  )
+  private Date gmtModified;
+
+  /**
+   * 是否逻辑删除
    */
   @TableField(
       value = "is_deleted",
@@ -50,6 +64,12 @@ public class StudentTeacherRelationEntity extends RichEntity implements MyEntity
   )
   @LogicDelete
   private Boolean isDeleted;
+
+  /**
+   * 数据隔离环境
+   */
+  @TableField("env")
+  private String env;
 
   /**
    */

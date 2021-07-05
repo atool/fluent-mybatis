@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
@@ -32,10 +33,28 @@ public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelatio
   public final transient KeyValue<StudentTeacherRelationDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
+      value = "gmt_created",
+      type = "datetime"
+  )
+  public final transient KeyValue<StudentTeacherRelationDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+
+  @ColumnDef(
+      value = "gmt_modified",
+      type = "datetime"
+  )
+  public final transient KeyValue<StudentTeacherRelationDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+
+  @ColumnDef(
       value = "is_deleted",
       type = "tinyint(2)"
   )
   public final transient KeyValue<StudentTeacherRelationDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+
+  @ColumnDef(
+      value = "env",
+      type = "varchar(10)"
+  )
+  public final transient KeyValue<StudentTeacherRelationDataMap> env = new KeyValue(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "student_id",
@@ -65,6 +84,8 @@ public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelatio
    */
   public StudentTeacherRelationDataMap init() {
     this.id.autoIncrease();
+    this.gmtCreated.values(new Date());
+    this.gmtModified.values(new Date());
     this.isDeleted.values(false);
     return this;
   }

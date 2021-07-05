@@ -1,22 +1,15 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
-import cn.org.atool.fluent.mybatis.customize.MyEntity;
-import java.io.Serializable;
-import java.lang.Class;
-import java.lang.Long;
-import java.lang.Override;
-import java.lang.String;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * TeacherEntity: 数据映射实体定义
@@ -31,11 +24,9 @@ import lombok.experimental.Accessors;
     callSuper = false
 )
 @FluentMybatis(
-    table = "teacher",
-    mapperBeanPrefix = "my",
-    defaults = MyCustomerInterface.class
+    table = "teacher"
 )
-public class TeacherEntity extends RichEntity implements MyEntity<TeacherEntity> {
+public class TeacherEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -43,6 +34,41 @@ public class TeacherEntity extends RichEntity implements MyEntity<TeacherEntity>
    */
   @TableId("id")
   private Long id;
+
+  /**
+   * 创建时间
+   */
+  @TableField(
+      value = "gmt_created",
+      insert = "now()"
+  )
+  private Date gmtCreated;
+
+  /**
+   * 更新时间
+   */
+  @TableField(
+      value = "gmt_modified",
+      insert = "now()",
+      update = "now()"
+  )
+  private Date gmtModified;
+
+  /**
+   * 是否逻辑删除
+   */
+  @TableField(
+      value = "is_deleted",
+      insert = "0"
+  )
+  @LogicDelete
+  private Boolean isDeleted;
+
+  /**
+   * 数据隔离环境
+   */
+  @TableField("env")
+  private String env;
 
   /**
    * 名字

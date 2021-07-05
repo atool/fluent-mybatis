@@ -98,7 +98,11 @@ drop table if exists teacher;
 create table teacher
 (
     id        bigint auto_increment primary key comment '主键id',
-    user_name varchar(20) null comment '名字'
+    user_name varchar(20) null comment '名字',
+    gmt_created     datetime null comment '创建时间',
+    gmt_modified    datetime null comment '更新时间',
+    is_deleted      tinyint(2) default 0 null comment '是否逻辑删除',
+    env             varchar(10) NULL comment '数据隔离环境'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
     COMMENT '教师信息表';
@@ -109,7 +113,10 @@ create table student_teacher_relation
     id bigint auto_increment primary key,
     student_id bigint not null,
     teacher_id bigint not null,
-    is_deleted tinyint(2) null
+    gmt_created     datetime null comment '创建时间',
+    gmt_modified    datetime null comment '更新时间',
+    is_deleted      tinyint(2) default 0 null comment '是否逻辑删除',
+    env             varchar(10) NULL comment '数据隔离环境'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
     COMMENT '学生教师关联表';

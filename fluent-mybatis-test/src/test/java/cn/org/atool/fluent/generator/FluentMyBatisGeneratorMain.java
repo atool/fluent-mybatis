@@ -51,12 +51,13 @@ public class FluentMyBatisGeneratorMain {
         srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
-            @Table(value = {"home_address", "student", "student_score", "teacher", "student_teacher_relation"},
+            @Table(value = {"home_address", "student", "student_score"},
                 tablePrefix = "t_", mapperPrefix = "my",
                 defaults = MyCustomerInterface.class,
                 entity = MyEntity.class,
                 columns = @Column(value = "version", isLarge = true)
-            )},
+            ),
+            @Table(value = {"teacher", "student_teacher_relation"})},
         relations = {
             @Relation(method = "findDeskMate", type = RelationType.OneWay_0_1,
                 source = "student", target = "student", where = "id=desk_mate_id"),
