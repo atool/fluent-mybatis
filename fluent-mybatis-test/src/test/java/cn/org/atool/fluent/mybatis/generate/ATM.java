@@ -11,6 +11,8 @@ import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
 import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentTeacherRelationDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.TeacherDataMap;
 import cn.org.atool.fluent.mybatis.generate.mix.BlobValueTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.IdcardTableMix;
@@ -22,6 +24,8 @@ import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
 import cn.org.atool.fluent.mybatis.generate.mix.StudentTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentTeacherRelationTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.TeacherTableMix;
 import java.lang.Class;
 import java.lang.Override;
 import java.lang.String;
@@ -49,7 +53,11 @@ public interface ATM {
 
     public final String noPrimary = "no_primary";
 
+    public final String studentTeacherRelation = "student_teacher_relation";
+
     public final String studentScore = "student_score";
+
+    public final String teacher = "teacher";
 
     public final String homeAddress = "home_address";
 
@@ -76,7 +84,11 @@ public interface ATM {
 
     public final NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
 
+    public final StudentTeacherRelationDataMap.Factory studentTeacherRelation = new StudentTeacherRelationDataMap.Factory();
+
     public final StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
+
+    public final TeacherDataMap.Factory teacher = new TeacherDataMap.Factory();
 
     public final HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
 
@@ -103,7 +115,11 @@ public interface ATM {
 
     public final NoPrimaryTableMix noPrimaryTableMix = MixProxy.proxy(NoPrimaryTableMix.class);
 
+    public final StudentTeacherRelationTableMix studentTeacherRelationTableMix = MixProxy.proxy(StudentTeacherRelationTableMix.class);
+
     public final StudentScoreTableMix studentScoreTableMix = MixProxy.proxy(StudentScoreTableMix.class);
+
+    public final TeacherTableMix teacherTableMix = MixProxy.proxy(TeacherTableMix.class);
 
     public final HomeAddressTableMix homeAddressTableMix = MixProxy.proxy(HomeAddressTableMix.class);
 
@@ -124,7 +140,9 @@ public interface ATM {
     public void cleanAllTable() {
       this.noAutoIdTableMix.cleanNoAutoIdTable();
       this.noPrimaryTableMix.cleanNoPrimaryTable();
+      this.studentTeacherRelationTableMix.cleanStudentTeacherRelationTable();
       this.studentScoreTableMix.cleanStudentScoreTable();
+      this.teacherTableMix.cleanTeacherTable();
       this.homeAddressTableMix.cleanHomeAddressTable();
       this.studentTableMix.cleanStudentTable();
       this.memberFavoriteTableMix.cleanMemberFavoriteTable();
@@ -145,7 +163,9 @@ public interface ATM {
       return list(
       	NoAutoIdDataMap.class,
       	NoPrimaryDataMap.class,
+      	StudentTeacherRelationDataMap.class,
       	StudentScoreDataMap.class,
+      	TeacherDataMap.class,
       	HomeAddressDataMap.class,
       	StudentDataMap.class,
       	MemberFavoriteDataMap.class,

@@ -94,6 +94,26 @@ create table student
   DEFAULT CHARSET = utf8
     COMMENT '学生信息表';
 
+drop table if exists teacher;
+create table teacher
+(
+    id        bigint auto_increment primary key comment '主键id',
+    user_name varchar(20) null comment '名字'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+    COMMENT '教师信息表';
+
+drop table if exists student_teacher_relation;
+create table student_teacher_relation
+(
+    id bigint auto_increment primary key,
+    student_id bigint not null,
+    teacher_id bigint not null,
+    is_deleted tinyint(2) null
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+    COMMENT '学生教师关联表';
+
 drop table if exists `county_division`;
 CREATE TABLE `county_division`
 (
