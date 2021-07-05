@@ -10,7 +10,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.test4j.junit5.Test4J;
-import org.test4j.module.database.proxy.DataSourceCreatorFactory;
+import org.test4j.module.database.proxy.DataSourceCreator;
 
 import javax.sql.DataSource;
 
@@ -32,7 +32,7 @@ public abstract class BaseTest extends Test4J {
 class TestSpringConfig {
     @Bean("dataSource")
     public DataSource newDataSource() {
-        return DataSourceCreatorFactory.create("dataSource");
+        return DataSourceCreator.create("dataSource");
     }
 
     @Bean

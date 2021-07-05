@@ -9,8 +9,6 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import lombok.Setter;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ public abstract class IRefs {
     /**
      * 返回框架默认的数据库类型
      *
-     * @return
+     * @return DbType
      */
     public DbType defaultDbType() {
         if (instance().defaultDbType == null) {
@@ -69,17 +67,17 @@ public abstract class IRefs {
                 return INSTANCE;
             }
             try {
-                Class klass = Class.forName("cn.org.atool.fluent.mybatis.refs.AllRef");
+                Class klass = Class.forName(IRefs.Fix_Package + ".Refs");
                 INSTANCE = (IRefs) klass.getDeclaredConstructor().newInstance();
                 return INSTANCE;
             } catch (Exception e) {
-                throw new RuntimeException("new AllRef error:" + e.getMessage(), e);
+                throw new RuntimeException("new Refs error:" + e.getMessage(), e);
             }
         }
     }
 
     protected static RuntimeException springNotInitException() {
-        return new RuntimeException("the Refs must be defined as a spring bean.");
+        return new RuntimeException("The cn.org.atool.fluent.mybatis.spring.MapperFactory must be configured as spring bean.");
     }
 
     /**
@@ -201,7 +199,7 @@ public abstract class IRefs {
     public Class<? extends IEntity> findFluentEntityClass(Class clazz) {
         Set<Class<? extends IEntity>> all = this.allEntityClass();
         if (all.isEmpty()) {
-            throw new RuntimeException("the sub of IRefs must be a spring bean.");
+            throw springNotInitException();
         }
         Class aClass = clazz;
         while (aClass != Object.class && aClass != RichEntity.class) {
@@ -244,10 +242,9 @@ public abstract class IRefs {
     protected abstract IRichMapper getMapper(Class<? extends IEntity> clazz);
 
     /**
-     * spring init-method
+     * 从spring容器中获取Mapper
      */
-    @PostConstruct
-    public void initMethod() {
+    public void wiredMapper() {
         Method[] methods = this.getClass().getMethods();
         for (Method method : methods) {
             if (method.getParameterCount() == 0) {
@@ -259,7 +256,6 @@ public abstract class IRefs {
             }
         }
         this.initEntityMapper();
-        INSTANCE = this;
     }
 
     /**
@@ -267,6 +263,17 @@ public abstract class IRefs {
      */
     protected abstract void initEntityMapper();
 
-    @Resource
     protected MapperFactory mapperFactory;
+
+    protected Object relation;
+
+    /**
+     * 设置实体类的关联自定义实现
+     *
+     * @param relation 实体关联关系实现
+     */
+    public void setEntityRelation(Object relation, MapperFactory mapperFactory) {
+        this.relation = relation;
+        this.mapperFactory = mapperFactory;
+    }
 }

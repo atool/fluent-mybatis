@@ -38,8 +38,9 @@ public class AllRefFiler extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(IRefs.class);
-        // .addModifiers(Modifier.ABSTRACT);
+        spec.superclass(IRefs.class)
+            .addModifiers(Modifier.ABSTRACT);
+        spec.modifiers.remove(Modifier.PUBLIC);
 
         spec.addField(f_mappers())
             .addMethod(this.m_constructor())

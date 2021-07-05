@@ -90,4 +90,17 @@ public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
             return false;
         }
     }
+
+    /**
+     * 是否抽象方法
+     *
+     * @return true: 抽象方法
+     */
+    public boolean isAbstractMethod() {
+        if (!this.isAutoMapping()) {
+            return true;
+        }
+        FluentEntity ref = FluentList.getFluentEntity(this.getReturnEntity());
+        return ref == null;
+    }
 }

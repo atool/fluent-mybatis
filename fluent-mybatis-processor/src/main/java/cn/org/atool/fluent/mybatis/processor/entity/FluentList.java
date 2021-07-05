@@ -102,6 +102,7 @@ public class FluentList {
             new QueryRefFiler(),
             new FormRefFiler(),
             new RefsFile(),
+            new EntityRelationFiler(),
             new MapperRefFiler()
         );
     }

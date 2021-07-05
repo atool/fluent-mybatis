@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
-import cn.org.atool.fluent.mybatis.generate.Refs;
 import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -10,12 +9,14 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
+import cn.org.atool.fluent.mybatis.refs.Refs;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.lang.String.format;
 
+@SuppressWarnings("rawtypes")
 public class JoinQueryTest_Alias1 extends BaseTest {
     @Autowired
     private StudentMapper mapper;

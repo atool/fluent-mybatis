@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.AllRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.EntityRelationFiler;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -25,11 +26,11 @@ public class RefsFile extends AbstractFile {
     private static String Refs = "Refs";
 
     public static ClassName getClassName() {
-        return ClassName.get(FluentList.getSamePackage(), Refs);
+        return ClassName.get(FluentList.refsPackage(), Refs);
     }
 
     public RefsFile() {
-        this.packageName = FluentList.getSamePackage();
+        this.packageName = FluentList.refsPackage();
         this.klassName = Refs;
         this.comment = "" +
             "\n o - 查询器，更新器工厂类单例引用" +
@@ -40,45 +41,46 @@ public class RefsFile extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(AllRefFiler.getClassName())
-            .addModifiers(Modifier.ABSTRACT)
+            .addModifiers(Modifier.FINAL)
             .addMethod(this.m_instance());
         for (FluentEntity fluent : FluentList.getFluents()) {
-            for (EntityRefMethod refField : fluent.getRefMethods()) {
-                spec.addMethod(this.m_refMethod(fluent, refField));
+            for (EntityRefMethod refMethod : fluent.getRefMethods()) {
+                if (refMethod.isAbstractMethod()) {
+                    spec.addMethod(this.m_refMethod(fluent, refMethod));
+                } else {
+                    spec.addMethod(this.m_refRealMethod(fluent, refMethod));
+                }
             }
         }
     }
 
-    private MethodSpec m_refMethod(FluentEntity fluent, EntityRefMethod refField) {
-        MethodSpec methodSpec = this.m_refRealMethod(fluent, refField);
-        if (methodSpec != null) {
-            return methodSpec;
-        }
-        return MethodSpec.methodBuilder(refField.getRefMethod(fluent))
+    private MethodSpec m_refMethod(FluentEntity fluent, EntityRefMethod refMethod) {
+        String methodName = refMethod.getRefMethod(fluent);
+        return MethodSpec.methodBuilder(methodName)
             .addParameter(fluent.entity(), "entity")
-            .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-            .returns(refField.getJavaType())
-            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getName())
+            .addModifiers(Modifier.PUBLIC)
+            .returns(refMethod.getJavaType())
+            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refMethod.getName())
+            .addCode("if (relation instanceof $T) {\n", EntityRelationFiler.getClassName())
+            .addStatement("\treturn (($T)relation).$L(entity)", EntityRelationFiler.getClassName(), methodName)
+            .addCode("} else {\n")
+            .addStatement("\tthrow new $T($S)", RuntimeException.class, "It must implement IEntityRelation and add the implementation to spring management.")
+            .addCode("}")
             .build();
     }
 
-    private MethodSpec m_refRealMethod(FluentEntity fluent, EntityRefMethod refField) {
-        if (!refField.isAutoMapping()) {
-            return null;
-        }
-        FluentEntity ref = FluentList.getFluentEntity(refField.getReturnEntity());
-        if (ref == null) {
-            return null;
-        }
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(refField.getRefMethod(fluent))
+    private MethodSpec m_refRealMethod(FluentEntity fluent, EntityRefMethod refMethod) {
+        FluentEntity ref = FluentList.getFluentEntity(refMethod.getReturnEntity());
+
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(refMethod.getRefMethod(fluent))
             .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC)
-            .returns(refField.getJavaType())
-            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getName());
-        String method = refField.returnList() ? "listEntity" : "findOne";
+            .returns(refMethod.getJavaType())
+            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refMethod.getName());
+        String method = refMethod.returnList() ? "listEntity" : "findOne";
         spec.addCode("return mapper().$LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
         int index = 0;
-        for (Map.Entry<String, String> pair : refField.getMapping().entrySet()) {
+        for (Map.Entry<String, String> pair : refMethod.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")
                 .addCode(".$L().eq(entity.get$L())\n", pair.getKey(), capitalFirst(pair.getValue(), ""));
             index++;
