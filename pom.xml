@@ -26,6 +26,7 @@
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
         <module>fluent-mybatis-test</module>
+        <module>fluent-mybatis-auto</module>
     </modules>
     <dependencyManagement>
         <dependencies>
