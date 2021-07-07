@@ -1,4 +1,4 @@
-# Fluent-Mybatis QQ交流群: 312885450
+# Fluent-Mybatis, QQ交流群: 312885450
 - [gitee](https://gitee.com/fluent-mybatis)
 - [github](https://github.com/atool/fluent-mybatis)
 
@@ -41,10 +41,10 @@
 - [deleteByMap](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/deleteByMap?sort_id=4098302)
 - [delete](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/delete?sort_id=4098306)
 - [deleteByEntityIds](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/deleteByEntityIds?sort_id=4098697)
-- [deleteByMapAndDefault TODO](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/deleteByMapAndDefault?sort_id=4098698)
+- [deleteByMapAndDefault](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/deleteByMapAndDefault?sort_id=4098698)
 
 #### 逻辑删除
-- [逻辑删除代码生成配置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E9%80%BB%E8%BE%91%E5%88%A0%E9%99%A4%E4%0%81%E7%94%9F%E6%88%90%E9%85%8D%E7%BD%AE?sort_id=4151541)
+- [逻辑删除代码生成配置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E9%80%BB%E8%BE%91%E5%88%A0%E9%99%A4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E9%85%8D%E7%BD%AE?sort_id=4151541)
 - [logicDeleteById](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/logicDeleteById?sort_id=4151529)
 - [logicDeleteByIds](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/logicDeleteByIds?sort_id=4151530)
 - [logicDeleteByMap](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/logicDeleteByMap?sort_id=4151531)
@@ -85,7 +85,7 @@
 
 #### 其他
 - [存储过程 callProcedure](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B+crocedure?sort_id=4098655)
-- [批量增删改查 batchCrud](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%89%B9%E9%87%8F%E5%A2%9E%E5%88%A0%E9%E6%9F%A5+batchCrud?sort_id=4098685)
+- [批量增删改查 batchCrud](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%89%B9%E9%87%8F%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%20batchCrud?sort_id=4098685)
 
 ##  Select语法
 - [select字段](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/select%E5%AD%97%E6%AE%B5?sort_id=4101591)
@@ -94,33 +94,33 @@
 
 ##  where语法
 - [where设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/where%E8%AE%BE%E7%BD%AE?sort_id=4102593)
-- [基本条件设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%9F%BA%E6%9C%AC%E6%9D%A1%E4%BB%B6%E8%AE%BE%E7?sort_id=4102602)
-- [exists 和 in 子查询](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/exists+%E5%92%8C+in+%E5%AD%90%E6%9F%A5%E8A2?sort_id=4106029)
+- [基本条件设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%9F%BA%E6%9C%AC%E6%9D%A1%E4%BB%B6%E8%AE%BE%E7%BD%AE?sort_id=4102602)
+- [exists 和 in 子查询](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/exists%20%E5%92%8C%20in%20%E5%AD%90%E6%9F%A5%E8%AF%A2?sort_id=4106029)
 - [eqByEntity](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/eqByEntity?sort_id=4176611)
 - [eqByExclude](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/eqByExclude?sort_id=4176639)
-- [and(子条件) or(子条件)](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/and%28%E5%AD%90%E6%9D%A1%E4%BB%B6%29+o5%AD%90%E6%9D%A1%E4%BB%B6%29?sort_id=4106034)
-- [apply: 自定义条件](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/apply%3A+%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9D%%BB%B6?sort_id=4106035)
-- [applyFunc: 设置函数条件](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/applyFunc%3A+%E8%AE%BE%E7%BD%AE%E5%87%95%B0%E6%9D%A1%E4%BB%B6?sort_id=4106039)
+- [and(子条件) or(子条件)](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/and(%E5%AD%90%E6%9D%A1%E4%BB%B6)%20or(%E5%AD%90%E6%9D%A1%E4%BB%B6)?sort_id=4106034)
+- [apply: 自定义条件](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/apply:%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9D%A1%E4%BB%B6?sort_id=4106035)
+- [applyFunc: 设置函数条件](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/applyFunc:%20%E8%AE%BE%E7%BD%AE%E5%87%BD%E6%95%B0%E6%9D%A1%E4%BB%B6?sort_id=4106039)
 - [按条件设置查询项](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%8C%89%E6%9D%A1%E4%BB%B6%E8%AE%BE%E7%BD%AA5%E8%AF%A2%E9%A1%B9?sort_id=4106038)
 
 ##  更新语法
-- [更新字段设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%9B%B4%E6%96%B0%E5%AD%97%E6%AE%B5%E8%AE%BE%E7?sort_id=4169719)
+- [更新字段设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%9B%B4%E6%96%B0%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE?sort_id=4169719)
 - [byEntity](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/byEntity?sort_id=4176650)
 - [byExclude](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/byExclude?sort_id=4176651)
 - [applyFunc](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/applyFunc?sort_id=4176831)
-- [根据条件更新](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E6%9B%B4%E6?sort_id=4176832)
+- [根据条件更新](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E6%9B%B4%E6%96%B0?sort_id=4176832)
 
 ##  关联查询
 - [inner join](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/inner+join?sort_id=4178540)
 - [left&right join](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/left%26right+join?sort_id=4178707)
-- [join on条件设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/join+on%E6%9D%A1%E4%BB%B6%E8%AE%BE%E7%BD%AE?sid=4178708)
+- [join on条件设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/join%20on%E6%9D%A1%E4%BB%B6%E8%AE%BE%E7%BD%AE?sort_id=4178708)
 - [多个join结合](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%A4%9A%E4%B8%AAjoin%E7%BB%93%E5%90%88?sort_id=4178709)
 
 ##  充血Entity模型
-- [在Query和Updater上直接执行Mapper方法](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%9C%A8Query%E5%92%8CU%B8%8A%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8CMapper%E6%96%B9%E6%B3%95?sort_id=4201867)
-- [Entity一对一关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E4%B8%80%E5%AF%B9%E4%B8%80%E5%85%B3%E94?sort_id=4201868)
-- [Entity一对多关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E4%B8%80%E5%AF%B9%E5%A4%9A%E5%85%B3%E94?sort_id=4201869)
-- [Entity多对多关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%85%B3%E94?sort_id=4201870)
+- [在Query和Updater上直接执行Mapper方法](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%9C%A8Query%E5%92%8CUpdater%E4%B8%8A%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8CMapper%E6%96%B9%E6%B3%95?sort_id=4201867)
+- [Entity一对一关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E4%B8%80%E5%AF%B9%E4%B8%80%E5%85%B3%E8%81%94?sort_id=4201868)
+- [Entity一对多关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E4%B8%80%E5%AF%B9%E5%A4%9A%E5%85%B3%E8%81%94?sort_id=4201869)
+- [Entity多对多关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%85%B3%E8%81%94?sort_id=4201870)
 
 ##  数据测试
 - TODO
