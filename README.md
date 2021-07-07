@@ -1,6 +1,7 @@
 # Fluent-Mybatis, QQ交流群: 312885450
 - [gitee](https://gitee.com/fluent-mybatis)
 - [github](https://github.com/atool/fluent-mybatis)
+- [FluentMybatis示例](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
 
 # [FluentMybatis特性](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/fluent%20mybatis%E7%89%B9%E6%80%A7%E6%80%BB%E8%A7%88?sort_id=4216053)
 ![-w930](image/fluent-mybatis-feature.png)
@@ -127,5 +128,4 @@
 
 # 其它
 - [release note](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/release%20note?sort_id=4216055)
-- [FluentMybatis示例](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
 - [掘金系列文章](https://juejin.im/user/1811586730696142/posts)
