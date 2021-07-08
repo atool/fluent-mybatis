@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.segment1;
 
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -17,6 +18,45 @@ import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.id;
 public class HavingTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
+
+
+    @Test
+    public void test_groupBy_having_query() throws Exception {
+        StudentQuery query = new StudentQuery()
+            .select
+            .sum.age("avg")
+            .apply(id.column)
+            .end()
+            .where.id().eq(24L).end()
+            .groupBy.id().end()
+            .having.avg.age().apply(SqlOp.GT, new StudentQuery().select.age().end().where.id().eq(34).end())
+            .end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT SUM(`age`) AS avg, `id` " +
+            "FROM student WHERE `id` = ? " +
+            "GROUP BY `id` HAVING AVG(`age`) > (SELECT `age` FROM student WHERE `id` = ?)");
+        db.sqlList().wantFirstPara().eqList(24L, 34);
+    }
+
+    @Test
+    public void test_groupBy_having_applyFun() throws Exception {
+        StudentQuery query = new StudentQuery()
+            .select
+            .sum.age("avg")
+            .apply(id.column)
+            .end()
+            .where.id().eq(24L).end()
+            .groupBy.id().end()
+            .having.avg.age().applyFunc(SqlOp.GT, "(? + ?)", 12, 23)
+            .end();
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT SUM(`age`) AS avg, `id` " +
+            "FROM student WHERE `id` = ? " +
+            "GROUP BY `id` HAVING AVG(`age`) > (? + ?)");
+        db.sqlList().wantFirstPara().eqList(24L, 12, 23);
+    }
 
     @Test
     public void test_groupBy_having() throws Exception {

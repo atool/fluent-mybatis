@@ -43,6 +43,11 @@ public abstract class HavingBase<
         return (H) this;
     }
 
+    H apply(String aggregate, ISqlOp op, String func, Object... args) {
+        this.wrapper.getWrapperData().apply(HAVING, Column.column(aggregate, this.wrapper), op, func, args);
+        return (H) this;
+    }
+
     /**
      * 执行聚合操作
      *
