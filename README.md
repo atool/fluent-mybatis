@@ -84,10 +84,6 @@
 - [defaultUpdater](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/defaultUpdater?sort_id=4098691)
 - [updater](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/updater?sort_id=4098693)
 
-#### 其他
-- [存储过程 callProcedure](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B+crocedure?sort_id=4098655)
-- [批量增删改查 batchCrud](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%89%B9%E9%87%8F%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%20batchCrud?sort_id=4098685)
-
 ##  Select语法
 - [select字段](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/select%E5%AD%97%E6%AE%B5?sort_id=4101591)
 - [聚合函数](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0?sort_id=4101749)
@@ -132,6 +128,8 @@
 - [FreeQuery/FreeUpdate](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/FreeQuery&FreeUpdate?sort_id=4219518)
 - [自定义完整SQL](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%8C%E6%95%B4SQL?sort_id=4219481)
 - [union](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/union?sort_id=4219716)
+- [存储过程 callProcedure](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B+crocedure?sort_id=4098655)
+- [批量增删改查 batchCrud](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%89%B9%E9%87%8F%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%20batchCrud?sort_id=4098685)
 
 ##  数据测试
 - TODO
