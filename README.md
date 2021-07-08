@@ -132,7 +132,7 @@
 - [批量增删改查 batchCrud](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%89%B9%E9%87%8F%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%20batchCrud?sort_id=4098685)
 
 ##  数据测试
-- TODO
+- [如何执行FluentMybatis工程中的测试](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8CFluentMybatis%E5%B7%A5%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%B5%8B%E8%AF%95?sort_id=4219724)
 
 # 其它
 - [release note](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/release%20note?sort_id=4216055)
