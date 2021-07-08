@@ -104,6 +104,11 @@
 - [applyFunc: 设置函数条件](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/applyFunc:%20%E8%AE%BE%E7%BD%AE%E5%87%BD%E6%95%B0%E6%9D%A1%E4%BB%B6?sort_id=4106039)
 - [按条件设置查询项](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%8C%89%E6%9D%A1%E4%BB%B6%E8%AE%BE%E7%BD%AA5%E8%AF%A2%E9%A1%B9?sort_id=4106038)
 
+## having条件
+- [having基本语法](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/having%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95?sort_id=4219385)
+- [applyFunc](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/applyFunc?sort_id=4219467)
+- [使用子查询](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2?sort_id=4219468)
+
 ##  更新语法
 - [更新字段设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%9B%B4%E6%96%B0%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE?sort_id=4169719)
 - [byEntity](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/byEntity?sort_id=4176650)

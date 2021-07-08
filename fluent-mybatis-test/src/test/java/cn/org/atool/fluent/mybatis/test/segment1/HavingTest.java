@@ -19,54 +19,44 @@ public class HavingTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
-
     @Test
     public void test_groupBy_having_query() throws Exception {
         StudentQuery query = new StudentQuery()
-            .select
-            .sum.age("avg")
-            .apply(id.column)
-            .end()
-            .where.id().eq(24L).end()
-            .groupBy.id().end()
+            .select.gender().sum.age("avg").end()
+            .where.id().gt(24L).end()
+            .groupBy.gender().end()
             .having.avg.age().apply(SqlOp.GT, new StudentQuery().select.age().end().where.id().eq(34).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT SUM(`age`) AS avg, `id` " +
-            "FROM student WHERE `id` = ? " +
-            "GROUP BY `id` HAVING AVG(`age`) > (SELECT `age` FROM student WHERE `id` = ?)");
+            "SELECT `gender`, SUM(`age`) AS avg " +
+            "FROM student WHERE `id` > ? " +
+            "GROUP BY `gender` HAVING AVG(`age`) > (SELECT `age` FROM student WHERE `id` = ?)");
         db.sqlList().wantFirstPara().eqList(24L, 34);
     }
 
     @Test
     public void test_groupBy_having_applyFun() throws Exception {
         StudentQuery query = new StudentQuery()
-            .select
-            .sum.age("avg")
-            .apply(id.column)
-            .end()
-            .where.id().eq(24L).end()
-            .groupBy.id().end()
+            .select.gender().sum.age("avg").end()
+            .where.id().gt(24L).end()
+            .groupBy.gender().end()
             .having.avg.age().applyFunc(SqlOp.GT, "(? + ?)", 12, 23)
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT SUM(`age`) AS avg, `id` " +
-            "FROM student WHERE `id` = ? " +
-            "GROUP BY `id` HAVING AVG(`age`) > (? + ?)");
+            "SELECT `gender`, SUM(`age`) AS avg " +
+            "FROM student WHERE `id` > ? " +
+            "GROUP BY `gender` HAVING AVG(`age`) > (? + ?)");
         db.sqlList().wantFirstPara().eqList(24L, 12, 23);
     }
 
     @Test
     public void test_groupBy_having() throws Exception {
         StudentQuery query = new StudentQuery()
-            .select
-            .sum.age("avg")
-            .apply(id.column)
-            .end()
-            .where.id().eq(24L).end()
-            .groupBy.id().end()
+            .select.gender().sum.age("avg").end()
+            .where.id().gt(24L).end()
+            .groupBy.gender().end()
             .having.sum.age().between(2, 10)
             .and.count.id().gt(2)
             .and.avg.age().in(new int[]{2, 3})
@@ -76,8 +66,9 @@ public class HavingTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(`age`) AS avg, `id` FROM student WHERE `id` = ? " +
-                "GROUP BY `id` " +
+            .eq("SELECT `gender`, SUM(`age`) AS avg " +
+                "FROM student WHERE `id` > ? " +
+                "GROUP BY `gender` " +
                 "HAVING SUM(`age`) BETWEEN ? AND ? " +
                 "AND COUNT(`id`) > ? " +
                 "AND AVG(`age`) IN (?, ?) " +
