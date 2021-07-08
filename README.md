@@ -128,6 +128,10 @@
 - [Entity一对多关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E4%B8%80%E5%AF%B9%E5%A4%9A%E5%85%B3%E8%81%94?sort_id=4201869)
 - [Entity多对多关联](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/Entity%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%85%B3%E8%81%94?sort_id=4201870)
 
+## FreeQuery&FreeUpdate
+- [FreeQuery/FreeUpdate](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/FreeQuery&FreeUpdate?sort_id=4219518)
+- [自定义完整SQL](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%8C%E6%95%B4SQL?sort_id=4219481)
+
 ##  数据测试
 - TODO
 
