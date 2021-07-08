@@ -133,6 +133,7 @@
 
 ##  数据测试
 - [如何执行FluentMybatis工程中的测试](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8CFluentMybatis%E5%B7%A5%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%B5%8B%E8%AF%95?sort_id=4219724)
+- [生成数据测试的辅助工具类](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E6%B5%8B%E8%AF%95%E7%9A%84%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%E7%B1%BB?sort_id=4219751)
 
 # 其它
 - [release note](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/release%20note?sort_id=4216055)
