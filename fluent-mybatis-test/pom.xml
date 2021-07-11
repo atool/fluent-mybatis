@@ -83,24 +83,6 @@
             <artifactId>test4j-junit5</artifactId>
             <version>${test4j-junit5.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mariaDB4j</artifactId>
-                    <groupId>org.craftercms.mariaDB4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>ojdbc8</artifactId>
-                    <groupId>com.oracle.ojdbc</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mybatis</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>fluent-mock</artifactId>
-                    <groupId>org.test4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -113,18 +95,6 @@
             <artifactId>spring-boot-test</artifactId>
             <version>${spring-boot.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.test4j</groupId>
-            <artifactId>fluent-assert</artifactId>
-            <version>1.0.3</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>fluent-mock</artifactId>
-                    <groupId>org.test4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
     <build>

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-parent</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-parent</artifactId>
@@ -16,11 +16,11 @@
     <description>fluent mybatis parent pom</description>
     <url>https://github.com/atool/fluent-mybatis</url>
     <properties>
-        <spring.version>5.2.0.RELEASE</spring.version>
+        <spring.version>5.3.0</spring.version>
         <mybatis.version>3.5.6</mybatis.version>
-        <fluent-mock.version>1.1.0</fluent-mock.version>
+        <fluent-mock.version>1.1.2</fluent-mock.version>
         <fluent-dbtest.version>1.0.4</fluent-dbtest.version>
-        <test4j-junit5.version>2.7.7</test4j-junit5.version>
+        <test4j-junit5.version>2.7.8</test4j-junit5.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>
