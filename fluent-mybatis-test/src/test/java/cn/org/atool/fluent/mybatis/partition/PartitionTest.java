@@ -19,6 +19,7 @@ public class PartitionTest extends BaseTest {
     @Test
     void test_query_partition() {
         String userName = "my_test_name";
+        // 编码实现分表逻辑
         Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
         StudentQuery query = StudentQuery.query(table)
             .defaultWhere()
@@ -33,6 +34,7 @@ public class PartitionTest extends BaseTest {
     @Test
     void test_update_partition() {
         String userName = "my_test_name";
+        // 编码实现分表逻辑
         Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
         StudentUpdate updater = StudentUpdate.updater(table)
             .set.userName().is("test").end()
