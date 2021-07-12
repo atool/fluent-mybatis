@@ -10,6 +10,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.function.Supplier;
 
 public class PartitionTest extends BaseTest {
     @Autowired
@@ -17,28 +18,32 @@ public class PartitionTest extends BaseTest {
 
     @Test
     void test_query_partition() {
-        StudentQuery query = StudentQuery.query(() -> "student_001")
+        String userName = "my_test_name";
+        Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
+        StudentQuery query = StudentQuery.query(table)
             .defaultWhere()
-            .id().eq(1).end();
+            .userName().eq(userName).end();
         want.exception(() -> mapper.listEntity(query),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().end("" +
-            "FROM  student_001 WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList(false, "test_env", 1);
+            "FROM  student_1 WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(false, "test_env", "my_test_name");
     }
 
     @Test
     void test_update_partition() {
-        StudentUpdate updater = StudentUpdate.updater(() -> "student_001")
+        String userName = "my_test_name";
+        Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
+        StudentUpdate updater = StudentUpdate.updater(table)
             .set.userName().is("test").end()
             .defaultWhere()
-            .id().eq(1).end();
+            .userName().eq(userName).end();
         want.exception(() -> mapper.updateBy(updater),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student_001 " +
+            "UPDATE student_1 " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList("test", false, "test_env", 1);
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList("test", false, "test_env", "my_test_name");
     }
 }
