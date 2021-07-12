@@ -4,6 +4,8 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
+import java.util.function.Supplier;
+
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
@@ -25,6 +27,10 @@ public abstract class BaseUpdate<
 
     protected BaseUpdate(String table, Class entityClass, Class queryClass) {
         super(() -> table, EMPTY, entityClass, queryClass);
+    }
+
+    protected BaseUpdate(Supplier<String> table, String alias, Class entityClass, Class queryClass) {
+        super(table, alias, entityClass, queryClass);
     }
 
     @Override

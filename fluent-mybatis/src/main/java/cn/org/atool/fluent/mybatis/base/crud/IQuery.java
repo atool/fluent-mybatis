@@ -75,6 +75,15 @@ public interface IQuery<E extends IEntity> {
     WhereBase where();
 
     /**
+     * 设置默认条件
+     *
+     * @return
+     */
+    default WhereBase defaultWhere() {
+        return this.where();
+    }
+
+    /**
      * 返回查询器或更新器对应的xml数据
      * 系统方法, 请勿调用
      *

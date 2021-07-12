@@ -60,6 +60,15 @@ public interface IUpdate<E extends IEntity> {
     WhereBase where();
 
     /**
+     * 返回设置了默认条件的where
+     *
+     * @return WhereBase
+     */
+    default WhereBase defaultWhere() {
+        return this.where();
+    }
+
+    /**
      * 返回查询器或更新器对应的xml数据
      * 系统方法, 请勿调用
      *

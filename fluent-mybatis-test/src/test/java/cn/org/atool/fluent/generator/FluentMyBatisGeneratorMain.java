@@ -9,7 +9,7 @@ import cn.org.atool.generator.annotation.*;
 import org.apache.ibatis.type.BlobTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 import org.apache.ibatis.type.EnumTypeHandler;
-import org.test4j.module.database.proxy.DataSourceCreatorFactory;
+import org.test4j.module.database.proxy.DataSourceCreator;
 
 public class FluentMyBatisGeneratorMain {
     static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
@@ -26,7 +26,7 @@ public class FluentMyBatisGeneratorMain {
      * @param args
      */
     public static void main(String[] args) {
-        DataSourceCreatorFactory.create("dataSource");
+        DataSourceCreator.create("dataSource");
         FileGenerator.build(
             MapperPrefix_Version.class,
             RelationDef1.class,

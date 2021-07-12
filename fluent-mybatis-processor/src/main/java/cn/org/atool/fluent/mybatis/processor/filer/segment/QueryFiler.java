@@ -18,6 +18,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
  * QueryGenerator: *Query文件生成
@@ -50,26 +51,32 @@ public class QueryFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superClass())
+            .addField(this.f_defaults())
             .addField(this.f_select())
             .addField(this.f_groupBy())
             .addField(this.f_having())
             .addField(this.f_orderBy())
             .addField(this.f_where());
         builder
-            .addMethod(this.constructor1_String())
             .addMethod(this.constructor0())
+            .addMethod(this.constructor1_String())
+            .addMethod(this.constructor2_String_String())
             .addMethod(this.constructor2_String_Parameter())
             .addMethod(this.m_column2mapping())
             .addMethod(this.m_where())
+            .addMethod(this.m_defaultWhere())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
             .addMethod(this.m_dbType())
             .addMethod(this.m_emptyQuery())
+            .addMethod(this.m_emptyQuery_Alias())
+            .addMethod(this.m_emptyQuery_table())
+            .addMethod(this.m_emptyQuery_table_Alias())
             .addMethod(this.m_defaultQuery())
             .addMethod(this.m_aliasQuery_0())
-            .addMethod(this.m_aliasQuery_1())
-            .addMethod(this.m_aliasWith_1())
-            .addMethod(this.m_aliasWith_2());
+            .addMethod(this.m_aliasQuery_1_String())
+            .addMethod(this.m_aliasWith_1_BaseQuery())
+            .addMethod(this.m_aliasWith_2_String_BaseQuery());
     }
 
     private MethodSpec m_emptyQuery() {
@@ -79,10 +86,36 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
+    private MethodSpec m_emptyQuery_Alias() {
+        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(String.class, "alias")
+            .addStatement("return new $T(alias)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_emptyQuery_table() {
+        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addStatement("return new $T(table, null)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_emptyQuery_table_Alias() {
+        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(String.class, "alias")
+            .addStatement("return new $T(table, alias)", fluent.query())
+            .build();
+    }
+
+    @Deprecated
     private MethodSpec m_defaultQuery() {
         return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
-            .addStatement("return $T.INSTANCE.defaultQuery()", fluent.defaults())
+            .addStatement("return defaults.defaultQuery()")
             .build();
     }
 
@@ -90,35 +123,35 @@ public class QueryFiler extends AbstractFiler {
         return super.publicMethod(M_ALIAS_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addJavadoc(JavaDoc_Alias_Query_0)
-            .addStatement("return $T.INSTANCE.aliasQuery()", fluent.defaults())
+            .addStatement("return defaults.aliasQuery()")
             .build();
     }
 
-    private MethodSpec m_aliasQuery_1() {
+    private MethodSpec m_aliasQuery_1_String() {
         return super.publicMethod(M_ALIAS_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(String.class, "alias")
             .addJavadoc(JavaDoc_Alias_Query_1)
-            .addStatement("return $T.INSTANCE.aliasQuery(alias)", fluent.defaults())
+            .addStatement("return defaults.aliasQuery(alias)")
             .build();
     }
 
-    private MethodSpec m_aliasWith_1() {
+    private MethodSpec m_aliasWith_1_BaseQuery() {
         return super.publicMethod(M_ALIAS_WITH, false, fluent.query())
             .addParameter(BaseQuery.class, "fromQuery")
             .addModifiers(Modifier.STATIC)
             .addJavadoc(JavaDoc_Alias_With_1)
-            .addStatement("return $T.INSTANCE.aliasWith(fromQuery)", fluent.defaults())
+            .addStatement("return defaults.aliasWith(fromQuery)")
             .build();
     }
 
-    private MethodSpec m_aliasWith_2() {
+    private MethodSpec m_aliasWith_2_String_BaseQuery() {
         return super.publicMethod(M_ALIAS_WITH, false, fluent.query())
             .addParameter(String.class, "alias")
             .addParameter(BaseQuery.class, "fromQuery")
             .addModifiers(Modifier.STATIC)
             .addJavadoc(JavaDoc_Alias_With_2)
-            .addStatement("return $T.INSTANCE.aliasWith(alias, fromQuery)", fluent.defaults())
+            .addStatement("return defaults.aliasWith(alias, fromQuery)")
             .build();
     }
 
@@ -134,6 +167,14 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec m_dbType() {
         return super.publicMethod("dbType", true, DbType.class)
             .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
+            .build();
+    }
+
+    private FieldSpec f_defaults() {
+        return FieldSpec.builder(fluent.defaults(),
+            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("默认设置器")
+            .initializer("$T.INSTANCE", fluent.defaults())
             .build();
     }
 
@@ -213,7 +254,7 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("this(null)")
+            .addStatement("this(()->$T.Table_Name, null)", fluent.mapping())
             .build();
     }
 
@@ -226,10 +267,7 @@ public class QueryFiler extends AbstractFiler {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(String.class, "alias")
-            .addStatement("super(()->$T.Table_Name, alias, $T.class, $T.class)",
-                fluent.mapping(),
-                fluent.entity(),
-                fluent.query())
+            .addStatement("this(()->$T.Table_Name, alias)", fluent.mapping())
             .build();
     }
 
@@ -241,11 +279,24 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec constructor2_String_Parameter() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Deprecated.class)
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "parameters")
             .addStatement("this(alias)")
             .addStatement("this.sharedParameter(parameters)")
+            .build();
+    }
+
+    /**
+     * public XyzQuery(Supplier&gt;String&lt; table, String alias) {}
+     *
+     * @return MethodSpec
+     */
+    private MethodSpec constructor2_String_String() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(String.class, "alias")
+            .addStatement("super(table, alias, $T.class, $T.class)", fluent.entity(), fluent.query())
             .build();
     }
 
@@ -256,6 +307,13 @@ public class QueryFiler extends AbstractFiler {
      */
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.queryWhere())
+            .addStatement("return this.where")
+            .build();
+    }
+
+    private MethodSpec m_defaultWhere() {
+        return super.publicMethod("defaultWhere", true, fluent.queryWhere())
+            .addStatement("defaults.setQueryDefault(this)")
             .addStatement("return this.where")
             .build();
     }

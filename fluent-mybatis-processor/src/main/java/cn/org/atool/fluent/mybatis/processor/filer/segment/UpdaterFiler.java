@@ -16,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
  * updater代码生成
@@ -46,16 +47,20 @@ public class UpdaterFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superKlass())
+            .addField(this.f_defaults())
             .addField(this.f_setter())
             .addField(this.f_update())
             .addField(this.f_where())
             .addField(this.f_orderBy())
             .addMethod(this.constructor0())
+            .addMethod(this.constructor2_supplier_string())
             .addMethod(this.m_where())
+            .addMethod(this.m_defaultWhere())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
             .addMethod(this.m_dbType())
             .addMethod(this.m_emptyUpdater())
+            .addMethod(this.m_emptyUpdater_table())
             .addMethod(this.m_defaultUpdater())
             .addMethod(this.m_column2mapping())
         ;
@@ -72,6 +77,14 @@ public class UpdaterFiler extends AbstractFiler {
             .initializer("set")
             .addJavadoc("replaced by {@link #set}")
             .addAnnotation(Deprecated.class)
+            .build();
+    }
+
+    private FieldSpec f_defaults() {
+        return FieldSpec.builder(fluent.defaults(),
+            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("默认设置器")
+            .initializer("$T.INSTANCE", fluent.defaults())
             .build();
     }
 
@@ -115,11 +128,16 @@ public class UpdaterFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("super($T.Table_Name, $T.class, $T.class)",
-                fluent.mapping(),
-                fluent.entity(),
-                fluent.query()
-            )
+            .addStatement("this(()-> $T.Table_Name, null)", fluent.mapping())
+            .build();
+    }
+
+    private MethodSpec constructor2_supplier_string() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(String.class, "alias")
+            .addStatement("super(table, alias, $T.class, $T.class)", fluent.entity(), fluent.query())
             .build();
     }
 
@@ -132,12 +150,24 @@ public class UpdaterFiler extends AbstractFiler {
     }
 
     /**
-     * public QueryWhere where() {}
+     * public UpdateWhere where() {}
      *
      * @return FieldSpec
      */
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.updateWhere())
+            .addStatement("return this.where")
+            .build();
+    }
+
+    /**
+     * public UpdateWhere where() {}
+     *
+     * @return FieldSpec
+     */
+    private MethodSpec m_defaultWhere() {
+        return super.publicMethod("defaultWhere", true, fluent.updateWhere())
+            .addStatement("defaults.setUpdateDefault(this)")
             .addStatement("return this.where")
             .build();
     }
@@ -149,10 +179,18 @@ public class UpdaterFiler extends AbstractFiler {
             .build();
     }
 
+    private MethodSpec m_emptyUpdater_table() {
+        return super.publicMethod(M_NEW_UPDATER, false, fluent.updater())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addStatement("return new $T(table, null)", fluent.updater())
+            .build();
+    }
+
     private MethodSpec m_defaultUpdater() {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
-            .addStatement("return $T.INSTANCE.defaultUpdater()", fluent.defaults())
+            .addStatement("return defaults.defaultUpdater()")
             .build();
     }
 
