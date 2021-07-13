@@ -132,7 +132,7 @@
 - [存储过程 callProcedure](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B+crocedure?sort_id=4098655)
 - [批量增删改查 batchCrud](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E6%89%B9%E9%87%8F%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%20batchCrud?sort_id=4098685)
 - [分表分库](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%88%86%E8%A1%A8%E5%88%86%E5%BA%93?sort_id=4235280)
-- [hits功能](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/hits%E5%8A%9F%E8%83%BD?sort_id=4235282)
+- [Hint功能](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/hint%E5%8A%9F%E8%83%BD?sort_id=4235282)
 
 ##  数据测试
 - [如何执行FluentMybatis工程中的测试](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8CFluentMybatis%E5%B7%A5%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%B5%8B%E8%AF%95?sort_id=4219724)

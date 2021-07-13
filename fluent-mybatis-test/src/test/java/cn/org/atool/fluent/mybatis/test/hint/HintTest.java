@@ -7,6 +7,9 @@ import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
+
+import java.sql.SQLSyntaxErrorException;
 
 public class HintTest extends BaseTest {
     @Autowired
@@ -15,10 +18,11 @@ public class HintTest extends BaseTest {
     @Test
     void beforeSelect() {
         StudentQuery query = new StudentQuery()
-            .hint("/** hint **/")
+            .hint("/*+DBP: $ROUTE={GROUP_ID(分片位),TABLE_NAME(物理表名)}*/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql().start("/** hint **/ SELECT `id`");
+        db.sqlList().wantFirstSql().start("" +
+            "/*+DBP: $ROUTE={GROUP_ID(分片位),TABLE_NAME(物理表名)}*/ SELECT `id`");
     }
 
     @Test
@@ -81,10 +85,12 @@ public class HintTest extends BaseTest {
     @Test
     void afterTable_SelectCount() {
         StudentQuery query = new StudentQuery()
-            .hint(HintType.After_Table, "/** hint **/")
+            .hint(HintType.After_Table, "force index(create_time)")
             .where.userName().eq("test").end();
-        mapper.count(query);
-        db.sqlList().wantFirstSql().start("SELECT COUNT(*) FROM student /** hint **/");
+        want.exception(() -> mapper.count(query),
+            SQLSyntaxErrorException.class, BadSqlGrammarException.class);
+        db.sqlList().wantFirstSql().start("" +
+            "SELECT COUNT(*) FROM student force index(create_time) WHERE");
     }
 
     @Test

@@ -37,11 +37,24 @@ public interface IWrapper<
      */
     WrapperData getWrapperData();
 
+    /**
+     * 在select或update指定位置插入hint语句
+     *
+     * @param type 指定位置
+     * @param hint hint语句
+     * @return W
+     */
     default W hint(HintType type, String hint) {
         this.getWrapperData().hint(type, hint);
         return (W) this;
     }
 
+    /**
+     * 在select或update开头插入hint语句
+     *
+     * @param hint hint语句
+     * @return W
+     */
     default W hint(String hint) {
         return this.hint(HintType.Before_All, hint);
     }
