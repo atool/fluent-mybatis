@@ -55,7 +55,6 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.constructor0())
             .addMethod(this.constructor2_supplier_string())
             .addMethod(this.m_where())
-            .addMethod(this.m_defaultWhere())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
             .addMethod(this.m_dbType())
@@ -156,18 +155,6 @@ public class UpdaterFiler extends AbstractFiler {
      */
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.updateWhere())
-            .addStatement("return this.where")
-            .build();
-    }
-
-    /**
-     * public UpdateWhere where() {}
-     *
-     * @return FieldSpec
-     */
-    private MethodSpec m_defaultWhere() {
-        return super.publicMethod("defaultWhere", true, fluent.updateWhere())
-            .addStatement("defaults.setUpdateDefault(this)")
             .addStatement("return this.where")
             .build();
     }

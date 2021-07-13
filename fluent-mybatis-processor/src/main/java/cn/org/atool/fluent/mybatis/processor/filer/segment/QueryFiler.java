@@ -64,7 +64,6 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.constructor2_String_Parameter())
             .addMethod(this.m_column2mapping())
             .addMethod(this.m_where())
-            .addMethod(this.m_defaultWhere())
             .addMethod(this.m_primary())
             .addMethod(this.m_allFields())
             .addMethod(this.m_dbType())
@@ -111,7 +110,6 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
-    @Deprecated
     private MethodSpec m_defaultQuery() {
         return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
@@ -307,13 +305,6 @@ public class QueryFiler extends AbstractFiler {
      */
     private MethodSpec m_where() {
         return super.publicMethod("where", true, fluent.queryWhere())
-            .addStatement("return this.where")
-            .build();
-    }
-
-    private MethodSpec m_defaultWhere() {
-        return super.publicMethod("defaultWhere", true, fluent.queryWhere())
-            .addStatement("defaults.setQueryDefault(this)")
             .addStatement("return this.where")
             .build();
     }

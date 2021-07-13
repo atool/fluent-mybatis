@@ -3,9 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
@@ -77,6 +75,18 @@ public abstract class WhereBase<
      * @return or where
      */
     protected abstract WHERE buildOr(WHERE and);
+
+    /**
+     * 设置默认条件
+     * <p>
+     * Query: {@link IDefaultSetter#setQueryDefault(IQuery)}
+     * Update: {@link IDefaultSetter#setUpdateDefault(IUpdate)}
+     *
+     * @return WHERE
+     */
+    public WHERE defaults() {
+        return this.and;
+    }
 
     /**
      * 根据entity非空字段设置where条件

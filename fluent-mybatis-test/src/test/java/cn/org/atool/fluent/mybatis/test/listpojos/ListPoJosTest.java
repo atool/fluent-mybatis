@@ -36,4 +36,26 @@ public class ListPoJosTest extends BaseTest {
             EqMode.EQ_STRING
         );
     }
+
+    @Test
+    public void statistics2() {
+        db.table(ATM.table.studentScore).clean();
+        ATM.dataMap.studentScore
+            .table(10).init()
+            .schoolTerm.values(2001)
+            .score.functionAutoIncrease(index -> (index % 11) * 10)
+            .subject.values("数学", "英语", "语文")
+            .env.values("test_env")
+            .cleanAndInsert();
+        List<ScoreStatistics> list = dao.statistics2(2000, 2019, new String[]{"语文", "数学", "英语"});
+        want.list(list).eqDataMap(DataMap.create(3)
+                .kv("schoolTerm", 2001)
+                .kv("subject", "数学", "英语", "语文")
+                .kv("count", 1, 1, 8)
+                .kv("minScore", 10, 20, 30)
+                .kv("maxScore", 10, 20, 100)
+                .kv("avgScore", "10.0000", "20.0000", "65.0000"),
+            EqMode.EQ_STRING
+        );
+    }
 }

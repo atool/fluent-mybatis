@@ -22,8 +22,8 @@ public class PartitionTest extends BaseTest {
         // 编码实现分表逻辑
         Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
         StudentQuery query = StudentQuery.query(table)
-            .defaultWhere()
-            .userName().eq(userName).end();
+            .where.defaults()
+            .and.userName().eq(userName).end();
         want.exception(() -> mapper.listEntity(query),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().end("" +
@@ -38,8 +38,8 @@ public class PartitionTest extends BaseTest {
         Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
         StudentUpdate updater = StudentUpdate.updater(table)
             .set.userName().is("test").end()
-            .defaultWhere()
-            .userName().eq(userName).end();
+            .where.defaults()
+            .and.userName().eq(userName).end();
         want.exception(() -> mapper.updateBy(updater),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().eq("" +

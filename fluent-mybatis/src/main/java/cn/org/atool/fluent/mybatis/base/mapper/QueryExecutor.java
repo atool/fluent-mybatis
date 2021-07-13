@@ -75,11 +75,11 @@ public class QueryExecutor<E extends IEntity> {
     }
 
     public <POJO> List<POJO> listPoJo(MapFunction<POJO> mapFunction) {
-        return this.mapper.listPoJo(this.query, mapFunction);
+        return this.mapper.listPoJos(this.query, mapFunction);
     }
 
     public <POJO> List<POJO> listPoJo(Class<POJO> clazz) {
-        return this.mapper.listPoJo(clazz, this.query);
+        return this.mapper.listPoJos(clazz, this.query);
     }
 
     public StdPagedList<E> stdPagedEntity() {

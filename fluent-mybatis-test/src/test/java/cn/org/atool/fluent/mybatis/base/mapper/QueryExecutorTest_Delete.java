@@ -17,7 +17,8 @@ class QueryExecutorTest_Delete extends BaseTest {
             .isDeleted.values(0)
             .cleanAndInsert();
         QueryRef.student.query()
-            .defaultWhere().userName().eq("test1").end()
+            .where.defaults()
+            .and.userName().eq("test1").end()
             .to().delete();
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM student " +

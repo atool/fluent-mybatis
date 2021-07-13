@@ -126,7 +126,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return POJO list
      */
     default <POJO> List<POJO> listPoJos(IQuery<E> query, MapFunction<POJO> mapFunction) {
-        return this.mapper().listPoJo(query, mapFunction);
+        return this.mapper().listPoJos(query, mapFunction);
     }
 
     /**
@@ -140,7 +140,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @return PoJo列表
      */
     default <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery<E> query) {
-        return this.mapper().listPoJo(clazz, query);
+        return this.mapper().listPoJos(clazz, query);
     }
 
     /**

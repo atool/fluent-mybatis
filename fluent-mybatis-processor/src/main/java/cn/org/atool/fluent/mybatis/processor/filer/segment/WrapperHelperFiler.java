@@ -34,8 +34,8 @@ public class WrapperHelperFiler extends AbstractFiler {
     }
 
     @Override
-    protected void build(TypeSpec.Builder builder) {
-        builder
+    protected void build(TypeSpec.Builder spec) {
+        spec.addField(this.f_defaults())
             .addType(this.nestedISegment())
             .addType(this.nestedSelector())
             .addType(this.nestedQueryWhere())
@@ -45,6 +45,14 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addType(this.nestedQueryOrderBy())
             .addType(this.nestedUpdateOrderBy())
             .addType(this.nestedUpdateSetter());
+    }
+
+    private FieldSpec f_defaults() {
+        return FieldSpec.builder(fluent.defaults(),
+            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("默认设置器")
+            .initializer("$T.INSTANCE", fluent.defaults())
+            .build();
     }
 
     /**
@@ -233,11 +241,26 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addJavadoc("query where条件设置")
             .addMethod(this.construct1_QueryWhere())
             .addMethod(this.construct2_QueryWhere())
-            .addMethod(this.m_buildOr_QueryWhere());
+            .addMethod(this.m_buildOr_QueryWhere())
+            .addMethod(this.m_queryDefaults());
         for (CommonField fc : fluent.getFields()) {
             buildWhereCondition(builder, fc, Suffix_QueryWhere);
         }
         return builder.build();
+    }
+
+    private MethodSpec m_queryDefaults() {
+        return super.publicMethod("defaults", true, fluent.queryWhere())
+            .addStatement("defaults.setQueryDefault(($T) super.wrapper)", fluent.query())
+            .addStatement("return super.and")
+            .build();
+    }
+
+    private MethodSpec m_updaterDefaults() {
+        return super.publicMethod("defaults", true, fluent.updateWhere())
+            .addStatement("defaults.setUpdateDefault(($T) super.wrapper)", fluent.updater())
+            .addStatement("return super.and")
+            .build();
     }
 
     /**
@@ -257,7 +280,8 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addJavadoc("update where条件设置")
             .addMethod(this.construct1_UpdateWhere())
             .addMethod(this.construct2_UpdateWhere())
-            .addMethod(this.m_buildOr_UpdateWhere());
+            .addMethod(this.m_buildOr_UpdateWhere())
+            .addMethod(this.m_updaterDefaults());
         for (CommonField fc : fluent.getFields()) {
             buildWhereCondition(builder, fc, Suffix_UpdateWhere);
         }

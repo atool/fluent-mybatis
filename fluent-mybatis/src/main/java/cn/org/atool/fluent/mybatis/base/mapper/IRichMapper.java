@@ -151,7 +151,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param <POJO>      POJO实体类型
      * @return POJO list
      */
-    default <POJO> List<POJO> listPoJo(IQuery query, MapFunction<POJO> mapFunction) {
+    default <POJO> List<POJO> listPoJos(IQuery query, MapFunction<POJO> mapFunction) {
         List<Map<String, Object>> list = this.listMaps(query);
         return PoJoHelper.toPoJoList(list, mapFunction);
     }
@@ -159,14 +159,14 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据query查询记录列表, 并将数据结果转换PoJo对象
      * 转换规则是下划线转驼峰
-     * 如果不符合这个规则, 请使用方法手动映射: listPoJos(IQuery query, MapFunction<POJO> mapFunction)
+     * 如果不符合这个规则, 请使用方法手动映射:{@link #listPoJos(IQuery, MapFunction<POJO> )}
      *
      * @param clazz  PoJo对象类型
      * @param query  查询条件
      * @param <POJO> PoJo对象类型
      * @return PoJo列表
      */
-    default <POJO> List<POJO> listPoJo(Class<POJO> clazz, IQuery query) {
+    default <POJO> List<POJO> listPoJos(Class<POJO> clazz, IQuery query) {
         List<Map<String, Object>> list = this.listMaps(query);
         return PoJoHelper.toPoJoList(clazz, list);
     }
