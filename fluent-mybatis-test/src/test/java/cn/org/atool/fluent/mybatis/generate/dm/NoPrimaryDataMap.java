@@ -24,12 +24,6 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
   private Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
-      value = "alias",
-      type = "varchar(20)"
-  )
-  public final transient KeyValue<NoPrimaryDataMap> alias = new KeyValue(this, "alias", "alias", supplier);
-
-  @ColumnDef(
       value = "column_1",
       type = "int(11)"
   )
@@ -40,6 +34,12 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
       type = "varchar(100)"
   )
   public final transient KeyValue<NoPrimaryDataMap> column2 = new KeyValue(this, "column_2", "column2", supplier);
+
+  @ColumnDef(
+      value = "alias",
+      type = "varchar(20)"
+  )
+  public final transient KeyValue<NoPrimaryDataMap> alias = new KeyValue(this, "alias", "alias", supplier);
 
   NoPrimaryDataMap(boolean isTable) {
     super();

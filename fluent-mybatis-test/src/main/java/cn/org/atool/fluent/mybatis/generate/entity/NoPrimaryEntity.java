@@ -33,11 +33,6 @@ public class NoPrimaryEntity extends RichEntity {
 
   /**
    */
-  @TableField("alias")
-  private String alias;
-
-  /**
-   */
   @TableField("column_1")
   private Integer column1;
 
@@ -45,6 +40,11 @@ public class NoPrimaryEntity extends RichEntity {
    */
   @TableField("column_2")
   private String column2;
+
+  /**
+   */
+  @TableField("alias")
+  private String alias;
 
   @Override
   public final Class<? extends IEntity> entityClass() {

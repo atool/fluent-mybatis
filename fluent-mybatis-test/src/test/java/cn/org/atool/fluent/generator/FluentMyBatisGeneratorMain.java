@@ -43,7 +43,7 @@ public class FluentMyBatisGeneratorMain {
             @Table(value = "no_auto_id", mapperPrefix = "new",
                 seqName = "SELECT LAST_INSERT_ID() AS ID", version = "lock_version"),
             @Table(value = "no_primary", mapperPrefix = "new")
-        })
+        }, alphabetOrder = false)
     static class MapperPrefix_Version {
     }
 
