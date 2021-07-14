@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-mybatis-parent</artifactId>
-        <version>1.6.7</version>
+        <version>1.6.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -72,24 +72,6 @@
             <scope>provided</scope>
         </dependency>
         <!-- test jar -->
-        <dependency>
-            <groupId>org.test4j</groupId>
-            <artifactId>fluent-mock</artifactId>
-            <version>${fluent-mock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.test4j</groupId>
-            <artifactId>test4j-junit5</artifactId>
-            <version>${test4j-junit5.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.verison}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>

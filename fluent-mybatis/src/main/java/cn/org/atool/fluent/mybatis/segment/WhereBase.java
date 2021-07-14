@@ -504,7 +504,7 @@ public abstract class WhereBase<
      * @param query 消费函数
      * @return children
      */
-    public WHERE and(QFunction<WRAPPER> query) {
+    public WHERE and(QFunction<NestedQ> query) {
         return this.nestedWhere(AND, query);
     }
 
@@ -517,7 +517,7 @@ public abstract class WhereBase<
      * @param query 消费函数
      * @return children
      */
-    public WHERE or(QFunction<WRAPPER> query) {
+    public WHERE or(QFunction<NestedQ> query) {
         return this.nestedWhere(OR, query);
     }
 
@@ -541,10 +541,10 @@ public abstract class WhereBase<
         return nestedWhere(OR, query);
     }
 
-    private WHERE nestedWhere(KeyWordSegment andOr, QFunction<WRAPPER> query) {
-        final WRAPPER nested = NestedQueryFactory.nested(this.queryClass(), this.wrapper, true);
+    private WHERE nestedWhere(KeyWordSegment andOr, QFunction query) {
+        final IQuery nested = NestedQueryFactory.nested(this.queryClass(), this.wrapper, true);
         query.apply(nested);
-        return this.nestedWhere(andOr, (IQuery) nested);
+        return this.nestedWhere(andOr, nested);
     }
 
     private WHERE nestedWhere(KeyWordSegment andOr, IQuery query) {

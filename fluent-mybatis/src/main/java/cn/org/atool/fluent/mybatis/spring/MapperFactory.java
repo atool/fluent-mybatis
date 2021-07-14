@@ -3,10 +3,11 @@ package cn.org.atool.fluent.mybatis.spring;
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 所有Mapper实例登记, 需spring bean初始化
@@ -14,10 +15,10 @@ import org.springframework.context.ApplicationContextAware;
  * @author wudarui
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class MapperFactory implements ApplicationContextAware, InitializingBean {
+public class MapperFactory {
     private ApplicationContext context;
 
-    @Override
+    @Autowired
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         this.context = context;
     }
@@ -33,7 +34,7 @@ public class MapperFactory implements ApplicationContextAware, InitializingBean 
         return context.getBean(mapperInterface);
     }
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         IRefs refs = IRefs.instance();
         Object relation = this.findEntityRelation();

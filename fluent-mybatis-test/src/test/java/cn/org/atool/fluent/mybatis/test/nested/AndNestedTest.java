@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.test.nested;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,42 @@ public class AndNestedTest extends BaseTest {
                 "FROM student " +
                 "WHERE `id` IN (SELECT `id` FROM student WHERE `id` = ?) " +
                 "AND ( `age` = ? AND `id` = ? )");
+    }
+
+    @Test
+    void test_and_nested_in_update() {
+        StudentUpdate update = new StudentUpdate()
+            .set.userName().is("test").end()
+            .where.id().lt(100)
+            .and(q -> q
+                .where.age().eq(24)
+                .and.id().gt(3L).end()
+            )
+            .end();
+        mapper.updateBy(update);
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student " +
+            "SET `gmt_modified` = now(), `user_name` = ? " +
+            "WHERE `id` < ? AND ( `age` = ? AND `id` > ? )");
+        db.sqlList().wantFirstPara().eqList("test", 100, 24, 3L);
+    }
+
+    @Test
+    void test_or_nested_in_update() {
+        StudentUpdate update = new StudentUpdate()
+            .set.userName().is("test").end()
+            .where.id().lt(100)
+            .or(q -> q
+                .where.age().eq(24)
+                .and.id().gt(3L).end()
+            )
+            .end();
+        mapper.updateBy(update);
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE student " +
+            "SET `gmt_modified` = now(), `user_name` = ? " +
+            "WHERE `id` < ? OR ( `age` = ? AND `id` > ? )");
+        db.sqlList().wantFirstPara().eqList("test", 100, 24, 3L);
     }
 
     @Test

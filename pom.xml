@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.atool</groupId>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.6.7</version>
+    <version>1.6.8</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -74,6 +74,10 @@
                 <exclusion>
                     <artifactId>fluent-mock</artifactId>
                     <groupId>org.test4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.atool</groupId>
+                    <artifactId>generator</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
