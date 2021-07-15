@@ -1,19 +1,18 @@
 package cn.org.atool.fluent.mybatis.test.basedao.paged;
 
 import cn.org.atool.fluent.mybatis.base.dao.IProtectedDao;
-import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -71,7 +70,7 @@ public class SelectMakerListTest extends BaseTest {
             .limit(10)
         );
 
-        MapFunction<Integer> convert = (m) -> ((BigInteger) m.get(StudentMapping.id.column)).intValue();
+        MapFunction<Integer> convert = (m) -> ((Number) m.get(StudentMapping.id.column)).intValue();
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
         int next = list.parseNext(convert);

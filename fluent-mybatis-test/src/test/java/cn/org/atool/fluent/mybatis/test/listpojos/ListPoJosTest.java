@@ -24,6 +24,7 @@ public class ListPoJosTest extends BaseTest {
             .score.functionAutoIncrease(index -> (index % 11) * 10)
             .subject.values("数学", "英语", "语文")
             .env.values("test_env")
+            .gender.values(1)
             .cleanAndInsert();
         List<ScoreStatistics> list = dao.statistics(2000, 2019, new String[]{"语文", "数学", "英语"});
         want.list(list).eqDataMap(DataMap.create(3)
@@ -46,6 +47,7 @@ public class ListPoJosTest extends BaseTest {
             .score.functionAutoIncrease(index -> (index % 11) * 10)
             .subject.values("数学", "英语", "语文")
             .env.values("test_env")
+            .gender.values(1)
             .cleanAndInsert();
         List<ScoreStatistics> list = dao.statistics2(2000, 2019, new String[]{"语文", "数学", "英语"});
         want.list(list).eqDataMap(DataMap.create(3)

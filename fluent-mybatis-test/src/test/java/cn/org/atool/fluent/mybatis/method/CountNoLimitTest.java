@@ -22,16 +22,17 @@ public class CountNoLimitTest extends BaseTest {
     public void test_count_no_limit() throws Exception {
         StudentQuery query = new StudentQuery()
             .where.id().eq(24L).end()
+            .groupBy.userName().end()
             .orderBy.userName().asc().end()
             .limit(10);
 
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT(*)")
-            .end("FROM student WHERE `id` = ? ORDER BY `user_name` ASC LIMIT ?, ?");
+            .end("FROM student WHERE `id` = ? GROUP BY `user_name` ORDER BY `user_name` ASC LIMIT ?, ?");
 
         mapper.countNoLimit(query);
-        db.sqlList().wantSql(1).end("WHERE `id` = ?");
+        db.sqlList().wantSql(1).end("WHERE `id` = ? GROUP BY `user_name`");
     }
 
     @Test

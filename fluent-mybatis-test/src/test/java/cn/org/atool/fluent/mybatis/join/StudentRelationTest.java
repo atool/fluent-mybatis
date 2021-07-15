@@ -23,11 +23,13 @@ public class StudentRelationTest extends BaseTest {
             .id.values(1)
             .userName.values("test")
             .env.values("test_env")
+            .gender.values("1")
             .cleanAndInsert();
         ATM.dataMap.studentScore.initTable(2)
             .id.values(1, 2)
             .studentId.values(1, 1)
             .score.values(70, 80)
+            .gender.values(1)
             .env.values("test_env")
             .cleanAndInsert();
     }
@@ -65,6 +67,7 @@ public class StudentRelationTest extends BaseTest {
             .studentId.values(1, 1)
             .score.values(70, 80)
             .env.values("test_env")
+            .gender.values(1)
             .cleanAndInsert();
         StudentScoreEntity score = studentScoreMapper.findById(1);
         StudentEntity student = score.findStudent();

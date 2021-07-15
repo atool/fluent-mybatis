@@ -36,7 +36,7 @@ public class FreeQueryTest extends BaseTest {
         FreeQuery query = new FreeQuery("t_member", "t1");
         query.select
             .apply("id")
-            .applyAs(MemberMapping.gmtModified , "modifiedDate").end()
+            .applyAs(MemberMapping.gmtModified, "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
@@ -49,12 +49,14 @@ public class FreeQueryTest extends BaseTest {
         FreeQuery query = new FreeQuery("t_member", "t1");
         query.select
             .apply("id")
-            .max.applyAs(MemberMapping.gmtModified , "modifiedDate").end()
-            .where().apply("id", EQ, "1").end();
+            .max.applyAs(MemberMapping.age, "_age").end()
+            .where().apply("id", EQ, "1").end()
+            .groupBy.apply("id").end();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT t1.`id`, MAX(t1.`gmt_modified`) AS modifiedDate " +
-            "FROM t_member t1 WHERE t1.`id` = ?");
+            "SELECT t1.`id`, MAX(t1.`age`) AS _age " +
+            "FROM t_member t1 WHERE t1.`id` = ? " +
+            "GROUP BY t1.`id`");
     }
 
     @Test
