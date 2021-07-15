@@ -26,51 +26,54 @@ public class MemberDataMap extends DataMap<MemberDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(21) unsigned",
+      type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<MemberDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<MemberDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "tinyint(1)"
+      type = "BIT",
+      defaultValue = "0"
   )
   public final transient KeyValue<MemberDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "age",
-      type = "int(11)"
+      type = "INT"
   )
   public final transient KeyValue<MemberDataMap> age = new KeyValue(this, "age", "age", supplier);
 
   @ColumnDef(
       value = "gmt_created",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<MemberDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "is_girl",
-      type = "tinyint(1)"
+      type = "BIT",
+      defaultValue = "0"
   )
   public final transient KeyValue<MemberDataMap> isGirl = new KeyValue(this, "is_girl", "isGirl", supplier);
 
   @ColumnDef(
       value = "school",
-      type = "varchar(20)"
+      type = "VARCHAR(20)"
   )
   public final transient KeyValue<MemberDataMap> school = new KeyValue(this, "school", "school", supplier);
 
   @ColumnDef(
       value = "user_name",
-      type = "varchar(45)"
+      type = "VARCHAR(45)"
   )
   public final transient KeyValue<MemberDataMap> userName = new KeyValue(this, "user_name", "userName", supplier);
 

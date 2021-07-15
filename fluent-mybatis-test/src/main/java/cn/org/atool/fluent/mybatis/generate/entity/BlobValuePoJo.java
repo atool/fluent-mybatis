@@ -11,7 +11,6 @@ import java.lang.Class;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
-import java.sql.Blob;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -49,7 +48,7 @@ public class BlobValuePoJo extends RichEntity {
       value = "blob_value",
       typeHandler = BlobTypeHandler.class
   )
-  private Blob blobValue;
+  private byte[] blobValue;
 
   /**
    */

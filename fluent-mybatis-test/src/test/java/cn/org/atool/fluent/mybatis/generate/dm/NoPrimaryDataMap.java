@@ -25,19 +25,19 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
 
   @ColumnDef(
       value = "column_1",
-      type = "int(11)"
+      type = "INT"
   )
   public final transient KeyValue<NoPrimaryDataMap> column1 = new KeyValue(this, "column_1", "column1", supplier);
 
   @ColumnDef(
       value = "column_2",
-      type = "varchar(100)"
+      type = "VARCHAR(100)"
   )
   public final transient KeyValue<NoPrimaryDataMap> column2 = new KeyValue(this, "column_2", "column2", supplier);
 
   @ColumnDef(
       value = "alias",
-      type = "varchar(20)"
+      type = "VARCHAR(20)"
   )
   public final transient KeyValue<NoPrimaryDataMap> alias = new KeyValue(this, "alias", "alias", supplier);
 

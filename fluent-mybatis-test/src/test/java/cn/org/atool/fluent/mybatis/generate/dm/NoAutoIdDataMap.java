@@ -25,20 +25,23 @@ public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "varchar(50)",
-      primary = true
+      type = "VARCHAR(50)",
+      primary = true,
+      notNull = true
   )
   public final transient KeyValue<NoAutoIdDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "column_1",
-      type = "varchar(20)"
+      type = "VARCHAR(20)"
   )
   public final transient KeyValue<NoAutoIdDataMap> column1 = new KeyValue(this, "column_1", "column1", supplier);
 
   @ColumnDef(
       value = "lock_version",
-      type = "bigint(21)"
+      type = "BIGINT",
+      notNull = true,
+      defaultValue = "0"
   )
   public final transient KeyValue<NoAutoIdDataMap> lockVersion = new KeyValue(this, "lock_version", "lockVersion", supplier);
 

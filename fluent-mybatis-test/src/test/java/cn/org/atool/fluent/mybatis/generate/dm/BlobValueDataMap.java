@@ -25,33 +25,34 @@ public class BlobValueDataMap extends DataMap<BlobValueDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(21) unsigned",
+      type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<BlobValueDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "blob_value",
-      type = "blob"
+      type = "BLOB"
   )
   public final transient KeyValue<BlobValueDataMap> blobValue = new KeyValue(this, "blob_value", "blobValue", supplier);
 
   @ColumnDef(
       value = "max",
-      type = "bigint(21)"
+      type = "BIGINT"
   )
   public final transient KeyValue<BlobValueDataMap> max = new KeyValue(this, "max", "max", supplier);
 
   @ColumnDef(
       value = "min",
-      type = "bigint(21)"
+      type = "BIGINT"
   )
   public final transient KeyValue<BlobValueDataMap> min = new KeyValue(this, "min", "min", supplier);
 
   @ColumnDef(
       value = "origin",
-      type = "varchar(20)"
+      type = "VARCHAR(20)"
   )
   public final transient KeyValue<BlobValueDataMap> origin = new KeyValue(this, "origin", "origin", supplier);
 

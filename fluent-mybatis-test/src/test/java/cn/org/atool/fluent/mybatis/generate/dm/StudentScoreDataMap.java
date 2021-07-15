@@ -26,69 +26,79 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(20)",
+      type = "BIGINT",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<StudentScoreDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_created",
-      type = "datetime"
+      type = "DATETIME",
+      notNull = true
   )
   public final transient KeyValue<StudentScoreDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
-      type = "datetime"
+      type = "DATETIME",
+      notNull = true
   )
   public final transient KeyValue<StudentScoreDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "tinyint(4)"
+      type = "TINYINT",
+      notNull = true,
+      defaultValue = "0"
   )
   public final transient KeyValue<StudentScoreDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "env",
-      type = "varchar(10)"
+      type = "VARCHAR(10)"
   )
   public final transient KeyValue<StudentScoreDataMap> env = new KeyValue(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "gender",
-      type = "tinyint(4)"
+      type = "TINYINT",
+      notNull = true,
+      defaultValue = "0"
   )
   public final transient KeyValue<StudentScoreDataMap> gender = new KeyValue(this, "gender", "gender", supplier);
 
   @ColumnDef(
       value = "school_term",
-      type = "int(11)"
+      type = "INT"
   )
   public final transient KeyValue<StudentScoreDataMap> schoolTerm = new KeyValue(this, "school_term", "schoolTerm", supplier);
 
   @ColumnDef(
       value = "score",
-      type = "int(11)"
+      type = "INT"
   )
   public final transient KeyValue<StudentScoreDataMap> score = new KeyValue(this, "score", "score", supplier);
 
   @ColumnDef(
       value = "student_id",
-      type = "bigint(20)"
+      type = "BIGINT",
+      notNull = true
   )
   public final transient KeyValue<StudentScoreDataMap> studentId = new KeyValue(this, "student_id", "studentId", supplier);
 
   @ColumnDef(
       value = "subject",
-      type = "varchar(30)"
+      type = "VARCHAR(30)"
   )
   public final transient KeyValue<StudentScoreDataMap> subject = new KeyValue(this, "subject", "subject", supplier);
 
   @ColumnDef(
       value = "tenant",
-      type = "bigint(20)"
+      type = "BIGINT",
+      notNull = true,
+      defaultValue = "0"
   )
   public final transient KeyValue<StudentScoreDataMap> tenant = new KeyValue(this, "tenant", "tenant", supplier);
 

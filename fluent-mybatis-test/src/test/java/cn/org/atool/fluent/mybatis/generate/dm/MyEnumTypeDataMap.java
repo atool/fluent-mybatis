@@ -25,21 +25,22 @@ public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(20)",
+      type = "BIGINT",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<MyEnumTypeDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "enum_num",
-      type = "int(11)"
+      type = "INT"
   )
   public final transient KeyValue<MyEnumTypeDataMap> enumNum = new KeyValue(this, "enum_num", "enumNum", supplier);
 
   @ColumnDef(
       value = "enum_string",
-      type = "varchar(20)"
+      type = "VARCHAR(20)"
   )
   public final transient KeyValue<MyEnumTypeDataMap> enumString = new KeyValue(this, "enum_string", "enumString", supplier);
 

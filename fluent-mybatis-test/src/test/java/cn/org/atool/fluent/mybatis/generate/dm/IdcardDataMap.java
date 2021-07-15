@@ -25,27 +25,31 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(21) unsigned",
+      type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<IdcardDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "bigint(21)"
+      type = "BIGINT",
+      defaultValue = "0"
   )
   public final transient KeyValue<IdcardDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "code",
-      type = "varchar(18)"
+      type = "VARCHAR(18)"
   )
   public final transient KeyValue<IdcardDataMap> code = new KeyValue(this, "code", "code", supplier);
 
   @ColumnDef(
       value = "version",
-      type = "bigint(21) unsigned"
+      type = "BIGINT UNSIGNED",
+      notNull = true,
+      defaultValue = "0"
   )
   public final transient KeyValue<IdcardDataMap> version = new KeyValue(this, "version", "version", supplier);
 

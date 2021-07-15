@@ -26,69 +26,74 @@ public class HomeAddressDataMap extends DataMap<HomeAddressDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(21) unsigned",
+      type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<HomeAddressDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_created",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<HomeAddressDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<HomeAddressDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "tinyint(2)"
+      type = "TINYINT",
+      defaultValue = "0"
   )
   public final transient KeyValue<HomeAddressDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "address",
-      type = "varchar(100)"
+      type = "VARCHAR(100)"
   )
   public final transient KeyValue<HomeAddressDataMap> address = new KeyValue(this, "address", "address", supplier);
 
   @ColumnDef(
       value = "city",
-      type = "varchar(50)"
+      type = "VARCHAR(50)"
   )
   public final transient KeyValue<HomeAddressDataMap> city = new KeyValue(this, "city", "city", supplier);
 
   @ColumnDef(
       value = "district",
-      type = "varchar(50)"
+      type = "VARCHAR(50)"
   )
   public final transient KeyValue<HomeAddressDataMap> district = new KeyValue(this, "district", "district", supplier);
 
   @ColumnDef(
       value = "env",
-      type = "varchar(10)"
+      type = "VARCHAR(10)"
   )
   public final transient KeyValue<HomeAddressDataMap> env = new KeyValue(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "province",
-      type = "varchar(50)"
+      type = "VARCHAR(50)"
   )
   public final transient KeyValue<HomeAddressDataMap> province = new KeyValue(this, "province", "province", supplier);
 
   @ColumnDef(
       value = "student_id",
-      type = "bigint(21)"
+      type = "BIGINT",
+      notNull = true
   )
   public final transient KeyValue<HomeAddressDataMap> studentId = new KeyValue(this, "student_id", "studentId", supplier);
 
   @ColumnDef(
       value = "tenant",
-      type = "bigint(20)"
+      type = "BIGINT",
+      notNull = true,
+      defaultValue = "0"
   )
   public final transient KeyValue<HomeAddressDataMap> tenant = new KeyValue(this, "tenant", "tenant", supplier);
 

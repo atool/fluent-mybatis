@@ -26,45 +26,49 @@ public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(21) unsigned",
+      type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<MemberLoveDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<MemberLoveDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "tinyint(2)"
+      type = "TINYINT",
+      defaultValue = "0"
   )
   public final transient KeyValue<MemberLoveDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "boy_id",
-      type = "bigint(21)"
+      type = "BIGINT",
+      notNull = true
   )
   public final transient KeyValue<MemberLoveDataMap> boyId = new KeyValue(this, "boy_id", "boyId", supplier);
 
   @ColumnDef(
       value = "girl_id",
-      type = "bigint(21)"
+      type = "BIGINT",
+      notNull = true
   )
   public final transient KeyValue<MemberLoveDataMap> girlId = new KeyValue(this, "girl_id", "girlId", supplier);
 
   @ColumnDef(
       value = "gmt_created",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<MemberLoveDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "status",
-      type = "varchar(45)"
+      type = "VARCHAR(45)"
   )
   public final transient KeyValue<MemberLoveDataMap> status = new KeyValue(this, "status", "status", supplier);
 

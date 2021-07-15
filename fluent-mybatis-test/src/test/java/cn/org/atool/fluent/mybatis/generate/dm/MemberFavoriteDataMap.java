@@ -26,39 +26,42 @@ public class MemberFavoriteDataMap extends DataMap<MemberFavoriteDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(21) unsigned",
+      type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<MemberFavoriteDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<MemberFavoriteDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "tinyint(2)"
+      type = "TINYINT",
+      defaultValue = "0"
   )
   public final transient KeyValue<MemberFavoriteDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "favorite",
-      type = "varchar(45)"
+      type = "VARCHAR(45)"
   )
   public final transient KeyValue<MemberFavoriteDataMap> favorite = new KeyValue(this, "favorite", "favorite", supplier);
 
   @ColumnDef(
       value = "gmt_created",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<MemberFavoriteDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "member_id",
-      type = "bigint(21)"
+      type = "BIGINT",
+      notNull = true
   )
   public final transient KeyValue<MemberFavoriteDataMap> memberId = new KeyValue(this, "member_id", "memberId", supplier);
 

@@ -26,39 +26,41 @@ public class TeacherDataMap extends DataMap<TeacherDataMap> {
 
   @ColumnDef(
       value = "id",
-      type = "bigint(20)",
+      type = "BIGINT",
       primary = true,
-      autoIncrease = true
+      autoIncrease = true,
+      notNull = true
   )
   public final transient KeyValue<TeacherDataMap> id = new KeyValue(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_created",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<TeacherDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
-      type = "datetime"
+      type = "DATETIME"
   )
   public final transient KeyValue<TeacherDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
-      type = "tinyint(2)"
+      type = "TINYINT",
+      defaultValue = "0"
   )
   public final transient KeyValue<TeacherDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "env",
-      type = "varchar(10)"
+      type = "VARCHAR(10)"
   )
   public final transient KeyValue<TeacherDataMap> env = new KeyValue(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "user_name",
-      type = "varchar(20)"
+      type = "VARCHAR(20)"
   )
   public final transient KeyValue<TeacherDataMap> userName = new KeyValue(this, "user_name", "userName", supplier);
 
