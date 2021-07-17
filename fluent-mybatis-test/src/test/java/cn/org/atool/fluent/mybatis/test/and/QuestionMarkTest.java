@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * QuestionMarkTest
  *
- * @author darui.wu
- * @create 2020/6/20 3:57 下午
+ * @author darui.wu 2020/6/20 3:57 下午
  */
 public class QuestionMarkTest extends BaseTest {
     @Autowired
