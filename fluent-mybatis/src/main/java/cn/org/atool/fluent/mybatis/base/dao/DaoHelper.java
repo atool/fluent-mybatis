@@ -22,7 +22,7 @@ public class DaoHelper {
     public static IUpdate buildUpdateEntityById(Supplier<IUpdate> supplier, IEntity entity) {
         IUpdate update = supplier.get();
         String primary = ((BaseWrapper) update).primary();
-        String version = ((BaseWrapper) update).version();
+//        String version = ((BaseWrapper) update).version();
         Map<String, Object> map = entity.toColumnMap();
         boolean hasPrimaryId = false;
         for (Map.Entry<String, Object> entry : map.entrySet()) {
