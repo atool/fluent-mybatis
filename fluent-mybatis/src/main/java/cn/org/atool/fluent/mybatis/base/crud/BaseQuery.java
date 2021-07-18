@@ -2,6 +2,8 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.Column;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -52,10 +54,11 @@ public abstract class BaseQuery<
 
     @Override
     public Q selectId() {
-        if (this.primary() == null) {
+        FieldMapping primary = this.fieldName(FieldType.PRIMARY_ID);
+        if (primary == null) {
             throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
         } else {
-            return this.select(this.primary());
+            return this.select(primary.column);
         }
     }
 

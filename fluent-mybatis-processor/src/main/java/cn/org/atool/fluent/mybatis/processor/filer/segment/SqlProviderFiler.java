@@ -76,36 +76,13 @@ public class SqlProviderFiler extends AbstractFiler {
         //Override method
         spec.addMethod(this.m_updateDefaults());
         spec.addMethod(this.m_tableName());
-        spec.addMethod(this.m_idColumn());
+        spec.addMethod(this.m_mapping());
         spec.addMethod(this.m_allFields());
         spec.addMethod(this.m_setEntityByDefault());
         spec.addMethod(this.m_dbType());
-        spec.addMethod(this.m_versionField());
-        spec.addMethod(this.m_logicDeleteField());
         spec.addMethod(this.m_longTypeOfLogicDelete());
     }
 
-    /**
-     * 返回乐观锁字段方法
-     *
-     * @return
-     */
-    private MethodSpec m_versionField() {
-        return super.protectedMethod("versionField", true, ClassNames2.CN_String)
-            .addStatement("return $S", fluent.getVersionField())
-            .build();
-    }
-
-    /**
-     * 返回逻辑删除字段方法
-     *
-     * @return
-     */
-    private MethodSpec m_logicDeleteField() {
-        return super.protectedMethod("logicDeleteField", true, ClassNames2.CN_String)
-            .addStatement("return $S", fluent.getLogicDelete())
-            .build();
-    }
 
     private MethodSpec m_longTypeOfLogicDelete() {
         return super.protectedMethod("longTypeOfLogicDelete", true, ClassName.BOOLEAN)
@@ -130,7 +107,7 @@ public class SqlProviderFiler extends AbstractFiler {
             if (isBlank(field.getUpdate())) {
                 continue;
             }
-            if (Objects.equals(field.getColumn(), fluent.getVersionField())) {
+            if (Objects.equals(field.getName(), fluent.getVersionField())) {
                 builder.addCode("if (!ignoreLockVersion) {\n");
                 builder.addStatement("\tdefaults.add(dbType(), $L, $S)", field.getName(), field.getUpdate());
                 builder.addCode("}\n");
@@ -155,7 +132,7 @@ public class SqlProviderFiler extends AbstractFiler {
 
         CommonField versionField = null;
         for (CommonField field : this.fluent.getFields()) {
-            if (Objects.equals(field.getColumn(), fluent.getVersionField())) {
+            if (Objects.equals(field.getName(), fluent.getVersionField())) {
                 spec.addCode("\n\t.add(this.dbType(), $L, null, $S)", field.getName(), field.getUpdate());
                 versionField = field;
             } else if (!field.isPrimary()) {
@@ -244,16 +221,6 @@ public class SqlProviderFiler extends AbstractFiler {
         return super.publicMethod("tableName", true, String.class)
             .addStatement("return Table_Name")
             .build();
-    }
-
-    private MethodSpec m_idColumn() {
-        MethodSpec.Builder builder = super.publicMethod("idColumn", true, String.class);
-        if (fluent.getPrimary() == null) {
-            this.throwPrimaryNoFound(builder);
-        } else {
-            builder.addStatement("return $L.column", fluent.getPrimary().getName());
-        }
-        return builder.build();
     }
 
     private MethodSpec m_allFields() {

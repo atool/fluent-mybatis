@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ArrayTypeName;
@@ -12,6 +13,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -39,6 +41,8 @@ public interface ClassNames2 extends ClassNames {
     ParameterizedTypeName CN_Supplier_Str = ParameterizedTypeName.get(Supplier.class, String.class);
 
     ParameterizedTypeName CN_Class_IEntity = ParameterizedTypeName.get(CN_Class, WildcardTypeName.subtypeOf(FM_IEntity));
+
+    ParameterizedTypeName CN_Optional_Mapping = ParameterizedTypeName.get(Optional.class, FieldMapping.class);
 
     ArrayTypeName CN_SerializableArray = ArrayTypeName.of(Serializable.class);
 

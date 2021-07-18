@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import com.squareup.javapoet.*;
 
@@ -85,17 +86,10 @@ public abstract class AbstractFiler {
      *
      * @return
      */
-    protected MethodSpec m_primary() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("primary")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(String.class);
-        if (fluent.getPrimary() == null) {
-            builder.addStatement("return null");
-        } else {
-            builder.addStatement("return $T.$L.column", fluent.mapping(), fluent.getPrimary().getName());
-        }
-        return builder.build();
+    protected MethodSpec m_mapping() {
+        return this.protectedMethod("mapping", true, ClassName.get(IMapping.class))
+            .addStatement("return $T.MAPPING", fluent.mapping())
+            .build();
     }
 
     protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, Class returnKlass) {

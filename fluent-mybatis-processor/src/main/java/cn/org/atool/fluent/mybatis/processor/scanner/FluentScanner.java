@@ -77,11 +77,11 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
             CommonField field = parseCommonField(fieldName, element);
             this.fluent.addField(field);
             if (element.getAnnotation(LogicDelete.class) != null) {
-                this.fluent.setLogicDelete(field.getColumn());
+                this.fluent.setLogicDelete(field.getName());
                 this.fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
             }
             if (element.getAnnotation(Version.class) != null) {
-                this.fluent.setVersionField(field.getColumn());
+                this.fluent.setVersionField(field.getName());
             }
         } else {
             PrimaryField field = this.parsePrimaryField(fieldName, element, tableId);

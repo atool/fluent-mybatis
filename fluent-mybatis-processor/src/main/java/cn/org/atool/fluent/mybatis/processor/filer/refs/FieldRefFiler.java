@@ -21,7 +21,7 @@ import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT
  * @author darui.wu
  */
 public class FieldRefFiler extends AbstractFile {
-    private static String FieldRef = "FieldRef";
+    private static final String FieldRef = "FieldRef";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), FieldRef);
@@ -42,7 +42,7 @@ public class FieldRefFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         for (FluentEntity fluent : FluentList.getFluents()) {
-            spec.addType(this.class_mapping(fluent));
+            spec.addField(this.class_mapping(fluent));
         }
         spec.addField(this.f_allMappings())
             .addStaticBlock(this.m_initMapping())
@@ -58,17 +58,16 @@ public class FieldRefFiler extends AbstractFile {
             .build();
     }
 
-    private TypeSpec class_mapping(FluentEntity fluent) {
-        return TypeSpec.classBuilder(fluent.getNoSuffix())
-            .addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC)
-            .addSuperinterface(fluent.mapping())
+    private FieldSpec class_mapping(FluentEntity fluent) {
+        return FieldSpec.builder(fluent.mapping(), fluent.getNoSuffix(), Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC)
+            .initializer("$T.MAPPING", fluent.mapping())
             .build();
     }
 
     private CodeBlock m_initMapping() {
         List<CodeBlock> list = new ArrayList<>();
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("mappings.put($T.class, new $L());\n", fluent.entity(), fluent.getNoSuffix()));
+            list.add(CodeBlock.of("mappings.put($T.class, $T.MAPPING);\n", fluent.entity(), fluent.mapping()));
         }
         return CodeBlock.join(list, "");
     }

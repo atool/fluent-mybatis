@@ -55,7 +55,7 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.constructor0())
             .addMethod(this.constructor2_supplier_string())
             .addMethod(this.m_where())
-            .addMethod(this.m_primary())
+            .addMethod(this.m_mapping())
             .addMethod(this.m_allFields())
             .addMethod(this.m_dbType())
             .addMethod(this.m_emptyUpdater())

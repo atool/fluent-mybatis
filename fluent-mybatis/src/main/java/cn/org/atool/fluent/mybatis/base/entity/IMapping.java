@@ -1,5 +1,10 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.FieldType;
+
+import java.util.Optional;
+
 /**
  * EntityMapping基类
  *
@@ -20,5 +25,15 @@ public interface IMapping {
      *
      * @return 主键字段名称
      */
-    String findPrimaryColumn();
+    default String findPrimaryColumn() {
+        return this.findField(FieldType.PRIMARY_ID).map(c -> c.column).orElse(null);
+    }
+
+    /**
+     * 返回特定类型字段
+     *
+     * @param type 字段类型
+     * @return 字段映射
+     */
+    Optional<FieldMapping> findField(FieldType type);
 }

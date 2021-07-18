@@ -64,7 +64,7 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.constructor2_String_Parameter())
             .addMethod(this.m_column2mapping())
             .addMethod(this.m_where())
-            .addMethod(this.m_primary())
+            .addMethod(this.m_mapping())
             .addMethod(this.m_allFields())
             .addMethod(this.m_dbType())
             .addMethod(this.m_emptyQuery())

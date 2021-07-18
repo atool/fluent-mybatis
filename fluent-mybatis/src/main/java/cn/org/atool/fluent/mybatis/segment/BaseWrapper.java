@@ -3,8 +3,10 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
@@ -65,13 +67,26 @@ public abstract class BaseWrapper<
     }
 
     /**
-     * 如果有主键字段返回主键字段
-     * 如果没有定义主键，返回null
+     * 返回字段映射关系
      *
-     * @return 主键字段
+     * @return 字段映射关系
      */
-    public String primary() {
+    protected IMapping mapping() {
         return null;
+    }
+
+    /**
+     * 返回指定类型字段名称
+     * 如果没有指定类型字段，返回null
+     *
+     * @return 指定类型的字段
+     */
+    public FieldMapping fieldName(FieldType type) {
+        if (this.mapping() == null) {
+            return null;
+        } else {
+            return this.mapping().findField(type).orElse(null);
+        }
     }
 
     /**

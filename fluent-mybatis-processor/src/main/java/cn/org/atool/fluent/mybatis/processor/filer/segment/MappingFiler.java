@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -9,14 +10,13 @@ import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Mapping;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_Mapping;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -42,32 +42,46 @@ public class MappingFiler extends AbstractFiler {
     }
 
     @Override
+    protected void staticImport(JavaFile.Builder spec) {
+        spec.addStaticImport(Optional.class, "of");
+    }
+
+    @Override
     public void build(TypeSpec.Builder spec) {
         spec.addSuperinterface(IMapping.class)
+            .addField(this.f_instance())
             .addField(this.f_Table_Name())
             .addField(this.f_Entity_Name());
-        this.fluent.getFields().stream()
-            .forEach(field -> {
-                spec.addField(f_Field(field));
-            });
+        this.fluent.getFields().forEach(field -> spec.addField(f_Field(field)));
         spec.addField(this.f_Property2Column())
             .addField(this.f_Column2Mapping())
             .addField(this.f_ALL_COLUMNS())
             .addField(this.f_ALL_JOIN_COLUMNS())
             .addMethod(this.m_findColumnByField())
-            .addMethod(this.m_findPrimaryColumn());
+            .addMethod(this.m_findField());
     }
 
-    private MethodSpec m_findPrimaryColumn() {
-        MethodSpec.Builder spec = super.publicMethod("findPrimaryColumn", true, String.class)
-            .addModifiers(Modifier.DEFAULT);
-        if (fluent.getPrimary() == null) {
-            // throwPrimaryNoFound(spec);
-            spec.addStatement("return null");
-        } else {
-            spec.addStatement("return $L.column", fluent.getPrimary().getName());
+    private MethodSpec m_findField() {
+        MethodSpec.Builder spec = super.publicMethod("findField", true, CN_Optional_Mapping)
+            .addParameter(FieldType.class, "type")
+            .addModifiers(Modifier.DEFAULT)
+            .addCode("switch (type) {\n");
+        if (fluent.getPrimary() != null) {
+            spec.addCode("\tcase PRIMARY_ID:\n")
+                .addStatement("\t\treturn of($L)", fluent.getPrimary().getName());
         }
-        return spec.build();
+        if (notBlank(fluent.getLogicDelete())) {
+            spec.addCode("\tcase LOGIC_DELETED:\n")
+                .addStatement("\t\treturn of($L)", fluent.getLogicDelete());
+        }
+        if (notBlank(fluent.getVersionField())) {
+            spec.addCode("\tcase LOCK_VERSION:\n")
+                .addStatement("\t\treturn of($L)", fluent.getVersionField());
+        }
+        return spec.addCode("\tdefault:\n")
+            .addStatement("\t\treturn of(null)")
+            .addCode("}")
+            .build();
     }
 
     private MethodSpec m_findColumnByField() {
@@ -127,6 +141,12 @@ public class MappingFiler extends AbstractFiler {
                 CodeBlock.of("  }"),
                 CodeBlock.of("}")
             ))
+            .build();
+    }
+
+    private FieldSpec f_instance() {
+        return FieldSpec.builder(fluent.mapping(), "MAPPING", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .initializer("new $T(){}", fluent.mapping())
             .build();
     }
 

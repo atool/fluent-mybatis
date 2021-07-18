@@ -3,7 +3,9 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
@@ -64,7 +66,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotBlank("tableName", tableName);
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
-        String columns = Stream.of(fields).map(c -> dbType.wrap(c)).collect(joining(", "));
+        String columns = Stream.of(fields).map(dbType::wrap).collect(joining(", "));
         return "INSERT INTO " + tableName + " (" + columns + ") " +
             query.getWrapperData().getQuerySql();
     }
@@ -641,25 +643,38 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     protected abstract List<String> allFields(boolean withPk);
 
     /**
+     * 获取字段映射关系
+     *
+     * @return 字段映射
+     */
+    protected abstract IMapping mapping();
+
+    /**
      * 主键字段名
      *
      * @return ignore
      */
-    protected abstract String idColumn();
+    private String idColumn() {
+        return this.mapping().findField(FieldType.PRIMARY_ID).map(c -> c.column).orElse(null);
+    }
 
     /**
      * 乐观锁字段
      *
      * @return ignore
      */
-    protected abstract String versionField();
+    private String versionField() {
+        return this.mapping().findField(FieldType.LOCK_VERSION).map(c -> c.column).orElse(null);
+    }
 
     /**
      * 逻辑删除字段
      *
      * @return ignore
      */
-    protected abstract String logicDeleteField();
+    private String logicDeleteField() {
+        return this.mapping().findField(FieldType.LOGIC_DELETED).map(c -> c.column).orElse(null);
+    }
 
     /**
      * 逻辑删除字段是否为 Long 型
