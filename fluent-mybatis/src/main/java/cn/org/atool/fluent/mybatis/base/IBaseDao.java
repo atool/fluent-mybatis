@@ -12,10 +12,9 @@ import java.util.Map;
  * IBaseDao Dao基本操作方法
  *
  * @param <E> 实体类
- * @author darui.wu
- * @Date 2019-06-25 12:00
+ * @author darui.wu 2019-06-25 12:00
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked", "UnusedReturnValue"})
 public interface IBaseDao<E extends IEntity> {
     /**
      * 插入一条记录
