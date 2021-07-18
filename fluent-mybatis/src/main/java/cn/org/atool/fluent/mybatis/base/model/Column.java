@@ -15,7 +15,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Getter
 public class Column {
     public static final Column EMPTY_COLUMN = new Column(EMPTY, null) {

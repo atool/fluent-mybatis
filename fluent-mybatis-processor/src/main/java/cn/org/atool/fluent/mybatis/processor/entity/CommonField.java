@@ -62,7 +62,7 @@ public class CommonField extends FieldOrMethod<CommonField> {
     /**
      * get方法名称
      *
-     * @return
+     * @return get(is) method name
      */
     public String getMethodName() {
         if (isPrimitive() && Objects.equals(javaType, ClassName.BOOLEAN)) {
@@ -75,7 +75,7 @@ public class CommonField extends FieldOrMethod<CommonField> {
     /**
      * set方法名称
      *
-     * @return
+     * @return set method name
      */
     public String setMethodName() {
         if (isPrimitive() && Objects.equals(javaType, ClassName.BOOLEAN)) {

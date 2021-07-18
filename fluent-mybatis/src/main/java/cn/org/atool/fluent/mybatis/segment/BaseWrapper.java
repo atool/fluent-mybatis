@@ -29,6 +29,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
  * @param <NQ> 对应的嵌套查询器
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 public abstract class BaseWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,

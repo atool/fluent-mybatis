@@ -20,6 +20,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes"})
 public class WrapperHelperFiler extends AbstractFiler {
     public WrapperHelperFiler(FluentEntity fluent) {
         super(fluent);
@@ -58,7 +59,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public interface ISegment<R> {}
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedISegment() {
         TypeSpec.Builder builder = TypeSpec.interfaceBuilder(Suffix_ISegment)
@@ -80,7 +81,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static final class GroupBy extends GroupByBase<GroupBy, EntityQuery>{}
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedGroupBy() {
         return TypeSpec.classBuilder(Suffix_GroupBy)
@@ -102,7 +103,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static final class Having extends HavingBase<Having, EntityQuery>
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedHaving() {
         return TypeSpec.classBuilder(Suffix_Having)
@@ -126,7 +127,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, EntityQuery>
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedQueryOrderBy() {
         return TypeSpec.classBuilder(Suffix_QueryOrderBy)
@@ -151,7 +152,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, EntityUpdate>
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedUpdateOrderBy() {
         return TypeSpec.classBuilder(Suffix_UpdateOrderBy)
@@ -176,7 +177,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static final class UpdateSetter extends UpdateBase<UpdateSetter, EntityUpdate>
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedUpdateSetter() {
         return TypeSpec.classBuilder(Suffix_UpdateSetter)
@@ -227,7 +228,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static class QueryWhere extends ...
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedQueryWhere() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_QueryWhere)
@@ -266,7 +267,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public static class QueryWhere extends ...
      *
-     * @return
+     * @return TypeSpec
      */
     private TypeSpec nestedUpdateWhere() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_UpdateWhere)
@@ -319,7 +320,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * protected Selector aggregateSegment(IAggregate aggregate)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_aggregate_Having() {
         return MethodSpec.methodBuilder("aggregateSegment")
@@ -334,7 +335,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * protected Selector aggregateSegment(IAggregate aggregate)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_aggregate_Selector() {
         return MethodSpec.methodBuilder("aggregateSegment")
@@ -350,7 +351,7 @@ public class WrapperHelperFiler extends AbstractFiler {
      * public Selector(AddressQuery query)
      * public GroupBy(AddressQuery query)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec constructor1() {
         return MethodSpec.constructorBuilder()
@@ -371,7 +372,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * protected Having(Having having, IAggregate aggregate)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec constructor2_Having() {
         return MethodSpec.constructorBuilder()
@@ -385,7 +386,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * protected Selector(Selector selector, IAggregate aggregate)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec constructor2_Selector() {
         return MethodSpec.constructorBuilder()
@@ -399,7 +400,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * R set(FieldMapping fieldMapping);
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_set_ISegment() {
         return MethodSpec.methodBuilder("set")
@@ -410,15 +411,9 @@ public class WrapperHelperFiler extends AbstractFiler {
     }
 
     /**
-     * R set(FieldMapping fieldMapping);
-     *
-     * @return
-     */
-
-    /**
      * public QueryWhere(AddressQuery query)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec construct1_QueryWhere() {
         return MethodSpec.constructorBuilder()
@@ -431,7 +426,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * private QueryWhere(AddressQuery query, QueryWhere where)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec construct2_QueryWhere() {
         return MethodSpec.constructorBuilder()
@@ -445,7 +440,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * public UpdateWhere(AddressUpdate update)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec construct1_UpdateWhere() {
         return MethodSpec.constructorBuilder()
@@ -458,7 +453,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * private UpdateWhere(AddressUpdate update, UpdateWhere where)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec construct2_UpdateWhere() {
         return MethodSpec.constructorBuilder()
@@ -472,7 +467,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * protected QueryWhere buildOr(QueryWhere and){}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_buildOr_QueryWhere() {
         return MethodSpec.methodBuilder("buildOr")
@@ -487,7 +482,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     /**
      * protected UpdateWhere buildOr(UpdateWhere and) {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_buildOr_UpdateWhere() {
         return MethodSpec.methodBuilder("buildOr")

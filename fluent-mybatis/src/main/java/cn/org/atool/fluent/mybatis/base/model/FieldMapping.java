@@ -10,6 +10,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author darui.wu  2020/6/23 9:16 上午
  */
+@SuppressWarnings("rawtypes")
 public class FieldMapping {
     /**
      * 属性名称

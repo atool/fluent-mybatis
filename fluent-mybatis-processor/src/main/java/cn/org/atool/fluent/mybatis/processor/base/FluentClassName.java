@@ -17,6 +17,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author darui.wu
  */
+@SuppressWarnings("unused")
 public abstract class FluentClassName {
 
     public abstract String getNoSuffix();
@@ -24,7 +25,7 @@ public abstract class FluentClassName {
     /**
      * 首字母小写,不带Entity后缀的entity名称
      *
-     * @return
+     * @return ignore
      */
     public String lowerNoSuffix() {
         return MybatisUtil.lowerFirst(this.getNoSuffix(), "");
@@ -61,7 +62,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzEntity
      *
-     * @return
+     * @return Entity ClassName
      */
     public ClassName entity() {
         return ClassName.get(this.getEntityPack(), this.getClassName());
@@ -70,7 +71,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzUpdater
      *
-     * @return
+     * @return Update ClassName
      */
     public ClassName updater() {
         return ClassName.get(
@@ -81,7 +82,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzEntityHelper
      *
-     * @return
+     * @return EntityHelper ClassName
      */
     public ClassName entityHelper() {
         return ClassName.get(
@@ -92,7 +93,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzMapper
      *
-     * @return
+     * @return Mapper ClassName
      */
     public ClassName mapper() {
         return ClassName.get(
@@ -103,7 +104,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzMapping
      *
-     * @return
+     * @return Mapping ClassName
      */
     public ClassName mapping() {
         return ClassName.get(
@@ -114,7 +115,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzQuery
      *
-     * @return
+     * @return Query ClassName
      */
     public ClassName query() {
         return ClassName.get(
@@ -125,7 +126,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzSqlProvider
      *
-     * @return
+     * @return SqlProvider ClassName
      */
     public ClassName sqlProvider() {
         return ClassName.get(
@@ -137,7 +138,7 @@ public abstract class FluentClassName {
     /**
      * ClassName of XyzDefaults
      *
-     * @return
+     * @return Defaults ClassName
      */
     public ClassName defaults() {
         return ClassName.get(
