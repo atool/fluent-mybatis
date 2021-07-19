@@ -4,12 +4,14 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import static cn.org.atool.fluent.mybatis.If.isNull;
 import static cn.org.atool.fluent.mybatis.If.notNull;
 
 /**
@@ -25,25 +27,34 @@ public class DaoHelper {
         String primary = ((BaseWrapper) update).fieldName(FieldType.PRIMARY_ID);
         String version = ((BaseWrapper) update).fieldName(FieldType.LOCK_VERSION);
         Map<String, Object> map = entity.toColumnMap();
-        boolean hasPrimaryId = false;
+
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
             // 主键字段和版本锁字段
             if (Objects.equals(column, primary) || Objects.equals(column, version)) {
-                if (notNull(value)) {
+                if (isNull(value)) {
+                    throw new FluentMybatisException("The condition[" + column + "] value of method[updateById(Entity)] cannot be null.");
+                } else {
                     update.where().apply(column, SqlOp.EQ, value);
-                    hasPrimaryId = true;
+                }
+                if (Objects.equals(column, primary)) {
+                    primary = null;
+                }
+                if (Objects.equals(column, version)) {
+                    version = null;
                 }
             } else {
                 update.updateSet(column, value);
             }
         }
-        if (!hasPrimaryId) {
-            throw new RuntimeException("no primary value found.");
-        } else {
-            return update;
+        if (primary != null) {
+            throw new FluentMybatisException("In updateById method, the primary value cannot be null.");
         }
+        if (version != null) {
+            throw new FluentMybatisException("In updateById method, the lock version value cannot be null.");
+        }
+        return update;
     }
 
     /**

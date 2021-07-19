@@ -418,7 +418,13 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    public WhereApply<WHERE, NestedQ> apply(String column){
+    /**
+     * 自定义column赋值比较
+     *
+     * @param column 自定义的column值
+     * @return WhereApply
+     */
+    public WhereApply<WHERE, NestedQ> apply(String column) {
         return this.set(new FieldMapping(null, column));
     }
 

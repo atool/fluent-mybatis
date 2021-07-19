@@ -63,7 +63,8 @@ public class DeleteTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.applyFunc("user_name=?", "user2").end();
         mapper.logicDelete(query);
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET `is_deleted` = true WHERE user_name=?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE student SET `is_deleted` = true WHERE user_name=?",
+            StringMode.SameAsSpace);
     }
 }
