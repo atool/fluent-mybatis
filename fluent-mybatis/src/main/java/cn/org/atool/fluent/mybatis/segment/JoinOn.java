@@ -34,17 +34,16 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
 
     private final JoinOnBuilder<QL, QR> onBuilder;
 
-    public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass,
-        QR qRight) {
+    public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
         this.joinQuery = joinQuery;
         this.onBuilder = new JoinOnBuilder<>(qLeft, joinType, qRight);
         if (qLeft instanceof FreeQuery) {
-            this.onLeft = (QL)((FreeQuery)qLeft).emptyQuery();
+            this.onLeft = (QL) ((FreeQuery) qLeft).emptyQuery();
         } else {
             this.onLeft = newEmptyQuery(qLeftClass);
         }
         if (qRight instanceof FreeQuery) {
-            this.onRight = (QR)((FreeQuery)qRight).emptyQuery();
+            this.onRight = (QR) ((FreeQuery) qRight).emptyQuery();
         } else {
             this.onRight = newEmptyQuery(qRightClass);
         }
@@ -62,7 +61,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     public JB on(OnConsumer<QL, QR> join) {
         join.accept(this.onBuilder, this.onLeft, this.onRight);
         this.joinQuery.getWrapperData().addTable(this.onBuilder.table());
-        return (JB)this.joinQuery;
+        return (JB) this.joinQuery;
     }
 
     /**
@@ -74,7 +73,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      */
     public JB on(String condition) {
         this.joinQuery.getWrapperData().addTable(this.onBuilder.table() + " ON " + condition);
-        return (JB)this.joinQuery;
+        return (JB) this.joinQuery;
     }
 
     /**
@@ -86,28 +85,6 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      */
     public JoinOn<QL, QR, JB> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
         this.onBuilder.on(l.apply(this.onLeft), r.apply(this.onRight));
-        return this;
-    }
-
-    /**
-     * 左表固定关联关系
-     *
-     * @param l 左查询条件
-     * @return JoinOn
-     */
-    public JoinOn<QL, QR, JB> leftCondition(Function<QL, BaseSegment<?, QL>> l) {
-        this.onBuilder.on(l.apply(this.onLeft).end().getWrapperData().getWhereSql());
-        return this;
-    }
-
-    /**
-     * 右表固定关联关系
-     *
-     * @param r 右查询条件
-     * @return JoinOn
-     */
-    public JoinOn<QL, QR, JB> rightCondition(Function<QR, BaseSegment<?, QR>> r) {
-        this.onBuilder.on(r.apply(this.onRight).end().getWrapperData().getWhereSql());
         return this;
     }
 
@@ -141,6 +118,28 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     }
 
     /**
+     * 左表固定关联关系
+     *
+     * @param l 左查询条件
+     * @return JoinOn
+     */
+    public JoinOn<QL, QR, JB> onLeft(Function<QL, BaseSegment<?, QL>> l) {
+        this.onBuilder.on(l.apply(this.onLeft).end().getWrapperData().getWhereSql());
+        return this;
+    }
+
+    /**
+     * 右表固定关联关系
+     *
+     * @param r 右查询条件
+     * @return JoinOn
+     */
+    public JoinOn<QL, QR, JB> onRight(Function<QR, BaseSegment<?, QR>> r) {
+        this.onBuilder.on(r.apply(this.onRight).end().getWrapperData().getWhereSql());
+        return this;
+    }
+
+    /**
      * 添加关联关系
      *
      * @return JoinOn
@@ -169,7 +168,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      */
     public JB endJoin() {
         this.joinQuery.getWrapperData().addTable(this.onBuilder.table());
-        return (JB)this.joinQuery;
+        return (JB) this.joinQuery;
     }
 
     private static Map<Class, Constructor> QueryNoArgConstructors = new HashMap<>(128);
@@ -186,7 +185,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
             if (!QueryNoArgConstructors.containsKey(klass)) {
                 QueryNoArgConstructors.put(klass, klass.getConstructor());
             }
-            return (Q)QueryNoArgConstructors.get(klass).newInstance();
+            return (Q) QueryNoArgConstructors.get(klass).newInstance();
         } catch (Exception e) {
             throw new RuntimeException(String.format("new %s() error: %s",
                 klass.getSimpleName(), e.getMessage()), e);
