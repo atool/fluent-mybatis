@@ -1,6 +1,10 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.Version;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.io.Serializable;
@@ -56,7 +60,8 @@ public class IdcardEntity extends RichEntity {
    */
   @TableField(
       value = "version",
-      update = "version + 1"
+      insert = "0",
+      update = "`version` + 1"
   )
   @Version
   private Long version;
