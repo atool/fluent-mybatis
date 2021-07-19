@@ -42,7 +42,7 @@ public class NoAliasJoinTest extends BaseTest {
             .join(rightQuery)
             .on(FieldRef.Student.homeAddressId, FieldRef.HomeAddress.id).endJoin()
             .build()
-            .where.apply("a1.id < ?", 100).end();
+            .where.applyFunc("a1.id < ?", 100).end();
         List<StudentEntity> entities = this.mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("" +
             "FROM student a1 " +

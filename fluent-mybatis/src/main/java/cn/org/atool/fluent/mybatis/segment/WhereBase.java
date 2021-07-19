@@ -413,9 +413,13 @@ public abstract class WhereBase<
      * @param paras    对应sql语句的 "?" 参数
      * @return children
      */
-    public WHERE apply(String applySql, Object... paras) {
+    public WHERE applyFunc(String applySql, Object... paras) {
         wrapper.getWrapperData().apply(this.currOp, EMPTY_COLUMN, RETAIN, applySql, paras);
         return this.and;
+    }
+
+    public WhereApply<WHERE, NestedQ> apply(String column){
+        return this.set(new FieldMapping(null, column));
     }
 
     /**
@@ -428,7 +432,7 @@ public abstract class WhereBase<
      */
     public WHERE applyIf(Predicate<Object[]> predicate, String applySql, Object... paras) {
         if (predicate.test(paras)) {
-            this.apply(applySql, paras);
+            this.applyFunc(applySql, paras);
         }
         return this.and;
     }

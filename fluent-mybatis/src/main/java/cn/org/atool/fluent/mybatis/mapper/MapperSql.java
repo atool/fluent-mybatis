@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.joining;
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class MapperSql {
-    private final StringBuffer buffer = new StringBuffer();
+    private final StringBuilder buffer = new StringBuilder();
 
     @Override
     public String toString() {

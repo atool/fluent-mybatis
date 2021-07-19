@@ -23,6 +23,25 @@ public class InNestQueryTest extends BaseTest {
     private StudentMapper mapper;
 
     @Test
+    void test_and_in_nested3() {
+        StudentQuery query = new StudentQuery()
+            .select.id().age().end()
+            .where.apply("(id, age)").in(q -> q.select.id().age().end()
+                .where.id().eq(3L).end())
+            .and.userName().like("user")
+            .and.age().gt(23).end();
+
+        mapper.listEntity(query);
+        db.sqlList().wantFirstSql()
+            .eq("SELECT `id`, `age` " +
+                "FROM student " +
+                "WHERE (id, age) IN (SELECT `id`, `age` FROM student WHERE `id` = ?) " +
+                "AND `user_name` LIKE ? " +
+                "AND `age` > ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(3L, "%user%", 23);
+    }
+
+    @Test
     void test_and_in_nested() {
         StudentQuery query = new StudentQuery()
             .select.apply(id).sum.age().end()

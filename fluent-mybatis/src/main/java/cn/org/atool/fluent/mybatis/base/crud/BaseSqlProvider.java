@@ -655,7 +655,9 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return ignore
      */
     private String idColumn() {
-        return this.mapping().findField(FieldType.PRIMARY_ID).map(c -> c.column).orElse(null);
+        return this.mapping().findField(FieldType.PRIMARY_ID)
+            .map(c -> c.column)
+            .orElseThrow(() -> new RuntimeException("the primary not found."));
     }
 
     /**

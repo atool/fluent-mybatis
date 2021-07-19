@@ -47,7 +47,7 @@ public class DeleteTest extends BaseTest {
             .cleanAndInsert();
 
         StudentQuery query = new StudentQuery()
-            .where.apply("user_name=?", "user2").end();
+            .where.applyFunc("user_name=?", "user2").end();
         mapper.delete(query);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM student WHERE user_name=?", StringMode.SameAsSpace);
@@ -61,7 +61,7 @@ public class DeleteTest extends BaseTest {
     @Test
     public void testLogicDelete_apply() {
         StudentQuery query = new StudentQuery()
-            .where.apply("user_name=?", "user2").end();
+            .where.applyFunc("user_name=?", "user2").end();
         mapper.logicDelete(query);
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET `is_deleted` = true WHERE user_name=?", StringMode.SameAsSpace);

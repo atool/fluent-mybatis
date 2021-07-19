@@ -19,9 +19,9 @@ public class UpdateByQueryTest extends BaseTest {
             .userName.values("user1", "user2")
             .cleanAndInsert();
         StudentUpdate update = new StudentUpdate()
-            .update.userName().is("user name2").end()
+            .set.userName().is("user name2").end()
             .where.id().eq(24L)
-            .apply("1=1").end();
+            .applyFunc("1=1").end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE student " +
@@ -40,10 +40,10 @@ public class UpdateByQueryTest extends BaseTest {
             .userName.values("user1", "user2")
             .cleanAndInsert();
         StudentUpdate update = new StudentUpdate()
-            .update.userName().is("user name2").end()
+            .set.userName().is("user name2").end()
             .where.id().eq(24L)
-            .and.apply("user_name='user2'")
-            .or.apply("user_name=?", "xxx").end();
+            .and.applyFunc("user_name='user2'")
+            .or.applyFunc("user_name=?", "xxx").end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE student SET `gmt_modified` = now(), `user_name` = ? " +

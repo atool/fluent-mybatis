@@ -40,18 +40,20 @@ public class UpdateByDefaultTest extends BaseTest {
 
     @Test
     void updateById() {
-        mapper.updateById(new IdcardEntity().setId(1L).setCode("new"));
+        mapper.updateById(new IdcardEntity().setId(1L).setCode("new").setVersion(2L));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET `code` = ?, `version` = version + 1 WHERE `id` = ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"new", 1L});
+            "UPDATE idcard SET `code` = ?, `version` = version + 1 " +
+            "WHERE `id` = ? AND `version` = ?");
+        db.sqlList().wantFirstPara().eqList("new", 1L, 2L);
     }
 
     @Test
     void updateById_EntityHasVersion() {
-        mapper.updateById(new IdcardEntity().setId(1L).setCode("new").setVersion(3L));
+        mapper.updateById(new IdcardEntity().setId(1L).setCode("new").setVersion(2L));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET `code` = ?, `version` = ? WHERE `id` = ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{"new", 3L, 1L});
+            "UPDATE idcard SET `code` = ?, `version` = version + 1 " +
+            "WHERE `id` = ? AND `version` = ?");
+        db.sqlList().wantFirstPara().eqList("new", 1L, 2L);
     }
 
     @Test

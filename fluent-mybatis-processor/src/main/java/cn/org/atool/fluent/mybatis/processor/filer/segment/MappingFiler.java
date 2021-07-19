@@ -43,7 +43,7 @@ public class MappingFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(Optional.class, "of");
+        spec.addStaticImport(Optional.class, "ofNullable");
     }
 
     @Override
@@ -68,18 +68,18 @@ public class MappingFiler extends AbstractFiler {
             .addCode("switch (type) {\n");
         if (fluent.getPrimary() != null) {
             spec.addCode("\tcase PRIMARY_ID:\n")
-                .addStatement("\t\treturn of($L)", fluent.getPrimary().getName());
+                .addStatement("\t\treturn ofNullable($L)", fluent.getPrimary().getName());
         }
         if (notBlank(fluent.getLogicDelete())) {
             spec.addCode("\tcase LOGIC_DELETED:\n")
-                .addStatement("\t\treturn of($L)", fluent.getLogicDelete());
+                .addStatement("\t\treturn ofNullable($L)", fluent.getLogicDelete());
         }
         if (notBlank(fluent.getVersionField())) {
             spec.addCode("\tcase LOCK_VERSION:\n")
-                .addStatement("\t\treturn of($L)", fluent.getVersionField());
+                .addStatement("\t\treturn ofNullable($L)", fluent.getVersionField());
         }
         return spec.addCode("\tdefault:\n")
-            .addStatement("\t\treturn of(null)")
+            .addStatement("\t\treturn ofNullable(null)")
             .addCode("}")
             .build();
     }

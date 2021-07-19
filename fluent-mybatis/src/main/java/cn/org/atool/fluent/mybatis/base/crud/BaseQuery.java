@@ -23,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
  * @param <Q> 查询器
  * @author darui.wu 2020/6/17 3:13 下午
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public abstract class BaseQuery<
     E extends IEntity,
     Q extends BaseQuery<E, Q>
@@ -54,11 +54,11 @@ public abstract class BaseQuery<
 
     @Override
     public Q selectId() {
-        FieldMapping primary = this.fieldName(FieldType.PRIMARY_ID);
+        String primary = this.fieldName(FieldType.PRIMARY_ID);
         if (primary == null) {
             throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
         } else {
-            return this.select(primary.column);
+            return this.select(primary);
         }
     }
 

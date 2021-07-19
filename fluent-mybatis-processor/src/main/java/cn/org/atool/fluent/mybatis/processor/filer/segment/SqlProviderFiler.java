@@ -235,7 +235,7 @@ public class SqlProviderFiler extends AbstractFiler {
     }
 
     private String getFields(boolean withPk) {
-        StringBuffer fields = new StringBuffer();
+        StringBuilder fields = new StringBuilder();
         boolean first = true;
         for (CommonField field : fluent.getFields()) {
             if (field.isPrimary() && !withPk) {
@@ -245,7 +245,7 @@ public class SqlProviderFiler extends AbstractFiler {
                 fields.append(", ");
             }
             first = false;
-            fields.append(DOUBLE_QUOTATION + field.getColumn() + DOUBLE_QUOTATION);
+            fields.append(DOUBLE_QUOTATION).append(field.getColumn()).append(DOUBLE_QUOTATION);
         }
         return fields.toString();
     }
@@ -260,12 +260,12 @@ public class SqlProviderFiler extends AbstractFiler {
      * 判断实例类是否有主键
      * 没有主键生成 "抛出异常语句"
      *
-     * @param builder
-     * @return
+     * @param builder MethodSpec.Builder
+     * @return true: 有主键
      */
     private boolean ifNotPrimary(MethodSpec.Builder builder) {
         if (fluent.getPrimary() == null) {
-            super.throwPrimaryNoFound(builder);
+            throwPrimaryNoFound(builder);
             return true;
         } else {
             return false;

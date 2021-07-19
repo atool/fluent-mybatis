@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.base.dao;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -23,16 +22,15 @@ public class DaoHelper {
 
     public static IUpdate buildUpdateEntityById(Supplier<IUpdate> supplier, IEntity entity) {
         IUpdate update = supplier.get();
-        FieldMapping primary = ((BaseWrapper) update).fieldName(FieldType.PRIMARY_ID);
-        FieldMapping version = ((BaseWrapper) update).fieldName(FieldType.LOCK_VERSION);
+        String primary = ((BaseWrapper) update).fieldName(FieldType.PRIMARY_ID);
+        String version = ((BaseWrapper) update).fieldName(FieldType.LOCK_VERSION);
         Map<String, Object> map = entity.toColumnMap();
         boolean hasPrimaryId = false;
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
             // 主键字段和版本锁字段
-            if (primary != null && Objects.equals(column, primary.column) ||
-                version != null && Objects.equals(column, version.column)) {
+            if (Objects.equals(column, primary) || Objects.equals(column, version)) {
                 if (notNull(value)) {
                     update.where().apply(column, SqlOp.EQ, value);
                     hasPrimaryId = true;

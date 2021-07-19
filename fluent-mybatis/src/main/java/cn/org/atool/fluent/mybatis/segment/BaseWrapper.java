@@ -81,11 +81,12 @@ public abstract class BaseWrapper<
      *
      * @return 指定类型的字段
      */
-    public FieldMapping fieldName(FieldType type) {
-        if (this.mapping() == null) {
+    public String fieldName(FieldType type) {
+        IMapping mapping = this.mapping();
+        if (mapping == null) {
             return null;
         } else {
-            return this.mapping().findField(type).orElse(null);
+            return mapping.findField(type).map(c -> c.column).orElse(null);
         }
     }
 
