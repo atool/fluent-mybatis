@@ -7,51 +7,60 @@ import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
-
 /**
  * 表join条件构造
  *
  * @author wudarui
  */
 public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>> {
-    private BaseQuery queryLeft;
+    private final BaseQuery<?, QL> queryLeft;
 
-    private BaseQuery queryRight;
+    private final BaseQuery<?, QR> queryRight;
 
-    private JoinType joinType;
+    private final JoinType joinType;
 
-    private List<String> ons = new ArrayList<>();
+    private final List<String> ons = new ArrayList<>();
 
-    public JoinOnBuilder(BaseQuery queryLeft, JoinType joinType, BaseQuery queryRight) {
+    public JoinOnBuilder(BaseQuery<?, QL> queryLeft, JoinType joinType, BaseQuery<?, QR> queryRight) {
         this.queryLeft = queryLeft;
         this.queryRight = queryRight;
         this.joinType = joinType;
     }
 
     /**
-     * on left = right
+     * on left = right,各只取最后一个调用属性
      *
-     * @param left
-     * @param right
-     * @return
+     * @param left  左表条件,只取最后一个调用属性
+     * @param right 右表条件,只取最后一个调用属性
+     * @return {@link JoinOnBuilder}
      */
-    public JoinOnBuilder<QL, QR> on(BaseWhere left, BaseWhere right) {
+    public JoinOnBuilder<QL, QR> on(BaseWhere<?, QL> left, BaseWhere<?, QR> right) {
         return this.on(
-            ((WhereApply) left).current().column,
-            ((WhereApply) right).current().column
+            ((WhereApply<?, ?>)left).current().column,
+            ((WhereApply<?, ?>)right).current().column
         );
     }
 
     /**
-     * on left = right
+     * on leftValue = rightValue
      *
-     * @param left
-     * @param right
-     * @return
+     * @param leftValue  左
+     * @param rightValue 右
+     * @return {@link JoinOnBuilder}
      */
-    public JoinOnBuilder on(String left, String right) {
-        this.ons.add(format(queryLeft.appendAlias(left) + " = " + queryRight.appendAlias(right)));
+    public JoinOnBuilder<QL, QR> on(String leftValue, String rightValue) {
+        this.ons.add(this.queryLeft.appendAlias(leftValue) + " = " + this.queryRight.appendAlias(rightValue));
+        return this;
+    }
+
+    /**
+     * on condition
+     *
+     * @param condition 条件
+     * @return {@link JoinOnBuilder}
+     */
+    public JoinOnBuilder<QL, QR> on(String condition) {
+        this.ons.add(condition.trim());
         return this;
     }
 

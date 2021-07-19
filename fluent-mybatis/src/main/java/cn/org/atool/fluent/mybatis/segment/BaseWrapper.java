@@ -46,7 +46,7 @@ public abstract class BaseWrapper<
      * 表别名
      */
     @Getter
-    protected final String tableAlias;
+    protected String tableAlias;
 
     @Getter
     protected WrapperData wrapperData;
@@ -59,7 +59,8 @@ public abstract class BaseWrapper<
         this(table, tableAlias, new Parameters(), entityClass, queryClass);
     }
 
-    protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass, Class queryClass) {
+    protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass,
+        Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();
