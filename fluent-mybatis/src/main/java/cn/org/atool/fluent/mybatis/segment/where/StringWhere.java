@@ -16,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_LIKE;
  * @param <WHERE>
  * @param <NQ>
  */
+@SuppressWarnings({"unused"})
 public interface StringWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
@@ -45,9 +46,9 @@ public interface StringWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs if conditions
+     * @param <T> type
+     * @return WHERE
      */
     default <T> WHERE like(Ifs<String> ifs) {
         return this.apply(LIKE, ifs);
@@ -77,9 +78,9 @@ public interface StringWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs if conditions
+     * @param <T> type
+     * @return WHERE
      */
     default <T> WHERE notLike(Ifs<String> ifs) {
         return this.apply(NOT_LIKE, ifs);

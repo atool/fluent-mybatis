@@ -21,8 +21,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 /**
  * IEntityMapper: 实例Mapper基类，Mapper 继承该接口后，无需编写 mapper.xml 文件，即可获得CRUD功能
  *
- * @author wudarui
- * @Date 2019-06-25 14:00
+ * @author wudarui 2019-06-25 14:00
  */
 @SuppressWarnings({"rawtypes"})
 public interface IEntityMapper<E extends IEntity> extends IMapper<E> {

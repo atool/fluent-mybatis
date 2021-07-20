@@ -5,8 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static java.util.stream.Collectors.joining;
@@ -43,7 +43,7 @@ public abstract class BaseSegmentList {
      * @return self
      */
     protected final BaseSegmentList addAll(ISqlSegment... sqlSegments) {
-        Stream.of(sqlSegments).forEach(this.segments::add);
+        this.segments.addAll(Arrays.asList(sqlSegments));
         cache = null;
         return this;
     }

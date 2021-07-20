@@ -8,7 +8,6 @@ import java.util.List;
  *
  * @author darui.wudr
  */
-@SuppressWarnings({"rawtypes"})
 public class ObjectArray {
     /**
      * An empty immutable <code>Class</code> array.
@@ -19,7 +18,7 @@ public class ObjectArray {
     // char
     // short int long
     // float double
-    private static Object[] toPrimitiveArray(char values[]) {
+    private static Object[] toPrimitiveArray(char[] values) {
         List<Object> objs = new ArrayList<>();
         for (Character value : values) {
             objs.add(value);
@@ -27,56 +26,56 @@ public class ObjectArray {
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(float values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(float[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Float value : values) {
             objs.add(value);
         }
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(long values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(long[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Long value : values) {
             objs.add(value);
         }
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(short values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(short[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Short value : values) {
             objs.add(value);
         }
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(int values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(int[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Integer value : values) {
             objs.add(value);
         }
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(double values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(double[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Double value : values) {
             objs.add(value);
         }
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(boolean values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(boolean[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Boolean value : values) {
             objs.add(value);
         }
         return objs.toArray();
     }
 
-    private static Object[] toPrimitiveArray(byte values[]) {
-        List<Object> objs = new ArrayList<Object>();
+    private static Object[] toPrimitiveArray(byte[] values) {
+        List<Object> objs = new ArrayList<>();
         for (Byte value : values) {
             objs.add(value);
         }
@@ -86,8 +85,8 @@ public class ObjectArray {
     /**
      * 将primitive对象数组转换为object类型数组
      *
-     * @param value
-     * @return
+     * @param value object
+     * @return ignore
      */
     public static Object[] array(Object value) {
         if (value instanceof int[]) {
@@ -118,7 +117,7 @@ public class ObjectArray {
             return null;
         } else {
             String _value = String.valueOf(value).trim();
-            if (_value.matches("\\-?\\d+")) {
+            if (_value.matches("-?\\d+")) {
                 return !_value.equals("0");
             } else {
                 return _value.equalsIgnoreCase("true");

@@ -29,7 +29,7 @@ public class SqlOps {
     /**
      * 注册新的自定义操作符
      *
-     * @param sqlOp
+     * @param sqlOp ISqlOp
      */
     public static void register(ISqlOp sqlOp) {
         EXT_OPS.add(sqlOp);
@@ -38,8 +38,8 @@ public class SqlOps {
     /**
      * 返回匹配的操作符实例
      *
-     * @param op
-     * @return
+     * @param op name of ISqlOp
+     * @return ISqlOp
      */
     public static ISqlOp get(String op) {
         try {

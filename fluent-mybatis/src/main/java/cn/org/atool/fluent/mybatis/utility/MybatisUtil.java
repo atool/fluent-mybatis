@@ -17,6 +17,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unused"})
 public class MybatisUtil {
     /**
      * 安全的进行字符串 format
@@ -40,7 +41,7 @@ public class MybatisUtil {
         Escape_Char.put('\n', "\\n");
         Escape_Char.put('\r', "\\r");
         Escape_Char.put('\\', "\\\\");
-        Escape_Char.put('\'', "\\\'");
+        Escape_Char.put('\'', "\\'");
         Escape_Char.put('"', "\\\"");
         Escape_Char.put('\032', "\\Z");
     }
@@ -58,13 +59,9 @@ public class MybatisUtil {
         while (current.getSuperclass() != null && current != Object.class) {
             Field[] fields = current.getDeclaredFields();
             for (Field field : fields) {
-                if (isStatic(field)) {
-                    continue;
-                } else if (field.getAnnotation(NotField.class) != null) {
-                    continue;
-                } else if (map.containsKey(field.getName())) {
-                    continue;
-                } else {
+                if (!isStatic(field) &&
+                    field.getAnnotation(NotField.class) == null &&
+                    !map.containsKey(field.getName())) {
                     map.put(field.getName(), field);
                 }
             }
@@ -76,8 +73,8 @@ public class MybatisUtil {
     /**
      * 过滤 static 和 transient 关键字修饰的属性
      *
-     * @param field
-     * @return
+     * @param field Field
+     * @return true: field is static modifier
      */
     private static boolean isStatic(Field field) {
         return Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers());
@@ -117,8 +114,8 @@ public class MybatisUtil {
     /**
      * 断言对象不能为null
      *
-     * @param property
-     * @param value
+     * @param property name of property
+     * @param value    object
      */
     public static void assertNotNull(String property, Object value) {
         if (value == null) {
@@ -129,10 +126,9 @@ public class MybatisUtil {
     /**
      * 断言对象不能为null
      *
-     * @param property
-     * @param value1
-     * @param value2
-     * @param <T>
+     * @param property name of property
+     * @param value1   object
+     * @param value2   object
      */
     public static <T> void assertNotNull(String property, T value1, T value2) {
         if (value1 == null || value2 == null) {
@@ -143,8 +139,8 @@ public class MybatisUtil {
     /**
      * 断言字符串不能为空
      *
-     * @param property
-     * @param value
+     * @param property name of property
+     * @param value    string value
      */
     public static void assertNotBlank(String property, String value) {
         if (If.isBlank(value)) {
@@ -155,8 +151,8 @@ public class MybatisUtil {
     /**
      * 断言list参数不能为空
      *
-     * @param property
-     * @param list
+     * @param property name of property
+     * @param list     objects
      */
     public static void assertNotEmpty(String property, Collection list) {
         if (list == null || list.size() == 0) {
@@ -167,8 +163,8 @@ public class MybatisUtil {
     /**
      * 断言list参数不能为空
      *
-     * @param property
-     * @param map
+     * @param property name of property
+     * @param map      map
      */
     public static void assertNotEmpty(String property, Map map) {
         if (map == null || map.size() == 0) {
@@ -179,8 +175,8 @@ public class MybatisUtil {
     /**
      * 断言数组array参数不能为空
      *
-     * @param property
-     * @param array
+     * @param property name of property
+     * @param array    objects
      */
     public static void assertNotEmpty(String property, Object[] array) {
         if (array == null || array.length == 0) {
@@ -229,11 +225,7 @@ public class MybatisUtil {
     }
 
     public static <O> boolean isCollection(O... args) {
-        if (args != null && args.length == 1 && args[0] instanceof Collection) {
-            return true;
-        } else {
-            return false;
-        }
+        return args != null && args.length == 1 && args[0] instanceof Collection;
     }
 
     public static String trim(String str) {
@@ -246,7 +238,7 @@ public class MybatisUtil {
      * @param klass  Entity类名称
      * @param prefix 表名称前缀
      * @param suffix Entity类后缀
-     * @return
+     * @return ignore
      */
     public static String tableName(String klass, String prefix, String suffix) {
         if (klass.endsWith(suffix)) {
@@ -265,7 +257,7 @@ public class MybatisUtil {
      *
      * @param string  要转换的字符串
      * @param toUpper 统一转大写
-     * @return
+     * @return ignore
      */
     public static String camelToUnderline(String string, boolean toUpper) {
         if (If.isBlank(string)) {
@@ -290,9 +282,9 @@ public class MybatisUtil {
     /**
      * 下划线转驼峰命名
      *
-     * @param input
+     * @param input        text
      * @param firstCapital true: 首字母大写, false:首字母小写
-     * @return
+     * @return ignore
      */
     public static String underlineToCamel(String input, boolean firstCapital) {
         if (If.isBlank(input)) {
@@ -309,10 +301,10 @@ public class MybatisUtil {
                 continue;
             }
             if (first) {
-                /** 首字母 **/
+                /* 首字母 **/
                 buff.append(firstCapital ? Character.toUpperCase(ch) : Character.toLowerCase(ch));
             } else if (underline) {
-                /** 下划线转驼峰 **/
+                /* 下划线转驼峰 **/
                 buff.append(Character.toUpperCase(ch));
             } else {
                 buff.append(ch);
@@ -364,7 +356,7 @@ public class MybatisUtil {
      *
      * @param method      属性(字段)名称
      * @param entityClass Entity类名
-     * @return
+     * @return ignore
      */
     public static String methodNameOfEntity(String method, Class entityClass) {
         return method + "Of" + entityClass.getSimpleName();
@@ -375,7 +367,7 @@ public class MybatisUtil {
      *
      * @param method      属性(字段)名称
      * @param entityClass Entity类名
-     * @return
+     * @return ignore
      */
     public static String methodNameOfEntity(String method, String entityClass) {
         return method + "Of" + entityClass;
@@ -384,8 +376,8 @@ public class MybatisUtil {
     /**
      * Entity Class不是@FluentMybatis注解类异常
      *
-     * @param clazz
-     * @return
+     * @param clazz class
+     * @return ignore
      */
     public static RuntimeException notFluentMybatisException(Class clazz) {
         return new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
@@ -396,8 +388,8 @@ public class MybatisUtil {
      * 判断是否是数据库表字段名称
      * 非全数字, 只包含数字+字母+下划线组成
      *
-     * @param input
-     * @return
+     * @param input column name
+     * @return ignore
      */
     public static boolean isColumnName(String input) {
         if (isBlank(input)) {
@@ -422,8 +414,8 @@ public class MybatisUtil {
     /**
      * 字母 a-z, A-Z, 或 '_'
      *
-     * @param ch
-     * @return
+     * @param ch letter
+     * @return ignore
      */
     public static boolean isLetter(char ch) {
         return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_';
@@ -436,8 +428,8 @@ public class MybatisUtil {
     /**
      * 数字
      *
-     * @param ch
-     * @return
+     * @param ch letter
+     * @return ignore
      */
     public static boolean isDigit(char ch) {
         return ch >= '0' && ch <= '9';
@@ -446,24 +438,23 @@ public class MybatisUtil {
     /**
      * fluent mybatis version
      *
-     * @return
+     * @return ignore
      */
     public static String getVersionBanner() {
         Package pkg = MybatisUtil.class.getPackage();
         String version = (pkg != null ? pkg.getImplementationVersion() : "");
-        StringBuilder buff = new StringBuilder()
-            .append("  _____   _                          _    \n")
-            .append(" |  ___| | |  _   _    ___   _ __   | |_  \n")
-            .append(" | |_    | | | | | |  ( _ ) | '_ L  | __| \n")
-            .append(" |  _|   | | | |_| | |  __) | | | | | |_  \n")
-            .append(" |_|     |_| |___,_| |____| |_| |_| |___| \n")
-            .append(" __  __         ____          _    _      \n")
-            .append("| )  ( | _   _ | __ )   __ _ | |_ (_) ___ \n")
-            .append("| |)(| || | | ||  _ L  { _` || __|| || __|\n")
-            .append("| |  | || |_| || |_) || (_| || |_ | |(__ )\n")
-            .append("|_|  |_| L__, ||____)  (__,_| L__||_||___}\n")
-            .append("         |___)                            \n")
-            .append(version == null ? "" : version + " \n");
-        return buff.toString();
+        return "" +
+            "  _____   _                          _    \n" +
+            " |  ___| | |  _   _    ___   _ __   | |_  \n" +
+            " | |_    | | | | | |  ( _ ) | '_ L  | __| \n" +
+            " |  _|   | | | |_| | |  __) | | | | | |_  \n" +
+            " |_|     |_| |___,_| |____| |_| |_| |___| \n" +
+            " __  __         ____          _    _      \n" +
+            "| )  ( | _   _ | __ )   __ _ | |_ (_) ___ \n" +
+            "| |)(| || | | ||  _ L  { _` || __|| || __|\n" +
+            "| |  | || |_| || |_) || (_| || |_ | |(__ )\n" +
+            "|_|  |_| L__, ||____)  (__,_| L__||_||___}\n" +
+            "         |___)                            \n" +
+            (version == null ? "" : version + " \n");
     }
 }

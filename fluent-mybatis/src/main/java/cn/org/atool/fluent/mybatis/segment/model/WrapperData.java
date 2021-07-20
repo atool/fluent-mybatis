@@ -22,8 +22,7 @@ import static java.util.stream.Collectors.joining;
 /**
  * WrapperInfo: 查询器或更新器xml需要用到信息
  *
- * @author darui.wu
- * @create 2020/6/23 5:15 下午
+ * @author darui.wu 2020/6/23 5:15 下午
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Getter
@@ -189,7 +188,7 @@ public class WrapperData implements IWrapperData {
         return this.mergeSegments.last();
     }
 
-    /**
+    /*
      * ============================================================
      *                          以下是数据操作部分
      * ============================================================

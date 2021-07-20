@@ -5,6 +5,12 @@ import cn.org.atool.fluent.mybatis.functions.IAggregate;
 
 import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
 
+/**
+ * 聚合函数
+ *
+ * @author wudarui
+ */
+@SuppressWarnings({"unchecked"})
 public abstract class AggregateSegment<
     S extends AggregateSegment<S, Q, R>,
     Q extends IBaseQuery<?, Q>,
@@ -67,8 +73,8 @@ public abstract class AggregateSegment<
     /**
      * 构造聚合选择器
      *
-     * @param aggregate
-     * @return
+     * @param aggregate 聚合函数接口
+     * @return S
      */
     protected abstract S aggregateSegment(IAggregate aggregate);
 

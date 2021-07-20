@@ -49,9 +49,9 @@ public interface ObjectWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs if condition
+     * @param <T> type
+     * @return WHERE
      */
     default <T> WHERE gt(Ifs<T> ifs) {
         return this.apply(GT, ifs);
@@ -81,9 +81,9 @@ public interface ObjectWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs if conditions
+     * @param <T> type
+     * @return WHERE
      */
     default <T> WHERE ge(Ifs<T> ifs) {
         return this.apply(GE, ifs);
@@ -113,9 +113,9 @@ public interface ObjectWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs if conditions
+     * @param <T> type
+     * @return WHERE
      */
     default <T> WHERE lt(Ifs<T> ifs) {
         return this.apply(LT, ifs);
@@ -145,9 +145,9 @@ public interface ObjectWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @param <T>
-     * @return
+     * @param ifs if conditions
+     * @param <T> type
+     * @return WHERE
      */
     default <T> WHERE le(Ifs<T> ifs) {
         return this.apply(LE, ifs);
@@ -198,8 +198,8 @@ public interface ObjectWhere<
     /**
      * 按Ifs条件设置where值
      *
-     * @param ifs
-     * @return
+     * @param ifs if conditions
+     * @return WHERE
      */
     default WHERE in(Ifs<Collection> ifs) {
         return this.apply(IN, ifs);
@@ -220,7 +220,7 @@ public interface ObjectWhere<
      * @param condition true时条件成立
      * @param select    子查询语句
      * @param args      子查询语句参数，对应select语句里面的 "?" 占位符
-     * @param <O>
+     * @param <O>       type
      * @return 查询器或更新器
      */
     <O> WHERE in(boolean condition, String select, O... args);

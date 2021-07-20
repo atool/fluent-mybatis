@@ -11,9 +11,9 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
 /**
  * BaseHaving: having设置
  *
- * @author darui.wu
- * @create 2020/6/21 6:22 下午
+ * @author darui.wu 2020/6/21 6:22 下午
  */
+@SuppressWarnings({"unchecked"})
 public abstract class HavingBase<
     H extends HavingBase<H, Q>,
     Q extends IBaseQuery<?, Q>

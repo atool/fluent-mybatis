@@ -24,14 +24,15 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes"})
 public class FormHelper {
     /**
      * 将表单Form转换为entityClass对应的Query
      *
-     * @param entityClass
+     * @param entityClass class of entity
      * @param form        表单
-     * @param <E>
-     * @return
+     * @param <E>         type
+     * @return IQuery
      */
     public static <E extends IEntity> IQuery toQuery(Class<E> entityClass, Form form) {
         assertNotNull("entityClass", entityClass);
@@ -74,7 +75,6 @@ public class FormHelper {
     IFormApply<E, S> by(Object object, Form form, Supplier<S> setterSupplier) {
         assertNotNull("object", object);
         Map map = PoJoHelper.toMap(object);
-        FormApply<E, S> apply = new FormApply<>(setterSupplier.get(), map, form);
-        return apply;
+        return new FormApply<>(setterSupplier.get(), map, form);
     }
 }

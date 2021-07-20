@@ -28,8 +28,6 @@ public @interface TableField {
 
     /**
      * insert的时候默认值
-     *
-     * @return
      */
     String insert() default "";
 

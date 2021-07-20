@@ -9,8 +9,7 @@ import java.lang.reflect.Field;
 /**
  * PrimaryInfo: 主键信息
  *
- * @author darui.wu
- * @create 2020/5/27 6:45 下午
+ * @author darui.wu 2020/5/27 6:45 下午
  */
 @Getter
 public class TablePrimaryMeta extends FieldMeta {

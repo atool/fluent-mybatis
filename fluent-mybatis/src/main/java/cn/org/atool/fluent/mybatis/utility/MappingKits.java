@@ -14,6 +14,7 @@ import java.util.stream.Stream;
  *
  * @author wudarui
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MappingKits {
     public static <E extends IEntity> String[] toColumns(Class<E> klass, GetterFunc<E> getter, GetterFunc<E>... getters) {
         List<String> list = new ArrayList<>(getters.length + 1);
@@ -41,7 +42,6 @@ public class MappingKits {
      */
     public static <E extends IEntity> String toColumn(Class<E> klass, GetterFunc<E> func) {
         String field = LambdaUtil.resolve(func);
-        String column = IRefs.instance().findColumnByField(klass, field);
-        return column;
+        return IRefs.instance().findColumnByField(klass, field);
     }
 }

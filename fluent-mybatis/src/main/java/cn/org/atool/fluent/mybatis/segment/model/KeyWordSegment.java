@@ -7,8 +7,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 /**
  * KeyWordSegment
  *
- * @author darui.wu
- * @create 2020/6/20 8:35 下午
+ * @author darui.wu 2020/6/20 8:35 下午
  */
 public enum KeyWordSegment implements ISqlSegment {
 

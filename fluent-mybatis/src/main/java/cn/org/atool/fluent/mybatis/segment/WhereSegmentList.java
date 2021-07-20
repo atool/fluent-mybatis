@@ -23,14 +23,13 @@ public class WhereSegmentList extends BaseSegmentList {
             if (!this.segments.isEmpty() && !this.lastIsAndOr()) {
                 this.segments.add(first);
             }
-            super.addAll(segments);
         } else {
             if (!this.segments.isEmpty() && !this.lastIsAndOr()) {
                 this.segments.add(AND);
             }
             this.segments.add(first);
-            super.addAll(segments);
         }
+        super.addAll(segments);
         return this;
     }
 

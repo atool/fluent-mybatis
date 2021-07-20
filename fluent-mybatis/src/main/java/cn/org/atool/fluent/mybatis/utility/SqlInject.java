@@ -1,15 +1,14 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * 简单判断有没有sql注入风险
  *
- * @author darui.wu
- * @create 2019/10/10 10:17 上午
+ * @author darui.wu 2019/10/10 10:17 上午
  */
+@SuppressWarnings({"UnusedReturnValue"})
 public class SqlInject {
     private static final String[] KEYWORDS = {"and", "or", "not", "use", "insert", "delete", "update", "select", "count",
         "group", "union", "create", "drop", "truncate", "alter", "grant", "execute", "exec",
@@ -19,13 +18,13 @@ public class SqlInject {
      */
     private static final List<String> DANGER_CHAR = Arrays.asList(";", "--", "*", "%", "\\", "'", "#", "/");
 
-    private static Map<Character, List<char[]>> KEYWORD_MAP = initMap(KEYWORDS);
+    private static final Map<Character, List<char[]>> KEYWORD_MAP = initMap(KEYWORDS);
 
-    private static Map<Character, List<char[]>> DANGER_MAP = initMap(DANGER_CHAR.toArray(new String[0]));
+    private static final Map<Character, List<char[]>> DANGER_MAP = initMap(DANGER_CHAR.toArray(new String[0]));
 
-    private static String KEYWORD_STR = "[" + Stream.of(KEYWORDS).collect(Collectors.joining(",")) + "]";
+    private static final String KEYWORD_STR = "[" + String.join(",", KEYWORDS) + "]";
 
-    private static String DANGER_STR = "[" + DANGER_CHAR.stream().collect(Collectors.joining(",")) + "]";
+    private static final String DANGER_STR = "[" + String.join(",", DANGER_CHAR) + "]";
 
     private static final int TO_UPPER = 'A' - 'a';
 
@@ -60,8 +59,8 @@ public class SqlInject {
     /**
      * 是否含有sql注入，返回true表示含有
      *
-     * @param str
-     * @return
+     * @param str sql
+     * @return ignore
      */
     public static boolean probablySqlInject(String str) {
         if (str == null) {
@@ -117,8 +116,8 @@ public class SqlInject {
     /**
      * 是否是空格符
      *
-     * @param ch
-     * @return
+     * @param ch char
+     * @return ignore
      */
     private static boolean isBlank(char ch) {
         return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == 0;
@@ -128,8 +127,8 @@ public class SqlInject {
      * 简单判断是否可能存在SQL注入危险
      * 不允许可能产生注入的字符串
      *
-     * @param str
-     * @return
+     * @param str sql
+     * @return ignore
      */
     public static boolean hasSimpleInject(String str) {
         if (str == null) {

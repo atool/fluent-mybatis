@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author wudarui
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class SqlProviderUtils {
     public static WrapperData getWrapperData(Map map, String paraName) {
         IWrapper wrapper = getWrapper(map, paraName);

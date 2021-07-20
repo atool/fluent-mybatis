@@ -6,8 +6,7 @@ import lombok.experimental.Accessors;
 /**
  * PageOffset: 分页查询设置
  *
- * @author darui.wu
- * @create 2020/6/16 2:00 下午
+ * @author darui.wu 2020/6/16 2:00 下午
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 @Getter

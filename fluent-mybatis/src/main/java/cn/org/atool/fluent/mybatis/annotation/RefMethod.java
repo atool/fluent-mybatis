@@ -19,8 +19,6 @@ public @interface RefMethod {
      * 注意: 这里是Entity实体字段, 不是数据库表字段
      * <p>
      * 如果未赋值, 则手动实现关联查询
-     *
-     * @return
      */
     String value() default "";
 }

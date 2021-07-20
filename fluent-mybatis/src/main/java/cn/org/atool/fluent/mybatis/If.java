@@ -12,12 +12,13 @@ import java.util.Map;
  *
  * @author wudarui
  */
+@SuppressWarnings({"unused", "rawtypes"})
 public interface If {
     /**
      * 总是真的
      *
-     * @param o
-     * @return
+     * @param o object
+     * @return always is true
      */
     static boolean everTrue(Object o) {
         return true;
@@ -26,8 +27,8 @@ public interface If {
     /**
      * 总是假的
      *
-     * @param o
-     * @return
+     * @param o object
+     * @return always is false
      */
     static boolean everFalse(Object o) {
         return false;
@@ -48,7 +49,7 @@ public interface If {
      * 判断数据对象(Collection, Map, Array)是否为空
      *
      * @param value Collection, Map, Array
-     * @return
+     * @return ignore
      */
     static boolean isEmpty(Object value) {
         if (value == null) {
@@ -116,7 +117,7 @@ public interface If {
     /**
      * 多条件选择
      *
-     * @return
+     * @return ignore
      */
     static <T> Ifs<T> test() {
         return new Ifs<>();
@@ -125,9 +126,9 @@ public interface If {
     /**
      * 多条件选择
      *
-     * @return
+     * @return ignore
      */
     static <T> InIfs<T> testIn() {
-        return new InIfs<T>();
+        return new InIfs<>();
     }
 }

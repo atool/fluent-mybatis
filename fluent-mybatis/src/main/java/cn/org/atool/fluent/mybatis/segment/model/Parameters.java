@@ -13,8 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * ParameterPair: 自定义参数列表
  *
- * @author darui.wu
- * @create 2020/6/19 1:53 下午
+ * @author darui.wu 2020/6/19 1:53 下午
  */
 public class Parameters extends HashMap<String, Object> {
     /**
@@ -65,11 +64,11 @@ public class Parameters extends HashMap<String, Object> {
         char prev = 0;
         for (char ch : sqlStr.toCharArray()) {
             if (prev == char_backslash && ch != char_question) {
-                buff.append(/** 补上上一个反斜杠 **/char_backslash);
+                buff.append(/* 补上上一个反斜杠 **/char_backslash);
             }
             if (ch == char_question) {
                 if (prev == char_backslash) {
-                    buff.append(/** 字符 '?' 的反义处理 **/char_question);
+                    buff.append(/* 字符 '?' 的反义处理 **/char_question);
                 } else if (index < params.length) {
                     buff.append(this.putParameter(column, params[index++]));
                 } else {
@@ -81,7 +80,7 @@ public class Parameters extends HashMap<String, Object> {
             prev = ch;
         }
         if (prev == char_backslash) {
-            buff.append(/** 补上结尾的反斜杠 **/char_backslash);
+            buff.append(/* 补上结尾的反斜杠 **/char_backslash);
         }
         if (index < params.length) {
             throw new FluentMybatisException("占位符和参数个数不匹配:" + sqlStr);

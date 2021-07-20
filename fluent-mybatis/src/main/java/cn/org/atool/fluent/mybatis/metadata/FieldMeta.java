@@ -11,8 +11,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
 /**
  * BaseFieldInfo
  *
- * @author darui.wu
- * @create 2020/5/27 6:46 下午
+ * @author darui.wu 2020/5/27 6:46 下午
  */
 @SuppressWarnings({"unused"})
 @Getter
@@ -66,7 +65,7 @@ public abstract class FieldMeta implements Comparable<FieldMeta> {
     }
 
     @Override
-    public int compareTo(FieldMeta info) {
-        return this.column.compareTo(info == null ? null : info.getColumn());
+    public int compareTo(FieldMeta o) {
+        return this.column.compareTo(o.getColumn());
     }
 }

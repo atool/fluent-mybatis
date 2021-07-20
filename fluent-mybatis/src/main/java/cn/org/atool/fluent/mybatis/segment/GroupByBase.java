@@ -14,9 +14,9 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
 /**
  * BaseGroupBy
  *
- * @author darui.wu
- * @create 2020/6/21 8:09 下午
+ * @author darui.wu 2020/6/21 8:09 下午
  */
+@SuppressWarnings({"unchecked"})
 public abstract class GroupByBase<
     G extends GroupByBase<G, Q>,
     Q extends IBaseQuery<?, Q>
@@ -42,7 +42,7 @@ public abstract class GroupByBase<
         for (String column : columns) {
             if (notBlank(column)) {
                 Column _column = Column.column(column, this.wrapper);
-                apply.add(() -> _column.wrapColumn());
+                apply.add(_column::wrapColumn);
             }
         }
         return (G) this;
@@ -69,7 +69,7 @@ public abstract class GroupByBase<
         for (FieldMapping column : columns) {
             if (column != null) {
                 Column _column = Column.column(column, this.wrapper);
-                apply.add(() -> _column.wrapColumn());
+                apply.add(_column::wrapColumn);
             }
         }
         return (G) this;

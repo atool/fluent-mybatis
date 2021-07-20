@@ -26,7 +26,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class PoJoHelper {
     /**
      * 将Map转换为指定的PoJo对象

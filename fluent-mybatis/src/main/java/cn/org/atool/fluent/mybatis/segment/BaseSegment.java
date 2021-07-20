@@ -22,7 +22,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @param <W>
  * @author darui.wu  2020/6/22 10:47 上午
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 当前查询（更新）器
@@ -116,7 +116,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
-            /**
+            /*
              * 跳过主键设置
              * o 更新设置
              * o 查询, 但主键值为null
@@ -139,7 +139,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
-            /**
+            /*
              * 跳过主键设置
              * o 更新设置
              * o 查询, 但主键值为null

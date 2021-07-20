@@ -11,6 +11,7 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
  * @param <W>       查询（更新）器
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unused"})
 public abstract class BaseApply<
     SEGMENT extends BaseSegment,
     W extends IWrapper<?, W, ?>
@@ -21,7 +22,7 @@ public abstract class BaseApply<
     /**
      * 当前被操作的字段
      *
-     * @return
+     * @return FieldMapping
      */
     public FieldMapping current() {
         return this.segment.current;
@@ -30,7 +31,7 @@ public abstract class BaseApply<
     /**
      * 当前被操作的字段
      *
-     * @return
+     * @return Column
      */
     public Column column() {
         return Column.column(this.segment.current, this.segment.wrapper);

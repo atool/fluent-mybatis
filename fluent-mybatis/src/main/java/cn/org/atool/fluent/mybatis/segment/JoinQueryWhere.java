@@ -5,6 +5,7 @@ package cn.org.atool.fluent.mybatis.segment;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class JoinQueryWhere extends WhereBase {
 
     protected JoinQueryWhere(JoinQuery wrapper) {

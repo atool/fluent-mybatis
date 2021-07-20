@@ -15,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
  * @param <S> 更新器
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 public class UpdateApply<
     S extends UpdateBase<S, U>,
     U extends IBaseUpdate<?, U, ?>
@@ -62,12 +63,12 @@ public class UpdateApply<
     /**
      * 按分支条件更新
      *
-     * @param ifs
-     * @param <O>
-     * @return
+     * @param ifs if conditions
+     * @param <O> type
+     * @return ignore
      */
     public <O> S is(Ifs<O> ifs) {
-        /** 重载（实际入参为null）时兼容处理 **/
+        /* 重载（实际入参为null）时兼容处理 **/
         if (ifs == null) {
             return this.is((Object) null);
         }

@@ -27,6 +27,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
  * @param <NQ>    对应的嵌套查询器
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class WhereApply<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
@@ -67,13 +68,13 @@ public class WhereApply<
             }
             return this.segment.apply(this.column(), EQ, value);
         } else {
-            return this.segment.apply(this.column(), op, args);
+            return this.segment.apply(this.column(), op, (Object[]) args);
         }
     }
 
     @Override
     public <T> WHERE apply(ISqlOp op, Ifs<T> ifs) {
-        /** 重载（实际入参为null）时兼容处理 **/
+        /* 重载（实际入参为null）时兼容处理 **/
         if (ifs == null) {
             return this.apply(op, (Object) null);
         }
@@ -106,7 +107,7 @@ public class WhereApply<
         if (isCollection(args)) {
             return this.segment.apply(this.column(), IN, select, ((Collection) args[0]).toArray());
         } else {
-            return this.segment.apply(this.column(), IN, select, args);
+            return this.segment.apply(this.column(), IN, select, (Object[]) args);
         }
     }
 

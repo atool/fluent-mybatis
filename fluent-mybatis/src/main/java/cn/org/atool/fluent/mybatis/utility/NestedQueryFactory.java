@@ -8,9 +8,9 @@ import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 /**
  * NestedQueryFactory
  *
- * @author darui.wu
- * @create 2020/6/19 8:34 下午
+ * @author darui.wu 2020/6/19 8:34 下午
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class NestedQueryFactory {
     /**
      * 构造查询对象

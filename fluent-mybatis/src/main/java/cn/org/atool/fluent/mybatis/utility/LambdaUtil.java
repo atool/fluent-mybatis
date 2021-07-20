@@ -16,8 +16,8 @@ public class LambdaUtil {
     /**
      * 返回getter lambda表达式
      *
-     * @param getter
-     * @return
+     * @param getter getter method lambda
+     * @return name of getter method
      */
     public static <E extends IEntity> String resolve(GetterFunc<E> getter) {
         String method = lambdaName(getter);
@@ -26,7 +26,8 @@ public class LambdaUtil {
 
     private static <E extends IEntity> String lambdaName(GetterFunc<E> lambda) {
         try {
-            Method writeReplace = lambda.getClass().getDeclaredMethod(M_WRITE_REPLACE);
+            String m_WRITE_REPLACE = "writeReplace";
+            Method writeReplace = lambda.getClass().getDeclaredMethod(m_WRITE_REPLACE);
             boolean accessible = writeReplace.isAccessible();
             writeReplace.setAccessible(Boolean.TRUE);
             SerializedLambda serializedLambda = (SerializedLambda) writeReplace.invoke(lambda);
@@ -48,5 +49,4 @@ public class LambdaUtil {
         }
     }
 
-    private static String M_WRITE_REPLACE = "writeReplace";
 }

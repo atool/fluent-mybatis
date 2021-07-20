@@ -14,8 +14,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
  * @param <E>  对应的实体类
  * @param <U>  更新器
  * @param <NQ> 对应的查询器
- * @author darui.wu
- * @date 2020/6/17 4:24 下午
+ * @author darui.wu 2020/6/17 4:24 下午
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class BaseUpdate<

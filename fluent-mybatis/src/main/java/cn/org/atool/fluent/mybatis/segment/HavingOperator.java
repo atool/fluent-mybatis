@@ -14,6 +14,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @param <H> Having操作器
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes"})
 public class HavingOperator<H extends HavingBase<H, ?>>
     implements IOperator<H> {
     /**

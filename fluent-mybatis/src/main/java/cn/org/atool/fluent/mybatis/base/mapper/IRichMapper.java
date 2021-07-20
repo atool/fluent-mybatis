@@ -159,7 +159,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     /**
      * 根据query查询记录列表, 并将数据结果转换PoJo对象
      * 转换规则是下划线转驼峰
-     * 如果不符合这个规则, 请使用方法手动映射:{@link #listPoJos(IQuery, MapFunction<POJO> )}
+     * 如果不符合这个规则, 请使用方法手动映射:{@link #listPoJos(IQuery, MapFunction)}
      *
      * @param clazz  PoJo对象类型
      * @param query  查询条件

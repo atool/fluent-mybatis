@@ -31,15 +31,11 @@ public @interface TableId {
 
     /**
      * 自增主键产生的sequence name
-     *
-     * @return
      */
     String seqName() default "";
 
     /**
      * 只在seqName有值时才有效
-     *
-     * @return
      */
     boolean before() default false;
 }

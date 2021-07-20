@@ -52,10 +52,10 @@ public class CustomizedSql {
     /**
      * 对自定义的sql中的#{var}和${var}按照ew变量(#{ew.parameters...var})进行重写
      *
-     * @param sql
-     * @param parameters
-     * @param variable
-     * @return
+     * @param sql        sql
+     * @param parameters Parameters
+     * @param variable   parameter of sql
+     * @return rewrite sql
      */
     public static String rewriteSql(String sql, Parameters parameters, Object variable) {
         String prefix = getVarName(parameters.putParameter(null, variable));
@@ -78,8 +78,8 @@ public class CustomizedSql {
     /**
      * 去掉${var}或#{var}格式化符号后的var名称
      *
-     * @param variable
-     * @return
+     * @param variable variable
+     * @return name of var
      */
     private static String getVarName(String variable) {
         return variable.substring(2, variable.length() - 1).trim();

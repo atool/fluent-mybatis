@@ -9,8 +9,7 @@ import java.util.function.Function;
  * MarkerList: 按next方式进行的分页查询结果
  *
  * @param <E> 实体对象类
- * @author darui.wu
- * @create 2020/6/24 10:45 上午
+ * @author darui.wu 2020/6/24 10:45 上午
  */
 @SuppressWarnings({"unused"})
 @Getter
