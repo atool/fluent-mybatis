@@ -25,6 +25,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @param <JB> JoinBuilder
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB> {
     private final JoinQuery<QL> joinQuery;
 
@@ -54,7 +55,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     /**
      * 关联关系设置
      *
-     * @param join
+     * @param join OnConsumer
      * @return JoinOn
      */
     @Deprecated
@@ -68,7 +69,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * 自由设置连接关系, 设置时需要加上表别名
      * 比如: t1.id = t2.id AND t1.is_deleted = t2.is_deleted
      *
-     * @param condition
+     * @param condition condition string
      * @return JoinOn
      */
     public JB on(String condition) {
@@ -171,14 +172,14 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         return (JB) this.joinQuery;
     }
 
-    private static Map<Class, Constructor> QueryNoArgConstructors = new HashMap<>(128);
+    private static final Map<Class, Constructor> QueryNoArgConstructors = new HashMap<>(128);
 
     /**
      * 执行on条件时, 新创建查询对象, 避免对原有对象的造成干扰
      *
-     * @param klass
-     * @param <Q>
-     * @return
+     * @param klass query class
+     * @param <Q>   class type
+     * @return BaseQuery
      */
     private static <Q extends BaseQuery<?, Q>> Q newEmptyQuery(Class<Q> klass) {
         try {
