@@ -50,7 +50,7 @@ public class BaseDaoFiler extends AbstractFiler {
      * XyzBaseDao extends BaseDao<XyzEntity>
      * </pre>
      *
-     * @return
+     * @return TypeName
      */
     private TypeName superBaseDaoImplKlass() {
         ClassName baseImpl = ClassName.get(BaseDao.class.getPackage().getName(), BaseDao.class.getSimpleName());
@@ -65,7 +65,7 @@ public class BaseDaoFiler extends AbstractFiler {
      * 方便未依赖spring环境使用
      * </pre>
      *
-     * @return
+     * @return FieldSpec
      */
     private FieldSpec f_mapper() {
         return FieldSpec.builder(fluent.mapper(), "mapper")
@@ -79,7 +79,7 @@ public class BaseDaoFiler extends AbstractFiler {
     /**
      * public AddressMapper mapper() {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_mapper() {
         return super.publicMethod("mapper", true, fluent.mapper())
@@ -96,7 +96,7 @@ public class BaseDaoFiler extends AbstractFiler {
     /**
      * public EntityQuery query() {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_defaultQuery() {
         return super.protectedMethod(M_DEFAULT_QUERY, true, fluent.query())
@@ -113,7 +113,7 @@ public class BaseDaoFiler extends AbstractFiler {
     /**
      * public AddressUpdate updater() {}
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_defaultUpdater() {
         return super.protectedMethod(M_DEFAULT_UPDATER, true, fluent.updater())

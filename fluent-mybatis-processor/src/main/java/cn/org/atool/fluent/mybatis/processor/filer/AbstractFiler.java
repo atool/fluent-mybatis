@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 
+@SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 public abstract class AbstractFiler {
     protected FluentEntity fluent;
 
@@ -26,7 +27,7 @@ public abstract class AbstractFiler {
     /**
      * 生成java文件
      *
-     * @return
+     * @return ignore
      */
     public final JavaFile javaFile() {
         TypeSpec.Builder builder;
@@ -54,7 +55,7 @@ public abstract class AbstractFiler {
      * 代码块, 或者注释块
      *
      * @param lines 代码行
-     * @return
+     * @return ignore
      */
     protected CodeBlock codeBlock(String... lines) {
         return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), NEWLINE);
@@ -77,14 +78,14 @@ public abstract class AbstractFiler {
     /**
      * 是否接口类
      *
-     * @return
+     * @return ignore
      */
     protected abstract boolean isInterface();
 
     /**
      * protected boolean hasPrimary()
      *
-     * @return
+     * @return ignore
      */
     protected MethodSpec m_mapping() {
         return this.protectedMethod("mapping", true, ClassName.get(IMapping.class))
@@ -99,13 +100,12 @@ public abstract class AbstractFiler {
     /**
      * 定义方式如下的方法
      * <pre>
-     * @Override
      * public abstract Xyz methodName(...);
      * </pre>
      *
-     * @param methodName
+     * @param methodName name of method
      * @param isOverride 是否注解@Override
-     * @return
+     * @return ignore
      */
     protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, TypeName returnKlass) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
@@ -134,8 +134,8 @@ public abstract class AbstractFiler {
     /**
      * 未定义主键异常
      *
-     * @param builder
-     * @return
+     * @param builder MethodSpec.Builder
+     * @return ignore
      */
     public static MethodSpec.Builder throwPrimaryNoFound(MethodSpec.Builder builder) {
         return builder.addStatement("throw new $T($S)", RuntimeException.class, "primary key not found.");

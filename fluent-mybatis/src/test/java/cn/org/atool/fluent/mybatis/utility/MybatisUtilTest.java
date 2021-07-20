@@ -7,6 +7,7 @@ import org.test4j.junit5.Test4J;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 
+@SuppressWarnings("all")
 class MybatisUtilTest extends Test4J {
 
     @ParameterizedTest

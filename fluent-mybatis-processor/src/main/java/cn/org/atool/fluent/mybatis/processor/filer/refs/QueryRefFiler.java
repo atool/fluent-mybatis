@@ -18,7 +18,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
 
 public class QueryRefFiler extends AbstractFile {
-    private static String QueryRef = "QueryRef";
+    private static final String QueryRef = "QueryRef";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), QueryRef);

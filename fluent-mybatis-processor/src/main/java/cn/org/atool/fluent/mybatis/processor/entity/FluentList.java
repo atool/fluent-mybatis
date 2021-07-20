@@ -23,16 +23,16 @@ import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
  * @author darui.wu
  */
 public class FluentList {
-    /**
+    /*
      * FluentEntity收集器
      */
     /**
      * 项目所有编译Entity类列表
      */
     @Getter
-    private static List<FluentEntity> fluents = new ArrayList<>();
+    private static final List<FluentEntity> fluents = new ArrayList<>();
 
-    private static Map<String, FluentEntity> map = new HashMap<>();
+    private static final Map<String, FluentEntity> map = new HashMap<>();
 
     /**
      * 所有entity对象的共同基础package
@@ -58,8 +58,8 @@ public class FluentList {
     /**
      * 生成java文件
      *
-     * @param filer
-     * @param logger
+     * @param filer  Filer
+     * @param logger Consumer
      */
     public static void generate(Filer filer, Consumer<String> logger) {
         fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
@@ -110,7 +110,7 @@ public class FluentList {
     /**
      * 生成java文件
      *
-     * @param fluent
+     * @param fluent FluentEntity
      */
     private static List<AbstractFiler> generateJavaFile(FluentEntity fluent) {
         return Arrays.asList(

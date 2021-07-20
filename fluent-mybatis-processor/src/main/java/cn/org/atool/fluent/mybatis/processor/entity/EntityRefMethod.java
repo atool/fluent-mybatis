@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +24,13 @@ import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 @ToString
 @Accessors(chain = true)
 public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
-    private String[] value;
-
-    private Map<String, String> mapping = new HashMap<>();
+    private final Map<String, String> mapping = new HashMap<>();
 
     public EntityRefMethod(String property, TypeName javaType) {
         super(property, javaType);
     }
 
     public void setValue(String value) {
-        List<String> list = new ArrayList<>();
         String[] pairs = value.split("&");
         for (String pair : pairs) {
             if (isBlank(pair)) {
@@ -48,26 +44,22 @@ public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
                 return;
             }
         }
-        this.value = list.toArray(new String[0]);
     }
 
     /**
      * <pre>
-     * @RefField对应的方法名称
+     * Ref对应的方法名称
      * </pre>
      *
-     * @param fluent
-     * @return
+     * @param fluent FluentEntity
+     * @return ignore
      */
     public String getRefMethod(FluentEntity fluent) {
         return methodNameOfEntity(this.name, fluent.getClassName());
     }
 
     public boolean isAutoMapping() {
-        if (mapping.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !mapping.isEmpty();
     }
 
     public String getReturnEntity() {

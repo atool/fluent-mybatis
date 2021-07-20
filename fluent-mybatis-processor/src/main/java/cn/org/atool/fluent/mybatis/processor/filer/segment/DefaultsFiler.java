@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -57,8 +57,8 @@ public class DefaultsFiler extends AbstractFiler {
     /**
      * 设置implements自定义接口
      *
-     * @param builder
-     * @param daoInterface
+     * @param builder      TypeSpec.Builder
+     * @param daoInterface interface name
      */
     protected void addWrapperDefault(TypeSpec.Builder builder, String daoInterface) {
         int dot = daoInterface.lastIndexOf('.');

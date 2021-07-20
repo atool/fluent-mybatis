@@ -7,6 +7,7 @@ import org.test4j.integration.DataProvider;
 
 import java.util.Iterator;
 
+@SuppressWarnings("all")
 class BaseSqlProviderTest implements IWant {
 
     @MethodSource("dataForAddEwParaIndex")

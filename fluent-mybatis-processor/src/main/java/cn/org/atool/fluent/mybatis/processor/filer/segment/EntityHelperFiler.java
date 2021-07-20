@@ -71,7 +71,7 @@ public class EntityHelperFiler extends AbstractFiler {
     /**
      * public static Map<String, Object> toEntityMap(Entity entity)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_toMap() {
         MethodSpec.Builder builder = super.publicMethod("toMap", false, CN_Map_StrObj)
@@ -89,7 +89,7 @@ public class EntityHelperFiler extends AbstractFiler {
     /**
      * public static Entity entity(Map<String, Object> map)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_toEntity() {
         MethodSpec.Builder builder = super.publicMethod("toEntity", true, TypeVariableName.get("E"))
@@ -110,7 +110,7 @@ public class EntityHelperFiler extends AbstractFiler {
     /**
      * public static Entity copy(Entity entity)
      *
-     * @return
+     * @return MethodSpec
      */
     private MethodSpec m_copy() {
         MethodSpec.Builder builder = super.publicMethod("copy", true, fluent.entity())

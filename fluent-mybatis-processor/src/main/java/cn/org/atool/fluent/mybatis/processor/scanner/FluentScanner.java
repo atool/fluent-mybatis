@@ -21,11 +21,12 @@ import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Long;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_DEFAULTS;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
 
+@SuppressWarnings({"unchecked"})
 public class FluentScanner extends ElementScanner8<Void, Void> {
     final Consumer<String> logger;
 
     @Getter
-    private FluentEntity fluent;
+    private final FluentEntity fluent;
 
     public FluentScanner(Consumer<String> logger) {
         super();
@@ -93,9 +94,9 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
     /**
      * 解析普通字段注解信息
      *
-     * @param fieldName
-     * @param var
-     * @return
+     * @param fieldName name of field
+     * @param var       var
+     * @return ignore
      */
     private CommonField parseCommonField(String fieldName, VariableElement var) {
         CommonField field = new CommonField(fieldName, ClassName.get(var.asType()));
@@ -128,10 +129,10 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
     /**
      * 解析主键主机信息
      *
-     * @param fieldName
-     * @param var
-     * @param tableId
-     * @return
+     * @param fieldName name of field
+     * @param var       var
+     * @param tableId   Annotation
+     * @return ignore
      */
     private PrimaryField parsePrimaryField(String fieldName, VariableElement var, TableId tableId) {
         PrimaryField field = new PrimaryField(fieldName, ClassName.get(var.asType()));

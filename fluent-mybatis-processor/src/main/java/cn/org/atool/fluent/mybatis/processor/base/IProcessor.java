@@ -7,11 +7,12 @@ import javax.annotation.processing.Messager;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unused"})
 public interface IProcessor {
     /**
      * 返回Messager
      *
-     * @return
+     * @return Messager
      */
     Messager getMessager();
 }

@@ -16,6 +16,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 public class ClassAttrParser {
     public static final String ATTR_DEFAULTS = "defaults()";
 
@@ -24,7 +25,7 @@ public class ClassAttrParser {
     /**
      * 获取@FluentMyBatis上定义的 iDao() 属性值
      *
-     * @param entity
+     * @param entity TypeElement of entity
      * @return key: @DaoInterface value值, value: @DaoInterface args值
      */
     public static String getClassAttr(TypeElement entity, String methodName, Class defaultValue) {

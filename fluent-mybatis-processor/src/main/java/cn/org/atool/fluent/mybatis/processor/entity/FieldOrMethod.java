@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
  *
  * @author darui.wu
  */
+@SuppressWarnings("unchecked")
 @Getter
 @ToString
 @Accessors(chain = true)
@@ -38,7 +39,7 @@ public abstract class FieldOrMethod<F extends FieldOrMethod<F>> {
     /**
      * javaType是否是原生类型int, double...
      *
-     * @return
+     * @return true: primitive
      */
     public boolean isPrimitive() {
         return javaType.isPrimitive();

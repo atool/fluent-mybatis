@@ -24,7 +24,7 @@ import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
  * @author darui.wu
  */
 public class AllRefFiler extends AbstractFile {
-    private static String AllRef = "AllRef";
+    private static final String AllRef = "AllRef";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), AllRef);

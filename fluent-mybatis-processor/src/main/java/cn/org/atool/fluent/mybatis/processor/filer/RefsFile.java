@@ -23,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
  */
 public class RefsFile extends AbstractFile {
 
-    private static String Refs = "Refs";
+    private static final String Refs = "Refs";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), Refs);

@@ -459,7 +459,7 @@ public class MapperFiler extends AbstractFiler {
 
     /**
      * <pre>
-     *      @ResultMap("ResultMap")
+     *      ResultMap("ResultMap")
      * </pre>
      *
      * @return AnnotationSpec
@@ -470,7 +470,7 @@ public class MapperFiler extends AbstractFiler {
 
     /**
      * <pre>
-     *      @Results(id="", value={@Result()}
+     *      Results(id="", value={Result()}
      * </pre>
      *
      * @return AnnotationSpec
@@ -503,7 +503,7 @@ public class MapperFiler extends AbstractFiler {
 
     /**
      * <pre>
-     *      @Param("value") 注解
+     *      Param("value") 注解
      * </pre>
      *
      * @param value 注解属性值

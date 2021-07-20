@@ -21,7 +21,7 @@ import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
  * @author darui.wu
  */
 public class MapperRefFiler extends AbstractFile {
-    private static String MapperRef = "MapperRef";
+    private static final String MapperRef = "MapperRef";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), MapperRef);

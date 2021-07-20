@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+@SuppressWarnings("all")
 class IfTest extends Test4J {
 
     @ParameterizedTest

@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.test4j.tools.commons.ListHelper.toList;
 
+@SuppressWarnings("all")
 class CustomizedSqlTest extends Test4J {
 
     @MethodSource("data4parse")

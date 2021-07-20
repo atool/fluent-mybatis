@@ -20,6 +20,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author wudarui
  */
+@SuppressWarnings({"UnusedReturnValue"})
 @Getter
 @ToString
 public class FluentEntity extends FluentClassName implements Comparable<FluentEntity> {
@@ -69,7 +70,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     /**
      * Entity类字段列表
      */
-    private List<CommonField> fields = new ArrayList<>();
+    private final List<CommonField> fields = new ArrayList<>();
     /**
      * 逻辑删除字段
      */
@@ -88,7 +89,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     /**
      * Entity关联查询信息
      */
-    private List<EntityRefMethod> refMethods = new ArrayList<>();
+    private final List<EntityRefMethod> refMethods = new ArrayList<>();
 
     private DbType dbType = DbType.MYSQL;
 
@@ -107,8 +108,8 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     /**
      * 设置对应的表名称
      *
-     * @param fluentMyBatis
-     * @return
+     * @param fluentMyBatis Annotation @FluentMybatis
+     * @return ignore
      */
     public FluentEntity setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults, String superMapper) {
         this.prefix = fluentMyBatis.prefix();

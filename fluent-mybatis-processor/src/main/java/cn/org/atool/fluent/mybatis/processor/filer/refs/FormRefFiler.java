@@ -20,7 +20,7 @@ import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT
  * @author darui.wu
  */
 public class FormRefFiler extends AbstractFile {
-    private static String FormRef = "FormRef";
+    private static final String FormRef = "FormRef";
 
     public static ClassName getClassName() {
         return ClassName.get(FluentList.refsPackage(), FormRef);
