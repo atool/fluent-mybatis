@@ -13,6 +13,7 @@ import cn.org.atool.fluent.mybatis.refs.Refs;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.module.database.IDatabase;
 
 import static java.lang.String.format;
 
@@ -39,6 +40,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
             .onLeft(l -> l.where.id().eq(1L).age().eq(1L))
+            .onLeft(l -> l.where.userName().eq("张三"))
             .onRight(r -> r.where.id().eq(1L).studentId().eq(1L))
             .onApply(format("%s.`id` > %d", studentQuery.getTableAlias(), 1))
             .on("age", "student_id").endJoin()
@@ -46,12 +48,13 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         this.mapper.listMaps(query.build());
         String a1 = studentQuery.getTableAlias();
         String a2 = addressQuery.getTableAlias();
-        db.sqlList().wantFirstSql().eq(
+        IDatabase.db.sqlList().wantFirstSql().eq(
             format("SELECT %s.`age`, %s.`student_id` ", a1, a2) +
                 format("FROM student %s ", a1) +
                 format("JOIN home_address %s ", a2) +
                 format("ON %s.`id` = %s.`id` ", a1, a2) +
                 format("AND %s.`id` = ? AND %s.`age` = ? ", a1, a1) +
+                format("AND %s.`user_name` = ? ", a1) +
                 format("AND %s.`id` = ? AND %s.`student_id` = ? ", a2, a2) +
                 format("AND %s.`id` > %d ", studentQuery.getTableAlias(), 1) +
                 format("AND %s.`age` = %s.`student_id` ", a1, a2) +
@@ -87,7 +90,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .distinct()
             .limit(20);
         this.mapper.listMaps(query.build());
-        db.sqlList().wantFirstSql().eq(
+        IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
                 "FROM student t1 " +
                 "LEFT JOIN home_address t2 " +
@@ -118,7 +121,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .endJoin()
             .build();
         this.mapper.listMaps(query);
-        db.sqlList().wantFirstSql()
+        IDatabase.db.sqlList().wantFirstSql()
             .end("FROM student t1 RIGHT JOIN home_address t2 " +
                 "ON t1.`id` = t2.`id` " +
                 "WHERE t1.`is_deleted` = ? " +
@@ -143,7 +146,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin()
             .build();
         this.mapper.listMaps(query);
-        db.sqlList().wantFirstSql()
+        IDatabase.db.sqlList().wantFirstSql()
             .contains(new String[]{"t1.id", "t2.id", "t3.id"})
             .end("FROM student t1 LEFT JOIN home_address t2 " +
                 "ON t1.`home_address_id` = t2.`id` " +

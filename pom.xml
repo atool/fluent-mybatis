@@ -19,7 +19,7 @@
         <spring.version>5.3.0</spring.version>
         <mybatis.version>3.5.6</mybatis.version>
         <fluent-mock.version>1.1.2</fluent-mock.version>
-        <fluent-dbtest.version>1.0.4</fluent-dbtest.version>
+        <fluent-dbtest.version>1.0.5</fluent-dbtest.version>
         <test4j-junit5.version>2.7.8</test4j-junit5.version>
     </properties>
     <modules>
