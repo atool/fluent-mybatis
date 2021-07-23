@@ -12,6 +12,7 @@ import static cn.org.atool.fluent.mybatis.metadata.DbEscape.*;
  *
  * @author darui.wu Created by darui.wu on 2020/6/16.
  */
+@SuppressWarnings("unused")
 public enum DbType {
     /**
      * MYSQL
@@ -94,11 +95,7 @@ public enum DbType {
     }
 
     public String wrap(String column) {
-        if (DB_ESCAPE.containsKey(this)) {
-            return DB_ESCAPE.get(this).wrap(column);
-        } else {
-            return this.escape.wrap(column);
-        }
+        return DB_ESCAPE.getOrDefault(this, this.escape).wrap(column);
     }
 
     /**
@@ -108,17 +105,13 @@ public enum DbType {
      * @return 去掉转义符后的名称
      */
     public String unwrap(String column) {
-        if (DB_ESCAPE.containsKey(this)) {
-            return DB_ESCAPE.get(this).unwrap(column);
-        } else {
-            return this.escape.unwrap(column);
-        }
+        return DB_ESCAPE.getOrDefault(this, this.escape).unwrap(column);
     }
 
     /**
      * 用户指定数据库的反义处理
      */
-    private static Map<DbType, DbEscape> DB_ESCAPE = new HashMap<>();
+    private static final Map<DbType, DbEscape> DB_ESCAPE = new HashMap<>();
 
     /**
      * 设置数据库字段的反义处理
