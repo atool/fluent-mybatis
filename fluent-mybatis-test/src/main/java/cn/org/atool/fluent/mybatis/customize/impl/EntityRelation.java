@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentTeacherRelationQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.TeacherQuery;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.refs.IEntityRelation;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 public class EntityRelation implements IEntityRelation {
+
     @Override
     public List<MemberEntity> findExFriendsOfMemberEntity(MemberEntity entity) {
         return null;

@@ -16,6 +16,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class FreeQueryTest extends BaseTest {
     @Autowired
     MemberMapper mapper;
@@ -72,7 +73,7 @@ public class FreeQueryTest extends BaseTest {
         JoinBuilder query = JoinBuilder
             .from(query1)
             .join(query2)
-            .on("t1.id = t2.id")
+            .onApply("t1.id = t2.id").endJoin()
             .limit(20);
 
         mapper.findOne(query.build());
@@ -96,9 +97,9 @@ public class FreeQueryTest extends BaseTest {
         JoinBuilder query = JoinBuilder
             .from(query1)
             .join(query2)
-            .on("t1.id = t2.id")
+            .onApply("t1.id = t2.id").endJoin()
             .leftJoin(query3)
-            .on("t1.id=t3.id")
+            .onApply("t1.id=t3.id").endJoin()
             .limit(20);
 
         try {
@@ -137,7 +138,7 @@ public class FreeQueryTest extends BaseTest {
         JoinBuilder builder = JoinBuilder
             .from(query1)
             .join(query2)
-            .on("t1.product_id = t2.product_id");
+            .onApply("t1.product_id = t2.product_id").endJoin();
         return builder.build();
     }
 

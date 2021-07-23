@@ -2,7 +2,10 @@ package cn.org.atool.fluent.mybatis.metadata;
 
 import lombok.Getter;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static cn.org.atool.fluent.mybatis.metadata.DbEscape.*;
 
 /**
  * DbType 数据库类型
@@ -13,24 +16,24 @@ public enum DbType {
     /**
      * MYSQL
      */
-    MYSQL("mysql", BACK_QUOTE, BACK_QUOTE, "SELECT LAST_INSERT_ID() AS ID"),
+    MYSQL("mysql", BACK_ESCAPE, "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * MARIADB
      */
-    MARIADB("mariadb", BACK_QUOTE, BACK_QUOTE, "SELECT LAST_INSERT_ID() AS ID"),
+    MARIADB("mariadb", BACK_ESCAPE, "SELECT LAST_INSERT_ID() AS ID"),
     /**
      * H2 '
      */
-    H2("h2", BACK_QUOTE, BACK_QUOTE),
+    H2("h2", BACK_ESCAPE),
     /**
      * SQLITE
      * https://www.sqlite.org/lang_keywords.html
      */
-    SQLITE("sqlite", DOUBLE_QUOTATION, DOUBLE_QUOTATION),
+    SQLITE("sqlite", D_QUOTATION_ESCAPE),
     /**
      * ORACLE
      */
-    ORACLE("oracle", DOUBLE_QUOTATION, DOUBLE_QUOTATION, "select SEQ_USER_ID.nextval as id from dual", true),
+    ORACLE("oracle", NONE_ESCAPE, "select SEQ_USER_ID.nextval as id from dual", true),
     /**
      * DB2
      */
@@ -42,15 +45,15 @@ public enum DbType {
     /**
      * POSTGRE
      */
-    POSTGRE_SQL("postgresql", DOUBLE_QUOTATION, DOUBLE_QUOTATION),
+    POSTGRE_SQL("postgresql", D_QUOTATION_ESCAPE),
     /**
      * SQLSERVER2005
      */
-    SQL_SERVER2005("sqlserver2005", '[', ']'),
+    SQL_SERVER2005("sqlserver2005", SQUARE_BRACKETS_ESCAPE),
     /**
      * SQLSERVER
      */
-    SQL_SERVER("sqlserver", '[', ']'),
+    SQL_SERVER("sqlserver", SQUARE_BRACKETS_ESCAPE),
     /**
      * 其它数据库, 按标准语法进行处理
      */
@@ -59,9 +62,7 @@ public enum DbType {
     @Getter
     private final String alias;
 
-    private char startWrapper;
-
-    private char endWrapper;
+    private final DbEscape escape;
 
     @Getter
     private String seq;
@@ -71,36 +72,32 @@ public enum DbType {
 
     DbType(String alias) {
         this.alias = alias;
-        this.startWrapper = SPACE_CHAR;
-        this.endWrapper = SPACE_CHAR;
+        this.escape = NONE_ESCAPE;
     }
 
-    DbType(String alias, char startWrapper, char endWrapper) {
+    DbType(String alias, DbEscape escape) {
         this.alias = alias;
-        this.startWrapper = startWrapper;
-        this.endWrapper = endWrapper;
+        this.escape = escape;
     }
 
-    DbType(String alias, char startWrapper, char endWrapper, String seq) {
+    DbType(String alias, DbEscape escape, String seq) {
         this.alias = alias;
         this.seq = seq;
-        this.startWrapper = startWrapper;
-        this.endWrapper = endWrapper;
+        this.escape = escape;
     }
 
-    DbType(String alias, char startWrapper, char endWrapper, String seq, boolean before) {
+    DbType(String alias, DbEscape escape, String seq, boolean before) {
         this.alias = alias;
         this.seq = seq;
         this.before = before;
-        this.startWrapper = startWrapper;
-        this.endWrapper = endWrapper;
+        this.escape = escape;
     }
 
     public String wrap(String column) {
-        if (startWrapper != SPACE_CHAR) {
-            return startWrapper + column + endWrapper;
+        if (DB_ESCAPE.containsKey(this)) {
+            return DB_ESCAPE.get(this).wrap(column);
         } else {
-            return column;
+            return this.escape.wrap(column);
         }
     }
 
@@ -111,11 +108,25 @@ public enum DbType {
      * @return 去掉转义符后的名称
      */
     public String unwrap(String column) {
-        int len = column.length();
-        if (column.charAt(0) == startWrapper && column.charAt(len - 1) == endWrapper) {
-            return column.substring(1, len - 1);
+        if (DB_ESCAPE.containsKey(this)) {
+            return DB_ESCAPE.get(this).unwrap(column);
         } else {
-            return column;
+            return this.escape.unwrap(column);
         }
+    }
+
+    /**
+     * 用户指定数据库的反义处理
+     */
+    private static Map<DbType, DbEscape> DB_ESCAPE = new HashMap<>();
+
+    /**
+     * 设置数据库字段的反义处理
+     *
+     * @param dbType  数据库类型
+     * @param wrapper 反义处理函数, 比如 mysql: `?`, sqlserver: [?], 或 无反义处理: ?
+     */
+    public static void setEscape(DbType dbType, String wrapper) {
+        DB_ESCAPE.put(dbType, new DbEscape(wrapper));
     }
 }

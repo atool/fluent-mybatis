@@ -33,7 +33,8 @@ public class JoinApplyTest extends BaseTest {
         JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .join(addressQuery)
-            .on(format("%s.id = %s.id OR %s.age = %s.student_id", alias1, alias2, alias1, alias2))
+            .onApply(format("%s.id = %s.id OR %s.age = %s.student_id", alias1, alias2, alias1, alias2))
+            .endJoin()
             .limit(20);
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(

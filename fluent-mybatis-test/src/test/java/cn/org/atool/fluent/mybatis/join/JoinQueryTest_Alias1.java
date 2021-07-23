@@ -42,8 +42,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .onLeft(l -> l.where.id().eq(1L).age().eq(1L))
             .onLeft(l -> l.where.userName().eq("张三"))
             .onRight(r -> r.where.id().eq(1L).studentId().eq(1L))
-            .onApply(format("%s.`id` > %d", studentQuery.getTableAlias(), 1))
-            .on("age", "student_id").endJoin()
+            .onApply(format("%s.`id` > ?", studentQuery.getTableAlias()), 1)
+            .onEq("age", "student_id").endJoin()
             .limit(20);
         this.mapper.listMaps(query.build());
         String a1 = studentQuery.getTableAlias();
@@ -56,7 +56,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 format("AND %s.`id` = ? AND %s.`age` = ? ", a1, a1) +
                 format("AND %s.`user_name` = ? ", a1) +
                 format("AND %s.`id` = ? AND %s.`student_id` = ? ", a2, a2) +
-                format("AND %s.`id` > %d ", studentQuery.getTableAlias(), 1) +
+                format("AND %s.`id` > ? ", studentQuery.getTableAlias()) +
                 format("AND %s.`age` = %s.`student_id` ", a1, a2) +
                 format("WHERE %s.`is_deleted` = ? ", a1) +
                 format("AND %s.`env` = ? ", a1) +
@@ -84,8 +84,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .leftJoin(addressQuery)
-            .onGetter(StudentEntity::getId, HomeAddressEntity::getId)
-            .onGetter(StudentEntity::getAge, HomeAddressEntity::getStudentId)
+            .onEq(StudentEntity::getId, HomeAddressEntity::getId)
+            .onEq(StudentEntity::getAge, HomeAddressEntity::getStudentId)
             .endJoin()
             .distinct()
             .limit(20);

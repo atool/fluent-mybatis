@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
@@ -44,6 +45,18 @@ public class Parameters extends HashMap<String, Object> {
 
     public Parameters() {
         super(16);
+    }
+
+    /**
+     * 往查询/更新中增加带参数的sql片段
+     *
+     * @param wrapper 查询/更新实例
+     * @param sql     外部传入的原始sql片段, 带有占位符 '?'
+     * @param args    占位符参数列表
+     * @return 经过占位符处理的sql
+     */
+    public static String parseSql(IWrapper wrapper, String sql, Object... args) {
+        return wrapper.getWrapperData().getParameters().paramSql(null, sql, args);
     }
 
     /**

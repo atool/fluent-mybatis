@@ -39,7 +39,7 @@ public class CommonlySqlDemo extends BaseTest {
             .groupBy.studentId().end()
             .to().listMaps();
         Logger.info(list);
-        want.object(list).eqDataMap(DataMap.create(1).kv("语文", 90L).kv("数学", 89L));
+        want.object(list).eqDataMap(DataMap.create(1).kv("语文", 89L).kv("数学", 90L));
     }
 
     private String row2col(String row, String col, String... cases) {

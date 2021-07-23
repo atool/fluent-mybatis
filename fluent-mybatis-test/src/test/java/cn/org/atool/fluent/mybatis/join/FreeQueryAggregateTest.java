@@ -12,6 +12,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 
+@SuppressWarnings("rawtypes")
 public class FreeQueryAggregateTest extends BaseTest {
     @Autowired
     MemberMapper mapper;
@@ -27,7 +28,7 @@ public class FreeQueryAggregateTest extends BaseTest {
                 .where.apply("id", EQ, "1").end()
                 .groupBy.apply("t2.id").end()
             )
-            .on("t1.id = t2.id")
+            .onApply("t1.id = t2.id").endJoin()
             .build();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
@@ -61,7 +62,7 @@ public class FreeQueryAggregateTest extends BaseTest {
         JoinBuilder query = JoinBuilder
             .from(query1)
             .join(query2)
-            .on("t1.id = t2.id");
+            .onApply("t1.id = t2.id").endJoin();
         mapper.findOne(query.build());
         db.sqlList().wantFirstSql().eq("" +
                 "SELECT t1.id, COUNT(t1.age), t2.id, SUM(t2.age) " +
@@ -84,7 +85,7 @@ public class FreeQueryAggregateTest extends BaseTest {
                 .where.apply("id", EQ, "1").end()
                 .groupBy.apply("id").end()
                 .having.count.apply("id").gt(1).end())
-            .on("t1.id = t2.id")
+            .onApply("t1.id = t2.id").endJoin()
             .build();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +

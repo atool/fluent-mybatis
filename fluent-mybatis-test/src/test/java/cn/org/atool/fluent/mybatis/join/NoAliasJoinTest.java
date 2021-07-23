@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public class NoAliasJoinTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -40,7 +41,7 @@ public class NoAliasJoinTest extends BaseTest {
 
         IQuery query = (IQuery) leftQuery
             .join(rightQuery)
-            .on(FieldRef.Student.homeAddressId, FieldRef.HomeAddress.id).endJoin()
+            .onEq(FieldRef.Student.homeAddressId, FieldRef.HomeAddress.id).endJoin()
             .build()
             .where.applyFunc("a1.id < ?", 100).end();
         List<StudentEntity> entities = this.mapper.listEntity(query);

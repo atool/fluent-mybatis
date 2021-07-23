@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.processor.scanner;
 import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
+import cn.org.atool.fluent.mybatis.processor.FluentMybatisProcessor;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -36,12 +37,16 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
 
     @Override
     public Void visitType(TypeElement entity, Void aVoid) {
-        ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
-        this.fluent.setClassName(className.packageName(), className.simpleName());
         FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
-        String defaults = ClassAttrParser.getClassAttr(entity, ATTR_DEFAULTS, IDefaultSetter.class);
-        String superMapper = ClassAttrParser.getClassAttr(entity, ATTR_SUPER_MAPPER, IMapper.class);
-        this.fluent.setFluentMyBatis(fluentMybatis, defaults, superMapper);
+        if (fluentMybatis == null) {
+            FluentMybatisProcessor.error("Error in: " + entity.getQualifiedName().toString());
+        } else {
+            ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
+            this.fluent.setClassName(className.packageName(), className.simpleName());
+            String defaults = ClassAttrParser.getClassAttr(entity, ATTR_DEFAULTS, IDefaultSetter.class);
+            String superMapper = ClassAttrParser.getClassAttr(entity, ATTR_SUPER_MAPPER, IMapper.class);
+            this.fluent.setFluentMyBatis(fluentMybatis, defaults, superMapper);
+        }
         return super.visitType(entity, aVoid);
     }
 

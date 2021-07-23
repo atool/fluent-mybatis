@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.processor.scanner.FluentScanner;
 import cn.org.atool.generator.util.GeneratorHelper;
 import com.google.auto.service.AutoService;
-import lombok.Getter;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -28,8 +27,7 @@ import static javax.tools.Diagnostic.Kind.NOTE;
 public class FluentMybatisProcessor extends AbstractProcessor implements IProcessor {
     protected Filer filer;
 
-    @Getter
-    protected Messager messager;
+    private static Messager messager;
 
     private boolean generated = false;
 
@@ -37,7 +35,7 @@ public class FluentMybatisProcessor extends AbstractProcessor implements IProces
     public synchronized void init(ProcessingEnvironment env) {
         super.init(env);
         this.filer = env.getFiler();
-        this.messager = env.getMessager();
+        FluentMybatisProcessor.messager = env.getMessager();
     }
 
     @Override
@@ -66,5 +64,14 @@ public class FluentMybatisProcessor extends AbstractProcessor implements IProces
         messager.printMessage(NOTE, "FluentMybatis process end !!!");
         this.generated = true;
         return true;
+    }
+
+    public static void error(String message) {
+        messager.printMessage(ERROR, message);
+    }
+
+    @Override
+    public Messager getMessager() {
+        return messager;
     }
 }

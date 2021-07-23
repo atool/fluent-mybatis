@@ -49,7 +49,7 @@ public class Issue_I3QVPB extends BaseTest {
         FreeQuery query2 = new FreeQuery(query21, "cr");
         IQuery join = JoinBuilder.from(query1)
             .join(query2)
-            .on("repository_id", "identifier").endJoin()
+            .onEq("repository_id", "identifier").endJoin()
             .build();
         try {
             mapper.listEntity(new FreeQuery(join, "ccsr")
@@ -91,7 +91,7 @@ public class Issue_I3QVPB extends BaseTest {
             .end();
         IQuery join = JoinBuilder.from(query1, "crs")
             .join(query2, "cr")
-            .on("repository_id", "identifier").endJoin()
+            .onEq("repository_id", "identifier").endJoin()
             .select("csr.*")
             .build();
         try {
