@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.test4j</groupId>
             <artifactId>fluent-dbtest</artifactId>
-            <version>1.0.5</version>
+            <version>${fluent-dbtest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

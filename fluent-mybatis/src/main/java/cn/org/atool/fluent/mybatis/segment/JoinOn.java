@@ -29,27 +29,33 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB> {
     private final JoinQuery<QL> joinQuery;
 
-    private final QL onLeft;
+    private QL onLeft;
 
-    private final QR onRight;
+    private QR onRight;
 
     private final JoinOnBuilder<QL, QR> onBuilder;
 
     public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
         this.joinQuery = joinQuery;
         this.onBuilder = new JoinOnBuilder<>(qLeft, joinType, qRight);
-        if (qLeft instanceof FreeQuery) {
-            this.onLeft = (QL) ((FreeQuery) qLeft).emptyQuery();
+        this.onLeft = this.emptyQuery(qLeftClass, qLeft);
+        this.onRight = this.emptyQuery(qRightClass, qRight);
+    }
+
+    private <T extends BaseQuery<?, T>> T emptyQuery(T oldQuery) {
+        return this.emptyQuery((Class<T>) oldQuery.getClass(), oldQuery);
+    }
+
+    private <T extends BaseQuery<?, T>> T emptyQuery(Class<T> qClass, T oldQuery) {
+        T res;
+        if (oldQuery instanceof FreeQuery) {
+            res = (T) ((FreeQuery) oldQuery).emptyQuery();
         } else {
-            this.onLeft = newEmptyQuery(qLeftClass);
+            res = newEmptyQuery(qClass);
         }
-        if (qRight instanceof FreeQuery) {
-            this.onRight = (QR) ((FreeQuery) qRight).emptyQuery();
-        } else {
-            this.onRight = newEmptyQuery(qRightClass);
-        }
-        this.onLeft.tableAlias = qLeft.tableAlias;
-        this.onRight.tableAlias = qRight.tableAlias;
+        res.tableAlias = oldQuery.tableAlias;
+        res.sharedParameter(oldQuery);
+        return res;
     }
 
     /**
@@ -126,6 +132,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      */
     public JoinOn<QL, QR, JB> onLeft(Function<QL, BaseSegment<?, QL>> l) {
         this.onBuilder.on(l.apply(this.onLeft).end().getWrapperData().getWhereSql());
+        this.onLeft = this.emptyQuery(this.onLeft);
         return this;
     }
 
@@ -137,6 +144,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      */
     public JoinOn<QL, QR, JB> onRight(Function<QR, BaseSegment<?, QR>> r) {
         this.onBuilder.on(r.apply(this.onRight).end().getWrapperData().getWhereSql());
+        this.onRight = this.emptyQuery(this.onRight);
         return this;
     }
 
@@ -145,7 +153,8 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      *
      * @return JoinOn
      */
-    public JoinOn<QL, QR, JB> onApply(String condition) {
+    public JoinOn<QL, QR, JB> onApply(String condition, String... p) {
+//        this.onLeft.wrapperData.apply();
         this.onBuilder.on(condition);
         return this;
     }
