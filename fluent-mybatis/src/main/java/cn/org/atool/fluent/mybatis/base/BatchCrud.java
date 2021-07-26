@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.util.stream.Stream;
 
@@ -69,4 +70,12 @@ public interface BatchCrud extends IWrapper {
      * @return BatchCrud
      */
     BatchCrud addDelete(IBaseQuery... deletes);
+
+    /**
+     * 数据库类型
+     *
+     * @param dbType
+     * @return
+     */
+    BatchCrud setDbType(DbType dbType);
 }

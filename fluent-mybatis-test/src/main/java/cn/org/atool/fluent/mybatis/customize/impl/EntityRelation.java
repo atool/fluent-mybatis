@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class EntityRelation implements IEntityRelation {
     static {
-//        DbType.setEscape(DbType.MYSQL, "?");
+//        DbType.setEscape(DbType.MYSQL, "`?`");
     }
 
     @Override

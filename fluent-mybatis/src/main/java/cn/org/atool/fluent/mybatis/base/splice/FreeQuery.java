@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Having;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Selector;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -70,6 +71,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      */
     public FreeQuery(IQuery child, String alias) {
         this(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias);
+        this.setDbType(((BaseWrapper) child).dbType());
         child.getWrapperData().sharedParameter(this.wrapperData);
     }
 

@@ -27,7 +27,8 @@ public abstract class BaseTest extends Test4J {
 })
 @MapperScan({"cn.org.atool.fluent.mybatis.generate.mapper",
     "cn.org.atool.fluent.mybatis.customize.mapper",
-    "cn.org.atool.fluent.mybatis.origin.mapper"
+    "cn.org.atool.fluent.mybatis.origin.mapper",
+    "cn.org.atool.fluent.mybatis.db"
 })
 class TestSpringConfig {
     @Bean("dataSource")

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.free;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class UnionQueryTest extends BaseTest {
     @Test
     void union() {
         FreeQuery query = new FreeQuery("student")
+            .setDbType(DbType.MYSQL)
             .select.apply("id", "user_name").end()
             .where.and(q -> q
                 .where.apply("user_name", LIKE, "1%")
@@ -38,6 +40,7 @@ public class UnionQueryTest extends BaseTest {
     @Test
     void unionAll() {
         FreeQuery query = new FreeQuery("student")
+            .setDbType(DbType.MYSQL)
             .select.apply("id", "user_name").end()
             .where.and(q -> q
                 .where.apply("user_name", LIKE, "1%")

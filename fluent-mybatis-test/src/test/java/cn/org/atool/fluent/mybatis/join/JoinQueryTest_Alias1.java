@@ -104,6 +104,51 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "AND t2.`address` LIKE ? " +
                 "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
                 "HAVING MAX(t1.`age`) > ? " +
+                "LIMIT ?, ?");this.mapper.listMaps(query.build());
+        IDatabase.db.sqlList().wantFirstSql().eq(
+            "SELECT DISTINCT t1.`age`, t2.`student_id` " +
+                "FROM student t1 " +
+                "LEFT JOIN home_address t2 " +
+                "ON t1.`id` = t2.`id` " +
+                "AND t1.`age` = t2.`student_id` " +
+                "WHERE t1.`is_deleted` = ? " +
+                "AND t1.`env` = ? " +
+                "AND t1.`age` IS NULL " +
+                "AND t2.`is_deleted` = ? " +
+                "AND t2.`env` = ? " +
+                "AND t2.`address` LIKE ? " +
+                "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
+                "HAVING MAX(t1.`age`) > ? " +
+                "LIMIT ?, ?");this.mapper.listMaps(query.build());
+        IDatabase.db.sqlList().wantFirstSql().eq(
+            "SELECT DISTINCT t1.`age`, t2.`student_id` " +
+                "FROM student t1 " +
+                "LEFT JOIN home_address t2 " +
+                "ON t1.`id` = t2.`id` " +
+                "AND t1.`age` = t2.`student_id` " +
+                "WHERE t1.`is_deleted` = ? " +
+                "AND t1.`env` = ? " +
+                "AND t1.`age` IS NULL " +
+                "AND t2.`is_deleted` = ? " +
+                "AND t2.`env` = ? " +
+                "AND t2.`address` LIKE ? " +
+                "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
+                "HAVING MAX(t1.`age`) > ? " +
+                "LIMIT ?, ?");this.mapper.listMaps(query.build());
+        IDatabase.db.sqlList().wantFirstSql().eq(
+            "SELECT DISTINCT t1.`age`, t2.`student_id` " +
+                "FROM student t1 " +
+                "LEFT JOIN home_address t2 " +
+                "ON t1.`id` = t2.`id` " +
+                "AND t1.`age` = t2.`student_id` " +
+                "WHERE t1.`is_deleted` = ? " +
+                "AND t1.`env` = ? " +
+                "AND t1.`age` IS NULL " +
+                "AND t2.`is_deleted` = ? " +
+                "AND t2.`env` = ? " +
+                "AND t2.`address` LIKE ? " +
+                "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
+                "HAVING MAX(t1.`age`) > ? " +
                 "LIMIT ?, ?");
     }
 

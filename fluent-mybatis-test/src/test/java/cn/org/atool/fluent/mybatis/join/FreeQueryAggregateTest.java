@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.MemberQuery;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ public class FreeQueryAggregateTest extends BaseTest {
     @Test
     void count() {
         IQuery query = new FreeQuery("t_member", "t1")
+            .setDbType(DbType.MYSQL)
             .select("t1.id", "count(t1.age)")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("t1.id").end()
             .join(new FreeQuery("t_member", "t2")
+                .setDbType(DbType.MYSQL)
                 .select("t2.id", "sum(t2.age)")
                 .where.apply("id", EQ, "1").end()
                 .groupBy.apply("t2.id").end()
@@ -44,7 +47,8 @@ public class FreeQueryAggregateTest extends BaseTest {
     @Test
     void count_apply() {
         FreeQuery query1 = new FreeQuery("t_member", "t1");
-        query1.select.apply("t1.id").count.apply("t1.age").end()
+        query1.setDbType(DbType.MYSQL)
+            .select.apply("t1.id").count.apply("t1.age").end()
             .where
             .applyIf(args -> args[0].equals("1"), "id", EQ, "1")
             .applyIf(args -> args[0].equals("1"), "id", EQ, "2")
@@ -52,7 +56,7 @@ public class FreeQueryAggregateTest extends BaseTest {
             .groupBy.apply("t1.id").end()
         ;
 
-        FreeQuery query2 = new FreeQuery("t_member", "t2");
+        FreeQuery query2 = new FreeQuery("t_member", "t2").setDbType(DbType.MYSQL);
         query2.select.apply("t2.id").sum.apply("t2.age")
             .end()
             .where.apply("id", EQ, "1").end()
@@ -78,9 +82,11 @@ public class FreeQueryAggregateTest extends BaseTest {
     @Test
     void joinNestedSelect() {
         IQuery query = new FreeQuery(new MemberQuery().where.age().gt(1).end(), "t1")
+            .setDbType(DbType.MYSQL)
             .select.apply("id").count.apply("age").end()
             .groupBy.apply("id").end()
             .join(new FreeQuery(new MemberQuery().groupBy.id().end(), "t2")
+                .setDbType(DbType.MYSQL)
                 .select.apply("id").sum.apply("age").end()
                 .where.apply("id", EQ, "1").end()
                 .groupBy.apply("id").end()

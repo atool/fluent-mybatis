@@ -49,6 +49,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         BaseQuery onQuery;
         if (oldQuery instanceof FreeQuery) {
             onQuery = ((FreeQuery) oldQuery).emptyQuery();
+            ((FreeQuery) onQuery).setDbType(oldQuery.dbType());
         } else {
             onQuery = newEmptyQuery(qClass);
         }

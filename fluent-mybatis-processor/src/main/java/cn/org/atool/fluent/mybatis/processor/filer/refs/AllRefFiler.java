@@ -12,6 +12,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findColumnByField;
@@ -65,10 +66,14 @@ public class AllRefFiler extends AbstractFile {
     }
 
     private MethodSpec m_constructor() {
-        return MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addStatement("super.setDefaultDbType($T.$L)", DbType.class, FluentList.getDbType())
-            .build();
+        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC);
+        if (isBlank(FluentList.getDbType())) {
+            spec.addStatement("super.setDefaultDbType(null)");
+        } else {
+            spec.addStatement("super.setDefaultDbType($T.$L)", DbType.class, FluentList.getDbType());
+        }
+        return spec.build();
     }
 
     private MethodSpec m_allEntityClass() {

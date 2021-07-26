@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.helper.MemberMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,6 +25,7 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test() {
         FreeQuery query = new FreeQuery("t_member")
+            .setDbType(DbType.MYSQL)
             .select("id", "gmt_modified")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("id").end();
@@ -35,8 +37,8 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test_alias() {
         FreeQuery query = new FreeQuery("t_member", "t1");
-        query.select
-            .apply("id")
+        query.setDbType(DbType.MYSQL)
+            .select.apply("id")
             .applyAs(MemberMapping.gmtModified, "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
@@ -48,8 +50,8 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test_sum_alias() {
         FreeQuery query = new FreeQuery("t_member", "t1");
-        query.select
-            .apply("id")
+        query.setDbType(DbType.MYSQL)
+            .select.apply("id")
             .max.applyAs(MemberMapping.age, "_age").end()
             .where().apply("id", EQ, "1").end()
             .groupBy.apply("id").end();
@@ -63,11 +65,13 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test_join() {
         FreeQuery query1 = new FreeQuery("t_member", "t1");
-        query1.select("t1.id", "t1.gmt_modified")
+        query1.setDbType(DbType.MYSQL)
+            .select("t1.id", "t1.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         FreeQuery query2 = new FreeQuery("t_member", "t2");
-        query1.select("t2.id", "t2.gmt_modified")
+        query2.setDbType(DbType.MYSQL)
+            .select("t2.id", "t2.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         JoinBuilder query = JoinBuilder
@@ -83,15 +87,18 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test_join3() {
         FreeQuery query1 = new FreeQuery("t_member", "t1");
-        query1.select("t1.id", "t1.gmt_modified")
+        query1.setDbType(DbType.MYSQL)
+            .select("t1.id", "t1.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         FreeQuery query2 = new FreeQuery("t_member", "t2");
-        query2.select("t2.id", "t2.gmt_modified")
+        query2.setDbType(DbType.MYSQL)
+            .select("t2.id", "t2.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         FreeQuery query3 = new FreeQuery("t_member2", "t3");
-        query3.select("t3.id", "t3.gmt_modified")
+        query3.setDbType(DbType.MYSQL)
+            .select("t3.id", "t3.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
         JoinBuilder query = JoinBuilder
@@ -121,16 +128,16 @@ public class FreeQueryTest extends BaseTest {
 
     IQuery buildFreeJoin(QueryModel bean) {
         FreeQuery query1 = new FreeQuery(bean.table1, "t1");
-        query1.select
-            .avg(bean.t1column1, "value").end()
+        query1.setDbType(DbType.MYSQL)
+            .select.avg(bean.t1column1, "value").end()
             .where
             .apply(bean.t1column2, GE, "2020-11-01 00:00:00")
             .apply("gmt_create", LE, "2020-12-01 23:59:59")
             .end();
 
         FreeQuery query2 = new FreeQuery(bean.table2, "t2");
-        query2.select
-            .applyAs("product_id", "productId").end()
+        query2.setDbType(DbType.MYSQL)
+            .select.applyAs("product_id", "productId").end()
             .where
             .apply("super_id", EQ, "153264")
             .end();

@@ -20,7 +20,9 @@ public class NestedQueryFactory {
      */
     public static <Q extends IBaseQuery> Q nested(Class klass, BaseWrapper wrapper, boolean sameAlias) {
         if (FreeQuery.class.isAssignableFrom(klass)) {
-            return (Q) new FreeQuery(wrapper.getTable(), sameAlias ? wrapper.getTableAlias() : null);
+            FreeQuery query = new FreeQuery(wrapper.getTable(), sameAlias ? wrapper.getTableAlias() : null);
+            query.setDbType(wrapper.dbType());
+            return (Q) query;
         }
         try {
             if (sameAlias) {

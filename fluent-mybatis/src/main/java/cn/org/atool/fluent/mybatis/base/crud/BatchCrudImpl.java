@@ -3,10 +3,13 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +24,7 @@ import static java.lang.String.format;
  *
  * @author wudarui
  */
+@Accessors(chain = true)
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BatchCrudImpl implements BatchCrud {
     @Getter
@@ -116,7 +120,7 @@ public class BatchCrudImpl implements BatchCrud {
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
         query.getWrapperData().sharedParameter(wrapperData);
-        String sql = BaseSqlProvider.buildInsertSelect(IRefs.instance().defaultDbType(), insertTable, fields, query);
+        String sql = BaseSqlProvider.buildInsertSelect(this.dbType(), insertTable, fields, query);
         list.add(sql);
         return this;
     }
@@ -124,5 +128,12 @@ public class BatchCrudImpl implements BatchCrud {
     @Override
     public WhereBase where() {
         throw new IllegalStateException("not supported by BatchUpdater.");
+    }
+
+    @Setter
+    private DbType dbType;
+
+    private DbType dbType() {
+        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
     }
 }

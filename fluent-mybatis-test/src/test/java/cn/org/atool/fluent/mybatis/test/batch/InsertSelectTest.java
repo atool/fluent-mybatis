@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,7 @@ public class InsertSelectTest extends BaseTest {
     void testBatchInsertSelect() {
         ATM.dataMap.student.table().clean();
         mapper.batchCrud(BatchCrud.batch()
+            .setDbType(DbType.MYSQL)
             .addInsert(newStudent("user1"), newStudent("user2"), newStudent("test1"))
             .addInsertSelect(ATM.table.student,
                 new FieldMapping[]{
