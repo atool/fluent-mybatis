@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
@@ -18,10 +19,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("idcard")
+@SuppressWarnings({"unused"})
 public class IdcardDataMap extends DataMap<IdcardDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -30,20 +32,20 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<IdcardDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<IdcardDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "is_deleted",
       type = "BIGINT",
       defaultValue = "0"
   )
-  public final transient KeyValue<IdcardDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<IdcardDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "code",
       type = "VARCHAR(18)"
   )
-  public final transient KeyValue<IdcardDataMap> code = new KeyValue(this, "code", "code", supplier);
+  public final transient KeyValue<IdcardDataMap> code = new KeyValue<>(this, "code", "code", supplier);
 
   @ColumnDef(
       value = "version",
@@ -51,7 +53,7 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
       notNull = true,
       defaultValue = "0"
   )
-  public final transient KeyValue<IdcardDataMap> version = new KeyValue(this, "version", "version", supplier);
+  public final transient KeyValue<IdcardDataMap> version = new KeyValue<>(this, "version", "version", supplier);
 
   IdcardDataMap(boolean isTable) {
     super();

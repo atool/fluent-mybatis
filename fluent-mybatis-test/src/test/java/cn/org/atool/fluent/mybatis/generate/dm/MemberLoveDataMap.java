@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,10 +20,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("t_member_love")
+@SuppressWarnings({"unused"})
 public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -31,46 +33,46 @@ public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<MemberLoveDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<MemberLoveDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
       type = "DATETIME"
   )
-  public final transient KeyValue<MemberLoveDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+  public final transient KeyValue<MemberLoveDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
       type = "TINYINT",
       defaultValue = "0"
   )
-  public final transient KeyValue<MemberLoveDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<MemberLoveDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "boy_id",
       type = "BIGINT",
       notNull = true
   )
-  public final transient KeyValue<MemberLoveDataMap> boyId = new KeyValue(this, "boy_id", "boyId", supplier);
+  public final transient KeyValue<MemberLoveDataMap> boyId = new KeyValue<>(this, "boy_id", "boyId", supplier);
 
   @ColumnDef(
       value = "girl_id",
       type = "BIGINT",
       notNull = true
   )
-  public final transient KeyValue<MemberLoveDataMap> girlId = new KeyValue(this, "girl_id", "girlId", supplier);
+  public final transient KeyValue<MemberLoveDataMap> girlId = new KeyValue<>(this, "girl_id", "girlId", supplier);
 
   @ColumnDef(
       value = "gmt_created",
       type = "DATETIME"
   )
-  public final transient KeyValue<MemberLoveDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+  public final transient KeyValue<MemberLoveDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "status",
       type = "VARCHAR(45)"
   )
-  public final transient KeyValue<MemberLoveDataMap> status = new KeyValue(this, "status", "status", supplier);
+  public final transient KeyValue<MemberLoveDataMap> status = new KeyValue<>(this, "status", "status", supplier);
 
   MemberLoveDataMap(boolean isTable) {
     super();

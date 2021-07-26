@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,10 +20,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("t_member")
+@SuppressWarnings({"unused"})
 public class MemberDataMap extends DataMap<MemberDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -31,51 +33,51 @@ public class MemberDataMap extends DataMap<MemberDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<MemberDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<MemberDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
       type = "DATETIME"
   )
-  public final transient KeyValue<MemberDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+  public final transient KeyValue<MemberDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
       type = "BIT",
       defaultValue = "0"
   )
-  public final transient KeyValue<MemberDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<MemberDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "age",
       type = "INT"
   )
-  public final transient KeyValue<MemberDataMap> age = new KeyValue(this, "age", "age", supplier);
+  public final transient KeyValue<MemberDataMap> age = new KeyValue<>(this, "age", "age", supplier);
 
   @ColumnDef(
       value = "gmt_created",
       type = "DATETIME"
   )
-  public final transient KeyValue<MemberDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+  public final transient KeyValue<MemberDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "is_girl",
       type = "BIT",
       defaultValue = "0"
   )
-  public final transient KeyValue<MemberDataMap> isGirl = new KeyValue(this, "is_girl", "isGirl", supplier);
+  public final transient KeyValue<MemberDataMap> isGirl = new KeyValue<>(this, "is_girl", "isGirl", supplier);
 
   @ColumnDef(
       value = "school",
       type = "VARCHAR(20)"
   )
-  public final transient KeyValue<MemberDataMap> school = new KeyValue(this, "school", "school", supplier);
+  public final transient KeyValue<MemberDataMap> school = new KeyValue<>(this, "school", "school", supplier);
 
   @ColumnDef(
       value = "user_name",
       type = "VARCHAR(45)"
   )
-  public final transient KeyValue<MemberDataMap> userName = new KeyValue(this, "user_name", "userName", supplier);
+  public final transient KeyValue<MemberDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
 
   MemberDataMap(boolean isTable) {
     super();

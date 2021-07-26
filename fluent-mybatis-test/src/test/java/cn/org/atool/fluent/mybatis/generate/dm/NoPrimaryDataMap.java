@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
@@ -18,28 +19,29 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("no_primary")
+@SuppressWarnings({"unused"})
 public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "column_1",
       type = "INT"
   )
-  public final transient KeyValue<NoPrimaryDataMap> column1 = new KeyValue(this, "column_1", "column1", supplier);
+  public final transient KeyValue<NoPrimaryDataMap> column1 = new KeyValue<>(this, "column_1", "column1", supplier);
 
   @ColumnDef(
       value = "column_2",
       type = "VARCHAR(100)"
   )
-  public final transient KeyValue<NoPrimaryDataMap> column2 = new KeyValue(this, "column_2", "column2", supplier);
+  public final transient KeyValue<NoPrimaryDataMap> column2 = new KeyValue<>(this, "column_2", "column2", supplier);
 
   @ColumnDef(
       value = "alias",
       type = "VARCHAR(20)"
   )
-  public final transient KeyValue<NoPrimaryDataMap> alias = new KeyValue(this, "alias", "alias", supplier);
+  public final transient KeyValue<NoPrimaryDataMap> alias = new KeyValue<>(this, "alias", "alias", supplier);
 
   NoPrimaryDataMap(boolean isTable) {
     super();

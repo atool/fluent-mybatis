@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,10 +20,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("student_teacher_relation")
+@SuppressWarnings({"unused"})
 public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelationDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -31,46 +33,46 @@ public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelatio
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_created",
       type = "DATETIME"
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
       type = "DATETIME"
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
       type = "TINYINT",
       defaultValue = "0"
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "env",
       type = "VARCHAR(10)"
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> env = new KeyValue(this, "env", "env", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> env = new KeyValue<>(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "student_id",
       type = "BIGINT",
       notNull = true
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> studentId = new KeyValue(this, "student_id", "studentId", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> studentId = new KeyValue<>(this, "student_id", "studentId", supplier);
 
   @ColumnDef(
       value = "teacher_id",
       type = "BIGINT",
       notNull = true
   )
-  public final transient KeyValue<StudentTeacherRelationDataMap> teacherId = new KeyValue(this, "teacher_id", "teacherId", supplier);
+  public final transient KeyValue<StudentTeacherRelationDataMap> teacherId = new KeyValue<>(this, "teacher_id", "teacherId", supplier);
 
   StudentTeacherRelationDataMap(boolean isTable) {
     super();

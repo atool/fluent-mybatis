@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
@@ -18,10 +19,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("my_enum_type")
+@SuppressWarnings({"unused"})
 public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -30,19 +32,19 @@ public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<MyEnumTypeDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<MyEnumTypeDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "enum_num",
       type = "INT"
   )
-  public final transient KeyValue<MyEnumTypeDataMap> enumNum = new KeyValue(this, "enum_num", "enumNum", supplier);
+  public final transient KeyValue<MyEnumTypeDataMap> enumNum = new KeyValue<>(this, "enum_num", "enumNum", supplier);
 
   @ColumnDef(
       value = "enum_string",
       type = "VARCHAR(20)"
   )
-  public final transient KeyValue<MyEnumTypeDataMap> enumString = new KeyValue(this, "enum_string", "enumString", supplier);
+  public final transient KeyValue<MyEnumTypeDataMap> enumString = new KeyValue<>(this, "enum_string", "enumString", supplier);
 
   MyEnumTypeDataMap(boolean isTable) {
     super();

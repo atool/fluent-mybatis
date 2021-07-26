@@ -1,10 +1,5 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
-import java.lang.Boolean;
-import java.lang.String;
-import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -13,16 +8,21 @@ import org.test4j.tools.datagen.DataMap;
 import org.test4j.tools.datagen.IDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
+import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 /**
  * StudentScoreDataMap: 表(实体)数据对比(插入)构造器
  *
  * @author Powered By Test4J
  */
 @ScriptTable("student_score")
+@SuppressWarnings({"unused"})
 public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -31,21 +31,21 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<StudentScoreDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<StudentScoreDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_created",
       type = "DATETIME",
       notNull = true
   )
-  public final transient KeyValue<StudentScoreDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+  public final transient KeyValue<StudentScoreDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
       type = "DATETIME",
       notNull = true
   )
-  public final transient KeyValue<StudentScoreDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+  public final transient KeyValue<StudentScoreDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
@@ -53,13 +53,13 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
       notNull = true,
       defaultValue = "0"
   )
-  public final transient KeyValue<StudentScoreDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<StudentScoreDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "env",
       type = "VARCHAR(10)"
   )
-  public final transient KeyValue<StudentScoreDataMap> env = new KeyValue(this, "env", "env", supplier);
+  public final transient KeyValue<StudentScoreDataMap> env = new KeyValue<>(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "gender",
@@ -67,32 +67,32 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
       notNull = true,
       defaultValue = "0"
   )
-  public final transient KeyValue<StudentScoreDataMap> gender = new KeyValue(this, "gender", "gender", supplier);
+  public final transient KeyValue<StudentScoreDataMap> gender = new KeyValue<>(this, "gender", "gender", supplier);
 
   @ColumnDef(
       value = "school_term",
       type = "INT"
   )
-  public final transient KeyValue<StudentScoreDataMap> schoolTerm = new KeyValue(this, "school_term", "schoolTerm", supplier);
+  public final transient KeyValue<StudentScoreDataMap> schoolTerm = new KeyValue<>(this, "school_term", "schoolTerm", supplier);
 
   @ColumnDef(
       value = "score",
       type = "INT"
   )
-  public final transient KeyValue<StudentScoreDataMap> score = new KeyValue(this, "score", "score", supplier);
+  public final transient KeyValue<StudentScoreDataMap> score = new KeyValue<>(this, "score", "score", supplier);
 
   @ColumnDef(
       value = "student_id",
       type = "BIGINT",
       notNull = true
   )
-  public final transient KeyValue<StudentScoreDataMap> studentId = new KeyValue(this, "student_id", "studentId", supplier);
+  public final transient KeyValue<StudentScoreDataMap> studentId = new KeyValue<>(this, "student_id", "studentId", supplier);
 
   @ColumnDef(
       value = "subject",
       type = "VARCHAR(30)"
   )
-  public final transient KeyValue<StudentScoreDataMap> subject = new KeyValue(this, "subject", "subject", supplier);
+  public final transient KeyValue<StudentScoreDataMap> subject = new KeyValue<>(this, "subject", "subject", supplier);
 
   @ColumnDef(
       value = "tenant",
@@ -100,7 +100,7 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
       notNull = true,
       defaultValue = "0"
   )
-  public final transient KeyValue<StudentScoreDataMap> tenant = new KeyValue(this, "tenant", "tenant", supplier);
+  public final transient KeyValue<StudentScoreDataMap> tenant = new KeyValue<>(this, "tenant", "tenant", supplier);
 
   StudentScoreDataMap(boolean isTable) {
     super();

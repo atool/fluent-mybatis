@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,10 +20,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("t_member_favorite")
+@SuppressWarnings({"unused"})
 public class MemberFavoriteDataMap extends DataMap<MemberFavoriteDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -31,39 +33,39 @@ public class MemberFavoriteDataMap extends DataMap<MemberFavoriteDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<MemberFavoriteDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<MemberFavoriteDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
       type = "DATETIME"
   )
-  public final transient KeyValue<MemberFavoriteDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+  public final transient KeyValue<MemberFavoriteDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
       type = "TINYINT",
       defaultValue = "0"
   )
-  public final transient KeyValue<MemberFavoriteDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<MemberFavoriteDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "favorite",
       type = "VARCHAR(45)"
   )
-  public final transient KeyValue<MemberFavoriteDataMap> favorite = new KeyValue(this, "favorite", "favorite", supplier);
+  public final transient KeyValue<MemberFavoriteDataMap> favorite = new KeyValue<>(this, "favorite", "favorite", supplier);
 
   @ColumnDef(
       value = "gmt_created",
       type = "DATETIME"
   )
-  public final transient KeyValue<MemberFavoriteDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+  public final transient KeyValue<MemberFavoriteDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "member_id",
       type = "BIGINT",
       notNull = true
   )
-  public final transient KeyValue<MemberFavoriteDataMap> memberId = new KeyValue(this, "member_id", "memberId", supplier);
+  public final transient KeyValue<MemberFavoriteDataMap> memberId = new KeyValue<>(this, "member_id", "memberId", supplier);
 
   MemberFavoriteDataMap(boolean isTable) {
     super();

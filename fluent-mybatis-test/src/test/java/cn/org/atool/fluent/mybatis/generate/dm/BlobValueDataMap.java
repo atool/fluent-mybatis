@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
@@ -18,10 +19,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("blob_value")
+@SuppressWarnings({"unused"})
 public class BlobValueDataMap extends DataMap<BlobValueDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -30,31 +32,31 @@ public class BlobValueDataMap extends DataMap<BlobValueDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<BlobValueDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<BlobValueDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "blob_value",
       type = "BLOB"
   )
-  public final transient KeyValue<BlobValueDataMap> blobValue = new KeyValue(this, "blob_value", "blobValue", supplier);
+  public final transient KeyValue<BlobValueDataMap> blobValue = new KeyValue<>(this, "blob_value", "blobValue", supplier);
 
   @ColumnDef(
       value = "max",
       type = "BIGINT"
   )
-  public final transient KeyValue<BlobValueDataMap> max = new KeyValue(this, "max", "max", supplier);
+  public final transient KeyValue<BlobValueDataMap> max = new KeyValue<>(this, "max", "max", supplier);
 
   @ColumnDef(
       value = "min",
       type = "BIGINT"
   )
-  public final transient KeyValue<BlobValueDataMap> min = new KeyValue(this, "min", "min", supplier);
+  public final transient KeyValue<BlobValueDataMap> min = new KeyValue<>(this, "min", "min", supplier);
 
   @ColumnDef(
       value = "origin",
       type = "VARCHAR(20)"
   )
-  public final transient KeyValue<BlobValueDataMap> origin = new KeyValue(this, "origin", "origin", supplier);
+  public final transient KeyValue<BlobValueDataMap> origin = new KeyValue<>(this, "origin", "origin", supplier);
 
   BlobValueDataMap(boolean isTable) {
     super();

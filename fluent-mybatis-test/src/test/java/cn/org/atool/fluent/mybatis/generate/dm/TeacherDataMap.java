@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,10 +20,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("teacher")
+@SuppressWarnings({"unused"})
 public class TeacherDataMap extends DataMap<TeacherDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -31,38 +33,38 @@ public class TeacherDataMap extends DataMap<TeacherDataMap> {
       autoIncrease = true,
       notNull = true
   )
-  public final transient KeyValue<TeacherDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<TeacherDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "gmt_created",
       type = "DATETIME"
   )
-  public final transient KeyValue<TeacherDataMap> gmtCreated = new KeyValue(this, "gmt_created", "gmtCreated", supplier);
+  public final transient KeyValue<TeacherDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
       type = "DATETIME"
   )
-  public final transient KeyValue<TeacherDataMap> gmtModified = new KeyValue(this, "gmt_modified", "gmtModified", supplier);
+  public final transient KeyValue<TeacherDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
   @ColumnDef(
       value = "is_deleted",
       type = "TINYINT",
       defaultValue = "0"
   )
-  public final transient KeyValue<TeacherDataMap> isDeleted = new KeyValue(this, "is_deleted", "isDeleted", supplier);
+  public final transient KeyValue<TeacherDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   @ColumnDef(
       value = "env",
       type = "VARCHAR(10)"
   )
-  public final transient KeyValue<TeacherDataMap> env = new KeyValue(this, "env", "env", supplier);
+  public final transient KeyValue<TeacherDataMap> env = new KeyValue<>(this, "env", "env", supplier);
 
   @ColumnDef(
       value = "user_name",
       type = "VARCHAR(20)"
   )
-  public final transient KeyValue<TeacherDataMap> userName = new KeyValue(this, "user_name", "userName", supplier);
+  public final transient KeyValue<TeacherDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
 
   TeacherDataMap(boolean isTable) {
     super();

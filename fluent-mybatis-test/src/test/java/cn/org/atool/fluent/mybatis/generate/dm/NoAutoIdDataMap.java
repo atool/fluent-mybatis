@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.dm;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
@@ -18,10 +19,11 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("no_auto_id")
+@SuppressWarnings({"unused"})
 public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
   private boolean isTable;
 
-  private Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
   @ColumnDef(
       value = "id",
@@ -29,13 +31,13 @@ public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
       primary = true,
       notNull = true
   )
-  public final transient KeyValue<NoAutoIdDataMap> id = new KeyValue(this, "id", "id", supplier);
+  public final transient KeyValue<NoAutoIdDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
       value = "column_1",
       type = "VARCHAR(20)"
   )
-  public final transient KeyValue<NoAutoIdDataMap> column1 = new KeyValue(this, "column_1", "column1", supplier);
+  public final transient KeyValue<NoAutoIdDataMap> column1 = new KeyValue<>(this, "column_1", "column1", supplier);
 
   @ColumnDef(
       value = "lock_version",
@@ -43,7 +45,7 @@ public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
       notNull = true,
       defaultValue = "0"
   )
-  public final transient KeyValue<NoAutoIdDataMap> lockVersion = new KeyValue(this, "lock_version", "lockVersion", supplier);
+  public final transient KeyValue<NoAutoIdDataMap> lockVersion = new KeyValue<>(this, "lock_version", "lockVersion", supplier);
 
   NoAutoIdDataMap(boolean isTable) {
     super();
