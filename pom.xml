@@ -46,6 +46,16 @@
                 <artifactId>fluent-assert</artifactId>
                 <version>1.0.4</version>
             </dependency>
+            <dependency>
+                <artifactId>fluent-dbtest</artifactId>
+                <groupId>org.test4j</groupId>
+                <version>${fluent-dbtest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.test4j</groupId>
+                <artifactId>fluent-mock</artifactId>
+                <version>${fluent-mock.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -72,14 +82,6 @@
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <artifactId>fluent-dbtest</artifactId>
-                    <groupId>org.test4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>fluent-mock</artifactId>
-                    <groupId>org.test4j</groupId>
-                </exclusion>
-                <exclusion>
                     <groupId>com.github.atool</groupId>
                     <artifactId>generator</artifactId>
                 </exclusion>
@@ -88,7 +90,6 @@
         <dependency>
             <groupId>org.test4j</groupId>
             <artifactId>fluent-mock</artifactId>
-            <version>${fluent-mock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -49,27 +49,6 @@
             <artifactId>spring-boot-starter</artifactId>
             <version>1.5.10.RELEASE</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.test4j</groupId>
-            <artifactId>test4j-junit5</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>database-dep</artifactId>
-                    <groupId>org.test4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>fluent-story</artifactId>
-                    <groupId>org.test4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 </project>
