@@ -74,4 +74,23 @@ public interface IEntity extends Serializable {
     default <E extends IEntity> E copy() {
         return IRefs.findEntityHelper(this.entityClass()).copy(this);
     }
+
+    /**
+     * 动态修改归属表, 默认无需设置
+     * 只有在插入数据时, 不想使用默认对应的数据库表, 想动态调整时才需要
+     *
+     * @param table 动态归属表
+     */
+    default <E extends IEntity> E changeTableBelongTo(String table) {
+        return (E) this;
+    }
+
+    /**
+     * 返回动态归属表
+     *
+     * @return 动态归属表
+     */
+    default String findTableBelongTo() {
+        return null;
+    }
 }

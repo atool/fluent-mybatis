@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class InsertBatchTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;

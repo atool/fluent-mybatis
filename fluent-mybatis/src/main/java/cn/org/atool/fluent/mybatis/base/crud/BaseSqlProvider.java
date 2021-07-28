@@ -4,12 +4,14 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.io.Serializable;
@@ -19,8 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderUtils.*;
@@ -59,7 +63,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String insertSelect(Map map) {
         String[] fields = (String[]) map.get(Param_Fields);
         IQuery query = (IQuery) map.get(Param_EW);
-        return buildInsertSelect(dbType(), this.tableName(), fields, query);
+        return buildInsertSelect(dbType(), dynamic(query), fields, query);
     }
 
     public static String buildInsertSelect(DbType dbType, String tableName, String[] fields, IQuery query) {
@@ -67,6 +71,10 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
         String columns = Stream.of(fields).map(dbType::wrap).collect(joining(", "));
+        String select = query.getWrapperData().getSqlSelect();
+        if (isBlank(select) || ASTERISK.equals(select)) {
+            ((BaseQuery) query).select(fields);
+        }
         return "INSERT INTO " + tableName + " (" + columns + ") " +
             query.getWrapperData().getQuerySql();
     }
@@ -105,10 +113,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
 
     private String insertBatch(List<E> entities, boolean withPk) {
         MapperSql sql = new MapperSql();
+        String tableName = null;
         for (E entity : entities) {
             this.validateInsertEntity(entity, withPk);
+            if (tableName == null) {
+                tableName = this.dynamic(entity);
+            }
         }
-        sql.INSERT_INTO(this.tableName());
+        sql.INSERT_INTO(tableName == null ? this.tableName() : tableName);
         sql.INSERT_COLUMNS(dbType(), this.allFields(withPk));
         sql.VALUES();
         for (int index = 0; index < entities.size(); index++) {
@@ -531,7 +543,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         assertNotNull(Param_Entity, entity);
         this.validateInsertEntity(entity, withPk);
         MapperSql sql = new MapperSql();
-        sql.INSERT_INTO(this.tableName());
+        sql.INSERT_INTO(this.dynamic(entity));
         InsertList inserts = new InsertList();
         this.insertEntity(inserts, prefix, entity, withPk);
         sql.INSERT_COLUMNS(dbType(), inserts.columns);
@@ -599,7 +611,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         if (isLogic) {
             this.logicDelete(sql);
         } else {
-            sql.DELETE_FROM(this.tableName(), ew);
+            sql.DELETE_FROM(ew.getTable(), ew);
         }
         sql.WHERE_GROUP_ORDER_BY(ew);
         return sql.toString();
@@ -684,4 +696,41 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return ignore
      */
     protected abstract boolean longTypeOfLogicDelete();
+
+    /**
+     * 获取指定的动态表名称
+     *
+     * @param entity 要插入的实例
+     * @return 操作表名称
+     */
+    private String dynamic(IEntity entity) {
+        if (entity instanceof IRichEntity) {
+            String dynamic = ((IRichEntity) entity).findTableBelongTo();
+            return isBlank(dynamic) ? this.tableName() : dynamic;
+        } else {
+            return this.tableName();
+        }
+    }
+
+    /**
+     * 获取IQuery或IUpdate对应的表名称
+     *
+     * @param query IQuery或IUpdate
+     * @return 表名称
+     */
+    private String dynamic(IQuery query) {
+        String table = (String) ((BaseWrapper) query).getTable().get();
+        return isBlank(table) ? this.tableName() : table;
+    }
+
+    /**
+     * 获取IQuery或IUpdate对应的表名称
+     *
+     * @param query IQuery或IUpdate
+     * @return 表名称
+     */
+    private String dynamic(IUpdate update) {
+        String table = (String) ((BaseWrapper) update).getTable().get();
+        return isBlank(table) ? this.tableName() : table;
+    }
 }

@@ -74,4 +74,20 @@ public abstract class RichEntity implements IEntity, IRichEntity {
         System.arraycopy(args, 0, reArgs, 1, args.length);
         return reArgs;
     }
+
+    /**
+     * 归属表, 默认无需设置
+     */
+    private String tableBelongTo;
+
+    @Override
+    public <E extends IEntity> E changeTableBelongTo(String table) {
+        this.tableBelongTo = table;
+        return (E) this;
+    }
+
+    @Override
+    public String findTableBelongTo() {
+        return this.tableBelongTo;
+    }
 }
