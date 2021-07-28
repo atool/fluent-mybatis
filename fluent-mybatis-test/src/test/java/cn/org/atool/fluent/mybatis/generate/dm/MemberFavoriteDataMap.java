@@ -20,7 +20,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("t_member_favorite")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class MemberFavoriteDataMap extends DataMap<MemberFavoriteDataMap> {
   private boolean isTable;
 

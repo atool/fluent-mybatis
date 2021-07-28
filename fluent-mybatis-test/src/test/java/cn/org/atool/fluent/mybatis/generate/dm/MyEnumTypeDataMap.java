@@ -19,7 +19,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("my_enum_type")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
   private boolean isTable;
 

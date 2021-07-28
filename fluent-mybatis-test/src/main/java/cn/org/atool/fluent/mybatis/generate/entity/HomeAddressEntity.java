@@ -14,6 +14,7 @@ import java.lang.Class;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("unchecked")
 @Data
 @Accessors(
     chain = true
@@ -124,5 +126,10 @@ public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddres
   @Override
   public final Class<? extends IEntity> entityClass() {
     return HomeAddressEntity.class;
+  }
+
+  @Override
+  public final HomeAddressEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
   }
 }

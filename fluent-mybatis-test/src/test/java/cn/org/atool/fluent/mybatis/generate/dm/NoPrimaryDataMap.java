@@ -19,7 +19,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("no_primary")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
   private boolean isTable;
 

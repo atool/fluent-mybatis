@@ -19,7 +19,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("no_auto_id")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class NoAutoIdDataMap extends DataMap<NoAutoIdDataMap> {
   private boolean isTable;
 

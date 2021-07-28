@@ -19,7 +19,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("blob_value")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class BlobValueDataMap extends DataMap<BlobValueDataMap> {
   private boolean isTable;
 

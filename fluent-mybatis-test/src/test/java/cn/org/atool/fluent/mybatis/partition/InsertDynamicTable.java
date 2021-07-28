@@ -30,10 +30,11 @@ public class InsertDynamicTable extends BaseTest {
         want.exception(() ->
             mapper.insertBatch(list(
                 new StudentEntity()
-                    //.changeTableBelongTo("my_student")
-                    .setUserName("name"), new StudentEntity()
                     .changeTableBelongTo("my_student")
-                    //.setUserName("name")
+                    .setUserName("name"),
+                new StudentEntity()
+                    .changeTableBelongTo("my_student")
+                    .setUserName("name")
                 )
             ), BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().start("INSERT INTO my_student(`");
@@ -43,7 +44,7 @@ public class InsertDynamicTable extends BaseTest {
     void insert() {
         want.exception(() ->
             mapper.insert(new StudentEntity()
-                //.changeTableBelongTo("my_student")
+                .changeTableBelongTo("my_student")
                 .setUserName("name")
             ), BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().start("INSERT INTO my_student(`");
@@ -53,7 +54,7 @@ public class InsertDynamicTable extends BaseTest {
     void insertWithPk() {
         want.exception(() ->
             mapper.insertWithPk(new StudentEntity()
-                //.changeTableBelongTo("my_student")
+                .changeTableBelongTo("my_student")
                 .setId(1L)
                 .setUserName("name")
             ), BadSqlGrammarException.class);

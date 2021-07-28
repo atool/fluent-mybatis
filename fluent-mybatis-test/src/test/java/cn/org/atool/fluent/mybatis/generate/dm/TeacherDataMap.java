@@ -20,7 +20,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("teacher")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class TeacherDataMap extends DataMap<TeacherDataMap> {
   private boolean isTable;
 

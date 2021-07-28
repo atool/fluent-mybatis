@@ -14,6 +14,7 @@ import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -25,6 +26,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("unchecked")
 @Data
 @Accessors(
     chain = true
@@ -126,5 +128,10 @@ public class MemberEntity extends RichEntity {
   @RefMethod
   public MemberEntity findCurrFriend() {
     return super.invoke("findCurrFriend", true);
+  }
+
+  @Override
+  public final MemberEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
   }
 }

@@ -19,7 +19,7 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("idcard")
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class IdcardDataMap extends DataMap<IdcardDataMap> {
   private boolean isTable;
 

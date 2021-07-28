@@ -16,6 +16,7 @@ import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +27,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("unchecked")
 @Data
 @Accessors(
     chain = true
@@ -134,5 +136,10 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
   public StudentEntity findStudent() {
     return super.invoke("findStudent", true);
+  }
+
+  @Override
+  public final StudentScoreEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
   }
 }

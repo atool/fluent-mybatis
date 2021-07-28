@@ -11,6 +11,7 @@ import java.lang.Class;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -20,6 +21,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("unchecked")
 @Data
 @Accessors(
     chain = true
@@ -66,5 +68,10 @@ public class NoAutoIdEntity extends RichEntity {
   @Override
   public final Class<? extends IEntity> entityClass() {
     return NoAutoIdEntity.class;
+  }
+
+  @Override
+  public final NoAutoIdEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
   }
 }

@@ -16,6 +16,7 @@ import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -27,6 +28,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("unchecked")
 @Data
 @Accessors(
     chain = true
@@ -216,5 +218,10 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   @RefMethod
   public List<TeacherEntity> findTeacherList() {
     return super.invoke("findTeacherList", true);
+  }
+
+  @Override
+  public final StudentEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
   }
 }

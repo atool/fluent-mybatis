@@ -12,6 +12,7 @@ import java.lang.Class;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("unchecked")
 @Data
 @Accessors(
     chain = true
@@ -93,5 +95,10 @@ public class MemberLoveEntity extends RichEntity {
   @Override
   public final Class<? extends IEntity> entityClass() {
     return MemberLoveEntity.class;
+  }
+
+  @Override
+  public final MemberLoveEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
   }
 }
