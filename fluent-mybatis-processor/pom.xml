@@ -52,12 +52,5 @@
             <version>30.0-jre</version>
             <scope>provided</scope>
         </dependency>
-        <!-- test-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>

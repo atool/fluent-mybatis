@@ -40,15 +40,14 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>30.0-jre</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
 
         <!--test jar -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>1.5.10.RELEASE</version>
-            <scope>provided</scope>
+            <groupId>org.test4j</groupId>
+            <artifactId>test4j-junit5</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

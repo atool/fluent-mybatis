@@ -72,6 +72,16 @@
         </dependency>
         <!-- test jar -->
         <dependency>
+            <groupId>org.test4j</groupId>
+            <artifactId>test4j-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
             <version>${spring-boot.version}</version>

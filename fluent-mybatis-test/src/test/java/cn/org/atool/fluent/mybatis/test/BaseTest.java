@@ -4,32 +4,31 @@ import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.test.context.ContextConfiguration;
+import org.test4j.integration.spring.SpringContext;
 import org.test4j.junit5.Test4J;
 import org.test4j.module.database.proxy.DataSourceCreator;
 
 import javax.sql.DataSource;
 
-@ContextConfiguration(classes = {
-    TestSpringConfig.class
-})
-public abstract class BaseTest extends Test4J {
-}
-
-@Configuration
-@ComponentScan(basePackages = {
-    "cn.org.atool.fluent.mybatis.generate.dao.impl",
-    "cn.org.atool.fluent.mybatis.customize.impl"
-})
+@SpringContext(
+    classes = TestSpringConfig.class,
+    basePackages = {
+        "cn.org.atool.fluent.mybatis.generate.dao.impl",
+        "cn.org.atool.fluent.mybatis.customize.impl"
+    }
+)
 @MapperScan({"cn.org.atool.fluent.mybatis.generate.mapper",
     "cn.org.atool.fluent.mybatis.customize.mapper",
     "cn.org.atool.fluent.mybatis.origin.mapper",
     "cn.org.atool.fluent.mybatis.db"
 })
+public abstract class BaseTest extends Test4J {
+}
+
+@Configuration
 class TestSpringConfig {
     @Bean("dataSource")
     public DataSource newDataSource() {
