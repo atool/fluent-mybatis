@@ -19,7 +19,7 @@
         <mybatis.version>3.5.6</mybatis.version>
         <fluent-mock.version>1.1.2</fluent-mock.version>
         <fluent-dbtest.version>1.0.6</fluent-dbtest.version>
-        <test4j-junit5.version>2.7.8</test4j-junit5.version>
+        <test4j-junit5.version>2.7.9</test4j-junit5.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>
