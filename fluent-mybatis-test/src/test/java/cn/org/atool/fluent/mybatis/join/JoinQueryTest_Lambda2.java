@@ -42,7 +42,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
             .build();
         List<StudentEntity> entities = this.mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("" +
-            "FROM student a1 " +
+            "FROM fluent_mybatis.student a1 " +
             "JOIN home_address a2 " +
             "ON a1.`home_address_id` = a2.`id` " +
             "WHERE a1.`age` = ? " +

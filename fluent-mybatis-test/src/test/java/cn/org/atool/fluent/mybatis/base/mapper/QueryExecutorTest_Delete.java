@@ -21,7 +21,7 @@ class QueryExecutorTest_Delete extends BaseTest {
             .and.userName().eq("test1").end()
             .to().delete();
         db.sqlList().wantFirstSql().eq("" +
-            "DELETE FROM student " +
+            "DELETE FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         ATM.dataMap.student.table(1)
             .userName.values("test2")
@@ -41,7 +41,7 @@ class QueryExecutorTest_Delete extends BaseTest {
             .to().delete();
 
         db.sqlList().wantFirstSql().eq("" +
-            "DELETE FROM student " +
+            "DELETE FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         ATM.dataMap.student.table(1)
             .userName.values("test2")

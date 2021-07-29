@@ -35,7 +35,7 @@ public class QuestionMarkTest extends BaseTest {
             .age.values(24)
             .eqTable();
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), " +
                 "`user_name` = concat(user_name, concat('_\\\\?', ? )), " +
                 "`age` = age+1 " +

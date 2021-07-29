@@ -41,7 +41,7 @@ public class HintTest extends BaseTest {
             .where.userName().eq("test").end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT `id`").contains("FROM /** hint **/ student");
+            .start("SELECT `id`").contains("FROM /** hint **/ fluent_mybatis.student");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class HintTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`,")
-            .contains("FROM student /** hint **/");
+            .contains("FROM fluent_mybatis.student /** hint **/");
     }
 
     @Test
@@ -79,7 +79,7 @@ public class HintTest extends BaseTest {
             .hint(HintType.Before_Table, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().start("SELECT COUNT(*) FROM /** hint **/ student");
+        db.sqlList().wantFirstSql().start("SELECT COUNT(*) FROM /** hint **/ fluent_mybatis.student");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class HintTest extends BaseTest {
         want.exception(() -> mapper.count(query),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().start("" +
-            "SELECT COUNT(*) FROM student force index(create_time) WHERE");
+            "SELECT COUNT(*) FROM fluent_mybatis.student force index(create_time) WHERE");
     }
 
     @Test
@@ -100,7 +100,7 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint("/** hint **/");
         mapper.updateBy(update);
-        db.sqlList().wantFirstSql().start("/** hint **/ UPDATE student");
+        db.sqlList().wantFirstSql().start("/** hint **/ UPDATE fluent_mybatis.student");
     }
 
     @Test
@@ -110,17 +110,17 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint(HintType.After_CrudKey, "/** hint **/");
         mapper.updateBy(update);
-        db.sqlList().wantFirstSql().start("UPDATE /** hint **/ student");
+        db.sqlList().wantFirstSql().start("UPDATE /** hint **/ fluent_mybatis.student");
     }
 
     @Test
     void beforeTableUpdate() {
         StudentUpdate update = new StudentUpdate()
-            .update.userName().is("test").end()
+            .set.userName().is("test").end()
             .where.id().eq(3L).end()
             .hint(HintType.Before_Table, "/** hint **/");
         mapper.updateBy(update);
-        db.sqlList().wantFirstSql().start("UPDATE /** hint **/ student");
+        db.sqlList().wantFirstSql().start("UPDATE /** hint **/ fluent_mybatis.student");
     }
 
     @Test
@@ -130,7 +130,7 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint(HintType.After_Table, "/** hint **/");
         mapper.updateBy(update);
-        db.sqlList().wantFirstSql().start("UPDATE student /** hint **/");
+        db.sqlList().wantFirstSql().start("UPDATE fluent_mybatis.student /** hint **/");
     }
 
     @Test
@@ -139,7 +139,7 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint("/** hint **/");
         mapper.delete(query);
-        db.sqlList().wantFirstSql().start("/** hint **/ DELETE FROM student");
+        db.sqlList().wantFirstSql().start("/** hint **/ DELETE FROM fluent_mybatis.student");
     }
 
     @Test
@@ -148,7 +148,7 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint(HintType.After_CrudKey, "/** hint **/");
         mapper.delete(query);
-        db.sqlList().wantFirstSql().start("DELETE /** hint **/ FROM student");
+        db.sqlList().wantFirstSql().start("DELETE /** hint **/ FROM fluent_mybatis.student");
     }
 
     @Test
@@ -157,7 +157,7 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint(HintType.Before_Table, "/** hint **/");
         mapper.delete(query);
-        db.sqlList().wantFirstSql().start("DELETE FROM /** hint **/ student");
+        db.sqlList().wantFirstSql().start("DELETE FROM /** hint **/ fluent_mybatis.student");
     }
 
     @Test
@@ -166,6 +166,6 @@ public class HintTest extends BaseTest {
             .where.id().eq(3L).end()
             .hint(HintType.After_Table, "/** hint **/");
         mapper.delete(query);
-        db.sqlList().wantFirstSql().start("DELETE FROM student /** hint **/");
+        db.sqlList().wantFirstSql().start("DELETE FROM fluent_mybatis.student /** hint **/");
     }
 }

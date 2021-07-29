@@ -42,15 +42,15 @@ public class CustomizedUpdateTest extends BaseTest {
         FreeQuery query = new FreeQuery(null)
             .setDbType(DbType.MYSQL)
             .customizedByPlaceholder("" +
-                    "SELECT address, age FROM student " +
+                    "SELECT address, age FROM fluent_mybatis.student " +
                     "WHERE id IN (#{value[0]}, #{value[1]}, #{value[2]})",
                 new long[]{1, 2, 3});
 
         mapper.insertSelect(new String[]{"address", "age"}, query);
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO student (`address`, `age`) " +
+            "INSERT INTO fluent_mybatis.student (`address`, `age`) " +
             "SELECT address, age " +
-            "FROM student " +
+            "FROM fluent_mybatis.student " +
             "WHERE id IN (?, ?, ?)");
         db.sqlList().wantFirstPara().eqList(1L, 2L, 3L);
     }
@@ -58,35 +58,35 @@ public class CustomizedUpdateTest extends BaseTest {
     @Test
     void test_updateBy() {
         FreeUpdate updater = new FreeUpdate(null)
-            .customizedByPlaceholder("update student " +
+            .customizedByPlaceholder("UPDATE fluent_mybatis.student " +
                     "set user_name=#{userName}, " +
                     "age=#{age} " +
                     "where id=#{id}",
                 new StudentEntity().setUserName("test").setAge(25).setId(3L));
         mapper.updateBy(updater);
         db.sqlList().wantFirstSql().eq("" +
-            "update student set user_name=?, age=? where id=?");
+            "UPDATE fluent_mybatis.student set user_name=?, age=? where id=?");
         db.sqlList().wantFirstPara().eq(new Object[]{"test", 25, 3L});
     }
 
     @Test
     void test_updateBy2() {
         FreeUpdate updater1 = new FreeUpdate(null)
-            .customizedByPlaceholder("update student " +
+            .customizedByPlaceholder("UPDATE fluent_mybatis.student " +
                     "set user_name=#{userName}, " +
                     "age=#{age} " +
                     "where id=#{id}",
                 new StudentEntity().setUserName("test").setAge(25).setId(3L));
         FreeUpdate updater2 = new FreeUpdate(null)
-            .customizedByQuestion("update student " +
+            .customizedByQuestion("UPDATE fluent_mybatis.student " +
                     "set user_name=?, " +
                     "address=? " +
                     "where id=?",
                 "test", "test", 4L);
         mapper.updateBy(updater1, updater2);
         db.sqlList().wantFirstSql().eq("" +
-            "update student set user_name=?, age=? where id=?; " +
-            "update student set user_name=?, address=? where id=?");
+            "UPDATE fluent_mybatis.student set user_name=?, age=? where id=?; " +
+            "UPDATE fluent_mybatis.student set user_name=?, address=? where id=?");
         db.sqlList().wantFirstPara().eqList("test", 25, 3L, "test", "test", 4L);
     }
 
@@ -94,11 +94,11 @@ public class CustomizedUpdateTest extends BaseTest {
     void test_delete() {
         FreeQuery query = new FreeQuery(null)
             .customizedByPlaceholder("" +
-                    "delete from student " +
+                    "delete FROM fluent_mybatis.student " +
                     "WHERE id IN (#{value[0]}, #{value[1]}, #{value[2]})",
                 new long[]{1, 2, 3});
         mapper.delete(query);
-        db.sqlList().wantFirstSql().eq("delete from student WHERE id IN (?, ?, ?)");
+        db.sqlList().wantFirstSql().eq("delete FROM fluent_mybatis.student WHERE id IN (?, ?, ?)");
         db.sqlList().wantFirstPara().eq(new Object[]{1L, 2L, 3L});
     }
 }

@@ -32,7 +32,7 @@ public class NestedQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t1.`id` " +
-            "FROM student t1 " +
+            "FROM fluent_mybatis.student t1 " +
             "WHERE t1.`id` IN (?, ?, ?) " +
             "AND ( t1.`address` LIKE ? OR t1.`age` >= ? )", StringMode.SameAsSpace);
     }
@@ -47,7 +47,7 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT `id` FROM student " +
+            .eq("SELECT `id` FROM fluent_mybatis.student " +
                 "WHERE EXISTS (SELECT * FROM home_address " +
                 "   WHERE `address` LIKE ? AND `id` =student.home_address_id)", StringMode.SameAsSpace);
     }
@@ -63,7 +63,7 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT `id` FROM student " +
+            .eq("SELECT `id` FROM fluent_mybatis.student " +
                 "WHERE EXISTS (SELECT 1 " +
                 "FROM home_address " +
                 "WHERE `address` LIKE ? " +
@@ -79,8 +79,8 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT `id` FROM student " +
-                "WHERE EXISTS (SELECT `id` FROM student WHERE `id` = ?)");
+            .eq("SELECT `id` FROM fluent_mybatis.student " +
+                "WHERE EXISTS (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?)");
     }
 
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
@@ -94,7 +94,7 @@ public class NestedQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`,")
-            .end("FROM student " +
+            .end("FROM fluent_mybatis.student " +
                 "WHERE `id` IN (SELECT `student_id` " +
                 "   FROM home_address WHERE `address` LIKE ?)", StringMode.SameAsSpace);
     }

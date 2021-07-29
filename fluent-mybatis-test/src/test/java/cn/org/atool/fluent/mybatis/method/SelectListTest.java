@@ -30,7 +30,7 @@ public class SelectListTest extends BaseTest {
             .where.id().eq(24L).end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `id` = ?");
+            .end("FROM fluent_mybatis.student WHERE `id` = ?");
         want.list(users).eqDataMap(ATM.dataMap.student.entity(1)
             .userName.values("u2"));
     }
@@ -46,7 +46,7 @@ public class SelectListTest extends BaseTest {
             .where.userName().eq("u2").end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
         want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
     }
@@ -65,7 +65,7 @@ public class SelectListTest extends BaseTest {
         want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `user_name` = ? LIMIT ?, ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ? LIMIT ?, ?");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class SelectListTest extends BaseTest {
             .limit(2, 3);
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `user_name` = ? LIMIT ?, ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ? LIMIT ?, ?");
         db.sqlList().wantFirstPara().eq(new Object[]{"u2", 2, 3});
     }
 
@@ -96,7 +96,7 @@ public class SelectListTest extends BaseTest {
             .and.gmtCreated().le(new Date(1604170000000L)).end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `gmt_created` > ? AND `gmt_created` <= ?");
+            .end("FROM fluent_mybatis.student WHERE `gmt_created` > ? AND `gmt_created` <= ?");
         want.list(users).eqDataMap(ATM.dataMap.student.entity(3));
     }
 }

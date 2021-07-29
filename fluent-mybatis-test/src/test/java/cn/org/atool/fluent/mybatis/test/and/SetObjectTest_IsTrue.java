@@ -25,7 +25,7 @@ public class SetObjectTest_IsTrue extends BaseTest {
             .where.isDeleted().eq(false).end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student " +
+            "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
             "`user_name` = ?, " +
             "`is_deleted` = ?, " +

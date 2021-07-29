@@ -27,7 +27,7 @@ public class OrderByTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT `id` FROM student WHERE `id` = ? " +
+            .eq("SELECT `id` FROM fluent_mybatis.student WHERE `id` = ? " +
                 "ORDER BY `id` ASC, `age` DESC", StringMode.SameAsSpace);
     }
 }

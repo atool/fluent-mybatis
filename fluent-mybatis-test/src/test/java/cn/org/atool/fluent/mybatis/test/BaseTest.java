@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test;
 
+import cn.org.atool.fluent.mybatis.refs.QueryRef;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -26,6 +27,9 @@ import javax.sql.DataSource;
     "cn.org.atool.fluent.mybatis.db"
 })
 public abstract class BaseTest extends Test4J {
+    static {
+        QueryRef.student.setTableDynamic(n -> "fluent_mybatis." + n);
+    }
 }
 
 @Configuration

@@ -25,7 +25,7 @@ public class UpdateByEntity extends BaseTest {
             .where.id().eq(1).end()
         );
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student " +
+            "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `address` = ?, `user_name` = ? " +
             "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", "test", 1);
@@ -45,7 +45,7 @@ public class UpdateByEntity extends BaseTest {
         mapper.updateBy(updater);
 
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student " +
+            "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ?, `grade` = ? " +
             "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);
@@ -64,7 +64,7 @@ public class UpdateByEntity extends BaseTest {
         mapper.updateBy(updater);
 
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student " +
+            "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ?, `grade` = ? " +
             "WHERE `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", null, 1);

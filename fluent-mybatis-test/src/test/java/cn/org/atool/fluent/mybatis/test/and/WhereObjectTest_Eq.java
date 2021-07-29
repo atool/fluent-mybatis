@@ -22,7 +22,7 @@ public class WhereObjectTest_Eq extends BaseTest {
             .where.age().eq(34).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE `age` = ?", StringMode.SameAsSpace);
+            "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -41,7 +41,7 @@ public class WhereObjectTest_Eq extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE `age` = ?", StringMode.SameAsSpace);
+            "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34});
     }
 
@@ -51,7 +51,7 @@ public class WhereObjectTest_Eq extends BaseTest {
             .where.age().eq(34, o -> false)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student");
         db.sqlList().wantFirstPara().sizeEq(0);
     }
 
@@ -62,7 +62,7 @@ public class WhereObjectTest_Eq extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE `user_name` = ?", StringMode.SameAsSpace);
+            "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `user_name` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{"name"});
     }
 
@@ -72,7 +72,7 @@ public class WhereObjectTest_Eq extends BaseTest {
             .where.userName().eq(null, Objects::nonNull)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student");
         db.sqlList().wantFirstPara().sizeEq(0);
     }
 }

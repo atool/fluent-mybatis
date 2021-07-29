@@ -18,7 +18,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         Object o = QueryRef.student.defaultQuery().to().findOne().orElse(null);
         want.object(o).isNull();
         db.sqlList().wantFirstSql().end("" +
-            "FROM student WHERE `is_deleted` = ? AND `env` = ?");
+            "FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ?");
     }
 
     @Test
@@ -30,7 +30,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
             .where.userName().eq("test1").end()
             .to().findOne(StudentEntity.class).orElse(null);
         want.object(o.getUserName()).eq("test1");
-        db.sqlList().wantFirstSql().end("FROM student WHERE `user_name` = ?");
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }
 
     @Test
@@ -42,7 +42,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
             .where.userName().eq("test1").end()
             .to().findOne(StudentEntity::getUserName).orElse(null);
         want.object(o).eq("test1");
-        db.sqlList().wantFirstSql().end("FROM student WHERE `user_name` = ?");
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }
 
     @Test
@@ -57,7 +57,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
             ).orElse(null);
 
         want.object(o.getUserName()).eq("test1");
-        db.sqlList().wantFirstSql().end("FROM student WHERE `user_name` = ?");
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }
 
     @Autowired
@@ -79,7 +79,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ).orElse(null);
         // 验证结果
         want.object(o.getUserName()).eq("test1");
-        db.sqlList().wantFirstSql().end("FROM student WHERE `user_name` = ?");
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }
 
 
@@ -92,6 +92,6 @@ public class QueryExecutorTest_FindOne extends BaseTest {
             .where.userName().eq("test1").end()
             .to().findOneMap().orElse(null);
         want.object(map.get("user_name")).eq("test1");
-        db.sqlList().wantFirstSql().end("FROM student WHERE `user_name` = ?");
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }
 }

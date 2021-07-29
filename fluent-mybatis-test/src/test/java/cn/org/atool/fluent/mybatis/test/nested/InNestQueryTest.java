@@ -34,8 +34,8 @@ public class InNestQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT `id`, `age` " +
-                "FROM student " +
-                "WHERE (id, age) IN (SELECT `id`, `age` FROM student WHERE `id` = ?) " +
+                "FROM fluent_mybatis.student " +
+                "WHERE (id, age) IN (SELECT `id`, `age` FROM fluent_mybatis.student WHERE `id` = ?) " +
                 "AND `user_name` LIKE ? " +
                 "AND `age` > ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList(3L, "%user%", 23);
@@ -55,8 +55,8 @@ public class InNestQueryTest extends BaseTest {
 
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT `id`, SUM(`age`) FROM student " +
-                "WHERE `id` IN (SELECT `id` FROM student WHERE `id` = ?) " +
+            .eq("SELECT `id`, SUM(`age`) FROM fluent_mybatis.student " +
+                "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?) " +
                 "AND `user_name` LIKE ? " +
                 "AND `age` > ? " +
                 "GROUP BY `id` " +
@@ -72,7 +72,7 @@ public class InNestQueryTest extends BaseTest {
 
         List list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("WHERE `id` IN (SELECT `id` FROM student WHERE `id` = ?) " +
+            .end("WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?) " +
                 "AND `user_name` LIKE ?");
     }
 
@@ -85,7 +85,7 @@ public class InNestQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT `id` FROM student " +
+            .eq("SELECT `id` FROM fluent_mybatis.student " +
                 "WHERE `home_address_id` IN (SELECT `id` " +
                 "   FROM home_address WHERE `id` IN (?, ?))", StringMode.SameAsSpace);
     }

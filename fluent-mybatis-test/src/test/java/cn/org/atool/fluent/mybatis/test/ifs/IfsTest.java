@@ -28,7 +28,7 @@ public class IfsTest extends BaseTest {
         mapper.updateBy(update);
         // 验证SQL语句
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student " +
+                "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `address` = ? " +
                 "WHERE `id` = ?",
             StringMode.SameAsSpace);
@@ -50,7 +50,7 @@ public class IfsTest extends BaseTest {
         mapper.updateBy(update);
         // 验证SQL语句
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student " +
+                "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `address` = ? " +
                 "WHERE `id` = ?",
             StringMode.SameAsSpace);
@@ -77,7 +77,7 @@ public class IfsTest extends BaseTest {
 
         // 验证SQL语句
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student " +
+                "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `address` = ? " +
                 "WHERE `id` = ?",
             StringMode.SameAsSpace);
@@ -101,7 +101,7 @@ public class IfsTest extends BaseTest {
 
         // 验证SQL语句
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student SET `gmt_modified` = now(), `address` = ? " +
+                "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `address` = ? " +
                 "WHERE `id` IN (?, ?)",
             StringMode.SameAsSpace);
         // 验证参数
@@ -125,7 +125,7 @@ public class IfsTest extends BaseTest {
 
         // 验证SQL语句
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student " +
+                "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `address` = ? WHERE `id` IN (?, ?)",
             StringMode.SameAsSpace);
         // 验证参数

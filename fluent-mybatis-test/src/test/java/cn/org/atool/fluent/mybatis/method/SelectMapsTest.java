@@ -29,7 +29,7 @@ public class SelectMapsTest extends BaseTest {
             .where.id().eq(24L).end();
         List<Map<String, Object>> users = mapper.listMaps(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `id` = ?");
+            .end("FROM fluent_mybatis.student WHERE `id` = ?");
         want.list(users).eqDataMap(ATM.dataMap.student.table(1)
             .userName.values("u2"));
     }
@@ -45,7 +45,7 @@ public class SelectMapsTest extends BaseTest {
             .where.userName().eq("u2").end();
         List<Map<String, Object>> users = mapper.listMaps(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
         want.list(users).eqDataMap(ATM.dataMap.student.table(2)
             .userName.values("u2"));
     }

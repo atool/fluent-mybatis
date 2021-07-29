@@ -28,7 +28,7 @@ public class SelectOneTest extends BaseTest {
             MyBatisSystemException.class)
             .contains("Expected one result (or null) to be returned by selectOne(), but found");
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student " +
+            .end("FROM fluent_mybatis.student " +
                 "WHERE `is_deleted` = ? " +
                 "AND `env` = ? " +
                 "AND `user_name` LIKE ?", StringMode.SameAsSpace);
@@ -44,7 +44,7 @@ public class SelectOneTest extends BaseTest {
         String username = dao.selectOne(5);
         want.string(username).eq("username_5");
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student " +
+            .end("FROM fluent_mybatis.student " +
                 "WHERE `is_deleted` = ? " +
                 "AND `env` = ? " +
                 "AND `id` = ?", StringMode.SameAsSpace);

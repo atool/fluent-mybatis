@@ -19,7 +19,7 @@ class UpdateApplyTest extends BaseTest {
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET `gmt_modified` = now(), `age` = ? WHERE `id` = ?");
+            .eq("UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `age` = ? WHERE `id` = ?");
     }
 
     @Test
@@ -67,7 +67,7 @@ class UpdateApplyTest extends BaseTest {
             .and.address().like(address, If::notBlank).end()
         );
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE `age` = ? AND `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `age` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara().eqList(43, "my name is fluent mybatis");
     }
 
@@ -89,7 +89,7 @@ class UpdateApplyTest extends BaseTest {
         }
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE `age` = ? AND `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `age` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara().eqList(43, "my name is fluent mybatis");
     }
 

@@ -31,9 +31,9 @@ public class InsertSelectTest extends BaseTest {
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("INSERT INTO student (`address`, `age`) " +
+            .eq("INSERT INTO fluent_mybatis.student (`address`, `age`) " +
                 "SELECT `address`, `age` " +
-                "FROM student WHERE `id` IN (?, ?, ?)");
+                "FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)");
         want.number(count).eq(3);
         ATM.dataMap.student.table(6)
             .address.values("address1", "address2", "address3", "address1", "address2", "address3")
@@ -53,7 +53,7 @@ public class InsertSelectTest extends BaseTest {
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
         db.sqlList().wantFirstSql()
-            .eq("SELECT `address`, `age` FROM student WHERE `id` IN (?, ?, ?)");
+            .eq("SELECT `address`, `age` FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)");
         want.list(list).sizeEq(3);
     }
 
@@ -70,7 +70,7 @@ public class InsertSelectTest extends BaseTest {
         );
         db.sqlList().wantFirstSql()
             .eq("SELECT `address` AS address_alias, `age` " +
-                "FROM student WHERE `id` IN (?, ?, ?)");
+                "FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)");
         want.list(list).sizeEq(3);
     }
 
@@ -91,12 +91,12 @@ public class InsertSelectTest extends BaseTest {
 
         db.sqlList().wantFirstSql()
             .containsInOrder(
-                "INSERT INTO student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
-                "INSERT INTO student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
-                "INSERT INTO student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)")
+                "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
+                "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
+                "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)")
             .end("INSERT INTO student (`user_name`, `age`, `address`) " +
                     "SELECT `user_name`, 40, 'test address' " +
-                    "FROM student " +
+                    "FROM fluent_mybatis.student " +
                     "WHERE `user_name` LIKE ?",
                 StringMode.SameAsSpace);
         ATM.dataMap.student.table(5)

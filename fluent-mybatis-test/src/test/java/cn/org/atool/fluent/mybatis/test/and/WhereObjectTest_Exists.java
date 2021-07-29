@@ -20,25 +20,25 @@ public class WhereObjectTest_Exists extends BaseTest {
     void test_exists() {
         StudentQuery query = new StudentQuery()
             .where.isDeleted().eq(true)
-            .and.exists("select 1 from student where age=?", 34)
+            .and.exists("select 1 FROM fluent_mybatis.student where age=?", 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT(*) " +
-                "FROM student " +
-                "WHERE `is_deleted` = ? AND EXISTS (select 1 from student where age=?)");
+                "FROM fluent_mybatis.student " +
+                "WHERE `is_deleted` = ? AND EXISTS (select 1 FROM fluent_mybatis.student where age=?)");
     }
 
     @Test
     void test_not_exists() {
         StudentQuery query = new StudentQuery()
             .where.isDeleted().eq(true)
-            .and.notExists("select 1 from student where age=?", 34)
+            .and.notExists("select 1 FROM fluent_mybatis.student where age=?", 34)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM student " +
+            .eq("SELECT COUNT(*) FROM fluent_mybatis.student " +
                 "WHERE `is_deleted` = ? " +
-                "AND NOT EXISTS (select 1 from student where age=?)");
+                "AND NOT EXISTS (select 1 FROM fluent_mybatis.student where age=?)");
     }
 }

@@ -28,7 +28,7 @@ public class SelectOneTest extends BaseTest {
             .where.id().eq(24L).end();
         StudentEntity student = mapper.findOne(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `id` = ?");
+            .end("FROM fluent_mybatis.student WHERE `id` = ?");
         want.object(student).eqDataMap(ATM.dataMap.student.entity(1)
             .userName.values("u2"));
     }
@@ -45,6 +45,6 @@ public class SelectOneTest extends BaseTest {
         want.exception(() -> mapper.findOne(query), MyBatisSystemException.class)
             .contains("Expected one result (or null) to be returned by selectOne(), but found: 2");
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }
 }

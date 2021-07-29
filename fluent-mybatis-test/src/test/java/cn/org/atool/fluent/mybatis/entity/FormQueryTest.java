@@ -41,7 +41,7 @@ public class FormQueryTest extends BaseTest {
             .leftLike().address()
             .query().to().tagPagedEntity();
 
-        db.sqlList().wantFirstSql().end("FROM student " +
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
             "AND `user_name` = ? " +

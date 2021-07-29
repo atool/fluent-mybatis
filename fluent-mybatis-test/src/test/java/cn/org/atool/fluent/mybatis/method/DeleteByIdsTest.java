@@ -21,7 +21,7 @@ public class DeleteByIdsTest extends BaseTest {
             .cleanAndInsert();
         mapper.deleteByIds(Arrays.asList(24, 27, 25));
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
+            .eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
         ATM.dataMap.student.table(2)
             .id.values(23L, 26L)
             .userName.values("user1", "user2")
@@ -32,7 +32,7 @@ public class DeleteByIdsTest extends BaseTest {
     public void testLogicDeleteByIds() {
         mapper.logicDeleteByIds(Arrays.asList(24, 27, 25));
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET `is_deleted` = true WHERE `id` IN (?, ?, ?)",
+            .eq("UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` IN (?, ?, ?)",
                 StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eq(new Object[]{24, 27, 25});
     }

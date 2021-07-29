@@ -26,7 +26,7 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE `address` = ? AND `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `address` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara()
             .eqList("address", "test");
     }
@@ -44,7 +44,7 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE `user_name` = ? AND `age` IS NULL");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ? AND `age` IS NULL");
         db.sqlList().wantFirstPara()
             .eqList("test");
     }
@@ -63,7 +63,7 @@ public class WhereEqByEntity extends BaseTest {
         mapper.listEntity(query);
 
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE `user_name` = ? AND `age` IS NULL");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ? AND `age` IS NULL");
         db.sqlList().wantFirstPara()
             .eqList("test");
     }

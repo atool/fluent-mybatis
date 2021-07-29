@@ -33,7 +33,7 @@ public class CaseFuncTest extends BaseTest {
         mapper.updateBy(update);
         // 验证SQL语句
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                     "SET `gmt_modified` = now(), " +
                     "`address` = case id when 1 then 'address 1' when 2 then 'address 2' else 'address 3' end " +
                     "WHERE `id` = ?",
@@ -49,7 +49,7 @@ public class CaseFuncTest extends BaseTest {
         ));
         /** 验证执行的SQL语句 **/
         db.sqlList().wantFirstSql().eq("" +
-                "update student " +
+                "UPDATE student " +
                 "set address =case id when ? then ? when ? then ? when ? then ? end, " +
                 "age =case id when ? then ? when ? then ? when ? then ? end " +
                 "where id in ( ? , ? , ? )"
@@ -70,7 +70,7 @@ public class CaseFuncTest extends BaseTest {
         mapper.updateBy(update);
         // 验证SQL语句
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                     "SET `gmt_modified` = now(), " +
                     "`address` = case id when 1 then ? when 2 then ? else ? end, " +
                     "`age` = case id when 1 then ? when 2 then ? else ? end " +
@@ -99,7 +99,7 @@ public class CaseFuncTest extends BaseTest {
         mapper.updateBy(update);
         // 验证SQL语句
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                     "SET `gmt_modified` = now(), " +
                     "`address` = case id when 1 then ? when 2 then ? else ? end, " +
                     "`age` = case id when 1 then ? when 2 then ? else ? end " +

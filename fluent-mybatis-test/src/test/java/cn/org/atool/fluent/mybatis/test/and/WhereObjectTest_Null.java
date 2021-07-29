@@ -17,7 +17,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE `age` IS NULL");
+            "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IS NULL");
     }
 
     @Test
@@ -27,7 +27,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE `age` IS NULL");
+            "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IS NULL");
     }
 
     @Test
@@ -36,7 +36,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().isNull(false)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM student WHERE `age` IS NOT NULL");
+            .eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IS NOT NULL");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class WhereObjectTest_Null extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT COUNT(*) FROM student WHERE `age` IS NOT NULL");
+            "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IS NOT NULL");
     }
 
     @Test
@@ -65,6 +65,6 @@ public class WhereObjectTest_Null extends BaseTest {
             .where.age().notNull(false)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student");
     }
 }

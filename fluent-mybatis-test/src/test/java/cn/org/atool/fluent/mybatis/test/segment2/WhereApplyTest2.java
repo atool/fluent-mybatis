@@ -27,7 +27,7 @@ public class WhereApplyTest2 extends BaseTest {
             .end()
         );
         db.sqlList().wantFirstSql()
-            .end("FROM student WHERE `gmt_modified` > DATE_ADD(gmt_created, INTERVAL ? DAY)");
+            .end("FROM fluent_mybatis.student WHERE `gmt_modified` > DATE_ADD(gmt_created, INTERVAL ? DAY)");
         db.sqlList().wantFirstPara().eqList(10);
     }
 }

@@ -25,7 +25,7 @@ public class UpdateTest extends BaseTest {
             .cleanAndInsert();
 
         dao.updateUserNameById("new_user_name", 4L);
-        db.sqlList().wantFirstSql().eq("UPDATE student " +
+        db.sqlList().wantFirstSql().eq("UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         db.table(ATM.table.student).queryWhere("id=4")

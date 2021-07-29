@@ -29,7 +29,7 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql().eq("" +
-            "DELETE FROM student " +
+            "DELETE FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         db.table(ATM.table.student).count().eq(8);
     }
@@ -42,7 +42,7 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student SET `is_deleted` = true " +
+            "UPDATE fluent_mybatis.student SET `is_deleted` = true " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         db.sqlList().wantFirstPara().eq(new Object[]{false, "test_env", "test12"});
     }

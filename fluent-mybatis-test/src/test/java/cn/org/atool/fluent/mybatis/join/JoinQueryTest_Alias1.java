@@ -50,7 +50,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         String a2 = addressQuery.getTableAlias();
         IDatabase.db.sqlList().wantFirstSql().eq(
             format("SELECT %s.`age`, %s.`student_id` ", a1, a2) +
-                format("FROM student %s ", a1) +
+                format("FROM fluent_mybatis.student %s ", a1) +
                 format("JOIN home_address %s ", a2) +
                 format("ON %s.`id` = %s.`id` ", a1, a2) +
                 format("AND %s.`id` = ? AND %s.`age` = ? ", a1, a1) +
@@ -92,7 +92,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
-                "FROM student t1 " +
+                "FROM fluent_mybatis.student t1 " +
                 "LEFT JOIN home_address t2 " +
                 "ON t1.`id` = t2.`id` " +
                 "AND t1.`age` = t2.`student_id` " +
@@ -107,7 +107,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "LIMIT ?, ?");this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
-                "FROM student t1 " +
+                "FROM fluent_mybatis.student t1 " +
                 "LEFT JOIN home_address t2 " +
                 "ON t1.`id` = t2.`id` " +
                 "AND t1.`age` = t2.`student_id` " +
@@ -122,7 +122,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "LIMIT ?, ?");this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
-                "FROM student t1 " +
+                "FROM fluent_mybatis.student t1 " +
                 "LEFT JOIN home_address t2 " +
                 "ON t1.`id` = t2.`id` " +
                 "AND t1.`age` = t2.`student_id` " +
@@ -137,7 +137,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "LIMIT ?, ?");this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
-                "FROM student t1 " +
+                "FROM fluent_mybatis.student t1 " +
                 "LEFT JOIN home_address t2 " +
                 "ON t1.`id` = t2.`id` " +
                 "AND t1.`age` = t2.`student_id` " +
@@ -167,7 +167,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .build();
         this.mapper.listMaps(query);
         IDatabase.db.sqlList().wantFirstSql()
-            .end("FROM student t1 RIGHT JOIN home_address t2 " +
+            .end("FROM fluent_mybatis.student t1 RIGHT JOIN home_address t2 " +
                 "ON t1.`id` = t2.`id` " +
                 "WHERE t1.`is_deleted` = ? " +
                 "AND t1.`age` IS NULL " +
@@ -193,7 +193,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
         this.mapper.listMaps(query);
         IDatabase.db.sqlList().wantFirstSql()
             .contains(new String[]{"t1.id", "t2.id", "t3.id"})
-            .end("FROM student t1 LEFT JOIN home_address t2 " +
+            .end("FROM fluent_mybatis.student t1 LEFT JOIN home_address t2 " +
                 "ON t1.`home_address_id` = t2.`id` " +
                 "LEFT JOIN student_score t3 ON t1.`id` = t3.`student_id` " +
                 "WHERE t1.`age` = ? " +

@@ -33,7 +33,7 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), " +
                 "`is_deleted` = ?, " +
                 "`age` = ?, `user_name` = ? " +
@@ -62,7 +62,7 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_created` = ?, `gmt_modified` = now(), " +
                 "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
@@ -91,7 +91,7 @@ public class UpdateByIdTest extends BaseTest {
 
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student " +
+            .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_created` = ?, `gmt_modified` = ?, " +
                 "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);

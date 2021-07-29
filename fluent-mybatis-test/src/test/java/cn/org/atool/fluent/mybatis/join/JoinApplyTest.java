@@ -39,7 +39,7 @@ public class JoinApplyTest extends BaseTest {
         mapper.listMaps(query.build());
         db.sqlList().wantFirstSql().eq(
             format("SELECT %s.`age`, %s.`student_id` ", alias1, alias2) +
-                format("FROM student %s ", alias1) +
+                format("FROM fluent_mybatis.student %s ", alias1) +
                 format("JOIN home_address %s ", alias2) +
                 format("ON %s.id = %s.id ", alias1, alias2) +
                 format("OR %s.age = %s.student_id ", alias1, alias2) +

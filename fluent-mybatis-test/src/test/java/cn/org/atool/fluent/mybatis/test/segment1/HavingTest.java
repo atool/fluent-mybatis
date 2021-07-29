@@ -30,8 +30,8 @@ public class HavingTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT `gender`, SUM(`age`) AS avg " +
-            "FROM student WHERE `id` > ? " +
-            "GROUP BY `gender` HAVING AVG(`age`) > (SELECT `age` FROM student WHERE `id` = ?)");
+            "FROM fluent_mybatis.student WHERE `id` > ? " +
+            "GROUP BY `gender` HAVING AVG(`age`) > (SELECT `age` FROM fluent_mybatis.student WHERE `id` = ?)");
         db.sqlList().wantFirstPara().eqList(24L, 34);
     }
 
@@ -46,7 +46,7 @@ public class HavingTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT `gender`, SUM(`age`) AS avg " +
-            "FROM student WHERE `id` > ? " +
+            "FROM fluent_mybatis.student WHERE `id` > ? " +
             "GROUP BY `gender` HAVING AVG(`age`) > (? + ?)");
         db.sqlList().wantFirstPara().eqList(24L, 12, 23);
     }
@@ -67,7 +67,7 @@ public class HavingTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT `gender`, SUM(`age`) AS avg " +
-                "FROM student WHERE `id` > ? " +
+                "FROM fluent_mybatis.student WHERE `id` > ? " +
                 "GROUP BY `gender` " +
                 "HAVING SUM(`age`) BETWEEN ? AND ? " +
                 "AND COUNT(`id`) > ? " +
@@ -93,7 +93,7 @@ public class HavingTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT SUM(`age`) AS avg, `id` FROM student WHERE `id` = ? " +
+            .eq("SELECT SUM(`age`) AS avg, `id` FROM fluent_mybatis.student WHERE `id` = ? " +
                 "GROUP BY `id` " +
                 "HAVING MAX(`age`) < ? AND SUM(age) < ?");
     }

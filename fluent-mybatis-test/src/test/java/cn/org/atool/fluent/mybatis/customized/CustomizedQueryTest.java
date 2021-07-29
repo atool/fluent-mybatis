@@ -18,7 +18,7 @@ public class CustomizedQueryTest extends BaseTest {
     void test_count() {
         FreeQuery query = new FreeQuery(null)
             .customizedByPlaceholder("" +
-                "select count(1) from student " +
+                "select count(1) FROM fluent_mybatis.student " +
                 "where id < #{value}", 10);
         mapper.count(query);
     }
@@ -31,7 +31,7 @@ public class CustomizedQueryTest extends BaseTest {
             .cleanAndInsert();
         FreeQuery query = new FreeQuery(null)
             .customizedByPlaceholder("" +
-                    "select * from student " +
+                    "select * FROM fluent_mybatis.student " +
                     "where user_name like #{userName} " +
                     "and age > ${age}",
                 new StudentEntity()
@@ -39,7 +39,7 @@ public class CustomizedQueryTest extends BaseTest {
                     .setAge(20));
         List<StudentEntity> list = mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
-            "select * from student where user_name like ? and age > 20");
+            "select * FROM fluent_mybatis.student where user_name like ? and age > 20");
         db.sqlList().wantFirstPara().eqList("xyz%");
         want.list(list).eqByProperties("userName",
             new String[]{"xyz2", "xyz3"});
@@ -49,13 +49,13 @@ public class CustomizedQueryTest extends BaseTest {
     void test_list_maps() {
         FreeQuery query = new FreeQuery(null)
             .customizedByQuestion("" +
-                    "select * from student " +
+                    "select * FROM fluent_mybatis.student " +
                     "where user_name like ? " +
                     "and age > ?",
                 "xyz%", 20);
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().eq("" +
-            "select * from student where user_name like ? and age > ?");
+            "select * FROM fluent_mybatis.student where user_name like ? and age > ?");
         db.sqlList().wantFirstPara().eqList("xyz%", 20);
     }
 
@@ -63,13 +63,13 @@ public class CustomizedQueryTest extends BaseTest {
     void test_list_objs() {
         FreeQuery query = new FreeQuery(null)
             .customizedByQuestion("" +
-                    "select * from student " +
+                    "select * FROM fluent_mybatis.student " +
                     "where user_name like ? " +
                     "and age > ?",
                 "xyz%", 20);
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +
-            "select * from student where user_name like ? and age > ?");
+            "select * FROM fluent_mybatis.student where user_name like ? and age > ?");
         db.sqlList().wantFirstPara().eqList("xyz%", 20);
     }
 
@@ -78,13 +78,13 @@ public class CustomizedQueryTest extends BaseTest {
     void test_findOne() {
         FreeQuery query = new FreeQuery(null)
             .customizedByQuestion("" +
-                    "select * from student " +
+                    "select * FROM fluent_mybatis.student " +
                     "where user_name like ? " +
                     "and age > ?",
                 "xyz%", 20);
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
-            "select * from student where user_name like ? and age > ?");
+            "select * FROM fluent_mybatis.student where user_name like ? and age > ?");
         db.sqlList().wantFirstPara().eqList("xyz%", 20);
     }
 }

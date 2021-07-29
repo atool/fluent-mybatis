@@ -17,7 +17,7 @@ public class AliasTest extends BaseTest {
             .select.userName("u").end()
             .orderBy.desc("u").end();
         mapper.listObjs(query);
-        db.sqlList().wantFirstSql().eq("SELECT t.`user_name` AS u FROM student t ORDER BY u DESC");
+        db.sqlList().wantFirstSql().eq("SELECT t.`user_name` AS u FROM fluent_mybatis.student t ORDER BY u DESC");
     }
 
     @Test
@@ -29,7 +29,7 @@ public class AliasTest extends BaseTest {
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t.`user_name` AS u, SUM(t.`age`) AS a " +
-            "FROM student t " +
+            "FROM fluent_mybatis.student t " +
             "GROUP BY u " +
             "HAVING a > ?");
     }
@@ -40,6 +40,6 @@ public class AliasTest extends BaseTest {
             .select.apply("*").end();
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT * FROM (SELECT * FROM student WHERE `age` > ?) aa");
+            "SELECT * FROM (SELECT * FROM fluent_mybatis.student WHERE `age` > ?) aa");
     }
 }

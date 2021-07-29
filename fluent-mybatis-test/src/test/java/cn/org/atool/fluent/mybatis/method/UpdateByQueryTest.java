@@ -24,7 +24,7 @@ public class UpdateByQueryTest extends BaseTest {
             .applyFunc("1=1").end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student " +
+            "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `id` = ? AND 1=1", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
@@ -46,7 +46,7 @@ public class UpdateByQueryTest extends BaseTest {
             .or.applyFunc("user_name=?", "xxx").end();
         mapper.updateBy(update);
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET `gmt_modified` = now(), `user_name` = ? " +
+            .eq("UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? " +
                 "WHERE `id` = ? " +
                 "AND user_name='user2' " +
                 "OR user_name=?", StringMode.SameAsSpace);

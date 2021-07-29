@@ -33,7 +33,7 @@ public class SelectObjsTest extends BaseTest {
             .end();
         List<String> users = mapper.listObjs(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `id` = ?");
+            .end("FROM fluent_mybatis.student WHERE `id` = ?");
         want.list(users).eqReflect(new String[]{"u2"});
     }
 
@@ -50,7 +50,7 @@ public class SelectObjsTest extends BaseTest {
             .end();
         List<String> users = mapper.listObjs(query);
         db.sqlList().wantFirstSql().start("SELECT")
-            .end("FROM student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
         want.list(users).eqReflect(new String[]{"u2", "u2"});
     }
 }

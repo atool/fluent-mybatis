@@ -21,7 +21,7 @@ public class WhereObjectTest_In extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+            .eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -32,7 +32,7 @@ public class WhereObjectTest_In extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM student WHERE `address` IN (?, ?)"
+            .eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `address` IN (?, ?)"
                 , StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new String[]{"a1", "a2"});
     }
@@ -43,7 +43,7 @@ public class WhereObjectTest_In extends BaseTest {
             .where.age().in(Arrays.asList(34, 35), o -> true)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -53,7 +53,7 @@ public class WhereObjectTest_In extends BaseTest {
             .where.age().in(Arrays.asList(34, 35), If::notEmpty)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -63,7 +63,7 @@ public class WhereObjectTest_In extends BaseTest {
             .where.age().in(new int[]{34, 35})
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -73,7 +73,7 @@ public class WhereObjectTest_In extends BaseTest {
             .where.age().in(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -85,7 +85,7 @@ public class WhereObjectTest_In extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) " +
-            "FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+            "FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -95,7 +95,7 @@ public class WhereObjectTest_In extends BaseTest {
             .where.age().in(new Integer[]{34, 35}, If::notEmpty)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student WHERE `age` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqReflect(new Object[]{34, 35});
     }
 
@@ -105,19 +105,19 @@ public class WhereObjectTest_In extends BaseTest {
             .where.age().in(new Integer[0], If::notEmpty)
             .end();
         mapper.count(query);
-        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM student");
+        db.sqlList().wantFirstSql().eq("SELECT COUNT(*) FROM fluent_mybatis.student");
     }
 
     @Test
     public void in_select() {
         StudentQuery query = new StudentQuery()
-            .where.id().in("select id from student where age =?", 24)
+            .where.id().in("select id FROM fluent_mybatis.student where age =?", 24)
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) " +
-            "FROM student " +
-            "WHERE `id` IN (select id from student where age =?)");
+            "FROM fluent_mybatis.student " +
+            "WHERE `id` IN (select id FROM fluent_mybatis.student where age =?)");
     }
 
     @Test
@@ -130,7 +130,7 @@ public class WhereObjectTest_In extends BaseTest {
             .end();
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .eq("SELECT COUNT(*) FROM student " +
-                "WHERE `id` IN (SELECT `id` FROM student WHERE `age` = ? AND `id` = ?)");
+            .eq("SELECT COUNT(*) FROM fluent_mybatis.student " +
+                "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `age` = ? AND `id` = ?)");
     }
 }

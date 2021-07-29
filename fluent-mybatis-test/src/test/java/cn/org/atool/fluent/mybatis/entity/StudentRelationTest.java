@@ -19,7 +19,7 @@ public class StudentRelationTest extends BaseTest {
 
         StudentEntity deskMate = new StudentEntity().setId(1L).findDeskMate();
         // 验证执行的SQL语句
-        db.sqlList().wantFirstSql().end("FROM student WHERE `desk_mate_id` = ?");
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `desk_mate_id` = ?");
         db.sqlList().wantFirstPara().eqList(1L);
         // 验证返回的同桌数据
         want.object(deskMate).eqReflect(ATM.dataMap.student.entity(1)
@@ -47,7 +47,7 @@ public class StudentRelationTest extends BaseTest {
         new TeacherEntity().setId(200L).findStudentList();
         // 验证SQL语句
         db.sqlList().wantFirstSql().end("" +
-            "FROM student " +
+            "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
             "AND `id` IN " +

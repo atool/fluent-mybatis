@@ -35,10 +35,10 @@ public class BatchCrudTest extends BaseTest {
     @Test
     public void testUpdateBatch_different() {
         StudentUpdate update1 = new StudentUpdate()
-            .update.userName().is("user name23").end()
+            .set.userName().is("user name23").end()
             .where.id().eq(23L).end();
         HomeAddressUpdate update2 = new HomeAddressUpdate()
-            .update.address().is("address 24").end()
+            .set.address().is("address 24").end()
             .where.id().eq(24L).end();
         mapper.batchCrud(BatchCrud.batch()
             .addInsert(
@@ -49,11 +49,11 @@ public class BatchCrudTest extends BaseTest {
         );
         db.sqlList().wantFirstSql()
             .eq("" +
-                    "INSERT INTO student(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`, `user_name`) " +
+                    "INSERT INTO fluent_mybatis.student(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`, `user_name`) " +
                     "VALUES (?, now(), now(), 0, ?, ?, ?); " +
                     "INSERT INTO home_address(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
                     "VALUES (now(), now(), 0, ?, ?, ?, ?); " +
-                    "UPDATE student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
+                    "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
                     "UPDATE home_address SET `gmt_modified` = now(), `address` = ? WHERE `id` = ?; " +
                     "DELETE FROM home_address WHERE `id` >= ?"
                 , StringMode.SameAsSpace);

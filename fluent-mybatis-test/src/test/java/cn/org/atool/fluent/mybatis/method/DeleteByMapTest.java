@@ -30,7 +30,7 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM student WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM fluent_mybatis.student WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L).eqTable()
         );
@@ -45,7 +45,7 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .eq("UPDATE student SET `is_deleted` = true WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
+            .eq("UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eq(new Object[]{"user2", 24});
     }
 

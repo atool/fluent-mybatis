@@ -32,7 +32,7 @@ public class SelectByMapTest extends BaseTest {
         });
         db.sqlList().wantFirstSql()
             .start("SELECT")
-            .end("FROM student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
         want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
     }

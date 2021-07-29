@@ -31,7 +31,7 @@ public class SelectCountTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .where.id().eq(24L).end();
         int count = mapper.count(query);
-        db.sqlList().wantFirstSql().start("SELECT COUNT(*)").end("FROM student WHERE `id` = ?");
+        db.sqlList().wantFirstSql().start("SELECT COUNT(*)").end("FROM fluent_mybatis.student WHERE `id` = ?");
         want.number(count).eq(1);
     }
 
@@ -47,7 +47,7 @@ public class SelectCountTest extends BaseTest {
         int count = mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT(`id`)")
-            .end("FROM student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
         want.number(count).eq(2);
     }
 
@@ -64,7 +64,7 @@ public class SelectCountTest extends BaseTest {
         int count = mapper.count(query);
         db.sqlList().wantFirstSql()
             .start("SELECT COUNT(`id`)")
-            .end("FROM student WHERE `user_name` = ? LIMIT ?, ?");
+            .end("FROM fluent_mybatis.student WHERE `user_name` = ? LIMIT ?, ?");
         want.number(count).eq(2);
     }
 }
