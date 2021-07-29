@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
+@SuppressWarnings("unchecked")
 public interface IEntity extends Serializable {
     /**
      * 返回实体主键
@@ -79,9 +82,19 @@ public interface IEntity extends Serializable {
      * 动态修改归属表, 默认无需设置
      * 只有在插入数据时, 不想使用默认对应的数据库表, 想动态调整时才需要
      *
-     * @param table 动态归属表
+     * @param supplier 动态归属表
      */
-    default <E extends IEntity> E changeTableBelongTo(String table) {
+    default <E extends IEntity> E changeTableBelongTo(TableSupplier supplier) {
+        return (E) this;
+    }
+
+    /**
+     * 动态修改归属表, 默认无需设置
+     * 只有在插入数据时, 不想使用默认对应的数据库表, 想动态调整时才需要
+     *
+     * @param supplier 动态归属表
+     */
+    default <E extends IEntity> E changeTableBelongTo(String supplier) {
         return (E) this;
     }
 

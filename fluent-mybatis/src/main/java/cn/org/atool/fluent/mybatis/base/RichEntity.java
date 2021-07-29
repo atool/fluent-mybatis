@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 
 import java.util.Map;
 import java.util.Optional;
@@ -78,16 +79,22 @@ public abstract class RichEntity implements IEntity, IRichEntity {
     /**
      * 归属表, 默认无需设置
      */
-    private String tableBelongTo;
+    private TableSupplier supplier;
+
+    @Override
+    public <E extends IEntity> E changeTableBelongTo(TableSupplier supplier) {
+        this.supplier = supplier;
+        return (E) this;
+    }
 
     @Override
     public <E extends IEntity> E changeTableBelongTo(String table) {
-        this.tableBelongTo = table;
+        this.supplier = e -> table;
         return (E) this;
     }
 
     @Override
     public String findTableBelongTo() {
-        return this.tableBelongTo;
+        return this.supplier == null ? null : this.supplier.get(this);
     }
 }
