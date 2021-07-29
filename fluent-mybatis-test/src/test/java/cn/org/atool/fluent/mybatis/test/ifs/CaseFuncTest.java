@@ -49,7 +49,7 @@ public class CaseFuncTest extends BaseTest {
         ));
         /** 验证执行的SQL语句 **/
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE student " +
+                "update student " +
                 "set address =case id when ? then ? when ? then ? when ? then ? end, " +
                 "age =case id when ? then ? when ? then ? when ? then ? end " +
                 "where id in ( ? , ? , ? )"
