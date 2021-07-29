@@ -48,14 +48,6 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addType(this.nestedUpdateSetter());
     }
 
-    private FieldSpec f_defaults() {
-        return FieldSpec.builder(fluent.defaults(),
-            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
-            .addJavadoc("默认设置器")
-            .initializer("$T.INSTANCE", fluent.defaults())
-            .build();
-    }
-
     /**
      * public interface ISegment<R> {}
      *

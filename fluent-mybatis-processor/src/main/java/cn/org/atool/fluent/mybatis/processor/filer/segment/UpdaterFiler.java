@@ -79,14 +79,6 @@ public class UpdaterFiler extends AbstractFiler {
             .build();
     }
 
-    private FieldSpec f_defaults() {
-        return FieldSpec.builder(fluent.defaults(),
-            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
-            .addJavadoc("默认设置器")
-            .initializer("$T.INSTANCE", fluent.defaults())
-            .build();
-    }
-
     private FieldSpec f_setter() {
         return FieldSpec.builder(fluent.updateSetter(),
             "set", Modifier.PUBLIC, Modifier.FINAL)
@@ -127,7 +119,7 @@ public class UpdaterFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("this(()-> $T.Table_Name, null)", fluent.mapping())
+            .addStatement("this(defaults.table(), null)")
             .build();
     }
 

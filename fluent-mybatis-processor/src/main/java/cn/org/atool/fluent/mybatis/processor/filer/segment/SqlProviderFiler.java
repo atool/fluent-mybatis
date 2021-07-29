@@ -66,6 +66,7 @@ public class SqlProviderFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(parameterizedType(ClassName.get(BaseSqlProvider.class), fluent.entity()));
+        spec.addField(this.f_defaults());
         // provider method
         spec.addMethod(this.m_primaryIsNull());
         spec.addMethod(this.m_primaryNotNull());
@@ -83,7 +84,6 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addMethod(this.m_longTypeOfLogicDelete());
     }
 
-
     private MethodSpec m_longTypeOfLogicDelete() {
         return super.protectedMethod("longTypeOfLogicDelete", true, ClassName.BOOLEAN)
             .addStatement("return $L", fluent.isLongTypeOfLogicDelete())
@@ -93,7 +93,7 @@ public class SqlProviderFiler extends AbstractFiler {
     private MethodSpec m_setEntityByDefault() {
         return super.protectedMethod(M_SET_ENTITY_BY_DEFAULT, true, null)
             .addParameter(IEntity.class, "entity")
-            .addStatement("$T.INSTANCE.setEntityByDefault(entity)", fluent.defaults())
+            .addStatement("defaults.setEntityByDefault(entity)")
             .build();
     }
 
@@ -219,7 +219,7 @@ public class SqlProviderFiler extends AbstractFiler {
 
     private MethodSpec m_tableName() {
         return super.publicMethod("tableName", true, String.class)
-            .addStatement("return Table_Name")
+            .addStatement("return defaults.table().get()")
             .build();
     }
 

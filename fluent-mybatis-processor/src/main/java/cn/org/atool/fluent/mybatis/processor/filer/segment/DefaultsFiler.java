@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -14,6 +15,7 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Defaults;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
  * 构造Query和Updater的工程类
@@ -36,12 +38,18 @@ public class DefaultsFiler extends AbstractFiler {
     }
 
     @Override
+    protected void staticImport(JavaFile.Builder spec) {
+        spec.addStaticImport(fluent.mapping(), "Table_Name");
+    }
+
+    @Override
     protected void build(TypeSpec.Builder spec) {
         this.addWrapperDefault(spec, fluent.getDefaults());
         spec.addSuperinterface(IDefaultGetter.class)
             .addField(FieldSpec.builder(fluent.defaults(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("new $T()", fluent.defaults())
                 .build())
+            .addField(this.f_dynamic())
             .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
             .addMethod(this.m_setEntityByDefault())
             .addMethod(this.m_emptyQuery())
@@ -51,7 +59,30 @@ public class DefaultsFiler extends AbstractFiler {
             .addMethod(this.m_aliasQuery_0())
             .addMethod(this.m_aliasQuery_1())
             .addMethod(this.m_aliasWith_1())
-            .addMethod(this.m_aliasWith_2());
+            .addMethod(this.m_aliasWith_2())
+            .addMethod(this.m_setTableDynamic())
+            .addMethod(this.m_table())
+        ;
+    }
+
+    private MethodSpec m_table() {
+        return super.publicMethod("table", false, CN_Supplier_Str)
+            .addStatement("return dynamic == null ? () -> Table_Name : () -> dynamic.get(Table_Name)")
+            .addJavadoc("获取表名")
+            .build();
+    }
+
+    private MethodSpec m_setTableDynamic() {
+        return super.publicMethod("setTableDynamic", false, fluent.defaults())
+            .addJavadoc("设置表名动态设置")
+            .addParameter(TableDynamic.class, "dynamic")
+            .addStatement("this.dynamic = dynamic")
+            .addStatement("return this")
+            .build();
+    }
+
+    private FieldSpec f_dynamic() {
+        return FieldSpec.builder(TableDynamic.class, "dynamic", Modifier.PRIVATE).build();
     }
 
     /**

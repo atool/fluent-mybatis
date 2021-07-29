@@ -140,4 +140,12 @@ public abstract class AbstractFiler {
     public static MethodSpec.Builder throwPrimaryNoFound(MethodSpec.Builder builder) {
         return builder.addStatement("throw new $T($S)", RuntimeException.class, "primary key not found.");
     }
+
+    protected FieldSpec f_defaults() {
+        return FieldSpec.builder(fluent.defaults(),
+            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("默认设置器")
+            .initializer("$T.INSTANCE", fluent.defaults())
+            .build();
+    }
 }

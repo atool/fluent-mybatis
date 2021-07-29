@@ -13,13 +13,4 @@ public interface TableDynamic {
      * @return 动态处理过的表名称
      */
     String get(String origName);
-
-    default String get() {
-        return this.get(null);
-    }
-
-    /**
-     * 原样返回原始表
-     */
-    TableDynamic NoneDynamic = origName -> origName;
 }

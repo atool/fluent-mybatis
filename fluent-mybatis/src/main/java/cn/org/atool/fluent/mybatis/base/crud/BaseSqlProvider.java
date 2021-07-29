@@ -705,7 +705,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     private String dynamic(IEntity entity) {
         if (entity instanceof IRichEntity) {
-            String dynamic = ((IRichEntity) entity).findTableBelongTo();
+            String dynamic = entity.findTableBelongTo();
             return isBlank(dynamic) ? this.tableName() : dynamic;
         } else {
             return this.tableName();
@@ -726,7 +726,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     /**
      * 获取IQuery或IUpdate对应的表名称
      *
-     * @param query IQuery或IUpdate
+     * @param update IQuery或IUpdate
      * @return 表名称
      */
     private String dynamic(IUpdate update) {
