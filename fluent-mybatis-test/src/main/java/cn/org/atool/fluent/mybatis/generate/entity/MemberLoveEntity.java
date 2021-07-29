@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Class;
@@ -95,6 +96,11 @@ public class MemberLoveEntity extends RichEntity {
   @Override
   public final Class<? extends IEntity> entityClass() {
     return MemberLoveEntity.class;
+  }
+
+  @Override
+  public final MemberLoveEntity changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
   }
 
   @Override

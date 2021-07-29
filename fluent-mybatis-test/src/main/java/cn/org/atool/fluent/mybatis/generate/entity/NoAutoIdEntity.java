@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.Version;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Class;
 import java.lang.Long;
@@ -68,6 +69,11 @@ public class NoAutoIdEntity extends RichEntity {
   @Override
   public final Class<? extends IEntity> entityClass() {
     return NoAutoIdEntity.class;
+  }
+
+  @Override
+  public final NoAutoIdEntity changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
   }
 
   @Override

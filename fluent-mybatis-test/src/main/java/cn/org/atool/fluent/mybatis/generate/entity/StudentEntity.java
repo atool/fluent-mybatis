@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Class;
@@ -188,6 +189,16 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
     return StudentEntity.class;
   }
 
+  @Override
+  public final StudentEntity changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
+  }
+
+  @Override
+  public final StudentEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
+  }
+
   /**
    * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
@@ -218,10 +229,5 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   @RefMethod
   public List<TeacherEntity> findTeacherList() {
     return super.invoke("findTeacherList", true);
-  }
-
-  @Override
-  public final StudentEntity changeTableBelongTo(String table) {
-    return super.changeTableBelongTo(table);
   }
 }

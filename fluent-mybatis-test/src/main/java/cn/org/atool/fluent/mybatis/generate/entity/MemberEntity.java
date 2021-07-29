@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Class;
@@ -106,6 +107,16 @@ public class MemberEntity extends RichEntity {
     return MemberEntity.class;
   }
 
+  @Override
+  public final MemberEntity changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
+  }
+
+  @Override
+  public final MemberEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
+  }
+
   /**
    * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
@@ -128,10 +139,5 @@ public class MemberEntity extends RichEntity {
   @RefMethod
   public MemberEntity findCurrFriend() {
     return super.invoke("findCurrFriend", true);
-  }
-
-  @Override
-  public final MemberEntity changeTableBelongTo(String table) {
-    return super.changeTableBelongTo(table);
   }
 }

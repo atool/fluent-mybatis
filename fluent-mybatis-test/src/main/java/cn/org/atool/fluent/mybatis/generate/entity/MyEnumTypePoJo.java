@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.model.MyEnum;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Class;
 import java.lang.Long;
@@ -70,6 +71,11 @@ public class MyEnumTypePoJo extends RichEntity {
   @Override
   public final Class<? extends IEntity> entityClass() {
     return MyEnumTypePoJo.class;
+  }
+
+  @Override
+  public final MyEnumTypePoJo changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
   }
 
   @Override

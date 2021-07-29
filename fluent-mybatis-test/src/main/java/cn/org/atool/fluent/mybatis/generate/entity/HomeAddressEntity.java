@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Class;
@@ -126,6 +127,11 @@ public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddres
   @Override
   public final Class<? extends IEntity> entityClass() {
     return HomeAddressEntity.class;
+  }
+
+  @Override
+  public final HomeAddressEntity changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
   }
 
   @Override

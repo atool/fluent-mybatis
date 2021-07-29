@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import java.io.Serializable;
 import java.lang.Boolean;
 import java.lang.Class;
@@ -96,16 +97,21 @@ public class TeacherEntity extends RichEntity {
     return TeacherEntity.class;
   }
 
+  @Override
+  public final TeacherEntity changeTableBelongTo(TableSupplier supplier) {
+    return super.changeTableBelongTo(supplier);
+  }
+
+  @Override
+  public final TeacherEntity changeTableBelongTo(String table) {
+    return super.changeTableBelongTo(table);
+  }
+
   /**
    * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
    */
   @RefMethod
   public List<StudentEntity> findStudentList() {
     return super.invoke("findStudentList", true);
-  }
-
-  @Override
-  public final TeacherEntity changeTableBelongTo(String table) {
-    return super.changeTableBelongTo(table);
   }
 }
