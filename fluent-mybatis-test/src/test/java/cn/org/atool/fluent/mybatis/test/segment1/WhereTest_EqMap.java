@@ -13,15 +13,14 @@ import java.util.HashMap;
 /**
  * WhereTest_EqMap
  *
- * @author darui.wu
- * @create 2020/6/21 3:40 下午
+ * @author darui.wu 2020/6/21 3:40 下午
  */
 public class WhereTest_EqMap extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
     @Test
-    public void test_eq_map() throws Exception {
+    public void test_eq_map() {
         StudentQuery query = new StudentQuery()
             .selectId()
             .where.eqNotNull(new HashMap<String, Object>() {
@@ -35,10 +34,10 @@ public class WhereTest_EqMap extends BaseTest {
     }
 
     @Test
-    public void test_eq_entity() throws Exception {
+    public void test_eq_entity() {
         StudentQuery query = new StudentQuery()
             .selectId()
-            .where.eqNotNull(new StudentEntity().setUserName("u2")).end();
+            .where.eqByEntity(new StudentEntity().setUserName("u2")).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT `id` FROM fluent_mybatis.student WHERE `user_name` = ?");
