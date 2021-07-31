@@ -15,6 +15,8 @@ import org.test4j.module.database.proxy.DataSourceCreator;
 
 import javax.sql.DataSource;
 
+import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LIMIT;
+
 @SpringContext(
     classes = TestSpringConfig.class,
     basePackages = {
@@ -31,7 +33,7 @@ public abstract class BaseTest extends Test4J {
     static {
         Refs.Query.student.setTableDynamic(t -> "fluent_mybatis." + t);
         DbType.ORACLE.setEscapeExpress("[?]");
-        DbType.ORACLE.setPagedFormat(DbType.ORACLE.getPagedFormat() + "/**test**/");
+        DbType.ORACLE.setPagedFormat(ORACLE_LIMIT + "/**测试而已**/");
     }
 }
 
