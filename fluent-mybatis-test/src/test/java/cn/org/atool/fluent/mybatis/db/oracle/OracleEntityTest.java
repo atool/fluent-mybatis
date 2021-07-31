@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.IdcardEntity;
 import cn.org.atool.fluent.mybatis.generate.wrapper.IdcardQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
@@ -15,13 +16,14 @@ class OracleEntityTest extends BaseTest {
     @Autowired
     OracleMapper mapper;
 
+    @DisplayName("验证数据库自定义特性: 反义符+分页")
     @Test
     void testPage() {
         want.exception(() ->
             new OracleQuery().selectId().limit(1, 10).of(mapper).listEntity(), Exception.class);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM (  " +
-            "SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM (SELECT id FROM oracle_table) TMP_PAGE) " +
+            "SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM (SELECT [id] FROM oracle_table) TMP_PAGE) " +
             "WHERE ROW_ID > ? AND ROW_ID <= ?/**test**/", StringMode.SameAsSpace);
 
         db.sqlList().wantFirstPara().eqList(1, 11);
