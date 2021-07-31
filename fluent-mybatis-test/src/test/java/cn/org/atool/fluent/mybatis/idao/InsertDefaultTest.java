@@ -44,7 +44,7 @@ public class InsertDefaultTest extends BaseTest {
     }
 
     @Test
-    void test_defaultQuery(){
+    void test_defaultQuery() {
 
     }
 }

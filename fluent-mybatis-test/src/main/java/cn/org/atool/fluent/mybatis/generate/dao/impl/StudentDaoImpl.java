@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  *
  * @author Powered By Fluent Mybatis
  */
+@SuppressWarnings("rawtypes")
 @Repository
 public class StudentDaoImpl extends StudentBaseDao implements StudentDao {
     @Override
@@ -32,7 +33,7 @@ public class StudentDaoImpl extends StudentBaseDao implements StudentDao {
     @Override
     public void updateAddressAndAgeById(StudentEntity... entities) {
         List<IUpdate> updates = Arrays.stream(entities).map(student -> super.updater()
-            .update.address().is(student.getAddress())
+            .set.address().is(student.getAddress())
             .set.age().is(student.getAge())
             .end()
             .where.id().eq(student.getId())

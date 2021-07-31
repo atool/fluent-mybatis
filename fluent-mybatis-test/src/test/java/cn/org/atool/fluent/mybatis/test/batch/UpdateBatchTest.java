@@ -90,10 +90,10 @@ public class UpdateBatchTest extends BaseTest {
     @Test
     public void testUpdateBatch_different() {
         StudentUpdate update1 = new StudentUpdate()
-            .update.userName().is("user name23").end()
+            .set.userName().is("user name23").end()
             .where.id().eq(23L).end();
         HomeAddressUpdate update2 = new HomeAddressUpdate()
-            .update.address().is("address 24").end()
+            .set.address().is("address 24").end()
             .where.id().eq(24L).end();
         int count = mapper.updateBy(update1, update2);
         db.sqlList().wantFirstSql()
@@ -117,10 +117,10 @@ public class UpdateBatchTest extends BaseTest {
      */
     private List<IUpdate> newListUpdater() {
         StudentUpdate update1 = new StudentUpdate()
-            .update.userName().is("user name23").end()
+            .set.userName().is("user name23").end()
             .where.id().eq(23L).end();
         StudentUpdate update2 = new StudentUpdate()
-            .update.userName().is("user name24").end()
+            .set.userName().is("user name24").end()
             .where.id().eq(24L).end();
         return Arrays.asList(update1, update2);
     }

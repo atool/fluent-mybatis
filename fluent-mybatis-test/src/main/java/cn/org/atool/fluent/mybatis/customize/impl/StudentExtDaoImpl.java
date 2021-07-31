@@ -88,7 +88,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
     @Override
     public void updateUserNameById(String newUserName, long id) {
         super.defaultUpdater()
-            .update.userName().is(newUserName).end()
+            .set.userName().is(newUserName).end()
             .where.id().eq(id).end()
             .to().updateBy();
     }

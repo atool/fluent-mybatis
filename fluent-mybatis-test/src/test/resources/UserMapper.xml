@@ -3,20 +3,24 @@
 <mapper namespace="cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper">
     <!-- base result map -->
     <resultMap id="BaseResultMap" type="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity">
-        <id column="id" property="id" />
-        <result column="home_address_id" property="addressId" />
-        <result column="age" property="age" />
-        <result column="gmt_created" property="gmtCreated" />
-        <result column="gmt_modified" property="gmtModified" />
-        <result column="grade" property="grade" />
-        <result column="is_deleted" property="isDeleted" />
-        <result column="user_name" property="userName" />
-        <result column="version" property="version" />
+        <id column="id" property="id"/>
+        <result column="home_address_id" property="addressId"/>
+        <result column="age" property="age"/>
+        <result column="gmt_created" property="gmtCreated"/>
+        <result column="gmt_modified" property="gmtModified"/>
+        <result column="grade" property="grade"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="user_name" property="userName"/>
+        <result column="version" property="version"/>
     </resultMap>
     <sql id="SELECT_COLUMNS">
-<![CDATA[id, home_address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version]]>
+<![CDATA[
+        id
+        , home_address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version
+        ]]>
 </sql>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity" useGeneratedKeys="true">
         INSERT INTO student
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -29,77 +33,87 @@
             <if test="userName != null">user_name,</if>
             <if test="version != null">version,</if>
         </trim>
-        VALUES<trim prefix="(" suffix=")" suffixOverrides=",">
-        <if test="id != null">#{id},</if>
-        <if test="addressId != null">#{addressId},</if>
-        <if test="age != null">#{age},</if>
-        <choose>
-            <when test="gmtCreated != null">#{gmtCreated},</when>
-            <otherwise>now(),</otherwise>
-        </choose>
-        <choose>
-            <when test="gmtModified != null">#{gmtModified},</when>
-            <otherwise>now(),</otherwise>
-        </choose>
-        <if test="grade != null">#{grade},</if>
-        <choose>
-            <when test="isDeleted != null">#{isDeleted},</when>
-            <otherwise>0,</otherwise>
-        </choose>
-        <if test="userName != null">#{userName},</if>
-        <if test="version != null">#{version},</if>
-    </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="addressId != null">#{addressId},</if>
+            <if test="age != null">#{age},</if>
+            <choose>
+                <when test="gmtCreated != null">#{gmtCreated},</when>
+                <otherwise>now(),</otherwise>
+            </choose>
+            <choose>
+                <when test="gmtModified != null">#{gmtModified},</when>
+                <otherwise>now(),</otherwise>
+            </choose>
+            <if test="grade != null">#{grade},</if>
+            <choose>
+                <when test="isDeleted != null">#{isDeleted},</when>
+                <otherwise>0,</otherwise>
+            </choose>
+            <if test="userName != null">#{userName},</if>
+            <if test="version != null">#{version},</if>
+        </trim>
     </insert>
     <insert id="insertBatch" parameterType="cn.org.atool.fluent.mybatis.generate.entity.StudentEntity">
         INSERT INTO student
         (id, home_address_id, age, gmt_created, gmt_modified, grade, is_deleted, user_name, version)
-        VALUES <foreach collection="list" item="item" index="k" separator=",">
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            #{item.id},
-            #{item.addressId},
-            #{item.age},
-            <choose>
-                <when test="item.gmtCreated != null">#{item.gmtCreated},</when>
-                <otherwise>now(),</otherwise>
-            </choose>
-            <choose>
-                <when test="item.gmtModified != null">#{item.gmtModified},</when>
-                <otherwise>now(),</otherwise>
-            </choose>
-            #{item.grade},
-            <choose>
-                <when test="item.isDeleted != null">#{item.isDeleted},</when>
-                <otherwise>0,</otherwise>
-            </choose>
-            #{item.userName},
-            #{item.version},
-        </trim>
-    </foreach>
+        VALUES
+        <foreach collection="list" item="item" index="k" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id},
+                #{item.addressId},
+                #{item.age},
+                <choose>
+                    <when test="item.gmtCreated != null">#{item.gmtCreated},</when>
+                    <otherwise>now(),</otherwise>
+                </choose>
+                <choose>
+                    <when test="item.gmtModified != null">#{item.gmtModified},</when>
+                    <otherwise>now(),</otherwise>
+                </choose>
+                #{item.grade},
+                <choose>
+                    <when test="item.isDeleted != null">#{item.isDeleted},</when>
+                    <otherwise>0,</otherwise>
+                </choose>
+                #{item.userName},
+                #{item.version},
+            </trim>
+        </foreach>
     </insert>
     <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT <include refid="SELECT_COLUMNS"/> FROM student
+        SELECT
+        <include refid="SELECT_COLUMNS"/>
+        FROM student
         <where>
             id=#{et.id}
         </where>
     </select>
     <select id="listByIds" parameterType="java.util.Collection" resultMap="BaseResultMap">
-        SELECT <include refid="SELECT_COLUMNS"/> FROM student
+        SELECT
+        <include refid="SELECT_COLUMNS"/>
+        FROM student
         <where>
-            id IN (<foreach collection="coll" item="item" index="k" separator=",">
-            #{item}
-        </foreach>
+            id IN (
+            <foreach collection="coll" item="item" index="k" separator=",">
+                #{item}
+            </foreach>
             )
         </where>
     </select>
     <select id="listByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
-        SELECT <include refid="SELECT_COLUMNS"/> FROM student
+        SELECT
+        <include refid="SELECT_COLUMNS"/>
+        FROM student
         <where>
-            <if test="cm != null and !cm.isEmpty"><foreach collection="cm" item="v" index="k" separator="AND ">
-                <choose>
-                    <when test="v == null">${k} IS NULL </when>
-                    <otherwise>${k} = #{v}</otherwise>
-                </choose>
-            </foreach>
+            <if test="cm != null and !cm.isEmpty">
+                <foreach collection="cm" item="v" index="k" separator="AND ">
+                    <choose>
+                        <when test="v == null">${k} IS NULL</when>
+                        <otherwise>${k} = #{v}</otherwise>
+                    </choose>
+                </foreach>
             </if>
         </where>
     </select>
@@ -107,10 +121,12 @@
         <if test="ew.wrapperData != null"></if>
 
         SELECT
-        <if test="ew.wrapperData.distinct"> DISTINCT </if>
+        <if test="ew.wrapperData.distinct">DISTINCT</if>
         <choose>
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+            <otherwise>
+                <include refid="SELECT_COLUMNS"/>
+            </otherwise>
         </choose>
         FROM student
         <where>
@@ -120,16 +136,18 @@
         <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
-        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
+        <if test="ew.wrapperData.paged != null">LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}</if>
     </select>
     <select id="listMaps" parameterType="java.util.Map" resultType="java.util.Map">
         <if test="ew.wrapperData != null"></if>
 
         SELECT
-        <if test="ew.wrapperData.distinct"> DISTINCT </if>
+        <if test="ew.wrapperData.distinct">DISTINCT</if>
         <choose>
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+            <otherwise>
+                <include refid="SELECT_COLUMNS"/>
+            </otherwise>
         </choose>
         FROM student
         <where>
@@ -139,16 +157,18 @@
         <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
-        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
+        <if test="ew.wrapperData.paged != null">LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}</if>
     </select>
     <select id="listObjs" parameterType="java.util.Map" resultType="java.lang.Object">
         <if test="ew.wrapperData != null"></if>
 
         SELECT
-        <if test="ew.wrapperData.distinct"> DISTINCT </if>
+        <if test="ew.wrapperData.distinct">DISTINCT</if>
         <choose>
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+            <otherwise>
+                <include refid="SELECT_COLUMNS"/>
+            </otherwise>
         </choose>
         FROM student
         <where>
@@ -158,16 +178,18 @@
         <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
-        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
+        <if test="ew.wrapperData.paged != null">LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}</if>
     </select>
     <select id="findOne" parameterType="java.util.Map" resultMap="BaseResultMap">
         <if test="ew.wrapperData != null"></if>
 
         SELECT
-        <if test="ew.wrapperData.distinct"> DISTINCT </if>
+        <if test="ew.wrapperData.distinct">DISTINCT</if>
         <choose>
             <when test="ew.wrapperData.sqlSelect != null">${ew.wrapperData.sqlSelect}</when>
-            <otherwise><include refid="SELECT_COLUMNS"/></otherwise>
+            <otherwise>
+                <include refid="SELECT_COLUMNS"/>
+            </otherwise>
         </choose>
         FROM student
         <where>
@@ -177,7 +199,7 @@
         <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
 
-        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </if>
+        <if test="ew.wrapperData.paged != null">LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}</if>
     </select>
     <select id="count" parameterType="java.util.Map" resultType="int">
         <if test="ew.wrapperData != null"></if>
@@ -207,7 +229,8 @@
                 <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
                 <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
                 <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
-                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit} </otherwise>
+                LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}
+            </otherwise>
         </choose>
     </select>
     <select id="countNoLimit" parameterType="java.util.Map" resultType="int">
@@ -244,21 +267,23 @@
     <delete id="deleteByIds" parameterType="java.util.Collection">
         DELETE FROM student
         <where>
-            id IN (<foreach collection="coll" item="item" index="k" separator=",">
-            #{item}
-        </foreach>
+            id IN (
+            <foreach collection="coll" item="item" index="k" separator=",">
+                #{item}
+            </foreach>
             )
         </where>
     </delete>
     <delete id="deleteByMap" parameterType="java.util.Map">
         DELETE FROM student
         <where>
-            <if test="cm != null and !cm.isEmpty"><foreach collection="cm" item="v" index="k" separator="AND ">
-                <choose>
-                    <when test="v == null">${k} IS NULL </when>
-                    <otherwise>${k} = #{v}</otherwise>
-                </choose>
-            </foreach>
+            <if test="cm != null and !cm.isEmpty">
+                <foreach collection="cm" item="v" index="k" separator="AND ">
+                    <choose>
+                        <when test="v == null">${k} IS NULL</when>
+                        <otherwise>${k} = #{v}</otherwise>
+                    </choose>
+                </foreach>
             </if>
         </where>
     </delete>
@@ -293,6 +318,6 @@
         <if test="ew.wrapperData.groupBy != null">${ew.wrapperData.groupBy}</if>
         <if test="ew.wrapperData.orderBy != null">${ew.wrapperData.orderBy}</if>
         <if test="ew.wrapperData.lastSql != null">${ew.wrapperData.lastSql}</if>
-        <if test="ew.wrapperData.paged != null"> LIMIT #{ew.wrapperData.paged.limit} </if>
+        <if test="ew.wrapperData.paged != null">LIMIT #{ew.wrapperData.paged.limit}</if>
     </update>
 </mapper>

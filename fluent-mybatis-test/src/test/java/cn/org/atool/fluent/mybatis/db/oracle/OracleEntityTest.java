@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 import org.test4j.tools.datagen.DataMap;
 
+@SuppressWarnings({"unchecked"})
 class OracleEntityTest extends BaseTest {
     @Autowired
     OracleMapper mapper;

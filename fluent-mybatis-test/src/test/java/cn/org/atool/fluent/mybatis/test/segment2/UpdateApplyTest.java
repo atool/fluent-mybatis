@@ -15,7 +15,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is() {
         mapper.updateBy(new StudentUpdate()
-            .update.age().is(34).end()
+            .set.age().is(34).end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -25,7 +25,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void isNull() {
         mapper.updateBy(new StudentUpdate()
-            .update.age().is(34)
+            .set.age().is(34)
             .set.userName().isNull().end()
             .where.id().eq(2).end()
         );
@@ -37,7 +37,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_If() {
         mapper.updateBy(new StudentUpdate()
-            .update.age().is(34, If::everFalse)
+            .set.age().is(34, If::everFalse)
             .set.userName().is(null, If::everTrue).end()
             .where.id().eq(2).end()
         );
@@ -96,7 +96,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void is_IfNotBlank() {
         mapper.updateBy(new StudentUpdate()
-            .update.version().is("19", If::notBlank)
+            .set.version().is("19", If::notBlank)
             .set.userName().is(null, If::notBlank)
             .set.userName().is("  ", If::notBlank).end()
             .where.id().eq(2).end()
@@ -108,7 +108,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void apply() {
         mapper.updateBy(new StudentUpdate()
-            .update.userName().applyFunc("concat('user_name', '_abc')").end()
+            .set.userName().applyFunc("concat('user_name', '_abc')").end()
             .where.id().eq(2).end()
         );
         db.sqlList().wantFirstSql()
@@ -119,7 +119,7 @@ class UpdateApplyTest extends BaseTest {
     @Test
     void apply_If() {
         mapper.updateBy(new StudentUpdate()
-            .update.userName().applyFunc(false, "concat('user_name', '_abc')")
+            .set.userName().applyFunc(false, "concat('user_name', '_abc')")
             .set.age().applyFunc(true, "age+1").end()
             .where.id().eq(2).end()
         );

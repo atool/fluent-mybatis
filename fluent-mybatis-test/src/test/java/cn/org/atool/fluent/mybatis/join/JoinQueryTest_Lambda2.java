@@ -38,7 +38,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
 
         IQuery query = leftQuery
             .join(rightQuery)
-            .onEq(FieldRef.Student.homeAddressId,FieldRef.HomeAddress.id).endJoin()
+            .onEq(FieldRef.Student.homeAddressId, FieldRef.HomeAddress.id).endJoin()
             .build();
         List<StudentEntity> entities = this.mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("" +

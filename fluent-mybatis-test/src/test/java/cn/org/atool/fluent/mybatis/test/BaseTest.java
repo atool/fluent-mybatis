@@ -49,11 +49,11 @@ class TestSpringConfig {
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         // 路径正则表达式方式加载
         bean.setMapperLocations(resolver.getResources("classpath*:mapper/*.xml"));
-        // 一个个文件加载
-        // bean.setMapperLocations(
-        //      new ClassPathResource("mapper/MyXmlMapper.xml"),
-        //      new ClassPathResource("mapper/BatchUpdate.xml")
-        // );
+        /* bean.setMapperLocations(
+        /*      new ClassPathResource("mapper/MyXmlMapper.xml"),
+        /*      new ClassPathResource("mapper/BatchUpdate.xml")
+        /* );
+        */
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setLazyLoadingEnabled(true);
         configuration.setMapUnderscoreToCamelCase(true);

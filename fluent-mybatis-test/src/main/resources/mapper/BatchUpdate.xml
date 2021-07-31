@@ -25,7 +25,7 @@
         </foreach>
     </update>
 
-    <update id="updateStudentBatch"  parameterType="java.util.List">
+    <update id="updateStudentBatch" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             update student
             <set>

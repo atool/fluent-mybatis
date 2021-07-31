@@ -15,16 +15,16 @@ public class InsertWithPkTest extends BaseTest {
     public void testInsertWithPk() {
         db.table(ATM.table.student).clean();
         StudentEntity student = new StudentEntity()
-                .setId(34L)
-                .setUserName("user name")
-                .setAge(25);
+            .setId(34L)
+            .setUserName("user name")
+            .setAge(25);
         mapper.insertWithPk(student);
         db.table(ATM.table.student)
-                .query()
-                .eqDataMap(ATM.dataMap.student.table(1)
-                        .id.values(34L)
-                        .userName.values("user name")
-                        .age.values(25)
-                );
+            .query()
+            .eqDataMap(ATM.dataMap.student.table(1)
+                .id.values(34L)
+                .userName.values("user name")
+                .age.values(25)
+            );
     }
 }

@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.Map;
@@ -48,10 +49,11 @@ public class SqlProviderUtils {
         if (data.getPaged() == null) {
             return sql;
         } else {
-            String pagedOffset = data.getParameters().putParameter(null, data.getPaged().getOffset());
-            String pagedEndOffset = data.getParameters().putParameter(null, data.getPaged().getEndOffset());
-            String pagedSize = data.getParameters().putParameter(null, data.getPaged().getLimit());
-            return dbType.paged(sql, pagedOffset, pagedSize, pagedEndOffset);
+            Parameters p = data.getParameters();
+            String offset = p.putParameter(null, data.getPaged().getOffset());
+            String size = p.putParameter(null, data.getPaged().getLimit());
+            String endOffset = p.putParameter(null, data.getPaged().getEndOffset());
+            return dbType.paged(sql, offset, size, endOffset);
         }
     }
 }

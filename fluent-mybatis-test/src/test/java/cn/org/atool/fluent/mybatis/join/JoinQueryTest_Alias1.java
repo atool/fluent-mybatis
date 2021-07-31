@@ -104,7 +104,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "AND t2.`address` LIKE ? " +
                 "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
                 "HAVING MAX(t1.`age`) > ? " +
-                "LIMIT ?, ?");this.mapper.listMaps(query.build());
+                "LIMIT ?, ?");
+        this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
                 "FROM fluent_mybatis.student t1 " +
@@ -119,7 +120,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "AND t2.`address` LIKE ? " +
                 "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
                 "HAVING MAX(t1.`age`) > ? " +
-                "LIMIT ?, ?");this.mapper.listMaps(query.build());
+                "LIMIT ?, ?");
+        this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
                 "FROM fluent_mybatis.student t1 " +
@@ -134,7 +136,8 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 "AND t2.`address` LIKE ? " +
                 "GROUP BY t1.`age`, t1.`id`, t2.`student_id` " +
                 "HAVING MAX(t1.`age`) > ? " +
-                "LIMIT ?, ?");this.mapper.listMaps(query.build());
+                "LIMIT ?, ?");
+        this.mapper.listMaps(query.build());
         IDatabase.db.sqlList().wantFirstSql().eq(
             "SELECT DISTINCT t1.`age`, t2.`student_id` " +
                 "FROM fluent_mybatis.student t1 " +
