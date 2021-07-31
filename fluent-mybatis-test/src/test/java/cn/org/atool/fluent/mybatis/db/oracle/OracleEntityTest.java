@@ -25,7 +25,7 @@ class OracleEntityTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM (  " +
             "SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM (SELECT [id] FROM oracle_table) TMP_PAGE) " +
-            "WHERE ROW_ID > ? AND ROW_ID <= ?/**test**/", StringMode.SameAsSpace);
+            "WHERE ROW_ID > ? AND ROW_ID <= ?/**测试而已**/", StringMode.SameAsSpace);
 
         db.sqlList().wantFirstPara().eqList(1, 11);
     }
