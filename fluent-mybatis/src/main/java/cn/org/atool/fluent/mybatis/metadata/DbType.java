@@ -1,11 +1,12 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
+import cn.org.atool.fluent.mybatis.metadata.feature.DbFeature;
 import cn.org.atool.fluent.mybatis.metadata.feature.EscapeExpress;
-import cn.org.atool.fluent.mybatis.metadata.feature.PagedExpress;
+import cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat;
 import lombok.Getter;
 
 import static cn.org.atool.fluent.mybatis.metadata.feature.EscapeExpress.*;
-import static cn.org.atool.fluent.mybatis.metadata.feature.PagedExpress.*;
+import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.*;
 
 /**
  * DbType 数据库类型
@@ -13,7 +14,6 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedExpress.*;
  * @author darui.wu Created by darui.wu on 2020/6/16.
  * @see EscapeExpress
  */
-@SuppressWarnings("unused")
 public enum DbType {
     /**
      * MYSQL
@@ -67,29 +67,22 @@ public enum DbType {
     OTHER_2("other2", MYSQL_LIMIT);
 
     @Getter
-    private final DbFeature feature;
+    public final DbFeature feature;
 
-    @Getter
-    private final boolean before = false;
-
-    DbType(String alias, PagedExpress paged) {
+    DbType(String alias, PagedFormat paged) {
         this.feature = new DbFeature(alias, paged);
     }
 
-    DbType(String alias, EscapeExpress escape, PagedExpress paged) {
+    DbType(String alias, EscapeExpress escape, PagedFormat paged) {
         this.feature = new DbFeature(alias, escape, paged);
     }
 
-    DbType(String alias, EscapeExpress escape, PagedExpress paged, String seq) {
+    DbType(String alias, EscapeExpress escape, PagedFormat paged, String seq) {
         this.feature = new DbFeature(alias, escape, paged, seq);
     }
 
-    DbType(String alias, EscapeExpress escape, PagedExpress paged, String seq, boolean before) {
-        this.feature = new DbFeature(alias, escape, paged, seq);
-    }
-
-    public String getSeq() {
-        return this.feature.getSeq();
+    DbType(String alias, EscapeExpress escape, PagedFormat paged, String seq, boolean before) {
+        this.feature = new DbFeature(alias, escape, paged, seq).setBefore(before);
     }
 
     /**
@@ -128,18 +121,27 @@ public enum DbType {
     /**
      * 设置数据库字段的反义处理
      *
-     * @param wrapper 反义处理函数, 比如 mysql: `?`, sqlserver: [?], 或 无反义处理: ?
+     * @param expression 反义处理函数, 比如 mysql: `?`, sqlserver: [?], 或 无反义处理: ?
      */
-    public void setEscape(String wrapper) {
-        this.feature.setEscape(new EscapeExpress(wrapper));
+    public void setEscapeExpress(String expression) {
+        this.feature.setEscape(new EscapeExpress(expression));
     }
 
     /**
      * 设置数据库分页处理语法规则
      *
-     * @param pagedExpression {@link PagedExpress}
+     * @param pagedFormat {@link PagedFormat}
      */
-    public void setPaged(String pagedExpression) {
-        this.feature.setPaged(new PagedExpress(pagedExpression));
+    public void setPagedFormat(String pagedFormat) {
+        this.feature.setPaged(new PagedFormat(pagedFormat));
+    }
+
+    /**
+     * 获取数据库分页语法
+     *
+     * @return 分页语法
+     */
+    public String getPagedFormat() {
+        return this.feature.getPaged().getFormat();
     }
 }

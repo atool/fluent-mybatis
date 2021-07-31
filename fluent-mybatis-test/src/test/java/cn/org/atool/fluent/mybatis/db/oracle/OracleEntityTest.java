@@ -21,8 +21,8 @@ class OracleEntityTest extends BaseTest {
             new OracleQuery().selectId().limit(1, 10).of(mapper).listEntity(), Exception.class);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM (  " +
-            "SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( SELECT     id FROM oracle_table ) TMP_PAGE) " +
-            "WHERE ROW_ID > ? AND ROW_ID <= ?", StringMode.SameAsSpace);
+            "SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM (SELECT id FROM oracle_table) TMP_PAGE) " +
+            "WHERE ROW_ID > ? AND ROW_ID <= ?/**test**/", StringMode.SameAsSpace);
 
         db.sqlList().wantFirstPara().eqList(1, 11);
     }

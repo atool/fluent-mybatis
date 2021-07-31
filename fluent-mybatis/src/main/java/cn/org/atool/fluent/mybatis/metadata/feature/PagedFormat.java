@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.metadata.feature;
 
+import lombok.Getter;
+
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -13,36 +15,37 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author darui.wu
  */
-public final class PagedExpress {
+public final class PagedFormat {
+    @Getter
     private final String format;
 
-    public PagedExpress(String format) {
+    public PagedFormat(String format) {
         this.format = format;
     }
 
     /**
      * 不支持分页
      */
-    public static final PagedExpress UN_SUPPORT_LIMIT = new PagedExpress(null);
+    public static final PagedFormat UN_SUPPORT_LIMIT = new PagedFormat(null);
     /**
      * MYSQL语法分页
      */
-    public static final PagedExpress MYSQL_LIMIT = new PagedExpress("{query} LIMIT {offset}, {size}");
+    public static final PagedFormat MYSQL_LIMIT = new PagedFormat("{query} LIMIT {offset}, {size}");
     /**
      * PG语法分页
      */
-    public static final PagedExpress PG_LIMIT = new PagedExpress("{query} LIMIT {size} OFFSET {offset}");
+    public static final PagedFormat PG_LIMIT = new PagedFormat("{query} LIMIT {size} OFFSET {offset}");
     /**
      * DB2语法分页
      */
-    public static final PagedExpress DB2_LIMIT = new PagedExpress(
+    public static final PagedFormat DB2_LIMIT = new PagedFormat(
         "SELECT * FROM " +
             "(SELECT TMP_PAGE.*,ROWNUMBER() OVER() AS ROW_ID FROM ({query})) AS TMP_PAGE) TMP_PAGE " +
             "WHERE ROW_ID BETWEEN {offset} AND {size}");
     /**
      * ORACLE语法分页
      */
-    public static final PagedExpress ORACLE_LIMIT = new PagedExpress(
+    public static final PagedFormat ORACLE_LIMIT = new PagedFormat(
         "SELECT * FROM ( " +
             " SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ({query}) TMP_PAGE) " +
             " WHERE ROW_ID > {offset} AND ROW_ID <= {end}");

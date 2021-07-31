@@ -30,7 +30,8 @@ import javax.sql.DataSource;
 public abstract class BaseTest extends Test4J {
     static {
         Refs.Query.student.setTableDynamic(t -> "fluent_mybatis." + t);
-        DbType.MYSQL.setEscape("`?`");
+        DbType.MYSQL.setEscapeExpress("`?`");
+        DbType.ORACLE.setPagedFormat(DbType.ORACLE.getPagedFormat() + "/**test**/");
     }
 }
 

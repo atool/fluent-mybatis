@@ -384,8 +384,8 @@ public class MapperFiler extends AbstractFiler {
     }
 
     private void addSelectKey(MethodSpec.Builder builder) {
-        String seqName = fluent.getDbType().getSeq();
-        boolean before = fluent.getDbType().isBefore();
+        String seqName = fluent.getDbType().feature.getSeq();
+        boolean before = fluent.getDbType().feature.isBefore();
         if (notBlank(fluent.getPrimary().getSeqName())) {
             seqName = fluent.getPrimary().getSeqName();
             before = fluent.getPrimary().isSeqIsBeforeOrder();
