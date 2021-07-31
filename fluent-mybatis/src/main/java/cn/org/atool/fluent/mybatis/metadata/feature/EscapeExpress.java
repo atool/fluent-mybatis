@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.metadata;
+package cn.org.atool.fluent.mybatis.metadata.feature;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 
@@ -8,7 +8,7 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
  * @author wudarui
  */
 @SuppressWarnings("unused")
-public class DbEscape {
+public class EscapeExpress {
     /**
      * 前缀
      */
@@ -18,7 +18,7 @@ public class DbEscape {
      */
     private final String suffix;
 
-    DbEscape(String wrapper) {
+    public EscapeExpress(String wrapper) {
         int index = wrapper.indexOf('?');
         if (index < 0) {
             throw new IllegalArgumentException("illegal antisense expression:" + wrapper);
@@ -27,7 +27,7 @@ public class DbEscape {
         this.suffix = wrapper.substring(index + 1);
     }
 
-    String wrap(String column) {
+    public String wrap(String column) {
         if (notBlank(prefix) && notBlank(suffix)) {
             return prefix + column + suffix;
         } else {
@@ -41,7 +41,7 @@ public class DbEscape {
      * @param column 可能带转义符的字段名称
      * @return 去掉转义符后的名称
      */
-    String unwrap(String column) {
+    public String unwrap(String column) {
         int len = column.length();
         if (notBlank(prefix) && notBlank(suffix) &&
             column.startsWith(prefix) && column.endsWith(suffix)) {
@@ -54,21 +54,21 @@ public class DbEscape {
     /**
      * 无反义处理
      */
-    public final static DbEscape NONE_ESCAPE = new DbEscape("?");
+    public final static EscapeExpress NONE_ESCAPE = new EscapeExpress("?");
     /**
      * 反引号反义处理
      */
-    public final static DbEscape BACK_ESCAPE = new DbEscape("`?`");
+    public final static EscapeExpress BACK_ESCAPE = new EscapeExpress("`?`");
     /**
      * 双引号反义处理
      */
-    public final static DbEscape D_QUOTATION_ESCAPE = new DbEscape("\"?\"");
+    public final static EscapeExpress D_QUOTATION_ESCAPE = new EscapeExpress("\"?\"");
     /**
      * 单引号反义处理
      */
-    public final static DbEscape S_QUOTATION_ESCAPE = new DbEscape("'?'");
+    public final static EscapeExpress S_QUOTATION_ESCAPE = new EscapeExpress("'?'");
     /**
      * 方括号反义处理
      */
-    public final static DbEscape SQUARE_BRACKETS_ESCAPE = new DbEscape("[?]");
+    public final static EscapeExpress SQUARE_BRACKETS_ESCAPE = new EscapeExpress("[?]");
 }

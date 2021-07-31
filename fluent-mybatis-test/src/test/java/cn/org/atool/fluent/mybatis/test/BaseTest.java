@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.test;
 
-import cn.org.atool.fluent.mybatis.refs.QueryRef;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.refs.Refs;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -28,7 +29,8 @@ import javax.sql.DataSource;
 })
 public abstract class BaseTest extends Test4J {
     static {
-        QueryRef.student.setTableDynamic(n -> "fluent_mybatis." + n);
+        Refs.Query.student.setTableDynamic(t -> "fluent_mybatis." + t);
+        DbType.MYSQL.setEscape("`?`");
     }
 }
 

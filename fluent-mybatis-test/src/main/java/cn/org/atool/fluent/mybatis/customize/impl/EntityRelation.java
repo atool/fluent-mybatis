@@ -13,12 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Service
 public class EntityRelation implements IEntityRelation {
-    static {
-//        DbType.setEscape(DbType.MYSQL, "`?`");
-    }
-
     @Override
     public List<MemberEntity> findExFriendsOfMemberEntity(MemberEntity entity) {
         return null;
