@@ -30,15 +30,17 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LI
     "cn.org.atool.fluent.mybatis.db"
 })
 public abstract class BaseTest extends Test4J {
-    static {
-        Refs.Query.student.setTableDynamic(t -> "fluent_mybatis." + t);
-        DbType.ORACLE.setEscapeExpress("[?]");
-        DbType.ORACLE.setPagedFormat(ORACLE_LIMIT + "/**测试而已**/");
-    }
+
 }
 
 @Configuration
 class TestSpringConfig {
+    static {
+        Refs.Query.student.setTableDynamic(t -> "fluent_mybatis." + t);
+        DbType.ORACLE.setEscapeExpress("[?]"); // 只是示例, ORACLE的转义方式不是[?], SQL Server才是
+        DbType.ORACLE.setPagedFormat(ORACLE_LIMIT + "/**测试而已**/");
+    }
+
     @Bean("dataSource")
     public DataSource newDataSource() {
         return DataSourceCreator.create("dataSource");
