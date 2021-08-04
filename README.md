@@ -1,4 +1,4 @@
-# Fluent-Mybatis, QQ交流群: 312885450
+# Fluent-Mybatis, QQ交流群: 群一已满，加群二 933791730
 - [gitee](https://gitee.com/fluent-mybatis)
 - [github](https://github.com/atool/fluent-mybatis)
 - [FluentMybatis示例](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
