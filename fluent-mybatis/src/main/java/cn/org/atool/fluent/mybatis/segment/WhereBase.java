@@ -17,6 +17,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
@@ -99,6 +100,30 @@ public abstract class WhereBase<
     @Deprecated
     public WHERE eqNotNull(IEntity entity) {
         return this.eqByEntity(entity);
+    }
+
+    /**
+     * 根据entity和字段predicate判断来设置where条件
+     *
+     * @param entity    实例
+     * @param predicate 判断字段是否作为where条件 (columnName, columnValue)->{}
+     * @return WHERE
+     */
+    public WHERE eqByEntity(IEntity entity, BiPredicate<String, Object> predicate) {
+        assertNotNull("entity", entity);
+        Map<String, Object> map = entity.toColumnMap(false);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String column = entry.getKey();
+            Object value = entry.getValue();
+            if (predicate.test(column, value)) {
+                if (value == null) {
+                    this.apply(column, IS_NULL);
+                } else {
+                    this.apply(column, EQ, value);
+                }
+            }
+        }
+        return this.and;
     }
 
     /**

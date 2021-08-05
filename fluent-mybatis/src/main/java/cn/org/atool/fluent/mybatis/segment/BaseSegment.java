@@ -105,8 +105,9 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      * o 无指定字段时, 所有非空entity字段
      * </pre>
      *
-     * @param entity  实例
-     * @param columns 要设置条件的字段
+     * @param entity   实例
+     * @param consumer 设置条件
+     * @param columns  要设置条件的字段
      */
     protected void byEntity(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> columns) {
         assertNotNull("entity", entity);
