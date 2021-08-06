@@ -1,4 +1,7 @@
-# Fluent-Mybatis, QQ交流群: 群一已满，加群二 933791730
+# Fluent-Mybatis
+QQ交流群: 群一 312885450 已满，群二 933791730
+![-w230](image/qq2.jpeg)
+
 - [gitee](https://gitee.com/fluent-mybatis)
 - [github](https://github.com/atool/fluent-mybatis)
 - [FluentMybatis示例](https://gitee.com/fluent-mybatis/fluent-mybatis-docs)
@@ -27,6 +30,7 @@
 - [自定义字段](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E6%AE%B5?sort_id=4156301)
 - [主键设置](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E4%B8%BB%E9%94%AE%E8%AE%BE%E7%BD%AE?sort_id=4169686)
 - [TypeHandler支持](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/TypeHandler%E6%94%AF%E6%8C%81?sort_id=4156262)
+- [不喜欢lombok的同学](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E4%B8%8D%E5%96%9C%E6%AC%A2lombok%E7%9A%84%E5%90%8C%E5%AD%A6?sort_id=4321650)
 
 ## Mapper类语法
 #### 增

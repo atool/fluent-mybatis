@@ -16,7 +16,10 @@ public class EqByEntityTest_BiPredicate extends BaseTest {
         StudentEntity entity = new StudentEntity().setUserName("u2");
         StudentQuery query = new StudentQuery()
             .selectId()
-            .where.eqByEntity(entity, (c, v) -> c.equals("user_name") || c.equals("version"))
+            .where.eqByEntity(entity, (column, value) -> {
+                /* 可以根据 column, value自行做判断是否当做条件字段 */
+                return column.equals("user_name") || column.equals("version");
+            })
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
