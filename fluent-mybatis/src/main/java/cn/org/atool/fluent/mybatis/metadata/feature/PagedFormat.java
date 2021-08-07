@@ -40,8 +40,9 @@ public final class PagedFormat {
      */
     public static final PagedFormat DB2_LIMIT = new PagedFormat(
         "SELECT * FROM " +
-            "(SELECT TMP_PAGE.*,ROWNUMBER() OVER() AS ROW_ID FROM ({query})) AS TMP_PAGE) TMP_PAGE " +
+            "(SELECT TMP_PAGE.*, ROWNUMBER() OVER() AS ROW_ID FROM ({query})) AS TMP_PAGE) TMP_PAGE " +
             "WHERE ROW_ID BETWEEN {offset} AND {size}");
+
     /**
      * ORACLE语法分页
      */
@@ -49,6 +50,17 @@ public final class PagedFormat {
         "SELECT * FROM ( " +
             " SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ({query}) TMP_PAGE) " +
             " WHERE ROW_ID > {offset} AND ROW_ID <= {end}");
+
+    /**
+     * Informix分页
+     */
+    public static final PagedFormat INFORMIX_LIMIT = new PagedFormat(
+        "SELECT SKIP {offset} FIRST {size} * FROM ({query}) TEMP_T"
+    );
+
+    public static final PagedFormat SQLSERVER2012_LIMIT = new PagedFormat(
+        "{query} OFFSET {offset} ROWS FETCH NEXT {size} ROWS ONLY"
+    );
 
     public String build(String query, String pagedOffset, String pagedSize, String pagedEndOffset) {
         if (isBlank(format)) {

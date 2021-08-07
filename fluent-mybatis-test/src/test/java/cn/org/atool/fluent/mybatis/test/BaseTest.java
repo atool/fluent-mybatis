@@ -30,7 +30,6 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LI
     "cn.org.atool.fluent.mybatis.db"
 })
 public abstract class BaseTest extends Test4J {
-
 }
 
 @Configuration

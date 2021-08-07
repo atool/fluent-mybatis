@@ -49,13 +49,17 @@ public enum DbType {
      */
     POSTGRE_SQL("postgresql", D_QUOTATION_ESCAPE, PG_LIMIT),
     /**
+     * informix
+     */
+    INFORMIX("informix", INFORMIX_LIMIT),
+    /**
      * SQLSERVER2005
      */
     SQL_SERVER2005("sqlserver2005", SQUARE_BRACKETS_ESCAPE, UN_SUPPORT_LIMIT),
     /**
      * SQLSERVER
      */
-    SQL_SERVER("sqlserver", SQUARE_BRACKETS_ESCAPE, UN_SUPPORT_LIMIT),
+    SQL_SERVER2012("sqlserver", SQUARE_BRACKETS_ESCAPE, SQLSERVER2012_LIMIT),
     /**
      * 其它数据库1, 按标准语法进行处理
      * 这里定义2个OTHER, 是为了尽可能满足一个应用使用到多数据源类型的场景
@@ -134,14 +138,5 @@ public enum DbType {
      */
     public void setPagedFormat(String pagedFormat) {
         this.feature.setPaged(new PagedFormat(pagedFormat));
-    }
-
-    /**
-     * 获取数据库分页语法
-     *
-     * @return 分页语法
-     */
-    public String getPagedFormat() {
-        return this.feature.getPaged().getFormat();
     }
 }
