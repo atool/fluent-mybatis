@@ -1,13 +1,12 @@
 package cn.org.atool.fluent.generator;
 
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.generator.FileGenerator;
 import cn.org.atool.generator.annotation.Table;
 import cn.org.atool.generator.annotation.Tables;
-import cn.org.atool.generator.database.DbTypeOfGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.test4j.module.database.proxy.DataSourceCreator;
-import org.test4j.module.database.script.DataSourceType;
 
 import javax.sql.DataSource;
 
@@ -15,7 +14,7 @@ import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
 
 public class SqlLiteGenerator {
     DataSource sqliteDataSource() {
-        return DataSourceCreator.create("dataSource", DataSourceType.Sqlite,
+        return DataSourceCreator.create("dataSource", DbType.SQLITE,
             "org.sqlite.JDBC",
             "jdbc:sqlite:" + System.getProperty("user.dir") + "/db/sqlite_test",
             "", ""
@@ -29,7 +28,7 @@ public class SqlLiteGenerator {
     }
 
     @Tables(
-        dbType = DbTypeOfGenerator.SQLITE,
+        dbType = DbType.SQLITE,
         driver = "org.sqlite.JDBC",
         url = "jdbc:sqlite:db/sqlite_test",
         username = "", password = "",
