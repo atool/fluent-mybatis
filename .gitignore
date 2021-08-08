@@ -31,3 +31,4 @@ build/
 
 ### Extra ###
 note/
+/fluent-mybatis-test/db/

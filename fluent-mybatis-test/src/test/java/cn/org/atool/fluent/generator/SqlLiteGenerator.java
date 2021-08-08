@@ -13,32 +13,32 @@ import javax.sql.DataSource;
 
 import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
 
-public class H2Generator {
-    DataSource h2DataSource() {
-        return DataSourceCreator.create("dataSource", DataSourceType.H2DB,
-            "org.h2.Driver",
-            "jdbc:h2:" + System.getProperty("user.dir") + "/db/h2test",
-            "sa", "sa"
+public class SqlLiteGenerator {
+    DataSource sqliteDataSource() {
+        return DataSourceCreator.create("dataSource", DataSourceType.Sqlite,
+            "org.sqlite.JDBC",
+            "jdbc:sqlite:" + System.getProperty("user.dir") + "/db/sqlite_test",
+            "", ""
         );
     }
 
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build(h2DataSource(), A.class);
+        FileGenerator.build( A.class);
     }
 
     @Tables(
-        dbType = DbTypeOfGenerator.H2,
-//        driver = "org.h2.Driver",
-//        url = "jdbc:h2:~/workspace/github/fluent-mybatis/fluent-mybatis-test/db/h2test",
-//        username = "sa", password = "sa",
-        basePack = BasePack, schema = "H2TEST.PUBLIC",
+        dbType = DbTypeOfGenerator.SQLITE,
+        driver = "org.sqlite.JDBC",
+        url = "jdbc:sqlite:db/sqlite_test",
+        username = "", password = "",
+        basePack = BasePack, schema = "",
         tables = {
-            @Table(value = {"STUDENT"})
+            @Table(value = {"student"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/h2/entity", testDir = "target/h2/test", daoDir = "target/h2/dao")
-    class A {
+        srcDir = "target/sqlite/entity", testDir = "target/sqlite/test", daoDir = "target/sqlite/dao")
+    static class A {
     }
 }
