@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-mybatis-parent</artifactId>
-        <version>1.6.15</version>
+        <version>1.6.16</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -63,7 +63,11 @@
             <artifactId>mybatis-spring</artifactId>
             <version>2.0.6</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>fluent-mybatis-processor</artifactId>

@@ -9,7 +9,7 @@
         <version>1.0.4</version>
     </parent>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.6.15</version>
+    <version>1.6.16</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -17,7 +17,7 @@
     <properties>
         <spring.version>5.3.0</spring.version>
         <mybatis.version>3.5.6</mybatis.version>
-        <fluent-generator.version>1.2.6</fluent-generator.version>
+        <db-feature.version>1.2.7</db-feature.version>
         <fluent-mock.version>1.1.3</fluent-mock.version>
         <fluent-dbtest.version>1.0.7</fluent-dbtest.version>
         <test4j-junit5.version>2.7.9</test4j-junit5.version>
@@ -50,8 +50,13 @@
             </dependency>
             <dependency>
                 <groupId>com.github.atool</groupId>
+                <artifactId>db-feature</artifactId>
+                <version>${db-feature.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.atool</groupId>
                 <artifactId>generator</artifactId>
-                <version>${fluent-generator.version}</version>
+                <version>${db-feature.version}</version>
             </dependency>
             <!-- test jar -->
             <dependency>
