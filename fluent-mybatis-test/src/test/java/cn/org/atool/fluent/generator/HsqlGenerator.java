@@ -13,31 +13,31 @@ import javax.sql.DataSource;
 import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
 
 public class HsqlGenerator {
-    DataSource sqliteDataSource() {
-        return DataSourceCreator.create("dataSource", DbType.HSQL,
-            "org.sqlite.JDBC",
-            "jdbc:sqlite:" + System.getProperty("user.dir") + "/db/sqlite_test",
-            "", ""
+    DataSource hsqlDataSource() {
+        return DataSourceCreator.create("dataSource",
+            DbType.HSQL, null,
+            "jdbc:hsqldb:file:" + System.getProperty("user.dir") + "/db/hsql_test",
+            "sa", "sa"
         );
     }
 
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build(sqliteDataSource(), A.class);
+        FileGenerator.build(hsqlDataSource(), A.class);
     }
 
     @Tables(
         dbType = DbType.HSQL,
-        driver = "org.sqlite.JDBC",
-        url = "jdbc:sqlite:db/sqlite_test",
-        username = "", password = "",
-        basePack = BasePack, schema = "",
+        driver = "org.hsqldb.jdbcDriver",
+        url = "jdbc:hsqldb:file:./db/hsql_test",
+        username = "sa", password = "sa",
+        basePack = BasePack, schema = "PUBLIC.PUBLIC",
         tables = {
-            @Table(value = {"student"})
+            @Table(value = {"STUDENT"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/sqlite/entity", testDir = "target/sqlite/test", daoDir = "target/sqlite/dao")
+        srcDir = "target/hsql/entity", testDir = "target/hsql/test", daoDir = "target/hsql/dao")
     static class A {
     }
 }

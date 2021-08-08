@@ -14,8 +14,8 @@ import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
 
 public class H2Generator {
     DataSource h2DataSource() {
-        return DataSourceCreator.create("dataSource", DbType.H2,
-            "org.h2.Driver",
+        return DataSourceCreator.create("dataSource",
+            DbType.H2, null,
             "jdbc:h2:" + System.getProperty("user.dir") + "/db/h2test",
             "sa", "sa"
         );
@@ -24,7 +24,7 @@ public class H2Generator {
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build(A.class);
+        FileGenerator.build(h2DataSource(), A.class);
     }
 
     @Tables(

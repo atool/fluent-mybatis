@@ -14,8 +14,8 @@ import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
 
 public class SqlLiteGenerator {
     DataSource sqliteDataSource() {
-        return DataSourceCreator.create("dataSource", DbType.SQLITE,
-            "org.sqlite.JDBC",
+        return DataSourceCreator.create("dataSource",
+            DbType.SQLITE, null,
             "jdbc:sqlite:" + System.getProperty("user.dir") + "/db/sqlite_test",
             "", ""
         );
