@@ -25,7 +25,7 @@ public class SqlLiteGenerator {
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build( A.class);
+        FileGenerator.build(sqliteDataSource(), A.class);
     }
 
     @Tables(

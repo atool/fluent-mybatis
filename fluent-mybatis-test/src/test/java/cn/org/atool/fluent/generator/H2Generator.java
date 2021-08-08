@@ -25,14 +25,14 @@ public class H2Generator {
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build(h2DataSource(), A.class);
+        FileGenerator.build( A.class);
     }
 
     @Tables(
         dbType = DbTypeOfGenerator.H2,
-//        driver = "org.h2.Driver",
-//        url = "jdbc:h2:~/workspace/github/fluent-mybatis/fluent-mybatis-test/db/h2test",
-//        username = "sa", password = "sa",
+        driver = "org.h2.Driver",
+        url = "jdbc:h2:./db/h2test",
+        username = "sa", password = "sa",
         basePack = BasePack, schema = "H2TEST.PUBLIC",
         tables = {
             @Table(value = {"STUDENT"})
