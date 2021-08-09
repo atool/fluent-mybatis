@@ -24,7 +24,7 @@ import org.apache.ibatis.type.EnumTypeHandler;
  *
  * @author Powered By Fluent Mybatis
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked"})
 @Data
 @Accessors(
     chain = true
