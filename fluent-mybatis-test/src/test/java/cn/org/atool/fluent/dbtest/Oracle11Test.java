@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.dbtest;
 
-import cn.org.atool.fluent.mybatis.db.mapper.OracleMapper;
-import cn.org.atool.fluent.mybatis.db.wrapper.OracleQuery;
+import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleMapper;
+import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleQuery;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.IdcardEntity;
 import cn.org.atool.fluent.mybatis.generate.wrapper.IdcardQuery;
