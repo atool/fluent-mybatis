@@ -32,12 +32,12 @@ public class PostgreGenerator {
         driver = "org.postgresql.Driver",
         url = "jdbc:postgresql://localhost:5432/postgres",
         username = "postgres", password = "",
-        basePack = BasePack, schema = "test",
+        basePack = "cn.org.atool.fluent.mybatis.db.pg", schema = "test",
         tables = {
-            @Table(value = {"student"})
+            @Table(value = {"student:PgStudent"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/postgresql/entity", testDir = "target/postgresql/test", daoDir = "target/postgresql/dao")
+        srcDir = "src/main/java", testDir = "target/postgresql/test", daoDir = "target/postgresql/dao")
     static class A {
     }
 }

@@ -87,6 +87,6 @@ public class InNestQueryTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("SELECT `id` FROM fluent_mybatis.student " +
                 "WHERE `home_address_id` IN (SELECT `id` " +
-                "   FROM home_address WHERE `id` IN (?, ?))", StringMode.SameAsSpace);
+                "   FROM `home_address` WHERE `id` IN (?, ?))", StringMode.SameAsSpace);
     }
 }

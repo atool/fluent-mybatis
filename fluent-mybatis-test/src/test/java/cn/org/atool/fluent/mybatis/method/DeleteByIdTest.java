@@ -87,6 +87,6 @@ public class DeleteByIdTest extends BaseTest {
             .column2.values("c1", "c2", "c3")
         );
         want.exception(() -> noPrimaryMapper.logicDeleteById(3L), MyBatisSystemException.class)
-            .contains("the parameter[logical delete field of table(no_primary)] can't be null.");
+            .contains("the parameter[logical delete field of table(`no_primary`)] can't be null.");
     }
 }

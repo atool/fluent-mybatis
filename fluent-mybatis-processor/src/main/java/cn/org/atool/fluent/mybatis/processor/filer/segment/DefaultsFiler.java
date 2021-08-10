@@ -1,21 +1,22 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
-import cn.org.atool.fluent.mybatis.functions.TableDynamic;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Defaults;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.FM_BaseDefault;
 
 /**
  * 构造Query和Updater的工程类
@@ -44,68 +45,22 @@ public class DefaultsFiler extends AbstractFiler {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        this.addWrapperDefault(spec, fluent.getDefaults());
-        spec.addSuperinterface(IDefaultGetter.class)
+        spec.superclass(parameterizedType(FM_BaseDefault, fluent.entity(), fluent.query(), fluent.updater(), fluent.defaults()))
+            .addSuperinterface(ClassNames2.getClassName(fluent.getDefaults()))
             .addField(FieldSpec.builder(fluent.defaults(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("new $T()", fluent.defaults())
                 .build())
-            .addField(this.f_dynamic())
-            .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build())
-            .addMethod(this.m_setEntityByDefault())
+            .addMethod(this.m_constructor())
             .addMethod(this.m_emptyQuery())
-            .addMethod(this.m_defaultQuery())
             .addMethod(this.m_emptyUpdater())
-            .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_aliasQuery_0())
-            .addMethod(this.m_aliasQuery_1())
-            .addMethod(this.m_aliasWith_1())
-            .addMethod(this.m_aliasWith_2())
-            .addMethod(this.m_setTableDynamic())
-            .addMethod(this.m_table())
+            .addMethod(this.m_aliasQuery_2())
         ;
     }
 
-    private MethodSpec m_table() {
-        return super.publicMethod("table", false, CN_Supplier_Str)
-            .addStatement("return dynamic == null ? () -> Table_Name : () -> dynamic.get(Table_Name)")
-            .addJavadoc("获取表名")
-            .build();
-    }
-
-    private MethodSpec m_setTableDynamic() {
-        return super.publicMethod("setTableDynamic", false, fluent.defaults())
-            .addJavadoc("设置表名动态设置")
-            .addParameter(TableDynamic.class, "dynamic")
-            .addStatement("this.dynamic = dynamic")
-            .addStatement("return this")
-            .build();
-    }
-
-    private FieldSpec f_dynamic() {
-        return FieldSpec.builder(TableDynamic.class, "dynamic", Modifier.PRIVATE).build();
-    }
-
-    /**
-     * 设置implements自定义接口
-     *
-     * @param builder      TypeSpec.Builder
-     * @param daoInterface interface name
-     */
-    protected void addWrapperDefault(TypeSpec.Builder builder, String daoInterface) {
-        int dot = daoInterface.lastIndexOf('.');
-        String packageName = "";
-        String simpleClassName = daoInterface;
-        if (dot > 0) {
-            packageName = daoInterface.substring(0, dot);
-            simpleClassName = daoInterface.substring(dot + 1);
-        }
-        builder.addSuperinterface(ClassName.get(packageName, simpleClassName));
-    }
-
-    private MethodSpec m_setEntityByDefault() {
-        return super.publicMethod(M_SET_ENTITY_BY_DEFAULT, true, (TypeName) null)
-            .addParameter(IEntity.class, "entity")
-            .addStatement("this.setInsertDefault(entity)")
+    private MethodSpec m_constructor() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PRIVATE)
+            .addStatement("super(Table_Name, $S, $T.$L)", fluent.getSchema(), DbType.class, fluent.getDbType().name())
             .build();
     }
 
@@ -115,67 +70,18 @@ public class DefaultsFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_defaultQuery() {
-        return super.publicMethod(M_DEFAULT_QUERY, true, fluent.query())
-            .addStatement("$T query = new $T()", fluent.query(), fluent.query())
-            .addStatement("this.setQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
-    private MethodSpec m_aliasQuery_0() {
-        return super.publicMethod(M_ALIAS_QUERY, true, fluent.query())
-            .addJavadoc(JavaDoc_Alias_Query_0)
-            .addStatement("$T parameters = new Parameters()", Parameters.class)
-            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
-            .addStatement("this.setQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
-    private MethodSpec m_aliasQuery_1() {
-        return super.publicMethod(M_ALIAS_QUERY, true, fluent.query())
-            .addParameter(String.class, "alias")
-            .addJavadoc(JavaDoc_Alias_Query_1)
-            .addStatement("$T query = new $T(alias, new $T())", fluent.query(), fluent.query(), ClassName.get(Parameters.class))
-            .addStatement("this.setQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
-    private MethodSpec m_aliasWith_1() {
-        return super.publicMethod(M_ALIAS_WITH, true, fluent.query())
-            .addParameter(BaseQuery.class, "fromQuery")
-            .addJavadoc(JavaDoc_Alias_With_1)
-            .addStatement("$T parameters = fromQuery.getWrapperData().getParameters()", Parameters.class)
-            .addStatement("$T query = new $T(parameters.alias(), parameters)", fluent.query(), fluent.query())
-            .addStatement("this.setQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
-    private MethodSpec m_aliasWith_2() {
-        return super.publicMethod(M_ALIAS_WITH, true, fluent.query())
-            .addParameter(String.class, "alias")
-            .addParameter(BaseQuery.class, "fromQuery")
-            .addJavadoc(JavaDoc_Alias_With_2)
-            .addStatement("$T query = new $T(alias, fromQuery.getWrapperData().getParameters())", fluent.query(), fluent.query())
-            .addStatement("this.setQueryDefault(query)")
-            .addStatement("return query")
-            .build();
-    }
-
     private MethodSpec m_emptyUpdater() {
         return super.publicMethod(M_NEW_UPDATER, true, fluent.updater())
             .addStatement("return new $T()", fluent.updater())
             .build();
     }
 
-    private MethodSpec m_defaultUpdater() {
-        return super.publicMethod(M_DEFAULT_UPDATER, true, fluent.updater())
-            .addStatement("$T updater = new $T()", fluent.updater(), fluent.updater())
-            .addStatement("this.setUpdateDefault(updater)")
-            .addStatement("return updater")
+    private MethodSpec m_aliasQuery_2() {
+        return super.publicMethod(M_ALIAS_QUERY, true, fluent.query())
+            .addJavadoc(JavaDoc_Alias_Query_0)
+            .addParameter(String.class, "alias")
+            .addParameter(Parameters.class, "parameters")
+            .addStatement("return new $T(alias, parameters)", fluent.query())
             .build();
     }
 

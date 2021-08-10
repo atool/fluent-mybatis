@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.db.oracle;
+package cn.org.atool.fluent.mybatis.db.oracle11.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;

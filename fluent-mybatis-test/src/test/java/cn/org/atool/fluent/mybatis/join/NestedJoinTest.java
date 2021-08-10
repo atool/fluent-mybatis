@@ -32,7 +32,7 @@ public class NestedJoinTest extends BaseTest {
             "FROM fluent_mybatis.student " +
             "WHERE `id` IN (SELECT a.`id` " +
             "FROM fluent_mybatis.student a " +
-            "JOIN home_address b " +
+            "JOIN `home_address` b " +
             "ON a.`home_address_id` = b.`id` " +
             "WHERE b.`address` LIKE ?)");
         db.sqlList().wantFirstPara().eq(new Object[]{"%add%"});
@@ -50,11 +50,11 @@ public class NestedJoinTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) " +
             "FROM fluent_mybatis.student t1 " +
-            "LEFT JOIN home_address t2 " +
+            "LEFT JOIN `home_address` t2 " +
             "ON t1.`home_address_id` = t2.`id`");
         db.sqlList().wantSql(1).end("" +
             "FROM fluent_mybatis.student t1 LEFT " +
-            "JOIN home_address t2 " +
+            "JOIN `home_address` t2 " +
             "ON t1.`home_address_id` = t2.`id` LIMIT ?, ?");
         db.sqlList().wantPara(1).eqList(50, 10);
     }

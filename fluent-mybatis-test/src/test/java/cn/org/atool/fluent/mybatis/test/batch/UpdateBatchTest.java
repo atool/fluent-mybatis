@@ -99,7 +99,7 @@ public class UpdateBatchTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("" +
                 "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
-                "UPDATE home_address SET `gmt_modified` = now(), `address` = ? WHERE `id` = ?", StringMode.SameAsSpace);
+                "UPDATE `home_address` SET `gmt_modified` = now(), `address` = ? WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user")

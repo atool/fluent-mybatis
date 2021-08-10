@@ -25,6 +25,11 @@ public @interface FluentMybatis {
     String table() default "";
 
     /**
+     * 数据库schema
+     */
+    String schema() default "";
+
+    /**
      * 实体类后缀
      *
      * @return suffix of Entity

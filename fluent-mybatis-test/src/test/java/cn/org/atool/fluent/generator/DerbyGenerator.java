@@ -10,8 +10,6 @@ import org.test4j.module.database.proxy.DataSourceCreator;
 
 import javax.sql.DataSource;
 
-import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
-
 public class DerbyGenerator {
     DataSource derbyDataSource() {
         return DataSourceCreator.create("dataSource",
@@ -24,7 +22,7 @@ public class DerbyGenerator {
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build( A.class);
+        FileGenerator.build(A.class);
     }
 
     @Tables(
@@ -32,12 +30,12 @@ public class DerbyGenerator {
         driver = "org.apache.derby.jdbc.EmbeddedDriver",
         url = "jdbc:derby:./db/derby_test;create=true",
         username = "sa", password = "sa",
-        basePack = BasePack, schema = "TEST",
+        basePack = "cn.org.atool.fluent.mybatis.db.derby", schema = "TEST",
         tables = {
-            @Table(value = {"student"})
+            @Table(value = {"student:DerbyStudent"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/derby/entity", testDir = "target/derby/test", daoDir = "target/derby/dao")
+        srcDir = "src/main/java", testDir = "target/derby/test", daoDir = "target/derby/dao")
     static class A {
     }
 }

@@ -48,7 +48,7 @@ public class NestedQueryTest extends BaseTest {
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT `id` FROM fluent_mybatis.student " +
-                "WHERE EXISTS (SELECT * FROM home_address " +
+                "WHERE EXISTS (SELECT * FROM `home_address` " +
                 "   WHERE `address` LIKE ? AND `id` =student.home_address_id)", StringMode.SameAsSpace);
     }
 
@@ -65,7 +65,7 @@ public class NestedQueryTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("SELECT `id` FROM fluent_mybatis.student " +
                 "WHERE EXISTS (SELECT 1 " +
-                "FROM home_address " +
+                "FROM `home_address` " +
                 "WHERE `address` LIKE ? " +
                 "AND `id` =student.home_address_id)");
     }
@@ -96,6 +96,6 @@ public class NestedQueryTest extends BaseTest {
             .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`,")
             .end("FROM fluent_mybatis.student " +
                 "WHERE `id` IN (SELECT `student_id` " +
-                "   FROM home_address WHERE `address` LIKE ?)", StringMode.SameAsSpace);
+                "   FROM `home_address` WHERE `address` LIKE ?)", StringMode.SameAsSpace);
     }
 }

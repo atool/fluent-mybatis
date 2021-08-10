@@ -47,7 +47,7 @@ public class NoAliasJoinTest extends BaseTest {
         List<StudentEntity> entities = this.mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student a1 " +
-            "JOIN home_address a2 " +
+            "JOIN `home_address` a2 " +
             "ON a1.`home_address_id` = a2.`id` " +
             "WHERE a1.id < ? " +
             "AND a1.`age` = ? " +

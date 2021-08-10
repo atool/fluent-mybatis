@@ -32,12 +32,12 @@ public class SqlLiteGenerator {
         driver = "org.sqlite.JDBC",
         url = "jdbc:sqlite:db/sqlite_test",
         username = "", password = "",
-        basePack = BasePack, schema = "",
+        basePack = "cn.org.atool.fluent.mybatis.db.sqlite", schema = "",
         tables = {
-            @Table(value = {"student"})
+            @Table(value = {"student:SqliteStudent"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/sqlite/entity", testDir = "target/sqlite/test", daoDir = "target/sqlite/dao")
+        srcDir = "src/main/java", testDir = "target/sqlite/test", daoDir = "target/sqlite/dao")
     static class A {
     }
 }

@@ -32,7 +32,7 @@ public class AggregateTest extends BaseTest {
             "AVG(`score`) AS avg_score, " +
             "SUM(`score`), " +
             "GROUP_CONCAT(`score`) " +
-            "FROM student_score " +
+            "FROM `student_score` " +
             "GROUP BY `school_term`, `subject`");
     }
 
@@ -49,7 +49,7 @@ public class AggregateTest extends BaseTest {
             "SELECT `school_term`, `subject` AS MySubject, " +
             "min(score) as min_score, " +
             "group_concat(id order by id desc separator ';') " +
-            "FROM student_score " +
+            "FROM `student_score` " +
             "GROUP BY `school_term`, `subject`");
     }
 }

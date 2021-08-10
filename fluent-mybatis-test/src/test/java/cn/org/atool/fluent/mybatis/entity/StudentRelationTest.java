@@ -34,10 +34,10 @@ public class StudentRelationTest extends BaseTest {
         new StudentEntity().setId(100L).findTeacherList();
         // 验证SQL语句
         db.sqlList().wantFirstSql().end("" +
-            "FROM teacher " +
+            "FROM `teacher` " +
             "WHERE `id` IN " +
             "   (SELECT `teacher_id` " +
-            "   FROM student_teacher_relation " +
+            "   FROM `student_teacher_relation` " +
             "   WHERE `student_id` = ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList(100L);
     }
@@ -52,7 +52,7 @@ public class StudentRelationTest extends BaseTest {
             "AND `env` = ? " +
             "AND `id` IN " +
             "   (SELECT `student_id` " +
-            "   FROM student_teacher_relation " +
+            "   FROM `student_teacher_relation` " +
             "   WHERE `teacher_id` = ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList(false, "test_env", 200L);
     }

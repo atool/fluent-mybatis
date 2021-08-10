@@ -24,7 +24,7 @@ public class VersionTest extends BaseTest {
             .setCode("xxx")
             .setId(1L).setVersion(1L));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET `version` = `version` + 1, `code` = ? " +
+            "UPDATE `idcard` SET `version` = `version` + 1, `code` = ? " +
             "WHERE `id` = ? AND `version` = ?");
     }
 
@@ -42,7 +42,7 @@ public class VersionTest extends BaseTest {
         mapper.updateById(new IdcardEntity()
             .setId(1L).setVersion(1L));
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET `version` = `version` + 1 " +
+            "UPDATE `idcard` SET `version` = `version` + 1 " +
             "WHERE `id` = ? AND `version` = ?");
     }
 
@@ -61,7 +61,7 @@ public class VersionTest extends BaseTest {
             .where.id().eq(1L)
             .and.version().eq(2L).end());
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE idcard SET `version` = `version` + 1, `code` = ? " +
+            "UPDATE `idcard` SET `version` = `version` + 1, `code` = ? " +
             "WHERE `id` = ? AND `version` = ?");
     }
 

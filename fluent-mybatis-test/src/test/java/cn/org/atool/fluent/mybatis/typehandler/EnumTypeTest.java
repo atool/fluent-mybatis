@@ -22,7 +22,7 @@ public class EnumTypeTest extends BaseTest {
             .setEnumNum(MyEnum.test3)
             .setEnumString(MyEnum.test2));
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO my_enum_type(`enum_num`, `enum_string`) VALUES (?, ?)");
+            "INSERT INTO `my_enum_type`(`enum_num`, `enum_string`) VALUES (?, ?)");
         db.sqlList().wantFirstPara().eqList(MyEnum.test3, MyEnum.test2);
     }
 
@@ -36,7 +36,7 @@ public class EnumTypeTest extends BaseTest {
                 .setEnumNum(MyEnum.test1)
                 .setEnumString(MyEnum.test2)));
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO my_enum_type(`enum_num`, `enum_string`) VALUES (?, ?) , (?, ?)");
+            "INSERT INTO `my_enum_type`(`enum_num`, `enum_string`) VALUES (?, ?) , (?, ?)");
         db.sqlList().wantFirstPara().eqList(MyEnum.test3, MyEnum.test2, MyEnum.test1, MyEnum.test2);
         ATM.dataMap.myEnumType.table(2)
             .enumNum.values(2, 0)
@@ -75,7 +75,7 @@ public class EnumTypeTest extends BaseTest {
             .end();
         List<MyEnumTypePoJo> list = mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .end("FROM my_enum_type WHERE `enum_num` = ? AND `enum_string` = ?");
+            .end("FROM `my_enum_type` WHERE `enum_num` = ? AND `enum_string` = ?");
         want.list(list).sizeEq(1);
     }
 }

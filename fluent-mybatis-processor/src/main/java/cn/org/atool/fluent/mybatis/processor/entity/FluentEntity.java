@@ -43,6 +43,10 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      */
     private String tableName;
     /**
+     * schema
+     */
+    private String schema = "";
+    /**
      * 默认值实现
      */
     private String defaults;
@@ -121,6 +125,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         if (isBlank(this.tableName)) {
             this.tableName = MybatisUtil.tableName(this.className, fluentMyBatis.prefix(), fluentMyBatis.suffix());
         }
+        this.schema = fluentMyBatis.schema();
         this.mapperBeanPrefix = fluentMyBatis.mapperBeanPrefix();
         this.dbType = fluentMyBatis.dbType();
         return this;

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.db.oracle;
+package cn.org.atool.fluent.dbtest;
 
 import cn.org.atool.fluent.mybatis.db.mapper.OracleMapper;
 import cn.org.atool.fluent.mybatis.db.wrapper.OracleQuery;
@@ -13,7 +13,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 import org.test4j.tools.datagen.DataMap;
 
 @SuppressWarnings({"unchecked"})
-class OracleEntityTest extends BaseTest {
+class Oracle11Test extends BaseTest {
     @Autowired
     OracleMapper mapper;
 
@@ -24,8 +24,8 @@ class OracleEntityTest extends BaseTest {
             new OracleQuery().selectId().limit(1, 10).of(mapper).listEntity(), Exception.class);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM (  " +
-            "SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM (SELECT [id] FROM oracle_table) TMP_PAGE) " +
-            "WHERE ROW_ID > ? AND ROW_ID <= ?/**测试而已**/", StringMode.SameAsSpace);
+            "SELECT TMP_PAGE.*, ROWNUM RN FROM (SELECT [id] FROM [oracle_table]) TMP_PAGE) " +
+            "WHERE RN > ? AND RN <= ?/**测试而已**/", StringMode.SameAsSpace);
 
         db.sqlList().wantFirstPara().eqList(1, 11);
     }
@@ -40,6 +40,6 @@ class OracleEntityTest extends BaseTest {
             .limit(1).to().findOne().orElse(null);
         want.object(entity).notNull().eqDataMap(DataMap.create(1).kv("code", "code"));
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT `id`, `is_deleted`, `code`, `version`, 'a' AS bb FROM idcard LIMIT ?, ?");
+            "SELECT `id`, `is_deleted`, `code`, `version`, 'a' AS bb FROM `idcard` LIMIT ?, ?");
     }
 }

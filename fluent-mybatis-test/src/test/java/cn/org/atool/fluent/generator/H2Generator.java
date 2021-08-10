@@ -32,12 +32,12 @@ public class H2Generator {
         driver = "org.h2.Driver",
         url = "jdbc:h2:./db/h2test",
         username = "sa", password = "sa",
-        basePack = BasePack, schema = "H2TEST.PUBLIC",
+        basePack = "cn.org.atool.fluent.mybatis.db.h2", schema = "H2TEST.PUBLIC",
         tables = {
-            @Table(value = {"STUDENT"})
+            @Table(value = {"STUDENT:H2Student"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/h2/entity", testDir = "target/h2/test", daoDir = "target/h2/dao")
+        srcDir = "src/main/java", testDir = "target/h2/test", daoDir = "target/h2/dao")
     class A {
     }
 }

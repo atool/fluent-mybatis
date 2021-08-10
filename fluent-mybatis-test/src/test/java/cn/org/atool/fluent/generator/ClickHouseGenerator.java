@@ -10,8 +10,7 @@ import org.test4j.module.database.proxy.DataSourceCreator;
 
 import javax.sql.DataSource;
 
-import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
-
+@SuppressWarnings({"unused"})
 public class ClickHouseGenerator {
     DataSource derbyDataSource() {
         return DataSourceCreator.create("dataSource",
@@ -24,20 +23,20 @@ public class ClickHouseGenerator {
     @Disabled
     @Test
     void generate() {
-        FileGenerator.build( A.class);
+        FileGenerator.build(A.class);
     }
 
     @Tables(
         dbType = DbType.CLICK_HOUSE,
         driver = "ru.yandex.clickhouse.ClickHouseDriver",
         url = "jdbc:clickhouse://localhost:8123/test",
-        username = "default", password = "",
-        basePack = BasePack, schema = "test",
+        username = "default",
+        basePack = "cn.org.atool.fluent.mybatis.db.clickhouse", schema = "test",
         tables = {
-            @Table(value = {"user"})
+            @Table(value = {"user:CkUser"})
         },
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
-        srcDir = "target/clickhouse/entity", testDir = "target/clickhouse/test", daoDir = "target/clickhouse/dao")
+        srcDir = "src/main/java", testDir = "target/clickhouse/test", daoDir = "target/clickhouse/dao")
     static class A {
     }
 }

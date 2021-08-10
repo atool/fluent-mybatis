@@ -33,7 +33,7 @@ public class SelectNestedTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t2.id, t2._count " +
             "FROM (SELECT `id`, COUNT(`gmt_modified`) AS _count " +
-            "   FROM t_member WHERE `id` = ? GROUP BY `id`) t2 " +
+            "   FROM `t_member` WHERE `id` = ? GROUP BY `id`) t2 " +
             "WHERE t2.`id` = ? GROUP BY t2.id", StringMode.SameAsSpace);
     }
 

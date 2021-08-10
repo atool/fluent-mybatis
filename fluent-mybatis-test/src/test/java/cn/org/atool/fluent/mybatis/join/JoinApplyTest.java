@@ -40,7 +40,7 @@ public class JoinApplyTest extends BaseTest {
         db.sqlList().wantFirstSql().eq(
             format("SELECT %s.`age`, %s.`student_id` ", alias1, alias2) +
                 format("FROM fluent_mybatis.student %s ", alias1) +
-                format("JOIN home_address %s ", alias2) +
+                format("JOIN `home_address` %s ", alias2) +
                 format("ON %s.id = %s.id ", alias1, alias2) +
                 format("OR %s.age = %s.student_id ", alias1, alias2) +
                 format("WHERE %s.`is_deleted` = ? ", alias1) +

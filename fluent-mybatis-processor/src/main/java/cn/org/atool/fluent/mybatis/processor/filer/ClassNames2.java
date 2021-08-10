@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
+import cn.org.atool.fluent.mybatis.base.crud.BaseDefault;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
@@ -27,6 +28,8 @@ public interface ClassNames2 extends ClassNames {
     ClassName FM_IRichMapper = ClassName.get(IRichMapper.class);
 
     ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
+
+    ClassName FM_BaseDefault = ClassName.get(BaseDefault.class);
 
     ClassName Spring_Component = ClassName.get("org.springframework.stereotype", "Component");
 

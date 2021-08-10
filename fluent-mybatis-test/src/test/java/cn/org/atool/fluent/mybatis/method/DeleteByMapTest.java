@@ -57,7 +57,7 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .start("UPDATE idcard SET `is_deleted` =")
+            .start("UPDATE `idcard` SET `is_deleted` =")
             .end("WHERE `id` = ?")
             .notContain("`is_deleted` = true");
         db.sqlList().wantFirstPara().eq(new Object[]{24});
