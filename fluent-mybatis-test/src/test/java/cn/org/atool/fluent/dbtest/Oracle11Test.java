@@ -23,7 +23,7 @@ class Oracle11Test extends BaseTest {
         want.exception(() ->
             new OracleQuery().selectId().limit(1, 10).of(mapper).listEntity(), Exception.class);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT * FROM (  " +
+            "SELECT * FROM (" +
             "SELECT TMP_PAGE.*, ROWNUM RN FROM (SELECT [id] FROM [oracle_table]) TMP_PAGE) " +
             "WHERE RN > ? AND RN <= ?/**测试而已**/", StringMode.SameAsSpace);
 
