@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,7 @@ public class StdPagedTest extends BaseTest {
     StudentMapper mapper;
 
     @Test
+    @Disabled("不支持group by分页")
     void stdPaged() {
         ATM.dataMap.student.initTable(6)
             .grade.values(2, 3)

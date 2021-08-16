@@ -3,9 +3,6 @@ package cn.org.atool.fluent.dbtest;
 import cn.org.atool.fluent.mybatis.db.oracle11.entity.OracleEntity;
 import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleMapper;
 import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleQuery;
-import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.entity.IdcardEntity;
-import cn.org.atool.fluent.mybatis.generate.wrapper.IdcardQuery;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 import org.test4j.tools.Kits;
-import org.test4j.tools.datagen.DataMap;
 
 @SuppressWarnings({"unchecked"})
 class Oracle11Test extends BaseTest {
@@ -45,22 +41,29 @@ class Oracle11Test extends BaseTest {
             , Exception.class);
         db.sqlList().wantFirstSql().eq("" +
                 "INSERT INTO oracle_table(id, is_deleted, code, version) " +
-                "SELECT SEQ_USER_ID.nextval as id, 0, ?, 0 FROM dual " +
+                "SELECT SEQ_USER_ID.nextval as id, TMP.* FROM ( " +
+                "SELECT 0, ?, 0 FROM dual " +
                 "UNION ALL " +
-                "SELECT SEQ_USER_ID.nextval as id, 0, ?, 0 FROM dual"
+                "SELECT 0, ?, 0 FROM dual ) TMP"
             , StringMode.SameAsSpace);
     }
 
+
     @Test
-    void testPoJo() {
-        ATM.dataMap.idcard.initTable(1)
-            .code.values("code")
-            .version.values(1)
-            .cleanAndInsert();
-        IdcardEntity entity = new IdcardQuery().selectAll().select.apply("'a' AS bb").end()
-            .limit(1).to().findOne().orElse(null);
-        want.object(entity).notNull().eqDataMap(DataMap.create(1).kv("code", "code"));
+    void test_batchInsertWithPk() {
+        DbType.ORACLE.setEscapeExpress("?");
+        want.exception(() ->
+                mapper.insertBatch(Kits.arr(
+                    new OracleEntity().setId(1L).setCode("code1"),
+                    new OracleEntity().setId(2L).setCode("code2")
+                ))
+            , Exception.class);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT `id`, `is_deleted`, `code`, `version`, 'a' AS bb FROM `idcard` LIMIT ?, ?");
+                "INSERT INTO oracle_table(id, is_deleted, code, version) " +
+                "SELECT SEQ_USER_ID.nextval as id, TMP.* FROM ( " +
+                "SELECT 0, ?, 0 FROM dual " +
+                "UNION ALL " +
+                "SELECT 0, ?, 0 FROM dual ) TMP"
+            , StringMode.SameAsSpace);
     }
 }

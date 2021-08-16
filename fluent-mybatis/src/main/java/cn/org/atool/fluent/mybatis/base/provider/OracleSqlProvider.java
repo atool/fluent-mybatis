@@ -15,6 +15,9 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  * @author wudarui
  */
 public class OracleSqlProvider {
+    /**
+     * https://blog.csdn.net/w_y_t_/article/details/51416201
+     */
     public static <E extends IEntity> String insertBatch(BaseSqlProvider provider, List<E> entities, boolean withPk) {
         MapperSql sql = new MapperSql();
         String tableName = null;
@@ -26,6 +29,11 @@ public class OracleSqlProvider {
         }
         sql.INSERT_INTO(tableName == null ? provider.tableName() : tableName);
         sql.INSERT_COLUMNS(provider.dbType(), provider.allFields(true));
+        sql.APPEND("SELECT");
+        if (!withPk) {
+            sql.APPEND(getSeq(provider.getSeq()) + ",");
+        }
+        sql.APPEND("TMP.* FROM (");
         for (int index = 0; index < entities.size(); index++) {
             if (index > 0) {
                 sql.APPEND("UNION ALL");
@@ -34,11 +42,9 @@ public class OracleSqlProvider {
             String fields = String.join(", ",
                 provider.insertBatchEntity(index, entities.get(index), withPk)
             );
-            if (!withPk) {
-                sql.APPEND(getSeq(provider.getSeq()) + ",");
-            }
             sql.APPEND(fields + " FROM dual");
         }
+        sql.APPEND(") TMP");
         return sql.toString();
     }
 

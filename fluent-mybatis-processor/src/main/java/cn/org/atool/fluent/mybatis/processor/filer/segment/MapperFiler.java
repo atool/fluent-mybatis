@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -330,7 +330,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch);
         if (fluent.getPrimary() != null) {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
-                this.addOptions(builder, false);
+                this.addOptions(builder, false, false);
             } else {
                 this.addSelectKey(builder);
             }
@@ -344,6 +344,8 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_insertBatchWithPk() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
         TypeName listType = parameterizedType(CN_Collection, fluent.entity());
+
+        this.addOptions(builder, false, true);
         return builder.addParameter(this.param(listType, "entities", "Param_List"))
             .returns(TypeName.INT)
             .build();
@@ -363,7 +365,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert);
         if (fluent.getPrimary() != null) {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
-                this.addOptions(builder, true);
+                this.addOptions(builder, true, false);
             } else {
                 this.addSelectKey(builder);
             }
@@ -402,9 +404,12 @@ public class MapperFiler extends AbstractFiler {
             .build());
     }
 
-    private void addOptions(MethodSpec.Builder builder, boolean single) {
+    private void addOptions(MethodSpec.Builder builder, boolean single, boolean withPk) {
+        if (fluent.getPrimary() == null) {
+            return;
+        }
         builder.addAnnotation(AnnotationSpec.builder(Options.class)
-            .addMember("useGeneratedKeys", "$L", single || this.useGeneratedKeys())
+            .addMember("useGeneratedKeys", "$L", !withPk && (single || this.useGeneratedKeys()))
             .addMember("keyProperty", "$S", fluent.getPrimary().getName())
             .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
             .build());
