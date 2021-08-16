@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;

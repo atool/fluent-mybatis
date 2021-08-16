@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import org.apache.ibatis.annotations.Options;

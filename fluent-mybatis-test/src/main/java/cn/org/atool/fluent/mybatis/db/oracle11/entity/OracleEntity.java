@@ -26,7 +26,7 @@ public class OracleEntity extends RichEntity {
     /**
      * 主键id
      */
-    @TableId("id")
+    @TableId(value = "id")
     private Long id;
 
     /**

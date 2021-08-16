@@ -1,8 +1,9 @@
-package cn.org.atool.fluent.mybatis.base.crud;
+package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
@@ -102,7 +103,13 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String insertBatch(Map map) {
         assertNotEmpty(Param_List, map);
         List<E> entities = getParas(map, Param_List);
-        return this.insertBatch(entities, false);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.insertBatch(this, entities, false);
+            default:
+                return this.insertBatch(entities, false);
+        }
     }
 
     public String insertBatchWithPk(Map map) {
@@ -138,7 +145,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param entity 实体实例
      * @param withPk true: 带id值插入; false: 不带id值插入
      */
-    private void validateInsertEntity(E entity, boolean withPk) {
+    void validateInsertEntity(E entity, boolean withPk) {
         this.setEntityByDefault(entity);
         if (withPk) {
             isTrue(this.primaryNotNull(entity), "the pk of insert entity can't be null.");
@@ -703,7 +710,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param entity 要插入的实例
      * @return 操作表名称
      */
-    private String dynamic(IEntity entity) {
+    String dynamic(IEntity entity) {
         if (entity instanceof IRichEntity) {
             String dynamic = entity.findTableBelongTo();
             return isBlank(dynamic) ? this.tableName() : dynamic;
@@ -732,5 +739,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     private String dynamic(IUpdate update) {
         String table = (String) ((BaseWrapper) update).getTable().get();
         return isBlank(table) ? this.tableName() : table;
+    }
+
+    /**
+     * 默认的seq值
+     *
+     * @return seq
+     */
+    String getSeq() {
+        return dbType().feature.getSeq();
     }
 }

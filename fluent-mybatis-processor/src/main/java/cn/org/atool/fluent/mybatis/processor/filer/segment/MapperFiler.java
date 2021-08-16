@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
@@ -330,7 +330,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch);
         if (fluent.getPrimary() != null) {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
-                this.addOptions(builder);
+                this.addOptions(builder, false);
             } else {
                 this.addSelectKey(builder);
             }
@@ -363,7 +363,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert);
         if (fluent.getPrimary() != null) {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
-                this.addOptions(builder);
+                this.addOptions(builder, true);
             } else {
                 this.addSelectKey(builder);
             }
@@ -402,12 +402,29 @@ public class MapperFiler extends AbstractFiler {
             .build());
     }
 
-    private void addOptions(MethodSpec.Builder builder) {
+    private void addOptions(MethodSpec.Builder builder, boolean single) {
         builder.addAnnotation(AnnotationSpec.builder(Options.class)
-            .addMember("useGeneratedKeys", "true")
+            .addMember("useGeneratedKeys", "$L", single || this.useGeneratedKeys())
             .addMember("keyProperty", "$S", fluent.getPrimary().getName())
             .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
             .build());
+    }
+
+    /**
+     * https://www.cnblogs.com/xunux/p/4882761.html
+     * <p>
+     * https://blog.csdn.net/weixin_41175479/article/details/80608512
+     *
+     * @return useGeneratedKeys = true/false
+     */
+    private boolean useGeneratedKeys() {
+        switch (fluent.getDbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return false;
+            default:
+                return true;
+        }
     }
 
     @Override
