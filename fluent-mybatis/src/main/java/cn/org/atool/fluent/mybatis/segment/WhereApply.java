@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
@@ -13,7 +14,9 @@ import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
 import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -181,7 +184,27 @@ public class WhereApply<
 
     @Override
     public WHERE applyFunc(ISqlOp op, String expression, Object... args) {
-        return this.segment.apply(this.column(), op, expression, args);
+        int prev = 0;
+        StringBuilder buff = new StringBuilder();
+        List<Object> list = new ArrayList<>();
+        for (Object arg : args) {
+            int next = expression.indexOf('?', prev);
+            if (next < 0) {
+                throw new IllegalArgumentException("The number of placeholders and parameters are not equal.");
+            }
+            buff.append(expression, prev, next);
+            if (arg instanceof IQuery) {
+                String nest = ((IQuery) arg).getWrapperData().getQuerySql();
+                buff.append(nest);
+                ((BaseQuery) arg).sharedParameter(this.segment.wrapper);
+            } else {
+                buff.append('?');
+                list.add(arg);
+            }
+            prev = next + 1;
+        }
+        buff.append(expression, prev, expression.length());
+        return this.segment.apply(this.column(), op, buff.toString(), list.toArray());
     }
 
     @Override

@@ -34,9 +34,6 @@ import java.io.Serializable;
 public class OracleUserEntity extends RichEntity {
     private static final long serialVersionUID = 1L;
 
-    /**
-     *
-     */
     @TableId(
         value = "ID",
         auto = false,

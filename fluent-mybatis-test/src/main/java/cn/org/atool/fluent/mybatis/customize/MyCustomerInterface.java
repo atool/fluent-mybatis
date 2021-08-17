@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressUpdate;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 
@@ -29,6 +30,9 @@ public interface MyCustomerInterface extends IDefaultSetter {
 
     @Override
     default void setUpdateDefault(IUpdate updater) {
+        if (updater instanceof HomeAddressUpdate) {
+            updater.updateSet("address", "default address set");
+        }
         updater.where()
             .apply(F_IS_DELETED, EQ, false)
             .apply(F_ENV, EQ, TEST_ENV)

@@ -21,6 +21,20 @@ public class WhereApplyTest2 extends BaseTest {
     }
 
     @Test
+    void apply_any() {
+        mapper.listEntity(new StudentQuery()
+            .where.age().applyFunc(SqlOp.GT, "any(?)",
+                new StudentQuery().select.age().end()
+                    .where.id().lt(30L).end())
+            .and.id().gt(50L)
+            .end()
+        );
+        db.sqlList().wantFirstSql().end("" +
+            "WHERE `age` > any(SELECT `age` FROM fluent_mybatis.student WHERE `id` < ?) " +
+            "AND `id` > ?");
+    }
+
+    @Test
     void apply_date() {
         mapper.listEntity(new StudentQuery()
             .where.gmtModified().applyFunc(SqlOp.GT, "DATE_ADD(gmt_created, INTERVAL ? DAY)", 10)
