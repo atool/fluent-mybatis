@@ -2,25 +2,20 @@ package cn.org.atool.fluent.dbtest;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.db.oracle11.entity.OracleUserEntity;
-import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleMapper;
 import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleUserMapper;
-import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleQuery;
 import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleUserUpdate;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 import org.test4j.tools.Kits;
 
 @SuppressWarnings({"unchecked"})
+@Disabled
 class Oracle11Test extends BaseTest {
-    @Autowired
-    OracleMapper mapper;
-
     @Autowired
     OracleUserMapper userMapper;
 
@@ -34,22 +29,7 @@ class Oracle11Test extends BaseTest {
         db.table("TEST_USER").clean();
     }
 
-    @DisplayName("验证数据库自定义特性: 反义符+分页")
     @Test
-    void testPage() {
-        DbType.ORACLE.setEscapeExpress("[?]");
-        want.exception(() ->
-            new OracleQuery().selectId().limit(1, 10).of(mapper).listEntity(), Exception.class);
-        db.sqlList().wantFirstSql().eq("" +
-            "SELECT * FROM (" +
-            "SELECT TMP_PAGE.*, ROWNUM RN FROM (SELECT [id] FROM [oracle_table]) TMP_PAGE) " +
-            "WHERE RN > ? AND RN <= ?/**测试而已**/", StringMode.SameAsSpace);
-
-        db.sqlList().wantFirstPara().eqList(1, 11);
-    }
-
-    @Test
-    @Disabled
     void test_Insert() {
         OracleUserEntity e1 = newEntity(null, "code1");
         userMapper.insert(e1);
@@ -77,14 +57,13 @@ class Oracle11Test extends BaseTest {
     void test_batchInsert() {
         OracleUserEntity e1 = newEntity(null, "code1");
         OracleUserEntity e2 = newEntity(null, "code2");
-//        want.exception(() ->
         userMapper.insertBatch(Kits.arr(e1, e2));
-//            , Exception.class);
-        System.out.println(e1.getId());
-//        db.sqlList().wantSql(0).eq("" +
-//            "SELECT TEST_USER_SEQ.nextval AS ID FROM DUAL");
         db.sqlList().wantSql(0).eq("" +
-                "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) SELECT TEST_USER_SEQ.nextval AS ID, TMP.* FROM ( SELECT ?, ?, ? FROM dual UNION ALL SELECT ?, ?, ? FROM dual ) TMP"
+                "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
+                "SELECT TEST_USER_SEQ.nextval AS ID, TMP.* FROM ( " +
+                "SELECT ?, ?, ? FROM dual " +
+                "UNION ALL " +
+                "SELECT ?, ?, ? FROM dual ) TMP"
             , StringMode.SameAsSpace);
     }
 
@@ -93,9 +72,7 @@ class Oracle11Test extends BaseTest {
         OracleUserEntity e1 = newEntity(21L, "code1");
         OracleUserEntity e2 = newEntity(22L, "code2");
 
-//        want.exception(() ->
         userMapper.insertBatchWithPk(Kits.arr(e1, e2));
-//            , Exception.class);
         db.sqlList().wantFirstSql().eq("" +
                 "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
                 "SELECT TMP.* " +
