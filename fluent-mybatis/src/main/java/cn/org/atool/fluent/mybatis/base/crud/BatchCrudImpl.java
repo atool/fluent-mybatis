@@ -134,7 +134,7 @@ public class BatchCrudImpl implements BatchCrud {
     @Setter
     private DbType dbType;
 
-    private DbType dbType() {
+    public DbType dbType() {
         return dbType == null ? IRefs.instance().defaultDbType() : dbType;
     }
 }

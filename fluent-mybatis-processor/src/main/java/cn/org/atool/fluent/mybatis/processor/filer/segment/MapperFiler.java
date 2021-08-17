@@ -330,9 +330,16 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch);
         if (fluent.getPrimary() != null) {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
-                this.addOptions(builder, false, false);
+                this.addOptions(builder);
             } else {
-                this.addSelectKey(builder);
+                switch (fluent.getDbType()) {
+                    case ORACLE:
+                    case ORACLE12:
+                        this.addOptions(builder);
+                        break;
+                    default:
+                        this.addSelectKey(builder);
+                }
             }
         }
         TypeName listType = parameterizedType(CN_Collection, fluent.entity());
@@ -344,8 +351,6 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_insertBatchWithPk() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
         TypeName listType = parameterizedType(CN_Collection, fluent.entity());
-
-        this.addOptions(builder, false, true);
         return builder.addParameter(this.param(listType, "entities", "Param_List"))
             .returns(TypeName.INT)
             .build();
@@ -365,7 +370,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert);
         if (fluent.getPrimary() != null) {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
-                this.addOptions(builder, true, false);
+                this.addOptions(builder);
             } else {
                 this.addSelectKey(builder);
             }
@@ -404,32 +409,22 @@ public class MapperFiler extends AbstractFiler {
             .build());
     }
 
-    private void addOptions(MethodSpec.Builder builder, boolean single, boolean withPk) {
+    private void addOptions(MethodSpec.Builder builder) {
         if (fluent.getPrimary() == null) {
             return;
         }
-        builder.addAnnotation(AnnotationSpec.builder(Options.class)
-            .addMember("useGeneratedKeys", "$L", !withPk && (single || this.useGeneratedKeys()))
-            .addMember("keyProperty", "$S", fluent.getPrimary().getName())
-            .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
-            .build());
-    }
-
-    /**
-     * https://www.cnblogs.com/xunux/p/4882761.html
-     * <p>
-     * https://blog.csdn.net/weixin_41175479/article/details/80608512
-     *
-     * @return useGeneratedKeys = true/false
-     */
-    private boolean useGeneratedKeys() {
+        AnnotationSpec.Builder ab = AnnotationSpec.builder(Options.class);
         switch (fluent.getDbType()) {
             case ORACLE:
             case ORACLE12:
-                return false;
+                ab.addMember("useGeneratedKeys", "$L", false);
+                break;
             default:
-                return true;
+                ab.addMember("useGeneratedKeys", "$L", true);
         }
+        ab.addMember("keyProperty", "$S", fluent.getPrimary().getName());
+        ab.addMember("keyColumn", "$S", fluent.getPrimary().getColumn());
+        builder.addAnnotation(ab.build());
     }
 
     @Override

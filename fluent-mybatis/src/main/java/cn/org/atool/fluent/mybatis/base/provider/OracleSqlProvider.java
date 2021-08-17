@@ -14,9 +14,14 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author wudarui
  */
+@SuppressWarnings({"unchecked"})
 public class OracleSqlProvider {
     /**
      * https://blog.csdn.net/w_y_t_/article/details/51416201
+     * <p>
+     * https://www.cnblogs.com/xunux/p/4882761.html
+     * <p>
+     * https://blog.csdn.net/weixin_41175479/article/details/80608512
      */
     public static <E extends IEntity> String insertBatch(BaseSqlProvider provider, List<E> entities, boolean withPk) {
         MapperSql sql = new MapperSql();
@@ -46,6 +51,10 @@ public class OracleSqlProvider {
         }
         sql.APPEND(") TMP");
         return sql.toString();
+    }
+
+    public static String wrapperBeginEnd(String sql) {
+        return "BEGIN " + sql + "; END;";
     }
 
     /**

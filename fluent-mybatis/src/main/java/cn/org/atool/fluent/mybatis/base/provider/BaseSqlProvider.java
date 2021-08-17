@@ -52,7 +52,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         if (!(wrapper instanceof BatchCrudImpl)) {
             throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
         }
-        return ((BatchCrudImpl) wrapper).batchSql();
+        String sql = ((BatchCrudImpl) wrapper).batchSql();
+        switch (((BatchCrudImpl) wrapper).dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.wrapperBeginEnd(sql);
+            default:
+                return sql;
+        }
     }
 
     /**
@@ -87,7 +94,13 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return sql
      */
     public String insert(E entity) {
-        return buildInsertSql(EMPTY, entity, false);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return buildInsertSql(EMPTY, entity, notBlank(getSeq()));
+            default:
+                return buildInsertSql(EMPTY, entity, false);
+        }
     }
 
     /**
@@ -115,7 +128,13 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String insertBatchWithPk(Map map) {
         assertNotEmpty(Param_List, map);
         List<E> entities = getParas(map, Param_List);
-        return this.insertBatch(entities, true);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.insertBatch(this, entities, true);
+            default:
+                return this.insertBatch(entities, true);
+        }
     }
 
     private String insertBatch(List<E> entities, boolean withPk) {
@@ -487,7 +506,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             index++;
             list.add(sql);
         }
-        return String.join(";\n", list);
+        String sql = String.join(";\n", list);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.wrapperBeginEnd(sql);
+            default:
+                return sql;
+        }
     }
 
     private final static char[] EW_CONST = "#{ew.".toCharArray();
@@ -746,7 +772,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      *
      * @return seq
      */
-    String getSeq() {
+    protected String getSeq() {
         return dbType().feature.getSeq();
     }
 }
