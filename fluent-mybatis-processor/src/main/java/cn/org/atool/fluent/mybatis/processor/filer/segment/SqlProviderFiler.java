@@ -1,16 +1,17 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_SET_ENTITY_BY_DEFAULT;
@@ -82,6 +84,16 @@ public class SqlProviderFiler extends AbstractFiler {
         spec.addMethod(this.m_setEntityByDefault());
         spec.addMethod(this.m_dbType());
         spec.addMethod(this.m_longTypeOfLogicDelete());
+        PrimaryField pr = fluent.getPrimary();
+        if (pr != null && notBlank(pr.getSeqName())) {
+            spec.addMethod(this.m_getSeq(pr.getSeqName()));
+        }
+    }
+
+    private MethodSpec m_getSeq(String seqName) {
+        return super.protectedMethod("getSeq", true, ClassName.get(String.class))
+            .addStatement("return $S", seqName)
+            .build();
     }
 
     private MethodSpec m_longTypeOfLogicDelete() {

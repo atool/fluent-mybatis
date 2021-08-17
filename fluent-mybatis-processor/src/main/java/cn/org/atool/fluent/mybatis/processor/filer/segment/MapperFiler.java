@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -332,7 +332,14 @@ public class MapperFiler extends AbstractFiler {
             if (fluent.getPrimary().isAutoIncrease() && isBlank(fluent.getPrimary().getSeqName())) {
                 this.addOptions(builder);
             } else {
-                this.addSelectKey(builder);
+                switch (fluent.getDbType()) {
+                    case ORACLE:
+                    case ORACLE12:
+                        this.addOptions(builder);
+                        break;
+                    default:
+                        this.addSelectKey(builder);
+                }
             }
         }
         TypeName listType = parameterizedType(CN_Collection, fluent.entity());
@@ -403,11 +410,21 @@ public class MapperFiler extends AbstractFiler {
     }
 
     private void addOptions(MethodSpec.Builder builder) {
-        builder.addAnnotation(AnnotationSpec.builder(Options.class)
-            .addMember("useGeneratedKeys", "true")
-            .addMember("keyProperty", "$S", fluent.getPrimary().getName())
-            .addMember("keyColumn", "$S", fluent.getPrimary().getColumn())
-            .build());
+        if (fluent.getPrimary() == null) {
+            return;
+        }
+        AnnotationSpec.Builder ab = AnnotationSpec.builder(Options.class);
+        switch (fluent.getDbType()) {
+            case ORACLE:
+            case ORACLE12:
+                ab.addMember("useGeneratedKeys", "$L", false);
+                break;
+            default:
+                ab.addMember("useGeneratedKeys", "$L", true);
+        }
+        ab.addMember("keyProperty", "$S", fluent.getPrimary().getName());
+        ab.addMember("keyColumn", "$S", fluent.getPrimary().getColumn());
+        builder.addAnnotation(ab.build());
     }
 
     @Override

@@ -1,8 +1,9 @@
-package cn.org.atool.fluent.mybatis.base.crud;
+package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
@@ -51,7 +52,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
         if (!(wrapper instanceof BatchCrudImpl)) {
             throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
         }
-        return ((BatchCrudImpl) wrapper).batchSql();
+        String sql = ((BatchCrudImpl) wrapper).batchSql();
+        switch (((BatchCrudImpl) wrapper).dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.wrapperBeginEnd(sql);
+            default:
+                return sql;
+        }
     }
 
     /**
@@ -86,7 +94,13 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @return sql
      */
     public String insert(E entity) {
-        return buildInsertSql(EMPTY, entity, false);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return buildInsertSql(EMPTY, entity, notBlank(getSeq()));
+            default:
+                return buildInsertSql(EMPTY, entity, false);
+        }
     }
 
     /**
@@ -102,13 +116,25 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     public String insertBatch(Map map) {
         assertNotEmpty(Param_List, map);
         List<E> entities = getParas(map, Param_List);
-        return this.insertBatch(entities, false);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.insertBatch(this, entities, false);
+            default:
+                return this.insertBatch(entities, false);
+        }
     }
 
     public String insertBatchWithPk(Map map) {
         assertNotEmpty(Param_List, map);
         List<E> entities = getParas(map, Param_List);
-        return this.insertBatch(entities, true);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.insertBatch(this, entities, true);
+            default:
+                return this.insertBatch(entities, true);
+        }
     }
 
     private String insertBatch(List<E> entities, boolean withPk) {
@@ -138,7 +164,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param entity 实体实例
      * @param withPk true: 带id值插入; false: 不带id值插入
      */
-    private void validateInsertEntity(E entity, boolean withPk) {
+    void validateInsertEntity(E entity, boolean withPk) {
         this.setEntityByDefault(entity);
         if (withPk) {
             isTrue(this.primaryNotNull(entity), "the pk of insert entity can't be null.");
@@ -480,7 +506,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
             index++;
             list.add(sql);
         }
-        return String.join(";\n", list);
+        String sql = String.join(";\n", list);
+        switch (dbType()) {
+            case ORACLE:
+            case ORACLE12:
+                return OracleSqlProvider.wrapperBeginEnd(sql);
+            default:
+                return sql;
+        }
     }
 
     private final static char[] EW_CONST = "#{ew.".toCharArray();
@@ -703,7 +736,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param entity 要插入的实例
      * @return 操作表名称
      */
-    private String dynamic(IEntity entity) {
+    String dynamic(IEntity entity) {
         if (entity instanceof IRichEntity) {
             String dynamic = entity.findTableBelongTo();
             return isBlank(dynamic) ? this.tableName() : dynamic;
@@ -732,5 +765,14 @@ public abstract class BaseSqlProvider<E extends IEntity> {
     private String dynamic(IUpdate update) {
         String table = (String) ((BaseWrapper) update).getTable().get();
         return isBlank(table) ? this.tableName() : table;
+    }
+
+    /**
+     * 默认的seq值
+     *
+     * @return seq
+     */
+    protected String getSeq() {
+        return dbType().feature.getSeq();
     }
 }

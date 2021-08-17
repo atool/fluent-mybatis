@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.dbtest;
 
+import cn.org.atool.fluent.mybatis.db.pg.entity.PgStudentEntity;
 import cn.org.atool.fluent.mybatis.db.pg.mapper.PgStudentMapper;
 import cn.org.atool.fluent.mybatis.db.pg.wrapper.PgStudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
@@ -25,5 +26,15 @@ public class PostgreTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT \"id\" FROM test.\"student\" LIMIT ? OFFSET ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList(10, 1);
+    }
+
+    @DisplayName("pg insert")
+    @Test
+    void testInsert() {
+        want.exception(() ->
+                mapper.insert(new PgStudentEntity().setAddress("address").setAge(29)),
+            SQLSyntaxErrorException.class, BadSqlGrammarException.class);
+        db.sqlList().wantFirstSql().eq("" +
+            "INSERT INTO test.\"student\"(\"address\", \"age\") VALUES (?, ?)", StringMode.SameAsSpace);
     }
 }

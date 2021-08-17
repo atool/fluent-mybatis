@@ -1,5 +1,6 @@
-package cn.org.atool.fluent.mybatis.base.crud;
+package cn.org.atool.fluent.mybatis.base.provider;
 
+import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.test4j.hamcrest.IWant;
