@@ -32,6 +32,7 @@ import lombok.experimental.Accessors;
 )
 @FluentMybatis(
     table = "no_auto_id",
+    schema = "fluent_mybatis",
     mapperBeanPrefix = "new"
 )
 public class NoAutoIdEntity extends RichEntity {

@@ -33,6 +33,7 @@ import org.apache.ibatis.type.BlobTypeHandler;
 )
 @FluentMybatis(
     table = "blob_value",
+    schema = "fluent_mybatis",
     superMapper = ICustomizedMapper.class,
     suffix = "PoJo"
 )

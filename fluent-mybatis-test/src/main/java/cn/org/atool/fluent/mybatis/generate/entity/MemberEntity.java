@@ -36,7 +36,8 @@ import lombok.experimental.Accessors;
     callSuper = false
 )
 @FluentMybatis(
-    table = "t_member"
+    table = "t_member",
+    schema = "fluent_mybatis"
 )
 public class MemberEntity extends RichEntity {
   private static final long serialVersionUID = 1L;

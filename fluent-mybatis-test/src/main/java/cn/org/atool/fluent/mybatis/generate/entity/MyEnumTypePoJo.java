@@ -34,6 +34,7 @@ import org.apache.ibatis.type.EnumTypeHandler;
 )
 @FluentMybatis(
     table = "my_enum_type",
+    schema = "fluent_mybatis",
     suffix = "PoJo"
 )
 public class MyEnumTypePoJo extends RichEntity {

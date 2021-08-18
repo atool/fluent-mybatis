@@ -32,7 +32,8 @@ import lombok.experimental.Accessors;
     callSuper = false
 )
 @FluentMybatis(
-    table = "idcard"
+    table = "idcard",
+    schema = "fluent_mybatis"
 )
 public class IdcardEntity extends RichEntity {
   private static final long serialVersionUID = 1L;

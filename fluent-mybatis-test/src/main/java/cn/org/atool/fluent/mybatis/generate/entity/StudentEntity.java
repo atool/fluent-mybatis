@@ -39,6 +39,7 @@ import lombok.experimental.Accessors;
 )
 @FluentMybatis(
     table = "student",
+    schema = "fluent_mybatis",
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )

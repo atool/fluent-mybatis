@@ -29,6 +29,7 @@ import lombok.experimental.Accessors;
 )
 @FluentMybatis(
     table = "no_primary",
+    schema = "fluent_mybatis",
     mapperBeanPrefix = "new"
 )
 public class NoPrimaryEntity extends RichEntity {
