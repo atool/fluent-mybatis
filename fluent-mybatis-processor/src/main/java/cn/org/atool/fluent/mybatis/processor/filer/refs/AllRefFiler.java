@@ -15,7 +15,7 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set_Class;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findColumnByField;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
@@ -84,8 +84,8 @@ public class AllRefFiler extends AbstractFile {
         return MethodSpec.methodBuilder("allEntityClass")
             .addModifiers(Modifier.PROTECTED, Modifier.FINAL)
             .addAnnotation(Override.class)
-            .returns(parameterizedType(CN_Set, CN_Class_IEntity))
-            .addStatement("return $T.allEntityClass()", MapperRefFiler.getClassName())
+            .returns(CN_Set_Class)
+            .addStatement("return $T.All_Entity_Class", QueryRefFiler.getClassName())
             .build();
     }
 
@@ -94,7 +94,7 @@ public class AllRefFiler extends AbstractFile {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .returns(MapperRefFiler.getClassName())
             .beginControlFlow("if (mappers == null)")
-            .addStatement("throw springNotInitException()")
+            .addStatement("validateMapperFactory()")
             .endControlFlow()
             .addStatement("return mappers")
             .build();

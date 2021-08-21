@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefault;
+import cn.org.atool.fluent.mybatis.base.crud.IDefault;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
@@ -12,10 +13,7 @@ import com.squareup.javapoet.WildcardTypeName;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -39,7 +37,12 @@ public interface ClassNames2 extends ClassNames {
 
     ParameterizedTypeName CN_Map_StrStr = ParameterizedTypeName.get(Map.class, String.class, String.class);
 
+    ParameterizedTypeName CN_Map_ClassIDefault = ParameterizedTypeName.get(Map.class, Class.class, IDefault.class);
+    ParameterizedTypeName CN_HashMap_ClassIDefault = ParameterizedTypeName.get(HashMap.class, Class.class, IDefault.class);
+
     ParameterizedTypeName CN_List_Str = ParameterizedTypeName.get(List.class, String.class);
+
+    ParameterizedTypeName CN_Set_Class = ParameterizedTypeName.get(Set.class, Class.class);
 
     ParameterizedTypeName CN_Supplier_Str = ParameterizedTypeName.get(Supplier.class, String.class);
 

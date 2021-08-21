@@ -77,8 +77,14 @@ public abstract class IRefs {
         }
     }
 
-    protected static RuntimeException springNotInitException() {
-        return new RuntimeException("The cn.org.atool.fluent.mybatis.spring.MapperFactory must be configured as spring bean.");
+    /**
+     * 验证MapperFactory实例是否已被spring容器管理
+     */
+    protected static void validateMapperFactory() {
+        if (IRefs.instance().mapperFactory != null) {
+            return;
+        }
+        throw new RuntimeException("The cn.org.atool.fluent.mybatis.spring.MapperFactory must be configured as spring bean.");
     }
 
     /**
@@ -198,10 +204,7 @@ public abstract class IRefs {
      * @return ignore
      */
     public Class<? extends IEntity> findFluentEntityClass(Class clazz) {
-        Set<Class<? extends IEntity>> all = this.allEntityClass();
-        if (all.isEmpty()) {
-            throw springNotInitException();
-        }
+        Set<Class> all = this.allEntityClass();
         Class aClass = clazz;
         while (aClass != Object.class && aClass != RichEntity.class) {
             if (all.contains(aClass)) {
@@ -218,7 +221,7 @@ public abstract class IRefs {
      *
      * @return ignore
      */
-    protected abstract Set<Class<? extends IEntity>> allEntityClass();
+    protected abstract Set<Class> allEntityClass();
 
     /**
      * 返回spring管理对应的mapper bean

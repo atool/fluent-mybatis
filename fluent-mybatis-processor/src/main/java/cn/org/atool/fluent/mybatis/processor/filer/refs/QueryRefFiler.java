@@ -11,11 +11,13 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_HashMap_ClassIDefault;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_ClassIDefault;
 
 public class QueryRefFiler extends AbstractFile {
     private static final String QueryRef = "QueryRef";
@@ -41,8 +43,9 @@ public class QueryRefFiler extends AbstractFile {
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_factory(fluent));
         }
-        spec.addField(this.f_allDefaultSupplier())
-            .addStaticBlock(this.m_initSupplier())
+        spec.addField(this.f_allDefaults())
+            //.addStaticBlock(this.m_initEntityDefaults())
+            .addField(this.f_allEntityClass())
             .addMethod(m_defaultQuery(false))
             .addMethod(m_emptyQuery(false))
             .addMethod(m_defaultUpdater(false))
@@ -132,26 +135,36 @@ public class QueryRefFiler extends AbstractFile {
             .returns(IDefault.class);
 
         spec.addModifiers(Modifier.STATIC)
-            .addCode("if (Supplier.containsKey(clazz)) {\n")
-            .addStatement("\treturn Supplier.get(clazz)")
+            .addCode("if (ENTITY_DEFAULTS.containsKey(clazz)) {\n")
+            .addStatement("\treturn ENTITY_DEFAULTS.get(clazz)")
             .addCode("}\n")
             .addStatement("throw $L(clazz)", M_NOT_FLUENT_MYBATIS_EXCEPTION);
 
         return spec.build();
     }
 
-    private CodeBlock m_initSupplier() {
+    private CodeBlock m_initEntityDefaults() {
         List<CodeBlock> list = new ArrayList<>();
+        list.add(CodeBlock.of("new $T() {\n", CN_HashMap_ClassIDefault));
+        list.add(CodeBlock.of("\t{\n"));
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("Supplier.put($T.class, $L);\n", fluent.entity(), fluent.lowerNoSuffix()));
+            list.add(CodeBlock.of("\t\tthis.put($T.class, $L);\n", fluent.entity(), fluent.lowerNoSuffix()));
         }
+        list.add(CodeBlock.of("\t}\n}"));
         return CodeBlock.join(list, "");
     }
 
-    private FieldSpec f_allDefaultSupplier() {
-        return FieldSpec.builder(parameterizedType(Map.class, Class.class, IDefault.class), "Supplier",
+    private FieldSpec f_allDefaults() {
+        return FieldSpec.builder(CN_Map_ClassIDefault, "ENTITY_DEFAULTS",
             Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
-            .initializer("new $T<>()", HashMap.class)
+            .initializer(this.m_initEntityDefaults())
+            .build();
+    }
+
+    private FieldSpec f_allEntityClass() {
+        return FieldSpec.builder(parameterizedType(Set.class, Class.class), "All_Entity_Class",
+            Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .initializer("$T.unmodifiableSet(ENTITY_DEFAULTS.keySet())", Collections.class)
             .build();
     }
 
