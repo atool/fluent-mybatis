@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -111,6 +112,7 @@ public class BatchCrudImpl implements BatchCrud {
             int index = values.size();
             values.add(entity);
             String prefix = format("ew.wrapperData.parameters.%s[%d].", ENTITY_LIST_KEY, index);
+            PkGeneratorKits.setIdByIdGenerator(entity);
             String sql = provider.buildInsertSql(prefix, entity, entity.findPk() != null);
             list.add(sql);
         }

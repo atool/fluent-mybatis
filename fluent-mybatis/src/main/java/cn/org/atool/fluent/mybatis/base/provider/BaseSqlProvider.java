@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
+import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldType;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
@@ -164,13 +165,16 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param entity 实体实例
      * @param withPk true: 带id值插入; false: 不带id值插入
      */
-    void validateInsertEntity(E entity, boolean withPk) {
-        this.setEntityByDefault(entity);
+    boolean validateInsertEntity(E entity, boolean withPk) {
+        PkGeneratorKits.setIdByIdGenerator(entity);
         if (withPk) {
-            isTrue(this.primaryNotNull(entity), "the pk of insert entity can't be null.");
+            isTrue(this.primaryNotNull(entity), "The pk of insert entity can't be null, you should use method insert without pk.");
         } else {
-            isTrue(this.primaryIsNull(entity), "the pk of insert entity must be null.");
+            isTrue(this.primaryIsNull(entity), "The pk of insert entity must be null, you should use method insert with pk.");
         }
+        this.setEntityByDefault(entity);
+        /* 主键有可能被 IdGenerator 赋值 **/
+        return entity.findPk() != null;
     }
 
     /**
@@ -574,7 +578,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      */
     public String buildInsertSql(String prefix, E entity, boolean withPk) {
         assertNotNull(Param_Entity, entity);
-        this.validateInsertEntity(entity, withPk);
+        withPk = this.validateInsertEntity(entity, withPk);
         MapperSql sql = new MapperSql();
         sql.INSERT_INTO(this.dynamic(entity));
         InsertList inserts = new InsertList();

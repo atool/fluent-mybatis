@@ -105,7 +105,7 @@ public class SqlProviderFiler extends AbstractFiler {
     private MethodSpec m_setEntityByDefault() {
         return super.protectedMethod(M_SET_ENTITY_BY_DEFAULT, true, null)
             .addParameter(IEntity.class, "entity")
-            .addStatement("defaults.setEntityByDefault(entity)")
+            .addStatement("defaults.setInsertDefault(entity)")
             .build();
     }
 

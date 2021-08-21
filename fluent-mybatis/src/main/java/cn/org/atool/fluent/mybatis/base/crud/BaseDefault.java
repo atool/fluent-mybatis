@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -26,7 +28,7 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
 @Setter
 @Accessors(chain = true)
 public abstract class BaseDefault<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>, D extends BaseDefault<E, Q, U, D>>
-    implements IDefaultSetter, IDefaultGetter {
+    implements IDefault {
 
     private TableDynamic dynamic;
 
@@ -40,11 +42,6 @@ public abstract class BaseDefault<E extends IEntity, Q extends IQuery<E>, U exte
         this.tableName = tableName;
         this.schema = schema;
         this.dbType = dbType;
-    }
-
-    @Override
-    public void setEntityByDefault(IEntity entity) {
-        this.setInsertDefault(entity);
     }
 
     @Override
@@ -119,7 +116,7 @@ public abstract class BaseDefault<E extends IEntity, Q extends IQuery<E>, U exte
      */
     public Supplier<String> table() {
         if (dynamic == null) {
-            if ((dbType == DbType.DERBY || dbType == DbType.POSTGRE_SQL) && notBlank(schema)) {
+            if (NeedSchemaDb.contains(dbType) && notBlank(schema)) {
                 return () -> this.schema + "." + this.dbType.wrap(this.tableName);
             } else {
                 return () -> this.dbType.wrap(this.tableName);
@@ -128,4 +125,11 @@ public abstract class BaseDefault<E extends IEntity, Q extends IQuery<E>, U exte
             return () -> dynamic.get(this.tableName);
         }
     }
+
+    /**
+     * 表查询需要带上schema的数据库类型
+     */
+    static final List<DbType> NeedSchemaDb = Arrays.asList(
+        DbType.DERBY, DbType.POSTGRE_SQL, DbType.SQL_SERVER2012, DbType.SQL_SERVER2005
+    );
 }

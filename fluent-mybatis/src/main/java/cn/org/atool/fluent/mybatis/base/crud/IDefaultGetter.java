@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
-
 /**
  * 进行默认设置
  *
@@ -9,14 +7,6 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
  */
 @SuppressWarnings({"rawtypes"})
 public interface IDefaultGetter {
-    /**
-     * 对entity设置默认值
-     * 默认值行为根据 {@link IDefaultSetter#setInsertDefault(IEntity)}来
-     *
-     * @param entity 实例
-     */
-    void setEntityByDefault(IEntity entity);
-
     /**
      * 创建一个空查询器(不包括{@link IDefaultSetter#setQueryDefault(IQuery)} 设置的默认条件)
      *

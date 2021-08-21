@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.crud.IDefault;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
@@ -54,7 +55,10 @@ public class AllRefFiler extends AbstractFile {
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_emptyUpdater(true))
             .addMethod(this.m_allEntityClass())
-            .addMethod(this.m_initEntityMapper());
+            .addMethod(this.m_initEntityMapper())
+            .addMethod(this.m_findDefault())
+        ;
+
         spec.addType(this.class_field())
             .addType(this.class_query())
             .addType(this.class_setter());
@@ -112,6 +116,16 @@ public class AllRefFiler extends AbstractFile {
             .addModifiers(Modifier.FINAL, Modifier.PROTECTED);
         spec.addStatement("mappers = $T.instance(super.mapperFactory)", MapperRefFiler.getClassName());
         return spec.build();
+    }
+
+    private MethodSpec m_findDefault() {
+        return MethodSpec.methodBuilder("findDefault")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
+            .returns(IDefault.class)
+            .addParameter(Class.class, "clazz")
+            .addStatement("return QueryRef.findDefault(clazz)")
+            .build();
     }
 
     private TypeSpec class_field() {

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-mybatis-parent</artifactId>
-        <version>1.7.2</version>
+        <version>1.7.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -138,6 +138,11 @@
             <artifactId>ojdbc8</artifactId>
             <version>19.3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>4.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -151,4 +156,11 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>clojars</id>
+            <name>clojars</name>
+            <url>https://repo.clojars.org/</url>
+        </repository>
+    </repositories>
 </project>

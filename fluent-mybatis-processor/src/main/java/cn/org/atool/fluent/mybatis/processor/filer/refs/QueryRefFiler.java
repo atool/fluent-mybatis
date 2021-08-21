@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.base.crud.IDefault;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -41,13 +41,13 @@ public class QueryRefFiler extends AbstractFile {
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_factory(fluent));
         }
-        spec.addField(this.f_allQuerySupplier())
+        spec.addField(this.f_allDefaultSupplier())
             .addStaticBlock(this.m_initSupplier())
             .addMethod(m_defaultQuery(false))
             .addMethod(m_emptyQuery(false))
             .addMethod(m_defaultUpdater(false))
             .addMethod(m_emptyUpdater(false))
-            .addMethod(this.m_findDefaultGetter());
+            .addMethod(this.m_findDefault());
     }
 
     private FieldSpec f_factory(FluentEntity fluent) {
@@ -125,11 +125,11 @@ public class QueryRefFiler extends AbstractFile {
         return spec.build();
     }
 
-    private MethodSpec m_findDefaultGetter() {
+    private MethodSpec m_findDefault() {
         MethodSpec.Builder spec = MethodSpec.methodBuilder("findDefault")
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
-            .returns(IDefaultGetter.class);
+            .returns(IDefault.class);
 
         spec.addModifiers(Modifier.STATIC)
             .addCode("if (Supplier.containsKey(clazz)) {\n")
@@ -148,8 +148,8 @@ public class QueryRefFiler extends AbstractFile {
         return CodeBlock.join(list, "");
     }
 
-    private FieldSpec f_allQuerySupplier() {
-        return FieldSpec.builder(parameterizedType(Map.class, Class.class, IDefaultGetter.class), "Supplier",
+    private FieldSpec f_allDefaultSupplier() {
+        return FieldSpec.builder(parameterizedType(Map.class, Class.class, IDefault.class), "Supplier",
             Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .initializer("new $T<>()", HashMap.class)
             .build();

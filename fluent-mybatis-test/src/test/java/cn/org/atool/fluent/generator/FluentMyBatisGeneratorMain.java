@@ -23,7 +23,7 @@ public class FluentMyBatisGeneratorMain {
     /**
      * 使用main函数，是避免全量跑test时，误执行生成代码
      *
-     * @param args
+     * @param args command line args
      */
     public static void main(String[] args) {
         DataSourceCreator.create("dataSource");
@@ -70,13 +70,13 @@ public class FluentMyBatisGeneratorMain {
     }
 
     @Tables(
-        /** 数据库连接信息 **/
+        /* 数据库连接信息 **/
         url = URL, username = "root", password = "password",
-        /** Entity类parent package路径 **/
+        /* Entity类parent package路径 **/
         srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
-        /** 如果表定义记录创建，记录修改，逻辑删除字段 **/
+        /* 如果表定义记录创建，记录修改，逻辑删除字段 **/
         gmtCreated = "gmt_create", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
-        /** 需要生成文件的表 ( 表名称:对应的Entity名称 ) **/
+        /* 需要生成文件的表 ( 表名称:对应的Entity名称 ) **/
         tables = @Table(value = {"t_member", "t_member_love", "t_member_favorite"}, tablePrefix = "t_"),
         relations = {
             @Relation(method = "findMyFavorite", source = "t_member", target = "t_member_favorite", type = RelationType.OneWay_0_N

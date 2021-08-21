@@ -6,6 +6,8 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressUpdate;
 
+import java.util.function.Supplier;
+
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 
 /**
@@ -13,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  *
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public interface MyCustomerInterface extends IDefaultSetter {
     String F_ENV = "env";
 
@@ -37,6 +40,11 @@ public interface MyCustomerInterface extends IDefaultSetter {
             .apply(F_IS_DELETED, EQ, false)
             .apply(F_ENV, EQ, TEST_ENV)
             .end();
+    }
+
+    @Override
+    default Supplier<Object> idGenerator(Class entityKlass) {
+        return SnowFlakeFake::snowFlakeId;
     }
 
     @Override

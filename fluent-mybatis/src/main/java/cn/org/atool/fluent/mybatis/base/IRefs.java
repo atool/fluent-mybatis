@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.crud.IDefault;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
@@ -276,4 +277,12 @@ public abstract class IRefs {
         this.relation = relation;
         this.mapperFactory = mapperFactory;
     }
+
+    /**
+     * 根据IEntity类型返回对应的IDefault实例
+     *
+     * @param clazz IEntity类型
+     * @return IDefault
+     */
+    public abstract IDefault findDefault(Class clazz);
 }
