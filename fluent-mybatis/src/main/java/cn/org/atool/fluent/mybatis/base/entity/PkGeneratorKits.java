@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.crud.IDefault;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * 实例主键生成器
@@ -31,6 +32,9 @@ public class PkGeneratorKits {
         if (defaults == null) {
             return;
         }
-        consumer.accept(defaults.pkGenerator(klass));
+        Supplier pkSupplier = defaults.pkGenerator(klass);
+        if (pkSupplier != null) {
+            consumer.accept(pkSupplier.get());
+        }
     }
 }

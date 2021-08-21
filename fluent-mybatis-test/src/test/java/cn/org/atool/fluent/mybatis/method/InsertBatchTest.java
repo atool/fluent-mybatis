@@ -59,7 +59,7 @@ public class InsertBatchTest extends BaseTest {
             new StudentEntity().setUserName("name1").setAge(23).setId(101L).setTenant(0L),
             new StudentEntity().setUserName("name2").setAge(24).setTenant(0L));
         want.exception(() -> mapper.insertBatch(list), FluentMybatisException.class, MyBatisSystemException.class)
-            .contains("the pk of insert entity must be null.");
+            .contains("The pk of insert entity must be null");
         db.table(ATM.table.student).count().eq(0);
     }
 }

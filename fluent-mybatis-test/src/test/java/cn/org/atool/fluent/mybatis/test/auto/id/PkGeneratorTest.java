@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.annotations.Mocks;
 
-import static cn.org.atool.fluent.mybatis.test.auto.id.SnowFlakeIdTestMocks.mocks;
+import static cn.org.atool.fluent.mybatis.test.auto.id.PkGeneratorTestMocks.mocks;
 
 @Mocks(SnowFlakeFake.class)
 public class PkGeneratorTest extends BaseTest {

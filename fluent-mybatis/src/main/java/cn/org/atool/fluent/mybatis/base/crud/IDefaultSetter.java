@@ -17,7 +17,7 @@ public interface IDefaultSetter {
      * @param entityKlass 实例类型
      */
     default Supplier<Object> pkGenerator(Class entityKlass) {
-        return () -> null;
+        return null;
     }
 
     /**

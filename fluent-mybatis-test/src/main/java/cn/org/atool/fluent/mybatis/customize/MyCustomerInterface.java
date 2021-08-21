@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressUpdate;
 
 import java.util.function.Supplier;
@@ -44,7 +45,11 @@ public interface MyCustomerInterface extends IDefaultSetter {
 
     @Override
     default Supplier<Object> pkGenerator(Class entityKlass) {
-        return SnowFlakeFake::snowFlakeId;
+        if (HomeAddressEntity.class.isAssignableFrom(entityKlass)) {
+            return SnowFlakeFake::snowFlakeId;
+        } else {
+            return null;
+        }
     }
 
     @Override

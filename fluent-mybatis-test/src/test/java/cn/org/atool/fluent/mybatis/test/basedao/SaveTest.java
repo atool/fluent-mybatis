@@ -54,7 +54,7 @@ public class SaveTest extends BaseTest {
                 new StudentEntity().setUserName("test name1").setAge(43),
                 new StudentEntity().setUserName("test name2").setAge(43).setId(5L)
             )), FluentMybatisException.class, MyBatisSystemException.class
-        ).contains("the pk of insert entity can't be null.");
+        ).contains("The pk of insert entity can't be null");
     }
 
     @Test

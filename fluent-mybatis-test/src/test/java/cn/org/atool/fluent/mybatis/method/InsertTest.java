@@ -46,7 +46,7 @@ public class InsertTest extends BaseTest {
                 .setId("test-id-1")
                 .setColumn1("test")),
             MyBatisSystemException.class
-        ).contains("the pk of insert entity must be null");
+        ).contains("The pk of insert entity must be null");
     }
 
     @Test
