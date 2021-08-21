@@ -112,7 +112,7 @@ public class BatchCrudImpl implements BatchCrud {
             int index = values.size();
             values.add(entity);
             String prefix = format("ew.wrapperData.parameters.%s[%d].", ENTITY_LIST_KEY, index);
-            PkGeneratorKits.setIdByIdGenerator(entity);
+            PkGeneratorKits.setPkByGenerator(entity);
             String sql = provider.buildInsertSql(prefix, entity, entity.findPk() != null);
             list.add(sql);
         }

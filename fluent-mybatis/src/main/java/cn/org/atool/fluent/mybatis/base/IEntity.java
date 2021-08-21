@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * IEntity 实体基类
@@ -18,6 +19,15 @@ public interface IEntity extends Serializable {
      * @return 主键
      */
     default Serializable findPk() {
+        return null;
+    }
+
+    /**
+     * 返回主键设置方法
+     *
+     * @return 主键设置方法
+     */
+    default Consumer pkSetter() {
         return null;
     }
 

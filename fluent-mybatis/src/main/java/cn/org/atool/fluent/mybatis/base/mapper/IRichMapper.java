@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
@@ -70,6 +71,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 主键
      */
     default <PK extends Serializable> PK save(E entity) {
+        /* 如果有主键生成器, 先设置主键 **/
+        PkGeneratorKits.setPkByGenerator(entity);
         if (entity.findPk() == null) {
             this.insert(entity);
         } else {

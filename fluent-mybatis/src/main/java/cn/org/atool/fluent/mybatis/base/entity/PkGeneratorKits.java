@@ -11,14 +11,26 @@ import java.util.function.Consumer;
  *
  * @author wudarui
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class PkGeneratorKits {
-    public static void setIdByIdGenerator(IEntity entity) {
+    /**
+     * 设置主键值
+     *
+     * @param entity IEntity
+     */
+    public static void setPkByGenerator(IEntity entity) {
+        if (entity.findPk() != null) {
+            return;
+        }
+        Consumer consumer = entity.pkSetter();
+        if (consumer == null) {
+            return;
+        }
         Class klass = entity.entityClass();
         IDefault defaults = IRefs.instance().findDefault(klass);
-        Consumer consumer = entity.pkSetter();
-        if (defaults != null && consumer != null) {
-            consumer.accept(defaults.idGenerator(klass));
+        if (defaults == null) {
+            return;
         }
+        consumer.accept(defaults.pkGenerator(klass));
     }
 }

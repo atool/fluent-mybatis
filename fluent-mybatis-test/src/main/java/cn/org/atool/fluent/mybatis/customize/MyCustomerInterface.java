@@ -43,7 +43,7 @@ public interface MyCustomerInterface extends IDefaultSetter {
     }
 
     @Override
-    default Supplier<Object> idGenerator(Class entityKlass) {
+    default Supplier<Object> pkGenerator(Class entityKlass) {
         return SnowFlakeFake::snowFlakeId;
     }
 

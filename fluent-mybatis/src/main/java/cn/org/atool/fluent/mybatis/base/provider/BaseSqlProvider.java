@@ -166,7 +166,7 @@ public abstract class BaseSqlProvider<E extends IEntity> {
      * @param withPk true: 带id值插入; false: 不带id值插入
      */
     boolean validateInsertEntity(E entity, boolean withPk) {
-        PkGeneratorKits.setIdByIdGenerator(entity);
+        PkGeneratorKits.setPkByGenerator(entity);
         if (withPk) {
             isTrue(this.primaryNotNull(entity), "The pk of insert entity can't be null, you should use method insert without pk.");
         } else {
