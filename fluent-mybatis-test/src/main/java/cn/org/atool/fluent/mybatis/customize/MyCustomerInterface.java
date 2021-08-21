@@ -18,11 +18,15 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
  */
 @SuppressWarnings("rawtypes")
 public interface MyCustomerInterface extends IDefaultSetter {
-    String F_ENV = "env";
 
-    String F_IS_DELETED = "is_deleted";
-
-    String TEST_ENV = "test_env";
+    @Override
+    default Supplier<Object> pkGenerator(IEntity entity) {
+        if (entity instanceof HomeAddressEntity) {
+            return SnowFlakeGenerator::uuid;
+        } else {
+            return null;
+        }
+    }
 
     @Override
     default void setQueryDefault(IQuery query) {
@@ -44,15 +48,6 @@ public interface MyCustomerInterface extends IDefaultSetter {
     }
 
     @Override
-    default Supplier<Object> pkGenerator(IEntity entity) {
-        if (entity instanceof HomeAddressEntity) {
-            return SnowFlakeGenerator::uuid;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     default void setInsertDefault(IEntity entity) {
         if (!(entity instanceof MyEntity)) {
             return;
@@ -61,4 +56,10 @@ public interface MyCustomerInterface extends IDefaultSetter {
         be.setEnv(TEST_ENV);
         be.setTenant(234567L);
     }
+
+    String F_ENV = "env";
+
+    String F_IS_DELETED = "is_deleted";
+
+    String TEST_ENV = "test_env";
 }
