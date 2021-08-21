@@ -44,9 +44,9 @@ public interface MyCustomerInterface extends IDefaultSetter {
     }
 
     @Override
-    default Supplier<Object> pkGenerator(Class entityKlass) {
-        if (HomeAddressEntity.class.isAssignableFrom(entityKlass)) {
-            return SnowFlakeFake::snowFlakeId;
+    default Supplier<Object> pkGenerator(IEntity entity) {
+        if (entity instanceof HomeAddressEntity) {
+            return SnowFlakeGenerator::uuid;
         } else {
             return null;
         }

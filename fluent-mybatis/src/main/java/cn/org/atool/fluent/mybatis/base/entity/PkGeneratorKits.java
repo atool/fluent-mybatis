@@ -20,7 +20,7 @@ public class PkGeneratorKits {
      * @param entity IEntity
      */
     public static void setPkByGenerator(IEntity entity) {
-        if (entity.findPk() != null) {
+        if (entity == null || entity.findPk() != null) {
             return;
         }
         Consumer consumer = entity.pkSetter();
@@ -32,7 +32,7 @@ public class PkGeneratorKits {
         if (defaults == null) {
             return;
         }
-        Supplier pkSupplier = defaults.pkGenerator(klass);
+        Supplier pkSupplier = defaults.pkGenerator(entity);
         if (pkSupplier != null) {
             consumer.accept(pkSupplier.get());
         }

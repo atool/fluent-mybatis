@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.auto.id;
 
-import cn.org.atool.fluent.mybatis.customize.SnowFlakeFake;
+import cn.org.atool.fluent.mybatis.customize.SnowFlakeGenerator;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.HomeAddressMapper;
@@ -11,7 +11,7 @@ import org.test4j.annotations.Mocks;
 
 import static cn.org.atool.fluent.mybatis.test.auto.id.PkGeneratorTestMocks.mocks;
 
-@Mocks(SnowFlakeFake.class)
+@Mocks(SnowFlakeGenerator.class)
 public class PkGeneratorTest extends BaseTest {
     @Autowired
     HomeAddressMapper mapper;
@@ -19,7 +19,7 @@ public class PkGeneratorTest extends BaseTest {
     @Test
     void insertWithPk() {
         ATM.dataMap.homeAddress.table().clean();
-        mocks.SnowFlakeFake.snowFlakeId.thenReturn(100L);
+        mocks.SnowFlakeGenerator().uuid.thenReturn(100L);
         mapper.insertWithPk(new HomeAddressEntity()
             .setAddress("add")
             .setStudentId(0L)
@@ -33,7 +33,8 @@ public class PkGeneratorTest extends BaseTest {
     @Test
     void insertBatchWithPk() {
         ATM.dataMap.homeAddress.table().clean();
-        mocks.SnowFlakeFake.snowFlakeId.thenReturn(200L, 300L);
+        mocks.SnowFlakeGenerator().uuid.thenReturn(200L, 300L);
+        mocks.SnowFlakeGenerator().fke.thenReturn(345L);
         mapper.insertBatchWithPk(list(
             new HomeAddressEntity()
                 .setAddress("add")
@@ -46,6 +47,7 @@ public class PkGeneratorTest extends BaseTest {
             .id.values(200L, 300L)
             .address.values("add")
             .eqTable();
+        want.number(SnowFlakeGenerator.fke()).eq(345L);
     }
 
     @Test

@@ -5,11 +5,15 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 雪花算法id模拟
  */
-public class SnowFlakeFake {
+public class SnowFlakeGenerator {
 
     static AtomicLong id = new AtomicLong(1000);
 
-    public static long snowFlakeId() {
+    public static long uuid() {
         return id.incrementAndGet();
+    }
+
+    public static long fke() {
+        return 1L;
     }
 }

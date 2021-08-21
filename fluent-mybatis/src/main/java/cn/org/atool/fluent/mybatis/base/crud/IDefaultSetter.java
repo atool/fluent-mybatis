@@ -12,11 +12,11 @@ import java.util.function.Supplier;
 @SuppressWarnings({"rawtypes", "unused"})
 public interface IDefaultSetter {
     /**
-     * entityKlass主键生成器
+     * entity主键生成器
      *
-     * @param entityKlass 实例类型
+     * @param entity 实例
      */
-    default Supplier<Object> pkGenerator(Class entityKlass) {
+    default Supplier<Object> pkGenerator(IEntity entity) {
         return null;
     }
 
