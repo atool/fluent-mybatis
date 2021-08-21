@@ -1,28 +1,19 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
-import java.io.Serializable;
-import java.lang.Boolean;
-import java.lang.Class;
-import java.lang.Integer;
-import java.lang.Long;
-import java.lang.Override;
-import java.lang.String;
-import java.lang.SuppressWarnings;
-import java.util.Date;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * StudentEntity: 数据映射实体定义
@@ -183,6 +174,11 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   @Override
   public Serializable findPk() {
     return this.id;
+  }
+
+  @Override
+  public Consumer<Long> pkSetter() {
+    return this::setId;
   }
 
   @Override

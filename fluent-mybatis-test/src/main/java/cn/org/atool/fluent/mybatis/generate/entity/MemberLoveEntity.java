@@ -15,6 +15,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;
 import java.util.Date;
+import java.util.function.Consumer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -92,6 +93,11 @@ public class MemberLoveEntity extends RichEntity {
   @Override
   public Serializable findPk() {
     return this.id;
+  }
+
+  @Override
+  public Consumer<Long> pkSetter() {
+    return this::setId;
   }
 
   @Override

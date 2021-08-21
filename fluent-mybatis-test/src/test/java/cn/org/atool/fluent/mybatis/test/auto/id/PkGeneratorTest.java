@@ -12,7 +12,7 @@ import org.test4j.annotations.Mocks;
 import static cn.org.atool.fluent.mybatis.test.auto.id.SnowFlakeIdTestMocks.mocks;
 
 @Mocks(SnowFlakeFake.class)
-public class SnowFlakeIdTest extends BaseTest {
+public class PkGeneratorTest extends BaseTest {
     @Autowired
     HomeAddressMapper mapper;
 
