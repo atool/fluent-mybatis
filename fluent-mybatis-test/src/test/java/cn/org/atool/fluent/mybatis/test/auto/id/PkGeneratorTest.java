@@ -19,11 +19,14 @@ public class PkGeneratorTest extends BaseTest {
     @Test
     void insertWithPk() {
         ATM.dataMap.homeAddress.table().clean();
+        // mock, 模拟雪花id为100
         mocks.SnowFlakeGenerator().uuid.thenReturn(100L);
+
         mapper.insertWithPk(new HomeAddressEntity()
             .setAddress("add")
             .setStudentId(0L)
         );
+        // 验证
         ATM.dataMap.homeAddress.table(1)
             .id.values(100L)
             .address.values("add")
@@ -77,10 +80,14 @@ public class PkGeneratorTest extends BaseTest {
 
     @Test
     void save() {
+        mocks.SnowFlakeGenerator().uuid.thenReturn(400L);
         mapper.save(new HomeAddressEntity()
             .setAddress("add")
             .setStudentId(0L)
         );
-
+        db.sqlList().wantFirstSql().eq("" +
+            "INSERT INTO `home_address`(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
+            "VALUES (?, now(), now(), 0, ?, ?, ?, ?)");
+        db.sqlList().wantFirstPara().eqList(400L, "add", "test_env", 0L, 234567L);
     }
 }
