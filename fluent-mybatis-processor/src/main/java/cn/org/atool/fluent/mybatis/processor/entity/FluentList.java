@@ -122,7 +122,7 @@ public class FluentList {
             new QueryFiler(fluent),
             new UpdaterFiler(fluent),
             new BaseDaoFiler(fluent),
-            new DefaultsFiler(fluent),
+            //new DefaultsFiler(fluent),
             new FormSetterFiler(fluent)
         );
     }

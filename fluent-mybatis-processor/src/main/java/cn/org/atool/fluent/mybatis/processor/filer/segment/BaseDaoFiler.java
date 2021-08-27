@@ -27,7 +27,7 @@ public class BaseDaoFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(fluent.defaults(), "INSTANCE");
+        spec.addStaticImport(fluent.wrapperHelper(), "defaults");
         super.staticImport(spec);
     }
 
@@ -100,7 +100,7 @@ public class BaseDaoFiler extends AbstractFiler {
      */
     private MethodSpec m_defaultQuery() {
         return super.protectedMethod(M_DEFAULT_QUERY, true, fluent.query())
-            .addStatement("return INSTANCE.$L()", M_DEFAULT_QUERY)
+            .addStatement("return defaults.$L()", M_DEFAULT_QUERY)
             .build();
     }
 
@@ -117,7 +117,7 @@ public class BaseDaoFiler extends AbstractFiler {
      */
     private MethodSpec m_defaultUpdater() {
         return super.protectedMethod(M_DEFAULT_UPDATER, true, fluent.updater())
-            .addStatement("return INSTANCE.$L()", M_DEFAULT_UPDATER)
+            .addStatement("return defaults.$L()", M_DEFAULT_UPDATER)
             .build();
     }
 

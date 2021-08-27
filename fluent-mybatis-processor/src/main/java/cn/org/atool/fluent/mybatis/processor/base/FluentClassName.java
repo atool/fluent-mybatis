@@ -141,10 +141,7 @@ public abstract class FluentClassName {
      * @return Defaults ClassName
      */
     public ClassName defaults() {
-        return ClassName.get(
-            DefaultsFiler.getPackageName(this),
-            DefaultsFiler.getClassName(this)
-        );
+        return ClassName.get(DefaultsFiler.getPackageName(this), Suffix_Defaults);
     }
 
     public ClassName wrapperHelper() {

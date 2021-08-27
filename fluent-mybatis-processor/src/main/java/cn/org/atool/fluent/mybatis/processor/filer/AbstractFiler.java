@@ -145,7 +145,7 @@ public abstract class AbstractFiler {
         return FieldSpec.builder(fluent.defaults(),
             "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .addJavadoc("默认设置器")
-            .initializer("$T.INSTANCE", fluent.defaults())
+            .initializer("$T.defaults", fluent.wrapperHelper())
             .build();
     }
 }

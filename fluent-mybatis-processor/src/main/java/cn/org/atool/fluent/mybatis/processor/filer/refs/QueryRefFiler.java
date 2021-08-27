@@ -56,7 +56,7 @@ public class QueryRefFiler extends AbstractFile {
     private FieldSpec f_factory(FluentEntity fluent) {
         return FieldSpec.builder(fluent.defaults(), fluent.lowerNoSuffix(),
             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$T.INSTANCE", fluent.defaults())
+            .initializer("$T.defaults", fluent.wrapperHelper())
             .build();
     }
 

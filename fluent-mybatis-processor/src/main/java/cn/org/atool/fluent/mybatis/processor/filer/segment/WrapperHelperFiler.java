@@ -31,6 +31,7 @@ public class WrapperHelperFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
+        spec.addStaticImport(fluent.mapping(), "Table_Name");
         super.staticImport(spec);
     }
 
@@ -45,7 +46,23 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addType(this.nestedHaving())
             .addType(this.nestedQueryOrderBy())
             .addType(this.nestedUpdateOrderBy())
-            .addType(this.nestedUpdateSetter());
+            .addType(this.nestedUpdateSetter())
+            .addType(this.nestedDefaults());
+    }
+
+    /**
+     * <pre>
+     * public Defaults extends BaseDefault<MsUserEntity, MsUserQuery, MsUserUpdate, MsUserDefaults>
+     *     implements IDefaultSetter {
+     * </pre>
+     *
+     * @return TypeSpec
+     */
+    private TypeSpec nestedDefaults() {
+        TypeSpec.Builder builder = TypeSpec.classBuilder("Defaults")
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        new DefaultsFiler(fluent).build(builder);
+        return builder.build();
     }
 
     /**
@@ -483,6 +500,15 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addParameter(fluent.updateWhere(), "and")
             .returns(fluent.updateWhere())
             .addStatement("return new UpdateWhere(($T) this.wrapper, and)", fluent.updater())
+            .build();
+    }
+
+    @Override
+    protected FieldSpec f_defaults() {
+        return FieldSpec.builder(TypeVariableName.get(Suffix_Defaults),
+            "defaults", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("默认设置器")
+            .initializer("new $L()", Suffix_Defaults)
             .build();
     }
 

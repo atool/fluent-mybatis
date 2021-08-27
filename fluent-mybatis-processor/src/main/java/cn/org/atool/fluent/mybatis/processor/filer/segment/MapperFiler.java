@@ -61,6 +61,7 @@ public class MapperFiler extends AbstractFiler {
     protected void staticImport(JavaFile.Builder spec) {
         super.staticImport(spec);
         spec.addStaticImport(ClassName.get(FluentConst.class), "*");
+        spec.addStaticImport(fluent.wrapperHelper(), "defaults");
     }
 
     @Override
@@ -141,7 +142,7 @@ public class MapperFiler extends AbstractFiler {
         return MethodSpec.methodBuilder(M_DEFAULT_QUERY)
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
             .returns(fluent.query())
-            .addStatement("return $T.INSTANCE.$L()", fluent.defaults(), M_DEFAULT_QUERY)
+            .addStatement("return defaults.$L()", M_DEFAULT_QUERY)
             .build();
     }
 
@@ -157,7 +158,7 @@ public class MapperFiler extends AbstractFiler {
         return MethodSpec.methodBuilder(M_DEFAULT_UPDATER)
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
             .returns(fluent.updater())
-            .addStatement("return $T.INSTANCE.$L()", fluent.defaults(), M_DEFAULT_UPDATER)
+            .addStatement("return defaults.$L()", M_DEFAULT_UPDATER)
             .build();
     }
 

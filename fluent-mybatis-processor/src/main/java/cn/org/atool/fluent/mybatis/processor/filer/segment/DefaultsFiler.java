@@ -6,8 +6,6 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
@@ -27,29 +25,17 @@ public class DefaultsFiler extends AbstractFiler {
     public DefaultsFiler(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
-        this.klassName = getClassName(fluent);
+        this.klassName = Suffix_Defaults;
     }
 
-    public static String getClassName(FluentClassName fluentEntity) {
-        return fluentEntity.getNoSuffix() + Suffix_Defaults;
-    }
-
-    public static String getPackageName(FluentClassName fluentEntity) {
-        return fluentEntity.getPackageName(Pack_Helper);
-    }
-
-    @Override
-    protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(fluent.mapping(), "Table_Name");
+    public static String getPackageName(FluentClassName fluent) {
+        return fluent.getPackageName(Pack_Helper) + "." + WrapperHelperFiler.getClassName(fluent);
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(parameterizedType(FM_BaseDefault, fluent.entity(), fluent.query(), fluent.updater(), fluent.defaults()))
             .addSuperinterface(ClassNames2.getClassName(fluent.getDefaults()))
-            .addField(FieldSpec.builder(fluent.defaults(), "INSTANCE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("new $T()", fluent.defaults())
-                .build())
             .addMethod(this.m_constructor())
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_emptyUpdater())
