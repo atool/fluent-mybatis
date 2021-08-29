@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
@@ -71,7 +71,7 @@ public class FormHelper {
         return query;
     }
 
-    public static <E extends IEntity, S extends FormSetter>
+    public static <E extends IEntity, S extends BaseFormSetter>
     IFormApply<E, S> by(Object object, Form form, Supplier<S> setterSupplier) {
         assertNotNull("object", object);
         Map map = PoJoHelper.toMap(object);

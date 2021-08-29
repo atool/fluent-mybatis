@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -18,11 +18,11 @@ import java.util.Map;
  * @author darui.wu
  */
 @SuppressWarnings({"unused", "rawtypes", "unchecked"})
-public class FormQuery<E extends IEntity, S extends FormSetter> implements IFormQuery<E, S> {
+public class FormQuery<E extends IEntity, S extends BaseFormSetter> implements IFormQuery<E, S> {
     private final Class<? extends IEntity> entityClazz;
     private final Map<String, Object> form;
     private final IQuery query;
-    private final FormSetter setter;
+    private final BaseFormSetter setter;
 
     public FormQuery(@NonNull IEntity entity, @NonNull IQuery query, @NonNull S setter) {
         this.form = entity.toEntityMap();

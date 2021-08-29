@@ -12,13 +12,13 @@ import java.util.function.Consumer;
  * @author darui.wu
  */
 @SuppressWarnings({"rawtypes"})
-public abstract class FormSetter {
+public abstract class BaseFormSetter {
 
     protected FormApply formApply;
 
     protected Consumer<FieldMapping> apply;
 
-    protected FormSetter() {
+    protected BaseFormSetter() {
     }
 
     public void set(Consumer<FieldMapping> apply) {

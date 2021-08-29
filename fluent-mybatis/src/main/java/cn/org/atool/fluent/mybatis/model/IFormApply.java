@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 
@@ -14,7 +14,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
  * @author wudarui
  */
 @SuppressWarnings({"unused"})
-public interface IFormApply<E extends IEntity, S extends FormSetter> {
+public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
 
     S op(String op);
 

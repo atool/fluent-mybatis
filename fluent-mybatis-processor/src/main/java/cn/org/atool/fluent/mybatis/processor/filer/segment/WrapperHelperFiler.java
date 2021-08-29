@@ -47,7 +47,9 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addType(this.nestedQueryOrderBy())
             .addType(this.nestedUpdateOrderBy())
             .addType(this.nestedUpdateSetter())
-            .addType(this.nestedDefaults());
+            .addType(this.nestedDefaults())
+//            .addType(this.nestedFormSetter())
+        ;
     }
 
     /**
@@ -64,6 +66,21 @@ public class WrapperHelperFiler extends AbstractFiler {
         new DefaultsFiler(fluent).build(builder);
         return builder.build();
     }
+
+    /**
+     * <pre>
+     * BlobValueFormSetter extends FormSetter
+     *  implements ISegment<IFormApply<BlobValuePoJo, BlobValueFormSetter>>
+     * </pre>
+     *
+     * @return TypeSpec
+     */
+//    private TypeSpec nestedFormSetter() {
+//        TypeSpec.Builder builder = TypeSpec.classBuilder("FormSetter")
+//            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+//        new DefaultsFiler(fluent).build(builder);
+//        return builder.build();
+//    }
 
     /**
      * public interface ISegment<R> {}

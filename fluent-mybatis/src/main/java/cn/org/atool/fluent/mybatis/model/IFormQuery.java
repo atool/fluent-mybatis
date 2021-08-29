@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 
@@ -16,7 +16,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
  * @author wudarui
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
-public interface IFormQuery<E extends IEntity, S extends FormSetter> extends IQuery<E> {
+public interface IFormQuery<E extends IEntity, S extends BaseFormSetter> extends IQuery<E> {
     /**
      * 对应的实体Entity类型
      *

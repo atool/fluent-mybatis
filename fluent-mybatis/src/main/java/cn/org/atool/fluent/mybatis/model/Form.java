@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
@@ -58,7 +58,7 @@ public class Form implements Serializable {
         return FormHelper.toQuery(entityClass, this);
     }
 
-    public <E extends IEntity, S extends FormSetter> IFormApply<E, S>
+    public <E extends IEntity, S extends BaseFormSetter> IFormApply<E, S>
     add(FormFunction<E, S> apply, Object value) {
         return apply.apply(value, this);
     }

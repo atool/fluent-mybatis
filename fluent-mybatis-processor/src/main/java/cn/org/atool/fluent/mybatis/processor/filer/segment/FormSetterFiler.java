@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.functions.FormApply;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.IFormApply;
@@ -45,7 +45,7 @@ public class FormSetterFiler extends AbstractFiler {
     protected void build(TypeSpec.Builder builder) {
         TypeName applyName = parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), fluent.formSetter());
         builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(FormSetter.class)
+            .superclass(BaseFormSetter.class)
             .addSuperinterface(super.parameterizedType(fluent.segment(), applyName))
             .addMethod(this.constructor1())
             .addMethod(this.m_entityClass())
@@ -75,7 +75,7 @@ public class FormSetterFiler extends AbstractFiler {
             .addParameter(Form.class, "form")
             .addStatement("assertNotNull($S, object)", "object")
             .addStatement("$T map = $T.toMap(object)", Map.class, PoJoHelper.class)
-            .addStatement("$T<FormApply, FormSetter> apply = $T::new", Function.class, fluent.formSetter())
+            .addStatement("$T<FormApply, BaseFormSetter> apply = $T::new", Function.class, fluent.formSetter())
             .addStatement("return new $T<>(apply, map, form)", FormApply.class)
             .build();
     }

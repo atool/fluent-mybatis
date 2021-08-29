@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.functions;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.FormSetter;
+import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.model.Form;
@@ -18,7 +18,7 @@ import java.util.function.Function;
  * @author darui.wu
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public final class FormApply<E extends IEntity, S extends FormSetter> implements IFormApply<E, S> {
+public final class FormApply<E extends IEntity, S extends BaseFormSetter> implements IFormApply<E, S> {
     /**
      * IDE智能提示对象
      */
@@ -32,7 +32,7 @@ public final class FormApply<E extends IEntity, S extends FormSetter> implements
      */
     private final Form form;
 
-    public FormApply(Function<FormApply, FormSetter> setterApply, Map map, Form form) {
+    public FormApply(Function<FormApply, BaseFormSetter> setterApply, Map map, Form form) {
         this.setter = (S) setterApply.apply(this);
         this.map = map;
         this.form = form == null ? new Form() : form;
