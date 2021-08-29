@@ -7,7 +7,6 @@ import cn.org.atool.fluent.mybatis.model.IFormApply;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import com.squareup.javapoet.*;
 
@@ -20,30 +19,20 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityFormSe
 
 public class FormSetterFiler extends AbstractFiler {
 
-    public static String getClassName(FluentClassName fluentEntity) {
-        return fluentEntity.getNoSuffix() + Suffix_EntityFormSetter;
-    }
-
-    public static String getPackageName(FluentClassName fluentEntity) {
-        return fluentEntity.getPackageName(Pack_Helper);
-    }
-
-    @Override
-    protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(MybatisUtil.class, "assertNotNull");
-        super.staticImport(spec);
-    }
-
     public FormSetterFiler(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
-        this.klassName = getClassName(fluent);
+        this.klassName = Suffix_EntityFormSetter;
         this.comment = "Form Column Setter";
+    }
+
+    public static String getPackageName(FluentClassName fluent) {
+        return fluent.getPackageName(Pack_Helper) + "." + WrapperHelperFiler.getClassName(fluent);
     }
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        TypeName applyName = parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), fluent.formSetter());
+        TypeName applyName = parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName());
         builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .superclass(BaseFormSetter.class)
             .addSuperinterface(super.parameterizedType(fluent.segment(), applyName))
@@ -51,6 +40,10 @@ public class FormSetterFiler extends AbstractFiler {
             .addMethod(this.m_entityClass())
             .addMethod(this.m_byObject())
         ;
+    }
+
+    private TypeVariableName setterName() {
+        return TypeVariableName.get(Suffix_EntityFormSetter);
     }
 
     private MethodSpec constructor1() {
@@ -69,13 +62,13 @@ public class FormSetterFiler extends AbstractFiler {
 
     private MethodSpec m_byObject() {
         return super.publicMethod("by", false,
-            parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), fluent.formSetter()))
+            parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
             .addModifiers(Modifier.STATIC)
             .addParameter(Object.class, "object")
             .addParameter(Form.class, "form")
             .addStatement("assertNotNull($S, object)", "object")
             .addStatement("$T map = $T.toMap(object)", Map.class, PoJoHelper.class)
-            .addStatement("$T<FormApply, BaseFormSetter> apply = $T::new", Function.class, fluent.formSetter())
+            .addStatement("$T<FormApply, BaseFormSetter> apply = $L::new", Function.class, Suffix_EntityFormSetter)
             .addStatement("return new $T<>(apply, map, form)", FormApply.class)
             .build();
     }

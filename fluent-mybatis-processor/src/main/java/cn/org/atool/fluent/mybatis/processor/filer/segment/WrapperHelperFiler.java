@@ -32,11 +32,13 @@ public class WrapperHelperFiler extends AbstractFiler {
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
         spec.addStaticImport(fluent.mapping(), "Table_Name");
+        spec.skipJavaLangImports(true);
         super.staticImport(spec);
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
+        spec.addAnnotation(suppressWarnings("unused", "rawtypes", "unchecked"));
         spec.addField(this.f_defaults())
             .addType(this.nestedISegment())
             .addType(this.nestedSelector())
@@ -48,7 +50,7 @@ public class WrapperHelperFiler extends AbstractFiler {
             .addType(this.nestedUpdateOrderBy())
             .addType(this.nestedUpdateSetter())
             .addType(this.nestedDefaults())
-//            .addType(this.nestedFormSetter())
+            .addType(this.nestedFormSetter())
         ;
     }
 
@@ -61,7 +63,7 @@ public class WrapperHelperFiler extends AbstractFiler {
      * @return TypeSpec
      */
     private TypeSpec nestedDefaults() {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("Defaults")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_Defaults)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
         new DefaultsFiler(fluent).build(builder);
         return builder.build();
@@ -75,12 +77,12 @@ public class WrapperHelperFiler extends AbstractFiler {
      *
      * @return TypeSpec
      */
-//    private TypeSpec nestedFormSetter() {
-//        TypeSpec.Builder builder = TypeSpec.classBuilder("FormSetter")
-//            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
-//        new DefaultsFiler(fluent).build(builder);
-//        return builder.build();
-//    }
+    private TypeSpec nestedFormSetter() {
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_EntityFormSetter)
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        new FormSetterFiler(fluent).build(builder);
+        return builder.build();
+    }
 
     /**
      * public interface ISegment<R> {}
@@ -531,7 +533,7 @@ public class WrapperHelperFiler extends AbstractFiler {
 
     @Override
     protected boolean isInterface() {
-        return false;
+        return true;
     }
 
     public static String getClassName(FluentClassName fluentEntity) {

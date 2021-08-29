@@ -5,10 +5,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.generator.javafile.AbstractFile;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
@@ -35,6 +32,7 @@ public class FormRefFiler extends AbstractFile {
     @Override
     protected void staticImport(JavaFile.Builder builder) {
         builder.addStaticImport(MybatisUtil.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
+        builder.skipJavaLangImports(true);
         super.staticImport(builder);
     }
 
@@ -46,9 +44,10 @@ public class FormRefFiler extends AbstractFile {
     }
 
     private FieldSpec f_formSetter(FluentEntity fluent) {
-        ClassName cn = fluent.formSetter();
+        TypeName cn = fluent.formSetter();
         return FieldSpec.builder(parameterizedType(ClassName.get(FormFunction.class), fluent.entity(), cn)
             , fluent.lowerNoSuffix(), Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .addJavadoc("$T", fluent.wrapperHelper())
             .initializer("(obj, form) -> $T.by(obj, form)", cn)
             .build();
     }

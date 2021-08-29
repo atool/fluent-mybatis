@@ -121,9 +121,9 @@ public class FluentList {
             new WrapperHelperFiler(fluent),
             new QueryFiler(fluent),
             new UpdaterFiler(fluent),
-            new BaseDaoFiler(fluent),
+            new BaseDaoFiler(fluent)
             //new DefaultsFiler(fluent),
-            new FormSetterFiler(fluent)
+//            new FormSetterFiler(fluent)
         );
     }
 

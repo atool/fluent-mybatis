@@ -177,7 +177,7 @@ public class QueryFiler extends AbstractFiler {
         return FieldSpec.builder(fluent.selector(),
             "select", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("指定查询字段, 默认无需设置")
-            .initializer("new Selector(this)")
+            .initializer("new $T(this)", fluent.selector())
             .build();
     }
 
@@ -190,7 +190,7 @@ public class QueryFiler extends AbstractFiler {
         return FieldSpec.builder(fluent.groupBy(), "groupBy", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("分组：GROUP BY 字段, ...\n")
             .addJavadoc("例: groupBy('id', 'name')")
-            .initializer("new GroupBy(this)")
+            .initializer("new $T(this)", fluent.groupBy())
             .build();
     }
 
@@ -202,7 +202,7 @@ public class QueryFiler extends AbstractFiler {
     private FieldSpec f_having() {
         return FieldSpec.builder(fluent.having(), "having", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("分组条件设置 having...")
-            .initializer("new Having(this)")
+            .initializer("new $T(this)", fluent.having())
             .build();
     }
 
@@ -214,7 +214,7 @@ public class QueryFiler extends AbstractFiler {
     private FieldSpec f_orderBy() {
         return FieldSpec.builder(fluent.queryOrderBy(), "orderBy", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("排序设置 order by ...")
-            .initializer("new QueryOrderBy(this)")
+            .initializer("new $T(this)", fluent.queryOrderBy())
             .build();
     }
 
@@ -225,7 +225,7 @@ public class QueryFiler extends AbstractFiler {
      */
     private FieldSpec f_where() {
         return FieldSpec.builder(fluent.queryWhere(), "where", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new QueryWhere(this)")
+            .initializer("new $T(this)", fluent.queryWhere())
             .addJavadoc("查询条件 where ...")
             .build();
     }

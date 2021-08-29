@@ -41,6 +41,7 @@ public class UpdaterFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
+        spec.skipJavaLangImports(true);
         spec.addStaticImport(If.class, "notBlank");
     }
 
@@ -82,7 +83,7 @@ public class UpdaterFiler extends AbstractFiler {
     private FieldSpec f_setter() {
         return FieldSpec.builder(fluent.updateSetter(),
             "set", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new UpdateSetter(this)")
+            .initializer("new $T(this)", fluent.updateSetter())
             .addJavadoc("same as {@link #update}")
             .build();
     }
@@ -95,7 +96,7 @@ public class UpdaterFiler extends AbstractFiler {
     private FieldSpec f_where() {
         return FieldSpec.builder(fluent.updateWhere(),
             "where", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new UpdateWhere(this)")
+            .initializer("new $T(this)", fluent.updateWhere())
             .build();
     }
 
@@ -107,7 +108,7 @@ public class UpdaterFiler extends AbstractFiler {
     private FieldSpec f_orderBy() {
         return FieldSpec.builder(fluent.updateOrderBy(),
             "orderBy", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new UpdateOrderBy(this)")
+            .initializer("new $T(this)", fluent.updateOrderBy())
             .build();
     }
 

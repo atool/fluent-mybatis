@@ -148,4 +148,12 @@ public abstract class AbstractFiler {
             .initializer("$T.defaults", fluent.wrapperHelper())
             .build();
     }
+
+    protected AnnotationSpec suppressWarnings(String... values) {
+        String format = Stream.of(values).map(s -> "$S")
+            .collect(Collectors.joining(", ", "{", "}"));
+        return AnnotationSpec.builder(SuppressWarnings.class)
+            .addMember("value", format, values)
+            .build();
+    }
 }
