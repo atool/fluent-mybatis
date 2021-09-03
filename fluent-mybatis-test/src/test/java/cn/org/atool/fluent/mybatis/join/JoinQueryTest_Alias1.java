@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
-import cn.org.atool.fluent.mybatis.refs.Refs;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Refs.Query.student.aliasQuery()
+        StudentQuery studentQuery = Ref.Query.student.aliasQuery()
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        HomeAddressQuery addressQuery = Refs.Query.homeAddress.aliasWith(studentQuery)
+        HomeAddressQuery addressQuery = Ref.Query.homeAddress.aliasWith(studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end()
@@ -72,12 +72,12 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        StudentQuery studentQuery = Refs.Query.student.aliasQuery("t1")
+        StudentQuery studentQuery = Ref.Query.student.aliasQuery("t1")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery addressQuery = Refs.Query.homeAddress.aliasWith("t2", studentQuery)
+        HomeAddressQuery addressQuery = Ref.Query.homeAddress.aliasWith("t2", studentQuery)
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();

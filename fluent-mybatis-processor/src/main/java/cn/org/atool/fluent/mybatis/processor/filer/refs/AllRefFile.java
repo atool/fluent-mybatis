@@ -1,11 +1,9 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.AllRefFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.EntityRelationFiler;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -21,17 +19,17 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
  *
  * @author darui.wu
  */
-public class RefsFile extends AbstractFile {
+public class AllRefFile extends AbstractFile {
 
-    private static final String Refs = "Refs";
+    private static final String AllRef = "AllRef";
 
     public static ClassName getClassName() {
-        return ClassName.get(FluentList.refsPackage(), Refs);
+        return ClassName.get(FluentList.refsPackage(), AllRef);
     }
 
-    public RefsFile() {
+    public AllRefFile() {
         this.packageName = FluentList.refsPackage();
-        this.klassName = Refs;
+        this.klassName = AllRef;
         this.comment = "" +
             "\n o - 查询器，更新器工厂类单例引用" +
             "\n o - 应用所有Mapper Bean引用" +
@@ -40,7 +38,7 @@ public class RefsFile extends AbstractFile {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(AllRefFiler.getClassName())
+        spec.superclass(RefFiler.getClassName())
             .addModifiers(Modifier.FINAL)
             .addMethod(this.m_instance());
         for (FluentEntity fluent : FluentList.getFluents()) {
@@ -93,8 +91,8 @@ public class RefsFile extends AbstractFile {
         return MethodSpec.methodBuilder("instance")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("Refs 单例")
-            .returns(RefsFile.getClassName())
-            .addStatement("return ($L) $T.instance()", Refs, IRefs.class)
+            .returns(AllRefFile.getClassName())
+            .addStatement("return ($L) $T.instance()", AllRef, IRef.class)
             .build();
     }
 

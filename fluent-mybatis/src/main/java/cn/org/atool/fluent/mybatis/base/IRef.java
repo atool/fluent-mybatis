@@ -20,18 +20,18 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**
- * EntityRefQuery: Entity @RefMethod关联关系, 关联加载基类
+ * IRef: Entity @RefMethod关联关系, 关联加载基类
  *
  * @author darui.wu
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
-public abstract class IRefs {
+public abstract class IRef {
     // Ref 文件生成的固定路径
     public static final String Fix_Package = "cn.org.atool.fluent.mybatis.refs";
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
      */
-    private static IRefs INSTANCE;
+    private static IRef INSTANCE;
 
     @Setter
     private DbType defaultDbType;
@@ -58,17 +58,17 @@ public abstract class IRefs {
      *
      * @return IRefs
      */
-    public static IRefs instance() {
+    public static IRef instance() {
         if (INSTANCE != null) {
             return INSTANCE;
         }
-        synchronized (IRefs.class) {
+        synchronized (IRef.class) {
             if (INSTANCE != null) {
                 return INSTANCE;
             }
             try {
-                Class klass = Class.forName(IRefs.Fix_Package + ".Refs");
-                INSTANCE = (IRefs) klass.getDeclaredConstructor().newInstance();
+                Class klass = Class.forName(IRef.Fix_Package + ".AllRef");
+                INSTANCE = (IRef) klass.getDeclaredConstructor().newInstance();
                 return INSTANCE;
             } catch (Exception e) {
                 throw new RuntimeException("new Refs error:" + e.getMessage(), e);
@@ -80,7 +80,7 @@ public abstract class IRefs {
      * 验证MapperFactory实例是否已被spring容器管理
      */
     protected static void validateMapperFactory() {
-        if (IRefs.instance().mapperFactory != null) {
+        if (IRef.instance().mapperFactory != null) {
             return;
         }
         throw new RuntimeException("The cn.org.atool.fluent.mybatis.spring.MapperFactory must be configured as spring bean.");
@@ -251,7 +251,7 @@ public abstract class IRefs {
      * @return ignore
      */
     public static IRichMapper mapper(IEntity entity) {
-        return IRefs.mapper(entity.getClass());
+        return IRef.mapper(entity.getClass());
     }
 
     /**

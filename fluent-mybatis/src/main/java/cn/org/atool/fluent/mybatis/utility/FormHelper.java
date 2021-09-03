@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -39,10 +39,10 @@ public class FormHelper {
         if (form.getNextId() != null && form.getCurrPage() != null) {
             throw new RuntimeException("nextId and currPage can only have one value");
         }
-        IQuery query = IRefs.instance().defaultQuery(entityClass);
+        IQuery query = IRef.instance().defaultQuery(entityClass);
         WhereBase where = query.where();
         for (FormItem item : form.getItems()) {
-            String column = IRefs.instance().findColumnByField(entityClass, item.getKey());
+            String column = IRef.instance().findColumnByField(entityClass, item.getKey());
             if (isBlank(column)) {
                 throw new RuntimeException("the field[" + item.getKey() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
             }
@@ -64,7 +64,7 @@ public class FormHelper {
             int from = form.getPageSize() * (form.getCurrPage() - 1);
             query.limit(from, form.getPageSize());
         } else if (form.getNextId() != null) {
-            String column = IRefs.instance().findPrimaryColumn(entityClass);
+            String column = IRef.instance().findPrimaryColumn(entityClass);
             where.and.apply(column, SqlOp.GE, form.getNextId());
             query.limit(form.getPageSize());
         }

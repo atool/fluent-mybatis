@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 
 import java.util.function.Consumer;
@@ -28,7 +28,7 @@ public class PkGeneratorKits {
             return;
         }
         Class klass = entity.entityClass();
-        BaseDefaults defaults = IRefs.instance().findDefault(klass);
+        BaseDefaults defaults = IRef.instance().findDefault(klass);
         if (defaults == null) {
             return;
         }

@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
@@ -200,7 +201,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
+   * 实现定义在{@link IRef}子类Refs上
    */
   @RefMethod("deskMateId = id")
   public StudentEntity findDeskMate() {
@@ -208,7 +209,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
+   * 实现定义在{@link IRef}子类Refs上
    */
   @RefMethod("studentId = id && isDeleted = isDeleted && env = env")
   public List<StudentScoreEntity> findStudentScoreList() {
@@ -216,7 +217,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
+   * 实现定义在{@link IRef}子类Refs上
    */
   @RefMethod
   public StudentScoreEntity findEnglishScore() {
@@ -224,7 +225,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
+   * 实现定义在{@link IRef}子类Refs上
    */
   @RefMethod
   public List<TeacherEntity> findTeacherList() {

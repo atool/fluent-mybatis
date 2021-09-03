@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
@@ -209,7 +209,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
                 return dbType;
             }
         }
-        dbType = IRefs.instance().defaultDbType();
+        dbType = IRef.instance().defaultDbType();
         return dbType;
     }
 }

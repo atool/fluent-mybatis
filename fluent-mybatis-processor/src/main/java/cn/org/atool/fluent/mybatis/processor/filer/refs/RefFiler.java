@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
@@ -24,24 +24,24 @@ import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
  *
  * @author darui.wu
  */
-public class AllRefFiler extends AbstractFile {
-    private static final String AllRef = "AllRef";
+@SuppressWarnings("rawtypes")
+public class RefFiler extends AbstractFile {
+    private static final String Ref = "Ref";
 
     public static ClassName getClassName() {
-        return ClassName.get(FluentList.refsPackage(), AllRef);
+        return ClassName.get(FluentList.refsPackage(), Ref);
     }
 
-    public AllRefFiler() {
+    public RefFiler() {
         this.packageName = FluentList.refsPackage();
-        this.klassName = AllRef;
+        this.klassName = Ref;
         this.comment = "应用所有Mapper Bean引用";
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(IRefs.class)
+        spec.superclass(IRef.class)
             .addModifiers(Modifier.ABSTRACT);
-        spec.modifiers.remove(Modifier.PUBLIC);
 
         spec.addField(f_mappers())
             .addMethod(this.m_constructor())

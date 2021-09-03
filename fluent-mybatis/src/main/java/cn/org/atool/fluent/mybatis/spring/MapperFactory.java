@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.spring;
 
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -36,7 +36,7 @@ public class MapperFactory {
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        IRefs refs = IRefs.instance();
+        IRef refs = IRef.instance();
         Object relation = this.findEntityRelation();
         refs.setEntityRelation(relation, this);
         refs.wiredMapper();
@@ -50,7 +50,7 @@ public class MapperFactory {
      */
     private Object findEntityRelation() throws ClassNotFoundException {
         try {
-            Class klass = Class.forName(IRefs.Fix_Package + ".IEntityRelation");
+            Class klass = Class.forName(IRef.Fix_Package + ".IEntityRelation");
             return context.getBean(klass);
         } catch (NoSuchBeanDefinitionException be) {
             // do nothing

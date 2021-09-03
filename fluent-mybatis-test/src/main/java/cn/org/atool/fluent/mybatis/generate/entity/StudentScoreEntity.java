@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
@@ -142,7 +143,7 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   }
 
   /**
-   * 实现定义在{@link cn.org.atool.fluent.mybatis.base.IRefs}子类Refs上
+   * 实现定义在{@link IRef}子类Refs上
    */
   @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
   public StudentEntity findStudent() {

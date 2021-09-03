@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 
 /**
@@ -13,7 +13,7 @@ public interface IRich {
      * Entity rich @RefMethod method方法定义接口
      * <p>
      * 具体实现 {@link RichEntity#invoke(String, boolean)}
-     * 对应调用 {@link IRefs#invoke(Class, String, Object[])}
+     * 对应调用 {@link IRef#invoke(Class, String, Object[])}
      *
      * @param method rich method方法名称
      * @param cache  结果是否缓存

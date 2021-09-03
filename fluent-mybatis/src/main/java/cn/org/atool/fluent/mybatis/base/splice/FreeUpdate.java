@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.splice;
 
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateSetter;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -71,6 +71,6 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
 
     @Override
     public DbType dbType() {
-        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
+        return dbType == null ? IRef.instance().defaultDbType() : dbType;
     }
 }

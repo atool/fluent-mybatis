@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.UpdaterExecutor;
 import cn.org.atool.fluent.mybatis.base.model.Column;
@@ -80,7 +80,7 @@ public interface IUpdate<E extends IEntity> {
     default UpdaterExecutor to() {
         Class entityClass = ((IBaseUpdate) this).getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
-        IRichMapper mapper = IRefs.mapper(entityClass);
+        IRichMapper mapper = IRef.mapper(entityClass);
         return new UpdaterExecutor(mapper, this);
     }
 

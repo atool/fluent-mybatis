@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IHasDbType;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
@@ -92,7 +92,7 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
     }
 
     private String buildSqlProviderClassName(Class<? extends IEntity> klass) {
-        Class mapper = IRefs.mapper(klass).getClass();
+        Class mapper = IRef.mapper(klass).getClass();
         if (mapper.getName().contains("$Proxy")) {
             mapper = mapper.getInterfaces()[0];
         }
@@ -140,6 +140,6 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
     private DbType dbType;
 
     public DbType dbType() {
-        return dbType == null ? IRefs.instance().defaultDbType() : dbType;
+        return dbType == null ? IRef.instance().defaultDbType() : dbType;
     }
 }

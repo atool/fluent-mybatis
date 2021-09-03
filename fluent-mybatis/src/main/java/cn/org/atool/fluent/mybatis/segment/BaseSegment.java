@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -113,7 +113,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         assertNotNull("entity", entity);
         Map<String, Object> map = entity.toColumnMap(false);
 
-        String pk = IRefs.instance().findPrimaryColumn(entity.getClass());
+        String pk = IRef.instance().findPrimaryColumn(entity.getClass());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
@@ -136,7 +136,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     protected void byExclude(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> excludes) {
         assertNotNull("entity", entity);
         Map<String, Object> map = entity.toColumnMap(false);
-        String pk = IRefs.instance().findPrimaryColumn(entity.getClass());
+        String pk = IRef.instance().findPrimaryColumn(entity.getClass());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();

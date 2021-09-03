@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
@@ -78,7 +78,7 @@ public interface IFormQuery<E extends IEntity, S extends BaseFormSetter> extends
      * @return true: exist
      */
     default boolean exists() {
-        IEntityMapper mapper = IRefs.mapper(this.entityClass());
+        IEntityMapper mapper = IRef.mapper(this.entityClass());
         int count = mapper.count(this);
         return count > 0;
     }

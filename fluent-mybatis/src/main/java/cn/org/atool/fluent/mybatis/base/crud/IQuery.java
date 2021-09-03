@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -96,7 +96,7 @@ public interface IQuery<E extends IEntity> {
     default QueryExecutor<E> to() {
         Class entityClass = this.getWrapperData().getEntityClass();
         assertNotNull("entity class", entityClass);
-        IRichMapper mapper = IRefs.mapper(entityClass);
+        IRichMapper mapper = IRef.mapper(entityClass);
         return new QueryExecutor<>(mapper, this);
     }
 

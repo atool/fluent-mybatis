@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.entity;
 
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.RefsFile;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.AllRefFile;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.*;
 import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
 import cn.org.atool.generator.javafile.AbstractFile;
@@ -13,7 +13,7 @@ import javax.annotation.processing.Filer;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static cn.org.atool.fluent.mybatis.base.IRefs.Fix_Package;
+import static cn.org.atool.fluent.mybatis.base.IRef.Fix_Package;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 
@@ -97,11 +97,11 @@ public class FluentList {
 
     private static List<AbstractFile> refFiles() {
         return Arrays.asList(
-            new AllRefFiler(),
+            new RefFiler(),
             new FieldRefFiler(),
             new QueryRefFiler(),
             new FormRefFiler(),
-            new RefsFile(),
+            new AllRefFile(),
             new EntityRelationFiler(),
             new MapperRefFiler()
         );

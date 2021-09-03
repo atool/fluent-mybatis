@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRefs;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
@@ -173,7 +173,7 @@ public abstract class WhereBase<
      */
     public <E extends IEntity> WHERE eqByEntity(E entity, GetterFunc<E> column, GetterFunc<E>... columns) {
         assertNotNull("entity", entity);
-        Class klass = IRefs.instance().findFluentEntityClass(entity.getClass());
+        Class klass = IRef.instance().findFluentEntityClass(entity.getClass());
         String[] arr = MappingKits.toColumns(klass, column, columns);
         return this.eqByEntity(entity, arr);
     }
@@ -202,7 +202,7 @@ public abstract class WhereBase<
 
     public <E extends IEntity> WHERE eqByExclude(E entity, GetterFunc<E> exclude, GetterFunc<E>... excludes) {
         assertNotNull("entity", entity);
-        Class klass = IRefs.instance().findFluentEntityClass(entity.getClass());
+        Class klass = IRef.instance().findFluentEntityClass(entity.getClass());
         String[] arr = MappingKits.toColumns(klass, exclude, excludes);
         return this.eqByExclude(entity, arr);
     }
