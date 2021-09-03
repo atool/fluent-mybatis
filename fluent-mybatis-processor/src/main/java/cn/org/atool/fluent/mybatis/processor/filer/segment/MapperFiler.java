@@ -59,7 +59,6 @@ public class MapperFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        super.staticImport(spec);
         spec.addStaticImport(ClassName.get(FluentConst.class), "*");
     }
 
@@ -73,6 +72,11 @@ public class MapperFiler extends AbstractFiler {
             .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Component)
                 .addMember("value", "$S", getMapperName(this.fluent)).build()
             );
+        if (fluent.isUsedCached()) {
+            spec.addAnnotation(AnnotationSpec.builder(CacheNamespace.class)
+                .addMember("blocking", "true").build()
+            );
+        }
         spec.addField(FieldSpec.builder(String.class, "ResultMap",
             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$S", fluent.getClassName() + "ResultMap")

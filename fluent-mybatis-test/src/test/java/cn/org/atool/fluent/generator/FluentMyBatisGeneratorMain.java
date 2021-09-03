@@ -110,7 +110,8 @@ public class FluentMyBatisGeneratorMain {
         tables = {
             @Table(value = "idcard",
                 columns = {@Column(value = "is_deleted", javaType = Long.class)})
-        }, logicDeleted = "is_deleted", version = "version")
+        }, logicDeleted = "is_deleted", version = "version",
+        useCached = true)
     static class UpdateDefault {
     }
 }

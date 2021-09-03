@@ -55,7 +55,6 @@ public class EntityKitFiler extends AbstractFiler {
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(Optional.class, "ofNullable");
         spec.addStaticImport(FieldType.class, "*");
-        spec.skipJavaLangImports(true);
     }
 
     @Override

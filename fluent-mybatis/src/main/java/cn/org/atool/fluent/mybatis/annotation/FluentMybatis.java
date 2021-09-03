@@ -55,7 +55,7 @@ public @interface FluentMybatis {
      *
      * @return prefix of Mapper Bean
      */
-    String mapperBeanPrefix() default "";
+    String mapperBeanPrefix() default "fm";
 
     /**
      * entity, query, updater默认值设置实现

@@ -32,8 +32,6 @@ public class WrapperKitFiler extends AbstractFiler {
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
         spec.addStaticImport(fluent.entityKit(), "Table_Name");
-        spec.skipJavaLangImports(true);
-        super.staticImport(spec);
     }
 
     @Override

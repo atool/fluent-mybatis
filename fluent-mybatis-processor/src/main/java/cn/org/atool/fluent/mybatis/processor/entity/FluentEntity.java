@@ -35,6 +35,10 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      */
     private String className;
     /**
+     * 使用mybatis的二级缓存
+     */
+    private boolean usedCached;
+    /**
      * 无后缀的entity name
      */
     private String noSuffix;
@@ -128,6 +132,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         this.schema = fluentMyBatis.schema();
         this.mapperBeanPrefix = fluentMyBatis.mapperBeanPrefix();
         this.dbType = fluentMyBatis.dbType();
+        this.usedCached = fluentMyBatis.useCached();
         return this;
     }
 
