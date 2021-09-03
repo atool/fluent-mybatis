@@ -2,20 +2,17 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NEW_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
@@ -48,7 +45,7 @@ public class UpdaterFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superKlass())
-            .addField(this.f_defaults())
+            .addField(this.f_mapping())
             .addField(this.f_setter())
             .addField(this.f_update())
             .addField(this.f_where())
@@ -57,12 +54,9 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.constructor2_supplier_string())
             .addMethod(this.m_where())
             .addMethod(this.m_mapping())
-            .addMethod(this.m_allFields())
-            .addMethod(this.m_dbType())
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_emptyUpdater_table())
             .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_column2mapping())
         ;
     }
 
@@ -120,7 +114,7 @@ public class UpdaterFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("this(defaults.table(), null)")
+            .addStatement("this(mapping.table(), null)")
             .build();
     }
 
@@ -170,27 +164,7 @@ public class UpdaterFiler extends AbstractFiler {
     private MethodSpec m_defaultUpdater() {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
-            .addStatement("return defaults.defaultUpdater()")
-            .build();
-    }
-
-    private MethodSpec m_column2mapping() {
-        return super.protectedMethod(M_COLUMN2MAPPING, true, ParameterizedTypeName.get(Map.class, String.class, FieldMapping.class))
-            .addStatement("return $T.Column2Mapping", fluent.mapping())
-            .build();
-    }
-
-    private MethodSpec m_allFields() {
-        return MethodSpec.methodBuilder("allFields")
-            .addModifiers(Modifier.PROTECTED)
-            .returns(CN_List_Str)
-            .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
-            .build();
-    }
-
-    private MethodSpec m_dbType() {
-        return super.publicMethod("dbType", true, DbType.class)
-            .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
+            .addStatement("return mapping.defaultUpdater()")
             .build();
     }
 

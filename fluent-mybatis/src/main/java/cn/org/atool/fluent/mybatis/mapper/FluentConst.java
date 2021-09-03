@@ -11,15 +11,11 @@ public interface FluentConst {
 
     String Suffix_BaseDao = "BaseDao";
 
-    String Suffix_EntityHelper = "Helper";
-
-    String Suffix_Mapping = "Mapping";
+    String Suffix_EntityKit = "Kit";
 
     String Suffix_Query = "Query";
 
     String Suffix_Update = "Update";
-
-    String Suffix_Defaults = "Defaults";
 
     String Suffix_QueryWhere = "QueryWhere";
 
@@ -41,9 +37,7 @@ public interface FluentConst {
 
     String Suffix_ISegment = "ISegment";
 
-    String Suffix_WrapperHelper = "WrapperHelper";
-
-    String Suffix_SqlProvider = "SqlProvider";
+    String Suffix_Segment = "Segment";
 
     String Pack_Helper = "helper";
 
@@ -52,8 +46,6 @@ public interface FluentConst {
     String Pack_Mapper = "mapper";
 
     String Pack_Wrapper = "wrapper";
-
-    String Param_Map = "map";
 
     String Param_List = "list";
 
@@ -70,10 +62,6 @@ public interface FluentConst {
     String M_Insert = "insert";
 
     String M_Insert_With_Pk = "insertWithPk";
-
-    String M_Insert_Entity = "insertEntity";
-
-    String M_Insert_Batch_Entity = "insertBatchEntity";
 
     String M_InsertBatch = "insertBatch";
 

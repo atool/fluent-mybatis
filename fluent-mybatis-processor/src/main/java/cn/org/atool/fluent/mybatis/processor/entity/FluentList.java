@@ -115,15 +115,11 @@ public class FluentList {
     private static List<AbstractFiler> generateJavaFile(FluentEntity fluent) {
         return Arrays.asList(
             new MapperFiler(fluent),
-            new MappingFiler(fluent),
-            new EntityHelperFiler(fluent),
-            new SqlProviderFiler(fluent),
-            new WrapperHelperFiler(fluent),
+            new EntityKitFiler(fluent),
+            new WrapperKitFiler(fluent),
             new QueryFiler(fluent),
             new UpdaterFiler(fluent),
             new BaseDaoFiler(fluent)
-            //new DefaultsFiler(fluent),
-//            new FormSetterFiler(fluent)
         );
     }
 

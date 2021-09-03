@@ -35,8 +35,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return true: 记录存在; false: 记录不存在
      */
     default boolean existPk(Serializable id) {
-        IBaseQuery<E, ?> query = ((IWrapperMapper<E>) this).query();
-        Column pk = Column.column(((IWrapperMapper<E>) this).primaryField(), (BaseWrapper) query);
+        IBaseQuery<E, ?> query = (IBaseQuery) ((IWrapperMapper) this).query();
+        Column pk = Column.column(((IWrapperMapper) this).primaryField(), (BaseWrapper) query);
         query.where().apply(pk, EQ, id).end().limit(1);
         Integer count = this.count(query);
         return count != null && count > 0;
@@ -181,7 +181,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 结果列表
      */
     default List<E> listByMapAndDefault(Map<String, Object> where) {
-        IQuery query = ((IWrapperMapper<E>) this).defaultQuery().where().eqNotNull(where).end();
+        IQuery query = (IQuery) ((IWrapperMapper) this).defaultQuery().where().eqNotNull(where).end();
         return this.listEntity(query);
     }
 
@@ -312,7 +312,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 删除记录数
      */
     default int deleteByMapAndDefault(Map<String, Object> where) {
-        IQuery query = ((IWrapperMapper<E>) this).defaultQuery().where().eqNotNull(where).end();
+        IQuery query = (IQuery) ((IWrapperMapper) this).defaultQuery().where().eqNotNull(where).end();
         return this.delete(query);
     }
 
@@ -323,7 +323,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 逻辑删除记录数
      */
     default int logicDeleteByMapAndDefault(Map<String, Object> where) {
-        IQuery query = ((IWrapperMapper<E>) this).defaultQuery().where().eqNotNull(where).end();
+        IQuery query = (IQuery) ((IWrapperMapper) this).defaultQuery().where().eqNotNull(where).end();
         return this.logicDelete(query);
     }
 

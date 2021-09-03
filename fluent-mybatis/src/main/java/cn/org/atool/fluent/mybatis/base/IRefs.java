@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.crud.IDefault;
+import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
-import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import lombok.Setter;
@@ -17,8 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.methodNameOfEntity;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 
 /**
  * EntityRefQuery: Entity @RefMethod关联关系, 关联加载基类
@@ -50,7 +49,7 @@ public abstract class IRefs {
     }
 
     public static IEntityHelper findEntityHelper(Class clazz) {
-        return EntityHelperFactory.getInstance(clazz);
+        return (IEntityHelper) instance().findMapping(clazz);
     }
 
     /**
@@ -120,13 +119,28 @@ public abstract class IRefs {
     public abstract IUpdate emptyUpdater(Class<? extends IEntity> clazz);
 
     /**
+     * 返回对应实体类的映射关系
+     *
+     * @param clazz Entity类类型
+     * @return IMapping
+     */
+    public abstract IMapping findMapping(Class clazz);
+
+    /**
      * 返回clazz属性field对应的数据库字段名称
      *
      * @param clazz Entity类类型
      * @param field entity属性名
      * @return 数据库字段名称
      */
-    public abstract String findColumnByField(Class clazz, String field);
+    public final String findColumnByField(Class clazz, String field) {
+        IMapping mapping = this.findMapping(clazz);
+        if (mapping == null) {
+            throw notFluentMybatisException(clazz);
+        } else {
+            return mapping.findColumnByField(field);
+        }
+    }
 
     /**
      * 返回clazz实体的主键字段
@@ -134,7 +148,14 @@ public abstract class IRefs {
      * @param clazz Entity类类型
      * @return 主键字段
      */
-    public abstract String findPrimaryColumn(Class clazz);
+    public String findPrimaryColumn(Class clazz) {
+        IMapping mapping = this.findMapping(clazz);
+        if (mapping == null) {
+            throw notFluentMybatisException(clazz);
+        } else {
+            return mapping.primaryId(false);
+        }
+    }
 
     /**
      * 实现entityClass#methodName方法
@@ -287,5 +308,5 @@ public abstract class IRefs {
      * @param clazz IEntity类型
      * @return IDefault
      */
-    public abstract IDefault findDefault(Class clazz);
+    public abstract BaseDefaults findDefault(Class clazz);
 }

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
-import cn.org.atool.fluent.mybatis.base.crud.BaseDefault;
-import cn.org.atool.fluent.mybatis.base.crud.IDefault;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
@@ -27,20 +27,15 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
 
-    ClassName FM_BaseDefault = ClassName.get(BaseDefault.class);
-
     ClassName Spring_Component = ClassName.get("org.springframework.stereotype", "Component");
 
     ClassName Mybatis_Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");
 
     ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
-    ParameterizedTypeName CN_Map_StrStr = ParameterizedTypeName.get(Map.class, String.class, String.class);
+    ParameterizedTypeName CN_Map_AMapping = ParameterizedTypeName.get(Map.class, Class.class, AMapping.class);
 
-    ParameterizedTypeName CN_Map_ClassIDefault = ParameterizedTypeName.get(Map.class, Class.class, IDefault.class);
-    ParameterizedTypeName CN_HashMap_ClassIDefault = ParameterizedTypeName.get(HashMap.class, Class.class, IDefault.class);
-
-    ParameterizedTypeName CN_List_Str = ParameterizedTypeName.get(List.class, String.class);
+    ParameterizedTypeName CN_HashMap_AMapping = ParameterizedTypeName.get(HashMap.class, Class.class, AMapping.class);
 
     ParameterizedTypeName CN_Set_Class = ParameterizedTypeName.get(Set.class, Class.class);
 
@@ -48,7 +43,9 @@ public interface ClassNames2 extends ClassNames {
 
     ParameterizedTypeName CN_Class_IEntity = ParameterizedTypeName.get(CN_Class, WildcardTypeName.subtypeOf(FM_IEntity));
 
-    ParameterizedTypeName CN_Optional_Mapping = ParameterizedTypeName.get(Optional.class, FieldMapping.class);
+    ParameterizedTypeName CN_Optional_FMapping = ParameterizedTypeName.get(Optional.class, FieldMapping.class);
+
+    ParameterizedTypeName CN_Optional_IMapping = ParameterizedTypeName.get(Optional.class, IMapping.class);
 
     ArrayTypeName CN_SerializableArray = ArrayTypeName.of(Serializable.class);
 

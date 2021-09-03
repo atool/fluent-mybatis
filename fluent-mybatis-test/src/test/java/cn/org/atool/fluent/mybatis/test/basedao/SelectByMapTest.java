@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class SelectByMapTest extends BaseTest {
             .cleanAndInsert();
 
         List<StudentEntity> users = dao.selectByMap(new HashMap<String, Object>() {{
-            put(StudentMapping.userName.column, "username_4");
+            put(FieldRef.Student.userName.column, "username_4");
         }});
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM fluent_mybatis.student " +
@@ -46,7 +46,7 @@ public class SelectByMapTest extends BaseTest {
             .cleanAndInsert();
 
         List<StudentEntity> students = dao.selectByMap(new HashMap<String, Object>() {{
-            put(StudentMapping.age.column, 21);
+            put(FieldRef.Student.age.column, 21);
         }});
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM fluent_mybatis.student " +
@@ -66,7 +66,7 @@ public class SelectByMapTest extends BaseTest {
             .cleanAndInsert();
 
         List<StudentEntity> students = dao.selectByMap(new HashMap<String, Object>() {{
-            put(StudentMapping.gmtModified.column, date);
+            put(FieldRef.Student.gmtModified.column, date);
         }});
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM fluent_mybatis.student " +

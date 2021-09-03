@@ -3,11 +3,10 @@ package cn.org.atool.fluent.mybatis.test.segment1;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.id;
 
 /**
  * HavingTest
@@ -82,7 +81,7 @@ public class HavingTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .select
             .sum.age("avg")
-            .apply(id.column)
+            .apply(FieldRef.Student.id.column)
             .end()
             .where.id().eq(24L)
             .end()

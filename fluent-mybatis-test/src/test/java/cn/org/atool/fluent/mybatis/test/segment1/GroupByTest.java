@@ -1,14 +1,12 @@
 package cn.org.atool.fluent.mybatis.test.segment1;
 
-import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.grade;
 
 /**
  * GroupByTest
@@ -38,7 +36,7 @@ public class GroupByTest extends BaseTest {
         StudentQuery query = new StudentQuery()
             .selectId()
             .where.id().eq(24L).end()
-            .groupBy.apply(StudentMapping.userName, StudentMapping.age).end();
+            .groupBy.apply(FieldRef.Student.userName, FieldRef.Student.age).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT `id` FROM fluent_mybatis.student " +
@@ -51,8 +49,8 @@ public class GroupByTest extends BaseTest {
             .selectId()
             .where.id().eq(24L).end()
             .groupBy
-            .apply(true, StudentMapping.userName)
-            .apply(false, StudentMapping.age).end();
+            .apply(true, FieldRef.Student.userName)
+            .apply(false, FieldRef.Student.age).end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT `id` FROM fluent_mybatis.student WHERE `id` = ? GROUP BY `user_name`");
@@ -81,7 +79,7 @@ public class GroupByTest extends BaseTest {
     public void test_count_gt_10_groupByGrade() throws Exception {
         StudentQuery query = new StudentQuery()
             .select
-            .apply(grade.column)
+            .apply(FieldRef.Student.grade.column)
             .count.id()
             .max.age()
             .min.age()

@@ -86,4 +86,6 @@ public interface StrConstant {
      * 反引号
      */
     char BACK_QUOTE = '`';
+
+    String MapperSqlProvider = "MapperSqlProvider";
 }

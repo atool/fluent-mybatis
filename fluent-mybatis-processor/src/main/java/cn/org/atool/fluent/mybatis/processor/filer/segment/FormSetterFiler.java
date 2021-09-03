@@ -27,15 +27,15 @@ public class FormSetterFiler extends AbstractFiler {
     }
 
     public static String getPackageName(FluentClassName fluent) {
-        return fluent.getPackageName(Pack_Helper) + "." + WrapperHelperFiler.getClassName(fluent);
+        return fluent.getPackageName(Pack_Helper) + "." + WrapperKitFiler.getClassName(fluent);
     }
 
     @Override
     protected void build(TypeSpec.Builder builder) {
-        TypeName applyName = parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName());
+        TypeName applyName = paraType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName());
         builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .superclass(BaseFormSetter.class)
-            .addSuperinterface(super.parameterizedType(fluent.segment(), applyName))
+            .addSuperinterface(super.paraType(fluent.segment(), applyName))
             .addMethod(this.constructor1())
             .addMethod(this.m_entityClass())
             .addMethod(this.m_byObject())
@@ -55,14 +55,14 @@ public class FormSetterFiler extends AbstractFiler {
     }
 
     private MethodSpec m_entityClass() {
-        return super.publicMethod("entityClass", true, Class.class)
+        return super.publicMethod("entityClass", Class.class)
             .addStatement("return $T.class", fluent.entity())
             .build();
     }
 
     private MethodSpec m_byObject() {
         return super.publicMethod("by", false,
-            parameterizedType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
+            paraType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
             .addModifiers(Modifier.STATIC)
             .addParameter(Object.class, "object")
             .addParameter(Form.class, "form")

@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -124,6 +125,21 @@ public class WrapperData implements IWrapperData {
      */
     private String customizedSql = null;
 
+    private List<Union> unions = null;
+
+    /**
+     * 增加union查询
+     *
+     * @param union union key
+     * @param query union query
+     */
+    public void union(String union, IQuery query) {
+        if (this.unions == null) {
+            this.unions = new ArrayList<>();
+        }
+        this.unions.add(new Union(union, query));
+    }
+
     /**
      * 自定义的完整sql语句设置
      *
@@ -153,7 +169,12 @@ public class WrapperData implements IWrapperData {
             this.getGroupBy().trim() + SPACE +
             this.getOrderBy().trim() + SPACE +
             this.getLastSql().trim();
-        return sql.trim();
+        sql = sql.trim();
+        if (unions == null || unions.isEmpty()) {
+            return sql;
+        } else {
+            return "(" + sql + ")" + unions.stream().map(Union::sql).collect(joining(SPACE));
+        }
     }
 
     @Override
@@ -360,5 +381,29 @@ public class WrapperData implements IWrapperData {
 
     public ISqlSegment[] whereSegments() {
         return this.mergeSegments.getWhere().getSegments().toArray(new ISqlSegment[0]);
+    }
+
+    public boolean hasUnion() {
+        return this.unions != null && !this.unions.isEmpty();
+    }
+
+    public List<Union> unions() {
+        return this.unions;
+    }
+
+    @Getter
+    public static class Union {
+        private final String key;
+
+        private final IQuery query;
+
+        Union(String key, IQuery query) {
+            this.key = key;
+            this.query = query;
+        }
+
+        public String sql() {
+            return key + SPACE + "(" + query.getWrapperData().getQuerySql().trim() + ")";
+        }
     }
 }

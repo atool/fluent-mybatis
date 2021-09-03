@@ -13,7 +13,7 @@ public class SnowFlakeGenerator {
         return id.incrementAndGet();
     }
 
-    public static long fke() {
+    public static long fake() {
         return 1L;
     }
 }

@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import lombok.NonNull;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
@@ -68,16 +69,54 @@ public class PoJoHelper {
      * 将Map转换为指定的PoJo对象
      *
      * @param clazz  POJO类型
+     * @param list   map对象列表
+     * @param <POJO> POJO类型
+     * @return POJO实例列表
+     */
+    public static <POJO> List<POJO> toPoJoListIgnoreNotFound(Class<POJO> clazz, List<Map<String, Object>> list) {
+        return list == null ? null : list.stream().map(map -> toPoJoIgnoreNotFound(clazz, map)).collect(toList());
+    }
+
+    /**
+     * 将Map转换为指定的PoJo对象
+     *
+     * @param clazz  POJO类型
      * @param map    map对象
      * @param <POJO> PoJo类型
      * @return 根据Map值设置后的对象
      */
     public static <POJO> POJO toPoJo(@NonNull Class<POJO> clazz, @NonNull Map<String, Object> map) {
+        return toPoJo(clazz, map, false);
+    }
+
+    /**
+     * 将Map转换为指定的PoJo对象
+     *
+     * @param clazz          POJO类型
+     * @param map            map对象
+     * @param ignoreNotFound 忽略不存在的字段
+     * @param <POJO>         PoJo类型
+     * @return 根据Map值设置后的对象
+     */
+    public static <POJO> POJO toPoJoIgnoreNotFound(@NonNull Class<POJO> clazz, @NonNull Map<String, Object> map) {
+        return toPoJo(clazz, map, true);
+    }
+
+    private static <POJO> POJO toPoJo(@NonNull Class<POJO> clazz, @NonNull Map<String, Object> map, boolean ignoreNotFound) {
         POJO target = newInstance(clazz);
         MetaObject metaObject = MetaObject.forObject(target, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String name = MybatisUtil.underlineToCamel(entry.getKey(), false);
-            Class<?> type = metaObject.getSetterType(name);
+            Class<?> type;
+            try {
+                type = metaObject.getSetterType(name);
+            } catch (ReflectionException e) {
+                if (ignoreNotFound) {
+                    continue;
+                } else {
+                    throw e;
+                }
+            }
             try {
                 Object value = entry.getValue();
                 if (value == null) {
@@ -90,7 +129,9 @@ public class PoJoHelper {
                     }
                 }
             } catch (Exception e) {
-                throw new RuntimeException("convert map to object[type=" + clazz.getName() + ", property=" + entry.getKey() + ", type=" + type.getName() + "] error: " + e.getMessage(), e);
+                String err = String.format("convert map to object[type=%s, property=%s, type=%s] error: %s",
+                    clazz.getName(), entry.getKey(), type == null ? "<null>" : type.getName(), e.getMessage());
+                throw new RuntimeException(err, e);
             }
         }
         return target;

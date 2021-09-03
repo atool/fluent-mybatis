@@ -8,8 +8,7 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.segment.MapperFiler.getMapperName;
 
@@ -27,7 +26,7 @@ public class BaseDaoFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(fluent.wrapperHelper(), "defaults");
+        spec.addStaticImport(fluent.entityKit(), Suffix_EntityKit);
         super.staticImport(spec);
     }
 
@@ -88,7 +87,7 @@ public class BaseDaoFiler extends AbstractFiler {
     }
 
     private MethodSpec m_newQuery() {
-        return super.protectedMethod(M_NEW_QUERY, true, fluent.query())
+        return super.protectedMethod(M_NEW_QUERY, fluent.query())
             .addStatement("return new $T()", fluent.query())
             .build();
     }
@@ -99,13 +98,13 @@ public class BaseDaoFiler extends AbstractFiler {
      * @return MethodSpec
      */
     private MethodSpec m_defaultQuery() {
-        return super.protectedMethod(M_DEFAULT_QUERY, true, fluent.query())
-            .addStatement("return defaults.$L()", M_DEFAULT_QUERY)
+        return super.protectedMethod(M_DEFAULT_QUERY, fluent.query())
+            .addStatement("return Kit.$L()", M_DEFAULT_QUERY)
             .build();
     }
 
     private MethodSpec m_newUpdater() {
-        return super.protectedMethod(M_NEW_UPDATER, true, fluent.updater())
+        return super.protectedMethod(M_NEW_UPDATER, fluent.updater())
             .addStatement("return new $T()", fluent.updater())
             .build();
     }
@@ -116,8 +115,8 @@ public class BaseDaoFiler extends AbstractFiler {
      * @return MethodSpec
      */
     private MethodSpec m_defaultUpdater() {
-        return super.protectedMethod(M_DEFAULT_UPDATER, true, fluent.updater())
-            .addStatement("return defaults.$L()", M_DEFAULT_UPDATER)
+        return super.protectedMethod(M_DEFAULT_UPDATER, fluent.updater())
+            .addStatement("return Kit.$L()", M_DEFAULT_UPDATER)
             .build();
     }
 

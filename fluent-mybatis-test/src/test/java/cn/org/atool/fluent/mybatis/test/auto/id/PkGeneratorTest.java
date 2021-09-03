@@ -37,7 +37,7 @@ public class PkGeneratorTest extends BaseTest {
     void insertBatchWithPk() {
         ATM.dataMap.homeAddress.table().clean();
         mocks.SnowFlakeGenerator().uuid.thenReturn(200L, 300L);
-        mocks.SnowFlakeGenerator().fke.thenReturn(345L);
+        mocks.SnowFlakeGenerator().fake.thenReturn(345L);
         mapper.insertBatchWithPk(list(
             new HomeAddressEntity()
                 .setAddress("add")
@@ -50,7 +50,7 @@ public class PkGeneratorTest extends BaseTest {
             .id.values(200L, 300L)
             .address.values("add")
             .eqTable();
-        want.number(SnowFlakeGenerator.fke()).eq(345L);
+        want.number(SnowFlakeGenerator.fake()).eq(345L);
     }
 
     @Test

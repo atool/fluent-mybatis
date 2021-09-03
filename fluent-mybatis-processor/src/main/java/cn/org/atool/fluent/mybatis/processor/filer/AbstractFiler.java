@@ -1,14 +1,15 @@
 package cn.org.atool.fluent.mybatis.processor.filer;
 
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_IMapping;
 
 @SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 public abstract class AbstractFiler {
@@ -61,18 +62,14 @@ public abstract class AbstractFiler {
         return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), NEWLINE);
     }
 
-    protected CodeBlock codeBlock(CodeBlock... blocks) {
-        return CodeBlock.join(Stream.of(blocks).collect(Collectors.toList()), NEWLINE);
-    }
-
     protected abstract void build(TypeSpec.Builder builder);
 
-    protected TypeName parameterizedType(ClassName raw, TypeName... paras) {
+    protected TypeName paraType(ClassName raw, TypeName... paras) {
         return ParameterizedTypeName.get(raw, paras);
     }
 
-    protected TypeName parameterizedType(Class raw, Class... paras) {
-        return ParameterizedTypeName.get(raw, paras);
+    protected TypeName mapType(Class... paras) {
+        return ParameterizedTypeName.get(Map.class, paras);
     }
 
     /**
@@ -88,13 +85,13 @@ public abstract class AbstractFiler {
      * @return ignore
      */
     protected MethodSpec m_mapping() {
-        return this.protectedMethod("mapping", true, ClassName.get(IMapping.class))
-            .addStatement("return $T.MAPPING", fluent.mapping())
+        return this.protectedMethod("mapping", CN_Optional_IMapping)
+            .addStatement("return Optional.of(mapping)")
             .build();
     }
 
-    protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, Class returnKlass) {
-        return this.publicMethod(methodName, isOverride, returnKlass == null ? null : ClassName.get(returnKlass));
+    protected MethodSpec.Builder publicMethod(String methodName, Class returnKlass) {
+        return this.publicMethod(methodName, true, returnKlass == null ? null : ClassName.get(returnKlass));
     }
 
     /**
@@ -119,11 +116,9 @@ public abstract class AbstractFiler {
         return builder;
     }
 
-    protected MethodSpec.Builder protectedMethod(String methodName, boolean isOverride, TypeName returnKlass) {
+    protected MethodSpec.Builder protectedMethod(String methodName, TypeName returnKlass) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
-        if (isOverride) {
-            builder.addAnnotation(Override.class);
-        }
+        builder.addAnnotation(Override.class);
         if (returnKlass != null) {
             builder.returns(returnKlass);
         }
@@ -131,24 +126,14 @@ public abstract class AbstractFiler {
         return builder;
     }
 
-    /**
-     * 未定义主键异常
-     *
-     * @param builder MethodSpec.Builder
-     * @return ignore
-     */
-    public static MethodSpec.Builder throwPrimaryNoFound(MethodSpec.Builder builder) {
-        return builder.addStatement("throw new $T($S)", RuntimeException.class, "primary key not found.");
-    }
-
-    protected FieldSpec f_defaults() {
-        return FieldSpec.builder(fluent.defaults(),
-            "defaults", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
-            .addJavadoc("默认设置器")
-            .initializer("$T.defaults", fluent.wrapperHelper())
+    protected FieldSpec f_mapping() {
+        return FieldSpec.builder(fluent.entityKit(),
+            "mapping", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .initializer("$T.Kit", fluent.entityKit())
             .build();
     }
 
+    @SuppressWarnings("all")
     protected AnnotationSpec suppressWarnings(String... values) {
         String format = Stream.of(values).map(s -> "$S")
             .collect(Collectors.joining(", ", "{", "}"));

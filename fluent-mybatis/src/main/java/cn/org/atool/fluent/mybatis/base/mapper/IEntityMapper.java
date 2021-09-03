@@ -2,9 +2,9 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -47,7 +47,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param crud 增删改操作
      */
     @UpdateProvider(
-        type = BaseSqlProvider.class,
+        type = SqlProvider.class,
         method = "batchCrud"
     )
     void batchCrud(@Param(Param_EW) BatchCrud crud);
@@ -90,7 +90,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param fields 要插入的字段
      * @param query  select数据
      * @return 拷贝插入的记录数
-     * @see BaseSqlProvider#insertSelect(Map)
+     * @see SqlProvider#insertSelect(Map)
      */
     int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
@@ -187,6 +187,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
+     * @see SqlProvider#countNoLimit(Map)
      */
     Integer countNoLimit(@Param(Param_EW) IQuery query);
 

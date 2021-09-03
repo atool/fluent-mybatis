@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.base.dao;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
@@ -35,7 +35,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param fields 要插入的字段
      * @param query  select数据
      * @return 拷贝插入的记录数
-     * @see BaseSqlProvider#insertSelect(Map)
+     * @see SqlProvider#insertSelect(Map)
      */
     default int insertSelect(String[] fields, IQuery query) {
         return this.mapper().insertSelect(fields, query);
@@ -47,7 +47,7 @@ public interface IProtectedDao<E extends IEntity> {
      * @param fields 要插入的字段
      * @param query  select数据
      * @return 拷贝插入的记录数
-     * @see BaseSqlProvider#insertSelect(Map)
+     * @see SqlProvider#insertSelect(Map)
      */
     default int insertSelect(FieldMapping[] fields, IQuery query) {
         return this.insertSelect(Stream.of(fields).map(c -> c.column).toArray(String[]::new), query);

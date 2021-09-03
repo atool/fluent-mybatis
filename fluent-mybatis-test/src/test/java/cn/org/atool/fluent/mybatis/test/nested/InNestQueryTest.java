@@ -3,14 +3,13 @@ package cn.org.atool.fluent.mybatis.test.nested;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.List;
-
-import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.id;
 
 /**
  * InNestQueryTest
@@ -44,7 +43,7 @@ public class InNestQueryTest extends BaseTest {
     @Test
     void test_and_in_nested() {
         StudentQuery query = new StudentQuery()
-            .select.apply(id).sum.age().end()
+            .select.apply(FieldRef.Student.id).sum.age().end()
             .where.id().in(q -> q.selectId()
                 .where.id().eq(3L).end())
             .and.userName().like("user")

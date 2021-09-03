@@ -3,9 +3,9 @@ package cn.org.atool.fluent.mybatis.splice;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
-import cn.org.atool.fluent.mybatis.generate.helper.MemberMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -39,7 +39,7 @@ public class FreeQueryTest extends BaseTest {
         FreeQuery query = new FreeQuery("t_member", "t1");
         query.setDbType(DbType.MYSQL)
             .select.apply("id")
-            .applyAs(MemberMapping.gmtModified, "modifiedDate").end()
+            .applyAs(FieldRef.Member.gmtModified, "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
@@ -52,7 +52,7 @@ public class FreeQueryTest extends BaseTest {
         FreeQuery query = new FreeQuery("t_member", "t1");
         query.setDbType(DbType.MYSQL)
             .select.apply("id")
-            .max.applyAs(MemberMapping.age, "_age").end()
+            .max.applyAs(FieldRef.Member.age, "_age").end()
             .where().apply("id", EQ, "1").end()
             .groupBy.apply("id").end();
         mapper.findOne(query);

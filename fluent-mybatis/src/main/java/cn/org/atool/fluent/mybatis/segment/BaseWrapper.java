@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
@@ -14,9 +15,10 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -31,13 +33,13 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
  * @param <NQ> 对应的嵌套查询器
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class BaseWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,
     NQ extends IBaseQuery<E, NQ>
     >
-    implements IWrapper<E, W, NQ> {
+    implements IWrapper<E, W, NQ>, IHasDbType {
     private static final long serialVersionUID = 2674302532927710150L;
 
     @Getter
@@ -51,20 +53,24 @@ public abstract class BaseWrapper<
     @Getter
     protected WrapperData wrapperData;
 
+    protected Class entityClass;
+
     protected BaseWrapper(String tableAlias) {
         this.tableAlias = tableAlias;
     }
 
     protected BaseWrapper(Supplier<String> table, String tableAlias, Class<E> entityClass, Class queryClass) {
         this(table, tableAlias, new Parameters(), entityClass, queryClass);
+        this.entityClass = entityClass;
     }
 
     protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass,
-        Class queryClass) {
+                          Class queryClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();
         this.wrapperData = new WrapperData(table, this.tableAlias, parameters, entityClass, queryClass);
+        this.entityClass = entityClass;
     }
 
     /**
@@ -72,8 +78,8 @@ public abstract class BaseWrapper<
      *
      * @return 字段映射关系
      */
-    protected IMapping mapping() {
-        return null;
+    protected Optional<IMapping> mapping() {
+        return Optional.empty();
     }
 
     /**
@@ -83,12 +89,8 @@ public abstract class BaseWrapper<
      * @return 指定类型的字段
      */
     public String fieldName(FieldType type) {
-        IMapping mapping = this.mapping();
-        if (mapping == null) {
-            return null;
-        } else {
-            return mapping.findField(type).map(c -> c.column).orElse(null);
-        }
+        return this.mapping().flatMap(m -> m.findField(type)).map(c -> c.column).orElse(null);
+
     }
 
     /**
@@ -96,7 +98,9 @@ public abstract class BaseWrapper<
      *
      * @return 所有字段
      */
-    protected abstract List<String> allFields();
+    protected List<String> allFields() {
+        return this.mapping().map(IMapping::getAllColumns).orElse(Collections.emptyList());
+    }
 
     protected TableMeta getTableMeta() {
         return TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass());
@@ -145,14 +149,16 @@ public abstract class BaseWrapper<
      *
      * @return DbType
      */
-    public abstract DbType dbType();
+    public DbType dbType() {
+        return this.mapping().map(IMapping::getDbType).orElseThrow(() -> new RuntimeException("DbType is not set."));
+    }
 
     /**
      * 返回字段映射关系
      *
      * @return 字段映射
      */
-    protected Map<String, FieldMapping> column2mapping() {
-        return new HashMap<>();
+    private Map<String, FieldMapping> column2mapping() {
+        return this.mapping().map(IMapping::getColumnMappings).orElse(Collections.EMPTY_MAP);
     }
 }

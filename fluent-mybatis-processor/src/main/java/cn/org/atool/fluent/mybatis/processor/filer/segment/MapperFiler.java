@@ -3,11 +3,11 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -29,7 +29,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.MapperSqlProvider;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 
 /**
@@ -61,15 +61,14 @@ public class MapperFiler extends AbstractFiler {
     protected void staticImport(JavaFile.Builder spec) {
         super.staticImport(spec);
         spec.addStaticImport(ClassName.get(FluentConst.class), "*");
-        spec.addStaticImport(fluent.wrapperHelper(), "defaults");
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addSuperinterface(this.superMapperClass())
-            .addSuperinterface(parameterizedType(ClassName.get(IRichMapper.class), fluent.entity()))
-            .addSuperinterface(parameterizedType(ClassName.get(IWrapperMapper.class), fluent.entity()))
-            .addSuperinterface(parameterizedType(ClassNames2.getClassName(fluent.getSuperMapper()), fluent.entity()))
+            .addSuperinterface(paraType(ClassName.get(IRichMapper.class), fluent.entity()))
+            .addSuperinterface(paraType(ClassName.get(IWrapperMapper.class), fluent.entity(), fluent.query(), fluent.updater()))
+            .addSuperinterface(paraType(ClassNames2.getClassName(fluent.getSuperMapper()), fluent.entity()))
             .addAnnotation(ClassNames2.Mybatis_Mapper)
             .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Component)
                 .addMember("value", "$S", getMapperName(this.fluent)).build()
@@ -104,61 +103,15 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_count())
             .addMethod(this.m_countNoLimit());
 
-        spec.addMethod(this.m_query())
-            .addMethod(this.m_updater())
-            .addMethod(this.m_defaultQuery())
-            .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_primaryField())
-            .addMethod(this.m_entityClass());
+        spec.addMethod(this.m_mapping());
+        spec.addType(this.t_SqlProvider());
     }
 
-    private MethodSpec m_entityClass() {
-        return super.publicMethod("entityClass", true, parameterizedType(ClassName.get(Class.class), fluent.entity()))
-            .addModifiers(Modifier.DEFAULT)
-            .addStatement("return $T.class", fluent.entity())
-            .build();
-    }
-
-    private MethodSpec m_primaryField() {
-        MethodSpec.Builder builder = super.publicMethod("primaryField", true, FieldMapping.class)
-            .addModifiers(Modifier.DEFAULT);
-        if (fluent.getPrimary() == null) {
-            throwPrimaryNoFound(builder);
-        } else {
-            builder.addStatement("return $T.$L", fluent.mapping(), fluent.getPrimary().getName());
-        }
-        return builder.build();
-    }
-
-    private MethodSpec m_query() {
-        return MethodSpec.methodBuilder(M_NEW_QUERY)
-            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(fluent.query())
-            .addStatement("return new $T()", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_defaultQuery() {
-        return MethodSpec.methodBuilder(M_DEFAULT_QUERY)
-            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(fluent.query())
-            .addStatement("return defaults.$L()", M_DEFAULT_QUERY)
-            .build();
-    }
-
-    private MethodSpec m_updater() {
-        return MethodSpec.methodBuilder(M_NEW_UPDATER)
-            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(fluent.updater())
-            .addStatement("return new $T()", fluent.updater())
-            .build();
-    }
-
-    private MethodSpec m_defaultUpdater() {
-        return MethodSpec.methodBuilder(M_DEFAULT_UPDATER)
-            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(fluent.updater())
-            .addStatement("return defaults.$L()", M_DEFAULT_UPDATER)
+    @Override
+    protected MethodSpec m_mapping() {
+        return this.publicMethod("mapping", IMapping.class)
+            .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
+            .addStatement("return $T.Kit", fluent.entityKit())
             .build();
     }
 
@@ -179,7 +132,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_listObjs() {
         return this.mapperMethod(SelectProvider.class, M_listObjs)
             .addParameter(queryParam("query"))
-            .returns(parameterizedType(ClassName.get(List.class), TypeVariableName.get("O")))
+            .returns(paraType(ClassName.get(List.class), TypeVariableName.get("O")))
             .addTypeVariable(TypeVariableName.get("O"))
             .build();
     }
@@ -190,7 +143,7 @@ public class MapperFiler extends AbstractFiler {
                 .addMember("value", "$T.class", Map.class)
                 .build())
             .addParameter(queryParam("query"))
-            .returns(parameterizedType(ClassName.get(List.class), CN_Map_StrObj))
+            .returns(paraType(ClassName.get(List.class), CN_Map_StrObj))
             .build();
     }
 
@@ -198,7 +151,7 @@ public class MapperFiler extends AbstractFiler {
         return this.mapperMethod(SelectProvider.class, M_listEntity)
             .addAnnotation(this.annotation_ResultMap())
             .addParameter(queryParam("query"))
-            .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
+            .returns(paraType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
 
@@ -206,7 +159,7 @@ public class MapperFiler extends AbstractFiler {
         return this.mapperMethod(SelectProvider.class, M_listByMap)
             .addAnnotation(this.annotation_ResultMap())
             .addParameter(this.param(CN_Map_StrObj, "columnMap", "Param_CM"))
-            .returns(parameterizedType(ClassName.get(List.class), fluent.entity()))
+            .returns(paraType(ClassName.get(List.class), fluent.entity()))
             .build();
     }
 
@@ -214,7 +167,7 @@ public class MapperFiler extends AbstractFiler {
         return this.mapperMethod(SelectProvider.class, M_listByIds)
             .addAnnotation(this.annotation_ResultMap())
             .addParameter(this.param(Collection.class, "ids", "Param_List"))
-            .returns(parameterizedType(CN_List, fluent.entity()))
+            .returns(paraType(CN_List, fluent.entity()))
             .build();
     }
 
@@ -237,7 +190,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_updateBy() {
         return this.mapperMethod(UpdateProvider.class, M_updateBy)
             .addParameter(this.param(ArrayTypeName.of(IUpdate.class), "updates", "Param_EW"))
-            .addJavadoc(" {@link $T#updateBy($T)}", fluent.sqlProvider(), Map.class)
+            .addJavadoc(" {@link $L#updateBy($T)}", MapperSqlProvider, Map.class)
             .varargs(true)
             .returns(TypeName.INT)
             .build();
@@ -251,18 +204,18 @@ public class MapperFiler extends AbstractFiler {
     }
 
     public MethodSpec m_deleteByIds() {
-        TypeName typeName = parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
+        TypeName typeName = paraType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
         return this.mapperMethod(DeleteProvider.class, M_deleteByIds)
-            .addJavadoc("@see $T#deleteByIds(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#deleteByIds(Map)", MapperSqlProvider)
             .addParameter(this.param(typeName, "idList", "Param_List"))
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_logicDeleteByIds() {
-        TypeName typeName = parameterizedType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
+        TypeName typeName = paraType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
         return this.mapperMethod(DeleteProvider.class, M_LogicDeleteByIds)
-            .addJavadoc("@see $T#logicDeleteByIds(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#logicDeleteByIds(Map)", MapperSqlProvider)
             .addParameter(this.param(typeName, "idList", "Param_List"))
             .returns(TypeName.INT)
             .build();
@@ -270,7 +223,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_delete() {
         return this.mapperMethod(DeleteProvider.class, M_Delete)
-            .addJavadoc("@see $T#delete(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#delete(Map)", MapperSqlProvider)
             .addParameter(queryParam("wrapper"))
             .returns(TypeName.INT)
             .build();
@@ -278,7 +231,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_logicDelete() {
         return this.mapperMethod(DeleteProvider.class, M_LogicDelete)
-            .addJavadoc("@see $T#logicDelete(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#logicDelete(Map)", MapperSqlProvider)
             .addParameter(queryParam("wrapper"))
             .returns(TypeName.INT)
             .build();
@@ -286,7 +239,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_deleteByMap() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteByMap)
-            .addJavadoc("@see $T#deleteByMap(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#deleteByMap(Map)", MapperSqlProvider)
             .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
                 .addAnnotation(annotation_Param("Param_CM"))
                 .build())
@@ -296,7 +249,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_logicDeleteByMap() {
         return this.mapperMethod(DeleteProvider.class, M_LogicDeleteByMap)
-            .addJavadoc("@see $T#logicDeleteByMap(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#logicDeleteByMap(Map)", MapperSqlProvider)
             .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
                 .addAnnotation(annotation_Param("Param_CM"))
                 .build())
@@ -306,7 +259,7 @@ public class MapperFiler extends AbstractFiler {
 
     public MethodSpec m_deleteById() {
         return this.mapperMethod(DeleteProvider.class, M_DeleteById)
-            .addJavadoc("@see $T#deleteById(Serializable[])", fluent.sqlProvider())
+            .addJavadoc("@see SqlProvider#deleteById(Map)")
             .addParameter(this.param(CN_SerializableArray, "ids", "Param_List"))
             .varargs(true)
             .returns(TypeName.INT)
@@ -320,7 +273,7 @@ public class MapperFiler extends AbstractFiler {
      */
     public MethodSpec m_logicDeleteById() {
         return this.mapperMethod(DeleteProvider.class, M_LogicDeleteById)
-            .addJavadoc("@see $T#logicDeleteById(Serializable[])", fluent.sqlProvider())
+            .addJavadoc("@see $L#logicDeleteById(Serializable[])", MapperSqlProvider)
             .addParameter(this.param(CN_SerializableArray, "ids", "Param_List"))
             .varargs(true)
             .returns(TypeName.INT)
@@ -343,16 +296,18 @@ public class MapperFiler extends AbstractFiler {
                 }
             }
         }
-        TypeName listType = parameterizedType(CN_Collection, fluent.entity());
+        TypeName listType = paraType(CN_Collection, fluent.entity());
         return builder.addParameter(this.param(listType, "entities", "Param_List"))
+            .addJavadoc("{@link SqlProvider#insertBatch($T)}", Map.class)
             .returns(TypeName.INT)
             .build();
     }
 
     public MethodSpec m_insertBatchWithPk() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertBatch_With_Pk);
-        TypeName listType = parameterizedType(CN_Collection, fluent.entity());
+        TypeName listType = paraType(CN_Collection, fluent.entity());
         return builder.addParameter(this.param(listType, "entities", "Param_List"))
+            .addJavadoc("{@link SqlProvider#insertBatchWithPk(Map)}")
             .returns(TypeName.INT)
             .build();
     }
@@ -360,7 +315,7 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_insertSelect() {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_InsertSelect);
         return builder
-            .addJavadoc("@see $T#insertSelect(Map)", fluent.sqlProvider())
+            .addJavadoc("@see $L#insertSelect(Map)", MapperSqlProvider)
             .addParameter(this.param(String[].class, Param_Fields, "Param_Fields"))
             .addParameter(this.queryParam(Param_EW))
             .returns(TypeName.INT)
@@ -379,7 +334,7 @@ public class MapperFiler extends AbstractFiler {
         return builder
             .addParameter(fluent.entity(), "entity")
             .returns(TypeName.INT)
-            .addJavadoc("{@link $T#insert($T)}", BaseSqlProvider.class, IEntity.class)
+            .addJavadoc("{@link $T#insert($T)}", SqlProvider.class, IEntity.class)
             .build();
     }
 
@@ -387,6 +342,7 @@ public class MapperFiler extends AbstractFiler {
         MethodSpec.Builder builder = this.mapperMethod(InsertProvider.class, M_Insert_With_Pk);
         return builder
             .addParameter(fluent.entity(), "entity")
+            .addJavadoc("{@link SqlProvider#insertWithPk($T)}", IEntity.class)
             .returns(TypeName.INT)
             .build();
     }
@@ -447,14 +403,14 @@ public class MapperFiler extends AbstractFiler {
         builder.addAnnotation(Override.class);
         builder.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
         builder.addAnnotation(AnnotationSpec.builder(provider)
-            .addMember("type", "$T.class", fluent.sqlProvider())
+            .addMember("type", "MapperSqlProvider.class")
             .addMember("method", "$S", methodName)
             .build());
         return builder;
     }
 
     private TypeName superMapperClass() {
-        return super.parameterizedType(
+        return super.paraType(
             ClassName.get(IEntityMapper.class),
             fluent.entity()
         );
@@ -553,5 +509,18 @@ public class MapperFiler extends AbstractFiler {
         return ParameterSpec.builder(type, varName)
             .addAnnotation(annotation_Param(paraName))
             .build();
+    }
+
+    private TypeSpec t_SqlProvider() {
+        return TypeSpec.classBuilder(MapperSqlProvider)
+            .superclass(paraType(ClassName.get(SqlProvider.class), fluent.entity()))
+            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addMethod(this.m_mapping2())
+            .build();
+    }
+
+    private MethodSpec m_mapping2() {
+        return this.publicMethod("mapping", IMapping.class)
+            .addStatement("return $T.Kit", fluent.entityKit()).build();
     }
 }

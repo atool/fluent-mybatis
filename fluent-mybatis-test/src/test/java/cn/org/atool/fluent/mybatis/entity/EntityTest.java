@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.entity;
 
+import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.mapper.EntityHelperFactory;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
@@ -56,7 +56,7 @@ public class EntityTest extends Test4J {
         map.put("age", 3);
         map.put("version", "1.3.0");
 
-        StudentEntity student = EntityHelperFactory.getInstance(StudentEntity.class).toEntity(map);
+        StudentEntity student = IRefs.findEntityHelper(StudentEntity.class).toEntity(map);
         want.object(student).eqDataMap(ATM.dataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)

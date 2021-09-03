@@ -20,20 +20,39 @@ public class FieldMapping {
      * 字段名称
      */
     public final String column;
-
+    /**
+     * 字段类型
+     */
+    public final FieldType fieldType;
+    /**
+     * 插入时的默认值
+     */
+    public final String insert;
+    /**
+     * 更新时的默认值
+     */
+    public final String update;
+    /**
+     * java 类型
+     */
     public final Class javaType;
-
+    /**
+     * type Handler
+     */
     public final Class typeHandler;
 
-    public FieldMapping(String name, String column) {
-        this(name, column, null, null);
-    }
-
-    public FieldMapping(String name, String column, Class javaType, Class typeHandler) {
+    public FieldMapping(String name, String column, FieldType fieldType, String insert, String update, Class javaType, Class typeHandler) {
         this.name = name;
         this.column = column;
+        this.fieldType = fieldType;
+        this.insert = insert;
+        this.update = update;
         this.javaType = javaType;
         this.typeHandler = typeHandler;
+    }
+
+    public FieldMapping(String name, String column) {
+        this(name, column, null, null, null, null, null);
     }
 
     /**
@@ -81,5 +100,23 @@ public class FieldMapping {
      */
     public static String alias(String alias, String column) {
         return isBlank(alias) ? column : alias + "." + column;
+    }
+
+    /**
+     * 主键字段
+     *
+     * @return true:主键字段
+     */
+    public boolean isPrimary() {
+        return this.fieldType == FieldType.PRIMARY_ID;
+    }
+
+    /**
+     * 版本号字段
+     *
+     * @return true:版本号字段
+     */
+    public boolean isVersion() {
+        return this.fieldType == FieldType.LOCK_VERSION;
     }
 }

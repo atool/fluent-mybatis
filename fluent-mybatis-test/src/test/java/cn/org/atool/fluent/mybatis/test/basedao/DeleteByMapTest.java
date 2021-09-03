@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class DeleteByMapTest extends BaseTest {
             .cleanAndInsert();
         dao.deleteByMap(new HashMap<String, Object>() {
             {
-                this.put(StudentMapping.userName.column, "test12");
+                this.put(FieldRef.Student.userName.column, "test12");
             }
         });
         db.sqlList().wantFirstSql().eq("" +
@@ -38,7 +38,7 @@ public class DeleteByMapTest extends BaseTest {
     public void test_logicDeleteByMap() throws Exception {
         dao.logicDeleteByMap(new HashMap<String, Object>() {
             {
-                this.put(StudentMapping.userName.column, "test12");
+                this.put(FieldRef.Student.userName.column, "test12");
             }
         });
         db.sqlList().wantFirstSql().eq("" +

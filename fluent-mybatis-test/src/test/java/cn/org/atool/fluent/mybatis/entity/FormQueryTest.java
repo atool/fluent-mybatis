@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.refs.FormRef;
-import cn.org.atool.fluent.mybatis.refs.Refs;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 
@@ -34,8 +33,8 @@ public class FormQueryTest extends BaseTest {
     @Test
     public void testTagPaged() {
         TagPagedList<StudentEntity> paged = new Form()
-            .add.eq(Refs.Field.Student.userName, "xx")
-            .add.between(Refs.Field.Student.age, 12, 40)
+            .add.eq(FieldRef.Student.userName, "xx")
+            .add.between(FieldRef.Student.age, 12, 40)
             .setNextId(0)
             .add(FormRef.student, new StudentEntity().setAddress("kkk"))
             .leftLike().address()

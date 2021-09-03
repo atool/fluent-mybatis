@@ -57,7 +57,6 @@ public class UpdateByEntityIdTest extends BaseTest {
             );
     }
 
-
     @Test
     public void test_byEntityId_Collection() throws Exception {
         ATM.dataMap.student.initTable(5)

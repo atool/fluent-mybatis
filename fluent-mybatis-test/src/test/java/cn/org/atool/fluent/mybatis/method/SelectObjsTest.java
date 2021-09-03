@@ -3,13 +3,12 @@ package cn.org.atool.fluent.mybatis.method;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-
-import static cn.org.atool.fluent.mybatis.generate.helper.StudentMapping.userName;
 
 /**
  * @author darui.wu
@@ -27,7 +26,7 @@ public class SelectObjsTest extends BaseTest {
                 .userName.values("u1", "u2", "u3", "u2")
             );
         StudentQuery query = new StudentQuery()
-            .select.apply(userName)
+            .select.apply(FieldRef.Student.userName)
             .end()
             .where.id().eq(24L)
             .end();

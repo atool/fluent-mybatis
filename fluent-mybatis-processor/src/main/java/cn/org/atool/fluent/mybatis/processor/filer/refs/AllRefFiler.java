@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.IRefs;
-import cn.org.atool.fluent.mybatis.base.crud.IDefault;
+import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
@@ -16,8 +17,6 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set_Class;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findColumnByField;
-import static cn.org.atool.fluent.mybatis.processor.filer.refs.FieldRefFiler.m_findPrimaryColumn;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
 
 /**
@@ -48,20 +47,30 @@ public class AllRefFiler extends AbstractFile {
             .addMethod(this.m_constructor())
             .addMethod(this.m_mappers())
             .addMethod(this.m_getMapper())
-            .addMethod(m_findColumnByField(true))
-            .addMethod(m_findPrimaryColumn(true))
             .addMethod(m_defaultQuery(true))
             .addMethod(m_emptyQuery(true))
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_emptyUpdater(true))
+            .addMethod(this.m_mapping("findMapping", IMapping.class))
+            .addMethod(this.m_mapping("findDefault", BaseDefaults.class))
             .addMethod(this.m_allEntityClass())
             .addMethod(this.m_initEntityMapper())
-            .addMethod(this.m_findDefault())
         ;
 
         spec.addType(this.class_field())
             .addType(this.class_query())
             .addType(this.class_setter());
+    }
+
+    private MethodSpec m_mapping(String method, Class rClass) {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(method)
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addParameter(Class.class, "clazz")
+            .returns(rClass);
+        spec.addAnnotation(Override.class)
+            .addStatement("return $T.mapping(clazz)", QueryRefFiler.getClassName());
+
+        return spec.build();
     }
 
     private FieldSpec f_mappers() {
@@ -118,20 +127,10 @@ public class AllRefFiler extends AbstractFile {
         return spec.build();
     }
 
-    private MethodSpec m_findDefault() {
-        return MethodSpec.methodBuilder("findDefault")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
-            .returns(IDefault.class)
-            .addParameter(Class.class, "clazz")
-            .addStatement("return QueryRef.findDefault(clazz)")
-            .build();
-    }
-
     private TypeSpec class_field() {
         return TypeSpec.classBuilder("Field")
             .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(FieldRefFiler.getClassName())
+            .addSuperinterface(FieldRefFiler.getClassName())
             .build();
     }
 

@@ -2,9 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -12,12 +10,10 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Query;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
@@ -51,7 +47,7 @@ public class QueryFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.superclass(this.superClass())
-            .addField(this.f_defaults())
+            .addField(this.f_mapping())
             .addField(this.f_select())
             .addField(this.f_groupBy())
             .addField(this.f_having())
@@ -62,11 +58,8 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.constructor1_String())
             .addMethod(this.constructor2_String_String())
             .addMethod(this.constructor2_String_Parameter())
-            .addMethod(this.m_column2mapping())
             .addMethod(this.m_where())
             .addMethod(this.m_mapping())
-            .addMethod(this.m_allFields())
-            .addMethod(this.m_dbType())
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_emptyQuery_Alias())
             .addMethod(this.m_emptyQuery_table())
@@ -113,7 +106,7 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec m_defaultQuery() {
         return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
-            .addStatement("return defaults.defaultQuery()")
+            .addStatement("return mapping.defaultQuery()")
             .build();
     }
 
@@ -121,7 +114,7 @@ public class QueryFiler extends AbstractFiler {
         return super.publicMethod(M_ALIAS_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addJavadoc(JavaDoc_Alias_Query_0)
-            .addStatement("return defaults.aliasQuery()")
+            .addStatement("return mapping.aliasQuery()")
             .build();
     }
 
@@ -130,7 +123,7 @@ public class QueryFiler extends AbstractFiler {
             .addModifiers(Modifier.STATIC)
             .addParameter(String.class, "alias")
             .addJavadoc(JavaDoc_Alias_Query_1)
-            .addStatement("return defaults.aliasQuery(alias)")
+            .addStatement("return mapping.aliasQuery(alias)")
             .build();
     }
 
@@ -139,7 +132,7 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(BaseQuery.class, "fromQuery")
             .addModifiers(Modifier.STATIC)
             .addJavadoc(JavaDoc_Alias_With_1)
-            .addStatement("return defaults.aliasWith(fromQuery)")
+            .addStatement("return mapping.aliasWith(fromQuery)")
             .build();
     }
 
@@ -149,22 +142,7 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(BaseQuery.class, "fromQuery")
             .addModifiers(Modifier.STATIC)
             .addJavadoc(JavaDoc_Alias_With_2)
-            .addStatement("return defaults.aliasWith(alias, fromQuery)")
-            .build();
-    }
-
-    private MethodSpec m_allFields() {
-        return MethodSpec.methodBuilder("allFields")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(CN_List_Str)
-            .addStatement("return $T.ALL_COLUMNS", fluent.mapping())
-            .build();
-    }
-
-    private MethodSpec m_dbType() {
-        return super.publicMethod("dbType", true, DbType.class)
-            .addStatement("return $T.$L", DbType.class, fluent.getDbType().name())
+            .addStatement("return mapping.aliasWith(alias, fromQuery)")
             .build();
     }
 
@@ -230,12 +208,6 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_column2mapping() {
-        return super.protectedMethod(M_COLUMN2MAPPING, true, ParameterizedTypeName.get(Map.class, String.class, FieldMapping.class))
-            .addStatement("return $T.Column2Mapping", fluent.mapping())
-            .build();
-    }
-
     /**
      * public EntityQuery() {}
      *
@@ -244,7 +216,7 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("this(defaults.table(), null)")
+            .addStatement("this(mapping.table(), null)")
             .build();
     }
 
@@ -257,7 +229,7 @@ public class QueryFiler extends AbstractFiler {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(String.class, "alias")
-            .addStatement("this(defaults.table(), alias)")
+            .addStatement("this(mapping.table(), alias)")
             .build();
     }
 

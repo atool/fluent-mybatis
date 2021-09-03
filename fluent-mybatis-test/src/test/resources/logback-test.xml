@@ -9,7 +9,7 @@
     </logger>
 
     <!--root是默认的logger 这里设定输出级别是info-->
-    <root level="DEBUG">
+    <root level="INFO">
         <!--定义了两个appender，日志会通过往这两个appender里面写-->
         <appender-ref ref="STDOUT"/>
     </root>

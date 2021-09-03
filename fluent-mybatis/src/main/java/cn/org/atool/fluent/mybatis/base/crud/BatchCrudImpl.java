@@ -2,9 +2,11 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.IRefs;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
-import cn.org.atool.fluent.mybatis.base.provider.BaseSqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.MapperSqlProvider;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
 
@@ -28,7 +31,7 @@ import static java.lang.String.format;
  */
 @Accessors(chain = true)
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class BatchCrudImpl implements BatchCrud {
+public class BatchCrudImpl implements BatchCrud, IHasDbType {
     @Getter
     protected final WrapperData wrapperData = new WrapperData();
 
@@ -44,8 +47,8 @@ public class BatchCrudImpl implements BatchCrud {
             if (!(updater instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
             }
-            BaseSqlProvider provider = this.findSqlProvider(updater.getWrapperData().getEntityClass());
-            String sql = provider.buildUpdaterSql(updater.getWrapperData());
+            SqlProvider provider = this.findSqlProvider(updater.getWrapperData().getEntityClass());
+            String sql = SqlKit.factory(provider).updateBy(provider, updater.getWrapperData());
             updater.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
         }
@@ -58,17 +61,17 @@ public class BatchCrudImpl implements BatchCrud {
             if (!(query instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
-            BaseSqlProvider provider = this.findSqlProvider(query.getWrapperData().getEntityClass());
-            String sql = provider.buildDeleteSql(query.getWrapperData(), false);
+            SqlProvider provider = this.findSqlProvider(query.getWrapperData().getEntityClass());
+            String sql = SqlKit.factory(provider).deleteBy(provider, query.getWrapperData());
             query.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
         }
         return this;
     }
 
-    private static final Map<Class, BaseSqlProvider> SQL_PROVIDER_MAP = new HashMap<>();
+    private static final Map<Class, SqlProvider> SQL_PROVIDER_MAP = new HashMap<>();
 
-    private BaseSqlProvider findSqlProvider(Class<? extends IEntity> klass) {
+    private SqlProvider findSqlProvider(Class<? extends IEntity> klass) {
         if (SQL_PROVIDER_MAP.containsKey(klass)) {
             return SQL_PROVIDER_MAP.get(klass);
         }
@@ -79,7 +82,7 @@ public class BatchCrudImpl implements BatchCrud {
             String klassName = buildSqlProviderClassName(klass);
             try {
                 Class providerKlass = Class.forName(klassName);
-                BaseSqlProvider provider = (BaseSqlProvider) providerKlass.getDeclaredConstructor().newInstance();
+                SqlProvider provider = (SqlProvider) providerKlass.getDeclaredConstructor().newInstance();
                 SQL_PROVIDER_MAP.put(klass, provider);
                 return provider;
             } catch (Exception e) {
@@ -89,11 +92,11 @@ public class BatchCrudImpl implements BatchCrud {
     }
 
     private String buildSqlProviderClassName(Class<? extends IEntity> klass) {
-        String pack = klass.getPackage().getName();
-        pack = pack.substring(0, pack.length() - ".entity".length()) + ".helper";
-        String name = klass.getSimpleName();
-        name = name.substring(0, name.length() - "Entity".length()) + "SqlProvider";
-        return pack + "." + name;
+        Class mapper = IRefs.mapper(klass).getClass();
+        if (mapper.getName().contains("$Proxy")) {
+            mapper = mapper.getInterfaces()[0];
+        }
+        return mapper.getName() + "$" + MapperSqlProvider;
     }
 
     private static final String ENTITY_LIST_KEY = "list";
@@ -107,13 +110,13 @@ public class BatchCrudImpl implements BatchCrud {
             if (!wrapperData.getParameters().containsKey(ENTITY_LIST_KEY)) {
                 wrapperData.getParameters().put(ENTITY_LIST_KEY, new ArrayList<>());
             }
-            BaseSqlProvider provider = this.findSqlProvider(entity.getClass());
+            SqlProvider provider = this.findSqlProvider(entity.getClass());
             List values = (List) wrapperData.getParameters().get(ENTITY_LIST_KEY);
             int index = values.size();
             values.add(entity);
             String prefix = format("ew.wrapperData.parameters.%s[%d].", ENTITY_LIST_KEY, index);
             PkGeneratorKits.setPkByGenerator(entity);
-            String sql = provider.buildInsertSql(prefix, entity, entity.findPk() != null);
+            String sql = SqlKit.factory(this).insertEntity(provider, prefix, entity, entity.findPk() != null);
             list.add(sql);
         }
         return this;
@@ -123,7 +126,7 @@ public class BatchCrudImpl implements BatchCrud {
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
         query.getWrapperData().sharedParameter(wrapperData);
-        String sql = BaseSqlProvider.buildInsertSelect(this.dbType(), insertTable, fields, query);
+        String sql = SqlKit.factory(this).insertSelect(insertTable, fields, query);
         list.add(sql);
         return this;
     }

@@ -80,14 +80,14 @@ public abstract class FluentClassName {
     }
 
     /**
-     * ClassName of XyzEntityHelper
+     * ClassName of XyzEntityKit
      *
      * @return EntityHelper ClassName
      */
-    public ClassName entityHelper() {
+    public ClassName entityKit() {
         return ClassName.get(
-            EntityHelperFiler.getPackageName(this),
-            EntityHelperFiler.getClassName(this));
+            EntityKitFiler.getPackageName(this),
+            EntityKitFiler.getClassName(this));
     }
 
     /**
@@ -102,17 +102,6 @@ public abstract class FluentClassName {
     }
 
     /**
-     * ClassName of XyzMapping
-     *
-     * @return Mapping ClassName
-     */
-    public ClassName mapping() {
-        return ClassName.get(
-            MappingFiler.getPackageName(this),
-            MappingFiler.getClassName(this));
-    }
-
-    /**
      * ClassName of XyzQuery
      *
      * @return Query ClassName
@@ -123,103 +112,79 @@ public abstract class FluentClassName {
             QueryFiler.getClassName(this));
     }
 
-    /**
-     * ClassName of XyzSqlProvider
-     *
-     * @return SqlProvider ClassName
-     */
-    public ClassName sqlProvider() {
-        return ClassName.get(
-            SqlProviderFiler.getPackageName(this),
-            SqlProviderFiler.getClassName(this));
-    }
-
-
-    /**
-     * ClassName of XyzDefaults
-     *
-     * @return Defaults ClassName
-     */
-    public ClassName defaults() {
-        return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
-            Suffix_Defaults);
-    }
-
     public ClassName wrapperHelper() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this));
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this));
     }
 
     public ClassName queryWhere() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_QueryWhere);
     }
 
     public ClassName updateWhere() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_UpdateWhere);
     }
 
     public ClassName selector() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_Selector);
     }
 
     public ClassName groupBy() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_GroupBy);
     }
 
     public ClassName having() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_Having);
     }
 
     public ClassName queryOrderBy() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_QueryOrderBy);
     }
 
     public ClassName updateOrderBy() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_UpdateOrderBy);
     }
 
     public ClassName updateSetter() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_UpdateSetter);
     }
 
     public ClassName segment() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_ISegment);
     }
 
     public ClassName formSetter() {
         return ClassName.get(
-            WrapperHelperFiler.getPackageName(this),
-            WrapperHelperFiler.getClassName(this),
+            WrapperKitFiler.getPackageName(this),
+            WrapperKitFiler.getClassName(this),
             Suffix_EntityFormSetter);
     }
 }

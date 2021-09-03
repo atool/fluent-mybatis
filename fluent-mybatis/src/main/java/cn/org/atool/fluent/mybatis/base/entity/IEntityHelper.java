@@ -45,4 +45,12 @@ public interface IEntityHelper {
      * @return 拷贝
      */
     <E extends IEntity> E copy(IEntity entity);
+
+    /**
+     * 返回属性值
+     *
+     * @param fieldName 字段名称
+     * @return 属性值
+     */
+    Object getFieldValue(IEntity entity, String fieldName);
 }

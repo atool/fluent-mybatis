@@ -4,10 +4,10 @@ import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.generate.helper.StudentMapping;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.refs.FieldRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +82,9 @@ public class InsertSelectTest extends BaseTest {
             .addInsert(newStudent("user1"), newStudent("user2"), newStudent("test1"))
             .addInsertSelect(ATM.table.student,
                 new FieldMapping[]{
-                    StudentMapping.userName,
-                    StudentMapping.age,
-                    StudentMapping.address},
+                    FieldRef.Student.userName,
+                    FieldRef.Student.age,
+                    FieldRef.Student.address},
                 new StudentQuery().select.userName().apply("40", "'test address'").end()
                     .where.userName().likeRight("user").end())
         );

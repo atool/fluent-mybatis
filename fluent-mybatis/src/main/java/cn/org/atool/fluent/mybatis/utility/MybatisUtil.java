@@ -224,6 +224,7 @@ public class MybatisUtil {
         }
     }
 
+    @SuppressWarnings("all")
     public static <O> boolean isCollection(O... args) {
         return args != null && args.length == 1 && args[0] instanceof Collection;
     }

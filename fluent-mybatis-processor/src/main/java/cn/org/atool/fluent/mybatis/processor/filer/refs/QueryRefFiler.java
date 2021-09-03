@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.crud.IDefault;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_HashMap_ClassIDefault;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_ClassIDefault;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_HashMap_AMapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
 
 public class QueryRefFiler extends AbstractFile {
     private static final String QueryRef = "QueryRef";
@@ -41,22 +41,21 @@ public class QueryRefFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         for (FluentEntity fluent : FluentList.getFluents()) {
-            spec.addField(this.f_factory(fluent));
+            spec.addField(this.f_mapping(fluent));
         }
         spec.addField(this.f_allDefaults())
-            //.addStaticBlock(this.m_initEntityDefaults())
             .addField(this.f_allEntityClass())
             .addMethod(m_defaultQuery(false))
             .addMethod(m_emptyQuery(false))
             .addMethod(m_defaultUpdater(false))
             .addMethod(m_emptyUpdater(false))
-            .addMethod(this.m_findDefault());
+            .addMethod(this.m_mapping());
     }
 
-    private FieldSpec f_factory(FluentEntity fluent) {
-        return FieldSpec.builder(fluent.defaults(), fluent.lowerNoSuffix(),
+    private FieldSpec f_mapping(FluentEntity fluent) {
+        return FieldSpec.builder(fluent.entityKit(), fluent.lowerNoSuffix(),
             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$T.defaults", fluent.wrapperHelper())
+            .initializer("$T.Kit", fluent.entityKit())
             .build();
     }
 
@@ -72,7 +71,7 @@ public class QueryRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Query实例")
-                .addStatement("\treturn findDefault(clazz).defaultQuery()");
+                .addStatement("\treturn mapping(clazz).defaultQuery()");
         }
         return spec.build();
     }
@@ -89,7 +88,7 @@ public class QueryRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的空Query实例")
-                .addStatement("\treturn findDefault(clazz).query()");
+                .addStatement("\treturn mapping(clazz).query()");
         }
         return spec.build();
     }
@@ -106,7 +105,7 @@ public class QueryRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Updater实例")
-                .addStatement("\treturn findDefault(clazz).defaultUpdater()");
+                .addStatement("\treturn mapping(clazz).defaultUpdater()");
         }
         return spec.build();
     }
@@ -123,16 +122,16 @@ public class QueryRefFiler extends AbstractFile {
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的空Updater实例")
-                .addStatement("\treturn findDefault(clazz).updater()");
+                .addStatement("\treturn mapping(clazz).updater()");
         }
         return spec.build();
     }
 
-    private MethodSpec m_findDefault() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder("findDefault")
+    private MethodSpec m_mapping() {
+        MethodSpec.Builder spec = MethodSpec.methodBuilder("mapping")
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
-            .returns(IDefault.class);
+            .returns(AMapping.class);
 
         spec.addModifiers(Modifier.STATIC)
             .addCode("if (ENTITY_DEFAULTS.containsKey(clazz)) {\n")
@@ -145,7 +144,7 @@ public class QueryRefFiler extends AbstractFile {
 
     private CodeBlock m_initEntityDefaults() {
         List<CodeBlock> list = new ArrayList<>();
-        list.add(CodeBlock.of("new $T() {\n", CN_HashMap_ClassIDefault));
+        list.add(CodeBlock.of("new $T() {\n", CN_HashMap_AMapping));
         list.add(CodeBlock.of("\t{\n"));
         for (FluentEntity fluent : FluentList.getFluents()) {
             list.add(CodeBlock.of("\t\tthis.put($T.class, $L);\n", fluent.entity(), fluent.lowerNoSuffix()));
@@ -155,7 +154,7 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     private FieldSpec f_allDefaults() {
-        return FieldSpec.builder(CN_Map_ClassIDefault, "ENTITY_DEFAULTS",
+        return FieldSpec.builder(CN_Map_AMapping, "ENTITY_DEFAULTS",
             Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .initializer(this.m_initEntityDefaults())
             .build();
