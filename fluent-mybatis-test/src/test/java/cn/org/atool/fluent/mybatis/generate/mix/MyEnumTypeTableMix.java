@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.mix;
 
 import cn.org.atool.fluent.mybatis.generate.dm.MyEnumTypeDataMap;
-import java.lang.String;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;

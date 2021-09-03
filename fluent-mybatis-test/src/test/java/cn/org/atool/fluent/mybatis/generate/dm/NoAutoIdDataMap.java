@@ -1,8 +1,5 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
-import java.lang.Boolean;
-import java.lang.String;
-import java.lang.SuppressWarnings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;

@@ -30,6 +30,13 @@ public @interface FluentMybatis {
     String schema() default "";
 
     /**
+     * 使用mybatis的二级缓存
+     *
+     * @return 默认false
+     */
+    boolean useCached() default false;
+
+    /**
      * 实体类后缀
      *
      * @return suffix of Entity
