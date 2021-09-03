@@ -14,6 +14,11 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,6 +190,17 @@ public class PoJoHelper {
             metaObject.setValue(name, new BigDecimal(value.toString()));
         } else if (type == BigInteger.class) {
             metaObject.setValue(name, new BigInteger(value.toString()));
+        } else if (value instanceof Timestamp) {
+            Timestamp t = (Timestamp) value;
+            if (type == LocalDateTime.class) {
+                metaObject.setValue(name, t.toLocalDateTime());
+            } else if (type == LocalDate.class) {
+                metaObject.setValue(name, LocalDate.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
+            } else if (type == LocalTime.class) {
+                metaObject.setValue(name, LocalTime.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
+            } else {
+                metaObject.setValue(name, value);
+            }
         } else {
             metaObject.setValue(name, value);
         }
