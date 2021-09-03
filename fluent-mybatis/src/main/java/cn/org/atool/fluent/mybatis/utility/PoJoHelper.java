@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public class PoJoHelper {
     /**
      * 将Map转换为指定的PoJo对象
@@ -92,10 +92,9 @@ public class PoJoHelper {
     /**
      * 将Map转换为指定的PoJo对象
      *
-     * @param clazz          POJO类型
-     * @param map            map对象
-     * @param ignoreNotFound 忽略不存在的字段
-     * @param <POJO>         PoJo类型
+     * @param clazz  POJO类型
+     * @param map    map对象
+     * @param <POJO> PoJo类型
      * @return 根据Map值设置后的对象
      */
     public static <POJO> POJO toPoJoIgnoreNotFound(@NonNull Class<POJO> clazz, @NonNull Map<String, Object> map) {
