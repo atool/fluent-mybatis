@@ -25,10 +25,11 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Getter
 public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     extends BaseDefaults<E, Q, U>
-    implements IMapping {
+    implements IMapping, IEntityKit {
     /**
      * schema
      */
@@ -91,6 +92,44 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         } else {
             return null;
         }
+    }
+
+    @Override
+    public <T extends IEntity> T toEntity(Map<String, Object> map) {
+        IEntity entity = this.newEntity();
+        for (Map.Entry entry : map.entrySet()) {
+            FieldMapping f = this.fieldMappings.get((String) entry.getKey());
+            if (f != null) {
+                f.setter.set(entity, entry.getValue());
+            }
+        }
+        return (T) entity;
+    }
+
+    public abstract Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean isNoN);
+
+    @Override
+    public Map<String, Object> toColumnMap(IEntity entity, boolean isNoN) {
+        return this.toMap(entity, false, isNoN);
+    }
+
+    @Override
+    public Map<String, Object> toEntityMap(IEntity entity, boolean isNoN) {
+        return this.toMap(entity, true, isNoN);
+    }
+
+//    @Override
+//    public Object getFieldValue(IEntity entity, String fieldName) {
+//        return null;
+//    }
+
+    @Override
+    public <T extends IEntity> T copy(IEntity entity) {
+        T copy = this.newEntity();
+        for (FieldMapping f : this.getFields()) {
+            f.setter.set(copy, f.getter.get(entity));
+        }
+        return copy;
     }
 
     /**

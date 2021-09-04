@@ -11,6 +11,13 @@ import java.util.Map;
  */
 public interface IEntityKit {
     /**
+     * new Entity
+     *
+     * @return Entity
+     */
+    <E extends IEntity> E newEntity();
+
+    /**
      * entity对象转换为map对象
      * key值为entity的属性字段名
      *
