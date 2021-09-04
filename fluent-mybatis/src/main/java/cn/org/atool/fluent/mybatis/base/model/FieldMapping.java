@@ -1,7 +1,11 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
+import cn.org.atool.fluent.mybatis.functions.IGetter;
+import cn.org.atool.fluent.mybatis.functions.ISetter;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
@@ -11,6 +15,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  * @author darui.wu  2020/6/23 9:16 上午
  */
 @SuppressWarnings("rawtypes")
+@Accessors(chain = true)
 public class FieldMapping {
     /**
      * 属性名称
@@ -41,12 +46,20 @@ public class FieldMapping {
      */
     public final Class typeHandler;
 
+    @Setter//e->((BlobValuePoJo)e).getId()
+    public IGetter getter;
+
+    @Setter// (e,v)->((BlobValuePoJo)e).setId((Long)v)
+    public ISetter setter;
+
     public FieldMapping(String name, String column, UniqueFieldType uniqueFieldType, String insert, String update, Class javaType, Class typeHandler) {
         this.name = name;
         this.column = column;
         this.uniqueFieldType = uniqueFieldType;
         this.insert = insert;
         this.update = update;
+        this.setter = setter;
+        this.getter = getter;
         this.javaType = javaType;
         this.typeHandler = typeHandler;
     }

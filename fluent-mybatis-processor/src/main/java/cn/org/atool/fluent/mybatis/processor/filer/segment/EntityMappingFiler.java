@@ -24,7 +24,6 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityMapping;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
@@ -71,8 +70,6 @@ public class EntityMappingFiler extends AbstractFiler {
             .addField(this.f_setter());
 
         spec.addMethod(this.m_constructor())
-            .addMethod(this.m_column2mapping())
-            .addMethod(this.m_field2mapping())
             .addMethod(this.m_entityClass())
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_emptyUpdater())
@@ -109,7 +106,7 @@ public class EntityMappingFiler extends AbstractFiler {
 
     private FieldSpec f_allFieldMapping() {
         String fields = fluent.getFields().stream()
-            .map(f -> f.getName())
+            .map(CommonField::getName)
             .collect(joining(", "));
         return FieldSpec.builder(CN_List_FMapping, "ALL_FIELD_MAPPING", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
             .initializer("$T.asList($L)", Arrays.class, fields)
@@ -123,28 +120,42 @@ public class EntityMappingFiler extends AbstractFiler {
             FieldSpec.Builder spec = FieldSpec.builder(FieldMapping.class,
                 f.getName(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", name, f.getColumn());
-            UniqueFieldType type = null;
-            if (f.isPrimary()) {
-                type = UniqueFieldType.PRIMARY_ID;
-            } else if (Objects.equals(name, fluent.getVersionField())) {
-                type = UniqueFieldType.LOCK_VERSION;
-            } else if (Objects.equals(name, fluent.getLogicDelete())) {
-                type = UniqueFieldType.LOGIC_DELETED;
-            }
-            String prev5para = quota(name) + ", " +
-                quota(f.getColumn()) + ", " +
-                (type == null ? "null" : type.name()) + ", " +
-                quota(f.getInsert()) + ", " +
-                quota(f.getUpdate());
-
+            UniqueFieldType type = this.getUniqueType(f);
+            String prev5para = quota(name) + ", "  // name
+                + quota(f.getColumn()) + ", "  // column
+                + (type == null ? "null" : type.name()) + ", " // type
+                + quota(f.getInsert()) + ", "  // insert value
+                + quota(f.getUpdate()); //update value
             if (f.getTypeHandler() == null) {
-                spec.initializer("new FieldMapping($L, $T.class, null)", prev5para, f.getJavaType());
+                spec.initializer("new FieldMapping($L, $T.class, null)" +
+                        "\n\t.setSetter((e, v) -> (($L) e).$L(($T) v))" +
+                        "\n\t.setGetter(e -> (($L) e).$L())",
+                    prev5para, f.getJavaType(),
+                    fluent.getClassName(), f.setMethodName(), f.getJavaType(),
+                    fluent.getClassName(), f.getMethodName());
             } else {
-                spec.initializer("new FieldMapping($L, $T.class, $T.class)", prev5para, f.getJavaType(), f.getTypeHandler());
+                spec.initializer("new FieldMapping($L, $T.class, $T.class)" +
+                        "\n\t.setSetter((e, v) -> (($L) e).$L(($T) v))" +
+                        "\n\t.setGetter(e -> (($L) e).$L())",
+                    prev5para, f.getJavaType(), f.getTypeHandler(),
+                    fluent.getClassName(), f.setMethodName(), f.getJavaType(),
+                    fluent.getClassName(), f.getMethodName());
             }
             fields.add(spec.build());
         }
         return fields;
+    }
+
+    private UniqueFieldType getUniqueType(CommonField field) {
+        if (field.isPrimary()) {
+            return UniqueFieldType.PRIMARY_ID;
+        } else if (Objects.equals(field.getName(), fluent.getVersionField())) {
+            return UniqueFieldType.LOCK_VERSION;
+        } else if (Objects.equals(field.getName(), fluent.getLogicDelete())) {
+            return UniqueFieldType.LOGIC_DELETED;
+        } else {
+            return null;
+        }
     }
 
     private FieldSpec f_setter() {
@@ -273,38 +284,6 @@ public class EntityMappingFiler extends AbstractFiler {
         if (notBlank(fluent.getVersionField())) {
             spec.addStatement("super.uniqueFields.put(LOCK_VERSION, $L)", fluent.getVersionField());
         }
-    }
-
-    private MethodSpec m_column2mapping() {
-        String statement = this.fluent.getFields().stream()
-            .map(CommonField::getName)
-            .map(field -> String.format("map.put(%s.column, %s);", field, field))
-            .collect(joining(NEWLINE));
-
-        return MethodSpec.methodBuilder("column2mapping")
-            .returns(ParameterizedTypeName.get(Map.class, String.class, FieldMapping.class))
-            .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
-            .addJavadoc("数据库字段对应的FieldMapping")
-            .addStatement("$T<String, FieldMapping> map = new $T<>(32)", Map.class, LinkedHashMap.class)
-            .addCode(statement + "\n")
-            .addStatement("return $T.unmodifiableMap(map)", Collections.class)
-            .build();
-    }
-
-    private MethodSpec m_field2mapping() {
-        String statement = this.fluent.getFields().stream()
-            .map(CommonField::getName)
-            .map(field -> String.format("map.put(%s.name, %s);", field, field))
-            .collect(joining(NEWLINE));
-
-        return MethodSpec.methodBuilder("field2mapping")
-            .returns(ParameterizedTypeName.get(Map.class, String.class, FieldMapping.class))
-            .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
-            .addJavadoc("实体类属性对应的FieldMapping")
-            .addStatement("$T<String, FieldMapping> map = new $T<>(32)", Map.class, LinkedHashMap.class)
-            .addCode(statement + "\n")
-            .addStatement("return $T.unmodifiableMap(map)", Collections.class)
-            .build();
     }
 
     private MethodSpec m_entityClass() {
