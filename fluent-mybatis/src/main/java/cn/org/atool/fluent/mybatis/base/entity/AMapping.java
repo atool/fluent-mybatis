@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import lombok.AccessLevel;
@@ -13,9 +14,11 @@ import lombok.Setter;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 /**
  * 字段映射抽象类
@@ -63,19 +66,23 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      */
     public final String selectAll;
 
-    public final List<FieldMapping> fields;
+    protected Map<UniqueFieldType, FieldMapping> uniqueFields = new HashMap<>(4);
 
-    protected AMapping(DbType dbType,
-                       Map<String, FieldMapping> columnMappings,
-                       Map<String, FieldMapping> fieldMappings) {
+    protected AMapping(DbType dbType) {
         this.dbType = dbType;
-        this.columnMappings = columnMappings;
-        this.fieldMappings = fieldMappings;
-        this.allColumns = Collections.unmodifiableList(new ArrayList<>(this.columnMappings.keySet()));
+        this.columnMappings = this.getFields().stream().collect(Collectors.toMap(f -> f.column, f -> f));
+        this.fieldMappings = this.getFields().stream().collect(Collectors.toMap(f -> f.name, f -> f));
+        this.allColumns = Collections.unmodifiableList(this.getFields().stream().map(f -> f.column).collect(toList()));
         this.selectAll = this.allColumns.stream().map(dbType::wrap).collect(joining(", "));
-        this.allFields = Collections.unmodifiableList(new ArrayList<>(this.fieldMappings.keySet()));
-        this.fields = Collections.unmodifiableList(new ArrayList<>(this.fieldMappings.values()));
+        this.allFields = Collections.unmodifiableList(this.getFields().stream().map(f -> f.name).collect(toList()));
     }
+
+    /**
+     * 返回所有字段定义
+     *
+     * @return List<FieldMapping>
+     */
+    public abstract List<FieldMapping> getFields();
 
     @Override
     public String findColumnByField(String field) {
@@ -98,6 +105,11 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         } else {
             return () -> this.dbType.wrap(this.tableName);
         }
+    }
+
+    @Override
+    public Optional<FieldMapping> findField(UniqueFieldType type) {
+        return Optional.ofNullable(uniqueFields.get(type));
     }
 
     /**

@@ -3,10 +3,10 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
+import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.FieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -22,12 +22,12 @@ import java.util.*;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityKit;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityMapping;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_FMapping;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -35,16 +35,16 @@ import static java.util.stream.Collectors.joining;
  *
  * @author wudarui
  */
-public class EntityKitFiler extends AbstractFiler {
+public class EntityMappingFiler extends AbstractFiler {
     public static String getClassName(FluentClassName fluent) {
-        return fluent.getClassName() + Suffix_EntityKit;
+        return fluent.getNoSuffix() + Suffix_EntityMapping;
     }
 
     public static String getPackageName(FluentClassName fluent) {
         return fluent.getPackageName(Pack_Helper);
     }
 
-    public EntityKitFiler(FluentEntity fluent) {
+    public EntityMappingFiler(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
         this.klassName = getClassName(fluent);
@@ -54,24 +54,25 @@ public class EntityKitFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(Optional.class, "ofNullable");
-        spec.addStaticImport(FieldType.class, "*");
+        spec.addStaticImport(UniqueFieldType.class, "*");
+        spec.skipJavaLangImports(true);
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(paraType(ClassName.get(AMapping.class), fluent.entity(), fluent.query(), fluent.updater()))
-            .addSuperinterface(IEntityHelper.class);
+            .addSuperinterface(IEntityKit.class);
         spec.addField(this.f_Table_Name())
             .addField(this.f_Entity_Name())
             .addFields(this.f_Fields())
-            .addField(this.f_setter())
+            .addField(this.f_allFieldMapping())
             /* 放在所有静态变量后面 */
-            .addField(this.f_instance());
+            .addField(this.f_instance())
+            .addField(this.f_setter());
 
         spec.addMethod(this.m_constructor())
             .addMethod(this.m_column2mapping())
             .addMethod(this.m_field2mapping())
-            .addMethod(this.m_findField())
             .addMethod(this.m_entityClass())
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_emptyUpdater())
@@ -82,6 +83,7 @@ public class EntityKitFiler extends AbstractFiler {
             .addMethod(this.m_toMap())
             .addMethod(this.m_toEntity())
             .addMethod(this.m_copy())
+            .addMethod(this.m_getFields())
             .addMethod(this.m_getFieldValue());
     }
 
@@ -100,8 +102,17 @@ public class EntityKitFiler extends AbstractFiler {
     }
 
     private FieldSpec f_instance() {
-        return FieldSpec.builder(fluent.entityKit(), Suffix_EntityKit, Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+        return FieldSpec.builder(fluent.entityKit(), "MAPPING", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
             .initializer("new $T()", fluent.entityKit())
+            .build();
+    }
+
+    private FieldSpec f_allFieldMapping() {
+        String fields = fluent.getFields().stream()
+            .map(f -> f.getName())
+            .collect(joining(", "));
+        return FieldSpec.builder(CN_List_FMapping, "ALL_FIELD_MAPPING", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .initializer("$T.asList($L)", Arrays.class, fields)
             .build();
     }
 
@@ -112,13 +123,13 @@ public class EntityKitFiler extends AbstractFiler {
             FieldSpec.Builder spec = FieldSpec.builder(FieldMapping.class,
                 f.getName(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", name, f.getColumn());
-            FieldType type = null;
+            UniqueFieldType type = null;
             if (f.isPrimary()) {
-                type = FieldType.PRIMARY_ID;
+                type = UniqueFieldType.PRIMARY_ID;
             } else if (Objects.equals(name, fluent.getVersionField())) {
-                type = FieldType.LOCK_VERSION;
+                type = UniqueFieldType.LOCK_VERSION;
             } else if (Objects.equals(name, fluent.getLogicDelete())) {
-                type = FieldType.LOGIC_DELETED;
+                type = UniqueFieldType.LOGIC_DELETED;
             }
             String prev5para = quota(name) + ", " +
                 quota(f.getColumn()) + ", " +
@@ -180,7 +191,7 @@ public class EntityKitFiler extends AbstractFiler {
     }
 
     /**
-     * public static Entity entity(Map<String, Object> map)
+     * public Entity entity(Map<String, Object> map)
      *
      * @return MethodSpec
      */
@@ -218,6 +229,13 @@ public class EntityKitFiler extends AbstractFiler {
         return builder.addStatement("return copy").build();
     }
 
+    private MethodSpec m_getFields() {
+        MethodSpec.Builder spec = super.publicMethod("getFields", true, CN_List_FMapping);
+        spec.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addStatement("return ALL_FIELD_MAPPING");
+        return spec.build();
+    }
+
     private MethodSpec m_getFieldValue() {
         MethodSpec.Builder spec = super.publicMethod("getFieldValue", Object.class);
         spec.addParameter(IEntity.class, "entity")
@@ -237,11 +255,24 @@ public class EntityKitFiler extends AbstractFiler {
     }
 
     private MethodSpec m_constructor() {
-        return MethodSpec.constructorBuilder()
+        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PROTECTED)
-            .addStatement("super($T.$L, column2mapping(), field2mapping())", DbType.class, fluent.getDbType().name())
-            .addStatement("super.tableName = Table_Name;")
-            .build();
+            .addStatement("super($T.$L)", DbType.class, fluent.getDbType().name())
+            .addStatement("super.tableName = Table_Name");
+        this.putUniqueField(spec);
+        return spec.build();
+    }
+
+    private void putUniqueField(MethodSpec.Builder spec) {
+        if (fluent.getPrimary() != null) {
+            spec.addStatement("super.uniqueFields.put(PRIMARY_ID, $L)", fluent.getPrimary().getName());
+        }
+        if (notBlank(fluent.getLogicDelete())) {
+            spec.addStatement("super.uniqueFields.put(LOGIC_DELETED, $L)", fluent.getLogicDelete());
+        }
+        if (notBlank(fluent.getVersionField())) {
+            spec.addStatement("super.uniqueFields.put(LOCK_VERSION, $L)", fluent.getVersionField());
+        }
     }
 
     private MethodSpec m_column2mapping() {
@@ -279,28 +310,6 @@ public class EntityKitFiler extends AbstractFiler {
     private MethodSpec m_entityClass() {
         return super.publicMethod("entityClass", Class.class)
             .addStatement("return $T.class", fluent.entity())
-            .build();
-    }
-
-    private MethodSpec m_findField() {
-        MethodSpec.Builder spec = super.publicMethod("findField", true, CN_Optional_FMapping)
-            .addParameter(FieldType.class, "type")
-            .addCode("switch (type) {\n");
-        if (fluent.getPrimary() != null) {
-            spec.addCode("\tcase PRIMARY_ID:\n")
-                .addStatement("\t\treturn ofNullable($L)", fluent.getPrimary().getName());
-        }
-        if (notBlank(fluent.getLogicDelete())) {
-            spec.addCode("\tcase LOGIC_DELETED:\n")
-                .addStatement("\t\treturn ofNullable($L)", fluent.getLogicDelete());
-        }
-        if (notBlank(fluent.getVersionField())) {
-            spec.addCode("\tcase LOCK_VERSION:\n")
-                .addStatement("\t\treturn ofNullable($L)", fluent.getVersionField());
-        }
-        return spec.addCode("\tdefault:\n")
-            .addStatement("\t\treturn ofNullable(null)")
-            .addCode("}")
             .build();
     }
 

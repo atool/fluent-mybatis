@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  *
  * @author darui.wu
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface IEntity extends Serializable {
     /**
      * 返回实体主键
@@ -32,7 +32,8 @@ public interface IEntity extends Serializable {
     }
 
     /**
-     * 数据库实体对应的Entity类名称, 在具体的XyzEntity类中定义为final, 防止返回匿名子类名称
+     * 数据库实体对应的Entity类名称
+     * 在具体的XyzEntity类中定义为final
      *
      * @return 实例类
      */
@@ -56,7 +57,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toEntityMap(boolean isNoN) {
-        return IRef.findEntityHelper(this.entityClass()).toEntityMap(this, isNoN);
+        return IRef.findEntityKit(this.entityClass()).toEntityMap(this, isNoN);
     }
 
     /**
@@ -75,7 +76,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toColumnMap(boolean isNoN) {
-        return IRef.findEntityHelper(this.entityClass()).toColumnMap(this, isNoN);
+        return IRef.findEntityKit(this.entityClass()).toColumnMap(this, isNoN);
     }
 
     /**
@@ -85,7 +86,7 @@ public interface IEntity extends Serializable {
      * @return 实例对象
      */
     default <E extends IEntity> E copy() {
-        return IRef.findEntityHelper(this.entityClass()).copy(this);
+        return IRef.findEntityKit(this.entityClass()).copy(this);
     }
 
     /**

@@ -43,7 +43,7 @@ public interface ClassNames2 extends ClassNames {
 
     ParameterizedTypeName CN_Class_IEntity = ParameterizedTypeName.get(CN_Class, WildcardTypeName.subtypeOf(FM_IEntity));
 
-    ParameterizedTypeName CN_Optional_FMapping = ParameterizedTypeName.get(Optional.class, FieldMapping.class);
+    ParameterizedTypeName CN_List_FMapping = ParameterizedTypeName.get(List.class, FieldMapping.class);
 
     ParameterizedTypeName CN_Optional_IMapping = ParameterizedTypeName.get(Optional.class, IMapping.class);
 

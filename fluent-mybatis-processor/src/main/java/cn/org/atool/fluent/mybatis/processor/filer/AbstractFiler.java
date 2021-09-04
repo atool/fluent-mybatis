@@ -46,6 +46,7 @@ public abstract class AbstractFiler {
         builder.addJavadoc(comment);
         JavaFile.Builder javaBuilder = JavaFile.builder(packageName, builder.build());
         this.staticImport(javaBuilder);
+        javaBuilder.skipJavaLangImports(true);
         return javaBuilder.build();
     }
 
@@ -129,7 +130,7 @@ public abstract class AbstractFiler {
     protected FieldSpec f_mapping() {
         return FieldSpec.builder(fluent.entityKit(),
             "mapping", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("$T.Kit", fluent.entityKit())
+            .initializer("$T.MAPPING", fluent.entityKit())
             .build();
     }
 

@@ -32,4 +32,8 @@ class DemoEntity implements Serializable, IEntity {
 
     private String userName;
 
+    @Override
+    public Class<? extends IEntity> entityClass() {
+        return DemoEntity.class;
+    }
 }

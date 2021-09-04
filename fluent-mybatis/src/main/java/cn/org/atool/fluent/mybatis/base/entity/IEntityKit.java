@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author wudarui
  */
-public interface IEntityHelper {
+public interface IEntityKit {
     /**
      * entity对象转换为map对象
      * key值为entity的属性字段名
@@ -31,7 +31,7 @@ public interface IEntityHelper {
     Map<String, Object> toColumnMap(IEntity entity, boolean isNoN);
 
     /**
-     * map对应属性值设置到Entity对象中
+     * map对应属性值设置到Entity对象中, 同JSON反序列化
      *
      * @param map map
      * @return map转对象

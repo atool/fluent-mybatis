@@ -55,7 +55,7 @@ public class QueryRefFiler extends AbstractFile {
     private FieldSpec f_mapping(FluentEntity fluent) {
         return FieldSpec.builder(fluent.entityKit(), fluent.lowerNoSuffix(),
             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$T.Kit", fluent.entityKit())
+            .initializer("$T.MAPPING", fluent.entityKit())
             .build();
     }
 

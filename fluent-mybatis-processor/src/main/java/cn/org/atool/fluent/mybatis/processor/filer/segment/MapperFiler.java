@@ -115,7 +115,7 @@ public class MapperFiler extends AbstractFiler {
     protected MethodSpec m_mapping() {
         return this.publicMethod("mapping", IMapping.class)
             .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
-            .addStatement("return $T.Kit", fluent.entityKit())
+            .addStatement("return $T.MAPPING", fluent.entityKit())
             .build();
     }
 
@@ -525,6 +525,6 @@ public class MapperFiler extends AbstractFiler {
 
     private MethodSpec m_mapping2() {
         return this.publicMethod("mapping", IMapping.class)
-            .addStatement("return $T.Kit", fluent.entityKit()).build();
+            .addStatement("return $T.MAPPING", fluent.entityKit()).build();
     }
 }

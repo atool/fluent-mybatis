@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.base;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.entity.IEntityHelper;
+import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -48,8 +48,8 @@ public abstract class IRef {
         return instance().defaultDbType;
     }
 
-    public static IEntityHelper findEntityHelper(Class clazz) {
-        return (IEntityHelper) instance().findMapping(clazz);
+    public static IEntityKit findEntityKit(Class clazz) {
+        return (IEntityKit) instance().findMapping(clazz);
     }
 
     /**

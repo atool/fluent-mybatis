@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
 /**
- * 特殊字段类型
+ * 特殊字段类型（在Entity字段中只能定义一个)
  *
  * @author wudarui
  */
-public enum FieldType {
+public enum UniqueFieldType {
     /**
      * 主键字段
      */

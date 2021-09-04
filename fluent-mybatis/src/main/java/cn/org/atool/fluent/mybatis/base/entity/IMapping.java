@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.FieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public interface IMapping {
      * @param type 字段类型
      * @return 字段映射
      */
-    Optional<FieldMapping> findField(FieldType type);
+    Optional<FieldMapping> findField(UniqueFieldType type);
 
     /**
      * 返回实体类对应的所有数据库字段列表
@@ -90,7 +90,7 @@ public interface IMapping {
      * @return 主键字段名称
      */
     default String primaryId(boolean nullError) {
-        String id = this.findField(FieldType.PRIMARY_ID).map(c -> c.column).orElse(null);
+        String id = this.findField(UniqueFieldType.PRIMARY_ID).map(c -> c.column).orElse(null);
         if (id == null && nullError) {
             throw new RuntimeException("the primary not found.");
         } else {
@@ -104,7 +104,7 @@ public interface IMapping {
      * @return ignore
      */
     default String versionField() {
-        return this.findField(FieldType.LOCK_VERSION)
+        return this.findField(UniqueFieldType.LOCK_VERSION)
             .map(m -> m.column).orElse(null);
     }
 
@@ -114,7 +114,7 @@ public interface IMapping {
      * @return ignore
      */
     default String logicDeleteField() {
-        return this.findField(FieldType.LOGIC_DELETED)
+        return this.findField(UniqueFieldType.LOGIC_DELETED)
             .map(c -> c.column).orElse(null);
     }
 
@@ -124,7 +124,7 @@ public interface IMapping {
      * @return ignore
      */
     default boolean longTypeOfLogicDelete() {
-        return this.findField(FieldType.LOGIC_DELETED)
+        return this.findField(UniqueFieldType.LOGIC_DELETED)
             .map(m -> m.javaType == Long.class)
             .orElse(false);
     }

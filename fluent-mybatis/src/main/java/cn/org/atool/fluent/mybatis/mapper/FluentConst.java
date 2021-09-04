@@ -11,7 +11,7 @@ public interface FluentConst {
 
     String Suffix_BaseDao = "BaseDao";
 
-    String Suffix_EntityKit = "Kit";
+    String Suffix_EntityMapping = "Mapping";
 
     String Suffix_Query = "Query";
 

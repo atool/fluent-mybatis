@@ -115,7 +115,7 @@ public class FluentList {
     private static List<AbstractFiler> generateJavaFile(FluentEntity fluent) {
         return Arrays.asList(
             new MapperFiler(fluent),
-            new EntityKitFiler(fluent),
+            new EntityMappingFiler(fluent),
             new WrapperKitFiler(fluent),
             new QueryFiler(fluent),
             new UpdaterFiler(fluent),

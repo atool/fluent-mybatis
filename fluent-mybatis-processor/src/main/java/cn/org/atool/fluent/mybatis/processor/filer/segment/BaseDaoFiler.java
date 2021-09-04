@@ -26,8 +26,8 @@ public class BaseDaoFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(fluent.entityKit(), Suffix_EntityKit);
-        super.staticImport(spec);
+        spec.addStaticImport(fluent.entityKit(), "MAPPING");
+        spec.skipJavaLangImports(true);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class BaseDaoFiler extends AbstractFiler {
      */
     private MethodSpec m_defaultQuery() {
         return super.protectedMethod(M_DEFAULT_QUERY, fluent.query())
-            .addStatement("return Kit.$L()", M_DEFAULT_QUERY)
+            .addStatement("return MAPPING.$L()", M_DEFAULT_QUERY)
             .build();
     }
 
@@ -116,7 +116,7 @@ public class BaseDaoFiler extends AbstractFiler {
      */
     private MethodSpec m_defaultUpdater() {
         return super.protectedMethod(M_DEFAULT_UPDATER, fluent.updater())
-            .addStatement("return Kit.$L()", M_DEFAULT_UPDATER)
+            .addStatement("return MAPPING.$L()", M_DEFAULT_UPDATER)
             .build();
     }
 

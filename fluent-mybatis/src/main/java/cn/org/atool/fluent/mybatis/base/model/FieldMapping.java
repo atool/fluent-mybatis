@@ -23,7 +23,7 @@ public class FieldMapping {
     /**
      * 字段类型
      */
-    public final FieldType fieldType;
+    public final UniqueFieldType uniqueFieldType;
     /**
      * 插入时的默认值
      */
@@ -41,10 +41,10 @@ public class FieldMapping {
      */
     public final Class typeHandler;
 
-    public FieldMapping(String name, String column, FieldType fieldType, String insert, String update, Class javaType, Class typeHandler) {
+    public FieldMapping(String name, String column, UniqueFieldType uniqueFieldType, String insert, String update, Class javaType, Class typeHandler) {
         this.name = name;
         this.column = column;
-        this.fieldType = fieldType;
+        this.uniqueFieldType = uniqueFieldType;
         this.insert = insert;
         this.update = update;
         this.javaType = javaType;
@@ -108,7 +108,7 @@ public class FieldMapping {
      * @return true:主键字段
      */
     public boolean isPrimary() {
-        return this.fieldType == FieldType.PRIMARY_ID;
+        return this.uniqueFieldType == UniqueFieldType.PRIMARY_ID;
     }
 
     /**
@@ -117,6 +117,6 @@ public class FieldMapping {
      * @return true:版本号字段
      */
     public boolean isVersion() {
-        return this.fieldType == FieldType.LOCK_VERSION;
+        return this.uniqueFieldType == UniqueFieldType.LOCK_VERSION;
     }
 }

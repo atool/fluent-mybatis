@@ -28,6 +28,14 @@ public class WrapperKitFiler extends AbstractFiler {
         this.klassName = getClassName(fluent);
     }
 
+    public static String getClassName(FluentClassName fluent) {
+        return fluent.getNoSuffix() + Suffix_Segment;
+    }
+
+    public static String getPackageName(FluentClassName fluent) {
+        return fluent.getPackageName(Pack_Helper);
+    }
+
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
@@ -507,13 +515,5 @@ public class WrapperKitFiler extends AbstractFiler {
     @Override
     protected boolean isInterface() {
         return true;
-    }
-
-    public static String getClassName(FluentClassName fluent) {
-        return fluent.getNoSuffix() + Suffix_Segment;
-    }
-
-    public static String getPackageName(FluentClassName fluent) {
-        return fluent.getPackageName(Pack_Helper);
     }
 }
