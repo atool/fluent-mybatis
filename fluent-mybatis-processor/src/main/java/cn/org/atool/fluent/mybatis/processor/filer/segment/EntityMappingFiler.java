@@ -73,11 +73,8 @@ public class EntityMappingFiler extends AbstractFiler {
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_aliasQuery_2())
             .addMethod(this.m_setter());
-        spec//.addMethod(this.m_toColumnMap())
-            //.addMethod(this.m_toEntityMap())
-            .addMethod(this.m_toMap())
+        spec.addMethod(this.m_toMap())
             .addMethod(this.m_newEntity())
-//            .addMethod(this.m_copy())
             .addMethod(this.m_getFields())
             .addMethod(this.m_getFieldValue());
     }
@@ -165,21 +162,6 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     /* ===== METHOD ==== */
-//    private MethodSpec m_toColumnMap() {
-//        return super.publicMethod("toColumnMap", true, CN_Map_StrObj)
-//            .addParameter(fluent.entity(), "entity")
-//            .addParameter(ClassName.BOOLEAN, "isNoN")
-//            .addStatement("return this.toMap(($T)entity, false, isNoN)", fluent.entity())
-//            .build();
-//    }
-
-    private MethodSpec m_toEntityMap() {
-        return super.publicMethod("toEntityMap", true, CN_Map_StrObj)
-            .addParameter(fluent.entity(), "entity")
-            .addParameter(ClassName.BOOLEAN, "isNoN")
-            .addStatement("return this.toMap(($T)entity, true, isNoN)", fluent.entity())
-            .build();
-    }
 
     /**
      * public static Map<String, Object> toEntityMap(Entity entity)
@@ -210,24 +192,6 @@ public class EntityMappingFiler extends AbstractFiler {
             .addTypeVariable(TypeVariableName.get("E", IEntity.class))
             .addStatement("return (E) new $T()", fluent.entity())
             .build();
-    }
-
-    /**
-     * public static Entity copy(Entity entity)
-     *
-     * @return MethodSpec
-     */
-    private MethodSpec m_copy() {
-        MethodSpec.Builder builder = super.publicMethod("copy", true, fluent.entity())
-            .addParameter(IEntity.class, "iEntity")
-            .addStatement("$T entity = ($T) iEntity", fluent.entity(), fluent.entity())
-            .addStatement("$T copy = new $T()", fluent.entity(), fluent.entity());
-        builder.addCode("{\n");
-        for (CommonField fc : fluent.getFields()) {
-            builder.addStatement("\tcopy.$L(entity.$L())", fc.setMethodName(), fc.getMethodName());
-        }
-        builder.addCode("}\n");
-        return builder.addStatement("return copy").build();
     }
 
     private MethodSpec m_getFields() {
