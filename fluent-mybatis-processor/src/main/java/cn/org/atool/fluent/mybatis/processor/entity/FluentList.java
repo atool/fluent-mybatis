@@ -116,7 +116,7 @@ public class FluentList {
         return Arrays.asList(
             new MapperFiler(fluent),
             new EntityMappingFiler(fluent),
-            new WrapperKitFiler(fluent),
+            new SegmentFiler(fluent),
             new QueryFiler(fluent),
             new UpdaterFiler(fluent),
             new BaseDaoFiler(fluent)

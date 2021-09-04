@@ -15,14 +15,14 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     @Override
     public Q defaultQuery() {
         Q query = this.query();
-        this.setter().setQueryDefault(query);
+        this.defaultSetter().setQueryDefault(query);
         return query;
     }
 
     @Override
     public U defaultUpdater() {
         U updater = this.updater();
-        this.setter().setUpdateDefault(updater);
+        this.defaultSetter().setUpdateDefault(updater);
         return updater;
     }
 
@@ -33,7 +33,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     @Override
     public Q aliasQuery() {
         Q query = this.aliasQuery(Parameters.alias(), new Parameters());
-        this.setter().setQueryDefault(query);
+        this.defaultSetter().setQueryDefault(query);
         return query;
     }
 
@@ -43,7 +43,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     @Override
     public Q aliasQuery(String alias) {
         Q query = this.aliasQuery(alias, new Parameters());
-        this.setter().setQueryDefault(query);
+        this.defaultSetter().setQueryDefault(query);
         return query;
     }
 
@@ -55,7 +55,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     public Q aliasWith(BaseQuery fromQuery) {
         Parameters parameters = fromQuery.getWrapperData().getParameters();
         Q query = this.aliasQuery(Parameters.alias(), parameters);
-        this.setter().setQueryDefault(query);
+        this.defaultSetter().setQueryDefault(query);
         return query;
     }
 
@@ -65,11 +65,11 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     @Override
     public Q aliasWith(String alias, BaseQuery fromQuery) {
         Q query = this.aliasQuery(alias, fromQuery.getWrapperData().getParameters());
-        this.setter().setQueryDefault(query);
+        this.defaultSetter().setQueryDefault(query);
         return query;
     }
 
     protected abstract Q aliasQuery(String alias, Parameters parameters);
 
-    public abstract IDefaultSetter setter();
+    public abstract IDefaultSetter defaultSetter();
 }

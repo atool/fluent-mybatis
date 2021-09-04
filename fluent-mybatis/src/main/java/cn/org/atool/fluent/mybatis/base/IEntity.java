@@ -57,7 +57,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toEntityMap(boolean isNoN) {
-        return IRef.findEntityKit(this.entityClass()).toEntityMap(this, isNoN);
+        return IRef.entityKit(this.entityClass()).toEntityMap(this, isNoN);
     }
 
     /**
@@ -76,7 +76,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toColumnMap(boolean isNoN) {
-        return IRef.findEntityKit(this.entityClass()).toColumnMap(this, isNoN);
+        return IRef.entityKit(this.entityClass()).toColumnMap(this, isNoN);
     }
 
     /**
@@ -86,7 +86,7 @@ public interface IEntity extends Serializable {
      * @return 实例对象
      */
     default <E extends IEntity> E copy() {
-        return IRef.findEntityKit(this.entityClass()).copy(this);
+        return IRef.entityKit(this.entityClass()).copy(this);
     }
 
     /**

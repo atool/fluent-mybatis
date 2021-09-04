@@ -21,8 +21,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  * @author wudarui
  */
 @SuppressWarnings({"rawtypes"})
-public class WrapperKitFiler extends AbstractFiler {
-    public WrapperKitFiler(FluentEntity fluent) {
+public class SegmentFiler extends AbstractFiler {
+    public SegmentFiler(FluentEntity fluent) {
         super(fluent);
         this.packageName = getPackageName(fluent);
         this.klassName = getClassName(fluent);
@@ -270,14 +270,14 @@ public class WrapperKitFiler extends AbstractFiler {
 
     private MethodSpec m_queryDefaults() {
         return super.publicMethod("defaults", true, fluent.queryWhere())
-            .addStatement("mapping.setter().setQueryDefault(($T) super.wrapper)", fluent.query())
+            .addStatement("mapping.defaultSetter().setQueryDefault(($T) super.wrapper)", fluent.query())
             .addStatement("return super.and")
             .build();
     }
 
     private MethodSpec m_updaterDefaults() {
         return super.publicMethod("defaults", true, fluent.updateWhere())
-            .addStatement("mapping.setter().setUpdateDefault(($T) super.wrapper)", fluent.updater())
+            .addStatement("mapping.defaultSetter().setUpdateDefault(($T) super.wrapper)", fluent.updater())
             .addStatement("return super.and")
             .build();
     }

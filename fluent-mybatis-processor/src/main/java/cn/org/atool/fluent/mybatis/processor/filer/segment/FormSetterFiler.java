@@ -27,7 +27,7 @@ public class FormSetterFiler extends AbstractFiler {
     }
 
     public static String getPackageName(FluentClassName fluent) {
-        return fluent.getPackageName(Pack_Helper) + "." + WrapperKitFiler.getClassName(fluent);
+        return fluent.getPackageName(Pack_Helper) + "." + SegmentFiler.getClassName(fluent);
     }
 
     @Override

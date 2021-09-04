@@ -42,7 +42,7 @@ public class FormHelper {
         IQuery query = IRef.instance().defaultQuery(entityClass);
         WhereBase where = query.where();
         for (FormItem item : form.getItems()) {
-            String column = IRef.instance().findColumnByField(entityClass, item.getKey());
+            String column = IRef.instance().columnOfField(entityClass, item.getKey());
             if (isBlank(column)) {
                 throw new RuntimeException("the field[" + item.getKey() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
             }
@@ -64,7 +64,7 @@ public class FormHelper {
             int from = form.getPageSize() * (form.getCurrPage() - 1);
             query.limit(from, form.getPageSize());
         } else if (form.getNextId() != null) {
-            String column = IRef.instance().findPrimaryColumn(entityClass);
+            String column = IRef.instance().primaryColumn(entityClass);
             where.and.apply(column, SqlOp.GE, form.getNextId());
             query.limit(form.getPageSize());
         }

@@ -48,12 +48,12 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     /**
      * 数据库字段对应的FieldMapping
      */
-    public final Map<String, FieldMapping> columnMappings;
+    public final Map<String, FieldMapping> columnMap;
 
     /**
      * 实体类字段对应的FieldMapping
      */
-    public final Map<String, FieldMapping> fieldMappings;
+    public final Map<String, FieldMapping> fieldsMap;
     /**
      * 实体类所有字段列表
      */
@@ -71,11 +71,11 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
 
     protected AMapping(DbType dbType) {
         this.dbType = dbType;
-        this.columnMappings = this.getFields().stream().collect(Collectors.toMap(f -> f.column, f -> f));
-        this.fieldMappings = this.getFields().stream().collect(Collectors.toMap(f -> f.name, f -> f));
-        this.allColumns = Collections.unmodifiableList(this.getFields().stream().map(f -> f.column).collect(toList()));
+        this.columnMap = this.allFields().stream().collect(Collectors.toMap(f -> f.column, f -> f));
+        this.fieldsMap = this.allFields().stream().collect(Collectors.toMap(f -> f.name, f -> f));
+        this.allColumns = Collections.unmodifiableList(this.allFields().stream().map(f -> f.column).collect(toList()));
         this.selectAll = this.allColumns.stream().map(dbType::wrap).collect(joining(", "));
-        this.allFields = Collections.unmodifiableList(this.getFields().stream().map(f -> f.name).collect(toList()));
+        this.allFields = Collections.unmodifiableList(this.allFields().stream().map(f -> f.name).collect(toList()));
     }
 
     /**
@@ -83,12 +83,12 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      *
      * @return List<FieldMapping>
      */
-    public abstract List<FieldMapping> getFields();
+    public abstract List<FieldMapping> allFields();
 
     @Override
-    public String findColumnByField(String field) {
-        if (this.fieldMappings.containsKey(field)) {
-            return this.fieldMappings.get(field).column;
+    public String columnOfField(String field) {
+        if (this.fieldsMap.containsKey(field)) {
+            return this.fieldsMap.get(field).column;
         } else {
             return null;
         }
@@ -98,7 +98,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     public <T extends IEntity> T toEntity(Map<String, Object> map) {
         IEntity entity = this.newEntity();
         for (Map.Entry entry : map.entrySet()) {
-            FieldMapping f = this.fieldMappings.get((String) entry.getKey());
+            FieldMapping f = this.fieldsMap.get((String) entry.getKey());
             if (f != null) {
                 f.setter.set(entity, entry.getValue());
             }
@@ -119,7 +119,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         if (entity == null) {
             return map;
         }
-        for (FieldMapping f : this.getFields()) {
+        for (FieldMapping f : this.allFields()) {
             Object value = f.getter.get(entity);
             if (!isNoN || value != null) {
                 map.put(isProperty ? f.name : f.column, value);
@@ -138,15 +138,30 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         return this.toMap(entity, true, isNoN);
     }
 
-//    @Override
-//    public Object getFieldValue(IEntity entity, String fieldName) {
-//        return null;
-//    }
+    @Override
+    public <T> T valueByField(IEntity entity, String prop) {
+        if (entity == null || prop == null) {
+            return null;
+        } else {
+            FieldMapping f = this.fieldsMap.get(prop);
+            return f == null ? null : (T) f.getter.get(entity);
+        }
+    }
+
+    @Override
+    public <T> T valueByColumn(IEntity entity, String column) {
+        if (entity == null || column == null) {
+            return null;
+        } else {
+            FieldMapping f = this.columnMap.get(column);
+            return f == null ? null : (T) f.getter.get(entity);
+        }
+    }
 
     @Override
     public <T extends IEntity> T copy(IEntity entity) {
         T copy = this.newEntity();
-        for (FieldMapping f : this.getFields()) {
+        for (FieldMapping f : this.allFields()) {
             f.setter.set(copy, f.getter.get(entity));
         }
         return copy;

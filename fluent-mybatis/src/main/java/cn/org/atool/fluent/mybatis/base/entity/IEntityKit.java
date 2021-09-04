@@ -54,10 +54,20 @@ public interface IEntityKit {
     <E extends IEntity> E copy(IEntity entity);
 
     /**
-     * 返回属性值
+     * 根据实体属性名称返回属性值
      *
-     * @param fieldName 字段名称
+     * @param entity    Entity instance
+     * @param fieldName 实体属性名称
      * @return 属性值
      */
-    Object getFieldValue(IEntity entity, String fieldName);
+    <T> T valueByField(IEntity entity, String fieldName);
+
+    /**
+     * 根据数据库字段名称返回属性值
+     *
+     * @param entity Entity instance
+     * @param column 数据库字段名称
+     * @return 属性值
+     */
+    <T> T valueByColumn(IEntity entity, String column);
 }

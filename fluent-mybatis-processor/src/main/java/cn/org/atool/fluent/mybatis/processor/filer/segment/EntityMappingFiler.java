@@ -63,35 +63,34 @@ public class EntityMappingFiler extends AbstractFiler {
             .addField(this.f_allFieldMapping())
             /* 放在所有静态变量后面 */
             .addField(this.f_instance())
-            .addField(this.f_setter());
+            .addField(this.f_defaultSetter());
 
         spec.addMethod(this.m_constructor())
             .addMethod(this.m_entityClass())
+            .addMethod(this.m_newEntity())
+            .addMethod(this.m_allFields())
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_aliasQuery_2())
-            .addMethod(this.m_setter());
-        spec.addMethod(this.m_newEntity())
-            .addMethod(this.m_getFields())
-            .addMethod(this.m_getFieldValue());
+            .addMethod(this.m_defaultSetter());
     }
 
     private FieldSpec f_Table_Name() {
-        return FieldSpec.builder(String.class, "Table_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
+        return FieldSpec.builder(String.class, "Table_Name", PUBLIC_STATIC_FINAL)
             .initializer("$S", fluent.getTableName())
             .addJavadoc(super.codeBlock("表名称"))
             .build();
     }
 
     private FieldSpec f_Entity_Name() {
-        return FieldSpec.builder(String.class, "Entity_Name", Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
+        return FieldSpec.builder(String.class, "Entity_Name", PUBLIC_STATIC_FINAL)
             .initializer("$S", fluent.getClassName())
             .addJavadoc(super.codeBlock("Entity名称"))
             .build();
     }
 
     private FieldSpec f_instance() {
-        return FieldSpec.builder(fluent.entityKit(), "MAPPING", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+        return FieldSpec.builder(fluent.entityKit(), "MAPPING", PUBLIC_STATIC_FINAL)
             .initializer("new $T()", fluent.entityKit())
             .build();
     }
@@ -100,7 +99,7 @@ public class EntityMappingFiler extends AbstractFiler {
         String fields = fluent.getFields().stream()
             .map(CommonField::getName)
             .collect(joining(", "));
-        return FieldSpec.builder(CN_List_FMapping, "ALL_FIELD_MAPPING", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+        return FieldSpec.builder(CN_List_FMapping, "ALL_FIELD_MAPPING", PUBLIC_STATIC_FINAL)
             .initializer("$T.asList($L)", Arrays.class, fields)
             .build();
     }
@@ -109,8 +108,8 @@ public class EntityMappingFiler extends AbstractFiler {
         List<FieldSpec> fields = new ArrayList<>();
         for (CommonField f : fluent.getFields()) {
             String name = f.getName();
-            FieldSpec.Builder spec = FieldSpec.builder(FieldMapping.class,
-                f.getName(), Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            FieldSpec.Builder spec = FieldSpec
+                .builder(FieldMapping.class, f.getName(), PUBLIC_STATIC_FINAL)
                 .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", name, f.getColumn());
             UniqueFieldType type = this.getUniqueType(f);
             String prev5para = quota(name) + ", "  // name
@@ -150,9 +149,9 @@ public class EntityMappingFiler extends AbstractFiler {
         }
     }
 
-    private FieldSpec f_setter() {
+    private FieldSpec f_defaultSetter() {
         ClassName type = ClassNames2.getClassName(fluent.getDefaults());
-        return FieldSpec.builder(type, "CustomizedSetter")
+        return FieldSpec.builder(type, "DEFAULT_SETTER")
             .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.FINAL)
             .initializer("new $T(){}", type)
             .build();
@@ -172,29 +171,11 @@ public class EntityMappingFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_getFields() {
-        MethodSpec.Builder spec = super.publicMethod("getFields", true, CN_List_FMapping);
+    private MethodSpec m_allFields() {
+        MethodSpec.Builder spec = super.publicMethod("allFields", true, CN_List_FMapping);
         spec.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addStatement("return ALL_FIELD_MAPPING");
         return spec.build();
-    }
-
-    private MethodSpec m_getFieldValue() {
-        MethodSpec.Builder spec = super.publicMethod("getFieldValue", Object.class);
-        spec.addParameter(IEntity.class, "entity")
-            .addParameter(String.class, "prop")
-            .beginControlFlow("if (!(entity instanceof $T) || prop == null)", fluent.entity())
-            .addStatement("return null")
-            .endControlFlow()
-            .addStatement("$T e = ($T) entity", fluent.entity(), fluent.entity())
-            .addCode("switch (prop) {\n");
-        for (CommonField field : fluent.getFields()) {
-            spec.addCode("\tcase $S: return e.$L();\n", field.getName(), field.getMethodName());
-        }
-        return spec
-            .addCode("\tdefault: return null;\n")
-            .addCode("}")
-            .build();
     }
 
     private MethodSpec m_constructor() {
@@ -243,9 +224,9 @@ public class EntityMappingFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_setter() {
-        return super.publicMethod("setter", IDefaultSetter.class)
-            .addStatement("return CustomizedSetter").build();
+    private MethodSpec m_defaultSetter() {
+        return super.publicMethod("defaultSetter", IDefaultSetter.class)
+            .addStatement("return DEFAULT_SETTER").build();
     }
 
     @Override
@@ -254,10 +235,6 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private String quota(String input) {
-        if (isBlank(input)) {
-            return null;
-        } else {
-            return DOUBLE_QUOTATION + input + DOUBLE_QUOTATION;
-        }
+        return isBlank(input) ? null : DOUBLE_QUOTATION + input + DOUBLE_QUOTATION;
     }
 }

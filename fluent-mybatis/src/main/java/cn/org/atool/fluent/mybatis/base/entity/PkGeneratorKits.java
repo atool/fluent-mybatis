@@ -32,7 +32,7 @@ public class PkGeneratorKits {
         if (defaults == null) {
             return;
         }
-        Supplier pkSupplier = defaults.setter().pkGenerator(entity);
+        Supplier pkSupplier = defaults.defaultSetter().pkGenerator(entity);
         if (pkSupplier != null) {
             consumer.accept(pkSupplier.get());
         }

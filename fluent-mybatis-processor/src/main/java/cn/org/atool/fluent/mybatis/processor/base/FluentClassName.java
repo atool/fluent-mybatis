@@ -114,77 +114,77 @@ public abstract class FluentClassName {
 
     public ClassName wrapperHelper() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this));
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this));
     }
 
     public ClassName queryWhere() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_QueryWhere);
     }
 
     public ClassName updateWhere() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_UpdateWhere);
     }
 
     public ClassName selector() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_Selector);
     }
 
     public ClassName groupBy() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_GroupBy);
     }
 
     public ClassName having() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_Having);
     }
 
     public ClassName queryOrderBy() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_QueryOrderBy);
     }
 
     public ClassName updateOrderBy() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_UpdateOrderBy);
     }
 
     public ClassName updateSetter() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_UpdateSetter);
     }
 
     public ClassName segment() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_ISegment);
     }
 
     public ClassName formSetter() {
         return ClassName.get(
-            WrapperKitFiler.getPackageName(this),
-            WrapperKitFiler.getClassName(this),
+            SegmentFiler.getPackageName(this),
+            SegmentFiler.getClassName(this),
             Suffix_EntityFormSetter);
     }
 }

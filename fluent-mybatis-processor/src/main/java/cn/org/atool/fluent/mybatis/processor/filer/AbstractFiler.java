@@ -142,4 +142,6 @@ public abstract class AbstractFiler {
             .addMember("value", format, values)
             .build();
     }
+
+    protected Modifier[] PUBLIC_STATIC_FINAL = {Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC};
 }

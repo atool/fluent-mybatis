@@ -42,6 +42,6 @@ public class MappingKits {
      */
     public static <E extends IEntity> String toColumn(Class<E> klass, GetterFunc<E> func) {
         String field = LambdaUtil.resolve(func);
-        return IRef.instance().findColumnByField(klass, field);
+        return IRef.instance().columnOfField(klass, field);
     }
 }

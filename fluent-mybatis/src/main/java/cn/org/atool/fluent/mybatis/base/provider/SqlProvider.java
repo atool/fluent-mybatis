@@ -363,7 +363,7 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param entity 实体实例
      */
     public void setEntityByDefault(IEntity entity) {
-        ((BaseDefaults) mapping()).setter().setInsertDefault(entity);
+        ((BaseDefaults) mapping()).defaultSetter().setInsertDefault(entity);
     }
 
     /**

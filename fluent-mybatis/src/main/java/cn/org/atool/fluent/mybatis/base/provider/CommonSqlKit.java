@@ -67,7 +67,7 @@ public class CommonSqlKit implements SqlKit {
      */
     private InsertList insertColumns(SqlProvider provider, String prefix, IEntity entity, boolean withPk) {
         InsertList inserts = new InsertList();
-        List<FieldMapping> fields = provider.mapping().getFields();
+        List<FieldMapping> fields = provider.mapping().allFields();
         Map map = entity.toEntityMap();
         for (FieldMapping f : fields) {
             if (!f.isPrimary() || withPk) {
@@ -220,7 +220,7 @@ public class CommonSqlKit implements SqlKit {
         MapperSql sql = new MapperSql();
         sql.UPDATE(provider.tableName());
         UpdateSet updates = new UpdateSet();
-        List<FieldMapping> fields = provider.mapping().getFields();
+        List<FieldMapping> fields = provider.mapping().allFields();
         FieldMapping primary = null;
         FieldMapping version = null;
         Map columns = entity.toColumnMap();
@@ -384,7 +384,7 @@ public class CommonSqlKit implements SqlKit {
         Set<String> set = new HashSet<>();
         maps.forEach(m -> set.addAll(m.keySet()));
 
-        return provider.mapping().getFields().stream()
+        return provider.mapping().allFields().stream()
             .filter(f -> set.contains(f.column) || notBlank(f.insert))
             .filter(f -> !f.isPrimary() || withPk)
             .collect(toList());
@@ -459,7 +459,7 @@ public class CommonSqlKit implements SqlKit {
      * @return ignore
      */
     static List<String> updateDefaults(SqlProvider provider, Map<String, String> updates, boolean ignoreLockVersion) {
-        List<FieldMapping> fields = provider.mapping().getFields();
+        List<FieldMapping> fields = provider.mapping().allFields();
         UpdateDefault defaults = new UpdateDefault(updates);
         for (FieldMapping f : fields) {
             if (isBlank(f.update)) {

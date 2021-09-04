@@ -38,10 +38,10 @@ public interface IMapping {
      *
      * @return Map<String, FieldMapping>
      */
-    Map<String, FieldMapping> getColumnMappings();
+    Map<String, FieldMapping> getColumnMap();
 
     /**
-     * 返回用 ', '连接好的所有字段
+     * 返回用 ', ' 连接好的所有字段
      */
     String getSelectAll();
 
@@ -51,7 +51,7 @@ public interface IMapping {
      * @param field 属性名称
      * @return 字段名称
      */
-    String findColumnByField(String field);
+    String columnOfField(String field);
 
     /**
      * 返回特定类型字段
@@ -73,7 +73,7 @@ public interface IMapping {
      *
      * @return 所有字段列表
      */
-    List<FieldMapping> getFields();
+    List<FieldMapping> allFields();
 
     /**
      * 实体类

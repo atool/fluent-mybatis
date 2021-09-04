@@ -159,6 +159,6 @@ public abstract class BaseWrapper<
      * @return 字段映射
      */
     private Map<String, FieldMapping> column2mapping() {
-        return this.mapping().map(IMapping::getColumnMappings).orElse(Collections.EMPTY_MAP);
+        return this.mapping().map(IMapping::getColumnMap).orElse(Collections.EMPTY_MAP);
     }
 }
