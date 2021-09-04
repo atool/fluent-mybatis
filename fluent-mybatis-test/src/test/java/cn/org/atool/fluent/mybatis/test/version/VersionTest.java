@@ -25,7 +25,7 @@ public class VersionTest extends BaseTest {
             .setId(1L).setVersion(1L));
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE `idcard` SET `version` = `version` + 1, `code` = ? " +
-            "WHERE `id` = ? AND `version` = ?");
+            "WHERE `version` = ? AND `id` = ?");
     }
 
     @Test

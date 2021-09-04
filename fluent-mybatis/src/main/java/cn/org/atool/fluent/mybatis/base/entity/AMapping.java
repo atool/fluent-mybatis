@@ -106,7 +106,27 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         return (T) entity;
     }
 
-    public abstract Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean isNoN);
+    /**
+     * entity转换为Map
+     *
+     * @param entity     Entity
+     * @param isProperty true: 实体属性值, false: 数据库字段值
+     * @param isNoN      is not null, true: 只允许非空值, false: 允许空值
+     * @return entity value map
+     */
+    private Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean isNoN) {
+        Map<String, Object> map = new HashMap<>(this.allFields.size());
+        if (entity == null) {
+            return map;
+        }
+        for (FieldMapping f : this.getFields()) {
+            Object value = f.getter.get(entity);
+            if (!isNoN || value != null) {
+                map.put(isProperty ? f.name : f.column, value);
+            }
+        }
+        return map;
+    }
 
     @Override
     public Map<String, Object> toColumnMap(IEntity entity, boolean isNoN) {

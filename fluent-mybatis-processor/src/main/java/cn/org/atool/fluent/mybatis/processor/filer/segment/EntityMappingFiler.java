@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.model.EntityToMap;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -25,7 +24,6 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityMappin
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -73,8 +71,7 @@ public class EntityMappingFiler extends AbstractFiler {
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_aliasQuery_2())
             .addMethod(this.m_setter());
-        spec.addMethod(this.m_toMap())
-            .addMethod(this.m_newEntity())
+        spec.addMethod(this.m_newEntity())
             .addMethod(this.m_getFields())
             .addMethod(this.m_getFieldValue());
     }
@@ -162,25 +159,6 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     /* ===== METHOD ==== */
-
-    /**
-     * public static Map<String, Object> toEntityMap(Entity entity)
-     *
-     * @return MethodSpec
-     */
-    private MethodSpec m_toMap() {
-        MethodSpec.Builder builder = super.publicMethod("toMap", true, CN_Map_StrObj)
-            .addParameter(IEntity.class, "entity")
-            .addParameter(TypeName.BOOLEAN, "isProperty")
-            .addParameter(ClassName.BOOLEAN, "isNoN")
-            .addStatement("$T e = ($T) entity", fluent.entity(), fluent.entity())
-            .addCode("return new $T(isProperty)\n", EntityToMap.class);
-        for (CommonField fc : fluent.getFields()) {
-            String getMethod = fc.getMethodName();
-            builder.addCode("\t.put($L, e.$L(), isNoN)\n", fc.getName(), getMethod);
-        }
-        return builder.addCode("\t.getMap();").build();
-    }
 
     /**
      * public Entity newEntity()

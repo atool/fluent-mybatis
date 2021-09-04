@@ -22,7 +22,7 @@ public interface IEntityKit {
      * key值为entity的属性字段名
      *
      * @param entity 实例
-     * @param isNoN  true:仅仅非空字段; false: 所有字段
+     * @param isNoN  is not null, true: 只允许非空值, false: 所有字段
      * @return 实例属性名称:属性值
      */
     Map<String, Object> toEntityMap(IEntity entity, boolean isNoN);
@@ -32,7 +32,7 @@ public interface IEntityKit {
      * key值为对应的数据库表字段名
      *
      * @param entity 实例
-     * @param isNoN  true:仅仅非空字段; false: 所有字段
+     * @param isNoN  is not null, true: 只允许非空值, false: 所有字段
      * @return 实例数据库字段名: 属性值
      */
     Map<String, Object> toColumnMap(IEntity entity, boolean isNoN);
