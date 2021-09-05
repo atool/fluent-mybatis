@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked"})
 public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     implements IDefaultGetter {
 
@@ -50,14 +50,6 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     @Override
     public Q alias() {
         return this.query(true, null, Parameters.alias(), null);
-    }
-
-    /**
-     * 关联查询, 显式设置别名, 根据fromQuery自动关联?参数
-     */
-    @Override
-    public Q aliasWith(String alias, BaseQuery fromQuery) {
-        return this.query(true, null, alias, fromQuery.getWrapperData().getParameters());
     }
 
     /* ========updater method======= */

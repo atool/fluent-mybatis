@@ -77,7 +77,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .where.age().isNull().end()
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery addressQuery = Ref.Query.homeAddress.aliasWith("t2", studentQuery)
+        HomeAddressQuery addressQuery = Ref.Query.homeAddress.query("t2")
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();

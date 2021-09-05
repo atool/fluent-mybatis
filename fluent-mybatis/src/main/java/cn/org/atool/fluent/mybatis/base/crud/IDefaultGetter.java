@@ -52,18 +52,6 @@ public interface IDefaultGetter {
     <Q extends IQuery> Q query(String alias);
 
     /**
-     * 实例化查询构造器
-     * o - 设置默认查询条件
-     * o - 设置别名alias
-     * o - 设置变量实例来自From查询实例
-     *
-     * @param alias     别名
-     * @param fromQuery 关联查询时,from表查询对象
-     * @return 查询构造器
-     */
-    <Q extends IQuery> Q aliasWith(String alias, BaseQuery fromQuery);
-
-    /**
      * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
      *
      * @param <U> IUpdate类型
