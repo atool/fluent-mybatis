@@ -14,7 +14,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.age().is(34).end()
             .where.id().eq(2).end()
         );
@@ -24,7 +24,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void isNull() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.age().is(34)
             .set.userName().isNull().end()
             .where.id().eq(2).end()
@@ -36,7 +36,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_If() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.age().is(34, If::everFalse)
             .set.userName().is(null, If::everTrue).end()
             .where.id().eq(2).end()
@@ -47,7 +47,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_IfNotNull() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.age().is(34, If::notNull)
             .set.userName().is(null, If::notNull).end()
             .where.id().eq(2).end()
@@ -95,7 +95,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_IfNotBlank() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.version().is("19", If::notBlank)
             .set.userName().is(null, If::notBlank)
             .set.userName().is("  ", If::notBlank).end()
@@ -107,7 +107,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void apply() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.userName().applyFunc("concat('user_name', '_abc')").end()
             .where.id().eq(2).end()
         );
@@ -118,7 +118,7 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void apply_If() {
-        mapper.updateBy(new StudentUpdate()
+        mapper.updateBy(StudentUpdate.emptyUpdater()
             .set.userName().applyFunc(false, "concat('user_name', '_abc')")
             .set.age().applyFunc(true, "age+1").end()
             .where.id().eq(2).end()

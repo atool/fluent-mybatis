@@ -23,7 +23,7 @@ public class CaseFuncTest extends BaseTest {
 
     @Test
     public void test_applyFunc() throws Exception {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().applyFunc("case id " +
                 "when 1 then 'address 1' " +
                 "when 2 then 'address 2' " +
@@ -62,7 +62,7 @@ public class CaseFuncTest extends BaseTest {
             "when 1 then ? " +
             "when 2 then ? " +
             "else ? end";
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().applyFunc(CaseWhen, "address 1", "address 2", "address 3")
             .set.age().applyFunc(CaseWhen, 23, 24, 25)
             .end()
@@ -91,7 +91,7 @@ public class CaseFuncTest extends BaseTest {
             "when 1 then ? " +
             "when 2 then ? " +
             "else ? end";
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().applyFunc(CaseWhen, getFields(students, StudentEntity::getAddress))
             .set.age().applyFunc(CaseWhen, getFields(students, StudentEntity::getAge))
             .end()

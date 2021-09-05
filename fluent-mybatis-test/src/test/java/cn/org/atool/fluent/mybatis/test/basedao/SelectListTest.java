@@ -80,7 +80,7 @@ public class SelectListTest extends BaseTest {
             .env.values("test_env")
             .cleanAndInsert();
 
-        new StudentUpdate()
+        StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().eq(2L)
             .and.env().eq("test_env").end()
@@ -101,7 +101,7 @@ public class SelectListTest extends BaseTest {
             .env.values("test_env")
             .cleanAndInsert();
 
-        new StudentUpdate()
+        StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().eq(2L)
             .and.env().eq("test_env").end()

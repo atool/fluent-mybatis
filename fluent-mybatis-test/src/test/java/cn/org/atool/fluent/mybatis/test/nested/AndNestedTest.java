@@ -40,7 +40,7 @@ public class AndNestedTest extends BaseTest {
 
     @Test
     void test_and_nested_in_update() {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().lt(100)
             .and(q -> q
@@ -58,7 +58,7 @@ public class AndNestedTest extends BaseTest {
 
     @Test
     void test_or_nested_in_update() {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().lt(100)
             .or(q -> q

@@ -18,7 +18,7 @@ public class UpdateByQueryTest extends BaseTest {
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("user name2").end()
             .where.id().eq(24L)
             .applyFunc("1=1").end();
@@ -39,7 +39,7 @@ public class UpdateByQueryTest extends BaseTest {
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .cleanAndInsert();
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("user name2").end()
             .where.id().eq(24L)
             .and.applyFunc("user_name='user2'")

@@ -20,7 +20,7 @@ public class UpdateByEntity extends BaseTest {
             .setId(1L)
             .setUserName("test")
             .setAddress("test");
-        mapper.updateBy(mapper.updater()
+        mapper.updateBy(mapper.emptyUpdater()
             .set.byEntity(student).end()
             .where.id().eq(1).end()
         );
@@ -39,7 +39,7 @@ public class UpdateByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("test");
 
-        StudentUpdate updater = mapper.updater()
+        StudentUpdate updater = mapper.emptyUpdater()
             .set.byEntity(student, FieldRef.Student.userName, FieldRef.Student.grade).end()
             .where.id().eq(1).end();
         mapper.updateBy(updater);
@@ -58,7 +58,7 @@ public class UpdateByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("test");
 
-        StudentUpdate updater = mapper.updater()
+        StudentUpdate updater = mapper.emptyUpdater()
             .set.byEntity(student, StudentEntity::getUserName, StudentEntity::getGrade).end()
             .where.id().eq(1).end();
         mapper.updateBy(updater);
@@ -79,7 +79,7 @@ public class UpdateByEntity extends BaseTest {
             .setAddress("test")
             .setTenant(122L);
 
-        StudentUpdate updater = mapper.updater()
+        StudentUpdate updater = mapper.emptyUpdater()
             .set.byExclude(student).end()
             .where.id().eq(1).end();
         mapper.updateBy(updater);
@@ -103,7 +103,7 @@ public class UpdateByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("test");
 
-        StudentUpdate updater = mapper.updater()
+        StudentUpdate updater = mapper.emptyUpdater()
             .set.byExclude(student,
                 FieldRef.Student.id,
                 FieldRef.Student.address,
@@ -130,7 +130,7 @@ public class UpdateByEntity extends BaseTest {
             .setTenant(124L)
             .setAddress("test");
 
-        StudentUpdate updater = mapper.updater()
+        StudentUpdate updater = mapper.emptyUpdater()
             .set.byExclude(student,
                 StudentEntity::getAddress,
                 StudentEntity::getBirthday,

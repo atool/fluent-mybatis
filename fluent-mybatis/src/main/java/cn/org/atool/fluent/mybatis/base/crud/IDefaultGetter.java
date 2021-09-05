@@ -25,14 +25,6 @@ public interface IDefaultGetter {
     <Q extends IQuery> Q emptyQuery(String alias);
 
     /**
-     * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
-     *
-     * @param <U> IUpdate类型
-     * @return IUpdate
-     */
-    <U extends IUpdate> U emptyUpdater();
-
-    /**
      * 实例化查询构造器
      * o - 设置默认查询条件
      *
@@ -84,12 +76,20 @@ public interface IDefaultGetter {
     <Q extends IQuery> Q aliasWith(String alias, BaseQuery fromQuery);
 
     /**
+     * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
+     *
+     * @param <U> IUpdate类型
+     * @return IUpdate
+     */
+    <U extends IUpdate> U emptyUpdater();
+
+    /**
      * 实例化更新构造器
      * o - 设置默认更新条件
      *
      * @return 更新构造器
      */
-    <U extends IUpdate> U defaultUpdater();
+    <U extends IUpdate> U updater();
 
     /**
      * 默认值设置器

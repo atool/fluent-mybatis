@@ -14,6 +14,12 @@ import java.util.function.Supplier;
 public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     implements IDefaultGetter {
 
+    protected abstract Q query(boolean defaults, Supplier<String> table, String alias, Parameters parameters);
+
+    protected abstract U updater(boolean defaults, Supplier<String> table, String alias, Parameters parameters);
+
+    /* =======query method======= */
+
     @Override
     public Q emptyQuery() {
         return this.query(false, null, null, null);
@@ -46,8 +52,6 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
         return this.query(true, null, Parameters.alias(), null);
     }
 
-    protected abstract Q query(boolean defaults, Supplier<String> table, String alias, Parameters parameters);
-
     /**
      * 关联查询, 根据fromQuery自动设置别名和关联?参数
      * 如果要自定义别名, 使用方法 {@link #aliasWith(String, BaseQuery)}
@@ -65,10 +69,15 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
         return this.query(true, null, alias, fromQuery.getWrapperData().getParameters());
     }
 
+    /* ========updater method======= */
+
     @Override
-    public U defaultUpdater() {
-        U updater = this.emptyUpdater();
-        this.defaultSetter().setUpdateDefault(updater);
-        return updater;
+    public U emptyUpdater() {
+        return this.updater(false, null, null, null);
+    }
+
+    @Override
+    public U updater() {
+        return this.updater(true, null, null, null);
     }
 }

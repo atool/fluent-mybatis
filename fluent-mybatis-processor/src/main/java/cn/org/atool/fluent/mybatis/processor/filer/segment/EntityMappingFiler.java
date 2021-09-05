@@ -22,7 +22,6 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 import static java.util.stream.Collectors.joining;
 
@@ -71,9 +70,9 @@ public class EntityMappingFiler extends AbstractFiler {
             .addMethod(this.m_entityClass())
             .addMethod(this.m_newEntity())
             .addMethod(this.m_allFields())
+            .addMethod(this.m_defaultSetter())
             .addMethod(this.m_newQuery())
-            .addMethod(this.m_emptyUpdater())
-            .addMethod(this.m_defaultSetter());
+            .addMethod(this.m_newUpdater());
     }
 
     private FieldSpec f_Table_Name() {
@@ -207,9 +206,13 @@ public class EntityMappingFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_emptyUpdater() {
-        return super.publicMethod(M_EMPTY_UPDATER, true, fluent.updater())
-            .addStatement("return new $T()", fluent.updater()).build();
+    private MethodSpec m_newUpdater() {
+        return super.protectedMethod("updater", fluent.updater())
+            .addParameter(boolean.class, "defaults")
+            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(String.class, "alias")
+            .addParameter(Parameters.class, "shared")
+            .addStatement("return new $T(defaults, table, alias, shared)", fluent.updater()).build();
     }
 
     private MethodSpec m_defaultSetter() {

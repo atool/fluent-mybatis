@@ -95,7 +95,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeUpdate() {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().eq(3L).end()
             .hint("/** hint **/");
@@ -105,7 +105,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterUpdate() {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().eq(3L).end()
             .hint(HintType.After_CrudKey, "/** hint **/");
@@ -115,7 +115,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeTableUpdate() {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().eq(3L).end()
             .hint(HintType.Before_Table, "/** hint **/");
@@ -125,7 +125,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterTableUpdate() {
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().is("test").end()
             .where.id().eq(3L).end()
             .hint(HintType.After_Table, "/** hint **/");

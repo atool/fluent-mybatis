@@ -18,7 +18,7 @@ public class IfsTest extends BaseTest {
     @Test
     public void test_multiIf() throws Exception {
         long id = 2L;
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().is("address 1", v -> id == 1)
             .set.address().is("address 2", v -> id == 2)
             .set.address().is("address 3", v -> id == 3)
@@ -39,7 +39,7 @@ public class IfsTest extends BaseTest {
     @Test
     public void test_Ifs() throws Exception {
         long id = 2L;
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().is(If.test()
                 .when(v -> id == 1, "address 1")
                 .when(v -> id == 2, "address 2")
@@ -61,7 +61,7 @@ public class IfsTest extends BaseTest {
     @Test
     public void test_Ifs2() throws Exception {
         long id = 2L;
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().is(If.test()
                 .when(v -> id == 1, "address 1")
                 .when(v -> id == 2, "address 2")
@@ -88,7 +88,7 @@ public class IfsTest extends BaseTest {
     @Test
     public void test_InIfs() throws Exception {
         int[] ids = {2, 3};
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().is("address")
             .end()
             .where.id().in(If.testIn()
@@ -112,7 +112,7 @@ public class IfsTest extends BaseTest {
     @Test
     public void test_InIfs2() throws Exception {
         List ids = Arrays.asList(2, 3);
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.address().is("address")
             .end()
             .where.id().in(If.testIn()

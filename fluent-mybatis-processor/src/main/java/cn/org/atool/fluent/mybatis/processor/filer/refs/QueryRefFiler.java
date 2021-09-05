@@ -97,18 +97,18 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     public static MethodSpec m_defaultUpdater(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder("defaultUpdater")
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_DEFAULT_UPDATER)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
             .returns(IUpdate.class);
         if (isRef) {
             spec.addAnnotation(Override.class)
                 .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.defaultUpdater(entityClass)", getClassName());
+                .addStatement("return $T.$L(entityClass)", getClassName(), M_DEFAULT_UPDATER);
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的默认Updater实例")
-                .addStatement("\treturn mapping(clazz).defaultUpdater()");
+                .addStatement("\treturn mapping(clazz).$L()", M_DEFAULT_UPDATER);
         }
         return spec.build();
     }

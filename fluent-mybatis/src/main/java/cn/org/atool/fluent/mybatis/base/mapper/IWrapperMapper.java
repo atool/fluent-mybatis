@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -44,8 +43,8 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      *
      * @return ignore
      */
-    default U defaultUpdater() {
-        return (U) ((BaseDefaults) mapping()).defaultUpdater();
+    default U updater() {
+        return mapping().updater();
     }
 
     /**
@@ -53,8 +52,8 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      *
      * @return ignore
      */
-    default U updater() {
-        return ((BaseDefaults) mapping()).emptyUpdater();
+    default U emptyUpdater() {
+        return mapping().emptyUpdater();
     }
 
     /**

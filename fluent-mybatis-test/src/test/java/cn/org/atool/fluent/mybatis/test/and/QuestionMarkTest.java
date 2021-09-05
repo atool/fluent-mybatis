@@ -25,7 +25,7 @@ public class QuestionMarkTest extends BaseTest {
             .userName.values("test")
             .age.values(23)
             .cleanAndInsert();
-        StudentUpdate update = new StudentUpdate()
+        StudentUpdate update = StudentUpdate.emptyUpdater()
             .set.userName().applyFunc("concat(user_name, concat('_\\\\\\?', ? ))", "_aaa")
             .set.age().applyFunc("age+1").end()
             .where.id().eq(1L).end();

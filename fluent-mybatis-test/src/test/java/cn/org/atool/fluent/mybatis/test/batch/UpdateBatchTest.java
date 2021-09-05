@@ -17,6 +17,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public class UpdateBatchTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -60,7 +61,7 @@ public class UpdateBatchTest extends BaseTest {
             new StudentEntity().setId(23L).setUserName("user name23"),
             new StudentEntity().setId(24L).setUserName("user name24"));
         batchMapper.updateStudentBatch(students);
-        /** 验证SQL参数 **/
+        /* 验证SQL参数 **/
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user name24")
@@ -72,43 +73,44 @@ public class UpdateBatchTest extends BaseTest {
     public void testUpdateBatch_same() {
         IUpdate[] updates = this.newListUpdater().toArray(new IUpdate[0]);
         int count = mapper.updateBy(updates);
-        /** 验证SQL语句 **/
+        /* 验证SQL语句 **/
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
                 "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?"
             , StringMode.SameAsSpace);
-        /** 验证SQL参数 **/
+        /* 验证SQL参数 **/
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user name24")
         );
-        /** 返回的update值是最后一条sql **/
+        /* 返回的update值是最后一条sql **/
         want.number(count).isEqualTo(1);
     }
 
     @DisplayName("批量更新不同表")
     @Test
     public void testUpdateBatch_different() {
-        StudentUpdate update1 = new StudentUpdate()
+        StudentUpdate update1 = StudentUpdate.emptyUpdater()
             .set.userName().is("user name23").end()
             .where.id().eq(23L).end();
-        HomeAddressUpdate update2 = new HomeAddressUpdate()
+        HomeAddressUpdate update2 = HomeAddressUpdate.updater()
             .set.address().is("address 24").end()
             .where.id().eq(24L).end();
         int count = mapper.updateBy(update1, update2);
         db.sqlList().wantFirstSql()
             .eq("" +
-                "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
-                "UPDATE `home_address` SET `gmt_modified` = now(), `address` = ? WHERE `id` = ?", StringMode.SameAsSpace);
+                    "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
+                    "UPDATE `home_address` SET `gmt_modified` = now(), `address` = ? WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?",
+                StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user")
         );
         db.table(ATM.table.homeAddress).query().eqDataMap(ATM.dataMap.homeAddress.table(2)
             .id.values(23, 24)
-            .address.values("address", "address 24")
+            .address.values("address", "address")
         );
-        /** 返回的update值是最后一条sql **/
+        /* 返回的update值是最后一条sql **/
         want.number(count).isEqualTo(1);
     }
 
@@ -116,10 +118,10 @@ public class UpdateBatchTest extends BaseTest {
      * 构造多个更新操作
      */
     private List<IUpdate> newListUpdater() {
-        StudentUpdate update1 = new StudentUpdate()
+        StudentUpdate update1 = StudentUpdate.emptyUpdater()
             .set.userName().is("user name23").end()
             .where.id().eq(23L).end();
-        StudentUpdate update2 = new StudentUpdate()
+        StudentUpdate update2 = StudentUpdate.emptyUpdater()
             .set.userName().is("user name24").end()
             .where.id().eq(24L).end();
         return Arrays.asList(update1, update2);

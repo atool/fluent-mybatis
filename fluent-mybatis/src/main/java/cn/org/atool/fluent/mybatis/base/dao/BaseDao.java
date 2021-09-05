@@ -58,7 +58,7 @@ public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends 
      * @return IUpdate
      */
     protected U updater() {
-        return this.defaults().defaultUpdater();
+        return this.defaults().updater();
     }
 
     @Override

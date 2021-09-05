@@ -108,7 +108,7 @@ public abstract class IRef {
      * @param clazz Entity类类型
      * @return IUpdate
      */
-    public abstract IUpdate defaultUpdater(Class<? extends IEntity> clazz);
+    public abstract IUpdate updater(Class<? extends IEntity> clazz);
 
     /**
      * 返回clazz实体对应的空Updater实例

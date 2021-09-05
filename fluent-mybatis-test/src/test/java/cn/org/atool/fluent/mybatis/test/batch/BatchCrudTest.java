@@ -35,10 +35,10 @@ public class BatchCrudTest extends BaseTest {
     @DisplayName("批量更新不同表")
     @Test
     public void testUpdateBatch_different() {
-        StudentUpdate update1 = new StudentUpdate()
+        StudentUpdate update1 = StudentUpdate.emptyUpdater()
             .set.userName().is("user name23").end()
             .where.id().eq(23L).end();
-        HomeAddressUpdate update2 = new HomeAddressUpdate()
+        HomeAddressUpdate update2 = HomeAddressUpdate.emptyUpdater()
             .set.address().is("address 24").end()
             .where.id().eq(24L).end();
         mapper.batchCrud(BatchCrud.batch()
