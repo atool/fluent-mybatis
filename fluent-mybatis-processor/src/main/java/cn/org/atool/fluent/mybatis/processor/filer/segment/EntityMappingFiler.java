@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
@@ -15,7 +14,9 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -24,6 +25,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityMappin
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.FN_FieldMapping;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -58,9 +60,11 @@ public class EntityMappingFiler extends AbstractFiler {
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(paraType(ClassName.get(AMapping.class), fluent.entity(), fluent.query(), fluent.updater()))
             .addField(this.f_Table_Name())
-            .addField(this.f_Entity_Name())
-            .addFields(this.f_Fields())
-            .addField(this.f_allFieldMapping())
+            .addField(this.f_Entity_Name());
+        for (CommonField f : fluent.getFields()) {
+            spec.addField(this.f_Field(f));
+        }
+        spec.addField(this.f_allFieldMapping())
             /* 放在所有静态变量后面 */
             .addField(this.f_instance())
             .addField(this.f_defaultSetter());
@@ -104,37 +108,28 @@ public class EntityMappingFiler extends AbstractFiler {
             .build();
     }
 
-    private List<FieldSpec> f_Fields() {
-        List<FieldSpec> fields = new ArrayList<>();
-        for (CommonField f : fluent.getFields()) {
-            String name = f.getName();
-            FieldSpec.Builder spec = FieldSpec
-                .builder(FieldMapping.class, f.getName(), PUBLIC_STATIC_FINAL)
-                .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", name, f.getColumn());
-            UniqueFieldType type = this.getUniqueType(f);
-            String prev5para = quota(name) + ", "  // name
-                + quota(f.getColumn()) + ", "  // column
-                + (type == null ? "null" : type.name()) + ", " // type
-                + quota(f.getInsert()) + ", "  // insert value
-                + quota(f.getUpdate()); //update value
-            if (f.getTypeHandler() == null) {
-                spec.initializer("new FieldMapping($L, $T.class, null)" +
-                        "\n\t.setSetter((e, v) -> (($L) e).$L(($T) v))" +
-                        "\n\t.setGetter(e -> (($L) e).$L())",
-                    prev5para, f.getJavaType(),
-                    fluent.getClassName(), f.setMethodName(), f.getJavaType(),
-                    fluent.getClassName(), f.getMethodName());
-            } else {
-                spec.initializer("new FieldMapping($L, $T.class, $T.class)" +
-                        "\n\t.setSetter((e, v) -> (($L) e).$L(($T) v))" +
-                        "\n\t.setGetter(e -> (($L) e).$L())",
-                    prev5para, f.getJavaType(), f.getTypeHandler(),
-                    fluent.getClassName(), f.setMethodName(), f.getJavaType(),
-                    fluent.getClassName(), f.getMethodName());
-            }
-            fields.add(spec.build());
+    private FieldSpec f_Field(CommonField f) {
+        String name = f.getName();
+        FieldSpec.Builder spec = FieldSpec
+            .builder(ParameterizedTypeName.get(FN_FieldMapping, fluent.entity()), f.getName(), PUBLIC_STATIC_FINAL)
+            .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", name, f.getColumn());
+        UniqueFieldType type = this.getUniqueType(f);
+        CodeBlock.Builder init = CodeBlock.builder();
+        init.add("new FieldMapping<$T>", fluent.entity());
+        init.add("\n\t(")
+            .add("$L, $L, ", quota(name), quota(f.getColumn()))
+            .add(type == null ? "null" : type.name())
+            .add(", $L, $L, ", quota(f.getInsert()), quota(f.getUpdate()))
+            .add("$T.class, ", f.getJavaType());
+
+        if (f.getTypeHandler() == null) {
+            init.add("null)");
+        } else {
+            init.add("$T.class)", f.getTypeHandler());
         }
-        return fields;
+        init.add("\n\t.sg((e, v) -> e.$L(($T) v), $T::$L)",
+            f.setMethodName(), f.getJavaType(), fluent.entity(), f.getMethodName());
+        return spec.initializer(init.build()).build();
     }
 
     private UniqueFieldType getUniqueType(CommonField field) {

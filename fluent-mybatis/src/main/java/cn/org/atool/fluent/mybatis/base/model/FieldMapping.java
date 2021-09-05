@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.ISetter;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -16,7 +16,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  */
 @SuppressWarnings("rawtypes")
 @Accessors(chain = true)
-public class FieldMapping {
+public class FieldMapping<E extends IEntity> {
     /**
      * 属性名称
      */
@@ -46,11 +46,31 @@ public class FieldMapping {
      */
     public final Class typeHandler;
 
-    @Setter//e->((BlobValuePoJo)e).getId()
-    public IGetter getter;
+    /**
+     * e->((BlobValuePoJo)e).getId()
+     */
+    public IGetter<E> getter;
 
-    @Setter// (e,v)->((BlobValuePoJo)e).setId((Long)v)
-    public ISetter setter;
+    /**
+     * (e,v)->((BlobValuePoJo)e).setId((Long)v)
+     */
+    public ISetter<E> setter;
+
+    /**
+     * sg: setter, getter简写
+     *
+     * @param setter setter方法
+     * @param getter getter方法
+     * @return FieldMapping
+     */
+    public FieldMapping<E> sg(ISetter<E> setter, IGetter<E> getter) {
+        if (this.setter != null || this.getter != null) {
+            throw new RuntimeException("Secondary assignment is not allowed.");
+        }
+        this.getter = getter;
+        this.setter = setter;
+        return this;
+    }
 
     public FieldMapping(String name, String column, UniqueFieldType uniqueFieldType, String insert, String update, Class javaType, Class typeHandler) {
         this.name = name;
@@ -58,8 +78,6 @@ public class FieldMapping {
         this.uniqueFieldType = uniqueFieldType;
         this.insert = insert;
         this.update = update;
-        this.setter = setter;
-        this.getter = getter;
         this.javaType = javaType;
         this.typeHandler = typeHandler;
     }

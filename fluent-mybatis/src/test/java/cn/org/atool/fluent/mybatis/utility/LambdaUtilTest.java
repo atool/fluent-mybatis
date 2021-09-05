@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class LambdaUtilTest extends Test4J {
     @Test
     public void test() {
-        DemoEntity entity = new DemoEntity();
+        //DemoEntity entity = new DemoEntity();
         String column = LambdaUtil.resolve(DemoEntity::getUserName);
         want.string(column).eq("userName");
         LambdaUtil.resolve(DemoEntity::getUserName);

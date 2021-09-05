@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.functions;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
-
 import java.io.Serializable;
 
 /**
@@ -10,11 +8,11 @@ import java.io.Serializable;
  * @author wudarui
  */
 @FunctionalInterface
-public interface ISetter extends Serializable {
+public interface ISetter<E> extends Serializable {
     /**
      * 设置属性值
      *
      * @param value 值
      */
-    void set(IEntity entity, Object value);
+    void set(E entity, Object value);
 }

@@ -27,6 +27,8 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
 
+    ClassName FN_FieldMapping = ClassName.get(FieldMapping.class);
+
     ClassName Spring_Component = ClassName.get("org.springframework.stereotype", "Component");
 
     ClassName Mybatis_Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");

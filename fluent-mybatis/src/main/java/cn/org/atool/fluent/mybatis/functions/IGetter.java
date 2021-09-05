@@ -15,5 +15,5 @@ public interface IGetter<E> extends Serializable {
      * @param entity Entity
      * @return 属性值
      */
-    Object get(E entity);
+     Object get(E entity);
 }
