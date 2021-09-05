@@ -22,9 +22,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.FN_FieldMapping;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -72,10 +71,8 @@ public class EntityMappingFiler extends AbstractFiler {
             .addMethod(this.m_entityClass())
             .addMethod(this.m_newEntity())
             .addMethod(this.m_allFields())
-            .addMethod(this.m_emptyQuery())
-            .addMethod(this.m_emptyQuery_Alias())
+            .addMethod(this.m_newQuery())
             .addMethod(this.m_emptyUpdater())
-            .addMethod(this.m_aliasQuery_2())
             .addMethod(this.m_defaultSetter());
     }
 
@@ -154,6 +151,15 @@ public class EntityMappingFiler extends AbstractFiler {
 
     /* ===== METHOD ==== */
 
+    private MethodSpec m_constructor() {
+        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PROTECTED)
+            .addStatement("super($T.$L)", DbType.class, fluent.getDbType().name())
+            .addStatement("super.tableName = Table_Name");
+        this.putUniqueField(spec);
+        return spec.build();
+    }
+
     /**
      * public Entity newEntity()
      *
@@ -170,15 +176,6 @@ public class EntityMappingFiler extends AbstractFiler {
         MethodSpec.Builder spec = super.publicMethod("allFields", true, CN_List_FMapping);
         spec.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addStatement("return ALL_FIELD_MAPPING");
-        return spec.build();
-    }
-
-    private MethodSpec m_constructor() {
-        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PROTECTED)
-            .addStatement("super($T.$L)", DbType.class, fluent.getDbType().name())
-            .addStatement("super.tableName = Table_Name");
-        this.putUniqueField(spec);
         return spec.build();
     }
 
@@ -200,29 +197,19 @@ public class EntityMappingFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_emptyQuery() {
-        return super.publicMethod(M_EMPTY_QUERY, true, fluent.query())
-            .addStatement("return $T.emptyQuery()", fluent.query()).build();
-    }
-
-    private MethodSpec m_emptyQuery_Alias() {
-        return super.publicMethod(M_EMPTY_QUERY, true, fluent.query())
+    private MethodSpec m_newQuery() {
+        return super.protectedMethod("query", fluent.query())
+            .addParameter(boolean.class, "defaults")
+            .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
-            .addStatement("return $T.emptyQuery(alias)", fluent.query()).build();
+            .addParameter(Parameters.class, "parameters")
+            .addStatement("return new $T(defaults, table, alias, parameters)", fluent.query())
+            .build();
     }
 
     private MethodSpec m_emptyUpdater() {
         return super.publicMethod(M_EMPTY_UPDATER, true, fluent.updater())
             .addStatement("return new $T()", fluent.updater()).build();
-    }
-
-    private MethodSpec m_aliasQuery_2() {
-        return super.publicMethod(M_ALIAS_QUERY, true, fluent.query())
-            .addJavadoc(JavaDoc_Alias_Query_0)
-            .addParameter(String.class, "alias")
-            .addParameter(Parameters.class, "parameters")
-            .addStatement("return new $T(alias, parameters)", fluent.query())
-            .build();
     }
 
     private MethodSpec m_defaultSetter() {

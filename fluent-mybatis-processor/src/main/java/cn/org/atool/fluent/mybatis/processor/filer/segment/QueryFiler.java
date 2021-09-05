@@ -2,12 +2,16 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
@@ -46,7 +50,7 @@ public class QueryFiler extends AbstractFiler {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.superclass(this.superClass())
+        spec.superclass(paraType(BaseQuery.class, fluent.entity(), fluent.query()))
             .addField(this.f_select())
             .addField(this.f_groupBy())
             .addField(this.f_having())
@@ -54,8 +58,6 @@ public class QueryFiler extends AbstractFiler {
             .addField(this.f_where());
         spec.addMethod(this.constructor0())
             .addMethod(this.constructor1_Alias())
-            .addMethod(this.constructor2_Alias_Parameter())
-            .addMethod(this.constructor2_Table_Alias())
             .addMethod(this.constructor4_Default_Table_Alias_Parameter())
             .addMethod(this.m_where())
             .addMethod(this.m_mapping());
@@ -67,92 +69,7 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.m_query_Alias())
             .addMethod(this.m_query_table())
             .addMethod(this.m_query_table_Alias())
-            .addMethod(this.m_aliasQuery_0())
-            .addMethod(this.m_aliasWith_1_BaseQuery())
-            .addMethod(this.m_aliasWith_2_String_BaseQuery());
-    }
-
-    private MethodSpec m_emptyQuery() {
-        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addStatement("return new $T(false, null, null, null)", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_emptyQuery_alias() {
-        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addParameter(String.class, "alias")
-            .addStatement("return new $T(false, null, alias, null)", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_emptyQuery_Table() {
-        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(false, table, null, null)", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_query() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addStatement("return new $T()", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_query_Alias() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addJavadoc(JavaDoc_Alias_Query_1)
-            .addParameter(String.class, "alias")
-            .addStatement("return new $T(alias)", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_query_table() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(table, null)", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_query_table_Alias() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addParameter(CN_Supplier_Str, "table")
-            .addParameter(String.class, "alias")
-            .addStatement("return new $T(table, alias)", fluent.query())
-            .build();
-    }
-
-    private MethodSpec m_aliasQuery_0() {
-        return super.publicMethod(M_ALIAS_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
-            .addJavadoc(JavaDoc_Alias_Query_0)
-            .addStatement("return $L.aliasQuery()", Suffix_MAPPING)
-            .build();
-    }
-
-    private MethodSpec m_aliasWith_1_BaseQuery() {
-        return super.publicMethod(M_ALIAS_WITH, false, fluent.query())
-            .addParameter(BaseQuery.class, "fromQuery")
-            .addModifiers(Modifier.STATIC)
-            .addJavadoc(JavaDoc_Alias_With_1)
-            .addStatement("return $L.aliasWith(fromQuery)", Suffix_MAPPING)
-            .build();
-    }
-
-    private MethodSpec m_aliasWith_2_String_BaseQuery() {
-        return super.publicMethod(M_ALIAS_WITH, false, fluent.query())
-            .addParameter(String.class, "alias")
-            .addParameter(BaseQuery.class, "fromQuery")
-            .addModifiers(Modifier.STATIC)
-            .addJavadoc(JavaDoc_Alias_With_2)
-            .addStatement("return $L.aliasWith(alias, fromQuery)", Suffix_MAPPING)
-            .build();
+            .addMethod(this.m_query_NestQuery_Alias());
     }
 
     /**
@@ -217,6 +134,8 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
+    /* =======constructor======= */
+
     /**
      * public EntityQuery() {}
      *
@@ -239,34 +158,6 @@ public class QueryFiler extends AbstractFiler {
             .addModifiers(Modifier.PUBLIC)
             .addParameter(String.class, "alias")
             .addStatement("this(true, null, alias, null)")
-            .build();
-    }
-
-    /**
-     * public XyzQuery(String alias) {}
-     *
-     * @return MethodSpec
-     */
-    private MethodSpec constructor2_Alias_Parameter() {
-        return MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(String.class, "alias")
-            .addParameter(Parameters.class, "shared")
-            .addStatement("this(true, null, alias, shared)")
-            .build();
-    }
-
-    /**
-     * public XyzQuery(Supplier&gt;String&lt; table, String alias) {}
-     *
-     * @return MethodSpec
-     */
-    private MethodSpec constructor2_Table_Alias() {
-        return MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(CN_Supplier_Str, "table")
-            .addParameter(String.class, "alias")
-            .addStatement("this(true, table, alias, null)")
             .build();
     }
 
@@ -298,11 +189,75 @@ public class QueryFiler extends AbstractFiler {
             .build();
     }
 
-    private ParameterizedTypeName superClass() {
-        ClassName base = ClassName.get(BaseQuery.class);
-        ClassName entity = fluent.entity();
-        ClassName query = fluent.query();
-        return ParameterizedTypeName.get(base, entity, query);
+    /* =======static query method======= */
+
+    private MethodSpec m_emptyQuery() {
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addStatement("return new $T(false, null, null, null)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_emptyQuery_alias() {
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(String.class, "alias")
+            .addStatement("return new $T(false, null, alias, null)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_emptyQuery_Table() {
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addStatement("return new $T(false, table, null, null)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_query() {
+        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addStatement("return new $T()", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_query_Alias() {
+        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addJavadoc(JavaDoc_Alias_Query_1)
+            .addParameter(String.class, "alias")
+            .addStatement("return new $T(alias)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_query_table() {
+        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addStatement("return new $T(true, table, null, null)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_query_table_Alias() {
+        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(String.class, "alias")
+            .addStatement("return new $T(true, table, alias, null)", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_query_NestQuery_Alias() {
+        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addJavadoc("select * from (select query) alias\n")
+            .addJavadoc("@param query 子查询\n")
+            .addJavadoc("@param alias 子查询别名")
+            .addParameter(IQuery.class, "query")
+            .addParameter(String.class, "alias")
+            .addStatement("return new $T(true, () -> $S + query.getWrapperData().getQuerySql() +$S, alias, null)",
+                fluent.query(), "(", ")")
+            .build();
     }
 
     @Override

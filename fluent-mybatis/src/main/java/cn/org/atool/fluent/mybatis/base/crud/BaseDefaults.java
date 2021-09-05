@@ -3,6 +3,8 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
+import java.util.function.Supplier;
+
 /**
  * 默认行为接口
  *
@@ -13,10 +15,18 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     implements IDefaultGetter {
 
     @Override
+    public Q emptyQuery() {
+        return this.query(false, null, null, null);
+    }
+
+    @Override
+    public Q emptyQuery(String alias) {
+        return this.query(false, null, alias, null);
+    }
+
+    @Override
     public Q query() {
-        Q query = this.emptyQuery();
-        this.defaultSetter().setQueryDefault(query);
-        return query;
+        return this.query(true, null, null, null);
     }
 
     /**
@@ -24,7 +34,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q query(String alias) {
-        return this.aliasQuery(alias, new Parameters());
+        return this.query(true, null, alias, null);
     }
 
     /**
@@ -33,10 +43,10 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q aliasQuery() {
-        return this.aliasQuery(Parameters.alias(), new Parameters());
+        return this.query(true, null, Parameters.alias(), null);
     }
 
-    protected abstract Q aliasQuery(String alias, Parameters parameters);
+    protected abstract Q query(boolean defaults, Supplier<String> table, String alias, Parameters parameters);
 
     /**
      * 关联查询, 根据fromQuery自动设置别名和关联?参数
@@ -44,7 +54,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q aliasWith(BaseQuery fromQuery) {
-        return this.aliasQuery(Parameters.alias(), fromQuery.getWrapperData().getParameters());
+        return this.query(true, null, Parameters.alias(), fromQuery.getWrapperData().getParameters());
     }
 
     /**
@@ -52,7 +62,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q aliasWith(String alias, BaseQuery fromQuery) {
-        return this.aliasQuery(alias, fromQuery.getWrapperData().getParameters());
+        return this.query(true, null, alias, fromQuery.getWrapperData().getParameters());
     }
 
     @Override
