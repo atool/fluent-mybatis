@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
-import cn.org.atool.fluent.mybatis.functions.GetterFunc;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -86,6 +86,15 @@ public abstract class WhereBase<
      * @return WHERE
      */
     public WHERE defaults() {
+        BaseDefaults defaults = IRef.instance().defaults(this.wrapper.entityClass);
+        if (defaults == null) {
+            return this.and;
+        }
+        if (wrapper instanceof IQuery) {
+            defaults.defaultSetter().setQueryDefault((IQuery) this.wrapper);
+        } else if (wrapper instanceof IUpdate) {
+            defaults.defaultSetter().setUpdateDefault((IUpdate) wrapper);
+        }
         return this.and;
     }
 
@@ -171,7 +180,7 @@ public abstract class WhereBase<
      * @param columns 要设置条件的字段
      * @return 查询器StudentQuery
      */
-    public <E extends IEntity> WHERE eqByEntity(E entity, GetterFunc<E> column, GetterFunc<E>... columns) {
+    public <E extends IEntity> WHERE eqByEntity(E entity, IGetter<E> column, IGetter<E>... columns) {
         assertNotNull("entity", entity);
         Class klass = IRef.instance().findFluentEntityClass(entity.getClass());
         String[] arr = MappingKits.toColumns(klass, column, columns);
@@ -200,7 +209,7 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    public <E extends IEntity> WHERE eqByExclude(E entity, GetterFunc<E> exclude, GetterFunc<E>... excludes) {
+    public <E extends IEntity> WHERE eqByExclude(E entity, IGetter<E> exclude, IGetter<E>... excludes) {
         assertNotNull("entity", entity);
         Class klass = IRef.instance().findFluentEntityClass(entity.getClass());
         String[] arr = MappingKits.toColumns(klass, exclude, excludes);

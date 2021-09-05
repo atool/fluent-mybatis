@@ -46,7 +46,7 @@ public class FieldRefFiler extends AbstractFile {
     private TypeSpec class_mapping(FluentEntity fluent) {
         return TypeSpec.classBuilder(fluent.getNoSuffix())
             .addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC)
-            .superclass(fluent.entityKit())
+            .superclass(fluent.entityMapping())
             .build();
     }
 

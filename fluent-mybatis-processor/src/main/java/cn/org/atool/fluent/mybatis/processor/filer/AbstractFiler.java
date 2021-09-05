@@ -128,9 +128,9 @@ public abstract class AbstractFiler {
     }
 
     protected FieldSpec f_mapping() {
-        return FieldSpec.builder(fluent.entityKit(),
+        return FieldSpec.builder(fluent.entityMapping(),
             "mapping", Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("$T.MAPPING", fluent.entityKit())
+            .initializer("$T.MAPPING", fluent.entityMapping())
             .build();
     }
 

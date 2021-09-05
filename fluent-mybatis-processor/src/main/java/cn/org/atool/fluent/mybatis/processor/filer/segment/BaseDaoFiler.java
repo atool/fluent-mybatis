@@ -26,7 +26,7 @@ public class BaseDaoFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(fluent.entityKit(), "MAPPING");
+        spec.addStaticImport(fluent.entityMapping(), "MAPPING");
         spec.skipJavaLangImports(true);
     }
 

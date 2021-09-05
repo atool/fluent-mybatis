@@ -39,14 +39,14 @@ public class SegmentFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
-        spec.addStaticImport(fluent.entityKit(), "Table_Name");
+        spec.addStaticImport(fluent.entityMapping(), "Table_Name");
+        spec.addStaticImport(fluent.entityMapping(), "MAPPING");
     }
 
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addAnnotation(suppressWarnings("unused", "rawtypes", "unchecked"));
-        spec.addField(this.f_mapping())
-            .addType(this.nestedISegment())
+        spec.addType(this.nestedISegment())
             .addType(this.nestedSelector())
             .addType(this.nestedQueryWhere())
             .addType(this.nestedUpdateWhere())
@@ -89,7 +89,7 @@ public class SegmentFiler extends AbstractFiler {
                 .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($T.$L)", fluent.entityKit(), fc.getName())
+                .addStatement("return this.set($T.$L)", fluent.entityMapping(), fc.getName())
                 .build()
             );
         }
@@ -236,7 +236,7 @@ public class SegmentFiler extends AbstractFiler {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "_alias_")
                 .returns(fluent.selector())
-                .addStatement("return this.process($T.$L, _alias_)", fluent.entityKit(), fc.getName())
+                .addStatement("return this.process($T.$L, _alias_)", fluent.entityMapping(), fc.getName())
                 .build()
             );
         }
@@ -260,26 +260,11 @@ public class SegmentFiler extends AbstractFiler {
             .addJavadoc("query where条件设置")
             .addMethod(this.construct1_QueryWhere())
             .addMethod(this.construct2_QueryWhere())
-            .addMethod(this.m_buildOr_QueryWhere())
-            .addMethod(this.m_queryDefaults());
+            .addMethod(this.m_buildOr_QueryWhere());
         for (CommonField fc : fluent.getFields()) {
             buildWhereCondition(builder, fc, Suffix_QueryWhere);
         }
         return builder.build();
-    }
-
-    private MethodSpec m_queryDefaults() {
-        return super.publicMethod("defaults", true, fluent.queryWhere())
-            .addStatement("mapping.defaultSetter().setQueryDefault(($T) super.wrapper)", fluent.query())
-            .addStatement("return super.and")
-            .build();
-    }
-
-    private MethodSpec m_updaterDefaults() {
-        return super.publicMethod("defaults", true, fluent.updateWhere())
-            .addStatement("mapping.defaultSetter().setUpdateDefault(($T) super.wrapper)", fluent.updater())
-            .addStatement("return super.and")
-            .build();
     }
 
     /**
@@ -299,8 +284,7 @@ public class SegmentFiler extends AbstractFiler {
             .addJavadoc("update where条件设置")
             .addMethod(this.construct1_UpdateWhere())
             .addMethod(this.construct2_UpdateWhere())
-            .addMethod(this.m_buildOr_UpdateWhere())
-            .addMethod(this.m_updaterDefaults());
+            .addMethod(this.m_buildOr_UpdateWhere());
         for (CommonField fc : fluent.getFields()) {
             buildWhereCondition(builder, fc, Suffix_UpdateWhere);
         }
@@ -327,7 +311,7 @@ public class SegmentFiler extends AbstractFiler {
             field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($T.$L)", fluent.entityKit(), fc.getName());
+        field.addStatement("return this.set($T.$L)", fluent.entityMapping(), fc.getName());
         builder.addMethod(field.build());
     }
 

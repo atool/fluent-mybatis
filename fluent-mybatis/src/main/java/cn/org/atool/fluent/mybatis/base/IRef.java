@@ -49,7 +49,7 @@ public abstract class IRef {
     }
 
     public static IEntityKit entityKit(Class clazz) {
-        return (IEntityKit) instance().findMapping(clazz);
+        return (IEntityKit) instance().mapping(clazz);
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class IRef {
      * @param clazz Entity类类型
      * @return IMapping
      */
-    public abstract IMapping findMapping(Class clazz);
+    public abstract IMapping mapping(Class clazz);
 
     /**
      * 返回clazz属性field对应的数据库字段名称
@@ -134,7 +134,7 @@ public abstract class IRef {
      * @return 数据库字段名称
      */
     public final String columnOfField(Class clazz, String field) {
-        IMapping mapping = this.findMapping(clazz);
+        IMapping mapping = this.mapping(clazz);
         if (mapping == null) {
             throw notFluentMybatisException(clazz);
         } else {
@@ -149,7 +149,7 @@ public abstract class IRef {
      * @return 主键字段
      */
     public String primaryColumn(Class clazz) {
-        IMapping mapping = this.findMapping(clazz);
+        IMapping mapping = this.mapping(clazz);
         if (mapping == null) {
             throw notFluentMybatisException(clazz);
         } else {
@@ -308,5 +308,5 @@ public abstract class IRef {
      * @param clazz IEntity类型
      * @return IDefault
      */
-    public abstract BaseDefaults findDefault(Class clazz);
+    public abstract BaseDefaults defaults(Class clazz);
 }

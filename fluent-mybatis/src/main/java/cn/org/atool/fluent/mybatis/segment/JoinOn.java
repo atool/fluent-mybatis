@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
-import cn.org.atool.fluent.mybatis.functions.GetterFunc;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
@@ -91,7 +91,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @param r 右查询条件
      * @return JoinOn
      */
-    public <LE extends IEntity, RE extends IEntity> JoinOn<QL, QR, JB> onEq(GetterFunc<LE> l, GetterFunc<RE> r) {
+    public <LE extends IEntity, RE extends IEntity> JoinOn<QL, QR, JB> onEq(IGetter<LE> l, IGetter<RE> r) {
         Class lKlass = this.onLeft.wrapperData.getEntityClass();
         Class rKlass = this.onRight.wrapperData.getEntityClass();
         assertNotNull("left query entity class", lKlass);

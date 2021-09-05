@@ -51,8 +51,8 @@ public class RefFiler extends AbstractFile {
             .addMethod(m_emptyQuery(true))
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_emptyUpdater(true))
-            .addMethod(this.m_mapping("findMapping", IMapping.class))
-            .addMethod(this.m_mapping("findDefault", BaseDefaults.class))
+            .addMethod(this.m_mapping("mapping", IMapping.class))
+            .addMethod(this.m_mapping("defaults", BaseDefaults.class))
             .addMethod(this.m_allEntityClass())
             .addMethod(this.m_initEntityMapper())
         ;

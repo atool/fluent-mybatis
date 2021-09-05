@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.functions;
 import java.io.Serializable;
 
 /**
- * setter方法
+ * IEntity setter(value)函数
  *
  * @author wudarui
  */

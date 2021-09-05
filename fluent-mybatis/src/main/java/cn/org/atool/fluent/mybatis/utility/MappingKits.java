@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.utility;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.functions.GetterFunc;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class MappingKits {
-    public static <E extends IEntity> String[] toColumns(Class<E> klass, GetterFunc<E> getter, GetterFunc<E>... getters) {
+    public static <E extends IEntity> String[] toColumns(Class<E> klass, IGetter<E> getter, IGetter<E>... getters) {
         List<String> list = new ArrayList<>(getters.length + 1);
         list.add(toColumn(klass, getter));
-        for (GetterFunc func : getters) {
+        for (IGetter func : getters) {
             list.add(toColumn(klass, func));
         }
         return list.toArray(new String[0]);
@@ -40,7 +40,7 @@ public class MappingKits {
      * @param <E>   IEntity类
      * @return 数据库字段名称
      */
-    public static <E extends IEntity> String toColumn(Class<E> klass, GetterFunc<E> func) {
+    public static <E extends IEntity> String toColumn(Class<E> klass, IGetter<E> func) {
         String field = LambdaUtil.resolve(func);
         return IRef.instance().columnOfField(klass, field);
     }

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.functions.GetterFunc;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
@@ -19,12 +19,12 @@ public class LambdaUtil {
      * @param getter getter method lambda
      * @return name of getter method
      */
-    public static <E extends IEntity> String resolve(GetterFunc<E> getter) {
+    public static <E extends IEntity> String resolve(IGetter<E> getter) {
         String method = lambdaName(getter);
         return validateMethod(method);
     }
 
-    private static <E extends IEntity> String lambdaName(GetterFunc<E> lambda) {
+    private static <E extends IEntity> String lambdaName(IGetter<E> lambda) {
         try {
             String m_WRITE_REPLACE = "writeReplace";
             Method writeReplace = lambda.getClass().getDeclaredMethod(m_WRITE_REPLACE);

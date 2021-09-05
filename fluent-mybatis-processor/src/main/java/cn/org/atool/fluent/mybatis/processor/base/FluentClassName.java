@@ -84,7 +84,7 @@ public abstract class FluentClassName {
      *
      * @return EntityHelper ClassName
      */
-    public ClassName entityKit() {
+    public ClassName entityMapping() {
         return ClassName.get(
             EntityMappingFiler.getPackageName(this),
             EntityMappingFiler.getClassName(this));

@@ -64,10 +64,10 @@ public class EntityMappingFiler extends AbstractFiler {
         for (CommonField f : fluent.getFields()) {
             spec.addField(this.f_Field(f));
         }
-        spec.addField(this.f_allFieldMapping())
+        spec.addField(this.f_defaultSetter())
+            .addField(this.f_allFieldMapping())
             /* 放在所有静态变量后面 */
-            .addField(this.f_instance())
-            .addField(this.f_defaultSetter());
+            .addField(this.f_instance());
 
         spec.addMethod(this.m_constructor())
             .addMethod(this.m_entityClass())
@@ -94,8 +94,8 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private FieldSpec f_instance() {
-        return FieldSpec.builder(fluent.entityKit(), "MAPPING", PUBLIC_STATIC_FINAL)
-            .initializer("new $T()", fluent.entityKit())
+        return FieldSpec.builder(fluent.entityMapping(), "MAPPING", PUBLIC_STATIC_FINAL)
+            .initializer("new $T()", fluent.entityMapping())
             .build();
     }
 
@@ -147,7 +147,7 @@ public class EntityMappingFiler extends AbstractFiler {
     private FieldSpec f_defaultSetter() {
         ClassName type = ClassNames2.getClassName(fluent.getDefaults());
         return FieldSpec.builder(type, "DEFAULT_SETTER")
-            .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .initializer("new $T(){}", type)
             .build();
     }
