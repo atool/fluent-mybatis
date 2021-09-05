@@ -48,17 +48,8 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      * 如果要自定义别名, 使用方法 {@link #query(String)}
      */
     @Override
-    public Q aliasQuery() {
+    public Q alias() {
         return this.query(true, null, Parameters.alias(), null);
-    }
-
-    /**
-     * 关联查询, 根据fromQuery自动设置别名和关联?参数
-     * 如果要自定义别名, 使用方法 {@link #aliasWith(String, BaseQuery)}
-     */
-    @Override
-    public Q aliasWith(BaseQuery fromQuery) {
-        return this.query(true, null, Parameters.alias(), fromQuery.getWrapperData().getParameters());
     }
 
     /**

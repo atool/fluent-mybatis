@@ -39,7 +39,7 @@ public interface IDefaultGetter {
      * @param <Q> IQuery类型
      * @return IQuery
      */
-    <Q extends IQuery> Q aliasQuery();
+    <Q extends IQuery> Q alias();
 
     /**
      * 实例化查询构造器
@@ -50,18 +50,6 @@ public interface IDefaultGetter {
      * @return 查询构造器
      */
     <Q extends IQuery> Q query(String alias);
-
-    /**
-     * 关联查询
-     * o - 设置默认查询条件
-     * o - 自动别名alias
-     * o - 设置变量实例来自From查询实例
-     *
-     * @param fromQuery 关联查询时,from表查询对象
-     * @param <Q>       IQuery类型
-     * @return IQuery
-     */
-    <Q extends IQuery> Q aliasWith(BaseQuery fromQuery);
 
     /**
      * 实例化查询构造器

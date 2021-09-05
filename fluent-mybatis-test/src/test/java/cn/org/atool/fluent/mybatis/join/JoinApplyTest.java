@@ -17,13 +17,13 @@ public class JoinApplyTest extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = Ref.Query.student.aliasQuery();
+        StudentQuery studentQuery = Ref.Query.student.alias();
         String alias1 = studentQuery.getTableAlias();
         studentQuery.select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply(alias1 + ".id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery addressQuery = Ref.Query.homeAddress.aliasWith(studentQuery)
+        HomeAddressQuery addressQuery = Ref.Query.homeAddress.alias()
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();
