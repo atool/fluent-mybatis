@@ -35,7 +35,7 @@ public class NoAliasJoinTest extends BaseTest {
             .select.age().homeAddressId().userName().end()
             .where.age().eq(34)
             .end();
-        HomeAddressQuery rightQuery = new HomeAddressQuery("a2")
+        HomeAddressQuery rightQuery = HomeAddressQuery.emptyQuery("a2")
             .where.address().like("address")
             .end();
 

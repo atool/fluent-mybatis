@@ -161,7 +161,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end()
-            .join(JoinType.RightJoin, new HomeAddressQuery("t2")
+            .join(JoinType.RightJoin, HomeAddressQuery.emptyQuery("t2")
                 .where.isDeleted().eq(true)
                 .and.address().like("vas")
                 .end())
@@ -182,9 +182,9 @@ public class JoinQueryTest_Alias1 extends BaseTest {
     void three_join() {
         StudentQuery query1 = StudentQuery.emptyQuery("t1")
             .where.age().eq(3).end();
-        HomeAddressQuery query2 = new HomeAddressQuery("t2")
+        HomeAddressQuery query2 = HomeAddressQuery.emptyQuery("t2")
             .where.address().like("xxx").end();
-        StudentScoreQuery query3 = new StudentScoreQuery("t3")
+        StudentScoreQuery query3 = StudentScoreQuery.emptyQuery("t3")
             .where.subject().in(new String[]{"a", "b", "c"}).end();
         IQuery query = JoinBuilder
             .from(query1)

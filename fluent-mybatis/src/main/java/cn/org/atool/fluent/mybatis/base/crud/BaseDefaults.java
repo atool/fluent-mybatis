@@ -44,10 +44,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q aliasWith(BaseQuery fromQuery) {
-        Parameters parameters = fromQuery.getWrapperData().getParameters();
-        Q query = this.aliasQuery(Parameters.alias(), parameters);
-        this.defaultSetter().setQueryDefault(query);
-        return query;
+        return this.aliasQuery(Parameters.alias(), fromQuery.getWrapperData().getParameters());
     }
 
     /**
@@ -55,9 +52,7 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q aliasWith(String alias, BaseQuery fromQuery) {
-        Q query = this.aliasQuery(alias, fromQuery.getWrapperData().getParameters());
-        this.defaultSetter().setQueryDefault(query);
-        return query;
+        return this.aliasQuery(alias, fromQuery.getWrapperData().getParameters());
     }
 
     @Override

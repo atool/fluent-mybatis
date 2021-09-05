@@ -19,7 +19,7 @@ public class NotInNestQueryTest extends BaseTest {
 
     @Test
     void test_and_not_in_nested() {
-        HomeAddressQuery query = new HomeAddressQuery()
+        HomeAddressQuery query = HomeAddressQuery.emptyQuery()
             .selectId()
             .where.id().notIn(q -> q.selectId()
                 .where.id().eq(3L).end())
@@ -32,8 +32,8 @@ public class NotInNestQueryTest extends BaseTest {
 
     @Test
     void test_and_in_nested2() {
-        HomeAddressQuery query = new HomeAddressQuery().
-            selectId()
+        HomeAddressQuery query = HomeAddressQuery.emptyQuery()
+            .selectId()
             .where.id().notIn(StudentQuery.emptyQuery()
                 .select.homeAddressId().end()
                 .where.age().eq(24).end())

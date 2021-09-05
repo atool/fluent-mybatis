@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, IBaseDao<StudentEntity> {
     @Override
     public int count(String userName) {
-        return super.emptyQuery()
+        return super.query()
             .where.userName().eq(userName).end()
             .to().count();
     }
@@ -57,7 +57,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public StudentEntity selectOne(String likeName) {
-        return super.emptyQuery()
+        return super.query()
             .where.userName().like(likeName)
             .end()
             .to().findOne()
@@ -66,7 +66,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public String selectOne(long id) {
-        return super.emptyQuery()
+        return super.query()
             .where.id().eq(id).end()
             .to().findOne(StudentEntity::getUserName).orElse(null);
     }
@@ -80,7 +80,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public void deleteByQuery(String... userNames) {
-        super.emptyQuery()
+        super.query()
             .where.userName().in(userNames).end()
             .to().delete();
     }

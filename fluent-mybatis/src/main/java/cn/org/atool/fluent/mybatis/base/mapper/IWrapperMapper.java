@@ -25,13 +25,17 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
     IMapping mapping();
 
     /**
-     * 构造设置了默认条件的Query
+     * 构造空查询条件
      * 默认条件设置{@link FluentMybatis#defaults()}, 具体定义继承 {@link IDefaultSetter#setQueryDefault(IQuery)}
      *
      * @return ignore
      */
-    default Q defaultQuery() {
-        return (Q) ((BaseDefaults) mapping()).query();
+    default Q query() {
+        return mapping().query();
+    }
+
+    default Q emptyQuery() {
+        return mapping().emptyQuery();
     }
 
     /**
@@ -42,15 +46,6 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      */
     default U defaultUpdater() {
         return (U) ((BaseDefaults) mapping()).defaultUpdater();
-    }
-
-    /**
-     * 构造空查询条件
-     *
-     * @return ignore
-     */
-    default Q query() {
-        return ((BaseDefaults) mapping()).emptyQuery();
     }
 
     /**

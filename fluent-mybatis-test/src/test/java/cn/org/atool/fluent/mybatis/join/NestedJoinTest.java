@@ -19,7 +19,7 @@ public class NestedJoinTest extends BaseTest {
     @Test
     void issue_I3UPZ0() {
         IQuery nested = JoinBuilder.from(StudentQuery.emptyQuery("a").select.id().end())
-            .join(new HomeAddressQuery("b").where.address().like("add").end())
+            .join(HomeAddressQuery.emptyQuery("b").where.address().like("add").end())
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .build();
 
@@ -42,7 +42,7 @@ public class NestedJoinTest extends BaseTest {
     @Test
     void issue_I3UPYD() {
         IQuery query = StudentQuery.emptyQuery("t1").selectAll()
-            .join(JoinType.LeftJoin, new HomeAddressQuery("t2"))
+            .join(JoinType.LeftJoin, HomeAddressQuery.emptyQuery("t2"))
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .limit(50, 10)
             .build();

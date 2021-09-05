@@ -79,7 +79,7 @@ public class InNestQueryTest extends BaseTest {
     void test_and_in_nested2() {
         StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
-            .where.homeAddressId().in(new HomeAddressQuery().selectId()
+            .where.homeAddressId().in(HomeAddressQuery.emptyQuery().selectId()
                 .where.id().in(new int[]{1, 2}).end())
             .end();
         mapper.listEntity(query);

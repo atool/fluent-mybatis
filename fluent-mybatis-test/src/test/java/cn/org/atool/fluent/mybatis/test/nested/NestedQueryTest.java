@@ -40,7 +40,7 @@ public class NestedQueryTest extends BaseTest {
     void test_or_nested() {
         StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
-            .where.exists(new HomeAddressQuery()
+            .where.exists(HomeAddressQuery.emptyQuery()
                 .where.address().like("u")
                 .and.id().apply("=student.home_address_id").end())
             .end();
@@ -55,7 +55,7 @@ public class NestedQueryTest extends BaseTest {
     void test_or_nested_query() {
         StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
-            .where.exists(new HomeAddressQuery()
+            .where.exists(HomeAddressQuery.emptyQuery()
                 .select.apply("1").end()
                 .where.address().like("u")
                 .and.id().apply("=student.home_address_id").end())
@@ -86,7 +86,7 @@ public class NestedQueryTest extends BaseTest {
     @Test
     void test_nested_query_address_like() {
         StudentQuery query = StudentQuery.emptyQuery()
-            .where.id().in(new HomeAddressQuery()
+            .where.id().in(HomeAddressQuery.emptyQuery()
                 .select.apply(FieldRef.HomeAddress.studentId).end()
                 .where.address().like("杭州滨江").end())
             .end();

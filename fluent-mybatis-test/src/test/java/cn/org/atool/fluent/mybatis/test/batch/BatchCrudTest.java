@@ -47,7 +47,7 @@ public class BatchCrudTest extends BaseTest {
                 new StudentEntity().setId(100L).setUserName("user 100"),
                 new HomeAddressEntity().setAddress("address 100").setStudentId(100L))
             .addUpdate(update1, update2)
-            .addDelete(new HomeAddressQuery().where.id().ge(24).end())
+            .addDelete(HomeAddressQuery.emptyQuery().where.id().ge(24).end())
         );
         db.sqlList().wantFirstSql()
             .eq("" +

@@ -17,7 +17,9 @@ public class NotMapperTest extends BaseTest {
         ATM.dataMap.student.table().clean();
         want.bool(mapper.existPk(1L)).is(false);
 
-        ATM.dataMap.student.table(1).id.values(1).insert();
+        ATM.dataMap.student.table(1)
+            .id.values(1)
+            .insert();
         want.bool(mapper.existPk(1L)).is(true);
 
         db.sqlList().wantFirstSql().eq("" +

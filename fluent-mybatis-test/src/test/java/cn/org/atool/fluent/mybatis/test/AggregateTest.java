@@ -11,7 +11,7 @@ public class AggregateTest extends BaseTest {
 
     @Test
     void aggregate() {
-        StudentScoreQuery query = new StudentScoreQuery()
+        StudentScoreQuery query = StudentScoreQuery.emptyQuery()
             .select.schoolTerm().subject()
             .count("count")
             .min.score()
@@ -38,7 +38,7 @@ public class AggregateTest extends BaseTest {
 
     @Test
     void select_apply() {
-        StudentScoreQuery query = new StudentScoreQuery()
+        StudentScoreQuery query = StudentScoreQuery.emptyQuery()
             .select.apply("school_term").subject("MySubject")
             .apply("min(score) as min_score", "group_concat(id order by id desc separator ';')")
             .end()
