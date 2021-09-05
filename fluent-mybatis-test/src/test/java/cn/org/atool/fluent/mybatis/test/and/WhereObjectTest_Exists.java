@@ -18,7 +18,7 @@ public class WhereObjectTest_Exists extends BaseTest {
 
     @Test
     void test_exists() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.isDeleted().eq(true)
             .and.exists("select 1 FROM fluent_mybatis.student where age=?", 34)
             .end();
@@ -31,7 +31,7 @@ public class WhereObjectTest_Exists extends BaseTest {
 
     @Test
     void test_not_exists() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.isDeleted().eq(true)
             .and.notExists("select 1 FROM fluent_mybatis.student where age=?", 34)
             .end();

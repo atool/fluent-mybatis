@@ -28,7 +28,7 @@ public class DistinctTest extends BaseTest {
             .userName.values(increase(index -> index > 5 ? "user2" : "user1"))
             .age.values(30)
             .cleanAndInsert();
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .distinct()
             .select.apply(FieldRef.Student.userName).end()
             .where.age().eq(30).end();

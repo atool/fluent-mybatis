@@ -39,7 +39,7 @@ public class SelectPagedListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        StdPagedList<StudentEntity> list = daoProtected.stdPagedEntity(new StudentQuery()
+        StdPagedList<StudentEntity> list = daoProtected.stdPagedEntity(StudentQuery.emptyQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc().end()
             .limit(20, 10)
@@ -66,7 +66,7 @@ public class SelectPagedListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        StdPagedList<Map> list = daoProtected.stdPagedMap(new StudentQuery()
+        StdPagedList<Map> list = daoProtected.stdPagedMap(StudentQuery.emptyQuery()
             .where.id().gt(20)
             .and.userName().like("user")
             .end()

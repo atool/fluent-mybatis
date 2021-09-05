@@ -49,7 +49,7 @@ public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends 
      * @return IQuery
      */
     protected Q query() {
-        return this.defaults().defaultQuery();
+        return this.defaults().query();
     }
 
     /**

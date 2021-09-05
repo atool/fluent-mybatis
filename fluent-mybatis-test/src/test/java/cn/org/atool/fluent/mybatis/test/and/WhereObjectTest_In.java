@@ -16,7 +16,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(Arrays.asList(34, 35))
             .end();
         mapper.count(query);
@@ -27,7 +27,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_str() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.address().in(new String[]{"a1", "a2"})
             .end();
         mapper.count(query);
@@ -39,7 +39,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(Arrays.asList(34, 35), o -> true)
             .end();
         mapper.count(query);
@@ -49,7 +49,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_IfNotEmpty() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(Arrays.asList(34, 35), If::notEmpty)
             .end();
         mapper.count(query);
@@ -59,7 +59,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_array() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(new int[]{34, 35})
             .end();
         mapper.count(query);
@@ -69,7 +69,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_array_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
@@ -79,7 +79,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_array2_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
@@ -91,7 +91,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_arr_IfNotEmpty() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(new Integer[]{34, 35}, If::notEmpty)
             .end();
         mapper.count(query);
@@ -101,7 +101,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_arr_IfNotEmpty2() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().in(new Integer[0], If::notEmpty)
             .end();
         mapper.count(query);
@@ -110,7 +110,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_select() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in("select id FROM fluent_mybatis.student where age =?", 24)
             .end();
         mapper.count(query);
@@ -122,7 +122,7 @@ public class WhereObjectTest_In extends BaseTest {
 
     @Test
     public void in_select_nested() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(q -> q.selectId()
                 .where.age().eq(24)
                 .and.id().eq(3L)
@@ -131,6 +131,6 @@ public class WhereObjectTest_In extends BaseTest {
         mapper.count(query);
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT(*) FROM fluent_mybatis.student " +
-                "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `age` = ? AND `id` = ?)");
+                "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ? AND `age` = ? AND `id` = ?)");
     }
 }

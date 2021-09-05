@@ -25,7 +25,7 @@ public class SelectMapsTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end();
         List<Map<String, Object>> users = mapper.listMaps(query);
         db.sqlList().wantFirstSql().start("SELECT")
@@ -41,7 +41,7 @@ public class SelectMapsTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end();
         List<Map<String, Object>> users = mapper.listMaps(query);
         db.sqlList().wantFirstSql().start("SELECT")

@@ -28,7 +28,7 @@ public class SelectCountTest extends BaseTest {
             .id.values(23, 24, 25, 26)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end();
         int count = mapper.count(query);
         db.sqlList().wantFirstSql().start("SELECT COUNT(*)").end("FROM fluent_mybatis.student WHERE `id` = ?");
@@ -41,7 +41,7 @@ public class SelectCountTest extends BaseTest {
             .id.values(23, 24, 25, 26)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.userName().eq("u2").end();
         int count = mapper.count(query);
@@ -57,7 +57,7 @@ public class SelectCountTest extends BaseTest {
             .id.values(23, 24, 25, 26)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.userName().eq("u2").end()
             .limit(2);

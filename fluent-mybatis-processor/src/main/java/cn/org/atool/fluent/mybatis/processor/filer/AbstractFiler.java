@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_MAPPING;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_IMapping;
@@ -77,6 +78,7 @@ public abstract class AbstractFiler {
         return ParameterizedTypeName.get(ClassName.get(raw), types);
     }
 
+    @SuppressWarnings("all")
     protected TypeName paraType(String typeName, Object... paras) {
         TypeName[] types = typeNames(paras);
         return ParameterizedTypeName.get(ClassNames2.getClassName(typeName), types);
@@ -110,7 +112,7 @@ public abstract class AbstractFiler {
      */
     protected MethodSpec m_mapping() {
         return this.protectedMethod(Suffix_mapping, CN_Optional_IMapping)
-            .addStatement("return Optional.of(mapping)")
+            .addStatement("return Optional.of($L)", Suffix_MAPPING)
             .build();
     }
 
@@ -148,13 +150,6 @@ public abstract class AbstractFiler {
         }
         builder.addModifiers(Modifier.PROTECTED);
         return builder;
-    }
-
-    protected FieldSpec f_mapping() {
-        return FieldSpec.builder(fluent.entityMapping(),
-            Suffix_mapping, Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-            .initializer("$T.MAPPING", fluent.entityMapping())
-            .build();
     }
 
     @SuppressWarnings("all")

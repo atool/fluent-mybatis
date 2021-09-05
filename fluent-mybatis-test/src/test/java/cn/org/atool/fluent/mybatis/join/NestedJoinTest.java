@@ -18,12 +18,12 @@ public class NestedJoinTest extends BaseTest {
     @DisplayName("子查询是join查询场景")
     @Test
     void issue_I3UPZ0() {
-        IQuery nested = JoinBuilder.from(new StudentQuery("a").select.id().end())
+        IQuery nested = JoinBuilder.from(StudentQuery.emptyQuery("a").select.id().end())
             .join(new HomeAddressQuery("b").where.address().like("add").end())
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .build();
 
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.userName().end()
             .where.id().in(nested).end();
         mapper.listEntity(query);
@@ -41,7 +41,7 @@ public class NestedJoinTest extends BaseTest {
     @DisplayName("对join查询进行count操作")
     @Test
     void issue_I3UPYD() {
-        IQuery query = new StudentQuery("t1").selectAll()
+        IQuery query = StudentQuery.emptyQuery("t1").selectAll()
             .join(JoinType.LeftJoin, new HomeAddressQuery("t2"))
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .limit(50, 10)

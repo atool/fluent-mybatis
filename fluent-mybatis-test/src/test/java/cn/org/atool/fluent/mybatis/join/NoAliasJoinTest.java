@@ -31,7 +31,7 @@ public class NoAliasJoinTest extends BaseTest {
             .address.values("address_1", "address_2")
             .cleanAndInsert();
 
-        StudentQuery leftQuery = new StudentQuery("a1")
+        StudentQuery leftQuery = StudentQuery.emptyQuery("a1")
             .select.age().homeAddressId().userName().end()
             .where.age().eq(34)
             .end();

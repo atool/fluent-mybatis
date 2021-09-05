@@ -14,7 +14,7 @@ class OrderByBaseTest extends BaseTest {
 
     @Test
     void orderBy() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .orderBy
             .id().asc()
             .desc(FieldRef.Student.userName).end()

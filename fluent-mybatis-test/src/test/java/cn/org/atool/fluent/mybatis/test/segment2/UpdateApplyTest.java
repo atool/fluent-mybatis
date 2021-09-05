@@ -61,7 +61,7 @@ class UpdateApplyTest extends BaseTest {
         int age = 43;
         String name = "my name is fluent mybatis";
         String address = "";
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().eq(age, arg -> arg > 30)
             .and.userName().eq(name, arg -> arg.contains("fluent"))
             .and.address().like(address, If::notBlank).end()
@@ -77,7 +77,7 @@ class UpdateApplyTest extends BaseTest {
         String name = "my name is fluent mybatis";
         String address = "";
 
-        StudentQuery query = new StudentQuery();
+        StudentQuery query = StudentQuery.emptyQuery();
         if (age > 30) {
             query.where.age().eq(age);
         }

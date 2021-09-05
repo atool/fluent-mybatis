@@ -72,7 +72,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        StudentQuery studentQuery = Ref.Query.student.aliasQuery("t1")
+        StudentQuery studentQuery = Ref.Query.student.query("t1")
             .select.age().end()
             .where.age().isNull().end()
             .groupBy.age().apply("id").end()
@@ -157,7 +157,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     public void test_right_join() {
-        IQuery query = new StudentQuery("t1")
+        IQuery query = StudentQuery.emptyQuery("t1")
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end()
@@ -180,7 +180,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
 
     @Test
     void three_join() {
-        StudentQuery query1 = new StudentQuery("t1")
+        StudentQuery query1 = StudentQuery.emptyQuery("t1")
             .where.age().eq(3).end();
         HomeAddressQuery query2 = new HomeAddressQuery("t2")
             .where.address().like("xxx").end();

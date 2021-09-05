@@ -14,7 +14,7 @@ public class EqByEntityTest_BiPredicate extends BaseTest {
     @Test
     public void test_eq_entity() {
         StudentEntity entity = new StudentEntity().setUserName("u2");
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.eqByEntity(entity, (column, value) -> {
                 /* 可以根据 column, value自行做判断是否当做条件字段 */

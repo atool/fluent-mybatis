@@ -13,26 +13,8 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
     implements IDefaultGetter {
 
     @Override
-    public Q defaultQuery() {
+    public Q query() {
         Q query = this.emptyQuery();
-        this.defaultSetter().setQueryDefault(query);
-        return query;
-    }
-
-    @Override
-    public U defaultUpdater() {
-        U updater = this.emptyUpdater();
-        this.defaultSetter().setUpdateDefault(updater);
-        return updater;
-    }
-
-    /**
-     * 自动分配表别名查询构造器(join查询的时候需要定义表别名)
-     * 如果要自定义别名, 使用方法 {@link #aliasQuery(String)}
-     */
-    @Override
-    public Q aliasQuery() {
-        Q query = this.aliasQuery(Parameters.alias(), new Parameters());
         this.defaultSetter().setQueryDefault(query);
         return query;
     }
@@ -41,11 +23,20 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      * 显式指定表别名(join查询的时候需要定义表别名)
      */
     @Override
-    public Q aliasQuery(String alias) {
-        Q query = this.aliasQuery(alias, new Parameters());
-        this.defaultSetter().setQueryDefault(query);
-        return query;
+    public Q query(String alias) {
+        return this.aliasQuery(alias, new Parameters());
     }
+
+    /**
+     * 自动分配表别名查询构造器(join查询的时候需要定义表别名)
+     * 如果要自定义别名, 使用方法 {@link #query(String)}
+     */
+    @Override
+    public Q aliasQuery() {
+        return this.aliasQuery(Parameters.alias(), new Parameters());
+    }
+
+    protected abstract Q aliasQuery(String alias, Parameters parameters);
 
     /**
      * 关联查询, 根据fromQuery自动设置别名和关联?参数
@@ -69,7 +60,10 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
         return query;
     }
 
-    protected abstract Q aliasQuery(String alias, Parameters parameters);
-
-    public abstract IDefaultSetter defaultSetter();
+    @Override
+    public U defaultUpdater() {
+        U updater = this.emptyUpdater();
+        this.defaultSetter().setUpdateDefault(updater);
+        return updater;
+    }
 }

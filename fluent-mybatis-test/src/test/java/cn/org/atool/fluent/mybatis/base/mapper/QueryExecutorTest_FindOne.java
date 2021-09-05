@@ -15,7 +15,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
     @Test
     void findOne() {
         ATM.dataMap.student.table().clean();
-        Object o = QueryRef.student.defaultQuery().to().findOne().orElse(null);
+        Object o = QueryRef.student.query().to().findOne().orElse(null);
         want.object(o).isNull();
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ?");
@@ -70,7 +70,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
             .userName.values("test1")
             .cleanAndInsert();
         // 构造条件
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("test1").end();
 
         StudentEntity o = mapper.findOne(query,

@@ -25,7 +25,7 @@ public class SelectObjsTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.apply(FieldRef.Student.userName)
             .end()
             .where.id().eq(24L)
@@ -43,7 +43,7 @@ public class SelectObjsTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.userName().age().end()
             .where.userName().eq("u2")
             .end();

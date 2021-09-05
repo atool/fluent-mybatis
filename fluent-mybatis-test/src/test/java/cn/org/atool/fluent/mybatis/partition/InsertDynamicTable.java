@@ -16,7 +16,7 @@ public class InsertDynamicTable extends BaseTest {
     @Test
     void insertSelect() {
         want.exception(() -> mapper.insertSelect(new String[]{"user_name"},
-            new StudentQuery(() -> "my_student", null).where.id().eq(1L).end())
+             StudentQuery.emptyQuery(() -> "my_student").where.id().eq(1L).end())
             , BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO my_student (`user_name`) " +

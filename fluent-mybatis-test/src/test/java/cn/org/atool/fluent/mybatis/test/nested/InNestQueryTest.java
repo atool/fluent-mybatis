@@ -23,7 +23,7 @@ public class InNestQueryTest extends BaseTest {
 
     @Test
     void test_and_in_nested3() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.id().age().end()
             .where.apply("(id, age)").in(q -> q.select.id().age().end()
                 .where.id().eq(3L).end())
@@ -42,7 +42,7 @@ public class InNestQueryTest extends BaseTest {
 
     @Test
     void test_and_in_nested() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.apply(FieldRef.Student.id).sum.age().end()
             .where.id().in(q -> q.selectId()
                 .where.id().eq(3L).end())
@@ -64,7 +64,7 @@ public class InNestQueryTest extends BaseTest {
 
     @Test
     void test_and_in_nested_1() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(q -> q.selectId()
                 .where.id().eq(3L).end())
             .and.userName().like("user").end();
@@ -77,7 +77,7 @@ public class InNestQueryTest extends BaseTest {
 
     @Test
     void test_and_in_nested2() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.homeAddressId().in(new HomeAddressQuery().selectId()
                 .where.id().in(new int[]{1, 2}).end())

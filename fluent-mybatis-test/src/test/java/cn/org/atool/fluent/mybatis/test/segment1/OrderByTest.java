@@ -19,7 +19,7 @@ public class OrderByTest extends BaseTest {
 
     @Test
     public void test_order() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.id().eq(24L)
             .end()

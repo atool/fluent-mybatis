@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.utility;
 
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -24,14 +26,14 @@ public class NestedQueryFactory {
             query.setDbType(wrapper.dbType());
             return (Q) query;
         }
-        try {
-            if (sameAlias) {
-                return (Q) klass.getConstructor(String.class).newInstance(wrapper.getTableAlias());
-            } else {
-                return (Q) klass.getConstructor().newInstance();
-            }
-        } catch (Exception e) {
-            throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.", e);
+        IMapping mapping = IRef.instance().mapping(wrapper.getWrapperData().getEntityClass());
+        if (mapping == null) {
+            throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.");
+        }
+        if (sameAlias) {
+            return mapping.emptyQuery(wrapper.getTableAlias());
+        } else {
+            return mapping.emptyQuery();
         }
     }
 }

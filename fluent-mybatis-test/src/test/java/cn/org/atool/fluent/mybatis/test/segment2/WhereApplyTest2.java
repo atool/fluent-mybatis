@@ -17,7 +17,7 @@ public class WhereApplyTest2 extends BaseTest {
 
     @Test
     void apply() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.userName().applyFunc(SqlOp.EQ, "user_name+1").end()
         );
         db.sqlList().wantFirstSql()
@@ -26,9 +26,9 @@ public class WhereApplyTest2 extends BaseTest {
 
     @Test
     void apply_any() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().applyFunc(SqlOp.GT, "any(?)",
-                new StudentQuery().select.age().end()
+                StudentQuery.emptyQuery().select.age().end()
                     .where.id().lt(30L).end())
             .and.id().gt(50L)
             .end()
@@ -40,7 +40,7 @@ public class WhereApplyTest2 extends BaseTest {
 
     @Test
     void orderBy() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .orderBy.gmtCreated().desc().end()
             .limit(10)
         ).sort(Comparator.comparing(StudentEntity::getGmtCreated));
@@ -49,7 +49,7 @@ public class WhereApplyTest2 extends BaseTest {
             "FROM fluent_mybatis.student ORDER BY `gmt_created` DESC LIMIT ?, ?");
 
         mapper.listEntity(new FreeQuery(
-            new StudentQuery()
+            StudentQuery.emptyQuery()
                 .selectAll()
                 .orderBy.gmtCreated().desc().end()
                 .limit(10), "a1")
@@ -61,7 +61,7 @@ public class WhereApplyTest2 extends BaseTest {
 
     @Test
     void apply_date() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.gmtModified().applyFunc(SqlOp.GT, "DATE_ADD(gmt_created, INTERVAL ? DAY)", 10)
             .end()
         );

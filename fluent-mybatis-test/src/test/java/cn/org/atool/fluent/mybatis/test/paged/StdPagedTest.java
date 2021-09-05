@@ -18,7 +18,7 @@ public class StdPagedTest extends BaseTest {
         ATM.dataMap.student.initTable(6)
             .grade.values(2, 3)
             .cleanAndInsert();
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(new int[]{1, 3, 4})
             .end()
             .groupBy.grade().end()

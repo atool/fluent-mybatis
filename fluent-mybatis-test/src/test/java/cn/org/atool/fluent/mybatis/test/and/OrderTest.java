@@ -13,7 +13,7 @@ public class OrderTest extends BaseTest {
 
     @Test
     public void order() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().like("user").end()
             .orderBy.id().asc()
             .homeAddressId().desc()
@@ -26,7 +26,7 @@ public class OrderTest extends BaseTest {
 
     @Test
     public void order2() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().like("user").end()
             .orderBy
             .id().asc()
@@ -42,7 +42,7 @@ public class OrderTest extends BaseTest {
 
     @Test
     public void orderBy_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().like("user").end()
             .orderBy
             .apply(true, false, FieldRef.Student.id, FieldRef.Student.homeAddressId)

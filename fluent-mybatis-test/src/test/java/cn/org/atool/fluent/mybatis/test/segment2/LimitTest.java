@@ -17,7 +17,7 @@ public class LimitTest extends BaseTest {
 
     @Test
     public void test_limit_offset() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().eq(10)
             .end()
             .limit(10, 20);
@@ -28,7 +28,7 @@ public class LimitTest extends BaseTest {
 
     @Test
     public void test_limit_maxSize() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().eq(10)
             .end()
             .limit(20);

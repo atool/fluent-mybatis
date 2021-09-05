@@ -12,7 +12,7 @@ public class WhereObjectTest_Between extends BaseTest {
 
     @Test
     public void between() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().between(23, 40).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().where().eq("`age` BETWEEN ? AND ?");
@@ -21,7 +21,7 @@ public class WhereObjectTest_Between extends BaseTest {
 
     @Test
     public void between_condition_true() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().between(23, 40, (v1, v2) -> true).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().where().eq("`age` BETWEEN ? AND ?");
@@ -30,7 +30,7 @@ public class WhereObjectTest_Between extends BaseTest {
 
     @Test
     public void between_condition_false() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where
             .age().between(23, 40, (v1, v2) -> false)
             .userName().like("user")
@@ -41,7 +41,7 @@ public class WhereObjectTest_Between extends BaseTest {
 
     @Test
     public void notBetween() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where
             .age().notBetween(23, 40)
             .end();
@@ -52,7 +52,7 @@ public class WhereObjectTest_Between extends BaseTest {
 
     @Test
     public void notBetween_condition_true() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notBetween(23, 40, (v1, v2) -> true).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().where().eq("`age` NOT BETWEEN ? AND ?");
@@ -61,7 +61,7 @@ public class WhereObjectTest_Between extends BaseTest {
 
     @Test
     public void notBetween_condition_false() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notBetween(23, 40, (v1, v2) -> false).end();
         mapper.count(query);
         db.sqlList().wantFirstSql().notContain("BETWEEN");

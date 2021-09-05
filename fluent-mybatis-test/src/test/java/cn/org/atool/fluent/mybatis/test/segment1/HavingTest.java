@@ -20,11 +20,11 @@ public class HavingTest extends BaseTest {
 
     @Test
     public void test_groupBy_having_query() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.gender().sum.age("avg").end()
             .where.id().gt(24L).end()
             .groupBy.gender().end()
-            .having.avg.age().apply(SqlOp.GT, new StudentQuery().select.age().end().where.id().eq(34).end())
+            .having.avg.age().apply(SqlOp.GT, StudentQuery.emptyQuery().select.age().end().where.id().eq(34).end())
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql().eq("" +
@@ -36,7 +36,7 @@ public class HavingTest extends BaseTest {
 
     @Test
     public void test_groupBy_having_applyFun() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.gender().sum.age("avg").end()
             .where.id().gt(24L).end()
             .groupBy.gender().end()
@@ -52,7 +52,7 @@ public class HavingTest extends BaseTest {
 
     @Test
     public void test_groupBy_having() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.gender().sum.age("avg").end()
             .where.id().gt(24L).end()
             .groupBy.gender().end()
@@ -78,7 +78,7 @@ public class HavingTest extends BaseTest {
 
     @Test
     public void test_groupBy_having2() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select
             .sum.age("avg")
             .apply(FieldRef.Student.id.column)

@@ -31,7 +31,7 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      * @return ignore
      */
     default Q defaultQuery() {
-        return (Q) ((BaseDefaults) mapping()).defaultQuery();
+        return (Q) ((BaseDefaults) mapping()).query();
     }
 
     /**

@@ -26,7 +26,7 @@ public class UnionQueryTest extends BaseTest {
                 .or.apply("age", GE, 20).end()
             ).end()
             .union(
-                new StudentQuery().select.id().userName().end()
+                StudentQuery.emptyQuery().select.id().userName().end()
                     .where.userName().likeRight("2").end()
             );
         mapper.listObjs(query);
@@ -47,7 +47,7 @@ public class UnionQueryTest extends BaseTest {
                 .or.apply("age", GE, 20).end()
             ).end()
             .unionAll(
-                new StudentQuery().select.id().userName().end()
+                StudentQuery.emptyQuery().select.id().userName().end()
                     .where.userName().likeRight("2").end()
             );
         mapper.listObjs(query);

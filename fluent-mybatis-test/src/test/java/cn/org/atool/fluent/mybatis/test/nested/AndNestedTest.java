@@ -21,7 +21,7 @@ public class AndNestedTest extends BaseTest {
 
     @Test
     void test_and_nested() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(q -> q
                 .selectId()
                 .where.id().eq(3L).end())
@@ -76,11 +76,11 @@ public class AndNestedTest extends BaseTest {
 
     @Test
     void test_and_nested_query() {
-        StudentQuery query = new StudentQuery()
-            .where.id().in(new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
+            .where.id().in(StudentQuery.emptyQuery()
                 .selectId()
                 .where.id().eq(3L).end())
-            .and(new StudentQuery()
+            .and(StudentQuery.emptyQuery()
                 .where.age().eq(24)
                 .and.id().eq(3L).end()
             )
@@ -96,7 +96,7 @@ public class AndNestedTest extends BaseTest {
     @DisplayName("And嵌套查询为空的场景")
     @Test
     void test_and_nested_is_null() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(q -> q
                 .selectId()
                 .where.id().eq(3L).end())
@@ -114,7 +114,7 @@ public class AndNestedTest extends BaseTest {
     @DisplayName("Or嵌套查询为空的场景")
     @Test
     void test_or_nested_is_null() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where
             .id().in(q -> q.selectId().where.id().eq(3L).end())
             .or(q -> q
@@ -130,7 +130,7 @@ public class AndNestedTest extends BaseTest {
 
     @Test
     void test_or_nested() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(q -> q
                 .selectId()
                 .where.id().eq(3L).end())

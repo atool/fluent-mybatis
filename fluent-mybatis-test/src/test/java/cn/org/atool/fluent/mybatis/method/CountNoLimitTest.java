@@ -19,7 +19,7 @@ public class CountNoLimitTest extends BaseTest {
 
     @Test
     public void test_count_no_limit() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end()
             .groupBy.userName().end()
             .orderBy.userName().asc().end()
@@ -40,7 +40,7 @@ public class CountNoLimitTest extends BaseTest {
             .age.values(10)
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().eq(10)
             .end()
             .orderBy.userName().asc()

@@ -45,7 +45,7 @@ public class SelectListTest extends BaseTest {
             .env.values("test_env")
             .cleanAndInsert();
 
-        List<StudentEntity> users = new StudentQuery()
+        List<StudentEntity> users = StudentQuery.emptyQuery()
             .where.id().in(new long[]{3L, 6L, 7L}).end()
             .of(mapper).listEntity();
 
@@ -62,7 +62,7 @@ public class SelectListTest extends BaseTest {
             .env.values("test_env")
             .cleanAndInsert();
 
-        List<StudentEntity> users = new StudentQuery()
+        List<StudentEntity> users = StudentQuery.emptyQuery()
             .where.id().in(new long[]{3L, 6L, 7L}).end()
             .to().listEntity();
 

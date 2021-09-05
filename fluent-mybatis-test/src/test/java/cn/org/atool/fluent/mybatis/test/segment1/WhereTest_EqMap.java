@@ -21,7 +21,7 @@ public class WhereTest_EqMap extends BaseTest {
 
     @Test
     public void test_eq_map() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.eqNotNull(new HashMap<String, Object>() {
                 {
@@ -35,7 +35,7 @@ public class WhereTest_EqMap extends BaseTest {
 
     @Test
     public void test_eq_entity() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.eqByEntity(new StudentEntity().setUserName("u2")).end();
         mapper.listEntity(query);

@@ -12,7 +12,7 @@ public class WhereObjectTest_Null extends BaseTest {
 
     @Test
     public void isNull() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().isNull()
             .end();
         mapper.count(query);
@@ -22,7 +22,7 @@ public class WhereObjectTest_Null extends BaseTest {
 
     @Test
     public void isNull_condition_true() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().isNull(true)
             .end();
         mapper.count(query);
@@ -32,7 +32,7 @@ public class WhereObjectTest_Null extends BaseTest {
 
     @Test
     public void isNull_condition_false() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().isNull(false)
             .end();
         mapper.count(query);
@@ -41,7 +41,7 @@ public class WhereObjectTest_Null extends BaseTest {
 
     @Test
     public void isNotNull() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notNull()
             .end();
         mapper.count(query);
@@ -51,7 +51,7 @@ public class WhereObjectTest_Null extends BaseTest {
 
     @Test
     public void isNotNull_condition_true() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notNull(true)
             .end();
         mapper.count(query);
@@ -61,7 +61,7 @@ public class WhereObjectTest_Null extends BaseTest {
 
     @Test
     public void isNotNull_condition_false() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notNull(false)
             .end();
         mapper.count(query);

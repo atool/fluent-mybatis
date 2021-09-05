@@ -73,6 +73,7 @@ public class EntityMappingFiler extends AbstractFiler {
             .addMethod(this.m_newEntity())
             .addMethod(this.m_allFields())
             .addMethod(this.m_emptyQuery())
+            .addMethod(this.m_emptyQuery_Alias())
             .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_aliasQuery_2())
             .addMethod(this.m_defaultSetter());
@@ -201,7 +202,13 @@ public class EntityMappingFiler extends AbstractFiler {
 
     private MethodSpec m_emptyQuery() {
         return super.publicMethod(M_EMPTY_QUERY, true, fluent.query())
-            .addStatement("return new $T()", fluent.query()).build();
+            .addStatement("return $T.emptyQuery()", fluent.query()).build();
+    }
+
+    private MethodSpec m_emptyQuery_Alias() {
+        return super.publicMethod(M_EMPTY_QUERY, true, fluent.query())
+            .addParameter(String.class, "alias")
+            .addStatement("return $T.emptyQuery(alias)", fluent.query()).build();
     }
 
     private MethodSpec m_emptyUpdater() {

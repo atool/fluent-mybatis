@@ -26,7 +26,7 @@ public class InsertSelectTest extends BaseTest {
             .age.values(34, 45, 55)
             .cleanAndInsert();
         int count = mapper.insertSelect(new String[]{"address", "age"},
-            new StudentQuery()
+            StudentQuery.emptyQuery()
                 .select.address().age().end()
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
@@ -48,7 +48,7 @@ public class InsertSelectTest extends BaseTest {
             .age.values(34, 45, 55)
             .cleanAndInsert();
         List list = mapper.listMaps(
-            new StudentQuery()
+            StudentQuery.emptyQuery()
                 .select.address().age().end()
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
@@ -64,7 +64,7 @@ public class InsertSelectTest extends BaseTest {
             .age.values(34, 45, 55)
             .cleanAndInsert();
         List list = mapper.listMaps(
-            new StudentQuery()
+            StudentQuery.emptyQuery()
                 .select.address("address_alias").age().end()
                 .where.id().in(new long[]{1, 2, 3}).end()
         );
@@ -85,7 +85,7 @@ public class InsertSelectTest extends BaseTest {
                     FieldRef.Student.userName,
                     FieldRef.Student.age,
                     FieldRef.Student.address},
-                new StudentQuery().select.userName().apply("40", "'test address'").end()
+                StudentQuery.emptyQuery().select.userName().apply("40", "'test address'").end()
                     .where.userName().likeRight("user").end())
         );
 

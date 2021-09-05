@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -15,7 +15,8 @@ import java.util.function.Supplier;
  *
  * @author darui.wu
  */
-public interface IMapping {
+@SuppressWarnings("rawtypes")
+public interface IMapping extends IDefaultGetter {
     /**
      * 返回数据库表名
      */
@@ -74,13 +75,6 @@ public interface IMapping {
      * @return 所有字段列表
      */
     List<FieldMapping> allFields();
-
-    /**
-     * 实体类
-     *
-     * @return entity class
-     */
-    Class<IEntity> entityClass();
 
     /**
      * 返回主键字段名称

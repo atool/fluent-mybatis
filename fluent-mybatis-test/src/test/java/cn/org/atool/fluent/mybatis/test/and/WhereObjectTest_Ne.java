@@ -15,7 +15,7 @@ public class WhereObjectTest_Ne extends BaseTest {
 
     @Test
     public void ne() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().ne(34)
             .end();
         mapper.count(query);
@@ -26,7 +26,7 @@ public class WhereObjectTest_Ne extends BaseTest {
 
     @Test
     public void ne_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().ne(34, o -> true)
             .end();
         mapper.count(query);
@@ -37,7 +37,7 @@ public class WhereObjectTest_Ne extends BaseTest {
 
     @Test
     public void ne_IfNotNull() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().ne(34, Objects::nonNull)
             .end();
         mapper.count(query);

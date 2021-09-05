@@ -16,7 +16,7 @@ class WhereApplyTest_In extends BaseTest {
 
     @Test
     void in() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().in(new int[]{23, 34})
             .and.age().in(new int[]{23})
             .or.age().in(new int[]{1}).end()
@@ -27,7 +27,7 @@ class WhereApplyTest_In extends BaseTest {
 
     @Test
     void testIn() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().in(new int[]{23, 34}, If::everTrue)
             .and.age().in(new long[]{23, 34}, If::everTrue).end()
         );
@@ -37,7 +37,7 @@ class WhereApplyTest_In extends BaseTest {
 
     @Test
     void testIn_collection() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().in(Arrays.asList(12, 23), If::everTrue)
             .and.age().in(Arrays.asList(12), If::everTrue).end()
         );
@@ -47,7 +47,7 @@ class WhereApplyTest_In extends BaseTest {
 
     @Test
     void testIn_IfNotEmpty() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().in(Arrays.asList(12, 23), If::notEmpty)
             .and.age().in(new long[]{23}, If::notEmpty).end()
         );
@@ -57,7 +57,7 @@ class WhereApplyTest_In extends BaseTest {
 
     @Test
     void notIn() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().notIn(new int[]{23, 34})
             .and.age().notIn(new long[]{23}, If::notEmpty).end()
         );
@@ -68,7 +68,7 @@ class WhereApplyTest_In extends BaseTest {
 
     @Test
     void notIn_IfNotEmpty() {
-        mapper.listEntity(new StudentQuery()
+        mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().notIn(Arrays.asList(1, 2))
             .and.age().notIn(Arrays.asList(1), If::notEmpty).end()
         );

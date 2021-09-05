@@ -24,7 +24,7 @@ public class SelectOneTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end();
         StudentEntity student = mapper.findOne(query);
         db.sqlList().wantFirstSql().start("SELECT")
@@ -40,7 +40,7 @@ public class SelectOneTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end();
         want.exception(() -> mapper.findOne(query), MyBatisSystemException.class)
             .contains("Expected one result (or null) to be returned by selectOne(), but found: 2");

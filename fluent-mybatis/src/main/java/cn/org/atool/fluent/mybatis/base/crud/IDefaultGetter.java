@@ -22,6 +22,8 @@ public interface IDefaultGetter {
      */
     <Q extends IQuery> Q emptyQuery();
 
+    <Q extends IQuery> Q emptyQuery(String alias);
+
     /**
      * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
      *
@@ -36,19 +38,11 @@ public interface IDefaultGetter {
      *
      * @return 查询构造器
      */
-    <Q extends IQuery> Q defaultQuery();
-
-    /**
-     * 实例化更新构造器
-     * o - 设置默认更新条件
-     *
-     * @return 更新构造器
-     */
-    <U extends IUpdate> U defaultUpdater();
+    <Q extends IQuery> Q query();
 
     /**
      * 自动分配表别名查询构造器(join查询的时候需要定义表别名)
-     * 如果要自定义别名, 使用方法 {@link #aliasQuery(String)}
+     * 如果要自定义别名, 使用方法 {@link #query(String)}
      *
      * @param <Q> IQuery类型
      * @return IQuery
@@ -63,7 +57,7 @@ public interface IDefaultGetter {
      * @param alias 别名
      * @return 查询构造器
      */
-    <Q extends IQuery> Q aliasQuery(String alias);
+    <Q extends IQuery> Q query(String alias);
 
     /**
      * 关联查询
@@ -88,4 +82,19 @@ public interface IDefaultGetter {
      * @return 查询构造器
      */
     <Q extends IQuery> Q aliasWith(String alias, BaseQuery fromQuery);
+
+    /**
+     * 实例化更新构造器
+     * o - 设置默认更新条件
+     *
+     * @return 更新构造器
+     */
+    <U extends IUpdate> U defaultUpdater();
+
+    /**
+     * 默认值设置器
+     *
+     * @return IDefaultSetter
+     */
+    IDefaultSetter defaultSetter();
 }

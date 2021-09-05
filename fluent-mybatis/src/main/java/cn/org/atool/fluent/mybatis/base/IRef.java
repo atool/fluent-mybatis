@@ -92,7 +92,7 @@ public abstract class IRef {
      * @param clazz Entity类类型
      * @return IQuery
      */
-    public abstract IQuery defaultQuery(Class<? extends IEntity> clazz);
+    public abstract IQuery query(Class<? extends IEntity> clazz);
 
     /**
      * 返回clazz实体对应的空Query实例

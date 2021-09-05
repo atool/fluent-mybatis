@@ -11,7 +11,7 @@ public class SqlLikeTest extends BaseTest {
         ATM.dataMap.student.initTable(2)
             .userName.values("user1", "user2")
             .cleanAndInsert();
-        want.exception(() -> new StudentQuery()
+        want.exception(() -> StudentQuery.emptyQuery()
             .where.userName().like("%").end()
             .to().listEntity(), IllegalArgumentException.class)
             .contains("The like operation cannot be string '%' or '_' only");

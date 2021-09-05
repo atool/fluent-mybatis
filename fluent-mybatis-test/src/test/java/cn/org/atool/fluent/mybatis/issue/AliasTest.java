@@ -13,7 +13,7 @@ public class AliasTest extends BaseTest {
 
     @Test
     void issue_I3V91T_1() {
-        StudentQuery query = new StudentQuery("t")
+        StudentQuery query = StudentQuery.emptyQuery("t")
             .select.userName("u").end()
             .orderBy.desc("u").end();
         mapper.listObjs(query);
@@ -22,7 +22,7 @@ public class AliasTest extends BaseTest {
 
     @Test
     void issue_I3V91T_2() {
-        StudentQuery query = new StudentQuery("t")
+        StudentQuery query = StudentQuery.emptyQuery("t")
             .select.userName("u").sum.age("a").end()
             .groupBy.apply("u").end()
             .having.apply("a").gt(30).end();
@@ -36,7 +36,7 @@ public class AliasTest extends BaseTest {
 
     @Test
     void testSelectAll() {
-        FreeQuery query = new FreeQuery(new StudentQuery().where.age().gt(30).end(), "aa")
+        FreeQuery query = new FreeQuery(StudentQuery.emptyQuery().where.age().gt(30).end(), "aa")
             .select.apply("*").end();
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().eq("" +

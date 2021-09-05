@@ -26,7 +26,7 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT")
@@ -42,7 +42,7 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end();
         List<StudentEntity> users = mapper.listEntity(query);
         db.sqlList().wantFirstSql().start("SELECT")
@@ -58,7 +58,7 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end()
             .limit(2);
         List<StudentEntity> users = mapper.listEntity(query);
@@ -75,7 +75,7 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .userName.values("u1", "u2", "u3", "u2")
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end()
             .limit(2, 3);
         List<StudentEntity> users = mapper.listEntity(query);
@@ -91,7 +91,7 @@ public class SelectListTest extends BaseTest {
                 .id.values(23, 24, 25, 26)
                 .gmtCreated.values(new Date(1604140000000L), new Date(1604150000000L), new Date(1604160000000L), new Date(1604170000000L))
             );
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.gmtCreated().gt(new Date(1604140000000L))
             .and.gmtCreated().le(new Date(1604170000000L)).end();
         List<StudentEntity> users = mapper.listEntity(query);

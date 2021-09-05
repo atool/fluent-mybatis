@@ -17,7 +17,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     public void test_join() {
-        StudentQuery studentQuery = new StudentQuery("t1")
+        StudentQuery studentQuery = StudentQuery.emptyQuery("t1")
             .select.age().end()
             .where.isDeleted().eq(true)
             .and.age().isNull()
@@ -25,7 +25,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end()
             .orderBy.id().desc().end();
-        HomeAddressQuery addressQuery = new HomeAddressQuery("t2")
+        HomeAddressQuery addressQuery = HomeAddressQuery.emptyQuery("t2")
             .select.studentId().end()
             .where.isDeleted().eq(true)
             .and.address().like("vas")
@@ -59,14 +59,14 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     public void test_left_join() {
-        StudentQuery uq = new StudentQuery("t1")
+        StudentQuery uq = StudentQuery.emptyQuery("t1")
             .select.age().end()
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end()
             .groupBy.age().apply("id").end()
             .having.max.age().gt(1L).end();
-        HomeAddressQuery aq = new HomeAddressQuery("t2")
+        HomeAddressQuery aq = HomeAddressQuery.emptyQuery("t2")
             .select.studentId().end()
             .where.isDeleted().eq(true)
             .and.address().like("vas")
@@ -98,11 +98,11 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     public void test_right_join() {
-        StudentQuery uq = new StudentQuery("t1")
+        StudentQuery uq = StudentQuery.emptyQuery("t1")
             .where.isDeleted().eq(true)
             .and.age().isNull()
             .end();
-        HomeAddressQuery aq = new HomeAddressQuery("t2")
+        HomeAddressQuery aq = HomeAddressQuery.emptyQuery("t2")
             .where.isDeleted().eq(true)
             .and.address().like("vas")
             .end();
@@ -124,15 +124,15 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
 
     @Test
     void three_join() {
-        StudentQuery uq = new StudentQuery("t1")
+        StudentQuery uq = StudentQuery.emptyQuery("t1")
             .where.age().eq(3).end();
-        HomeAddressQuery aq = new HomeAddressQuery("t2")
+        HomeAddressQuery aq = HomeAddressQuery.emptyQuery("t2")
             .where.address().like("xxx").end();
         JoinBuilder query = JoinBuilder
             .from(uq)
             .leftJoin(aq)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
-            .leftJoin(new StudentScoreQuery("t3")
+            .leftJoin(StudentScoreQuery.emptyQuery("t3")
                 .where.subject().in(new String[]{"a", "b", "c"}).end())
             .on(l -> l.where.id(), r -> r.where.studentId()).endJoin();
         mapper.listMaps(query.build());

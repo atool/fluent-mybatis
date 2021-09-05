@@ -31,11 +31,11 @@ public class JoinQueryTest_Alias2 extends BaseTest {
             .cleanAndInsert();
 
         Parameters parameter = new Parameters();
-        IQuery query = JoinBuilder.from(new StudentQuery("t1", parameter)
+        IQuery query = JoinBuilder.from(new StudentQuery(false, null, "t1", parameter)
             .selectAll()
             .where.age().eq(34)
             .end())
-            .join(new HomeAddressQuery("t2", parameter)
+            .join(new HomeAddressQuery(false, null, "t2", parameter)
                 .where.address().like("address")
                 .end())
             .on(l -> l.where.homeAddressId(), r -> r.where.id())

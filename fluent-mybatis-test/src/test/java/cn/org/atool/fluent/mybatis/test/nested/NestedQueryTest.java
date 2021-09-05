@@ -23,7 +23,7 @@ public class NestedQueryTest extends BaseTest {
     @DisplayName(".and(子查询) 中lambda表达式别名问题")
     @Test
     void test_I3YX65() {
-        StudentQuery query = new StudentQuery("t1")
+        StudentQuery query = StudentQuery.emptyQuery("t1")
             .selectId()
             .where.id().in(new int[]{1, 3, 5})
             .and(q -> q.where.address().like("kk").or.age().ge(20).end())
@@ -38,7 +38,7 @@ public class NestedQueryTest extends BaseTest {
 
     @Test
     void test_or_nested() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.exists(new HomeAddressQuery()
                 .where.address().like("u")
@@ -53,7 +53,7 @@ public class NestedQueryTest extends BaseTest {
 
     @Test
     void test_or_nested_query() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.exists(new HomeAddressQuery()
                 .select.apply("1").end()
@@ -71,7 +71,7 @@ public class NestedQueryTest extends BaseTest {
 
     @Test
     void test_exist() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.exists(q -> q.selectId()
                 .where.id().eq(34L).end())
@@ -85,7 +85,7 @@ public class NestedQueryTest extends BaseTest {
     @DisplayName("嵌套查询：地址包含'杭州滨江'的所有用户列表")
     @Test
     void test_nested_query_address_like() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(new HomeAddressQuery()
                 .select.apply(FieldRef.HomeAddress.studentId).end()
                 .where.address().like("杭州滨江").end())

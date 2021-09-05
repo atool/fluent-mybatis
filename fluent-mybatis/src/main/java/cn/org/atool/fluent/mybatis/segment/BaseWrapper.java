@@ -90,7 +90,6 @@ public abstract class BaseWrapper<
      */
     public String fieldName(UniqueFieldType type) {
         return this.mapping().flatMap(m -> m.findField(type)).map(c -> c.column).orElse(null);
-
     }
 
     /**

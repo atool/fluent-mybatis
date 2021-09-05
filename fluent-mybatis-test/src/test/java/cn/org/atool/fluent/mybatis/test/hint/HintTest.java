@@ -17,7 +17,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeSelect() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint("/*+DBP: $ROUTE={GROUP_ID(分片位),TABLE_NAME(物理表名)}*/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
@@ -27,7 +27,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterSelect() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint(HintType.After_CrudKey, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
@@ -36,7 +36,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeSelectTable() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint(HintType.Before_Table, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
@@ -46,7 +46,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterSelectTable() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint(HintType.After_Table, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.listEntity(query);
@@ -57,7 +57,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void before_SelectCount() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint("/** hint **/")
             .where.userName().eq("test").end();
         mapper.count(query);
@@ -66,7 +66,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterSelect_count() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint(HintType.After_CrudKey, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.count(query);
@@ -75,7 +75,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeTable_SelectCount() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint(HintType.Before_Table, "/** hint **/")
             .where.userName().eq("test").end();
         mapper.count(query);
@@ -84,7 +84,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterTable_SelectCount() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .hint(HintType.After_Table, "force index(create_time)")
             .where.userName().eq("test").end();
         want.exception(() -> mapper.count(query),
@@ -135,7 +135,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeDelete() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(3L).end()
             .hint("/** hint **/");
         mapper.delete(query);
@@ -144,7 +144,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterDelete() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(3L).end()
             .hint(HintType.After_CrudKey, "/** hint **/");
         mapper.delete(query);
@@ -153,7 +153,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void beforeTableDelete() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(3L).end()
             .hint(HintType.Before_Table, "/** hint **/");
         mapper.delete(query);
@@ -162,7 +162,7 @@ public class HintTest extends BaseTest {
 
     @Test
     void afterTableDelete() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(3L).end()
             .hint(HintType.After_Table, "/** hint **/");
         mapper.delete(query);

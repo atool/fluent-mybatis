@@ -19,7 +19,7 @@ public class SelectorTest extends BaseTest {
 
     @Test
     public void test_select() throws Exception {
-        StudentQuery query = new StudentQuery();
+        StudentQuery query = StudentQuery.emptyQuery();
 
         query.select
             .apply("id", "home_address_id", "1")
@@ -39,7 +39,7 @@ public class SelectorTest extends BaseTest {
 
     @Test
     public void test_select_alias() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select
             .id("pk")
             .sum.age("sum")
@@ -61,7 +61,7 @@ public class SelectorTest extends BaseTest {
 
     @Test
     public void test_select_no_alias() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .select
             .sum.age()
@@ -84,7 +84,7 @@ public class SelectorTest extends BaseTest {
 
     @Test
     public void test_select2() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .select.apply(f -> f.getProperty().startsWith("gmt")).end()
             .where.id().eq(24L).end();

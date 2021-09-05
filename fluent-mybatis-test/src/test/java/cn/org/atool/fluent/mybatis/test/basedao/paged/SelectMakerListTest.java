@@ -39,7 +39,7 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        TagPagedList<StudentEntity> list = dao.tagPagedEntity(new StudentQuery()
+        TagPagedList<StudentEntity> list = dao.tagPagedEntity(StudentQuery.emptyQuery()
             .where.
                 id().gt(20).
                 userName().like("user").end()
@@ -62,7 +62,7 @@ public class SelectMakerListTest extends BaseTest {
             .age.generate((index) -> new Random().nextInt(100))
             .cleanAndInsert();
 
-        TagPagedList<Map> list = dao.tagPagedMap(new StudentQuery()
+        TagPagedList<Map> list = dao.tagPagedMap(StudentQuery.emptyQuery()
             .selectId()
             .where.id().gt(20)
             .and.userName().like("user").end()

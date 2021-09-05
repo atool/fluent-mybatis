@@ -20,7 +20,7 @@ public class GroupByTest extends BaseTest {
 
     @Test
     public void test_groupBy() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.id().eq(24L).end()
             .groupBy.userName().age().end()
@@ -33,7 +33,7 @@ public class GroupByTest extends BaseTest {
 
     @Test
     public void test_groupBy2() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.id().eq(24L).end()
             .groupBy.apply(FieldRef.Student.userName, FieldRef.Student.age).end();
@@ -45,7 +45,7 @@ public class GroupByTest extends BaseTest {
 
     @Test
     public void test_groupBy_condition() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .where.id().eq(24L).end()
             .groupBy
@@ -58,7 +58,7 @@ public class GroupByTest extends BaseTest {
 
     @Test
     public void test_groupBy_having() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select.apply("count(1)", "sum(1)")
             .end()
             .where.id().eq(24L)
@@ -77,7 +77,7 @@ public class GroupByTest extends BaseTest {
     @DisplayName("按级别grade统计年龄在15和25之间的人数在10人以上，该条件内最大、最小和平均年龄")
     @Test
     public void test_count_gt_10_groupByGrade() throws Exception {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .select
             .apply(FieldRef.Student.grade.column)
             .count.id()

@@ -15,7 +15,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(Arrays.asList(34, 35))
             .end();
         mapper.count(query);
@@ -26,7 +26,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(Arrays.asList(34, 35), o -> true)
             .end();
         mapper.count(query);
@@ -37,7 +37,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_IfNotEmpty() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(Arrays.asList(34, 35), If::notEmpty)
             .end();
         mapper.count(query);
@@ -48,7 +48,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_array() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(new Integer[]{34, 35})
             .end();
         mapper.count(query);
@@ -59,7 +59,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_array_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
@@ -70,7 +70,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_array2_condition() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(new Integer[]{34, 35}, o -> true)
             .end();
         mapper.count(query);
@@ -81,7 +81,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_arr_IfNotEmpty() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(new Integer[]{34, 35}, If::notEmpty)
             .end();
         mapper.count(query);
@@ -92,7 +92,7 @@ public class WhereObjectTest_NotIn extends BaseTest {
 
     @Test
     public void notIn_arr_IfNotEmpty2() {
-        StudentQuery query = new StudentQuery()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.age().notIn(new Integer[0], If::notEmpty)
             .end();
         mapper.count(query);

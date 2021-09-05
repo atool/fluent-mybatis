@@ -29,10 +29,10 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
             .address.values("address_1", "address_2")
             .cleanAndInsert();
 
-        StudentQuery leftQuery = new StudentQuery("a1").selectAll()
+        StudentQuery leftQuery = StudentQuery.emptyQuery("a1").selectAll()
             .where.age().eq(34)
             .end();
-        HomeAddressQuery rightQuery = new HomeAddressQuery("a2")
+        HomeAddressQuery rightQuery = HomeAddressQuery.emptyQuery("a2")
             .where.address().like("address")
             .end();
 
