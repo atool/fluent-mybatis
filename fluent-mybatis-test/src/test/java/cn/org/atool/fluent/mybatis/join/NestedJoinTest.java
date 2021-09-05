@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
@@ -18,7 +18,7 @@ public class NestedJoinTest extends BaseTest {
     @DisplayName("子查询是join查询场景")
     @Test
     void issue_I3UPZ0() {
-        IQuery nested = JoinBuilder.from(StudentQuery.emptyQuery("a").select.id().end())
+        IQuery nested = JoinFromBuilder.from(StudentQuery.emptyQuery("a").select.id().end())
             .join(HomeAddressQuery.emptyQuery("b").where.address().like("add").end())
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
             .build();

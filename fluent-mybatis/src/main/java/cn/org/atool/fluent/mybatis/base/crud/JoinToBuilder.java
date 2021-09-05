@@ -10,7 +10,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinOn;
  * @author wudarui
  */
 @SuppressWarnings({"unchecked", "unused"})
-public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<QL> {
+public interface JoinToBuilder<QL extends BaseQuery<?, QL>> extends JoinFromBuilder<QL> {
     /**
      * from left.table join right.table on condition
      *
@@ -18,7 +18,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param <QR>  join right表类型
      * @return ignore
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> join(QR query);
 
     /**
      * from table1 join (select query) alias ...
@@ -28,7 +28,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param <QR>  右查询类型
      * @return ignore
      */
-    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query, String alias) {
+    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> join(QR query, String alias) {
         return this.join((QR) new FreeQuery(query, alias));
     }
 
@@ -39,7 +39,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param <QR>  join right 表类型
      * @return ignore
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> leftJoin(QR query);
 
     /**
      * from table1 left join (select query) alias ...
@@ -49,7 +49,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param <QR>  右查询类型
      * @return ignore
      */
-    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query, String alias) {
+    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> leftJoin(QR query, String alias) {
         return this.leftJoin((QR) new FreeQuery(query, alias));
     }
 
@@ -60,7 +60,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param <QR>  join right 表类型
      * @return ignore
      */
-    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query);
+    <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> rightJoin(QR query);
 
     /**
      * from table1 right join (select query) alias ...
@@ -70,7 +70,7 @@ public interface JoinBuilder1<QL extends BaseQuery<?, QL>> extends JoinBuilder<Q
      * @param <QR>  右查询类型
      * @return ignore
      */
-    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query, String alias) {
+    default <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> rightJoin(QR query, String alias) {
         return this.rightJoin((QR) new FreeQuery(query, alias));
     }
 }

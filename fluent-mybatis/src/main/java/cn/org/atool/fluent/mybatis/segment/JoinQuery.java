@@ -26,7 +26,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class JoinQuery<QL extends BaseQuery<?, QL>>
     extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
-    implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL> {
+    implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinToBuilder<QL> {
     /**
      * 主查询条件
      */
@@ -62,21 +62,21 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> join(QR query) {
         return join(JoinType.Join, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> leftJoin(QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> leftJoin(QR query) {
         return join(JoinType.LeftJoin, query);
     }
 
     @Override
-    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> rightJoin(QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> rightJoin(QR query) {
         return join(JoinType.RightJoin, query);
     }
 
-    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinBuilder1<QL>> join(
+    private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> join(
         JoinType joinType, QR query) {
         this.assertQueryAlias(query);
         query.sharedParameter(this.query);
@@ -102,7 +102,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public JoinBuilder<QL> select(String... columns) {
+    public JoinFromBuilder<QL> select(String... columns) {
         for (String column : columns) {
             this.wrapperData.addSelectColumn(column);
         }

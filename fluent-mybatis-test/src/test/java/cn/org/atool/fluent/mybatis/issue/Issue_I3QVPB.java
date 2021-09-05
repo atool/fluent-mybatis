@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.issue;
 
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
@@ -51,7 +51,7 @@ public class Issue_I3QVPB extends BaseTest {
             .and.apply("project_report_value", SqlOp.EQ, "2")
             .end();
         FreeQuery query2 = new FreeQuery(query21, "cr").setDbType(DbType.MYSQL);
-        IQuery join = JoinBuilder.from(query1)
+        IQuery join = JoinFromBuilder.from(query1)
             .join(query2)
             .onEq("repository_id", "identifier").endJoin()
             .build();
@@ -95,7 +95,7 @@ public class Issue_I3QVPB extends BaseTest {
             .where.apply("organization_id", SqlOp.EQ, "1")
             .and.apply("project_report_value", SqlOp.EQ, "2")
             .end();
-        IQuery join = JoinBuilder.from(query1, "crs")
+        IQuery join = JoinFromBuilder.from(query1, "crs")
             .join(query2, "cr")
             .onEq("repository_id", "identifier").endJoin()
             .select("csr.*")

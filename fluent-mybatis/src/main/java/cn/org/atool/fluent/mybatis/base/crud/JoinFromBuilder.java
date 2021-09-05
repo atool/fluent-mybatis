@@ -9,7 +9,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinQuery;
  * @author wudarui
  */
 @SuppressWarnings({"unchecked", "unused", "rawtypes"})
-public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
+public interface JoinFromBuilder<QL extends BaseQuery<?, QL>> {
 
     /**
      * 关联查询构造方式一: 使用直接传入设置好别名和参数的Query
@@ -18,7 +18,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @param <QL>  左查询类型
      * @return ignore
      */
-    static <QL extends BaseQuery<?, QL>> JoinBuilder1<QL> from(QL query) {
+    static <QL extends BaseQuery<?, QL>> JoinToBuilder<QL> from(QL query) {
         return new JoinQuery<>(query);
     }
 
@@ -30,7 +30,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @param <QL>  左查询类型
      * @return ignore
      */
-    static <QL extends BaseQuery<?, QL>> JoinBuilder1<QL> from(QL query, String alias) {
+    static <QL extends BaseQuery<?, QL>> JoinToBuilder<QL> from(QL query, String alias) {
         return new JoinQuery<>((QL) new FreeQuery(query, alias));
     }
 
@@ -40,14 +40,14 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @param columns 字段列表
      * @return ignore
      */
-    JoinBuilder<QL> select(String... columns);
+    JoinFromBuilder<QL> select(String... columns);
 
     /**
      * distinct
      *
      * @return ignore
      */
-    JoinBuilder<QL> distinct();
+    JoinFromBuilder<QL> distinct();
 
     /**
      * limit 0, limit
@@ -55,7 +55,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @param limit limit
      * @return ignore
      */
-    JoinBuilder<QL> limit(int limit);
+    JoinFromBuilder<QL> limit(int limit);
 
     /**
      * limit start, limit
@@ -64,7 +64,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @param limit limit size
      * @return ignore
      */
-    JoinBuilder<QL> limit(int start, int limit);
+    JoinFromBuilder<QL> limit(int start, int limit);
 
     /**
      * 追加在sql语句的末尾
@@ -74,7 +74,7 @@ public interface JoinBuilder<QL extends BaseQuery<?, QL>> {
      * @param lastSql 追加的SQL
      * @return ignore
      */
-    JoinBuilder<QL> last(String lastSql);
+    JoinFromBuilder<QL> last(String lastSql);
 
     /**
      * 返回IQuery对象

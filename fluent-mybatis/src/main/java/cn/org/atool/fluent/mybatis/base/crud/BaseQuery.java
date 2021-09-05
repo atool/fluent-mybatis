@@ -146,8 +146,8 @@ public abstract class BaseQuery<
      * @param <QR>  右查询类型
      * @return JoinOn
      */
-    public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinBuilder1<Q>> join(QR query) {
-        return JoinBuilder.from((Q) this).join(query);
+    public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinToBuilder<Q>> join(QR query) {
+        return JoinFromBuilder.from((Q) this).join(query);
     }
 
     /**
@@ -160,14 +160,14 @@ public abstract class BaseQuery<
      * @param <QR>     右查询类型
      * @return JoinOn
      */
-    public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinBuilder1<Q>> join(JoinType joinType, QR query) {
+    public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinToBuilder<Q>> join(JoinType joinType, QR query) {
         switch (joinType) {
             case LeftJoin:
-                return JoinBuilder.from((Q) this).leftJoin(query);
+                return JoinFromBuilder.from((Q) this).leftJoin(query);
             case RightJoin:
-                return JoinBuilder.from((Q) this).rightJoin(query);
+                return JoinFromBuilder.from((Q) this).rightJoin(query);
             default:
-                return JoinBuilder.from((Q) this).join(query);
+                return JoinFromBuilder.from((Q) this).join(query);
         }
     }
 }
