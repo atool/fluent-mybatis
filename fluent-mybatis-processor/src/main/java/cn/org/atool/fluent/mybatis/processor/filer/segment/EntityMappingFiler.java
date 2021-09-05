@@ -20,8 +20,7 @@ import java.util.Optional;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityMapping;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
@@ -94,7 +93,7 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private FieldSpec f_instance() {
-        return FieldSpec.builder(fluent.entityMapping(), "MAPPING", PUBLIC_STATIC_FINAL)
+        return FieldSpec.builder(fluent.entityMapping(), Suffix_MAPPING, PUBLIC_STATIC_FINAL)
             .initializer("new $T()", fluent.entityMapping())
             .build();
     }

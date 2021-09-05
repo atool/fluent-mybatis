@@ -15,6 +15,8 @@ import com.squareup.javapoet.TypeSpec;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set_Class;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
@@ -51,7 +53,7 @@ public class RefFiler extends AbstractFile {
             .addMethod(m_emptyQuery(true))
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_emptyUpdater(true))
-            .addMethod(this.m_mapping("mapping", IMapping.class))
+            .addMethod(this.m_mapping(Suffix_mapping, IMapping.class))
             .addMethod(this.m_mapping("defaults", BaseDefaults.class))
             .addMethod(this.m_allEntityClass())
             .addMethod(this.m_initEntityMapper())
@@ -129,21 +131,21 @@ public class RefFiler extends AbstractFile {
 
     private TypeSpec class_field() {
         return TypeSpec.classBuilder("Field")
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .addSuperinterface(FieldRefFiler.getClassName())
             .build();
     }
 
     private TypeSpec class_query() {
         return TypeSpec.classBuilder("Query")
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(QueryRefFiler.getClassName())
             .build();
     }
 
     private TypeSpec class_setter() {
         return TypeSpec.classBuilder("Form")
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .addSuperinterface(FormRefFiler.getClassName())
             .build();
     }

@@ -15,7 +15,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
+import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_HashMap_AMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
 
@@ -128,7 +131,7 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     private MethodSpec m_mapping() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder("mapping")
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(Suffix_mapping)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
             .returns(AMapping.class);
@@ -154,15 +157,13 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     private FieldSpec f_allDefaults() {
-        return FieldSpec.builder(CN_Map_AMapping, "ENTITY_DEFAULTS",
-            Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+        return FieldSpec.builder(CN_Map_AMapping, "ENTITY_DEFAULTS", PRIVATE_STATIC_FINAL)
             .initializer(this.m_initEntityDefaults())
             .build();
     }
 
     private FieldSpec f_allEntityClass() {
-        return FieldSpec.builder(parameterizedType(Set.class, Class.class), "All_Entity_Class",
-            Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+        return FieldSpec.builder(parameterizedType(Set.class, Class.class), "All_Entity_Class", PUBLIC_STATIC_FINAL)
             .initializer("$T.unmodifiableSet(ENTITY_DEFAULTS.keySet())", Collections.class)
             .build();
     }

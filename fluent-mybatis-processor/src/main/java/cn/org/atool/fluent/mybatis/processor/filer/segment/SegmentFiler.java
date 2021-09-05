@@ -16,6 +16,8 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
@@ -43,8 +45,7 @@ public class SegmentFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
-        spec.addStaticImport(fluent.entityMapping(), "Table_Name");
-        spec.addStaticImport(fluent.entityMapping(), "MAPPING");
+        spec.addStaticImport(fluent.entityMapping(), "*");
     }
 
     @Override
@@ -94,7 +95,7 @@ public class SegmentFiler extends AbstractFiler {
                 .methodBuilder(fc.getName())
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(TypeVariableName.get("R"))
-                .addStatement("return this.set($T.$L)", fluent.entityMapping(), fc.getName())
+                .addStatement("return this.set($L)", fc.getName())
                 .build()
             );
         }
@@ -108,7 +109,7 @@ public class SegmentFiler extends AbstractFiler {
      */
     private TypeSpec nestedGroupBy() {
         return TypeSpec.classBuilder(Suffix_GroupBy)
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(super.paraType(
                 ClassName.get(GroupByBase.class),
                 fluent.groupBy(),
@@ -130,7 +131,7 @@ public class SegmentFiler extends AbstractFiler {
      */
     private TypeSpec nestedHaving() {
         return TypeSpec.classBuilder(Suffix_Having)
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(super.paraType(
                 ClassName.get(HavingBase.class),
                 fluent.having(),
@@ -154,7 +155,7 @@ public class SegmentFiler extends AbstractFiler {
      */
     private TypeSpec nestedQueryOrderBy() {
         return TypeSpec.classBuilder(Suffix_QueryOrderBy)
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(super.paraType(
                 ClassName.get(OrderByBase.class),
                 fluent.queryOrderBy(),
@@ -179,7 +180,7 @@ public class SegmentFiler extends AbstractFiler {
      */
     private TypeSpec nestedUpdateOrderBy() {
         return TypeSpec.classBuilder(Suffix_UpdateOrderBy)
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(super.paraType(
                 ClassName.get(OrderByBase.class),
                 fluent.updateOrderBy(),
@@ -204,7 +205,7 @@ public class SegmentFiler extends AbstractFiler {
      */
     private TypeSpec nestedUpdateSetter() {
         return TypeSpec.classBuilder(Suffix_UpdateSetter)
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(super.paraType(
                 ClassName.get(UpdateBase.class),
                 fluent.updateSetter(),
@@ -224,7 +225,7 @@ public class SegmentFiler extends AbstractFiler {
 
     private TypeSpec nestedSelector() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_Selector)
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(super.paraType(
                 ClassName.get(SelectorBase.class),
                 fluent.selector(),
@@ -241,7 +242,7 @@ public class SegmentFiler extends AbstractFiler {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(String.class, "_alias_")
                 .returns(fluent.selector())
-                .addStatement("return this.process($T.$L, _alias_)", fluent.entityMapping(), fc.getName())
+                .addStatement("return this.process($L, _alias_)", varAggregate(fc.getName()))
                 .build()
             );
         }
@@ -315,7 +316,7 @@ public class SegmentFiler extends AbstractFiler {
             field.returns(this.whereType(ObjectWhere.class));
         }
 
-        field.addStatement("return this.set($T.$L)", fluent.entityMapping(), fc.getName());
+        field.addStatement("return this.set($L)", varSegment(fc.getName()));
         builder.addMethod(field.build());
     }
 
@@ -520,5 +521,34 @@ public class SegmentFiler extends AbstractFiler {
     @Override
     protected boolean isInterface() {
         return true;
+    }
+
+    /**
+     * 在 {@link AggregateSegment} 中定义过的变量
+     */
+    static List<String> CONFLICT_AGGREGATE = Arrays.asList(
+        "origin", "aggregate", "max", "min", "sum", "avg", "count", "group_concat"
+    );
+    /**
+     * 在 {@link BaseSegment}, {@link WhereBase} 中定义过的变量
+     */
+    static List<String> CONFLICT_SEGMENT = Arrays.asList(
+        "and", "or", "wrapper", "current", "apply"
+    );
+
+    private String varAggregate(String name) {
+        if (CONFLICT_AGGREGATE.contains(name) || CONFLICT_SEGMENT.contains(name)) {
+            return fluent.entityMapping().simpleName() + "." + name;
+        } else {
+            return name;
+        }
+    }
+
+    private String varSegment(String name) {
+        if (CONFLICT_SEGMENT.contains(name)) {
+            return fluent.entityMapping().simpleName() + "." + name;
+        } else {
+            return name;
+        }
     }
 }

@@ -60,6 +60,7 @@ public class MapperFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(ClassName.get(FluentConst.class), "*");
+        spec.addStaticImport(fluent.entityMapping(), Suffix_MAPPING);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class MapperFiler extends AbstractFiler {
             );
         }
         spec.addField(FieldSpec.builder(String.class, "ResultMap",
-            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            PUBLIC_STATIC_FINAL)
             .initializer("$S", fluent.getClassName() + "ResultMap")
             .build()
         );
@@ -113,9 +114,9 @@ public class MapperFiler extends AbstractFiler {
 
     @Override
     protected MethodSpec m_mapping() {
-        return this.publicMethod("mapping", IMapping.class)
+        return this.publicMethod(Suffix_mapping, IMapping.class)
             .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
-            .addStatement("return $T.MAPPING", fluent.entityMapping())
+            .addStatement("return $L", Suffix_MAPPING)
             .build();
     }
 
@@ -518,13 +519,13 @@ public class MapperFiler extends AbstractFiler {
     private TypeSpec t_SqlProvider() {
         return TypeSpec.classBuilder(MapperSqlProvider)
             .superclass(paraType(ClassName.get(SqlProvider.class), fluent.entity()))
-            .addModifiers(Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .addMethod(this.m_mapping2())
             .build();
     }
 
     private MethodSpec m_mapping2() {
-        return this.publicMethod("mapping", IMapping.class)
-            .addStatement("return $T.MAPPING", fluent.entityMapping()).build();
+        return this.publicMethod(Suffix_mapping, IMapping.class)
+            .addStatement("return $L", Suffix_MAPPING).build();
     }
 }

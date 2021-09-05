@@ -13,6 +13,7 @@ import javax.lang.model.element.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 
 /**
@@ -70,17 +71,15 @@ public class MapperRefFiler extends AbstractFile {
     }
 
     private FieldSpec f_allMappers() {
-        return FieldSpec.builder(
-            parameterizedType(CN_Map, CN_Class_IEntity, FM_IRichMapper),
-            "allMappers", Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+        return FieldSpec.builder(parameterizedType(CN_Map, CN_Class_IEntity, FM_IRichMapper),
+            "allMappers", PRIVATE_STATIC_FINAL)
             .initializer("new $T<>()", HashMap.class)
             .build();
     }
 
     private FieldSpec f_allEntityClass() {
-        return FieldSpec.builder(
-            parameterizedType(CN_Set, CN_Class_IEntity),
-            "allEntityClass", Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+        return FieldSpec.builder(parameterizedType(CN_Set, CN_Class_IEntity),
+            "allEntityClass", PRIVATE_STATIC_FINAL)
             .initializer("new $T<>()", HashSet.class)
             .build();
     }
@@ -91,7 +90,8 @@ public class MapperRefFiler extends AbstractFile {
     }
 
     private MethodSpec m_constructor() {
-        MethodSpec.Builder spec = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
+        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PRIVATE)
             .addParameter(FM_MapperFactory, "factory");
 
         for (FluentEntity fluent : FluentList.getFluents()) {
