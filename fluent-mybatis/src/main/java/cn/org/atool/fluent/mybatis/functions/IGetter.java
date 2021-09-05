@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.functions;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import java.io.Serializable;
 
 /**
  * getter方法
@@ -8,12 +8,12 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
  * @author wudarui
  */
 @FunctionalInterface
-public interface IGetter {
+public interface IGetter<E> extends Serializable {
     /**
      * 返回属性值
      *
      * @param entity Entity
      * @return 属性值
      */
-    Object get(IEntity entity);
+    Object get(E entity);
 }
