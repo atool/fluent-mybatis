@@ -15,12 +15,14 @@ public class StudentRelationTest extends BaseTest {
             .id.values(1, 2)
             .deskMateId.values(2, 1)
             .userName.values("tom", "rose")
+            .env.values("test_env")
+            .isDeleted.values(false)
             .cleanAndInsert();
 
         StudentEntity deskMate = new StudentEntity().setId(1L).findDeskMate();
         // 验证执行的SQL语句
         db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ? AND `desk_mate_id` = ?");
-        db.sqlList().wantFirstPara().eqList(1L);
+        db.sqlList().wantFirstPara().eqList(false, "test_env", 1L);
         // 验证返回的同桌数据
         want.object(deskMate).eqReflect(ATM.dataMap.student.entity(1)
             .id.values(2)

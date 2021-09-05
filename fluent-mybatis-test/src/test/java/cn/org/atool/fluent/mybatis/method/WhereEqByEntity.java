@@ -19,7 +19,7 @@ public class WhereEqByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("address");
 
-        StudentQuery query = mapper.query()
+        StudentQuery query = mapper.emptyQuery()
             .where.eqByEntity(student)
             .end();
 
@@ -37,7 +37,7 @@ public class WhereEqByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("address");
 
-        StudentQuery query = mapper.query()
+        StudentQuery query = mapper.emptyQuery()
             .where.eqByEntity(student, FieldRef.Student.userName, FieldRef.Student.age)
             .end();
 
@@ -56,7 +56,7 @@ public class WhereEqByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("address");
 
-        StudentQuery query = mapper.query()
+        StudentQuery query = mapper.emptyQuery()
             .where.eqByEntity(student, StudentEntity::getUserName, StudentEntity::getAge)
             .end();
 
@@ -76,7 +76,7 @@ public class WhereEqByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("address");
 
-        StudentQuery query = mapper.query()
+        StudentQuery query = mapper.emptyQuery()
             .where.eqByExclude(student)
             .end();
 
@@ -98,7 +98,7 @@ public class WhereEqByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("address");
 
-        StudentQuery query = mapper.query()
+        StudentQuery query = mapper.emptyQuery()
             .where.eqByExclude(student)
             .end();
 
@@ -120,7 +120,7 @@ public class WhereEqByEntity extends BaseTest {
             .setUserName("test")
             .setAddress("address");
 
-        StudentQuery query = mapper.query()
+        StudentQuery query = mapper.emptyQuery()
             .where.eqByExclude(student, StudentEntity::getAddress)
             .end();
 
