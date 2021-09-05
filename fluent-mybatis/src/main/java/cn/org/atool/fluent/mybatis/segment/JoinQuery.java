@@ -28,10 +28,6 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
     implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinBuilder1<QL> {
     /**
-     * 主查询类型
-     */
-    private final Class<QL> queryClass;
-    /**
      * 主查询条件
      */
     private final QL query;
@@ -61,7 +57,6 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         this.query = query;
         Parameters parameters = new Parameters();
         this.query.sharedParameter(parameters);
-        this.queryClass = (Class<QL>) query.getClass();
         super.wrapperData = new JoinWrapperData(this.query, this.queries, parameters);
         this.alias.add(this.query.tableAlias);
     }
@@ -88,7 +83,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
 
         this.queries.add(query);
         this.alias.add(query.tableAlias);
-        return new JoinOn<>(this, this.queryClass, this.query, joinType, (Class<QR>) query.getClass(), query);
+        return new JoinOn<>(this, this.query, joinType, query);
     }
 
     /**

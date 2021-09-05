@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
@@ -11,9 +12,6 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -36,24 +34,24 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
 
     private final JoinOnBuilder<QL, QR> onBuilder;
 
-    public JoinOn(JoinQuery<QL> joinQuery, Class<QL> qLeftClass, QL qLeft, JoinType joinType, Class<QR> qRightClass, QR qRight) {
+    public JoinOn(JoinQuery<QL> joinQuery, QL qLeft, JoinType joinType, QR qRight) {
         this.joinQuery = joinQuery;
         this.onBuilder = new JoinOnBuilder<>(qLeft, joinType, qRight);
         /* 初始化左查询关联 */
-        this.onLeft = this.emptyQuery(qLeftClass, qLeft);
+        this.onLeft = this.emptyQuery(qLeft);
         /* 初始化右查询关联 */
-        this.onRight = this.emptyQuery(qRightClass, qRight);
+        this.onRight = this.emptyQuery(qRight);
     }
 
-    private <Q extends BaseQuery> Q emptyQuery(Class qClass, BaseQuery oldQuery) {
+    private <Q extends BaseQuery> Q emptyQuery(BaseQuery origQuery) {
         BaseQuery onQuery;
-        if (oldQuery instanceof FreeQuery) {
-            onQuery = ((FreeQuery) oldQuery).emptyQuery();
-            ((FreeQuery) onQuery).setDbType(oldQuery.dbType());
+        if (origQuery instanceof FreeQuery) {
+            onQuery = ((FreeQuery) origQuery).emptyQuery();
+            ((FreeQuery) onQuery).setDbType(origQuery.dbType());
         } else {
-            onQuery = newEmptyQuery(qClass);
+            onQuery = IRef.instance().mapping(origQuery.entityClass).emptyQuery();
         }
-        onQuery.tableAlias = oldQuery.tableAlias;
+        onQuery.tableAlias = origQuery.tableAlias;
         onQuery.sharedParameter(this.joinQuery);
         return (Q) onQuery;
     }
@@ -146,7 +144,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     }
 
     private JoinOn onQuery(IQuery query, Function func) {
-        BaseQuery onQuery = this.emptyQuery(query.getClass(), (BaseQuery) query);
+        BaseQuery onQuery = this.emptyQuery((BaseQuery) query);
         String sql = ((BaseSegment) func.apply(onQuery)).end().getWrapperData().getWhereSql();
         this.onBuilder.on(sql);
         return this;
@@ -160,26 +158,5 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     public JB endJoin() {
         this.joinQuery.getWrapperData().addTable(this.onBuilder.table());
         return (JB) this.joinQuery;
-    }
-
-    private static final Map<Class, Constructor> QueryNoArgConstructors = new HashMap<>(128);
-
-    /**
-     * 执行on条件时, 新创建查询对象, 避免对原有对象的造成干扰
-     *
-     * @param klass query class
-     * @param <Q>   class type
-     * @return BaseQuery
-     */
-    private static <Q extends BaseQuery> Q newEmptyQuery(Class<Q> klass) {
-        try {
-            if (!QueryNoArgConstructors.containsKey(klass)) {
-                QueryNoArgConstructors.put(klass, klass.getConstructor());
-            }
-            return (Q) QueryNoArgConstructors.get(klass).newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(String.format("new %s() error: %s",
-                klass.getSimpleName(), e.getMessage()), e);
-        }
     }
 }
