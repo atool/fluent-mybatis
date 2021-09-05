@@ -4,7 +4,8 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,12 +66,33 @@ public abstract class AbstractFiler {
 
     protected abstract void build(TypeSpec.Builder builder);
 
-    protected TypeName paraType(ClassName raw, TypeName... paras) {
-        return ParameterizedTypeName.get(raw, paras);
+    protected TypeName paraType(ClassName raw, Object... paras) {
+        TypeName[] types = typeNames(paras);
+        return ParameterizedTypeName.get(raw, types);
     }
 
-    protected TypeName mapType(Class... paras) {
-        return ParameterizedTypeName.get(Map.class, paras);
+    protected TypeName paraType(Class raw, Object... paras) {
+        TypeName[] types = typeNames(paras);
+        return ParameterizedTypeName.get(ClassName.get(raw), types);
+    }
+
+    protected TypeName paraType(String typeName, Object... paras) {
+        TypeName[] types = typeNames(paras);
+        return ParameterizedTypeName.get(ClassNames2.getClassName(typeName), types);
+    }
+
+    private TypeName[] typeNames(Object... paras) {
+        List<TypeName> types = new ArrayList<>(paras.length);
+        for (Object p : paras) {
+            if (p instanceof String) {
+                types.add(TypeVariableName.get((String) p));
+            } else if (p instanceof Class) {
+                types.add(ClassName.get((Class) p));
+            } else {
+                types.add((TypeName) p);
+            }
+        }
+        return types.toArray(new TypeName[0]);
     }
 
     /**

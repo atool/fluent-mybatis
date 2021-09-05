@@ -26,7 +26,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        StudentEntity o = QueryRef.student.query()
+        StudentEntity o = QueryRef.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOne(StudentEntity.class).orElse(null);
         want.object(o.getUserName()).eq("test1");
@@ -38,7 +38,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        String o = QueryRef.student.query()
+        String o = QueryRef.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOne(StudentEntity::getUserName).orElse(null);
         want.object(o).eq("test1");
@@ -50,7 +50,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        StudentEntity o = QueryRef.student.query()
+        StudentEntity o = QueryRef.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOneMap(map -> new StudentEntity()
                 .setUserName((String) map.get("user_name"))
@@ -88,7 +88,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        Map<String, Object> map = QueryRef.student.query()
+        Map<String, Object> map = QueryRef.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOneMap().orElse(null);
         want.object(map.get("user_name")).eq("test1");

@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
@@ -7,7 +8,10 @@ import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.*;
-import cn.org.atool.fluent.mybatis.segment.where.*;
+import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
+import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
+import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
+import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 
@@ -48,6 +52,7 @@ public class SegmentFiler extends AbstractFiler {
         spec.addAnnotation(suppressWarnings("unused", "rawtypes", "unchecked"));
         spec.addType(this.nestedISegment())
             .addType(this.nestedSelector())
+            .addType(this.nestedEntityWhere())
             .addType(this.nestedQueryWhere())
             .addType(this.nestedUpdateWhere())
             .addType(this.nestedGroupBy())
@@ -243,6 +248,21 @@ public class SegmentFiler extends AbstractFiler {
         return builder.build();
     }
 
+    private TypeSpec nestedEntityWhere() {
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_EntityWhere)
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
+            .addTypeVariable(TypeVariableName.get("W", paraType(WhereBase.class, "W", "U", fluent.query())))
+            .addTypeVariable(TypeVariableName.get("U", paraType(IWrapper.class, "?", "U", fluent.query())))
+            .superclass(paraType(WhereBase.class, "W", "U", fluent.query()))
+            .addJavadoc("query/update where条件设置")
+            .addMethod(this.construct1_EntityWhere())
+            .addMethod(this.construct2_EntityWhere());
+        for (CommonField fc : fluent.getFields()) {
+            buildWhereCondition(builder, fc);
+        }
+        return builder.build();
+    }
+
     /**
      * public static class QueryWhere extends ...
      *
@@ -251,19 +271,11 @@ public class SegmentFiler extends AbstractFiler {
     private TypeSpec nestedQueryWhere() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_QueryWhere)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .superclass(super.paraType(
-                ClassName.get(WhereBase.class),
-                fluent.queryWhere(),
-                fluent.query(),
-                fluent.query()
-            ))
+            .superclass(super.paraType("EntityWhere", Suffix_QueryWhere, fluent.query()))
             .addJavadoc("query where条件设置")
             .addMethod(this.construct1_QueryWhere())
             .addMethod(this.construct2_QueryWhere())
             .addMethod(this.m_buildOr_QueryWhere());
-        for (CommonField fc : fluent.getFields()) {
-            buildWhereCondition(builder, fc, Suffix_QueryWhere);
-        }
         return builder.build();
     }
 
@@ -275,23 +287,15 @@ public class SegmentFiler extends AbstractFiler {
     private TypeSpec nestedUpdateWhere() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_UpdateWhere)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .superclass(super.paraType(
-                ClassName.get(WhereBase.class),
-                fluent.updateWhere(),
-                fluent.updater(),
-                fluent.query()
-            ))
+            .superclass(super.paraType("EntityWhere", Suffix_UpdateWhere, fluent.updater()))
             .addJavadoc("update where条件设置")
             .addMethod(this.construct1_UpdateWhere())
             .addMethod(this.construct2_UpdateWhere())
             .addMethod(this.m_buildOr_UpdateWhere());
-        for (CommonField fc : fluent.getFields()) {
-            buildWhereCondition(builder, fc, Suffix_UpdateWhere);
-        }
         return builder.build();
     }
 
-    private void buildWhereCondition(TypeSpec.Builder builder, CommonField fc, String suffix_queryWhere) {
+    private void buildWhereCondition(TypeSpec.Builder builder, CommonField fc) {
         MethodSpec.Builder field = MethodSpec
             .methodBuilder(fc.getName())
             .addModifiers(Modifier.PUBLIC);
@@ -299,24 +303,24 @@ public class SegmentFiler extends AbstractFiler {
         try {
             Class klass = Class.forName(klassName);
             if (klass.equals(String.class)) {
-                field.returns(whereType(suffix_queryWhere, StringWhere.class));
+                field.returns(this.whereType(StringWhere.class));
             } else if (klass.equals(Boolean.class)) {
-                field.returns(whereType(suffix_queryWhere, BooleanWhere.class));
+                field.returns(this.whereType(BooleanWhere.class));
             } else if (Number.class.isAssignableFrom(klass)) {
-                field.returns(whereType(suffix_queryWhere, NumericWhere.class));
+                field.returns(this.whereType(NumericWhere.class));
             } else {
-                field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
+                field.returns(this.whereType(ObjectWhere.class));
             }
         } catch (Exception e) {
-            field.returns(whereType(suffix_queryWhere, ObjectWhere.class));
+            field.returns(this.whereType(ObjectWhere.class));
         }
 
         field.addStatement("return this.set($T.$L)", fluent.entityMapping(), fc.getName());
         builder.addMethod(field.build());
     }
 
-    private TypeName whereType(String suffix_queryWhere, Class<? extends BaseWhere> whereKlass) {
-        return paraType(ClassName.get(whereKlass), TypeVariableName.get(suffix_queryWhere), fluent.query());
+    private TypeName whereType(Class whereKlass) {
+        return paraType(ClassName.get(whereKlass), TypeVariableName.get("W"), fluent.query());
     }
 
     /**
@@ -409,6 +413,23 @@ public class SegmentFiler extends AbstractFiler {
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .addParameter(ClassName.get(FieldMapping.class), "fieldMapping")
             .returns(TypeVariableName.get("R"))
+            .build();
+    }
+
+    private MethodSpec construct1_EntityWhere() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(TypeVariableName.get("U"), "wrapper")
+            .addStatement("super(wrapper)")
+            .build();
+    }
+
+    private MethodSpec construct2_EntityWhere() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PROTECTED)
+            .addParameter(TypeVariableName.get("U"), "wrapper")
+            .addParameter(TypeVariableName.get("W"), "where")
+            .addStatement("super(wrapper, where)")
             .build();
     }
 

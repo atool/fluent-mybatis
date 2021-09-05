@@ -21,7 +21,7 @@ public class PartitionTest extends BaseTest {
         String userName = "my_test_name";
         // 编码实现分表逻辑
         Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
-        StudentQuery query = StudentQuery.query(table)
+        StudentQuery query = StudentQuery.emptyQuery(table)
             .where.defaults()
             .and.userName().eq(userName).end();
         want.exception(() -> mapper.listEntity(query),
@@ -36,7 +36,7 @@ public class PartitionTest extends BaseTest {
         String userName = "my_test_name";
         // 编码实现分表逻辑
         Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
-        StudentUpdate updater = StudentUpdate.updater(table)
+        StudentUpdate updater = StudentUpdate.emptyUpdater(table)
             .set.userName().is("test").end()
             .where.defaults()
             .and.userName().eq(userName).end();

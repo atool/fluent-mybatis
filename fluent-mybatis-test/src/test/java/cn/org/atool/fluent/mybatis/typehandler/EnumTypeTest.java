@@ -69,7 +69,7 @@ public class EnumTypeTest extends BaseTest {
             .enumString.values("test1", "test3", "test2")
             .cleanAndInsert();
 
-        MyEnumTypeQuery query = MyEnumTypeQuery.query()
+        MyEnumTypeQuery query = MyEnumTypeQuery.emptyQuery()
             .where.enumNum().eq(MyEnum.test2)
             .and.enumString().eq(MyEnum.test1)
             .end();

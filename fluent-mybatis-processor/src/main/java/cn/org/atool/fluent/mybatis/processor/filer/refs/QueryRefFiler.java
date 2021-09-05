@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_HashMap_AMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
 
@@ -77,18 +77,18 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     public static MethodSpec m_emptyQuery(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder("emptyQuery")
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_EMPTY_QUERY)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
             .returns(IQuery.class);
         if (isRef) {
             spec.addAnnotation(Override.class)
                 .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.emptyQuery(entityClass)", getClassName());
+                .addStatement("return $T.$L(entityClass)", getClassName(), M_EMPTY_QUERY);
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的空Query实例")
-                .addStatement("\treturn mapping(clazz).query()");
+                .addStatement("\treturn mapping(clazz).$L()", M_EMPTY_QUERY);
         }
         return spec.build();
     }
@@ -111,18 +111,18 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     public static MethodSpec m_emptyUpdater(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder("emptyUpdater")
+        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_EMPTY_UPDATER)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
             .returns(IUpdate.class);
         if (isRef) {
             spec.addAnnotation(Override.class)
                 .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.emptyUpdater(entityClass)", getClassName());
+                .addStatement("return $T.$L(entityClass)", getClassName(), M_EMPTY_UPDATER);
         } else {
             spec.addModifiers(Modifier.STATIC)
                 .addJavadoc("返回clazz实体对应的空Updater实例")
-                .addStatement("\treturn mapping(clazz).updater()");
+                .addStatement("\treturn mapping(clazz).$L()", M_EMPTY_UPDATER);
         }
         return spec.build();
     }

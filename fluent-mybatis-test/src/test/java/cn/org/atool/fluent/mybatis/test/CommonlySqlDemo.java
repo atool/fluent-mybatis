@@ -20,7 +20,7 @@ public class CommonlySqlDemo extends BaseTest {
         ATM.dataMap.student.initTable(1).cleanAndInsert();
         // oracle: TO_CHAR(DATEADD(TO_DATE('${bizdate}', 'yyyymmdd'), - 1,'dd'),'yyyymmdd')
         // mysql
-        List list = StudentQuery.query()
+        List list = StudentQuery.emptyQuery()
             .select.applyAs("date_format(DATE_ADD(str_to_date('2020-01-29','%Y-%m-%d'), INTERVAL -1 DAY),'%Y-%m-%d')", "yesterday").end()
             .limit(1).to().listObjs();
         want.object(list.get(0)).eq("2020-01-28");
@@ -34,7 +34,7 @@ public class CommonlySqlDemo extends BaseTest {
             .subject.values("语文", "数学")
             .score.values(89, 90)
             .cleanAndInsert();
-        List list = StudentScoreQuery.query()
+        List list = StudentScoreQuery.emptyQuery()
             .select.apply(row2col("subject", "score", "语文", "数学")).end()
             .groupBy.studentId().end()
             .to().listMaps();
@@ -51,7 +51,7 @@ public class CommonlySqlDemo extends BaseTest {
     @DisplayName("统计重复条数")
     @Test
     void test_deprecate() {
-        StudentScoreQuery.query().select.studentId().count("_count").end()
+        StudentScoreQuery.emptyQuery().select.studentId().count("_count").end()
             .groupBy.studentId().end()
             .having.apply("_count").gt(1).end()
             .to().listMaps();

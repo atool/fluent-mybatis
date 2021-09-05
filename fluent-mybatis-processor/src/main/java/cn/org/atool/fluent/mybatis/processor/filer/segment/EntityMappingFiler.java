@@ -201,12 +201,12 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private MethodSpec m_emptyQuery() {
-        return super.publicMethod(M_NEW_QUERY, true, fluent.query())
+        return super.publicMethod(M_EMPTY_QUERY, true, fluent.query())
             .addStatement("return new $T()", fluent.query()).build();
     }
 
     private MethodSpec m_emptyUpdater() {
-        return super.publicMethod(M_NEW_UPDATER, true, fluent.updater())
+        return super.publicMethod(M_EMPTY_UPDATER, true, fluent.updater())
             .addStatement("return new $T()", fluent.updater()).build();
     }
 

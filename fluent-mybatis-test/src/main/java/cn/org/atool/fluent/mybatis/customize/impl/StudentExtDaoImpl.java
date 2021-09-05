@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, IBaseDao<StudentEntity> {
     @Override
     public int count(String userName) {
-        return super.defaultQuery()
+        return super.query()
             .where.userName().eq(userName).end()
             .to().count();
     }
 
     @Override
     public List<String> selectFields(Long... ids) {
-        return super.defaultQuery()
+        return super.query()
             .where.id().in(ids).end()
             .to().listEntity()
             .stream()
@@ -32,14 +32,14 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public List<StudentEntity> selectList(Long... ids) {
-        return super.defaultQuery()
+        return super.query()
             .where.id().in(ids).end()
             .to().listEntity();
     }
 
     @Override
     public List<String> selectObjs(Long... ids) {
-        return super.defaultQuery()
+        return super.query()
             .select.apply(FieldRef.Student.userName).end()
             .where.id().in(ids).end()
             .to().listPoJo(
@@ -48,7 +48,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public List<String> selectObjs2(Long... ids) {
-        return super.defaultQuery()
+        return super.query()
             .select.apply(FieldRef.Student.userName, FieldRef.Student.age).end()
             .where.id().in(ids).end()
             .to().listPoJo(
@@ -57,7 +57,7 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public StudentEntity selectOne(String likeName) {
-        return super.defaultQuery()
+        return super.query()
             .where.userName().like(likeName)
             .end()
             .to().findOne()
@@ -66,28 +66,28 @@ public class StudentExtDaoImpl extends StudentBaseDao implements StudentExtDao, 
 
     @Override
     public String selectOne(long id) {
-        return super.defaultQuery()
+        return super.query()
             .where.id().eq(id).end()
             .to().findOne(StudentEntity::getUserName).orElse(null);
     }
 
     @Override
     public void deleteByQuery(String username) {
-        super.defaultQuery()
+        super.query()
             .where.userName().eq(username).end()
             .to().delete();
     }
 
     @Override
     public void deleteByQuery(String... userNames) {
-        super.defaultQuery()
+        super.query()
             .where.userName().in(userNames).end()
             .to().delete();
     }
 
     @Override
     public void updateUserNameById(String newUserName, long id) {
-        super.defaultUpdater()
+        super.updater()
             .set.userName().is(newUserName).end()
             .where.id().eq(id).end()
             .to().updateBy();

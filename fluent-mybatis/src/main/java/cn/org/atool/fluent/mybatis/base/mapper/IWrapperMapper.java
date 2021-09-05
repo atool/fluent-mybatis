@@ -12,13 +12,15 @@ import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 
 /**
  * 以下方法在EntityMapper中实现接口default方法
+ *
+ * @author wudarui
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>> {
     /**
      * 返回对应的默认构造器
      *
-     * @return
+     * @return IMapping
      */
     IMapping mapping();
 
@@ -48,7 +50,7 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      * @return ignore
      */
     default Q query() {
-        return ((BaseDefaults) mapping()).query();
+        return ((BaseDefaults) mapping()).emptyQuery();
     }
 
     /**
@@ -57,7 +59,7 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      * @return ignore
      */
     default U updater() {
-        return ((BaseDefaults) mapping()).updater();
+        return ((BaseDefaults) mapping()).emptyUpdater();
     }
 
     /**

@@ -17,6 +17,8 @@ public interface FluentConst {
 
     String Suffix_Update = "Update";
 
+    String Suffix_EntityWhere = "EntityWhere";
+
     String Suffix_QueryWhere = "QueryWhere";
 
     String Suffix_UpdateWhere = "UpdateWhere";

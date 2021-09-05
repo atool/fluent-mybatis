@@ -1,17 +1,14 @@
 package cn.org.atool.fluent.mybatis.processor.base;
 
 public interface MethodName {
-    String M_SET_ENTITY_BY_DEFAULT = "setEntityByDefault";
 
-    String M_DEFAULT_QUERY = "defaultQuery";
+    String M_EMPTY_QUERY = "emptyQuery";
 
-    String M_NEW_QUERY = "query";
+    String M_DEFAULT_QUERY = "query";
 
-    String M_NEW_UPDATER = "updater";
+    String M_EMPTY_UPDATER = "emptyUpdater";
 
-    String M_DEFAULT_UPDATER = "defaultUpdater";
-
-    String M_COLUMN2MAPPING = "column2mapping";
+    String M_DEFAULT_UPDATER = "updater";
 
     String M_ALIAS_QUERY = "aliasQuery";
 

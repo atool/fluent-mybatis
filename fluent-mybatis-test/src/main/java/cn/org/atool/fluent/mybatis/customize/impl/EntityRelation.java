@@ -39,9 +39,9 @@ public class EntityRelation implements IEntityRelation {
 
     @Override
     public List<TeacherEntity> findTeacherListOfStudentEntity(StudentEntity student) {
-        return TeacherQuery.defaultQuery()
+        return TeacherQuery.query()
             .where.id().in(
-                StudentTeacherRelationQuery.defaultQuery()
+                StudentTeacherRelationQuery.query()
                     .select.teacherId().end()
                     .where.studentId().eq(student.getId())
                     .end()
@@ -51,9 +51,9 @@ public class EntityRelation implements IEntityRelation {
 
     @Override
     public List<StudentEntity> findStudentListOfTeacherEntity(TeacherEntity teacher) {
-        return StudentQuery.defaultQuery()
+        return StudentQuery.query()
             .where.id().in(
-                StudentTeacherRelationQuery.defaultQuery()
+                StudentTeacherRelationQuery.query()
                     .select.studentId().end()
                     .where.teacherId().eq(teacher.getId())
                     .end()

@@ -17,7 +17,7 @@ import java.util.List;
 public class StudentScoreDaoImpl extends StudentScoreBaseDao implements StudentScoreDao {
     @Override
     public List<ScoreStatistics> statistics(int fromSchoolTerm, int endSchoolTerm, String[] subjects) {
-        return super.listPoJos(ScoreStatistics.class, super.query()
+        return super.listPoJos(ScoreStatistics.class, super.emptyQuery()
             .select.schoolTerm().subject()
             .count("count")
             .min.score("min_score")
@@ -36,7 +36,7 @@ public class StudentScoreDaoImpl extends StudentScoreBaseDao implements StudentS
 
     @Override
     public List<ScoreStatistics> statistics2(int fromSchoolTerm, int endSchoolTerm, String[] subjects) {
-        return mapper.listPoJos(super.query()
+        return mapper.listPoJos(super.emptyQuery()
                 .select.schoolTerm().subject()
                 .count("count")
                 .min.score("min_score")

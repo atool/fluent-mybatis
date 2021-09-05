@@ -12,7 +12,7 @@ public class FindOneTest extends BaseTest {
 
     @Test
     void findOne() {
-        StudentQuery query = StudentQuery.query()
+        StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(2).end();
         dao.findOne(query).orElse(null);
     }

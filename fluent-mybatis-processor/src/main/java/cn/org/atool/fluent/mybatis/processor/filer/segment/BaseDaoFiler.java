@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
+import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -8,8 +9,8 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
 import static cn.org.atool.fluent.mybatis.processor.filer.segment.MapperFiler.getMapperName;
 
 /**
@@ -27,34 +28,16 @@ public class BaseDaoFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(fluent.entityMapping(), "MAPPING");
-        spec.skipJavaLangImports(true);
     }
 
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.addModifiers(Modifier.ABSTRACT)
-            .superclass(this.superBaseDaoImplKlass());
+            .superclass(paraType(BaseDao.class, fluent.entity(), fluent.query(), fluent.updater()));
 
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
-            .addMethod(this.m_newQuery())
-            .addMethod(this.m_defaultQuery())
-            .addMethod(this.m_newUpdater())
-            .addMethod(this.m_defaultUpdater());
-    }
-
-    /**
-     * 超类定义
-     * <pre>
-     * XyzBaseDao extends BaseDao<XyzEntity>
-     * </pre>
-     *
-     * @return TypeName
-     */
-    private TypeName superBaseDaoImplKlass() {
-        ClassName baseImpl = ClassName.get(BaseDao.class.getPackage().getName(), BaseDao.class.getSimpleName());
-        ClassName entity = fluent.entity();
-        return ParameterizedTypeName.get(baseImpl, entity);
+            .addMethod(this.m_defaults());
     }
 
     /**
@@ -86,37 +69,9 @@ public class BaseDaoFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_newQuery() {
-        return super.protectedMethod(M_NEW_QUERY, fluent.query())
-            .addStatement("return new $T()", fluent.query())
-            .build();
-    }
-
-    /**
-     * public EntityQuery query() {}
-     *
-     * @return MethodSpec
-     */
-    private MethodSpec m_defaultQuery() {
-        return super.protectedMethod(M_DEFAULT_QUERY, fluent.query())
-            .addStatement("return MAPPING.$L()", M_DEFAULT_QUERY)
-            .build();
-    }
-
-    private MethodSpec m_newUpdater() {
-        return super.protectedMethod(M_NEW_UPDATER, fluent.updater())
-            .addStatement("return new $T()", fluent.updater())
-            .build();
-    }
-
-    /**
-     * public AddressUpdate updater() {}
-     *
-     * @return MethodSpec
-     */
-    private MethodSpec m_defaultUpdater() {
-        return super.protectedMethod(M_DEFAULT_UPDATER, fluent.updater())
-            .addStatement("return MAPPING.$L()", M_DEFAULT_UPDATER)
+    private MethodSpec m_defaults() {
+        return super.protectedMethod("defaults", ClassName.get(IDefaultGetter.class))
+            .addStatement("return $T.MAPPING", fluent.entityMapping())
             .build();
     }
 

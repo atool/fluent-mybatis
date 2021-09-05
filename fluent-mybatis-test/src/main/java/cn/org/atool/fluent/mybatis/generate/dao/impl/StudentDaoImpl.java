@@ -27,12 +27,12 @@ public class StudentDaoImpl extends StudentBaseDao implements StudentDao {
 
     @Override
     public List<StudentEntity> findStudentsByName(String name) {
-        return super.listEntity(super.query().where.userName().like(name).end());
+        return super.listEntity(super.emptyQuery().where.userName().like(name).end());
     }
 
     @Override
     public void updateAddressAndAgeById(StudentEntity... entities) {
-        List<IUpdate> updates = Arrays.stream(entities).map(student -> super.updater()
+        List<IUpdate> updates = Arrays.stream(entities).map(student -> super.emptyUpdater()
             .set.address().is(student.getAddress())
             .set.age().is(student.getAge())
             .end()

@@ -12,7 +12,7 @@ class MyCustomerInterfaceTest extends BaseTest {
 
     @Test
     void test() {
-        HomeAddressUpdate.defaultUpdater()
+        HomeAddressUpdate.updater()
             .set.city().is("ccc").end()
             .where.id().eq(1L).end()
             .of(mapper).updateBy();

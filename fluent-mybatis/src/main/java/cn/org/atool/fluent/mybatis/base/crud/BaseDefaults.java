@@ -8,20 +8,20 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
  *
  * @author wudarui
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     implements IDefaultGetter {
 
     @Override
     public Q defaultQuery() {
-        Q query = this.query();
+        Q query = this.emptyQuery();
         this.defaultSetter().setQueryDefault(query);
         return query;
     }
 
     @Override
     public U defaultUpdater() {
-        U updater = this.updater();
+        U updater = this.emptyUpdater();
         this.defaultSetter().setUpdateDefault(updater);
         return updater;
     }

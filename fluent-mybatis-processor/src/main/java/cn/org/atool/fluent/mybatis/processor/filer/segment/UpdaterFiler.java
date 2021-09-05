@@ -12,7 +12,7 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Wrapper;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Update;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NEW_UPDATER;
+import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
@@ -147,14 +147,14 @@ public class UpdaterFiler extends AbstractFiler {
     }
 
     private MethodSpec m_emptyUpdater() {
-        return super.publicMethod(M_NEW_UPDATER, false, fluent.updater())
+        return super.publicMethod(M_EMPTY_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addStatement("return new $T()", fluent.updater())
             .build();
     }
 
     private MethodSpec m_emptyUpdater_table() {
-        return super.publicMethod(M_NEW_UPDATER, false, fluent.updater())
+        return super.publicMethod(M_EMPTY_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("return new $T(table, null)", fluent.updater())

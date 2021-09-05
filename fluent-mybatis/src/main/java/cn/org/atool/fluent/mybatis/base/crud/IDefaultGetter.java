@@ -8,12 +8,27 @@ package cn.org.atool.fluent.mybatis.base.crud;
 @SuppressWarnings({"rawtypes"})
 public interface IDefaultGetter {
     /**
+     * Entity class
+     *
+     * @return Entity class
+     */
+    Class entityClass();
+
+    /**
      * 创建一个空查询器(不包括{@link IDefaultSetter#setQueryDefault(IQuery)} 设置的默认条件)
      *
      * @param <Q> IQuery类型
      * @return IQuery
      */
-    <Q extends IQuery> Q query();
+    <Q extends IQuery> Q emptyQuery();
+
+    /**
+     * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
+     *
+     * @param <U> IUpdate类型
+     * @return IUpdate
+     */
+    <U extends IUpdate> U emptyUpdater();
 
     /**
      * 实例化查询构造器
@@ -22,14 +37,6 @@ public interface IDefaultGetter {
      * @return 查询构造器
      */
     <Q extends IQuery> Q defaultQuery();
-
-    /**
-     * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)
-     *
-     * @param <U> IUpdate类型
-     * @return IUpdate
-     */
-    <U extends IUpdate> U updater();
 
     /**
      * 实例化更新构造器

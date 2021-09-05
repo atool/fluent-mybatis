@@ -72,14 +72,14 @@ public class QueryFiler extends AbstractFiler {
     }
 
     private MethodSpec m_emptyQuery() {
-        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addStatement("return new $T()", fluent.query())
             .build();
     }
 
     private MethodSpec m_emptyQuery_Alias() {
-        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(String.class, "alias")
             .addStatement("return new $T(alias)", fluent.query())
@@ -87,7 +87,7 @@ public class QueryFiler extends AbstractFiler {
     }
 
     private MethodSpec m_emptyQuery_table() {
-        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("return new $T(table, null)", fluent.query())
@@ -95,7 +95,7 @@ public class QueryFiler extends AbstractFiler {
     }
 
     private MethodSpec m_emptyQuery_table_Alias() {
-        return super.publicMethod(M_NEW_QUERY, false, fluent.query())
+        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
