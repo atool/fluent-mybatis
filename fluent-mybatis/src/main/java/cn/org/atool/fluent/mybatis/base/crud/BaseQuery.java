@@ -147,7 +147,7 @@ public abstract class BaseQuery<
      * @return JoinOn
      */
     public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinToBuilder<Q>> join(QR query) {
-        return JoinFromBuilder.from((Q) this).join(query);
+        return JoinBuilder.from((Q) this).join(query);
     }
 
     /**
@@ -163,11 +163,11 @@ public abstract class BaseQuery<
     public <QR extends BaseQuery<?, QR>> JoinOn<Q, QR, JoinToBuilder<Q>> join(JoinType joinType, QR query) {
         switch (joinType) {
             case LeftJoin:
-                return JoinFromBuilder.from((Q) this).leftJoin(query);
+                return JoinBuilder.from((Q) this).leftJoin(query);
             case RightJoin:
-                return JoinFromBuilder.from((Q) this).rightJoin(query);
+                return JoinBuilder.from((Q) this).rightJoin(query);
             default:
-                return JoinFromBuilder.from((Q) this).join(query);
+                return JoinBuilder.from((Q) this).join(query);
         }
     }
 }

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -35,7 +35,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .where.address().like("vas").end()
             .groupBy.studentId().end()
             .orderBy.id().asc().end();
-        JoinFromBuilder<StudentQuery> query = JoinFromBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -81,7 +81,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .select.studentId().end()
             .where.address().like("vas").end()
             .groupBy.studentId().end();
-        JoinFromBuilder<StudentQuery> query = JoinFromBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .leftJoin(addressQuery)
             .onEq(StudentEntity::getId, HomeAddressEntity::getId)
@@ -186,7 +186,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .where.address().like("xxx").end();
         StudentScoreQuery query3 = StudentScoreQuery.emptyQuery("t3")
             .where.subject().in(new String[]{"a", "b", "c"}).end();
-        IQuery query = JoinFromBuilder
+        IQuery query = JoinBuilder
             .from(query1)
             .leftJoin(query2)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
@@ -31,7 +31,7 @@ public class JoinQueryTest_Alias2 extends BaseTest {
             .cleanAndInsert();
 
         Parameters parameter = new Parameters();
-        IQuery query = JoinFromBuilder.from(new StudentQuery(false, null, "t1", parameter)
+        IQuery query = JoinBuilder.from(new StudentQuery(false, null, "t1", parameter)
             .selectAll()
             .where.age().eq(34)
             .end())

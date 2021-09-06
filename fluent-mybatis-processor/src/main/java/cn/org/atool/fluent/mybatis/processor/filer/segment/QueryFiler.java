@@ -66,6 +66,7 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.m_emptyQuery_alias())
             .addMethod(this.m_emptyQuery_Table())
             .addMethod(this.m_query())
+            .addMethod(this.m_defaultQuery())
             .addMethod(this.m_query_Alias())
             .addMethod(this.m_query_table())
             .addMethod(this.m_query_table_Alias())
@@ -218,6 +219,13 @@ public class QueryFiler extends AbstractFiler {
         return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addStatement("return new $T()", fluent.query())
+            .build();
+    }
+
+    private MethodSpec m_defaultQuery() {
+        return super.publicMethod("defaultQuery", false, fluent.query())
+            .addModifiers(Modifier.STATIC)
+            .addStatement("return query()")
             .build();
     }
 

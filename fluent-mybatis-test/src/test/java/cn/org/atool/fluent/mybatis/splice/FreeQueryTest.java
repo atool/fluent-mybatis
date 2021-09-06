@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.splice;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -74,7 +74,7 @@ public class FreeQueryTest extends BaseTest {
             .select("t2.id", "t2.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
-        JoinFromBuilder query = JoinFromBuilder
+        JoinBuilder query = JoinBuilder
             .from(query1)
             .join(query2)
             .onApply("t1.id = t2.id").endJoin()
@@ -101,7 +101,7 @@ public class FreeQueryTest extends BaseTest {
             .select("t3.id", "t3.gmt_modified")
             .where.apply("id", EQ, "1").end();
 
-        JoinFromBuilder query = JoinFromBuilder
+        JoinBuilder query = JoinBuilder
             .from(query1)
             .join(query2)
             .onApply("t1.id = t2.id").endJoin()
@@ -142,7 +142,7 @@ public class FreeQueryTest extends BaseTest {
             .apply("super_id", EQ, "153264")
             .end();
 
-        JoinFromBuilder builder = JoinFromBuilder
+        JoinBuilder builder = JoinBuilder
             .from(query1)
             .join(query2)
             .onApply("t1.product_id = t2.product_id").endJoin();

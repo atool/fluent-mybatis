@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.join;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.MemberQuery;
@@ -63,7 +63,7 @@ public class FreeQueryAggregateTest extends BaseTest {
             .groupBy.apply("t2.id").end()
             .having.count.apply("id").gt(1).end();
 
-        JoinFromBuilder query = JoinFromBuilder
+        JoinBuilder query = JoinBuilder
             .from(query1)
             .join(query2)
             .onApply("t1.id = t2.id").endJoin();

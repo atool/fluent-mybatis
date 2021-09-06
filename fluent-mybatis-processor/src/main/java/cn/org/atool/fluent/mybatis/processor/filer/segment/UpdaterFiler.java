@@ -50,15 +50,15 @@ public class UpdaterFiler extends AbstractFiler {
             .addField(this.f_orderBy());
         /* method */
         spec.addMethod(this.constructor0())
-//            .addMethod(this.constructor2_supplier_string())
             .addMethod(this.constructor4_Default_Table_Alias_Parameter())
             .addMethod(this.m_where())
             .addMethod(this.m_mapping());
         /* static method */
         spec.addMethod(this.m_emptyUpdater())
             .addMethod(this.m_emptyUpdater_table())
+            .addMethod(this.m_updater())
             .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_defaultUpdater_table());
+            .addMethod(this.m_dupdater_table());
     }
 
     private FieldSpec f_setter() {
@@ -155,14 +155,21 @@ public class UpdaterFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_defaultUpdater() {
+    private MethodSpec m_updater() {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addStatement("return new $T(true, null, null, null)", fluent.updater())
             .build();
     }
 
-    private MethodSpec m_defaultUpdater_table() {
+    private MethodSpec m_defaultUpdater() {
+        return super.publicMethod("defaultUpdater", false, fluent.updater())
+            .addModifiers(Modifier.STATIC)
+            .addStatement("return updater()")
+            .build();
+    }
+
+    private MethodSpec m_dupdater_table() {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")

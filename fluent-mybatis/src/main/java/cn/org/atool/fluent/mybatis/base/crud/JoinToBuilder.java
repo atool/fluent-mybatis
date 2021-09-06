@@ -10,7 +10,7 @@ import cn.org.atool.fluent.mybatis.segment.JoinOn;
  * @author wudarui
  */
 @SuppressWarnings({"unchecked", "unused"})
-public interface JoinToBuilder<QL extends BaseQuery<?, QL>> extends JoinFromBuilder<QL> {
+public interface JoinToBuilder<QL extends BaseQuery<?, QL>> extends JoinBuilder<QL> {
     /**
      * from left.table join right.table on condition
      *

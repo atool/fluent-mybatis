@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
-import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
@@ -30,7 +30,7 @@ public class JoinApplyTest extends BaseTest {
 
         String alias2 = addressQuery.getTableAlias();
 
-        JoinFromBuilder<StudentQuery> query = JoinFromBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .join(addressQuery)
             .onApply(format("%s.id = %s.id OR %s.age = %s.student_id", alias1, alias2, alias1, alias2))

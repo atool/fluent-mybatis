@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.join;
 
-import cn.org.atool.fluent.mybatis.base.crud.JoinFromBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
@@ -32,7 +32,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .end()
             .groupBy.studentId().end()
             .orderBy.id().asc().end();
-        JoinFromBuilder<StudentQuery> query = JoinFromBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(studentQuery)
             .join(addressQuery)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -72,7 +72,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .and.address().like("vas")
             .end()
             .groupBy.studentId().end();
-        JoinFromBuilder<StudentQuery> query = JoinFromBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(uq)
             .leftJoin(aq)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -106,7 +106,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.isDeleted().eq(true)
             .and.address().like("vas")
             .end();
-        JoinFromBuilder<StudentQuery> query = JoinFromBuilder
+        JoinBuilder<StudentQuery> query = JoinBuilder
             .from(uq)
             .rightJoin(aq)
             .on(l -> l.where.id(), r -> r.where.id())
@@ -128,7 +128,7 @@ public class JoinQueryTest_Lambda1 extends BaseTest {
             .where.age().eq(3).end();
         HomeAddressQuery aq = HomeAddressQuery.emptyQuery("t2")
             .where.address().like("xxx").end();
-        JoinFromBuilder query = JoinFromBuilder
+        JoinBuilder query = JoinBuilder
             .from(uq)
             .leftJoin(aq)
             .on(l -> l.where.homeAddressId(), r -> r.where.id()).endJoin()
