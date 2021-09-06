@@ -405,7 +405,7 @@ public class MybatisUtil {
         }
         for (int index = 1; index < len; index++) {
             char ch = input.charAt(index);
-            if (!isLetter(ch) && !isDigit(ch)) {
+            if (!isLetterOrDigit(ch)) {
                 return false;
             }
         }
@@ -419,7 +419,37 @@ public class MybatisUtil {
      * @return ignore
      */
     public static boolean isLetter(char ch) {
-        return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_';
+        return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '-';
+    }
+
+    /**
+     * a-z, A-Z, 0-9, -, _, $
+     *
+     * @param ch char
+     * @return ignore
+     */
+    public static boolean isLetterOrDigit(char ch) {
+        return ch < 128 && letterAndDigit[ch] == 1;
+    }
+
+    private static final char[] letterAndDigit = new char[128];
+
+    static {
+        for (int i = 0; i < 128; i++) {
+            letterAndDigit[i] = 0;
+        }
+        for (char c = 'A'; c <= 'Z'; c++) {
+            letterAndDigit[c] = 1;
+        }
+        for (char c = 'a'; c <= 'z'; c++) {
+            letterAndDigit[c] = 1;
+        }
+        for (char c = '0'; c <= '9'; c++) {
+            letterAndDigit[c] = 1;
+        }
+        letterAndDigit['_'] = 1;
+        letterAndDigit['-'] = 1;
+        letterAndDigit['$'] = 1;
     }
 
     public static boolean isSpace(char ch) {

@@ -9,6 +9,7 @@ import cn.org.atool.generator.annotation.*;
 import org.apache.ibatis.type.BlobTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 import org.apache.ibatis.type.EnumTypeHandler;
+import org.apache.ibatis.type.LongTypeHandler;
 import org.test4j.module.database.proxy.DataSourceCreator;
 
 public class FluentMyBatisGeneratorMain {
@@ -99,7 +100,8 @@ public class FluentMyBatisGeneratorMain {
             @Table(value = "my_enum_type",
                 columns = {
                     @Column(value = "enum_string", javaType = MyEnum.class, typeHandler = EnumTypeHandler.class),
-                    @Column(value = "enum_num", javaType = MyEnum.class, typeHandler = EnumOrdinalTypeHandler.class)
+                    @Column(value = "enum-num", javaType = MyEnum.class, typeHandler = EnumOrdinalTypeHandler.class),
+                    @Column(value = "id", typeHandler = LongTypeHandler.class)
                 })
         }, entitySuffix = "PoJo")
     static class EntitySuffix_TypeHandler_CustomizedMapper {

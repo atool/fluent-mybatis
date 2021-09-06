@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 import org.apache.ibatis.type.EnumTypeHandler;
+import org.apache.ibatis.type.LongTypeHandler;
 
 /**
  * MyEnumTypePoJo: 数据映射实体定义
@@ -39,14 +40,17 @@ public class MyEnumTypePoJo extends RichEntity {
   /**
    * 主键id
    */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      typeHandler = LongTypeHandler.class
+  )
   private Long id;
 
   /**
    * 枚举类型, 序号
    */
   @TableField(
-      value = "enum_num",
+      value = "enum-num",
       typeHandler = EnumOrdinalTypeHandler.class
   )
   private MyEnum enumNum;

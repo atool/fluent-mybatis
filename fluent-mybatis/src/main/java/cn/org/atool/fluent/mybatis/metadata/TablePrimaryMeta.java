@@ -3,6 +3,8 @@ package cn.org.atool.fluent.mybatis.metadata;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.reflect.Field;
 
@@ -13,10 +15,6 @@ import java.lang.reflect.Field;
  */
 @Getter
 public class TablePrimaryMeta extends FieldMeta {
-    /**
-     * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
-     */
-    private final String el;
     /**
      * 主键ID是否自增
      */
@@ -30,6 +28,8 @@ public class TablePrimaryMeta extends FieldMeta {
     public TablePrimaryMeta(Field field, TableId tableId) {
         super(tableId.value(), field);
         this.setJdbcType(tableId.jdbcType());
+        this.typeHandler = UnknownTypeHandler.class == tableId.typeHandler() ? null : (Class<? extends TypeHandler<?>>) tableId.typeHandler();
+
         this.el = el();
         this.autoIncrease = tableId.auto();
         this.seqName = tableId.seqName();

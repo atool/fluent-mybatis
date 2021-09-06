@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.metadata;
 
 import lombok.Getter;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
 
 import java.lang.reflect.Field;
 
@@ -32,6 +33,14 @@ public abstract class FieldMeta implements Comparable<FieldMeta> {
      * JDBC类型
      */
     private JdbcType jdbcType;
+    /**
+     * 类型处理器
+     */
+    protected Class<? extends TypeHandler<?>> typeHandler;
+    /**
+     * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
+     */
+    protected String el;
 
     public FieldMeta(String column, Field field) {
         this.property = field.getName();
@@ -47,10 +56,13 @@ public abstract class FieldMeta implements Comparable<FieldMeta> {
         }
     }
 
-    public String el() {
+    protected String el() {
         String el = this.property;
         if (this.jdbcType != null) {
             el += (", jdbcType = " + jdbcType.name());
+        }
+        if (typeHandler != null) {
+            el += (", typeHandler = " + typeHandler.getName());
         }
         return el;
     }

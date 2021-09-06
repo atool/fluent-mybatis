@@ -26,12 +26,38 @@ public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends 
     protected abstract IDefaultGetter defaults();
 
     /**
+     * 构造默认查询条件
+     *
+     * @return IQuery
+     */
+    protected Q query() {
+        return this.defaults().query();
+    }
+
+    /**
      * 无任何条件的查询
      *
      * @return IQuery
      */
     protected Q emptyQuery() {
         return defaults().emptyQuery();
+    }
+
+    /**
+     * @deprecated replaced by query()
+     */
+    @Deprecated
+    protected Q defaultQuery() {
+        return this.query();
+    }
+
+    /**
+     * 构造默认更新条件
+     *
+     * @return IUpdate
+     */
+    protected U updater() {
+        return this.defaults().updater();
     }
 
     /**
@@ -44,21 +70,11 @@ public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends 
     }
 
     /**
-     * 构造默认查询条件
-     *
-     * @return IQuery
+     * @deprecated replaced by updater()
      */
-    protected Q query() {
-        return this.defaults().query();
-    }
-
-    /**
-     * 构造默认更新条件
-     *
-     * @return IUpdate
-     */
-    protected U updater() {
-        return this.defaults().updater();
+    @Deprecated
+    protected U defaultUpdater() {
+        return this.updater();
     }
 
     @Override

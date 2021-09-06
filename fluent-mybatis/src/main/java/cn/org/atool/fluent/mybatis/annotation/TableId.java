@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.annotation;
 
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.annotation.*;
 
@@ -28,6 +30,12 @@ public @interface TableId {
      * JDBC类型 (该默认值不代表会按照该值生效)
      */
     JdbcType jdbcType() default JdbcType.UNDEFINED;
+
+    /**
+     * 类型处理器 (该默认值不代表会按照该值生效)
+     */
+    Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
+
 
     /**
      * 自增主键产生的sequence name

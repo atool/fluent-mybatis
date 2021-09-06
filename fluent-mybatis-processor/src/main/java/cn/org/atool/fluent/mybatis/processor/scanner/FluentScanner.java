@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 
 import javax.lang.model.element.*;
@@ -22,6 +23,11 @@ import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Long;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_DEFAULTS;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
 
+/**
+ * FluentScanner 对{@link FluentMybatis}Entity上的注解进行解析
+ *
+ * @author darui.wu
+ */
 @SuppressWarnings({"unchecked"})
 public class FluentScanner extends ElementScanner8<Void, Void> {
     final Consumer<String> logger;
@@ -115,19 +121,8 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         field.setNotLarge(tableField.notLarge());
         field.setNumericScale(tableField.numericScale());
         field.setJdbcType(tableField.jdbcType().name());
-        for (AnnotationMirror annotationMirror : var.getAnnotationMirrors()) {
-            if (!annotationMirror.getAnnotationType().toString().contains(TableField.class.getSimpleName())) {
-                continue;
-            }
-            Map<ExecutableElement, AnnotationValue> values = (Map<ExecutableElement, AnnotationValue>) annotationMirror.getElementValues();
-            for (Map.Entry<ExecutableElement, AnnotationValue> entry : values.entrySet()) {
-                String method = entry.getKey().getSimpleName().toString();
-                AnnotationValue value = entry.getValue();
-                if ("typeHandler".equals(method)) {
-                    field.setTypeHandler(ClassNames2.getClassName(value.getValue().toString()));
-                }
-            }
-        }
+        field.setTypeHandler(this.getTypeHandler(var, TableField.class.getSimpleName()));
+
         return field;
     }
 
@@ -145,7 +140,33 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         field.setAutoIncrease(tableId.auto());
         field.setSeqIsBeforeOrder(tableId.before());
         field.setJdbcType(tableId.jdbcType().name());
+        field.setTypeHandler(this.getTypeHandler(var, TableId.class.getSimpleName()));
         field.setSeqName(tableId.seqName());
         return field;
+    }
+
+    /**
+     * 获取 {@link TableId}和{@link TableField}上的typeHandler属性
+     *
+     * @param var   注解实例
+     * @param aName "TableId" or "TableField"
+     * @return TypeName
+     */
+    private TypeName getTypeHandler(VariableElement var, String aName) {
+        for (AnnotationMirror annotationMirror : var.getAnnotationMirrors()) {
+            String aTypeName = annotationMirror.getAnnotationType().toString();
+            if (!aTypeName.contains(aName)) {
+                continue;
+            }
+            Map<ExecutableElement, AnnotationValue> values = (Map<ExecutableElement, AnnotationValue>) annotationMirror.getElementValues();
+            for (Map.Entry<ExecutableElement, AnnotationValue> entry : values.entrySet()) {
+                String method = entry.getKey().getSimpleName().toString();
+                AnnotationValue value = entry.getValue();
+                if ("typeHandler".equals(method)) {
+                    return ClassNames2.getClassName(value.getValue().toString());
+                }
+            }
+        }
+        return null;
     }
 }

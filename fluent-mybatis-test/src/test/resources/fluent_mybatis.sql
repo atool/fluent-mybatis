@@ -207,7 +207,7 @@ create table my_enum_type
 (
     id          bigint auto_increment COMMENT '主键id',
     enum_string varchar(20) null COMMENT '枚举类型, 字符',
-    enum_num    int null COMMENT '枚举类型, 序号',
+    `enum-num`    int null COMMENT '枚举类型, 序号',
     constraint my_enum_type_pk primary key (id)
 ) ENGINE = InnoDB
   CHARACTER SET = utf8;

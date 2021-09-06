@@ -267,7 +267,7 @@ public class WrapperData implements IWrapperData {
                 pos = 2;
             } else if ((pos == 2 || pos == 3) && isSpace(c)) {
                 pos = 3;
-            } else if (pos >= 3 && (isLetter(c) || isDigit(c))) {
+            } else if (pos >= 3 && (isLetterOrDigit(c))) {
                 pos = 4;
                 buff.append(c);
             } else if (pos == 4 && (isSpace(c) || c == ',')) {

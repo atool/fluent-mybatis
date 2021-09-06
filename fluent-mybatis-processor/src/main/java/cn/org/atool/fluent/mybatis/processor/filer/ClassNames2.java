@@ -33,6 +33,8 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName Mybatis_Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");
 
+    ClassName Mybatis_UnknownTypeHandler = ClassName.get("org.apache.ibatis.type", "UnknownTypeHandler");
+
     ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
     ParameterizedTypeName CN_Map_AMapping = ParameterizedTypeName.get(Map.class, Class.class, AMapping.class);

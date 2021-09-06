@@ -24,14 +24,6 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
 @EqualsAndHashCode(callSuper = false)
 public class TableFieldMeta extends FieldMeta {
     /**
-     * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
-     */
-    protected String el;
-    /**
-     * 类型处理器
-     */
-    protected Class<? extends TypeHandler<?>> typeHandler;
-    /**
      * numericScale
      */
     protected String numericScale;
@@ -63,15 +55,11 @@ public class TableFieldMeta extends FieldMeta {
             this.insert = tableField.insert();
             this.update = tableField.update();
         }
-        this.el = this.el();
     }
 
     @Override
-    public String el() {
+    protected String el() {
         String el = super.el();
-        if (typeHandler != null) {
-            el += (", typeHandler = " + typeHandler.getName());
-        }
         if (notBlank(numericScale)) {
             el += (", numericScale = " + numericScale);
         }
