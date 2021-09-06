@@ -32,10 +32,10 @@ public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
   public final transient KeyValue<MyEnumTypeDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
-      value = "enum_num",
+      value = "enum-num",
       type = "INT"
   )
-  public final transient KeyValue<MyEnumTypeDataMap> enumNum = new KeyValue<>(this, "enum_num", "enumNum", supplier);
+  public final transient KeyValue<MyEnumTypeDataMap> enumNum = new KeyValue<>(this, "enum-num", "enumNum", supplier);
 
   @ColumnDef(
       value = "enum_string",
