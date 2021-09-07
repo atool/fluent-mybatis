@@ -25,6 +25,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
+import static cn.org.atool.fluent.mybatis.mapper.MapperSql.tmpTable;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
@@ -38,7 +40,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class CommonSqlKit implements SqlKit {
     protected final DbType dbType;
 
@@ -127,7 +129,7 @@ public class CommonSqlKit implements SqlKit {
     public String deleteByIds(SqlProvider provider, Collection ids) {
         MapperSql sql = new MapperSql();
         sql.DELETE_FROM(provider.tableName(), null);
-        sql.WHERE_PK_IN(dbType.wrap(provider.mapping().primaryId(true)), ids.size());
+        whereEqIds(provider, sql, ids.toArray());
         return sql.toString();
     }
 
@@ -138,7 +140,7 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public String logicDeleteByIds(SqlProvider provider, Collection ids) {
-        return this.logicDeleted(provider, sql -> sql.WHERE_PK_IN(dbType.wrap(provider.mapping().primaryId(true)), ids.size()));
+        return this.logicDeleted(provider, sql -> whereEqIds(provider, sql, ids.toArray()));
     }
 
     @Override
@@ -238,11 +240,11 @@ public class CommonSqlKit implements SqlKit {
         if (primary == null) {
             throw new IllegalArgumentException("Primary of entity is not defined.");
         } else {
-            sql.WHERE(primary.el(dbType, Param_ET));
+            sql.WHERE(primary.columnEqVar(dbType, Param_ET, null));
         }
         if (version != null) {
             assertNotNull("lock version field(" + version.name + ")", columns.get(version.column));
-            sql.APPEND(" AND " + version.el(dbType, Param_ET));
+            sql.APPEND(" AND " + version.columnEqVar(dbType, Param_ET, null));
         }
         return sql.toString();
     }
@@ -251,10 +253,13 @@ public class CommonSqlKit implements SqlKit {
     public String countNoLimit(SqlProvider provider, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
+        }
+        MapperSql sql = new MapperSql();
+        sql.COUNT(ew.getTable(), ew);
+        sql.WHERE_GROUP_BY(ew);
+        if (ew.hasGroupBy()) {
+            return "SELECT COUNT(*) FROM" + brackets(sql) + SPACE + tmpTable();
         } else {
-            MapperSql sql = new MapperSql();
-            sql.COUNT(ew.getTable(), ew);
-            sql.WHERE_GROUP_BY(ew);
             return sql.toString();
         }
     }
@@ -280,11 +285,11 @@ public class CommonSqlKit implements SqlKit {
         if (!ew.hasUnion()) {
             return sql;
         }
-        StringBuilder buff = new StringBuilder("(").append(sql).append(")");
+        StringBuilder buff = new StringBuilder(brackets(sql));
         for (WrapperData.Union union : ew.unions()) {
             WrapperData data = union.getQuery().getWrapperData();
             buff.append(SPACE).append(union.getKey()).append(SPACE);
-            buff.append("(").append(this.querySql(provider, data)).append(")");
+            buff.append(brackets(this.querySql(provider, data)));
         }
         return buff.toString();
     }
@@ -308,7 +313,7 @@ public class CommonSqlKit implements SqlKit {
     public String queryByIds(SqlProvider provider, Collection ids) {
         MapperSql sql = new MapperSql();
         sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
-        sql.WHERE_PK_IN(this.dbType.wrap(provider.mapping().primaryId(true)), ids.size());
+        whereEqIds(provider, sql, ids.toArray());
         return sql.toString();
     }
 
@@ -316,7 +321,8 @@ public class CommonSqlKit implements SqlKit {
     public String queryById(SqlProvider provider, Serializable id) {
         MapperSql sql = new MapperSql();
         sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
-        sql.WHERE(format("%s = #{value}", dbType.wrap(provider.mapping().primaryId(true))));
+        String el = (String) provider.mapping().primaryApplier(true, f -> f.var(null, "value"));
+        sql.WHERE(format("%s = %s", dbType.wrap(provider.mapping().primaryId(true)), el));
         return sql.toString();
     }
 
@@ -338,7 +344,8 @@ public class CommonSqlKit implements SqlKit {
      * 设置逻辑删除标识
      * UPDATE table SET logic_delete_field = true 语句
      *
-     * @param sql sql构造器
+     * @param provider SqlProvider
+     * @param where    where sql
      */
     private String logicDeleted(SqlProvider provider, Consumer<MapperSql> where) {
         MapperSql sql = new MapperSql();
@@ -408,19 +415,19 @@ public class CommonSqlKit implements SqlKit {
         return entity.findPk() != null;
     }
 
-    protected void whereEqIds(SqlProvider provider, MapperSql sql, Serializable[] ids) {
-        String idColumn = dbType.wrap(provider.mapping().primaryId(true));
+    protected void whereEqIds(SqlProvider provider, MapperSql sql, Object[] ids) {
+        FieldMapping pk = (FieldMapping) provider.mapping().primaryApplier(true, f -> f);
         if (ids.length == 1) {
-            sql.WHERE(format("%s = #{list[0]}", idColumn));
+            sql.WHERE(pk.columnEqVar(dbType, null, "list[0]"));
         } else {
             StringBuilder values = new StringBuilder();
             for (int index = 0; index < ids.length; index++) {
                 if (index > 0) {
                     values.append(", ");
                 }
-                values.append("#{list[").append(index).append("]}");
+                values.append(pk.var(null, "list[" + index + "]"));
             }
-            sql.WHERE(format("%s IN (%s)", idColumn, values));
+            sql.WHERE(format("%s IN (%s)", dbType.wrap(pk.column), values));
         }
     }
 

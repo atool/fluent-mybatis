@@ -31,7 +31,8 @@ public class CountNoLimitTest extends BaseTest {
             .end("FROM fluent_mybatis.student WHERE `id` = ? GROUP BY `user_name` ORDER BY `user_name` ASC LIMIT ?, ?");
 
         mapper.countNoLimit(query);
-        db.sqlList().wantSql(1).end("WHERE `id` = ? GROUP BY `user_name`");
+        db.sqlList().wantSql(1).start("" +
+            "SELECT COUNT(*) FROM(SELECT COUNT(*) FROM fluent_mybatis.student WHERE `id` = ? GROUP BY `user_name`) TMP_");
     }
 
     @Test

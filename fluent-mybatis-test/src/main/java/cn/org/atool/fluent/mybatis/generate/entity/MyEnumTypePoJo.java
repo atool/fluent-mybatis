@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -45,6 +46,16 @@ public class MyEnumTypePoJo extends RichEntity {
       typeHandler = LongTypeHandler.class
   )
   private Long id;
+
+  /**
+   * 是否逻辑删除
+   */
+  @TableField(
+      value = "is_deleted",
+      insert = "0"
+  )
+  @LogicDelete
+  private Boolean isDeleted;
 
   /**
    * 枚举类型, 序号

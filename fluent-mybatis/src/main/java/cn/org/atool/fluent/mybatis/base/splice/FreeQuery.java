@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhere;
+import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 
 /**
  * 字符串形式自由拼接查询器构造
@@ -70,7 +71,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @param alias 别名
      */
     public FreeQuery(IQuery child, String alias) {
-        this(() -> "(" + child.getWrapperData().getQuerySql() + ")", alias);
+        this(() -> brackets(child), alias);
         this.setDbType(((BaseWrapper) child).dbType());
         child.getWrapperData().sharedParameter(this.wrapperData);
     }

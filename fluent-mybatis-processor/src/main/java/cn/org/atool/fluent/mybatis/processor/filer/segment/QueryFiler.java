@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -46,6 +47,7 @@ public class QueryFiler extends AbstractFiler {
         spec.addStaticImport(If.class, "notBlank");
         spec.addStaticImport(StrConstant.class, "EMPTY");
         spec.addStaticImport(fluent.entityMapping(), Suffix_MAPPING);
+        spec.addStaticImport(MapperSql.class, "brackets");
     }
 
     @Override
@@ -263,8 +265,7 @@ public class QueryFiler extends AbstractFiler {
             .addJavadoc("@param alias 子查询别名")
             .addParameter(IQuery.class, "query")
             .addParameter(String.class, "alias")
-            .addStatement("return new $T(true, () -> $S + query.getWrapperData().getQuerySql() +$S, alias, null)",
-                fluent.query(), "(", ")")
+            .addStatement("return new $T(true, () -> brackets(query), alias, null)", fluent.query())
             .build();
     }
 

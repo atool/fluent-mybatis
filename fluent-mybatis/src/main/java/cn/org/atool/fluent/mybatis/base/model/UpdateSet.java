@@ -31,7 +31,7 @@ public class UpdateSet {
      */
     public UpdateSet add(DbType dbType, FieldMapping field, Object value, String _default) {
         if (value != null) {
-            this.updates.add(field.el(dbType, Param_ET));
+            this.updates.add(field.columnEqVar(dbType, Param_ET, null));
         } else if (notBlank(_default)) {
             this.updates.add(dbType.wrap(field.column) + " = " + _default);
         }

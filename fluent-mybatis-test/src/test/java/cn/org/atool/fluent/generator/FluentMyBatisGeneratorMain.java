@@ -102,7 +102,7 @@ public class FluentMyBatisGeneratorMain {
                     @Column(value = "enum_string", javaType = MyEnum.class, typeHandler = EnumTypeHandler.class),
                     @Column(value = "enum-num", javaType = MyEnum.class, typeHandler = EnumOrdinalTypeHandler.class),
                     @Column(value = "id", typeHandler = LongTypeHandler.class)
-                })
+                }, logicDeleted = "is_deleted")
         }, entitySuffix = "PoJo")
     static class EntitySuffix_TypeHandler_CustomizedMapper {
     }

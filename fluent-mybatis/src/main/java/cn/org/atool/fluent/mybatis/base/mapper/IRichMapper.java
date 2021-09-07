@@ -194,7 +194,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     default StdPagedList<E> stdPagedEntity(IQuery query) {
         int total = this.countNoLimit(query);
         List list = this.listEntity(query);
-        return new StdPagedList<>(total, list);
+
+        return new StdPagedList<>(total, list, query.getWrapperData().hasNext(total));
     }
 
     /**
@@ -206,7 +207,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     default StdPagedList<Map<String, Object>> stdPagedMap(IQuery query) {
         int total = this.countNoLimit(query);
         List<Map<String, Object>> list = this.listMaps(query);
-        return new StdPagedList<>(total, list);
+        return new StdPagedList<>(total, list, query.getWrapperData().hasNext(total));
     }
 
     /**
@@ -223,7 +224,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
             return (StdPagedList<POJO>) paged;
         } else {
             List<POJO> list = PoJoHelper.toPoJoList(paged.getData(), mapFunction);
-            return new StdPagedList<>(paged.getTotal(), list);
+            return new StdPagedList<>(paged.getTotal(), list, paged.hasNext());
         }
     }
 
@@ -238,7 +239,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     default <POJO> StdPagedList<POJO> stdPagedPoJo(Class<POJO> clazz, IQuery query) {
         StdPagedList<Map<String, Object>> paged = this.stdPagedMap(query);
         List<POJO> list = PoJoHelper.toPoJoList(clazz, paged.getData());
-        return new StdPagedList<>(paged.getTotal(), list);
+        return new StdPagedList<>(paged.getTotal(), list, paged.hasNext());
     }
 
     /**

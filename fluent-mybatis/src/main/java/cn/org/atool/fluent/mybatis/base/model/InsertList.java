@@ -40,11 +40,8 @@ public class InsertList {
     public static String el(String prefix, FieldMapping field, Object value, String _default) {
         if (value == null) {
             return isBlank(_default) ? null : _default;
-        } else if (field.typeHandler == null) {
-            return "#{" + prefix + field.name + "}";
         } else {
-            return String.format("#{%s%s, javaType=%s, typeHandler=%s}",
-                prefix, field.name, field.javaType.getName(), field.typeHandler.getName());
+            return field.var(prefix, field.name);
         }
     }
 }

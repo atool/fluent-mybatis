@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -26,11 +27,24 @@ public class StdPagedList<E> implements IPagedList<E> {
      */
     private List<E> data;
 
+    @Getter(AccessLevel.NONE)
+    private boolean hasNextPage;
+
     public StdPagedList() {
     }
 
     public StdPagedList(int total, List<E> data) {
         this.total = total;
         this.data = data;
+    }
+
+    public StdPagedList(int total, List<E> data, boolean hasNextPage) {
+        this.total = total;
+        this.data = data;
+        this.hasNextPage = hasNextPage;
+    }
+
+    public boolean hasNext() {
+        return this.hasNextPage;
     }
 }

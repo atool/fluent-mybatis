@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -8,6 +9,7 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -64,12 +66,12 @@ public class MapperSql {
             .map(String::trim)
             .map(dbType::wrap)
             .collect(joining(", "));
-        buffer.append("(").append(joining).append(")");
+        buffer.append(brackets(joining));
         return this;
     }
 
     public MapperSql INSERT_VALUES(List<String> values) {
-        buffer.append("(").append(String.join(", ", values)).append(")");
+        buffer.append(brackets(String.join(", ", values)));
         return this;
     }
 
@@ -161,18 +163,6 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql WHERE_PK_IN(String column, int size) {
-        buffer.append(" WHERE ").append(column).append(" IN (");
-        for (int index = 0; index < size; index++) {
-            if (index > 0) {
-                buffer.append(", ");
-            }
-            buffer.append("#{list[").append(index).append("]}");
-        }
-        buffer.append(")");
-        return this;
-    }
-
     public MapperSql APPEND(String sql) {
         buffer.append(SPACE).append(sql).append(SPACE);
         return this;
@@ -214,5 +204,46 @@ public class MapperSql {
         if (data != null) {
             buffer.append(data.hint(hintType));
         }
+    }
+
+    /**
+     * 给 query sql 加上括弧
+     *
+     * @param query IQuery
+     * @return (query sql)
+     */
+    public static String brackets(IQuery query) {
+        return brackets(query.getWrapperData().getQuerySql());
+    }
+
+    /**
+     * 给sql加上括弧
+     *
+     * @param sql sql
+     * @return (sql)
+     */
+    public static String brackets(MapperSql sql) {
+        return brackets(sql.toString());
+    }
+
+    /**
+     * 给sql加上括弧
+     *
+     * @param sql sql
+     * @return (sql)
+     */
+    public static String brackets(String sql) {
+        return sql == null ? null : "(" + sql.trim() + ")";
+    }
+
+    static final AtomicLong tmp = new AtomicLong(0);
+
+    /**
+     * 临时表别名
+     *
+     * @return 临时表别名
+     */
+    public static String tmpTable() {
+        return "TMP_" + tmp.incrementAndGet();
     }
 }

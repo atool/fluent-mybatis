@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.joining;
@@ -173,7 +174,7 @@ public class WrapperData implements IWrapperData {
         if (unions == null || unions.isEmpty()) {
             return sql;
         } else {
-            return "(" + sql + ")" + unions.stream().map(Union::sql).collect(joining(SPACE));
+            return brackets(sql) + unions.stream().map(Union::sql).collect(joining(SPACE));
         }
     }
 
@@ -403,7 +404,26 @@ public class WrapperData implements IWrapperData {
         }
 
         public String sql() {
-            return key + SPACE + "(" + query.getWrapperData().getQuerySql().trim() + ")";
+            return key + SPACE + brackets(query);
         }
+    }
+
+    /**
+     * 有 group by语句
+     *
+     * @return
+     */
+    public boolean hasGroupBy() {
+        return !this.mergeSegments.getGroupBy().isEmpty();
+    }
+
+    /**
+     * 是否有更多数据
+     *
+     * @param total 总记录数
+     * @return true: has next page
+     */
+    public boolean hasNext(long total) {
+        return this.paged != null && total > this.paged.getEndOffset();
     }
 }

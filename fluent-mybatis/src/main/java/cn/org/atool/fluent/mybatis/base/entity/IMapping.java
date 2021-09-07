@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -84,11 +85,22 @@ public interface IMapping extends IDefaultGetter {
      * @return 主键字段名称
      */
     default String primaryId(boolean nullError) {
-        String id = this.findField(UniqueFieldType.PRIMARY_ID).map(c -> c.column).orElse(null);
-        if (id == null && nullError) {
+        return (String) this.primaryApplier(nullError, f -> f == null ? null : f.column);
+    }
+
+    /**
+     * 返回主键加工对象
+     *
+     * @param nullError 为空时抛出异常
+     * @param applier   根据主键FieldMapping返回对应值
+     * @return ignore
+     */
+    default Object primaryApplier(boolean nullError, Function<FieldMapping, Object> applier) {
+        FieldMapping f = this.findField(UniqueFieldType.PRIMARY_ID).orElse(null);
+        if (nullError && f == null) {
             throw new RuntimeException("the primary not found.");
         } else {
-            return id;
+            return applier.apply(f);
         }
     }
 

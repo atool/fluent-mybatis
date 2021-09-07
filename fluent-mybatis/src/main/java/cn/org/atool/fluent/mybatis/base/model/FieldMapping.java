@@ -3,11 +3,11 @@ package cn.org.atool.fluent.mybatis.base.model;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.ISetter;
-import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * FieldMeta: 实体字段和数据库字段映射信息
@@ -97,18 +97,32 @@ public class FieldMapping<E extends IEntity> {
     }
 
     /**
-     * column = #{prefix.field}
+     * column = #{prefix.field, javaType=?, typeHandler=?}
      *
      * @param prefix 前缀
      * @return ignore
      */
-    public String el(DbType dbType, final String prefix) {
-        String _prefix = isBlank(prefix) ? StrConstant.EMPTY : prefix + ".";
-        if (typeHandler == null) {
-            return dbType.wrap(this.column) + " = " + "#{" + _prefix + this.name + "}";
+    public String columnEqVar(DbType dbType, final String prefix, String varName) {
+        String _prefix = isBlank(prefix) ? EMPTY : prefix + ".";
+        return dbType.wrap(this.column) + " = " + var(_prefix, varName);
+    }
+
+    /**
+     * 变量表达式
+     *
+     * @param prefix 变量名称前缀
+     * @param name   外部传入的变量名称, 如果为空, 取内部的name
+     * @return 变量表达式
+     */
+    public String var(String prefix, String name) {
+        String full = (isBlank(prefix) ? EMPTY : (prefix.endsWith(".") ? prefix : prefix + "."))
+            +
+            (isBlank(name) ? this.name : name);
+        if (this.typeHandler == null) {
+            return "#{" + full + "}";
         } else {
-            return String.format("%s = #{%s%s, javaType=%s, typeHandler=%s}",
-                dbType.wrap(this.column), _prefix, this.name, this.javaType.getName(), this.typeHandler.getName());
+            return String.format("#{%s, javaType=%s, typeHandler=%s}",
+                full, this.javaType.getName(), this.typeHandler.getName());
         }
     }
 

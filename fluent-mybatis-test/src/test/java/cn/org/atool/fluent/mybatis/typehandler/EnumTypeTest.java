@@ -9,16 +9,17 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.MyEnumTypeQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.test4j.annotations.Mock;
-import org.test4j.mock.Invocation;
-import org.test4j.mock.MockUp;
+import org.test4j.annotations.Mocks;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
+@Mocks(value = SqlProvider.class)
 @SuppressWarnings("unused")
 public class EnumTypeTest extends BaseTest {
+    static EnumTypeTestMocks mocks = EnumTypeTestMocks.mocks;
+    final String[] aSql = {""};
+
     @Autowired
     MyEnumTypeMapper mapper;
 
@@ -28,7 +29,7 @@ public class EnumTypeTest extends BaseTest {
             .setEnumNum(MyEnum.test3)
             .setEnumString(MyEnum.test2));
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO `my_enum_type`(`enum-num`, `enum_string`) VALUES (?, ?)");
+            "INSERT INTO `my_enum_type`(`is_deleted`, `enum-num`, `enum_string`) VALUES (0, ?, ?)");
         db.sqlList().wantFirstPara().eqList(MyEnum.test3, MyEnum.test2);
     }
 
@@ -42,7 +43,9 @@ public class EnumTypeTest extends BaseTest {
                 .setEnumNum(MyEnum.test1)
                 .setEnumString(MyEnum.test2)));
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO `my_enum_type`(`enum-num`, `enum_string`) VALUES (?, ?) , (?, ?)");
+            "INSERT INTO `my_enum_type`(`is_deleted`, `enum-num`, `enum_string`) " +
+            "VALUES (0, ?, ?) , " +
+            "(0, ?, ?)");
         db.sqlList().wantFirstPara().eqList(MyEnum.test3, MyEnum.test2, MyEnum.test1, MyEnum.test2);
         ATM.dataMap.myEnumType.table(2)
             .enumNum.values(2, 0)
@@ -58,15 +61,12 @@ public class EnumTypeTest extends BaseTest {
             .enumString.values("test1", "test3", "test2")
             .cleanAndInsert();
 
-        final String[] aSql = {""};
-        new MockUp<SqlProvider>() {
-            @Mock
-            public String updateById(Invocation it, Map<String, Object> map) {
-                String sql = it.proceed(map);
-                aSql[0] = sql;
-                return sql;
-            }
-        };
+        mocks.SqlProvider.updateById.restAnswer(f -> {
+            String sql = f.proceed();
+            aSql[0] = sql;
+            return sql;
+        });
+
         mapper.updateById(new MyEnumTypePoJo()
             .setId(1L)
             .setEnumNum(MyEnum.test3)
@@ -98,5 +98,73 @@ public class EnumTypeTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .end("FROM `my_enum_type` WHERE `enum-num` = ? AND `enum_string` = ?");
         want.list(list).sizeEq(1);
+    }
+
+    @Test
+    void findById() {
+        mocks.SqlProvider.findById.restAnswer(f -> {
+            String sql = f.proceed();
+            aSql[0] = sql;
+            return sql;
+        });
+        mapper.findById(1L);
+        want.string(aSql[0]).end("" +
+            "WHERE `id` = #{value, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+    }
+
+    @Test
+    void deleteById() {
+        mocks.SqlProvider.deleteById.restAnswer(f -> {
+            String sql = f.proceed();
+            aSql[0] = sql;
+            return sql;
+        });
+        mapper.deleteById(1L, 2L);
+        want.string(aSql[0]).eq("" +
+            "DELETE  FROM `my_enum_type` " +
+            "WHERE `id` IN (" +
+            "#{list[0], javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}, " +
+            "#{list[1], javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}" +
+            ")");
+    }
+
+    @Test
+    void logicDeleteById() {
+        mocks.SqlProvider.logicDeleteById.restAnswer(f -> {
+            String sql = f.proceed();
+            aSql[0] = sql;
+            return sql;
+        });
+        mapper.logicDeleteById(1L);
+        want.string(aSql[0]).eq("" +
+            "UPDATE `my_enum_type` " +
+            "SET `is_deleted` = true WHERE `id` = #{list[0], javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+    }
+
+    @Test
+    void updateByEntityId() {
+        mocks.SqlProvider.updateById.restAnswer(f -> {
+            String sql = f.proceed();
+            aSql[0] = sql;
+            return sql;
+        });
+        mapper.updateById(new MyEnumTypePoJo().setEnumNum(MyEnum.test2).setId(3L));
+        want.string(aSql[0]).eq("" +
+            "UPDATE `my_enum_type` " +
+            "SET `enum-num` = #{et.enumNum, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler} " +
+            "WHERE `id` = #{et.id, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+    }
+
+    @Test
+    void deleteByIds() {
+        mocks.SqlProvider.deleteByIds.restAnswer(f -> {
+            String sql = f.proceed();
+            aSql[0] = sql;
+            return sql;
+        });
+        mapper.deleteByIds(Arrays.asList(1L));
+        want.string(aSql[0]).eq("" +
+            "DELETE  FROM `my_enum_type` " +
+            "WHERE `id` = #{list[0], javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
     }
 }

@@ -32,6 +32,13 @@ public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
   public final transient KeyValue<MyEnumTypeDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
+      value = "is_deleted",
+      type = "TINYINT",
+      defaultValue = "0"
+  )
+  public final transient KeyValue<MyEnumTypeDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
+
+  @ColumnDef(
       value = "enum-num",
       type = "INT"
   )
@@ -59,6 +66,7 @@ public class MyEnumTypeDataMap extends DataMap<MyEnumTypeDataMap> {
    */
   public MyEnumTypeDataMap init() {
     this.id.autoIncrease();
+    this.isDeleted.values(false);
     return this;
   }
 

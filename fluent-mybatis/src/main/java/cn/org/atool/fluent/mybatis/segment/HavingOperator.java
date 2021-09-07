@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 
+import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -45,7 +46,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
         assertNotNull("query", query);
         String sql = query.getWrapperData().getQuerySql();
         query.getWrapperData().sharedParameter(this.having.wrapperData());
-        return this.having.apply(expression, op, "(" + sql + ")");
+        return this.having.apply(expression, op, brackets(sql));
     }
 
     /**
