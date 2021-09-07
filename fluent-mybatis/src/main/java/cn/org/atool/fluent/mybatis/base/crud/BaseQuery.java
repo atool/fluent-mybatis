@@ -130,7 +130,6 @@ public abstract class BaseQuery<
             throw new IllegalArgumentException("The size of parameter[queries] should be greater than zero.");
         }
         for (IBaseQuery query : queries) {
-            String sql = query.getWrapperData().getQuerySql();
             this.wrapperData.union(key, query);
             query.getWrapperData().sharedParameter(this.wrapperData);
         }

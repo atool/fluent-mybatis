@@ -135,7 +135,7 @@ public class WhereApply<
     @Override
     public WHERE in(IQuery query) {
         ((BaseWrapper) query).sharedParameter(this.segment.getParameters());
-        return this.segment.apply(this.column(), IN, query.getWrapperData().getQuerySql());
+        return this.segment.apply(this.column(), IN, query.getWrapperData().sqlWithoutPaged());
     }
 
     @Override
@@ -164,7 +164,7 @@ public class WhereApply<
     @Override
     public WHERE notIn(IQuery query) {
         ((BaseWrapper) query).sharedParameter(this.segment.getParameters());
-        return this.segment.apply(this.column(), NOT_IN, query.getWrapperData().getQuerySql());
+        return this.segment.apply(this.column(), NOT_IN, query.getWrapperData().sqlWithoutPaged());
     }
 
     @Override
@@ -194,7 +194,7 @@ public class WhereApply<
             }
             buff.append(expression, prev, next);
             if (arg instanceof IQuery) {
-                String nest = ((IQuery) arg).getWrapperData().getQuerySql();
+                String nest = ((IQuery) arg).getWrapperData().sqlWithoutPaged();
                 buff.append(nest);
                 ((BaseQuery) arg).sharedParameter(this.segment.wrapper);
             } else {

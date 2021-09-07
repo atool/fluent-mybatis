@@ -5,6 +5,8 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.mapper.MapperSql;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.WhereSegmentList;
 import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
 import lombok.AccessLevel;
@@ -155,26 +157,62 @@ public class WrapperData implements IWrapperData {
         }
     }
 
+
+    /**
+     * 不同数据库分页查询
+     *
+     * @param dbType 数据库类型
+     * @param sql    非分页查询sql
+     * @return sql segment
+     */
+    public String wrappedByPaged(DbType dbType, String sql) {
+        if (this.paged != null) {
+            Parameters p = this.getParameters();
+            String offset = p.putParameter(null, this.paged.getOffset());
+            String size = p.putParameter(null, this.paged.getLimit());
+            String endOffset = p.putParameter(null, this.paged.getEndOffset());
+            return dbType.paged(sql, offset, size, endOffset);
+        } else {
+            return sql;
+        }
+    }
+
     @Override
-    public String getQuerySql() {
+    public String sqlWithPaged(DbType dbType, String allColumn) {
+        return this.wrappedByPaged(dbType, sqlWithoutPaged(allColumn));
+    }
+
+    @Override
+    public String sqlWithoutPaged() {
+        return this.sqlWithoutPaged(null);
+    }
+
+    public String sqlWithoutPaged(String allColumns) {
         if (If.notBlank(customizedSql)) {
             return customizedSql;
         }
         String select = this.getSqlSelect();
-        String where = this.getWhereSql();
-        String sql = "SELECT" + SPACE +
-            (isBlank(select) ? ASTERISK : select.trim()) + SPACE +
-            "FROM" + SPACE +
-            this.getTable() + SPACE +
-            (isBlank(where) ? EMPTY : "WHERE " + where.trim()) + SPACE +
-            this.getGroupBy().trim() + SPACE +
-            this.getOrderBy().trim() + SPACE +
-            this.getLastSql().trim();
-        sql = sql.trim();
+        if (isBlank(select)) {
+            select = isBlank(allColumns) ? ASTERISK : allColumns;
+        }
+        MapperSql text = new MapperSql();
+        text.SELECT(this.getTable(), this, select);
+        text.WHERE_GROUP_ORDER_BY(this);
+
+//        String where = this.getWhereSql();
+//        String sql = "SELECT" + SPACE +
+//            (isBlank(select) ? ASTERISK : select.trim()) + SPACE +
+//            "FROM" + SPACE +
+//            this.getTable() + SPACE +
+//            (isBlank(where) ? EMPTY : "WHERE " + where.trim()) + SPACE +
+//            this.getGroupBy().trim() + SPACE +
+//            this.getOrderBy().trim() + SPACE +
+//            this.getLastSql().trim();
+        String sql = text.toString();
         if (unions == null || unions.isEmpty()) {
             return sql;
         } else {
-            return brackets(sql) + unions.stream().map(Union::sql).collect(joining(SPACE));
+            return brackets(sql) + SPACE + unions.stream().map(Union::sql).collect(joining(SPACE));
         }
     }
 
@@ -411,7 +449,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 有 group by语句
      *
-     * @return
+     * @return true: has group by
      */
     public boolean hasGroupBy() {
         return !this.mergeSegments.getGroupBy().isEmpty();

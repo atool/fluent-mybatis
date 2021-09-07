@@ -44,7 +44,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
      */
     public H apply(ISqlOp op, IQuery query) {
         assertNotNull("query", query);
-        String sql = query.getWrapperData().getQuerySql();
+        String sql = query.getWrapperData().sqlWithoutPaged();
         query.getWrapperData().sharedParameter(this.having.wrapperData());
         return this.having.apply(expression, op, brackets(sql));
     }

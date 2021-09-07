@@ -15,6 +15,14 @@ public interface StrConstant {
      */
     String EMPTY = "";
     /**
+     * SELECT
+     */
+    String SELECT = "SELECT";
+    /**
+     * FROM
+     */
+    String FROM = "FROM";
+    /**
      * where
      */
     String WHERE = "WHERE";

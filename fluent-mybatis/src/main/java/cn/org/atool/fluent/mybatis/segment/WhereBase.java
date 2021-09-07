@@ -327,7 +327,7 @@ public abstract class WhereBase<
      */
     public WHERE exists(IQuery query) {
         ((BaseWrapper) query).sharedParameter(wrapper);
-        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().getQuerySql());
+        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().sqlWithoutPaged());
         return this.and;
     }
 
@@ -341,7 +341,7 @@ public abstract class WhereBase<
     public WHERE exists(boolean condition, IQuery query) {
         if (condition) {
             ((BaseWrapper) query).sharedParameter(wrapper);
-            wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().getQuerySql());
+            wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().sqlWithoutPaged());
         }
         return this.and;
     }
@@ -419,7 +419,7 @@ public abstract class WhereBase<
      */
     public WHERE notExists(IQuery query) {
         ((BaseWrapper) query).sharedParameter(wrapper);
-        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, query.getWrapperData().getQuerySql());
+        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, query.getWrapperData().sqlWithoutPaged());
         return this.and;
     }
 

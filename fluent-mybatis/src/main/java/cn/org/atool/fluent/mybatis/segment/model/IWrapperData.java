@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+
 /**
  * IWrapperData: 提供给xml文件调用的方法
  *
@@ -59,12 +61,20 @@ public interface IWrapperData {
     String getOrderBy();
 
     /**
+     * 根据数据库类型返回带分页的语法
+     *
+     * @param dbType DbType
+     * @return sql with page
+     */
+    String sqlWithPaged(DbType dbType, String allColumn);
+
+    /**
      * select ... from table where ...
      * 不包含分页部分
      *
      * @return select ... from table where ...
      */
-    String getQuerySql();
+    String sqlWithoutPaged();
 
     /**
      * 返回last sql部分

@@ -213,7 +213,7 @@ public class MapperSql {
      * @return (query sql)
      */
     public static String brackets(IQuery query) {
-        return brackets(query.getWrapperData().getQuerySql());
+        return brackets(query.getWrapperData().sqlWithoutPaged());
     }
 
     /**
@@ -233,7 +233,13 @@ public class MapperSql {
      * @return (sql)
      */
     public static String brackets(String sql) {
-        return sql == null ? null : "(" + sql.trim() + ")";
+        if (sql == null) {
+            return null;
+        } else if (sql.startsWith("(") && sql.endsWith(")")) {
+            return sql;
+        } else {
+            return "(" + sql.trim() + ")";
+        }
     }
 
     static final AtomicLong tmp = new AtomicLong(0);

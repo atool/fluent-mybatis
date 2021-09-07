@@ -30,7 +30,6 @@ import static cn.org.atool.fluent.mybatis.mapper.MapperSql.tmpTable;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderKit.byPaged;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -89,8 +88,7 @@ public class CommonSqlKit implements SqlKit {
         if (isBlank(select) || ASTERISK.equals(select)) {
             ((BaseQuery) query).select(fields);
         }
-        return "INSERT INTO " + tableName + " (" + columns + ") " +
-            query.getWrapperData().getQuerySql();
+        return "INSERT INTO " + tableName + " (" + columns + ") " + query.getWrapperData().sqlWithoutPaged();
     }
 
     @Override
@@ -272,7 +270,7 @@ public class CommonSqlKit implements SqlKit {
             MapperSql sql = new MapperSql();
             sql.COUNT(ew.getTable(), ew);
             sql.WHERE_GROUP_ORDER_BY(ew);
-            return byPaged(dbType, ew, sql.toString());
+            return ew.wrappedByPaged(dbType, sql.toString());
         }
     }
 
@@ -281,7 +279,8 @@ public class CommonSqlKit implements SqlKit {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
-        String sql = this.querySql(provider, ew);
+        String allColumns = provider.mapping().getSelectAll();
+        String sql = ew.sqlWithPaged(dbType, allColumns);
         if (!ew.hasUnion()) {
             return sql;
         }
@@ -289,16 +288,10 @@ public class CommonSqlKit implements SqlKit {
         for (WrapperData.Union union : ew.unions()) {
             WrapperData data = union.getQuery().getWrapperData();
             buff.append(SPACE).append(union.getKey()).append(SPACE);
-            buff.append(brackets(this.querySql(provider, data)));
+            String text = data.sqlWithPaged(dbType, allColumns);
+            buff.append(brackets(text));
         }
         return buff.toString();
-    }
-
-    private String querySql(SqlProvider provider, WrapperData ew) {
-        MapperSql sql = new MapperSql();
-        sql.SELECT(ew.getTable(), ew, provider.mapping().getSelectAll());
-        sql.WHERE_GROUP_ORDER_BY(ew);
-        return byPaged(this.dbType, ew, sql.toString());
     }
 
     @Override
