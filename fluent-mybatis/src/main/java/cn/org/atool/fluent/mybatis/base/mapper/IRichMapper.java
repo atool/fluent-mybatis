@@ -193,8 +193,12 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default StdPagedList<E> stdPagedEntity(IQuery query) {
         int total = this.countNoLimit(query);
-        List list = this.listEntity(query);
-
+        List list;
+        if (total == 0) {
+            list = Collections.emptyList();
+        } else {
+            list = this.listEntity(query);
+        }
         return new StdPagedList<>(total, list, query.getWrapperData().hasNext(total));
     }
 
@@ -206,7 +210,12 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default StdPagedList<Map<String, Object>> stdPagedMap(IQuery query) {
         int total = this.countNoLimit(query);
-        List<Map<String, Object>> list = this.listMaps(query);
+        List<Map<String, Object>> list;
+        if (total == 0) {
+            list = Collections.emptyList();
+        } else {
+            list = this.listMaps(query);
+        }
         return new StdPagedList<>(total, list, query.getWrapperData().hasNext(total));
     }
 
