@@ -27,7 +27,6 @@ public class FormQueryTest extends BaseTest {
             "AND `env` = ? " +
             "AND `user_name` = ? " +
             "AND `age` BETWEEN ? AND ?");
-        want.number(db.sqlList().size()).eq(1);
     }
 
     @Test
