@@ -313,7 +313,7 @@ public class MybatisUtil {
                 buff.append(Character.toLowerCase(ch));
             }
             first = false;
-            underline = false;
+            underline = false; 
         }
         return buff.toString();
     }
