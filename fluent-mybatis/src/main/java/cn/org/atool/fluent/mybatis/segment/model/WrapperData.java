@@ -144,7 +144,6 @@ public class WrapperData implements IWrapperData {
     /**
      * 不同数据库分页查询
      *
-     * @param dbType 数据库类型
      * @param sql    非分页查询sql
      * @return sql segment
      */
