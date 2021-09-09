@@ -26,12 +26,12 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
     public final UpdateOrderBy orderBy = new UpdateOrderBy(this);
 
     public FreeUpdate(String table) {
-        super(table, EmptyEntity.class, FreeQuery.class);
+        super(table, EmptyEntity.class);
     }
 
     @Override
-    protected List<String> allFields() {
-        throw new RuntimeException("not support by FreeUpdate.");
+    public List<String> allFields() {
+        throw new RuntimeException("The method is not supported by FreeUpdate.");
     }
 
     @Override

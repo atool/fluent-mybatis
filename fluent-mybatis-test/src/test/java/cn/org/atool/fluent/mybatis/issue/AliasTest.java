@@ -39,7 +39,8 @@ public class AliasTest extends BaseTest {
         FreeQuery query = new FreeQuery(StudentQuery.emptyQuery().where.age().gt(30).end(), "aa")
             .select.apply("*").end();
         mapper.listMaps(query);
-        db.sqlList().wantFirstSql().eq("" +
-            "SELECT * FROM (SELECT * FROM fluent_mybatis.student WHERE `age` > ?) aa");
+        db.sqlList().wantFirstSql().containsInOrder(
+            "SELECT * FROM (SELECT `id`, `",
+            "`, `version` FROM fluent_mybatis.student WHERE `age` > ?) aa");
     }
 }

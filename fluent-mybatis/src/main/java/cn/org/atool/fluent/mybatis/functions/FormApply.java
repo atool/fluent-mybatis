@@ -3,13 +3,17 @@ package cn.org.atool.fluent.mybatis.functions;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.IFormApply;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
+import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 
 import java.util.Map;
 import java.util.function.Function;
+
+import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 
 /**
  * FormApply
@@ -50,6 +54,62 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     public S op(String op) {
         this.op = op;
         return setter;
+    }
+
+    private FormApply<E, S> setFieldMapping(String op, IGetter<E> getter) {
+        this.op(op);
+        String field = LambdaUtil.resolve(getter);
+        IMapping mapping = this.setter._mapping();
+        FieldMapping f = mapping.getFieldsMap().get(field);
+        if (f == null) {
+            throw new RuntimeException("The property[" + field + "] of entity[" + mapping.entityClass().getSimpleName() + "] not found.");
+        }
+        this.set(f);
+        return this;
+    }
+
+    public IFormApply<E, S> eq(IGetter<E> getter) {
+        return this.setFieldMapping(OP_EQ, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> ne(IGetter<E> getter) {
+        return this.setFieldMapping(OP_NE, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> gt(IGetter<E> getter) {
+        return this.setFieldMapping(OP_GT, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> ge(IGetter<E> getter) {
+        return this.setFieldMapping(OP_GE, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> lt(IGetter<E> getter) {
+        return this.setFieldMapping(OP_LT, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> le(IGetter<E> getter) {
+        return this.setFieldMapping(OP_LE, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> like(IGetter<E> getter) {
+        return this.setFieldMapping(OP_LIKE, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> likeLeft(IGetter<E> getter) {
+        return this.setFieldMapping(OP_LEFT_LIKE, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> likeRight(IGetter<E> getter) {
+        return this.setFieldMapping(OP_RIGHT_LIKE, getter);
     }
 
     public void set(FieldMapping field) {

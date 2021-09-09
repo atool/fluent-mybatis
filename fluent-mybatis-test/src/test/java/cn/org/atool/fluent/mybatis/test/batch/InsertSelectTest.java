@@ -86,7 +86,7 @@ public class InsertSelectTest extends BaseTest {
                     FieldRef.Student.age,
                     FieldRef.Student.address},
                 StudentQuery.emptyQuery().select.userName().apply("40", "'test address'").end()
-                    .where.userName().likeRight("user").end())
+                    .where.userName().likeLeft("user").end())
         );
 
         db.sqlList().wantFirstSql()

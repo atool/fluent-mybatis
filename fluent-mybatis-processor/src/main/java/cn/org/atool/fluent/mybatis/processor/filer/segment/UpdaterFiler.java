@@ -111,7 +111,7 @@ public class UpdaterFiler extends AbstractFiler {
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "shared")
-            .addStatement("super(table == null ? $L.table() : table, alias, $T.class, $T.class)", Suffix_MAPPING, fluent.entity(), fluent.query())
+            .addStatement("super(table == null ? $L.table() : table, alias, $T.class)", Suffix_MAPPING, fluent.entity())
             .beginControlFlow("if(shared != null)")
             .addStatement("this.sharedParameter(shared)")
             .endControlFlow()

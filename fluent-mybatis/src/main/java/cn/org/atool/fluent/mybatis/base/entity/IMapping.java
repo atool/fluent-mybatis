@@ -43,6 +43,13 @@ public interface IMapping extends IDefaultGetter {
     Map<String, FieldMapping> getColumnMap();
 
     /**
+     * 返回Entity属性映射关系
+     *
+     * @return Map<String, FieldMapping>
+     */
+    Map<String, FieldMapping> getFieldsMap();
+
+    /**
      * 返回用 ', ' 连接好的所有字段
      */
     String getSelectAll();

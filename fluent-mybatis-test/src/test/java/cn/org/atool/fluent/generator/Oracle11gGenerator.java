@@ -18,7 +18,7 @@ public class Oracle11gGenerator {
      * CODE VARCHAR2(100),
      * VERSION2 NUMBER(19) default 0
      * );
-     *
+     * <p>
      * CREATE SEQUENCE TEST_USER_SEQ;
      */
 
@@ -37,7 +37,7 @@ public class Oracle11gGenerator {
         tables = {
             @Table(value = {"TEST_USER:OracleUser"},
                 seqName = "SELECT TEST_USER_SEQ.nextval AS ID FROM DUAL")
-        },
+        }, logicDeleted = "IS_DELETED",
         /* 只是测试需要, 正式项目请生产文件到对应的src目录下 */
         srcDir = "src/main/java", testDir = "target/oracle/test", daoDir = "target/oracle/dao")
     static class A {

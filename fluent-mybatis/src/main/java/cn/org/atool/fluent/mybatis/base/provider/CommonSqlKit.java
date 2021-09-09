@@ -27,7 +27,6 @@ import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.tmpTable;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.lang.String.format;
@@ -84,8 +83,7 @@ public class CommonSqlKit implements SqlKit {
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
         String columns = Stream.of(fields).map(dbType::wrap).collect(joining(", "));
-        String select = query.getWrapperData().getSqlSelect();
-        if (isBlank(select) || ASTERISK.equals(select)) {
+        if (!query.getWrapperData().hasSelect()) {
             ((BaseQuery) query).select(fields);
         }
         return "INSERT INTO " + tableName + " (" + columns + ") " + query.getWrapperData().sqlWithoutPaged();
@@ -270,28 +268,13 @@ public class CommonSqlKit implements SqlKit {
             MapperSql sql = new MapperSql();
             sql.COUNT(ew.getTable(), ew);
             sql.WHERE_GROUP_ORDER_BY(ew);
-            return ew.wrappedByPaged(dbType, sql.toString());
+            return ew.wrappedByPaged(sql.toString());
         }
     }
 
     @Override
     public String queryByQuery(SqlProvider provider, WrapperData ew) {
-        if (notBlank(ew.getCustomizedSql())) {
-            return ew.getCustomizedSql();
-        }
-        String allColumns = provider.mapping().getSelectAll();
-        String sql = ew.sqlWithPaged(dbType, allColumns);
-        if (!ew.hasUnion()) {
-            return sql;
-        }
-        StringBuilder buff = new StringBuilder(brackets(sql));
-        for (WrapperData.Union union : ew.unions()) {
-            WrapperData data = union.getQuery().getWrapperData();
-            buff.append(SPACE).append(union.getKey()).append(SPACE);
-            String text = data.sqlWithPaged(dbType, allColumns);
-            buff.append(brackets(text));
-        }
-        return buff.toString();
+        return ew.sqlWithPaged();
     }
 
     @Override

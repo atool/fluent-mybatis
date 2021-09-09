@@ -13,8 +13,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 /**
  * NestedQueryTest
  *
- * @author darui.wu
- * @create 2020/6/19 8:28 下午
+ * @author darui.wu 2020/6/19 8:28 下午
  */
 public class NestedQueryTest extends BaseTest {
     @Autowired
@@ -45,10 +44,10 @@ public class NestedQueryTest extends BaseTest {
                 .and.id().apply("=student.home_address_id").end())
             .end();
         mapper.listEntity(query);
-        db.sqlList().wantFirstSql()
-            .eq("SELECT `id` FROM fluent_mybatis.student " +
-                "WHERE EXISTS (SELECT * FROM `home_address` " +
-                "   WHERE `address` LIKE ? AND `id` =student.home_address_id)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().containsInOrder(
+            "SELECT `id` FROM fluent_mybatis.student WHERE EXISTS (SELECT `id`, `",
+            "` FROM `home_address` WHERE `address` LIKE ? AND `id` =student.home_address_id)"
+        );
     }
 
     @Test

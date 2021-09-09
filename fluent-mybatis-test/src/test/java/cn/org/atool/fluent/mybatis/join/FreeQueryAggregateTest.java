@@ -85,23 +85,25 @@ public class FreeQueryAggregateTest extends BaseTest {
             .setDbType(DbType.MYSQL)
             .select.apply("id").count.apply("age").end()
             .groupBy.apply("id").end()
-            .join(new FreeQuery(new MemberQuery().groupBy.id().end(), "t2")
-                .setDbType(DbType.MYSQL)
-                .select.apply("id").sum.apply("age").end()
-                .where.apply("id", EQ, "1").end()
-                .groupBy.apply("id").end()
-                .having.count.apply("id").gt(1).end())
+            .join(
+                new FreeQuery(new MemberQuery().groupBy.id().end(), "t2")
+                    .setDbType(DbType.MYSQL)
+                    .select.apply("id").sum.apply("age").end()
+                    .where.apply("id", EQ, "1").end()
+                    .groupBy.apply("id").end()
+                    .having.count.apply("id").gt(1).end())
             .onApply("t1.id = t2.id").endJoin()
             .build();
         mapper.findOne(query);
-        db.sqlList().wantFirstSql().eq("" +
-                "SELECT t1.`id`, COUNT(t1.`age`), t2.`id`, SUM(t2.`age`) " +
-                "FROM (SELECT * FROM `t_member` WHERE `age` > ?) t1 " +
-                "JOIN (SELECT * FROM `t_member` GROUP BY `id`) t2 " +
+        db.sqlList().wantFirstSql().containsInOrder(
+            "SELECT t1.`id`, COUNT(t1.`age`), t2.`id`, SUM(t2.`age`) ",
+            "FROM (SELECT `id`, ",
+            "` FROM `t_member` WHERE `age` > ?) t1 JOIN (SELECT `id`,",
+            "` FROM `t_member` GROUP BY `id`) t2 " +
                 "ON t1.id = t2.id " +
                 "WHERE t2.`id` = ? " +
                 "GROUP BY t1.`id`, t2.`id` " +
                 "HAVING COUNT(t2.`id`) > ?"
-            , StringMode.SameAsSpace);
+        );
     }
 }

@@ -178,7 +178,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    protected List<String> allFields() {
+    public List<String> allFields() {
         List<String> all = new ArrayList<>();
         for (BaseQuery query : this.queries) {
             all.addAll(query.allFields());

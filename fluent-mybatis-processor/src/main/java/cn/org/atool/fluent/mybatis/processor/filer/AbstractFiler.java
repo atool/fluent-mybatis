@@ -111,7 +111,7 @@ public abstract class AbstractFiler {
      * @return ignore
      */
     protected MethodSpec m_mapping() {
-        return this.protectedMethod(Suffix_mapping, CN_Optional_IMapping)
+        return this.publicMethod(Suffix_mapping, true, CN_Optional_IMapping)
             .addStatement("return Optional.of($L)", Suffix_MAPPING)
             .build();
     }

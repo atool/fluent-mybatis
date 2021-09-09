@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import java.util.Objects;
-
 /**
  * SQL like 枚举
  *
@@ -9,20 +7,20 @@ import java.util.Objects;
  */
 public class SqlLike {
     /**
-     * %值
+     * 值%
      */
 
     public static String left(Object input) {
         assertInput(input);
-        return "%" + input;
+        return input + "%";
     }
 
     /**
-     * 值%SqlOp
+     * %值
      */
     public static String right(Object input) {
         assertInput(input);
-        return input + "%";
+        return "%" + input;
     }
 
     /**
@@ -33,10 +31,18 @@ public class SqlLike {
         return "%" + input + "%";
     }
 
+    /**
+     * 验证输入值不仅仅是 '%' 组成
+     *
+     * @param input 输入值
+     */
     private static void assertInput(Object input) {
         String text = String.valueOf(input);
-        if (Objects.equals("%", text) || Objects.equals("_", text)) {
-            throw new IllegalArgumentException("The like operation cannot be string '%' or '_' only");
+        for (char ch : text.toCharArray()) {
+            if (ch != '%') {
+                return;
+            }
         }
+        throw new IllegalArgumentException("The like operation cannot be string '%' or empty only");
     }
 }

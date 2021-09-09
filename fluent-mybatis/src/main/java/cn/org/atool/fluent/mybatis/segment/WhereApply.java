@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.ifs.IfsPredicate;
+import cn.org.atool.fluent.mybatis.mapper.SqlLike;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
@@ -85,17 +86,62 @@ public class WhereApply<
             throw new IllegalArgumentException("Ifs condition does not apply to the operation:" + op.name());
         }
         for (IfsPredicate predicate : ifs.predicates) {
-            Object value = predicate.value(op);
-            if (predicate.predicate.test(value)) {
-                return this.apply(op, value);
+            if (this.doIfs(op, predicate)) {
+                break;
             }
         }
         return segment;
     }
 
+    private boolean doIfs(ISqlOp op, IfsPredicate predicate) {
+        Object value = predicate.value(op);
+        if (!predicate.predicate.test(value)) {
+            return false;
+        } else {
+            this.apply(op, value);
+            return true;
+        }
+    }
+
     @Override
     public <O> WHERE apply(Predicate<Object[]> predicate, ISqlOp op, O... args) {
         return predicate.test(args) ? this.apply(op, args) : segment;
+    }
+
+    @Override
+    public WHERE like(final String value, final Predicate<String> when) {
+        if (when.test(value)) {
+            return this.apply(LIKE, SqlLike.like(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Override
+    public WHERE notLike(String value, Predicate<String> when) {
+        if (when.test(value)) {
+            return this.apply(NOT_LIKE, SqlLike.like(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Override
+    public WHERE likeLeft(String value, Predicate<String> when) {
+        if (when.test(value)) {
+            return this.apply(LIKE, SqlLike.left(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Override
+    public WHERE likeRight(String value, Predicate<String> when) {
+        if (when.test(value)) {
+            return this.apply(LIKE, SqlLike.right(value));
+        } else {
+            return this.segment;
+        }
     }
 
     /**
@@ -127,7 +173,7 @@ public class WhereApply<
      */
     @Override
     public WHERE in(QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(this.segment.queryClass(), this.segment.wrapper, false);
+        NQ nested = NestedQueryFactory.nested(this.segment.wrapper, false);
         query.apply(nested);
         return this.in(nested);
     }
@@ -156,7 +202,7 @@ public class WhereApply<
      */
     @Override
     public WHERE notIn(QFunction<NQ> query) {
-        NQ nested = NestedQueryFactory.nested(this.segment.queryClass(), this.segment.wrapper, false);
+        NQ nested = NestedQueryFactory.nested(this.segment.wrapper, false);
         query.apply(nested);
         return this.notIn(nested);
     }

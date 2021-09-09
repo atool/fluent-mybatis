@@ -144,7 +144,7 @@ public class RefFiler extends AbstractFile {
     }
 
     private TypeSpec class_setter() {
-        return TypeSpec.classBuilder("Form")
+        return TypeSpec.classBuilder("Forms")
             .addModifiers(PUBLIC_STATIC_FINAL)
             .addSuperinterface(FormRefFiler.getClassName())
             .build();

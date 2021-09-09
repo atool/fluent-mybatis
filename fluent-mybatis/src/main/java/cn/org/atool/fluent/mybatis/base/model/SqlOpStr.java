@@ -28,6 +28,8 @@ public interface SqlOpStr {
 
     String OP_LEFT_LIKE = "LEFT_LIKE";
 
+    String OP_RIGHT_LIKE = "RIGHT_LIKE";
+
     String OP_NOT_LIKE = "NOT_LIKE";
 
     String OP_BETWEEN = BETWEEN.name();

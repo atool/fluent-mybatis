@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.functions.FormApply;
 import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.IFormApply;
@@ -14,8 +15,7 @@ import javax.lang.model.element.Modifier;
 import java.util.Map;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_Helper;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_EntityFormSetter;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 public class FormSetterFiler extends AbstractFiler {
 
@@ -37,9 +37,17 @@ public class FormSetterFiler extends AbstractFiler {
             .superclass(BaseFormSetter.class)
             .addSuperinterface(super.paraType(fluent.segment(), applyName))
             .addMethod(this.constructor1())
+            .addMethod(this.m_mapping())
             .addMethod(this.m_entityClass())
             .addMethod(this.m_byObject())
         ;
+    }
+
+    @Override
+    protected MethodSpec m_mapping() {
+        return this.publicMethod("_" + Suffix_mapping, IMapping.class)
+            .addStatement("return $L", Suffix_MAPPING)
+            .build();
     }
 
     private TypeVariableName setterName() {
@@ -62,7 +70,7 @@ public class FormSetterFiler extends AbstractFiler {
 
     private MethodSpec m_byObject() {
         return super.publicMethod("by", false,
-            paraType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
+                paraType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
             .addModifiers(Modifier.STATIC)
             .addParameter(Object.class, "object")
             .addParameter(Form.class, "form")

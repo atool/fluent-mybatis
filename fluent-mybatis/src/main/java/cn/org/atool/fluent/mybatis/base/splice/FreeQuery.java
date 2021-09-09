@@ -53,7 +53,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     public final QueryWhere where = new QueryWhere(this);
 
     public FreeQuery(Supplier<String> table, String alias) {
-        super(table, alias, EmptyEntity.class, FreeQuery.class);
+        super(table, alias, EmptyEntity.class);
     }
 
     public FreeQuery(String table) {
@@ -78,11 +78,6 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
 
     public FreeQuery emptyQuery() {
         return new FreeQuery(super.table, super.tableAlias);
-    }
-
-    @Override
-    public List<String> allFields() {
-        throw new RuntimeException("not support by FreeQuery.");
     }
 
     @Override
@@ -123,5 +118,10 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     @Override
     public DbType dbType() {
         return dbType == null ? IRef.instance().defaultDbType() : dbType;
+    }
+
+    @Override
+    public List<String> allFields() {
+        throw new RuntimeException("The method is not supported by FreeQuery.");
     }
 }

@@ -4,10 +4,12 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
+import cn.org.atool.fluent.mybatis.refs.FormRef;
 import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public class FormDemo extends BaseTest {
@@ -21,7 +23,7 @@ public class FormDemo extends BaseTest {
             .setAge(2)
             .setAddress("宇宙深处");
 
-        IQuery<StudentEntity> query = Ref.Form.student.apply(student)
+        IQuery<StudentEntity> query = Ref.Forms.student.with(student)
             .eq().userName()
             .eq().age()
             .query();
@@ -41,39 +43,40 @@ public class FormDemo extends BaseTest {
         );
         db.table(ATM.table.student).count().isEqualTo(11);
     }
-//
-//    @Test
-//    public void formDemo2() {
-//        ATM.dataMap.student.table().clean();
-//        // 新增表单
-//        StudentEntity student = new StudentEntity()
-//            .setUserName("I am FluentMybatis")
-//            .setAge(2)
-//            .setAddress("宇宙深处");
-//
-//        Form.by(FormRef.student,student)
-//            .eq().userName()
-//            .eq().address()
-//            .query();
 
+    @Test
+    public void formDemo2() {
+        ATM.dataMap.student.table().clean();
+        // 新增表单
+        StudentEntity student = new StudentEntity()
+            .setUserName("I am FluentMybatis")
+            .setAge(2)
+            .setAddress("宇宙深处");
 
-//        IFormQuery<StudentEntity, ?> query = Refs.Form.student.by(student)
-//            .eq().userName()
-//            .eq().age();
-//        if (query.exists()) {
-//            throw new RuntimeException("出BUG了!");
-//        }
-//        student.save();
-//        want.bool(query.exists()).is(true);
-//        Stream.of(new Object[10]).forEach(o -> student.setId(null).save());
+        List<StudentEntity> students = FormRef.student.with(student)
+            .eq(StudentEntity::getUserName)
+            .like(StudentEntity::getAddress)
+            .query().to().listEntity();
+        want.list(students).sizeEq(0);
 
-//        StdPagedList<StudentEntity> list = query
-//            .limit(10)
-//            .to().stdPagedEntity();
-//
-//        want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(10)
-//            .userName.values("I am FluentMybatis")
-//        );
-//        db.table(ATM.table.student).count().isEqualTo(11);
-//}
+        IQuery<StudentEntity> query = FormRef.student.with(student)
+            .eq().userName()
+            .eq().age()
+            .query();
+        if (query.to().count() > 0) {
+            throw new RuntimeException("出BUG了!");
+        }
+        student.save();
+        want.number(query.to().count()).eq(1);
+        Stream.of(new Object[10]).forEach(o -> student.setId(null).save());
+
+        StdPagedList<StudentEntity> list = query
+            .limit(5)
+            .to().stdPagedEntity();
+
+        want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(5)
+            .userName.values("I am FluentMybatis")
+        );
+        db.table(ATM.table.student).count().isEqualTo(11);
+    }
 }

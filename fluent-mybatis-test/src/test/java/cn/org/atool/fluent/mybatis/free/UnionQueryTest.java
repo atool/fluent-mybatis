@@ -34,7 +34,7 @@ public class UnionQueryTest extends BaseTest {
             "(SELECT `id`, `user_name` FROM student WHERE ( `user_name` LIKE ? OR `age` >= ? )) " +
             "UNION " +
             "(SELECT `id`, `user_name` FROM fluent_mybatis.student WHERE `user_name` LIKE ?)", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eq(new Object[]{"1%", 20, "2%"});
+        db.sqlList().wantFirstPara().eq(new Object[]{"1%", 20, "%2"});
     }
 
     @Test
@@ -55,6 +55,6 @@ public class UnionQueryTest extends BaseTest {
             "(SELECT `id`, `user_name` FROM student WHERE ( `user_name` LIKE ? OR `age` >= ? )) " +
             "UNION ALL " +
             "(SELECT `id`, `user_name` FROM fluent_mybatis.student WHERE `user_name` LIKE ?)", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList("1%", 20, "2%");
+        db.sqlList().wantFirstPara().eqList("1%", 20, "%2");
     }
 }

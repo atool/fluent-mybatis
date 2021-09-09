@@ -20,15 +20,15 @@ public class NestedQueryFactory {
      * @param klass 嵌套查询对象类
      * @return 嵌套查询对象
      */
-    public static <Q extends IBaseQuery> Q nested(Class klass, BaseWrapper wrapper, boolean sameAlias) {
-        if (FreeQuery.class.isAssignableFrom(klass)) {
+    public static <Q extends IBaseQuery> Q nested(BaseWrapper wrapper, boolean sameAlias) {
+        if (wrapper instanceof FreeQuery) {
             FreeQuery query = new FreeQuery(wrapper.getTable(), sameAlias ? wrapper.getTableAlias() : null);
             query.setDbType(wrapper.dbType());
             return (Q) query;
         }
-        IMapping mapping = IRef.instance().mapping(wrapper.getWrapperData().getEntityClass());
+        IMapping mapping = IRef.instance().mapping(wrapper.getEntityClass());
         if (mapping == null) {
-            throw new FluentMybatisException("create nested Query[" + klass.getName() + "] error.");
+            throw new FluentMybatisException("create nested Query[" + wrapper.getClass().getName() + "] error.");
         }
         if (sameAlias) {
             return mapping.emptyQuery(wrapper.getTableAlias());

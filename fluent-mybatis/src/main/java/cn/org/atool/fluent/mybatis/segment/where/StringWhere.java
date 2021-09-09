@@ -39,9 +39,7 @@ public interface StringWhere<
      * @param when  成立条件
      * @return self
      */
-    default WHERE like(String value, Predicate<String> when) {
-        return this.apply(args -> when.test(value), LIKE, SqlLike.like(value));
-    }
+    WHERE like(final String value, final Predicate<String> when);
 
     /**
      * 按Ifs条件设置where值
@@ -71,9 +69,7 @@ public interface StringWhere<
      * @param when  成立条件
      * @return self
      */
-    default WHERE notLike(String value, Predicate<String> when) {
-        return this.apply(args -> when.test(value), NOT_LIKE, SqlLike.like(value));
-    }
+    WHERE notLike(String value, Predicate<String> when);
 
     /**
      * 按Ifs条件设置where值
@@ -103,9 +99,7 @@ public interface StringWhere<
      * @param when  执行条件
      * @return where
      */
-    default WHERE likeLeft(String value, Predicate<String> when) {
-        return this.apply(args -> when.test(value), LIKE, SqlLike.left(value));
-    }
+    WHERE likeLeft(String value, Predicate<String> when);
 
     /**
      * like 'value%'
@@ -124,7 +118,5 @@ public interface StringWhere<
      * @param when  执行条件
      * @return where
      */
-    default WHERE likeRight(String value, Predicate<String> when) {
-        return this.apply(args -> when.test(value), LIKE, SqlLike.right(value));
-    }
+    WHERE likeRight(String value, Predicate<String> when);
 }

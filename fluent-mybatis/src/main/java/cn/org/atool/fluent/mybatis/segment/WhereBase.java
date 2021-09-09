@@ -301,7 +301,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE exists(QFunction<NestedQ> query) {
-        NestedQ nestQuery = NestedQueryFactory.nested(this.queryClass(), this.wrapper, false);
+        NestedQ nestQuery = NestedQueryFactory.nested(this.wrapper, false);
         query.apply(nestQuery);
         return this.exists(nestQuery);
     }
@@ -391,7 +391,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE notExists(QFunction<NestedQ> query) {
-        NestedQ nestQuery = NestedQueryFactory.nested(this.queryClass(), this.wrapper, false);
+        NestedQ nestQuery = NestedQueryFactory.nested(this.wrapper, false);
         query.apply(nestQuery);
         return this.notExists(nestQuery);
     }
@@ -586,7 +586,7 @@ public abstract class WhereBase<
     }
 
     private WHERE nestedWhere(KeyWordSegment andOr, QFunction query) {
-        final IQuery nested = NestedQueryFactory.nested(this.queryClass(), this.wrapper, true);
+        final IQuery nested = NestedQueryFactory.nested(this.wrapper, true);
         query.apply(nested);
         return this.nestedWhere(andOr, nested);
     }
@@ -598,10 +598,6 @@ public abstract class WhereBase<
             wrapper.getWrapperData().apply(andOr, EMPTY_COLUMN, BRACKET, sql);
         }
         return this.and;
-    }
-
-    Class queryClass() {
-        return this.wrapper.getWrapperData().getQueryClass();
     }
 
     Parameters getParameters() {

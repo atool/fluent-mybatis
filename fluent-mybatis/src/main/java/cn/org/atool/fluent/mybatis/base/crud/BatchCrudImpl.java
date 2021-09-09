@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
@@ -15,10 +16,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.MapperSqlProvider;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -33,9 +32,13 @@ import static java.lang.String.format;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BatchCrudImpl implements BatchCrud, IHasDbType {
     @Getter
-    protected final WrapperData wrapperData = new WrapperData();
+    protected final WrapperData wrapperData;
 
     private final List<String> list = new ArrayList<>();
+
+    public BatchCrudImpl() {
+        this.wrapperData = new WrapperData(this);
+    }
 
     public String batchSql() {
         return String.join(";\n", list);
@@ -47,7 +50,7 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
             if (!(updater instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
             }
-            SqlProvider provider = this.findSqlProvider(updater.getWrapperData().getEntityClass());
+            SqlProvider provider = this.findSqlProvider(((BaseWrapper) updater).getEntityClass());
             String sql = SqlKit.factory(provider).updateBy(provider, updater.getWrapperData());
             updater.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
@@ -61,7 +64,7 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
             if (!(query instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
-            SqlProvider provider = this.findSqlProvider(query.getWrapperData().getEntityClass());
+            SqlProvider provider = this.findSqlProvider(((BaseWrapper) query).getEntityClass());
             String sql = SqlKit.factory(provider).deleteBy(provider, query.getWrapperData());
             query.getWrapperData().sharedParameter(wrapperData);
             list.add(sql);
@@ -141,5 +144,20 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
 
     public DbType dbType() {
         return dbType == null ? IRef.instance().defaultDbType() : dbType;
+    }
+
+    @Override
+    public List<String> allFields() {
+        throw new RuntimeException("The method is not supported by BatchCrudImpl.");
+    }
+
+    @Override
+    public Supplier<String> getTable() {
+        throw new RuntimeException("The method is not supported by BatchCrudImpl.");
+    }
+
+    @Override
+    public Optional<IMapping> mapping() {
+        throw new RuntimeException("The method is not supported by BatchCrudImpl.");
     }
 }

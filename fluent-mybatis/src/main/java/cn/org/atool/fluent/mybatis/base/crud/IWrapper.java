@@ -1,11 +1,18 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * IWrapper: 查询和更新都用到的接口
@@ -58,4 +65,36 @@ public interface IWrapper<
     default W hint(String hint) {
         return this.hint(HintType.Before_All, hint);
     }
+
+    /**
+     * query/update表别名
+     *
+     * @return 表别名
+     */
+    default String getTableAlias() {
+        return EMPTY;
+    }
+
+    /**
+     * query/update表名
+     *
+     * @return Supplier<String>
+     */
+    Supplier<String> getTable();
+
+    /**
+     * 数据库映射定义
+     *
+     * @return Optional<IMapping>
+     */
+    Optional<IMapping> mapping();
+
+    /**
+     * 数据库类型
+     *
+     * @return DbType
+     */
+    DbType dbType();
+    
+    List<String> allFields();
 }

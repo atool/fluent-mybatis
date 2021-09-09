@@ -24,12 +24,12 @@ public abstract class BaseUpdate<
     extends BaseWrapper<E, U, NQ>
     implements IBaseUpdate<E, U, NQ> {
 
-    protected BaseUpdate(String table, Class entityClass, Class queryClass) {
-        super(() -> table, EMPTY, entityClass, queryClass);
+    protected BaseUpdate(String table, Class entityClass) {
+        super(() -> table, EMPTY, entityClass);
     }
 
-    protected BaseUpdate(Supplier<String> table, String alias, Class entityClass, Class queryClass) {
-        super(table, alias, entityClass, queryClass);
+    protected BaseUpdate(Supplier<String> table, String alias, Class entityClass) {
+        super(table, alias, entityClass);
     }
 
     @Override

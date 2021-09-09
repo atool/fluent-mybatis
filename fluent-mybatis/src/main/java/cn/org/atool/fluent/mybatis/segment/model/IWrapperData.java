@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
  * IWrapperData: 提供给xml文件调用的方法
@@ -37,36 +37,44 @@ public interface IWrapperData {
      *
      * @return where sql
      */
-    String getMergeSql();
+    default String getMergeSql() {
+        String sql = mergeSegments().sql();
+        return isBlank(sql) ? null : sql.trim();
+    }
 
     /**
      * 返回where部分sql
      *
      * @return ignore
      */
-    String getWhereSql();
+    default String getWhereSql() {
+        return this.mergeSegments().whereSql();
+    }
 
     /**
      * 返回 groupBy + having + orderBy + last 组合起来的语句
      *
      * @return ignore
      */
-    String getGroupBy();
+    default String getGroupBy() {
+        return this.mergeSegments().groupBy();
+    }
 
     /**
      * 返回 groupBy + having + last 组合起来的语句
      *
      * @return ignore
      */
-    String getOrderBy();
+    default String getOrderBy() {
+        return this.mergeSegments().orderBy();
+    }
 
     /**
      * 根据数据库类型返回带分页的语法
      *
-     * @param dbType DbType
      * @return sql with page
      */
-    String sqlWithPaged(DbType dbType, String allColumn);
+    String sqlWithPaged();
 
     /**
      * select ... from table where ...
@@ -81,5 +89,18 @@ public interface IWrapperData {
      *
      * @return ignore
      */
-    String getLastSql();
+    default String getLastSql() {
+        return this.mergeSegments().last();
+    }
+
+    /**
+     * 附加sql,只允许执行一次
+     *
+     * @param lastSql 附加sql
+     */
+    default void last(String lastSql) {
+        this.mergeSegments().setLastSql(lastSql);
+    }
+
+    MergeSegments mergeSegments();
 }

@@ -90,8 +90,8 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinOn
      */
     public <LE extends IEntity, RE extends IEntity> JoinOn<QL, QR, JB> onEq(IGetter<LE> l, IGetter<RE> r) {
-        Class lKlass = this.onLeft.wrapperData.getEntityClass();
-        Class rKlass = this.onRight.wrapperData.getEntityClass();
+        Class lKlass = this.onLeft.entityClass;
+        Class rKlass = this.onRight.entityClass;
         assertNotNull("left query entity class", lKlass);
         assertNotNull("right query entity class", rKlass);
         String lField = MappingKits.toColumn(lKlass, l);

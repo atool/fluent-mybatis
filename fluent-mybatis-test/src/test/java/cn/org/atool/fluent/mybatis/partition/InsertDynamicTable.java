@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 
-@SuppressWarnings("unchecked")
 public class InsertDynamicTable extends BaseTest {
     @Autowired
     StudentMapper mapper;

@@ -2,19 +2,18 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.WhereSegmentList;
 import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -31,6 +30,11 @@ import static java.util.stream.Collectors.joining;
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Getter
 public class WrapperData implements IWrapperData {
+    protected final IWrapper wrapper;
+    /**
+     * 自定义参数列表
+     */
+    protected final Parameters parameters;
     /**
      * select 前面是否加 DISTINCT 关键字
      */
@@ -40,18 +44,6 @@ public class WrapperData implements IWrapperData {
      * 查询字段
      */
     protected List<String> sqlSelect = new ArrayList<>(8);
-    /**
-     * 表名
-     */
-    @Getter(AccessLevel.NONE)
-    protected Supplier<String> table;
-
-    @Setter
-    private String alias;
-    /**
-     * 自定义参数列表
-     */
-    protected final Parameters parameters;
     /**
      * where, group, having ,order by对象列表
      */
@@ -72,14 +64,6 @@ public class WrapperData implements IWrapperData {
      */
     private final Map<HintType, String> hints = new HashMap<>(4);
     /**
-     * 实体类型
-     */
-    private final Class entityClass;
-    /**
-     * 对应的嵌套查询类
-     */
-    private final Class queryClass;
-    /**
      * 字段别名列表
      */
     private final Set<String> fieldAlias = new HashSet<>();
@@ -90,29 +74,28 @@ public class WrapperData implements IWrapperData {
     @Setter
     private boolean ignoreLockVersion = false;
 
-    public WrapperData() {
-        this.parameters = new Parameters();
-        this.queryClass = null;
-        this.entityClass = null;
+    public WrapperData(IWrapper wrapper) {
+        this(wrapper, new Parameters());
     }
 
-    public WrapperData(Supplier<String> table, String alias, Parameters parameters, Class entityClass, Class queryClass) {
-        notNull(entityClass, "entityClass must not null,please set entity before use this method!");
-        this.table = table;
-        this.alias = alias;
+    public WrapperData(IWrapper wrapper, Parameters parameters) {
+        notNull(wrapper, "IQuery/IUpdate must not null!");
+        notNull(parameters, "Parameters must not null!");
+        this.wrapper = wrapper;
         this.parameters = parameters;
-        this.entityClass = entityClass;
-        this.queryClass = queryClass;
     }
 
     public String getTable() {
-        return isBlank(alias) ? this.table.get() : this.table.get() + " " + this.alias;
+        String alias = this.wrapper.getTableAlias();
+        String table = (String) this.wrapper.getTable().get();
+        return isBlank(alias) ? table : table + " " + alias;
     }
 
     @Override
     public String getSqlSelect() {
         if (this.sqlSelect.isEmpty()) {
-            return null;
+            Optional<IMapping> mapping = wrapper.mapping();
+            return mapping.map(IMapping::getSelectAll).orElse(ASTERISK);
         } else {
             String sql = String.join(COMMA_SPACE, sqlSelect);
             return isBlank(sql) ? null : sql.trim();
@@ -165,49 +148,31 @@ public class WrapperData implements IWrapperData {
      * @param sql    非分页查询sql
      * @return sql segment
      */
-    public String wrappedByPaged(DbType dbType, String sql) {
+    public String wrappedByPaged(String sql) {
         if (this.paged != null) {
             Parameters p = this.getParameters();
             String offset = p.putParameter(null, this.paged.getOffset());
             String size = p.putParameter(null, this.paged.getLimit());
             String endOffset = p.putParameter(null, this.paged.getEndOffset());
-            return dbType.paged(sql, offset, size, endOffset);
+            return this.wrapper.dbType().paged(sql, offset, size, endOffset);
         } else {
             return sql;
         }
     }
 
     @Override
-    public String sqlWithPaged(DbType dbType, String allColumn) {
-        return this.wrappedByPaged(dbType, sqlWithoutPaged(allColumn));
+    public String sqlWithPaged() {
+        return this.wrappedByPaged(sqlWithoutPaged());
     }
 
     @Override
     public String sqlWithoutPaged() {
-        return this.sqlWithoutPaged(null);
-    }
-
-    public String sqlWithoutPaged(String allColumns) {
         if (If.notBlank(customizedSql)) {
             return customizedSql;
         }
-        String select = this.getSqlSelect();
-        if (isBlank(select)) {
-            select = isBlank(allColumns) ? ASTERISK : allColumns;
-        }
         MapperSql text = new MapperSql();
-        text.SELECT(this.getTable(), this, select);
+        text.SELECT(this.getTable(), this, this.getSqlSelect());
         text.WHERE_GROUP_ORDER_BY(this);
-
-//        String where = this.getWhereSql();
-//        String sql = "SELECT" + SPACE +
-//            (isBlank(select) ? ASTERISK : select.trim()) + SPACE +
-//            "FROM" + SPACE +
-//            this.getTable() + SPACE +
-//            (isBlank(where) ? EMPTY : "WHERE " + where.trim()) + SPACE +
-//            this.getGroupBy().trim() + SPACE +
-//            this.getOrderBy().trim() + SPACE +
-//            this.getLastSql().trim();
         String sql = text.toString();
         if (unions == null || unions.isEmpty()) {
             return sql;
@@ -223,29 +188,8 @@ public class WrapperData implements IWrapperData {
     }
 
     @Override
-    public String getMergeSql() {
-        String sql = mergeSegments.sql();
-        return isBlank(sql) ? null : sql.trim();
-    }
-
-    @Override
-    public String getWhereSql() {
-        return this.mergeSegments.whereSql();
-    }
-
-    @Override
-    public String getGroupBy() {
-        return this.mergeSegments.groupBy();
-    }
-
-    @Override
-    public String getOrderBy() {
-        return this.mergeSegments.orderBy();
-    }
-
-    @Override
-    public String getLastSql() {
-        return this.mergeSegments.last();
+    public MergeSegments mergeSegments() {
+        return this.mergeSegments;
     }
 
     /*
@@ -253,15 +197,6 @@ public class WrapperData implements IWrapperData {
      *                          以下是数据操作部分
      * ============================================================
      */
-
-    /**
-     * 附加sql,只允许执行一次
-     *
-     * @param lastSql 附加sql
-     */
-    public void last(String lastSql) {
-        this.mergeSegments.setLastSql(lastSql);
-    }
 
     /**
      * 增加条件设置
@@ -422,30 +357,6 @@ public class WrapperData implements IWrapperData {
         return this.mergeSegments.getWhere().getSegments().toArray(new ISqlSegment[0]);
     }
 
-    public boolean hasUnion() {
-        return this.unions != null && !this.unions.isEmpty();
-    }
-
-    public List<Union> unions() {
-        return this.unions;
-    }
-
-    @Getter
-    public static class Union {
-        private final String key;
-
-        private final IQuery query;
-
-        Union(String key, IQuery query) {
-            this.key = key;
-            this.query = query;
-        }
-
-        public String sql() {
-            return key + SPACE + brackets(query);
-        }
-    }
-
     /**
      * 有 group by语句
      *
@@ -463,5 +374,25 @@ public class WrapperData implements IWrapperData {
      */
     public boolean hasNext(long total) {
         return this.paged != null && total > this.paged.getEndOffset();
+    }
+
+    public boolean hasSelect() {
+        return !this.sqlSelect.isEmpty();
+    }
+
+    @Getter
+    public static class Union {
+        private final String key;
+
+        private final IQuery query;
+
+        Union(String key, IQuery query) {
+            this.key = key;
+            this.query = query;
+        }
+
+        public String sql() {
+            return key + SPACE + brackets(query);
+        }
     }
 }

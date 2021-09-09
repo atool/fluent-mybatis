@@ -37,7 +37,7 @@ public class FormQueryTest extends BaseTest {
             .add.between(FieldRef.Student.age, 12, 40)
             .setNextId(0)
             .add(FormRef.student, new StudentEntity().setAddress("kkk"))
-            .leftLike().address()
+            .likeLeft().address()
             .query().to().tagPagedEntity();
 
         db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student " +

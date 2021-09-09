@@ -10,8 +10,13 @@ import java.util.function.BiFunction;
 @FunctionalInterface
 public interface FormFunction<E extends IEntity, S extends BaseFormSetter>
     extends BiFunction<Object, Form, IFormApply<E, S>> {
-
-    default IFormApply<E, S> apply(Object object) {
-        return this.apply(object, new Form());
+    /**
+     * 按照entity来定义条件值
+     *
+     * @param entity entity
+     * @return entity条件设置器
+     */
+    default IFormApply<E, S> with(Object entity) {
+        return this.apply(entity, new Form());
     }
 }

@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.FormApply;
 import cn.org.atool.fluent.mybatis.model.IFormApply;
@@ -37,4 +38,6 @@ public abstract class BaseFormSetter {
     }
 
     public abstract Class entityClass();
+
+    public abstract IMapping _mapping();
 }

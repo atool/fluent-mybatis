@@ -60,11 +60,10 @@ class UpdateApplyTest extends BaseTest {
     void if_demo() {
         int age = 43;
         String name = "my name is fluent mybatis";
-        String address = "";
         mapper.listEntity(StudentQuery.emptyQuery()
             .where.age().eq(age, arg -> arg > 30)
             .and.userName().eq(name, arg -> arg.contains("fluent"))
-            .and.address().like(address, If::notBlank).end()
+            .and.address().like("", If::notBlank).end()
         );
         db.sqlList().wantFirstSql()
             .end("FROM fluent_mybatis.student WHERE `age` = ? AND `user_name` = ?");

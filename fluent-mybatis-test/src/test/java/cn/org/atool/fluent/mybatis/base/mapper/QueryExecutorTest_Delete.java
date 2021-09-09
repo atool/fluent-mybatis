@@ -36,7 +36,7 @@ class QueryExecutorTest_Delete extends BaseTest {
             .isDeleted.values(0)
             .cleanAndInsert();
         FormRef.student
-            .apply(new StudentEntity().setUserName("test1"))
+            .with(new StudentEntity().setUserName("test1"))
             .eq().userName()
             .to().delete();
 

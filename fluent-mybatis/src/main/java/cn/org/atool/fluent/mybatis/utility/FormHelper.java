@@ -53,6 +53,9 @@ public class FormHelper {
                 case OP_LIKE:
                     where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0] + "%");
                     break;
+                case OP_RIGHT_LIKE:
+                    where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0]);
+                    break;
                 case OP_NOT_LIKE:
                     where.and.apply(column, SqlOp.NOT_LIKE, "%" + item.getValue()[0] + "%");
                     break;

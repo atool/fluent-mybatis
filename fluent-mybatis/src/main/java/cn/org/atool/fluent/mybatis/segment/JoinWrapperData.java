@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +18,12 @@ import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class JoinWrapperData extends WrapperData {
 
-    private final BaseQuery query;
-
     private final List<BaseQuery> queries;
 
-    @Getter
-    private final Parameters parameters;
-
     public JoinWrapperData(BaseQuery query, List<BaseQuery> queries, Parameters shared) {
-        this.query = query;
+        super(query, shared);
         this.queries = queries;
-        this.parameters = shared;
-        this.tables.add(this.query.wrapperData.getTable());
+        this.tables.add(this.wrapper.getWrapperData().getTable());
     }
 
     private final List<String> tables = new ArrayList<>();
@@ -51,12 +44,12 @@ public class JoinWrapperData extends WrapperData {
         if (selectMerged) {
             return super.getSqlSelect();
         }
-        this.sqlSelect.addAll(this.query.wrapperData.sqlSelect());
+        this.sqlSelect.addAll(this.wrapper.getWrapperData().sqlSelect());
         for (BaseQuery query : this.queries) {
             this.sqlSelect.addAll(query.wrapperData.sqlSelect());
         }
         if (this.sqlSelect.isEmpty()) {
-            this.query.allFields().forEach(c -> this.sqlSelect.add(alias(query.tableAlias, (String) c)));
+            this.wrapper.allFields().forEach(c -> this.sqlSelect.add(alias(wrapper.getTableAlias(), (String) c)));
             for (BaseQuery query : this.queries) {
                 query.allFields().forEach(c -> this.sqlSelect.add(alias(query.tableAlias, (String) c)));
             }
@@ -72,7 +65,7 @@ public class JoinWrapperData extends WrapperData {
         if (whereMerged) {
             return super.getWhereSql();
         }
-        this.mergeSegments.getWhere().add(KeyWordSegment.AND, this.query.wrapperData.whereSegments());
+        this.mergeSegments.getWhere().add(KeyWordSegment.AND, this.wrapper.getWrapperData().whereSegments());
         for (BaseQuery query : this.queries) {
             this.mergeSegments.getWhere().add(KeyWordSegment.AND, query.wrapperData.whereSegments());
         }
@@ -87,8 +80,8 @@ public class JoinWrapperData extends WrapperData {
         if (groupByMerged) {
             return super.getGroupBy();
         }
-        this.query.wrapperData.getMergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments.getGroupBy()::addAll);
-        this.query.wrapperData.getMergeSegments().getHaving().getSegments().forEach(this.mergeSegments.getHaving()::addAll);
+        this.wrapper.getWrapperData().getMergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments.getGroupBy()::addAll);
+        this.wrapper.getWrapperData().getMergeSegments().getHaving().getSegments().forEach(this.mergeSegments.getHaving()::addAll);
         for (BaseQuery query : this.queries) {
             query.wrapperData.getMergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments.getGroupBy()::addAll);
             if (!this.mergeSegments.getHaving().isEmpty() &&
@@ -108,7 +101,7 @@ public class JoinWrapperData extends WrapperData {
         if (orderByMerged) {
             return super.getOrderBy();
         }
-        this.query.wrapperData.getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
+        this.wrapper.getWrapperData().getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
         for (BaseQuery query : this.queries) {
             query.wrapperData.getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
         }

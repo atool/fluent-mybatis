@@ -19,7 +19,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @param <E> 实体类型
  * @author wudarui
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 public interface IUpdate<E extends IEntity> {
     /**
      * 设置更新值
@@ -78,7 +78,7 @@ public interface IUpdate<E extends IEntity> {
      * </pre>
      */
     default UpdaterExecutor to() {
-        Class entityClass = ((IBaseUpdate) this).getWrapperData().getEntityClass();
+        Class entityClass = ((BaseWrapper) this).getEntityClass();
         assertNotNull("entity class", entityClass);
         IRichMapper mapper = IRef.mapper(entityClass);
         return new UpdaterExecutor(mapper, this);

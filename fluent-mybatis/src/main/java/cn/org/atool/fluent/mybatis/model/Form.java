@@ -58,8 +58,8 @@ public class Form implements Serializable {
         return FormHelper.toQuery(entityClass, this);
     }
 
-    public <E extends IEntity, S extends BaseFormSetter> IFormApply<E, S>
-    add(FormFunction<E, S> apply, Object value) {
+    public <E extends IEntity, S extends BaseFormSetter>
+    IFormApply<E, S> add(FormFunction<E, S> apply, Object value) {
         return apply.apply(value, this);
     }
 }

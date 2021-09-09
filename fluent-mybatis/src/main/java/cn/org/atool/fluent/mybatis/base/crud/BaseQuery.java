@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
@@ -31,8 +30,8 @@ public abstract class BaseQuery<
     extends BaseWrapper<E, Q, Q>
     implements IBaseQuery<E, Q> {
 
-    protected BaseQuery(Supplier<String> table, String alias, Class entityClass, Class queryClass) {
-        super(table, alias, entityClass, queryClass);
+    protected BaseQuery(Supplier<String> table, String alias, Class entityClass) {
+        super(table, alias, entityClass);
     }
 
     @Override
@@ -69,6 +68,9 @@ public abstract class BaseQuery<
      * @return Query
      */
     public Q select(String... columns) {
+        if (columns == null) {
+            return (Q) this;
+        }
         for (String column : columns) {
             Column _column = Column.column(column, this);
             this.wrapperData.addSelectColumn(_column.wrapColumn());
@@ -91,11 +93,6 @@ public abstract class BaseQuery<
     public Q last(String lastSql) {
         this.wrapperData.last(lastSql);
         return (Q) this;
-    }
-
-    @Override
-    public List<String> allFields() {
-        return super.allFields();
     }
 
     /**

@@ -53,23 +53,23 @@ public abstract class BaseWrapper<
     @Getter
     protected WrapperData wrapperData;
 
+    @Getter
     protected Class entityClass;
 
     protected BaseWrapper(String tableAlias) {
         this.tableAlias = tableAlias;
     }
 
-    protected BaseWrapper(Supplier<String> table, String tableAlias, Class<E> entityClass, Class queryClass) {
-        this(table, tableAlias, new Parameters(), entityClass, queryClass);
+    protected BaseWrapper(Supplier<String> table, String tableAlias, Class<E> entityClass) {
+        this(table, tableAlias, new Parameters(), entityClass);
         this.entityClass = entityClass;
     }
 
-    protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass,
-                          Class queryClass) {
+    protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();
-        this.wrapperData = new WrapperData(table, this.tableAlias, parameters, entityClass, queryClass);
+        this.wrapperData = new WrapperData(this, parameters);
         this.entityClass = entityClass;
     }
 
@@ -78,7 +78,7 @@ public abstract class BaseWrapper<
      *
      * @return 字段映射关系
      */
-    protected Optional<IMapping> mapping() {
+    public Optional<IMapping> mapping() {
         return Optional.empty();
     }
 
@@ -97,12 +97,12 @@ public abstract class BaseWrapper<
      *
      * @return 所有字段
      */
-    protected List<String> allFields() {
+    public List<String> allFields() {
         return this.mapping().map(IMapping::getAllColumns).orElse(Collections.emptyList());
     }
 
     protected TableMeta getTableMeta() {
-        return TableMetaHelper.getTableInfo(this.getWrapperData().getEntityClass());
+        return TableMetaHelper.getTableInfo(this.entityClass);
     }
 
     /**
