@@ -93,7 +93,6 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_logicDeleteByMap())
             .addMethod(this.m_delete())
             .addMethod(this.m_logicDelete())
-            .addMethod(this.m_updateById())
             .addMethod(this.m_updateBy())
             .addMethod(this.m_findById())
             .addMethod(this.m_findOne())
@@ -203,14 +202,6 @@ public class MapperFiler extends AbstractFiler {
             .addParameter(this.param(ArrayTypeName.of(IUpdate.class), "updates", "Param_EW"))
             .addJavadoc("@See SqlProvider#updateBy($T)", Map.class)
             .varargs(true)
-            .returns(TypeName.INT)
-            .build();
-    }
-
-    public MethodSpec m_updateById() {
-        return this.mapperMethod(UpdateProvider.class, M_updateById)
-            .addJavadoc("@see SqlProvider#updateById(Map)")
-            .addParameter(this.param(fluent.entity(), "entity", "Param_ET"))
             .returns(TypeName.INT)
             .build();
     }

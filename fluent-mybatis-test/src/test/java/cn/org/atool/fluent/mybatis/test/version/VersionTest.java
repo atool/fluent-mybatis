@@ -50,7 +50,7 @@ public class VersionTest extends BaseTest {
     public void test_updateById_noVersion() {
         want.exception(() ->
                 mapper.updateById(new IdcardEntity().setCode("new").setId(1L))
-            , MyBatisSystemException.class)
+            , MyBatisSystemException.class, FluentMybatisException.class)
             .contains("the parameter[lock version field(version)] can't be null");
     }
 

@@ -26,10 +26,13 @@ public class RichEntityTest extends BaseTest {
         ATM.dataMap.student.table(1)
             .id.values(1)
             .userName.values("test1")
+            .env.values("test_env")
             .cleanAndInsert();
         StudentEntity entity = new StudentEntity().setId(1L).setUserName("test2").updateById();
         db.sqlList().wantFirstSql()
-            .eq("UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?");
+            .eq("UPDATE fluent_mybatis.student " +
+                "SET `gmt_modified` = now(), `user_name` = ? " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         ATM.dataMap.student.table(1)
             .userName.values("test2")
             .id.values(entity.getId())

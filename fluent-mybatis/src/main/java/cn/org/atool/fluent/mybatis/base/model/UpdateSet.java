@@ -14,6 +14,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_ET;
  *
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public class UpdateSet {
     /**
      * 待更新记录字段表达式

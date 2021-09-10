@@ -20,6 +20,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
+@SuppressWarnings("rawtypes")
 public interface SqlKit {
     /**
      * 工具类单例
@@ -117,7 +118,7 @@ public interface SqlKit {
      * @param ids      主键列表
      * @return sql
      */
-    String logicDeleteById(SqlProvider eSqlProvider, Serializable[] ids);
+    String logicDeleteById(SqlProvider provider, Serializable[] ids);
 
     /**
      * 按主键逻辑删除
@@ -182,15 +183,6 @@ public interface SqlKit {
      * @return sql
      */
     String updateBy(SqlProvider provider, WrapperData ew);
-
-    /**
-     * 按主键更新Entity其它值, 需要考虑版本字段
-     *
-     * @param provider SqlProvide
-     * @param entity   Entity
-     * @return sql
-     */
-    String updateById(SqlProvider provider, IEntity entity);
 
     /**
      * 去掉limit部分 count(IQuery) SQL构造

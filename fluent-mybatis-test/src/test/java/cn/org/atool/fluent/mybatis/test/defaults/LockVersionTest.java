@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.defaults;
 
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generate.entity.NoAutoIdEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoAutoIdMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.NoAutoIdUpdate;
@@ -25,7 +26,8 @@ public class LockVersionTest extends BaseTest {
     @Test
     void updateById_NoSetVersion() {
         want.exception(() -> mapper
-            .updateById(new NoAutoIdEntity().setColumn1("new").setId("1")), MyBatisSystemException.class)
+                .updateById(new NoAutoIdEntity().setColumn1("new").setId("1")),
+            MyBatisSystemException.class, FluentMybatisException.class)
             .contains("the parameter[lock version field(lockVersion)] can't be null");
     }
 

@@ -19,6 +19,7 @@ public class SaveOrUpdateTest extends BaseTest {
     @Test
     public void test_saveOrUpdate() throws Exception {
         ATM.dataMap.student.initTable(3)
+            .env.values("test_env")
             .cleanAndInsert();
         dao.saveOrUpdate(new StudentEntity().setId(3L).setUserName("test_111").setAge(30));
         // 验证执行的sql: 先判断主键记录有没有
@@ -26,7 +27,7 @@ public class SaveOrUpdateTest extends BaseTest {
             "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `id` = ? LIMIT ?, ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).eq("" +
             "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `age` = ?, `user_name` = ? " +
-            "WHERE `id` = ?");
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         db.table(ATM.table.student).queryWhere("id=3")
             .eqDataMap(ATM.dataMap.student.table(1)
                 .userName.values("test_111")

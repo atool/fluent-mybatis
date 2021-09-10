@@ -5,14 +5,13 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.InsertList;
-import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
-import cn.org.atool.fluent.mybatis.base.model.UpdateSet;
+import cn.org.atool.fluent.mybatis.base.model.*;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderKit;
 
@@ -213,38 +212,47 @@ public class CommonSqlKit implements SqlKit {
         return sql.toString();
     }
 
-    @Override
-    public String updateById(SqlProvider provider, IEntity entity) {
-        MapperSql sql = new MapperSql();
-        sql.UPDATE(provider.tableName());
-        UpdateSet updates = new UpdateSet();
-        List<FieldMapping> fields = provider.mapping().allFields();
+    /**
+     * 根据Entity构造IUpdate
+     *
+     * @param mapping entity对应的数据库映射定义
+     * @param entity  entity实例
+     * @return IUpdate
+     */
+    public static IUpdate updateById(IMapping mapping, IEntity entity) {
+        assertNotNull("entity", entity);
+        IUpdate update = mapping.updater();
+
+        List<FieldMapping> fields = mapping.allFields();
         FieldMapping primary = null;
         FieldMapping version = null;
-        Map columns = entity.toColumnMap();
+        Map values = entity.toColumnMap();
         for (FieldMapping f : fields) {
+            Object value = values.get(f.column);
+            Column column = Column.column(f.column, (BaseWrapper) update);
             if (f.isPrimary()) {
                 primary = f;
             } else if (f.isVersion()) {
                 version = f;
-                updates.add(dbType, f, null, f.update);
-            } else {
-                updates.add(dbType, f, columns.get(f.column), f.update);
+                update.getWrapperData().updateSql(column, f.update);
+            } else if (value != null) {
+                update.updateSet(f.column, value);
+            } else if (notBlank(f.update)) {
+                update.getWrapperData().updateSql(column, f.update);
             }
         }
-        sql.SET(updates.getUpdates());
         if (primary == null) {
-            throw new IllegalArgumentException("Primary of entity is not defined.");
+            throw new IllegalArgumentException("Primary of entity[" + entity.getClass().getSimpleName() + "] is not defined.");
         } else {
-            sql.WHERE(primary.columnEqVar(dbType, Param_ET, null));
+            update.where().apply(primary.column, SqlOp.EQ, values.get(primary.column));
         }
         if (version != null) {
-            assertNotNull("lock version field(" + version.name + ")", columns.get(version.column));
-            sql.APPEND(" AND " + version.columnEqVar(dbType, Param_ET, null));
+            assertNotNull("lock version field(" + version.name + ")", values.get(version.column));
+            update.where().apply(version.column, SqlOp.EQ, values.get(version.column));
         }
-        return sql.toString();
+        return update;
     }
-
+    
     @Override
     public String countNoLimit(SqlProvider provider, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {

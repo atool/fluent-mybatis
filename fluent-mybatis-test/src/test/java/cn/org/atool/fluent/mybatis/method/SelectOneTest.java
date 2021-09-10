@@ -34,6 +34,16 @@ public class SelectOneTest extends BaseTest {
     }
 
     @Test
+    void query_for_update() {
+        StudentQuery query = StudentQuery.emptyQuery()
+            .where.id().eq(24L).end()
+            .last("for update");
+        StudentEntity student = mapper.findOne(query);
+        db.sqlList().wantFirstSql()
+            .end("FROM fluent_mybatis.student WHERE `id` = ? for update");
+    }
+
+    @Test
     public void test_selectOne_hasMultiple() throws Exception {
         db.table(ATM.table.student).clean()
             .insert(ATM.dataMap.student.initTable(4)

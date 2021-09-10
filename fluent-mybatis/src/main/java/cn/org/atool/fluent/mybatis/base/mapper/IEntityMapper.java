@@ -4,6 +4,8 @@ import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.provider.CommonSqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -100,7 +102,10 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param entity 实体对象
      * @return ignore
      */
-    int updateById(@Param(Param_ET) E entity);
+    default int updateById(@Param(Param_ET) E entity) {
+        IUpdate update = CommonSqlKit.updateById(this.mapping(), entity);
+        return this.updateBy(update);
+    }
 
     /**
      * 根据update对象更新记录
@@ -254,4 +259,11 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return ignore
      */
     int logicDelete(@Param(Param_EW) IQuery wrapper);
+
+    /**
+     * 数据库映射定义
+     *
+     * @return IMapping
+     */
+    IMapping mapping();
 }

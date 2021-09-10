@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.io.Serializable;
@@ -114,19 +113,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
         assertNotEmpty(Param_List, map);
         List<E> entities = getParas(map, Param_List);
         return sqlKit.insertBatch(this, entities, true);
-    }
-
-    /**
-     * 按主键更新
-     * {@link IEntityMapper#updateById(IEntity)}
-     *
-     * @param map 入参
-     * @return sql
-     */
-    public String updateById(Map<String, Object> map) {
-        IEntity entity = getParas(map, Param_ET);
-        assertNotNull(Param_Entity, entity);
-        return sqlKit.updateById(this, entity);
     }
 
     /**
@@ -398,7 +384,7 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @return 表名称
      */
     private String dynamic(IWrapper wrapper) {
-        String table = (String) ((BaseWrapper) wrapper).getTable().get();
+        String table = (String) wrapper.getTable().get();
         return isBlank(table) ? this.tableName() : table;
     }
 }

@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.annotations.Mocks;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +62,7 @@ public class EnumTypeTest extends BaseTest {
             .enumString.values("test1", "test3", "test2")
             .cleanAndInsert();
 
-        mocks.SqlProvider.updateById.restAnswer(f -> {
+        mocks.SqlProvider.updateBy.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
             return sql;
@@ -71,11 +72,13 @@ public class EnumTypeTest extends BaseTest {
             .setId(1L)
             .setEnumNum(MyEnum.test3)
             .setEnumString(MyEnum.test3));
+        aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
-            "UPDATE `my_enum_type` " +
-            "SET `enum-num` = #{et.enumNum, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},\n" +
-            "`enum_string` = #{et.enumString, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumTypeHandler} " +
-            "WHERE `id` = #{et.id, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+                "UPDATE `my_enum_type` " +
+                "SET `enum-num` = #{ew[0].wrapperData.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},\n" +
+                "`enum_string` = #{ew[0].wrapperData.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumTypeHandler} " +
+                "WHERE `id` = #{ew[0].wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
+            StringMode.SameAsSpace);
         ATM.dataMap.myEnumType.table(3)
             .id.values(1, 2, 3)
             .enumNum.values(2, 0, 2)
@@ -143,16 +146,18 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void updateByEntityId() {
-        mocks.SqlProvider.updateById.restAnswer(f -> {
+        mocks.SqlProvider.updateBy.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
             return sql;
         });
         mapper.updateById(new MyEnumTypePoJo().setEnumNum(MyEnum.test2).setId(3L));
+        aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
-            "UPDATE `my_enum_type` " +
-            "SET `enum-num` = #{et.enumNum, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler} " +
-            "WHERE `id` = #{et.id, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+                "UPDATE `my_enum_type` " +
+                "SET `enum-num` = #{ew[0].wrapperData.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler} " +
+                "WHERE `id` = #{ew[0].wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
+            StringMode.SameAsSpace);
     }
 
     @Test
