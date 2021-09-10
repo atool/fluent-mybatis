@@ -130,15 +130,6 @@ public interface SqlKit {
     String logicDeleteByIds(SqlProvider provider, Collection ids);
 
     /**
-     * 按Map k-v条件物理删除
-     *
-     * @param provider SqlProvider
-     * @param map      k-v条件
-     * @return sql
-     */
-    String deleteByMap(SqlProvider provider, Map<String, Object> map);
-
-    /**
      * 按Map k-v条件逻辑删除
      *
      * @param provider SqlProvider

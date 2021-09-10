@@ -22,6 +22,7 @@ public class DeleteByMapTest extends BaseTest {
         ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
+            .env.values("test_env")
             .cleanAndInsert();
         mapper.deleteByMap(new HashMap<String, Object>() {
             {
@@ -30,7 +31,8 @@ public class DeleteByMapTest extends BaseTest {
             }
         });
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM fluent_mybatis.student WHERE `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM fluent_mybatis.student " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? AND `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L).eqTable()
         );

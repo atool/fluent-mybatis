@@ -278,18 +278,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
     }
 
     /**
-     * 按map删除数据SQL构造
-     * {@link IEntityMapper#deleteByMap(Map)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String deleteByMap(Map<String, Object> map) {
-        Map<String, Object> cm = getParas(map, Param_CM);
-        return sqlKit.deleteByMap(this, cm);
-    }
-
-    /**
      * 按map逻辑删除数据SQL构造
      * {@link IEntityMapper#logicDeleteByMap(Map)}
      *

@@ -102,7 +102,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param entity 实体对象
      * @return ignore
      */
-    default int updateById(@Param(Param_ET) E entity) {
+    default int updateById(E entity) {
         IUpdate update = CommonSqlKit.updateById(this.mapping(), entity);
         return this.updateBy(update);
     }
@@ -215,10 +215,13 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     /**
      * 根据 columnMap key值删除记录
      *
-     * @param cm k-v条件
+     * @param condition k-v条件
      * @return ignore
      */
-    int deleteByMap(@Param(Param_CM) Map<String, Object> cm);
+    default int deleteByMap(Map<String, Object> condition) {
+        IQuery query = CommonSqlKit.deleteByMap(this.mapping(), condition);
+        return this.delete(query);
+    }
 
     /**
      * 根据wrapper删除记录

@@ -138,12 +138,29 @@ public class CommonSqlKit implements SqlKit {
         return this.logicDeleted(provider, sql -> whereEqIds(provider, sql, ids.toArray()));
     }
 
-    @Override
-    public String deleteByMap(SqlProvider provider, Map<String, Object> map) {
-        MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(provider.tableName(), null);
-        this.whereByMap(sql, map);
-        return sql.toString();
+    /**
+     * 构造根据map删除的IQuery
+     *
+     * @param mapping   IMapping
+     * @param condition 删除条件
+     * @return IQuery
+     */
+    public static IQuery deleteByMap(IMapping mapping, Map<String, Object> condition) {
+        IQuery query = mapping.query();
+        for (Map.Entry<String, Object> entry : condition.entrySet()) {
+            String column = entry.getKey();
+            FieldMapping f = mapping.getColumnMap().get(column);
+            if (f == null) {
+                throw new IllegalArgumentException("Column[" + column + "] of Entity[" + mapping.entityClass().getSimpleName() + "] is not found.");
+            }
+            Object value = entry.getValue();
+            if (value == null) {
+                query.where().apply(f.column, SqlOp.IS_NULL);
+            } else {
+                query.where().apply(f.column, SqlOp.EQ, value);
+            }
+        }
+        return query;
     }
 
     @Override
@@ -252,7 +269,7 @@ public class CommonSqlKit implements SqlKit {
         }
         return update;
     }
-    
+
     @Override
     public String countNoLimit(SqlProvider provider, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
