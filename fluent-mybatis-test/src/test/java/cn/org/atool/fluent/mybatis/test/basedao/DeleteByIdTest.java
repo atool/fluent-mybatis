@@ -15,9 +15,12 @@ public class DeleteByIdTest extends BaseTest {
 
     @Test
     public void test_deleteById() throws Exception {
-        ATM.dataMap.student.initTable(10).cleanAndInsert();
+        ATM.dataMap.student.initTable(10)
+            .env.values("test_env")
+            .cleanAndInsert();
         dao.deleteById(4L);
-        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student WHERE `id` = ?");
+        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         db.table(ATM.table.student).count().eq(9);
     }
 
@@ -30,9 +33,12 @@ public class DeleteByIdTest extends BaseTest {
 
     @Test
     public void test_deleteById2() throws Exception {
-        ATM.dataMap.student.initTable(10).cleanAndInsert();
+        ATM.dataMap.student.initTable(10)
+            .env.values("test_env")
+            .cleanAndInsert();
         dao.deleteById(4L, 5L, 6L);
-        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)");
+        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)");
         db.table(ATM.table.student).count().eq(7);
     }
 

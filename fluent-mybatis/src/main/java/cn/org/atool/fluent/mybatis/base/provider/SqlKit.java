@@ -94,15 +94,6 @@ public interface SqlKit {
     <E extends IEntity> String insertBatch(SqlProvider provider, List<E> entities, boolean withPk);
 
     /**
-     * 按主键物理删除
-     *
-     * @param provider SqlProvider
-     * @param ids      主键列表
-     * @return sql
-     */
-    String deleteById(SqlProvider provider, Serializable[] ids);
-
-    /**
      * 根据主键列表物理删除数据SQL构造
      *
      * @param provider SqlProvider

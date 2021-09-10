@@ -81,9 +81,11 @@ public class RichEntityTest extends BaseTest {
         ATM.dataMap.student.table(1)
             .id.values(1)
             .userName.values("test1")
+            .env.values("test_env")
             .cleanAndInsert();
         new StudentEntity().setId(1L).deleteById();
-        db.sqlList().wantFirstSql().end("DELETE FROM fluent_mybatis.student WHERE `id` = ?");
+        db.sqlList().wantFirstSql().end("DELETE FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         db.table(ATM.table.student).count().isEqualTo(0);
     }
 

@@ -202,7 +202,10 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param ids 主键列表
      * @return ignore
      */
-    int deleteById(@Param(Param_List) Serializable... ids);
+    default int deleteById(@Param(Param_List) Serializable... ids) {
+        IQuery query = CommonSqlKit.deleteById(this.mapping(), ids);
+        return this.delete(query);
+    }
 
     /**
      * 根据id列表批量删除

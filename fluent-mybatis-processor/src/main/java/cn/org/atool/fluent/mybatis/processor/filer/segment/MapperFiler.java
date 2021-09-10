@@ -85,7 +85,6 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertBatch())
             .addMethod(this.m_insertBatchWithPk())
             .addMethod(this.m_insertSelect())
-            .addMethod(this.m_deleteById())
             .addMethod(this.m_logicDeleteById())
             .addMethod(this.m_deleteByIds())
             .addMethod(this.m_logicDeleteByIds())
@@ -245,15 +244,6 @@ public class MapperFiler extends AbstractFiler {
             .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
                 .addAnnotation(annotation_Param("Param_CM"))
                 .build())
-            .returns(TypeName.INT)
-            .build();
-    }
-
-    public MethodSpec m_deleteById() {
-        return this.mapperMethod(DeleteProvider.class, M_DeleteById)
-            .addJavadoc("@see SqlProvider#deleteById(Map)")
-            .addParameter(this.param(CN_SerializableArray, "ids", "Param_List"))
-            .varargs(true)
             .returns(TypeName.INT)
             .build();
     }

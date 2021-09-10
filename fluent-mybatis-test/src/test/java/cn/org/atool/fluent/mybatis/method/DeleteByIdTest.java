@@ -21,10 +21,12 @@ public class DeleteByIdTest extends BaseTest {
         ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
+            .env.values("test_env")
             .cleanAndInsert();
         mapper.deleteById(24);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM fluent_mybatis.student WHERE `id` = ?", StringMode.SameAsSpace);
+            .eq("DELETE FROM fluent_mybatis.student " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
@@ -52,11 +54,13 @@ public class DeleteByIdTest extends BaseTest {
         ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
+            .env.values("test_env")
             .cleanAndInsert();
         mapper.deleteById(24, 25);
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?)", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eq(new Object[]{24, 25});
+            .eq("DELETE FROM fluent_mybatis.student " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(false, "test_env", 24, 25);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
@@ -72,16 +76,16 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
-    public void test_deleteById_noPrimary() throws Exception {
+    public void test_deleteById_noPrimary() {
         db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );
-        want.exception(() -> noPrimaryMapper.deleteById(3L), MyBatisSystemException.class);
+        want.exception(() -> noPrimaryMapper.deleteById(3L), MyBatisSystemException.class, RuntimeException.class);
     }
 
     @Test
-    public void test_logicDeleteById_noLogicDeletedField() throws Exception {
+    public void test_logicDeleteById_noLogicDeletedField() {
         db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")

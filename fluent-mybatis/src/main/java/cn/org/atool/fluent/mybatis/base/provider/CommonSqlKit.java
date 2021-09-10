@@ -112,12 +112,23 @@ public class CommonSqlKit implements SqlKit {
         return sql.toString();
     }
 
-    @Override
-    public String deleteById(SqlProvider provider, Serializable[] ids) {
-        MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(provider.tableName(), null);
-        whereEqIds(provider, sql, ids);
-        return sql.toString();
+    /**
+     * 按主键物理删除
+     *
+     * @param mapping IMapping
+     * @param ids     主键列表
+     * @return sql
+     */
+    public static IQuery deleteById(IMapping mapping, Serializable[] ids) {
+        assertNotEmpty("ids", ids);
+        IQuery query = mapping.query();
+        String primary = mapping.primaryId(true);
+        if (ids.length == 1) {
+            query.where().apply(primary, SqlOp.EQ, ids[0]);
+        } else {
+            query.where().apply(primary, SqlOp.IN, ids);
+        }
+        return query;
     }
 
     @Override
