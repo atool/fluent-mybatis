@@ -35,15 +35,16 @@ public class DeleteByMapTest extends BaseTest {
     }
 
     @Test
-    public void test_logicDeleteByMap() throws Exception {
+    public void test_logicDeleteByMap() {
         dao.logicDeleteByMap(new HashMap<String, Object>() {
             {
                 this.put(FieldRef.Student.userName.column, "test12");
             }
         });
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE fluent_mybatis.student SET `is_deleted` = true " +
+            "UPDATE fluent_mybatis.student " +
+            "SET `gmt_modified` = now(), `is_deleted` = ? " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
-        db.sqlList().wantFirstPara().eq(new Object[]{false, "test_env", "test12"});
+        db.sqlList().wantFirstPara().eqList(true, false, "test_env", "test12");
     }
 }

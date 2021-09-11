@@ -264,8 +264,11 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     /**
      * 根据wrapper删除记录
      *
-     * @param wrapper 实体对象封装操作类（属性条件可以为null）
+     * @param query 实体对象封装操作类（属性条件可以为null）
      * @return ignore
      */
-    int logicDelete(@Param(Param_EW) IQuery wrapper);
+    default int logicDelete(@Param(Param_EW) IQuery query) {
+        IUpdate update = SqlKit.factory(this).logicDeleteBy(this.mapping(), query);
+        return this.updateBy(update);
+    }
 }

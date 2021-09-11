@@ -32,11 +32,14 @@ public class DeleteTest extends BaseTest {
 
     @Test
     public void testLogicDeleteById() {
-        mapper.logicDelete(StudentQuery.emptyQuery()
+        mapper.logicDelete(StudentQuery.query()
             .where.id().eq(24L).end());
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` = ?", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eq(new Object[]{24L});
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE fluent_mybatis.student " +
+                "SET `gmt_modified` = now(), `is_deleted` = ? " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?"
+            , StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 24L);
     }
 
     @Test
@@ -64,7 +67,9 @@ public class DeleteTest extends BaseTest {
             .where.applyFunc("user_name=?", "user2").end();
         mapper.logicDelete(query);
         db.sqlList().wantFirstSql().eq("" +
-                "UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE user_name=?",
+                "UPDATE fluent_mybatis.student " +
+                "SET `gmt_modified` = now(), `is_deleted` = ? " +
+                "WHERE user_name=?",
             StringMode.SameAsSpace);
     }
 }

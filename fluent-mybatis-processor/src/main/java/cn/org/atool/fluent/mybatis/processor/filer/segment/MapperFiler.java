@@ -89,7 +89,7 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_logicDeleteById())
             .addMethod(this.m_logicDeleteByIds())
             .addMethod(this.m_logicDeleteByMap())
-            .addMethod(this.m_logicDelete())
+//            .addMethod(this.m_logicDelete())
             .addMethod(this.m_updateBy())
             .addMethod(this.m_findById())
             .addMethod(this.m_findOne())

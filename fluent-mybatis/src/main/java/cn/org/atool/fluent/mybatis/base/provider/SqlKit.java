@@ -162,6 +162,8 @@ public interface SqlKit {
      */
     String deleteBy(SqlProvider provider, WrapperData ew);
 
+    IUpdate logicDeleteBy(IMapping mapping, IQuery query);
+
     /**
      * 根据WrapperData设置构建逻辑删除语句
      *

@@ -65,9 +65,9 @@ public class JoinWrapperData extends WrapperData {
         if (whereMerged) {
             return super.getWhereSql();
         }
-        this.mergeSegments.getWhere().add(KeyWordSegment.AND, this.wrapper.getWrapperData().whereSegments());
+        this.mergeSegments().getWhere().add(KeyWordSegment.AND, this.wrapper.getWrapperData().whereSegments());
         for (BaseQuery query : this.queries) {
-            this.mergeSegments.getWhere().add(KeyWordSegment.AND, query.wrapperData.whereSegments());
+            this.mergeSegments().getWhere().add(KeyWordSegment.AND, query.wrapperData.whereSegments());
         }
         whereMerged = true;
         return super.getWhereSql();
@@ -80,15 +80,15 @@ public class JoinWrapperData extends WrapperData {
         if (groupByMerged) {
             return super.getGroupBy();
         }
-        this.wrapper.getWrapperData().getMergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments.getGroupBy()::addAll);
-        this.wrapper.getWrapperData().getMergeSegments().getHaving().getSegments().forEach(this.mergeSegments.getHaving()::addAll);
+        this.wrapper.getWrapperData().mergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments().getGroupBy()::addAll);
+        this.wrapper.getWrapperData().mergeSegments().getHaving().getSegments().forEach(this.mergeSegments().getHaving()::addAll);
         for (BaseQuery query : this.queries) {
-            query.wrapperData.getMergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments.getGroupBy()::addAll);
-            if (!this.mergeSegments.getHaving().isEmpty() &&
-                !query.wrapperData.getMergeSegments().getHaving().getSegments().isEmpty()) {
-                this.mergeSegments.getHaving().addAll(KeyWordSegment.AND);
+            query.wrapperData.mergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments().getGroupBy()::addAll);
+            if (!this.mergeSegments().getHaving().isEmpty() &&
+                !query.wrapperData.mergeSegments().getHaving().getSegments().isEmpty()) {
+                this.mergeSegments().getHaving().addAll(KeyWordSegment.AND);
             }
-            query.wrapperData.getMergeSegments().getHaving().getSegments().forEach(this.mergeSegments.getHaving()::addAll);
+            query.wrapperData.mergeSegments().getHaving().getSegments().forEach(this.mergeSegments().getHaving()::addAll);
         }
         this.groupByMerged = true;
         return super.getGroupBy();
@@ -101,9 +101,9 @@ public class JoinWrapperData extends WrapperData {
         if (orderByMerged) {
             return super.getOrderBy();
         }
-        this.wrapper.getWrapperData().getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
+        this.wrapper.getWrapperData().mergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments().getOrderBy()::addAll);
         for (BaseQuery query : this.queries) {
-            query.wrapperData.getMergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments.getOrderBy()::addAll);
+            query.wrapperData.mergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments().getOrderBy()::addAll);
         }
         orderByMerged = true;
         return super.getOrderBy();

@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
@@ -10,6 +9,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.segment.WhereSegmentList;
 import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,16 +44,6 @@ public class WrapperData implements IWrapperData {
      * 查询字段
      */
     protected List<String> sqlSelect = new ArrayList<>(8);
-    /**
-     * where, group, having ,order by对象列表
-     */
-    protected final MergeSegments mergeSegments = new MergeSegments();
-
-    /**
-     * 分页参数
-     */
-    @Setter
-    protected PagedOffset paged;
 
     /**
      * SQL 更新字段内容，例如：name='1', age=2
@@ -67,12 +57,51 @@ public class WrapperData implements IWrapperData {
      * 字段别名列表
      */
     private final Set<String> fieldAlias = new HashSet<>();
+
+    /* =========WHERE条件部分======== */
+    /**
+     * where, group, having ,order by对象列表
+     */
+    @Getter(AccessLevel.NONE)
+    private final MergeSegments mergeSegments = new MergeSegments();
+
+    @Override
+    public MergeSegments mergeSegments() {
+        return this.where == null ? this.mergeSegments : this.where.getWrapperData().mergeSegments();
+    }
+
+    /**
+     * 分页参数
+     */
+    @Setter
+    @Getter(AccessLevel.NONE)
+    protected PagedOffset paged;
+
+    public PagedOffset getPaged() {
+        return this.where == null ? this.paged : this.where.getWrapperData().paged;
+    }
+
     /**
      * 按条件更新时, 跳过检查乐观锁条件字段
      * 默认必须有乐观锁
      */
     @Setter
+    @Getter(AccessLevel.NONE)
     private boolean ignoreLockVersion = false;
+
+    public boolean isIgnoreLockVersion() {
+        return this.where == null ? ignoreLockVersion : this.where.getWrapperData().isIgnoreLockVersion();
+    }
+
+    /**
+     * 外部传入的where条件
+     */
+    private IQuery where;
+
+    public void replacedWhere(IQuery query) {
+        this.where = query;
+        query.getWrapperData().sharedParameter(this);
+    }
 
     public WrapperData(IWrapper wrapper) {
         this(wrapper, new Parameters());
@@ -140,19 +169,19 @@ public class WrapperData implements IWrapperData {
         }
     }
 
-
     /**
      * 不同数据库分页查询
      *
-     * @param sql    非分页查询sql
+     * @param sql 非分页查询sql
      * @return sql segment
      */
     public String wrappedByPaged(String sql) {
-        if (this.paged != null) {
+        PagedOffset paged = this.getPaged();
+        if (paged != null) {
             Parameters p = this.getParameters();
-            String offset = p.putParameter(null, this.paged.getOffset());
-            String size = p.putParameter(null, this.paged.getLimit());
-            String endOffset = p.putParameter(null, this.paged.getEndOffset());
+            String offset = p.putParameter(null, paged.getOffset());
+            String size = p.putParameter(null, paged.getLimit());
+            String endOffset = p.putParameter(null, paged.getEndOffset());
             return this.wrapper.dbType().paged(sql, offset, size, endOffset);
         } else {
             return sql;
@@ -166,7 +195,7 @@ public class WrapperData implements IWrapperData {
 
     @Override
     public String sqlWithoutPaged() {
-        if (If.notBlank(customizedSql)) {
+        if (notBlank(customizedSql)) {
             return customizedSql;
         }
         MapperSql text = new MapperSql();
@@ -184,11 +213,6 @@ public class WrapperData implements IWrapperData {
     public String getUpdateStr() {
         String sql = this.updates.entrySet().stream().map(i -> i.getKey() + " = " + i.getValue()).collect(joining(COMMA_SPACE));
         return isBlank(sql) ? null : sql.trim();
-    }
-
-    @Override
-    public MergeSegments mergeSegments() {
-        return this.mergeSegments;
     }
 
     /*
@@ -268,14 +292,14 @@ public class WrapperData implements IWrapperData {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
         String segment = operator.operator(column, this.getParameters(), format, args);
-        this.getMergeSegments().add(keyWord, column.columnSegment(), () -> segment);
+        this.mergeSegments().add(keyWord, column.columnSegment(), () -> segment);
     }
 
     public void apply(KeyWordSegment keyWord, ISqlSegment... segments) {
         if (keyWord == null) {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
-        this.getMergeSegments().add(keyWord, segments);
+        this.mergeSegments().add(keyWord, segments);
     }
 
     /**
@@ -319,7 +343,7 @@ public class WrapperData implements IWrapperData {
      * @return ignore
      */
     public List<String> findWhereColumns() {
-        WhereSegmentList list = this.getMergeSegments().getWhere();
+        WhereSegmentList list = this.mergeSegments().getWhere();
         if (list == null || list.getSegments() == null) {
             return Collections.EMPTY_LIST;
         }
@@ -331,7 +355,6 @@ public class WrapperData implements IWrapperData {
         }
         return columns;
     }
-
 
     public void hint(HintType type, String hint) {
         if (notBlank(hint)) {
@@ -353,7 +376,7 @@ public class WrapperData implements IWrapperData {
     }
 
     public ISqlSegment[] whereSegments() {
-        return this.mergeSegments.getWhere().getSegments().toArray(new ISqlSegment[0]);
+        return this.mergeSegments().getWhere().getSegments().toArray(new ISqlSegment[0]);
     }
 
     /**
@@ -362,7 +385,7 @@ public class WrapperData implements IWrapperData {
      * @return true: has group by
      */
     public boolean hasGroupBy() {
-        return !this.mergeSegments.getGroupBy().isEmpty();
+        return !this.mergeSegments().getGroupBy().isEmpty();
     }
 
     /**
@@ -372,7 +395,7 @@ public class WrapperData implements IWrapperData {
      * @return true: has next page
      */
     public boolean hasNext(long total) {
-        return this.paged != null && total > this.paged.getEndOffset();
+        return this.getPaged() != null && total > this.getPaged().getEndOffset();
     }
 
     public boolean hasSelect() {

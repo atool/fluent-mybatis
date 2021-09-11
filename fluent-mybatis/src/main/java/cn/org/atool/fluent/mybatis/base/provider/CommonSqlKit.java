@@ -185,6 +185,33 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
+    public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
+        IUpdate update = mapping.updater();
+        String logicDeleted = mapping.logicDeleteField();
+        assertNotNull("logical delete field of table(" + mapping.getTableName() + ")", logicDeleted);
+        if (mapping.longTypeOfLogicDelete()) {
+            update.updateSet(logicDeleted, System.currentTimeMillis());
+        } else {
+            update.updateSet(logicDeleted, true);
+        }
+        update.getWrapperData().replacedWhere(query);
+        return update;
+    }
+
+//    MapperSql sql = new MapperSql();
+//    String logicDeleted = provider.mapping().logicDeleteField();
+//    assertNotNull("logical delete field of table(" + provider.tableName() + ")", logicDeleted);
+//        sql.UPDATE(provider.tableName(), null);
+//        if (provider.mapping().longTypeOfLogicDelete()) {
+//        sql.SET(String.format("%s = %d", dbType.wrap(logicDeleted), System.currentTimeMillis()));
+//    } else {
+//        sql.SET(String.format("%s = true", dbType.wrap(logicDeleted)));
+//    }
+//    /* 设置where */
+//        where.accept(sql);
+//        return sql.toString();
+
+    @Override
     public String updateBy(SqlProvider provider, IUpdate[] updaters) {
         List<String> list = new ArrayList<>(updaters.length);
         int index = 0;
