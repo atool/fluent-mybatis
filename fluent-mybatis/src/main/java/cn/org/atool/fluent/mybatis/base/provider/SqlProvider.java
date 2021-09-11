@@ -147,7 +147,7 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      */
     public String listEntity(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryByQuery(this, ew);
+        return sqlKit.queryBy(this, ew);
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      */
     public String listMaps(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryByQuery(this, ew);
+        return sqlKit.queryBy(this, ew);
     }
 
     /**
@@ -171,7 +171,7 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      */
     public String listObjs(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryByQuery(this, ew);
+        return sqlKit.queryBy(this, ew);
     }
 
     /**

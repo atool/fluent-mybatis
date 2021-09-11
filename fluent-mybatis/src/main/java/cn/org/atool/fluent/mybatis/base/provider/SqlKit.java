@@ -58,6 +58,55 @@ public interface SqlKit {
         return factory(mapping.mapping().getDbType());
     }
 
+    /* ======== IQuery/IUpdate ====== */
+
+    /**
+     * 根据id列表构造查询条件IQuery
+     *
+     * @param mapping IMapping
+     * @param ids     主键列表
+     * @return IQuery
+     */
+    IQuery queryByIds(IMapping mapping, Collection ids);
+
+    /**
+     * 根据id列表构造查询条件IQuery
+     *
+     * @param mapping IMapping
+     * @param ids     主键列表
+     * @return IQuery
+     */
+    IQuery queryByIds(IMapping mapping, Object[] ids);
+
+    /**
+     * 根据map(k-v)条件构造查询条件IQuery
+     *
+     * @param mapping   IMapping
+     * @param condition 查询条件
+     * @return IQuery
+     */
+    IQuery queryByMap(IMapping mapping, Map<String, Object> condition);
+
+    /**
+     * 根据IQuery条件构造逻辑删除更新IUpdate
+     *
+     * @param mapping IMapping
+     * @param query   逻辑删除条件
+     * @return IUpdate
+     */
+    IUpdate logicDeleteBy(IMapping mapping, IQuery query);
+
+    /**
+     * 根据Entity构造IUpdate
+     *
+     * @param mapping entity对应的数据库映射定义
+     * @param entity  entity实例
+     * @return IUpdate
+     */
+    IUpdate updateById(IMapping mapping, IEntity entity);
+
+    /* =======SqlProvider====== */
+
     /**
      * 批量更新, 插入, 删除操作语句构造
      *
@@ -99,33 +148,6 @@ public interface SqlKit {
     <E extends IEntity> String insertBatch(SqlProvider provider, List<E> entities, boolean withPk);
 
     /**
-     * 根据id列表构造查询条件IQuery
-     *
-     * @param mapping IMapping
-     * @param ids     主键列表
-     * @return IQuery
-     */
-    IQuery queryByIds(IMapping mapping, Collection ids);
-
-    /**
-     * 根据id列表构造查询条件IQuery
-     *
-     * @param mapping IMapping
-     * @param ids     主键列表
-     * @return IQuery
-     */
-    IQuery queryByIds(IMapping mapping, Object[] ids);
-
-    /**
-     * 根据map(k-v)条件构造查询条件IQuery
-     *
-     * @param mapping   IMapping
-     * @param condition 查询条件
-     * @return IQuery
-     */
-    IQuery queryByMap(IMapping mapping, Map<String, Object> condition);
-
-    /**
      * 根据WrapperData设置构建物理删除语句
      *
      * @param provider SqlProvide
@@ -133,24 +155,6 @@ public interface SqlKit {
      * @return sql
      */
     String deleteBy(SqlProvider provider, WrapperData ew);
-
-    /**
-     * 根据IQuery条件构造逻辑删除更新IUpdate
-     *
-     * @param mapping IMapping
-     * @param query   逻辑删除条件
-     * @return IUpdate
-     */
-    IUpdate logicDeleteBy(IMapping mapping, IQuery query);
-
-    /**
-     * 根据Entity构造IUpdate
-     *
-     * @param mapping entity对应的数据库映射定义
-     * @param entity  entity实例
-     * @return IUpdate
-     */
-    IUpdate updateById(IMapping mapping, IEntity entity);
 
     /**
      * update(IQuery) SQL构造
@@ -196,5 +200,5 @@ public interface SqlKit {
      * @param ew       query查询条件
      * @return sql
      */
-    String queryByQuery(SqlProvider provider, WrapperData ew);
+    String queryBy(SqlProvider provider, WrapperData ew);
 }

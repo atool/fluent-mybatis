@@ -31,32 +31,6 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  */
 @SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMapping {
-    /**
-     * 调用存储过程
-     *
-     * @param procedure 存储过程及参数, 比如:
-     *                  procedureName(#{p.input1, mode=IN, jdbcType=INTEGER}, #{p.output1, mode=OUT, jdbcType=INTEGER})
-     * @param parameter 存储过程引用的入参和出参设置对象, 以前缀 "p." 引用属性
-     */
-    @Options(statementType = StatementType.CALLABLE)
-    @Select("{CALL ${procedure}}")
-    void callProcedure(@Param("procedure") String procedure, @Param("p") Object parameter);
-
-    /**
-     * 批量执行增删改操作
-     *
-     * <pre>
-     * 传入多个操作时, 需要数据库支持
-     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
-     * </pre>
-     *
-     * @param crud 增删改操作
-     */
-    @UpdateProvider(
-        type = SqlProvider.class,
-        method = "batchCrud"
-    )
-    void batchCrud(@Param(Param_EW) BatchCrud crud);
 
     /**
      * 插入一条记录, 主键字段为空
@@ -164,6 +138,37 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     int delete(@Param(Param_EW) IQuery wrapper);
 
+    /* =========== 静态引用 =========== */
+
+    /**
+     * 调用存储过程
+     *
+     * @param procedure 存储过程及参数, 比如:
+     *                  procedureName(#{p.input1, mode=IN, jdbcType=INTEGER}, #{p.output1, mode=OUT, jdbcType=INTEGER})
+     * @param parameter 存储过程引用的入参和出参设置对象, 以前缀 "p." 引用属性
+     */
+    @Options(statementType = StatementType.CALLABLE)
+    @Select("{CALL ${procedure}}")
+    void callProcedure(@Param("procedure") String procedure, @Param("p") Object parameter);
+
+    /**
+     * 批量执行增删改操作
+     *
+     * <pre>
+     * 传入多个操作时, 需要数据库支持
+     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * </pre>
+     *
+     * @param crud 增删改操作
+     */
+    @UpdateProvider(
+        type = SqlProvider.class,
+        method = "batchCrud"
+    )
+    void batchCrud(@Param(Param_EW) BatchCrud crud);
+
+    /* ===========default 实现=========== */
+
     /**
      * 根据id修改
      *
@@ -192,7 +197,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
      */
-    default E findOne(@Param(Param_EW) IQuery query) {
+    default E findOne(IQuery query) {
         List<E> list = this.listEntity(query);
         if (isEmpty(list)) {
             return null;

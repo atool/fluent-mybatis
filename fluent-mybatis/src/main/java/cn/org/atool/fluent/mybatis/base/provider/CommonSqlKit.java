@@ -283,7 +283,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String queryByQuery(SqlProvider provider, WrapperData ew) {
+    public String queryBy(SqlProvider provider, WrapperData ew) {
         return ew.sqlWithPaged();
     }
 

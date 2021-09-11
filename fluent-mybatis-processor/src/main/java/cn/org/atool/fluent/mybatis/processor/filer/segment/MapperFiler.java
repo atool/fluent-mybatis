@@ -75,11 +75,7 @@ public class MapperFiler extends AbstractFiler {
                 .addMember("blocking", "true").build()
             );
         }
-        spec.addField(FieldSpec.builder(String.class, "ResultMap",
-            PUBLIC_STATIC_FINAL)
-            .initializer("$S", fluent.getClassName() + "ResultMap")
-            .build()
-        );
+
         spec.addMethod(this.m_insert())
             .addMethod(this.m_insertWithPk())
             .addMethod(this.m_insertBatch())
@@ -357,7 +353,7 @@ public class MapperFiler extends AbstractFiler {
             results.add(CodeBlock.join(blocks, ""));
         }
         return AnnotationSpec.builder(Results.class)
-            .addMember("id", "ResultMap")
+//            .addMember("id", "ResultMap")
             .addMember("value", "{\n$L\n}", CodeBlock.join(results, ",\n"))
             .build();
     }
