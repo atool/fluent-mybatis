@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.method;
 
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -52,8 +52,8 @@ public class SelectOneTest extends BaseTest {
             );
         StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end();
-        want.exception(() -> mapper.findOne(query), MyBatisSystemException.class)
-            .contains("Expected one result (or null) to be returned by selectOne(), but found: 2");
+        want.exception(() -> mapper.findOne(query), FluentMybatisException.class)
+            .contains("Expected one result (or null) to be returned, but found 2 results.");
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
     }

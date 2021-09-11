@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -144,7 +145,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         } else if (list.size() == 1) {
             return list.get(0);
         } else {
-            throw new RuntimeException("Expected to return a single result, but found " + list.size() + " results.");
+            throw new FluentMybatisException("Expected one result (or null) to be returned, but found " + list.size() + " results.");
         }
     }
 
