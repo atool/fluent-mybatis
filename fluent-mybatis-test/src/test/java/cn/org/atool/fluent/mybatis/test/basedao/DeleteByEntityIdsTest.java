@@ -25,7 +25,7 @@ public class DeleteByEntityIdsTest extends BaseTest {
         dao.deleteByEntityIds(Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(5L)));
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)");
+            "WHERE `id` IN (?, ?)");
         db.table(ATM.table.student).count().isEqualTo(8);
     }
 
@@ -35,8 +35,8 @@ public class DeleteByEntityIdsTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `is_deleted` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)");
-        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 1L, 5L);
+            "WHERE `id` IN (?, ?)");
+        db.sqlList().wantFirstPara().eqList(true, 1L, 5L);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class DeleteByEntityIdsTest extends BaseTest {
         dao.deleteByEntityIds(new StudentEntity().setId(1L), new StudentEntity().setId(5L));
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)");
+            "WHERE `id` IN (?, ?)");
         db.table(ATM.table.student).count().isEqualTo(8);
     }
 
@@ -57,8 +57,8 @@ public class DeleteByEntityIdsTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)"
+                "WHERE `id` IN (?, ?)"
             , StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 1L, 5L);
+        db.sqlList().wantFirstPara().eqList(true, 1L, 5L);
     }
 }

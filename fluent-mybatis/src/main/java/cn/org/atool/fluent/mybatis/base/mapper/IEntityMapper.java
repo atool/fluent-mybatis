@@ -149,10 +149,14 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     /**
      * 查询（根据 columnMap 条件）
      *
-     * @param columnMap 表字段 map 对象
+     * @param condition 表字段 map 对象
      * @return ignore
      */
-    List<E> listByMap(@Param(Param_CM) Map<String, Object> columnMap);
+    default List<E> listByMap(@Param(Param_CM) Map<String, Object> condition) {
+        assertNotEmpty("condition", condition);
+        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
+        return this.listEntity(query);
+    }
 
     /**
      * 根据 query 条件，查询全部记录

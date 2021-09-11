@@ -23,6 +23,7 @@ public class SelectByMapTest extends BaseTest {
     public void test_selectByMap() throws Exception {
         ATM.dataMap.student.initTable(4)
             .userName.values("u1", "u2", "u3", "u2")
+            .env.values("test_env")
             .cleanAndInsert();
 
         List<StudentEntity> users = mapper.listByMap(new HashMap<String, Object>() {
@@ -32,7 +33,8 @@ public class SelectByMapTest extends BaseTest {
         });
         db.sqlList().wantFirstSql()
             .start("SELECT")
-            .end("FROM fluent_mybatis.student WHERE `user_name` = ?");
+            .end("FROM fluent_mybatis.student " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
         want.list(users).eqDataMap(ATM.dataMap.student.entity(2)
             .userName.values("u2"));
     }

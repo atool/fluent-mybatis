@@ -85,7 +85,7 @@ public class RichEntityTest extends BaseTest {
             .cleanAndInsert();
         new StudentEntity().setId(1L).deleteById();
         db.sqlList().wantFirstSql().end("DELETE FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
+            "WHERE `id` = ?");
         db.table(ATM.table.student).count().isEqualTo(0);
     }
 
@@ -95,8 +95,8 @@ public class RichEntityTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `is_deleted` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
-        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 1L);
+            "WHERE `id` = ?");
+        db.sqlList().wantFirstPara().eqList(true, 1L);
     }
 
     @Test
@@ -112,9 +112,12 @@ public class RichEntityTest extends BaseTest {
             .id.values(3, 4, 6)
             .userName.values("test1")
             .tenant.values(123L)
+            .env.values("test_env")
             .cleanAndInsert();
         List<StudentEntity> list = new StudentEntity().setUserName("test1").setTenant(123L).listByNotNull();
-        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `user_name` = ? AND `tenant` = ?");
+        db.sqlList().wantFirstSql().end("" +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? AND `tenant` = ?");
         want.list(list).eqDataMap(ATM.dataMap.student.entity(3)
             .id.values(3, 4, 6)
             .userName.values("test1")

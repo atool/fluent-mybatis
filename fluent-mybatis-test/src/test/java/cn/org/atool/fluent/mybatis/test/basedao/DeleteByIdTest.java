@@ -20,7 +20,7 @@ public class DeleteByIdTest extends BaseTest {
             .cleanAndInsert();
         dao.deleteById(4L);
         db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
+            "WHERE `id` = ?");
         db.table(ATM.table.student).count().eq(9);
     }
 
@@ -30,7 +30,7 @@ public class DeleteByIdTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?"
+                "WHERE `id` = ?"
             , StringMode.SameAsSpace);
     }
 
@@ -41,7 +41,7 @@ public class DeleteByIdTest extends BaseTest {
             .cleanAndInsert();
         dao.deleteById(4L, 5L, 6L);
         db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)");
+            "WHERE `id` IN (?, ?, ?)");
         db.table(ATM.table.student).count().eq(7);
     }
 
@@ -53,7 +53,7 @@ public class DeleteByIdTest extends BaseTest {
         dao.deleteByIds(Arrays.asList(4L, 6L, 9L));
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student " +
-                    "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)"
+                    "WHERE `id` IN (?, ?, ?)"
                 , StringMode.SameAsSpace);
         db.table(ATM.table.student).count().eq(7);
     }
@@ -64,8 +64,8 @@ public class DeleteByIdTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)"
+                "WHERE `id` IN (?, ?, ?)"
             , StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 4L, 6L, 9L);
+        db.sqlList().wantFirstPara().eqList(true, 4L, 6L, 9L);
     }
 }

@@ -26,7 +26,7 @@ public class DeleteByIdTest extends BaseTest {
         mapper.deleteById(24);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
+                "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
@@ -44,7 +44,7 @@ public class DeleteByIdTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?"
+                "WHERE `id` = ?"
             , StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
@@ -63,8 +63,8 @@ public class DeleteByIdTest extends BaseTest {
         mapper.deleteById(24, 25);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList(false, "test_env", 24, 25);
+                "WHERE `id` IN (?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(24, 25);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
@@ -77,9 +77,9 @@ public class DeleteByIdTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)"
+                "WHERE `id` IN (?, ?)"
             , StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 24, 25);
+        db.sqlList().wantFirstPara().eqList(true, 24, 25);
     }
 
     @Test

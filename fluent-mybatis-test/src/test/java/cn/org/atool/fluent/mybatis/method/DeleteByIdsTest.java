@@ -23,7 +23,7 @@ public class DeleteByIdsTest extends BaseTest {
         mapper.deleteByIds(Arrays.asList(24, 27, 25));
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)", StringMode.SameAsSpace);
+                "WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
         ATM.dataMap.student.table(2)
             .id.values(23L, 26L)
             .userName.values("user1", "user2")
@@ -36,8 +36,8 @@ public class DeleteByIdsTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
                 "UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)",
+                "WHERE `id` IN (?, ?, ?)",
             StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 24, 27, 25);
+        db.sqlList().wantFirstPara().eqList(true, 24, 27, 25);
     }
 }

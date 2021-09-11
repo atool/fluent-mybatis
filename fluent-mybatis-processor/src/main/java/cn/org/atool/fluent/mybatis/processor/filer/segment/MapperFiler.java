@@ -90,7 +90,6 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_findById())
             .addMethod(this.m_findOne())
             .addMethod(this.m_listByIds())
-            .addMethod(this.m_listByMap())
             .addMethod(this.m_listEntity())
             .addMethod(this.m_listMaps())
             .addMethod(this.m_listObjs())
@@ -150,15 +149,6 @@ public class MapperFiler extends AbstractFiler {
             .addJavadoc("@see SqlProvider#listEntity(Map)")
             .addAnnotation(this.annotation_ResultMap())
             .addParameter(queryParam("query"))
-            .returns(paraType(ClassName.get(List.class), fluent.entity()))
-            .build();
-    }
-
-    public MethodSpec m_listByMap() {
-        return this.mapperMethod(SelectProvider.class, M_listByMap)
-            .addJavadoc("@see SqlProvider#listByMap(Map)")
-            .addAnnotation(this.annotation_ResultMap())
-            .addParameter(this.param(CN_Map_StrObj, "columnMap", "Param_CM"))
             .returns(paraType(ClassName.get(List.class), fluent.entity()))
             .build();
     }

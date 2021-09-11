@@ -120,7 +120,8 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public IQuery queryByIds(IMapping mapping, Object[] ids) {
         assertNotEmpty("ids", ids);
-        IQuery query = mapping.query();
+        /* 根据id的条件不用附加默认条件 */
+        IQuery query = mapping.emptyQuery();
         String primary = mapping.primaryId(true);
         if (ids.length == 1) {
             query.where().apply(primary, SqlOp.EQ, ids[0]);
