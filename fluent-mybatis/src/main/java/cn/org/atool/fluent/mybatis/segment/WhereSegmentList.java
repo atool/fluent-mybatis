@@ -54,4 +54,11 @@ public class WhereSegmentList extends BaseSegmentList {
         }
         return super.merge(EMPTY, SPACE);
     }
+
+    /**
+     * 清空where条件设置
+     */
+    public void clean() {
+        this.segments.clear();
+    }
 }

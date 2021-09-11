@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
 /**
- * @author darui.wu
- * @create 2019/10/29 9:32 下午
+ * @author darui.wu 2019/10/29 9:32 下午
  */
+@SuppressWarnings("unchecked")
 public class SaveOrUpdateTest extends BaseTest {
     @Autowired
     private StudentExtDao dao;
 
     @Test
-    public void test_saveOrUpdate() throws Exception {
+    public void test_saveOrUpdate() {
         ATM.dataMap.student.initTable(3)
             .env.values("test_env")
             .cleanAndInsert();
@@ -27,7 +27,7 @@ public class SaveOrUpdateTest extends BaseTest {
             "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `id` = ? LIMIT ?, ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).eq("" +
             "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `age` = ?, `user_name` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
+            "WHERE `id` = ?");
         db.table(ATM.table.student).queryWhere("id=3")
             .eqDataMap(ATM.dataMap.student.table(1)
                 .userName.values("test_111")
@@ -36,7 +36,7 @@ public class SaveOrUpdateTest extends BaseTest {
     }
 
     @Test
-    public void test_saveOrUpdate_2() throws Exception {
+    public void test_saveOrUpdate_2() {
         ATM.dataMap.student.initTable(3)
             .cleanAndInsert();
         dao.saveOrUpdate(new StudentEntity().setId(4L).setUserName("test_111").setAge(30));

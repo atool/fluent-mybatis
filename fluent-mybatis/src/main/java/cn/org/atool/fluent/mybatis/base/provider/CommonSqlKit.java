@@ -224,6 +224,8 @@ public class CommonSqlKit implements SqlKit {
     public IUpdate updateById(IMapping mapping, IEntity entity) {
         assertNotNull("entity", entity);
         IUpdate update = mapping.updater();
+        /* 清空byId场景下默认条件设置 */
+        update.getWrapperData().mergeSegments().getWhere().clean();
 
         List<FieldMapping> fields = mapping.allFields();
         FieldMapping primary = null;
@@ -244,7 +246,7 @@ public class CommonSqlKit implements SqlKit {
             }
         }
         if (primary == null) {
-            throw new IllegalArgumentException("Primary of entity[" + entity.getClass().getSimpleName() + "] is not defined.");
+            throw new IllegalArgumentException("Primary of entity[" + entity.getClass().getSimpleName() + "] is not found.");
         } else {
             update.where().apply(primary.column, SqlOp.EQ, values.get(primary.column));
         }
