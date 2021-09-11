@@ -38,7 +38,7 @@ public class UpdateByIdTest extends BaseTest {
                 "SET `gmt_modified` = now(), " +
                 "`is_deleted` = ?, " +
                 "`age` = ?, `user_name` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
+                "WHERE `id` = ?", StringMode.SameAsSpace);
 
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
@@ -67,7 +67,7 @@ public class UpdateByIdTest extends BaseTest {
             .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_created` = ?, `gmt_modified` = now(), " +
                 "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
+                "WHERE `id` = ?", StringMode.SameAsSpace);
 
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
@@ -97,7 +97,7 @@ public class UpdateByIdTest extends BaseTest {
             .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_created` = ?, `gmt_modified` = ?, " +
                 "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
-                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?", StringMode.SameAsSpace);
+                "WHERE `id` = ?", StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")

@@ -101,17 +101,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
     /**
-     * 根据id修改
-     *
-     * @param entity 实体对象
-     * @return ignore
-     */
-    default int updateById(E entity) {
-        IUpdate update = SqlKit.factory(this).updateById(this.mapping(), entity);
-        return this.updateBy(update);
-    }
-
-    /**
      * 根据update对象更新记录
      *
      * <pre>
@@ -123,6 +112,68 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     int updateBy(@Param(Param_EW) IUpdate... updates);
+
+    /**
+     * 根据 query 条件，查询全部记录
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
+     */
+    List<E> listEntity(@Param(Param_EW) IQuery query);
+
+    /**
+     * 根据 query 条件，查询全部记录
+     * 注意： 只返回第一个字段的值
+     * </p>
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
+     */
+    <O> List<O> listObjs(@Param(Param_EW) IQuery query);
+
+    /**
+     * 根据 query 条件，查询全部记录
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return map列表
+     */
+    List<Map<String, Object>> listMaps(@Param(Param_EW) IQuery query);
+
+    /**
+     * 根据 query 条件，查询总记录数
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
+     */
+    Integer count(@Param(Param_EW) IQuery query);
+
+    /**
+     * 根据 query 条件(如果有pageOffset, 去掉pageOffset限制部分)，查询总记录数
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
+     * @see SqlProvider#countNoLimit(Map)
+     */
+    Integer countNoLimit(@Param(Param_EW) IQuery query);
+
+    /**
+     * 根据wrapper删除记录
+     *
+     * @param wrapper 实体对象封装操作类（属性条件可以为null）
+     * @return ignore
+     */
+    int delete(@Param(Param_EW) IQuery wrapper);
+
+    /**
+     * 根据id修改
+     *
+     * @param entity 实体对象
+     * @return ignore
+     */
+    default int updateById(E entity) {
+        IUpdate update = SqlKit.factory(this).updateById(this.mapping(), entity);
+        return this.updateBy(update);
+    }
 
     /**
      * 根据 ID 查询
@@ -185,58 +236,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
         return this.listEntity(query);
     }
-
-    /**
-     * 根据 query 条件，查询全部记录
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return ignore
-     */
-    List<E> listEntity(@Param(Param_EW) IQuery query);
-
-    /**
-     * 根据 query 条件，查询全部记录
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return map列表
-     */
-    List<Map<String, Object>> listMaps(@Param(Param_EW) IQuery query);
-
-    /**
-     * <p>
-     * 根据 query 条件，查询全部记录
-     * 注意： 只返回第一个字段的值
-     * </p>
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return ignore
-     */
-    <O> List<O> listObjs(@Param(Param_EW) IQuery query);
-
-    /**
-     * 根据 query 条件，查询总记录数
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return ignore
-     */
-    Integer count(@Param(Param_EW) IQuery query);
-
-    /**
-     * 根据 query 条件(如果有pageOffset, 去掉pageOffset限制部分)，查询总记录数
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return ignore
-     * @see SqlProvider#countNoLimit(Map)
-     */
-    Integer countNoLimit(@Param(Param_EW) IQuery query);
-
-    /**
-     * 根据wrapper删除记录
-     *
-     * @param wrapper 实体对象封装操作类（属性条件可以为null）
-     * @return ignore
-     */
-    int delete(@Param(Param_EW) IQuery wrapper);
 
     /**
      * 根据id删除记录
