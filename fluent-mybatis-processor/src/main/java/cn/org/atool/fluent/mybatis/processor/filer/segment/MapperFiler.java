@@ -86,8 +86,6 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertBatchWithPk())
             .addMethod(this.m_insertSelect())
             .addMethod(this.m_delete())
-            .addMethod(this.m_logicDeleteById())
-            .addMethod(this.m_logicDeleteByIds())
             .addMethod(this.m_logicDeleteByMap())
             .addMethod(this.m_updateBy())
             .addMethod(this.m_findById())
@@ -202,15 +200,6 @@ public class MapperFiler extends AbstractFiler {
             .build();
     }
 
-    public MethodSpec m_logicDeleteByIds() {
-        TypeName typeName = paraType(ClassName.get(Collection.class), TypeVariableName.get("? extends Serializable"));
-        return this.mapperMethod(DeleteProvider.class, M_LogicDeleteByIds)
-            .addJavadoc("@see SqlProvider#logicDeleteByIds(Map)")
-            .addParameter(this.param(typeName, "idList", "Param_List"))
-            .returns(TypeName.INT)
-            .build();
-    }
-
     public MethodSpec m_delete() {
         return this.mapperMethod(DeleteProvider.class, M_Delete)
             .addJavadoc("@see SqlProvider#delete(Map)")
@@ -225,20 +214,6 @@ public class MapperFiler extends AbstractFiler {
             .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
                 .addAnnotation(annotation_Param("Param_CM"))
                 .build())
-            .returns(TypeName.INT)
-            .build();
-    }
-
-    /**
-     * 根据id逻辑删除
-     *
-     * @return MethodSpec
-     */
-    public MethodSpec m_logicDeleteById() {
-        return this.mapperMethod(DeleteProvider.class, M_LogicDeleteById)
-            .addJavadoc("@see SqlProvider#logicDeleteById(Map)")
-            .addParameter(this.param(CN_SerializableArray, "ids", "Param_List"))
-            .varargs(true)
             .returns(TypeName.INT)
             .build();
     }

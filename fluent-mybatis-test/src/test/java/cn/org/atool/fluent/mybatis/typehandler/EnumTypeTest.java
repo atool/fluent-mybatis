@@ -135,15 +135,18 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void logicDeleteById() {
-        mocks.SqlProvider.logicDeleteById.restAnswer(f -> {
+        mocks.SqlProvider.updateBy.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
             return sql;
         });
         mapper.logicDeleteById(1L);
+        aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+", ".var");
         want.string(aSql[0]).eq("" +
-            "UPDATE `my_enum_type` " +
-            "SET `is_deleted` = true WHERE `id` = #{list[0], javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+                "UPDATE `my_enum_type` " +
+                "SET `is_deleted` = #{ew[0].wrapperData.parameters.var} " +
+                "WHERE `id` = #{ew[0].wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}"
+            , StringMode.SameAsSpace);
     }
 
     @Test

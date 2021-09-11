@@ -113,12 +113,12 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public IQuery deleteById(IMapping mapping, Collection ids) {
-        return this.deleteById(mapping, ids.toArray());
+    public IQuery queryByIds(IMapping mapping, Collection ids) {
+        return this.queryByIds(mapping, ids.toArray());
     }
 
     @Override
-    public IQuery deleteById(IMapping mapping, Object[] ids) {
+    public IQuery queryByIds(IMapping mapping, Object[] ids) {
         assertNotEmpty("ids", ids);
         IQuery query = mapping.query();
         String primary = mapping.primaryId(true);
@@ -141,7 +141,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public IQuery deleteByMap(IMapping mapping, Map<String, Object> condition) {
+    public IQuery queryByMap(IMapping mapping, Map<String, Object> condition) {
         IQuery query = mapping.query();
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
             String column = entry.getKey();

@@ -33,9 +33,11 @@ public class DeleteByIdsTest extends BaseTest {
     @Test
     public void testLogicDeleteByIds() {
         mapper.logicDeleteByIds(Arrays.asList(24, 27, 25));
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` IN (?, ?, ?)",
-                StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eq(new Object[]{24, 27, 25});
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE fluent_mybatis.student " +
+                "SET `gmt_modified` = now(), `is_deleted` = ? " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)",
+            StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 24, 27, 25);
     }
 }

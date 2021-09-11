@@ -127,31 +127,31 @@ public interface SqlKit {
     String logicDeleteByMap(SqlProvider provider, Map<String, Object> map);
 
     /**
-     * 根据主键列表物理删除数据SQL构造
-     *
-     * @param mapping IMapping
-     * @param ids     主
-     * @return sql
-     */
-    IQuery deleteById(IMapping mapping, Collection ids);
-
-    /**
-     * 按主键物理删除
+     * 根据id列表构造查询条件IQuery
      *
      * @param mapping IMapping
      * @param ids     主键列表
-     * @return sql
-     */
-    IQuery deleteById(IMapping mapping, Object[] ids);
-
-    /**
-     * 构造根据map删除的IQuery
-     *
-     * @param mapping   IMapping
-     * @param condition 删除条件
      * @return IQuery
      */
-    IQuery deleteByMap(IMapping mapping, Map<String, Object> condition);
+    IQuery queryByIds(IMapping mapping, Collection ids);
+
+    /**
+     * 根据id列表构造查询条件IQuery
+     *
+     * @param mapping IMapping
+     * @param ids     主键列表
+     * @return IQuery
+     */
+    IQuery queryByIds(IMapping mapping, Object[] ids);
+
+    /**
+     * 根据map(k-v)条件构造查询条件IQuery
+     *
+     * @param mapping   IMapping
+     * @param condition 查询条件
+     * @return IQuery
+     */
+    IQuery queryByMap(IMapping mapping, Map<String, Object> condition);
 
     /**
      * 根据WrapperData设置构建物理删除语句

@@ -38,10 +38,14 @@ public class DeleteByIdTest extends BaseTest {
         ATM.dataMap.student.initTable(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
+            .env.values("test_env")
             .cleanAndInsert();
         mapper.logicDeleteById(24);
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` = ?", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE fluent_mybatis.student " +
+                "SET `gmt_modified` = now(), `is_deleted` = ? " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?"
+            , StringMode.SameAsSpace);
         db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
@@ -70,9 +74,12 @@ public class DeleteByIdTest extends BaseTest {
     @Test
     public void testLogicDeleteByIdArr() {
         mapper.logicDeleteById(24, 25);
-        db.sqlList().wantFirstSql()
-            .eq("UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` IN (?, ?)", StringMode.SameAsSpace);
-        db.sqlList().wantFirstPara().eq(new Object[]{24, 25});
+        db.sqlList().wantFirstSql().eq("" +
+                "UPDATE fluent_mybatis.student " +
+                "SET `gmt_modified` = now(), `is_deleted` = ? " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)"
+            , StringMode.SameAsSpace);
+        db.sqlList().wantFirstPara().eqList(true, false, "test_env", 24, 25);
     }
 
     @Test
@@ -90,7 +97,8 @@ public class DeleteByIdTest extends BaseTest {
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );
-        want.exception(() -> noPrimaryMapper.logicDeleteById(3L), MyBatisSystemException.class)
-            .contains("the parameter[logical delete field of table(`no_primary`)] can't be null.");
+        want.exception(() -> noPrimaryMapper.logicDeleteById(3L),
+            MyBatisSystemException.class, RuntimeException.class)
+            .contains("the primary not found.");
     }
 }

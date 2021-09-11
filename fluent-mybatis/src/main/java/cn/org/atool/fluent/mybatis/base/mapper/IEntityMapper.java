@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * IEntityMapper: 实例Mapper基类，Mapper 继承该接口后，无需编写 mapper.xml 文件，即可获得CRUD功能
@@ -203,7 +205,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default int deleteById(Serializable... ids) {
-        IQuery query = SqlKit.factory(this).deleteById(this.mapping(), ids);
+        assertNotEmpty("ids", ids);
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
         return this.delete(query);
     }
 
@@ -214,7 +217,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default int deleteByIds(Collection ids) {
-        IQuery query = SqlKit.factory(this).deleteById(this.mapping(), ids);
+        assertNotEmpty("ids", ids);
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
         return this.delete(query);
     }
 
@@ -225,7 +229,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default int deleteByMap(Map<String, Object> condition) {
-        IQuery query = SqlKit.factory(this).deleteByMap(this.mapping(), condition);
+        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
         return this.delete(query);
     }
 
@@ -243,15 +247,23 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param ids 主键值列表
      * @return ignore
      */
-    int logicDeleteById(@Param(Param_List) Serializable... ids);
+    default int logicDeleteById(Object... ids) {
+        assertNotEmpty("ids", ids);
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        return this.logicDelete(query);
+    }
 
     /**
      * 根据id列表批量逻辑删除
      *
-     * @param idList id列表（值不能为null或者empty）
+     * @param ids id列表（值不能为null或者empty）
      * @return ignore
      */
-    int logicDeleteByIds(@Param(Param_List) Collection<? extends Serializable> idList);
+    default int logicDeleteByIds(Collection ids) {
+        assertNotEmpty("ids", ids);
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        return this.logicDelete(query);
+    }
 
     /**
      * 根据 columnMap key值逻辑删除记录
@@ -267,7 +279,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param query 实体对象封装操作类（属性条件可以为null）
      * @return ignore
      */
-    default int logicDelete(@Param(Param_EW) IQuery query) {
+    default int logicDelete(IQuery query) {
+        assertNotNull("query", query);
         IUpdate update = SqlKit.factory(this).logicDeleteBy(this.mapping(), query);
         return this.updateBy(update);
     }
