@@ -15,7 +15,6 @@ import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderKit;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -286,23 +285,6 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public String queryByQuery(SqlProvider provider, WrapperData ew) {
         return ew.sqlWithPaged();
-    }
-
-    @Override
-    public String queryByIds(SqlProvider provider, Collection ids) {
-        MapperSql sql = new MapperSql();
-        sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
-        whereEqIds(provider, sql, ids.toArray());
-        return sql.toString();
-    }
-
-    @Override
-    public String queryById(SqlProvider provider, Serializable id) {
-        MapperSql sql = new MapperSql();
-        sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
-        String el = (String) provider.mapping().primaryApplier(true, f -> f.var(null, "value"));
-        sql.WHERE(format("%s = %s", dbType.wrap(provider.mapping().primaryId(true)), el));
-        return sql.toString();
     }
 
     /**

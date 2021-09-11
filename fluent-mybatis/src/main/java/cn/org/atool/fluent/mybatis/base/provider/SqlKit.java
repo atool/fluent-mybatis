@@ -11,7 +11,6 @@ import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -198,22 +197,4 @@ public interface SqlKit {
      * @return sql
      */
     String queryByQuery(SqlProvider provider, WrapperData ew);
-
-    /**
-     * 按主键列表查询数据
-     *
-     * @param provider SqlProvider
-     * @param ids      主键列表
-     * @return sql
-     */
-    String queryByIds(SqlProvider provider, Collection ids);
-
-    /**
-     * 按主键查询数据
-     *
-     * @param provider SqlProvider
-     * @param id       主键值
-     * @return sql
-     */
-    String queryById(SqlProvider provider, Serializable id);
 }

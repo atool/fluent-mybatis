@@ -11,7 +11,6 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -171,43 +170,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @return ignore
      */
     public String listObjs(Map map) {
-        WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryByQuery(this, ew);
-    }
-
-    /**
-     * 根据Id列表查询数据SQL构造
-     * {@link IEntityMapper#listByIds(Collection)}
-     *
-     * @param map k-v条件
-     * @return sql
-     */
-    public String listByIds(Map map) {
-        Collection ids = getParas(map, Param_List);
-        assertNotEmpty("PrimaryKeyList", ids);
-        return sqlKit.queryByIds(this, ids);
-    }
-
-    /**
-     * 根据主键查找数据SQL构造
-     * {@link IEntityMapper#findById(Serializable)}
-     *
-     * @param id 主键
-     * @return ignore
-     */
-    public String findById(Serializable id) {
-        assertNotNull("PrimaryKey", id);
-        return sqlKit.queryById(this, id);
-    }
-
-    /**
-     * 根据动态条件查询一条记录SQL构造
-     * {@link IEntityMapper#findOne(IQuery)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String findOne(Map map) {
         WrapperData ew = getWrapperData(map, Param_EW);
         return sqlKit.queryByQuery(this, ew);
     }

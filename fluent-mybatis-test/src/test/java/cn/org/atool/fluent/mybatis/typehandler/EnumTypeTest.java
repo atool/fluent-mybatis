@@ -105,14 +105,16 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void findById() {
-        mocks.SqlProvider.findById.restAnswer(f -> {
+        mocks.SqlProvider.listEntity.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
             return sql;
         });
         mapper.findById(1L);
+
+        aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).end("" +
-            "WHERE `id` = #{value, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+            "WHERE `id` = #{ew.wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
     }
 
     @Test

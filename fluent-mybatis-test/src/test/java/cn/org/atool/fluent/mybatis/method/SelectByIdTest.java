@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.method;
 
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.NoPrimaryMapper;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.tools.datagen.DataGenerator;
 
@@ -41,6 +41,7 @@ public class SelectByIdTest extends BaseTest {
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );
-        want.exception(() -> noPrimaryMapper.findById(3L), MyBatisSystemException.class);
+        want.exception(() -> noPrimaryMapper.findById(3L), FluentMybatisException.class)
+            .contains("primary not found");
     }
 }

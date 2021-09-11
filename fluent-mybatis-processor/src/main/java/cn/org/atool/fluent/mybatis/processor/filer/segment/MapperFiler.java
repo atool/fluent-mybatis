@@ -20,14 +20,14 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
 import javax.lang.model.element.Modifier;
-import java.io.Serializable;
 import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.MapperSqlProvider;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_StrObj;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.Mybatis_UnknownTypeHandler;
 
 /**
  * 生成Entity对应的Mapper类
@@ -87,7 +87,6 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertSelect())
             .addMethod(this.m_delete())
             .addMethod(this.m_updateBy())
-            .addMethod(this.m_findById())
             .addMethod(this.m_listEntity())
             .addMethod(this.m_listMaps())
             .addMethod(this.m_listObjs())
@@ -145,18 +144,9 @@ public class MapperFiler extends AbstractFiler {
     public MethodSpec m_listEntity() {
         return this.mapperMethod(SelectProvider.class, M_listEntity)
             .addJavadoc("@see SqlProvider#listEntity(Map)")
-            .addAnnotation(this.annotation_ResultMap())
+            .addAnnotation(this.annotation_Results())
             .addParameter(queryParam("query"))
             .returns(paraType(ClassName.get(List.class), fluent.entity()))
-            .build();
-    }
-
-    public MethodSpec m_findById() {
-        return this.mapperMethod(SelectProvider.class, M_findById)
-            .addJavadoc("@see SqlProvider#findById(Serializable)")
-            .addAnnotation(this.annotation_Results())
-            .addParameter(Serializable.class, "id")
-            .returns(fluent.entity())
             .build();
     }
 

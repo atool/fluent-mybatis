@@ -130,7 +130,10 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param id 主键ID
      * @return ignore
      */
-    E findById(Serializable id);
+    default E findById(Serializable id) {
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), new Object[]{id});
+        return this.findOne(query);
+    }
 
     /**
      * 根据 query 条件，查询一条记录

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base.entity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.util.List;
@@ -105,7 +106,7 @@ public interface IMapping extends IDefaultGetter {
     default Object primaryApplier(boolean nullError, Function<FieldMapping, Object> applier) {
         FieldMapping f = this.findField(UniqueFieldType.PRIMARY_ID).orElse(null);
         if (nullError && f == null) {
-            throw new RuntimeException("the primary not found.");
+            throw new FluentMybatisException("the primary not found.");
         } else {
             return applier.apply(f);
         }
