@@ -112,25 +112,13 @@ public class CommonSqlKit implements SqlKit {
         return sql.toString();
     }
 
-    /**
-     * 根据主键列表物理删除数据SQL构造
-     *
-     * @param mapping IMapping
-     * @param ids     主
-     * @return sql
-     */
-    public static IQuery deleteById(IMapping mapping, Collection ids) {
-        return deleteById(mapping, ids.toArray());
+    @Override
+    public IQuery deleteById(IMapping mapping, Collection ids) {
+        return this.deleteById(mapping, ids.toArray());
     }
 
-    /**
-     * 按主键物理删除
-     *
-     * @param mapping IMapping
-     * @param ids     主键列表
-     * @return sql
-     */
-    public static IQuery deleteById(IMapping mapping, Object[] ids) {
+    @Override
+    public IQuery deleteById(IMapping mapping, Object[] ids) {
         assertNotEmpty("ids", ids);
         IQuery query = mapping.query();
         String primary = mapping.primaryId(true);
@@ -152,14 +140,8 @@ public class CommonSqlKit implements SqlKit {
         return this.logicDeleted(provider, sql -> whereEqIds(provider, sql, ids.toArray()));
     }
 
-    /**
-     * 构造根据map删除的IQuery
-     *
-     * @param mapping   IMapping
-     * @param condition 删除条件
-     * @return IQuery
-     */
-    public static IQuery deleteByMap(IMapping mapping, Map<String, Object> condition) {
+    @Override
+    public IQuery deleteByMap(IMapping mapping, Map<String, Object> condition) {
         IQuery query = mapping.query();
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
             String column = entry.getKey();
@@ -243,14 +225,8 @@ public class CommonSqlKit implements SqlKit {
         return sql.toString();
     }
 
-    /**
-     * 根据Entity构造IUpdate
-     *
-     * @param mapping entity对应的数据库映射定义
-     * @param entity  entity实例
-     * @return IUpdate
-     */
-    public static IUpdate updateById(IMapping mapping, IEntity entity) {
+    @Override
+    public IUpdate updateById(IMapping mapping, IEntity entity) {
         assertNotNull("entity", entity);
         IUpdate update = mapping.updater();
 

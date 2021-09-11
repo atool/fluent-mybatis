@@ -2,9 +2,11 @@ package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IHasDbType;
+import cn.org.atool.fluent.mybatis.base.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -51,6 +53,10 @@ public interface SqlKit {
 
     static SqlKit factory(IHasDbType hasDbType) {
         return factory(hasDbType.dbType());
+    }
+
+    static SqlKit factory(IHasMapping mapping) {
+        return factory(mapping.mapping().getDbType());
     }
 
     /**
@@ -121,6 +127,33 @@ public interface SqlKit {
     String logicDeleteByMap(SqlProvider provider, Map<String, Object> map);
 
     /**
+     * 根据主键列表物理删除数据SQL构造
+     *
+     * @param mapping IMapping
+     * @param ids     主
+     * @return sql
+     */
+    IQuery deleteById(IMapping mapping, Collection ids);
+
+    /**
+     * 按主键物理删除
+     *
+     * @param mapping IMapping
+     * @param ids     主键列表
+     * @return sql
+     */
+    IQuery deleteById(IMapping mapping, Object[] ids);
+
+    /**
+     * 构造根据map删除的IQuery
+     *
+     * @param mapping   IMapping
+     * @param condition 删除条件
+     * @return IQuery
+     */
+    IQuery deleteByMap(IMapping mapping, Map<String, Object> condition);
+
+    /**
      * 根据WrapperData设置构建物理删除语句
      *
      * @param provider SqlProvide
@@ -137,6 +170,15 @@ public interface SqlKit {
      * @return sql
      */
     String logicDeleteBy(SqlProvider provider, WrapperData ew);
+
+    /**
+     * 根据Entity构造IUpdate
+     *
+     * @param mapping entity对应的数据库映射定义
+     * @param entity  entity实例
+     * @return IUpdate
+     */
+    IUpdate updateById(IMapping mapping, IEntity entity);
 
     /**
      * update(IQuery) SQL构造

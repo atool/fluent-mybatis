@@ -2,10 +2,10 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.base.provider.CommonSqlKit;
+import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +26,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  * @author wudarui 2019-06-25 14:00
  */
 @SuppressWarnings({"rawtypes", "UnusedReturnValue"})
-public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
+public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMapping {
     /**
      * 调用存储过程
      *
@@ -103,7 +103,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return ignore
      */
     default int updateById(E entity) {
-        IUpdate update = CommonSqlKit.updateById(this.mapping(), entity);
+        IUpdate update = SqlKit.factory(this).updateById(this.mapping(), entity);
         return this.updateBy(update);
     }
 
@@ -203,7 +203,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return ignore
      */
     default int deleteById(Serializable... ids) {
-        IQuery query = CommonSqlKit.deleteById(this.mapping(), ids);
+        IQuery query = SqlKit.factory(this).deleteById(this.mapping(), ids);
         return this.delete(query);
     }
 
@@ -214,7 +214,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return ignore
      */
     default int deleteByIds(Collection ids) {
-        IQuery query = CommonSqlKit.deleteById(this.mapping(), ids);
+        IQuery query = SqlKit.factory(this).deleteById(this.mapping(), ids);
         return this.delete(query);
     }
 
@@ -225,7 +225,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return ignore
      */
     default int deleteByMap(Map<String, Object> condition) {
-        IQuery query = CommonSqlKit.deleteByMap(this.mapping(), condition);
+        IQuery query = SqlKit.factory(this).deleteByMap(this.mapping(), condition);
         return this.delete(query);
     }
 
@@ -268,11 +268,4 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @return ignore
      */
     int logicDelete(@Param(Param_EW) IQuery wrapper);
-
-    /**
-     * 数据库映射定义
-     *
-     * @return IMapping
-     */
-    IMapping mapping();
 }
