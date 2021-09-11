@@ -86,7 +86,6 @@ public class MapperFiler extends AbstractFiler {
             .addMethod(this.m_insertBatchWithPk())
             .addMethod(this.m_insertSelect())
             .addMethod(this.m_delete())
-            .addMethod(this.m_logicDeleteByMap())
             .addMethod(this.m_updateBy())
             .addMethod(this.m_findById())
             .addMethod(this.m_findOne())
@@ -204,16 +203,6 @@ public class MapperFiler extends AbstractFiler {
         return this.mapperMethod(DeleteProvider.class, M_Delete)
             .addJavadoc("@see SqlProvider#delete(Map)")
             .addParameter(queryParam("wrapper"))
-            .returns(TypeName.INT)
-            .build();
-    }
-
-    public MethodSpec m_logicDeleteByMap() {
-        return this.mapperMethod(DeleteProvider.class, M_LogicDeleteByMap)
-            .addJavadoc("@see SqlProvider#logicDeleteByMap(Map)")
-            .addParameter(ParameterSpec.builder(CN_Map_StrObj, "cm")
-                .addAnnotation(annotation_Param("Param_CM"))
-                .build())
             .returns(TypeName.INT)
             .build();
     }

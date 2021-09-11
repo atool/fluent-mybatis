@@ -100,33 +100,6 @@ public interface SqlKit {
     <E extends IEntity> String insertBatch(SqlProvider provider, List<E> entities, boolean withPk);
 
     /**
-     * 按主键逻辑删除
-     *
-     * @param provider SqlProvider
-     * @param ids      主键列表
-     * @return sql
-     */
-    String logicDeleteById(SqlProvider provider, Serializable[] ids);
-
-    /**
-     * 按主键逻辑删除
-     *
-     * @param provider SqlProvider
-     * @param ids      主键列表
-     * @return sql
-     */
-    String logicDeleteByIds(SqlProvider provider, Collection ids);
-
-    /**
-     * 按Map k-v条件逻辑删除
-     *
-     * @param provider SqlProvider
-     * @param map      k-v条件
-     * @return sql
-     */
-    String logicDeleteByMap(SqlProvider provider, Map<String, Object> map);
-
-    /**
      * 根据id列表构造查询条件IQuery
      *
      * @param mapping IMapping

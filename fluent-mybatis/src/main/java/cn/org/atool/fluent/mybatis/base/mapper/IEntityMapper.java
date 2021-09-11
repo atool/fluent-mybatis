@@ -199,6 +199,14 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     Integer countNoLimit(@Param(Param_EW) IQuery query);
 
     /**
+     * 根据wrapper删除记录
+     *
+     * @param wrapper 实体对象封装操作类（属性条件可以为null）
+     * @return ignore
+     */
+    int delete(@Param(Param_EW) IQuery wrapper);
+
+    /**
      * 根据id删除记录
      *
      * @param ids 主键列表
@@ -234,14 +242,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 根据wrapper删除记录
-     *
-     * @param wrapper 实体对象封装操作类（属性条件可以为null）
-     * @return ignore
-     */
-    int delete(@Param(Param_EW) IQuery wrapper);
-
-    /**
      * 根据id逻辑删除
      *
      * @param ids 主键值列表
@@ -268,10 +268,14 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     /**
      * 根据 columnMap key值逻辑删除记录
      *
-     * @param cm k-v条件
+     * @param condition k-v条件
      * @return ignore
      */
-    int logicDeleteByMap(@Param(Param_CM) Map<String, Object> cm);
+    default int logicDeleteByMap(Map<String, Object> condition) {
+        assertNotEmpty("ids", condition);
+        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
+        return this.logicDelete(query);
+    }
 
     /**
      * 根据wrapper删除记录
@@ -281,6 +285,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDelete(IQuery query) {
         assertNotNull("query", query);
+        query.getWrapperData().setIgnoreLockVersion(true);
         IUpdate update = SqlKit.factory(this).logicDeleteBy(this.mapping(), query);
         return this.updateBy(update);
     }

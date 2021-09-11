@@ -226,44 +226,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
     }
 
     /**
-     * 根据主键逻辑删除数据SQL构造
-     * {@link IEntityMapper#logicDeleteById(Serializable...)}
-     *
-     * @param map 参数
-     * @return ignore
-     */
-    public String logicDeleteById(Map map) {
-        Serializable[] ids = (Serializable[]) map.get(Param_List);
-        assertNotEmpty("ids", ids);
-        return sqlKit.logicDeleteById(this, ids);
-    }
-
-    /**
-     * 根据主键列表逻辑删除数据SQL构造
-     * {@link IEntityMapper#logicDeleteByIds(Collection)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String logicDeleteByIds(Map map) {
-        Collection ids = getParas(map, Param_List);
-        assertNotEmpty("ids", ids);
-        return sqlKit.logicDeleteByIds(this, ids);
-    }
-
-    /**
-     * 按map逻辑删除数据SQL构造
-     * {@link IEntityMapper#logicDeleteByMap(Map)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String logicDeleteByMap(Map<String, Object> map) {
-        Map<String, Object> cm = getParas(map, Param_CM);
-        return sqlKit.logicDeleteByMap(this, cm);
-    }
-
-    /**
      * 根据动态查询条件物理删除数据SQL构造
      * {@link IEntityMapper#delete(IQuery)}
      *

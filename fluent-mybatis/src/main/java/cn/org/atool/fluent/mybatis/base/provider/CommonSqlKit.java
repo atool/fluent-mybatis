@@ -131,16 +131,6 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String logicDeleteById(SqlProvider provider, Serializable[] ids) {
-        return this.logicDeleted(provider, sql -> whereEqIds(provider, sql, ids));
-    }
-
-    @Override
-    public String logicDeleteByIds(SqlProvider provider, Collection ids) {
-        return this.logicDeleted(provider, sql -> whereEqIds(provider, sql, ids.toArray()));
-    }
-
-    @Override
     public IQuery queryByMap(IMapping mapping, Map<String, Object> condition) {
         IQuery query = mapping.query();
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
@@ -160,19 +150,15 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String logicDeleteByMap(SqlProvider provider, Map<String, Object> map) {
-        return this.logicDeleted(provider, sql -> this.whereByMap(sql, map));
-    }
-
-    @Override
     public String deleteBy(SqlProvider provider, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
+        } else {
+            MapperSql sql = new MapperSql();
+            sql.DELETE_FROM(ew.getTable(), ew);
+            sql.WHERE_GROUP_ORDER_BY(ew);
+            return sql.toString();
         }
-        MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(ew.getTable(), ew);
-        sql.WHERE_GROUP_ORDER_BY(ew);
-        return sql.toString();
     }
 
     @Override
@@ -181,12 +167,16 @@ public class CommonSqlKit implements SqlKit {
         String logicDeleted = mapping.logicDeleteField();
         assertNotNull("logical delete field of table(" + mapping.getTableName() + ")", logicDeleted);
         if (mapping.longTypeOfLogicDelete()) {
-            update.updateSet(logicDeleted, System.currentTimeMillis());
+            update.updateSet(logicDeleted, currentTimeMillis());
         } else {
             update.updateSet(logicDeleted, true);
         }
         update.getWrapperData().replacedWhere(query);
         return update;
+    }
+
+    private static long currentTimeMillis() {
+        return System.currentTimeMillis();
     }
 
     @Override
@@ -319,42 +309,6 @@ public class CommonSqlKit implements SqlKit {
         sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
         String el = (String) provider.mapping().primaryApplier(true, f -> f.var(null, "value"));
         sql.WHERE(format("%s = %s", dbType.wrap(provider.mapping().primaryId(true)), el));
-        return sql.toString();
-    }
-
-    /**
-     * 按map构造条件语句
-     *
-     * @param sql sql构造器
-     * @param map key-value条件
-     */
-    private void whereByMap(MapperSql sql, Map<String, Object> map) {
-        List<String> where = new ArrayList<>();
-        for (String key : map.keySet()) {
-            where.add(format("%s = #{%s.%s}", dbType.wrap(key), Param_CM, key));
-        }
-        sql.WHERE(where);
-    }
-
-    /**
-     * 设置逻辑删除标识
-     * UPDATE table SET logic_delete_field = true 语句
-     *
-     * @param provider SqlProvider
-     * @param where    where sql
-     */
-    private String logicDeleted(SqlProvider provider, Consumer<MapperSql> where) {
-        MapperSql sql = new MapperSql();
-        String logicDeleted = provider.mapping().logicDeleteField();
-        assertNotNull("logical delete field of table(" + provider.tableName() + ")", logicDeleted);
-        sql.UPDATE(provider.tableName(), null);
-        if (provider.mapping().longTypeOfLogicDelete()) {
-            sql.SET(String.format("%s = %d", dbType.wrap(logicDeleted), System.currentTimeMillis()));
-        } else {
-            sql.SET(String.format("%s = true", dbType.wrap(logicDeleted)));
-        }
-        /* 设置where */
-        where.accept(sql);
         return sql.toString();
     }
 
