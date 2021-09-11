@@ -176,15 +176,6 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String logicDeleteBy(SqlProvider provider, WrapperData ew) {
-        if (notBlank(ew.getCustomizedSql())) {
-            return ew.getCustomizedSql();
-        } else {
-            return this.logicDeleted(provider, sql -> sql.WHERE_GROUP_ORDER_BY(ew));
-        }
-    }
-
-    @Override
     public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
         IUpdate update = mapping.updater();
         String logicDeleted = mapping.logicDeleteField();
@@ -197,19 +188,6 @@ public class CommonSqlKit implements SqlKit {
         update.getWrapperData().replacedWhere(query);
         return update;
     }
-
-//    MapperSql sql = new MapperSql();
-//    String logicDeleted = provider.mapping().logicDeleteField();
-//    assertNotNull("logical delete field of table(" + provider.tableName() + ")", logicDeleted);
-//        sql.UPDATE(provider.tableName(), null);
-//        if (provider.mapping().longTypeOfLogicDelete()) {
-//        sql.SET(String.format("%s = %d", dbType.wrap(logicDeleted), System.currentTimeMillis()));
-//    } else {
-//        sql.SET(String.format("%s = true", dbType.wrap(logicDeleted)));
-//    }
-//    /* 设置where */
-//        where.accept(sql);
-//        return sql.toString();
 
     @Override
     public String updateBy(SqlProvider provider, IUpdate[] updaters) {

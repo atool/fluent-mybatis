@@ -162,16 +162,14 @@ public interface SqlKit {
      */
     String deleteBy(SqlProvider provider, WrapperData ew);
 
-    IUpdate logicDeleteBy(IMapping mapping, IQuery query);
-
     /**
-     * 根据WrapperData设置构建逻辑删除语句
+     * 根据IQuery条件构造逻辑删除更新IUpdate
      *
-     * @param provider SqlProvide
-     * @param ew       更新/查询 条件
-     * @return sql
+     * @param mapping IMapping
+     * @param query   逻辑删除条件
+     * @return IUpdate
      */
-    String logicDeleteBy(SqlProvider provider, WrapperData ew);
+    IUpdate logicDeleteBy(IMapping mapping, IQuery query);
 
     /**
      * 根据Entity构造IUpdate

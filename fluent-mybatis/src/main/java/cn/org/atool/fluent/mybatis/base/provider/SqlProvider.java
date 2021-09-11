@@ -276,18 +276,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
     }
 
     /**
-     * 根据动态查询条件逻辑删除数据SQL构造
-     * {@link IEntityMapper#logicDelete(IQuery)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String logicDelete(Map map) {
-        WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.logicDeleteBy(this, ew);
-    }
-
-    /**
      * update(IQuery) SQL构造
      * {@link IEntityMapper#updateBy(IUpdate[])}
      *
