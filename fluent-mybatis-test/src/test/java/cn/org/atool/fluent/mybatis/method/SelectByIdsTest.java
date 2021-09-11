@@ -41,12 +41,27 @@ public class SelectByIdsTest extends BaseTest {
     }
 
     @Test
+    public void test_selectByIds() {
+        ATM.dataMap.student.initTable(3)
+            .userName.values(DataGenerator.increase("username_%d"))
+            .cleanAndInsert();
+
+        List<StudentEntity> users = mapper.listByIds(3L, 1L);
+        db.sqlList().wantFirstSql()
+            .where().eq("`id` IN (?, ?)");
+        want.list(users)
+            .eqMap(ATM.dataMap.student.entity(2)
+                .userName.values("username_1", "username_3")
+            );
+    }
+
+    @Test
     public void test_selectById_noPrimary() {
         db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
         );
         want.exception(() -> noPrimaryMapper.listByIds(Collections.singletonList(3L)),
-            MyBatisSystemException.class);
+            MyBatisSystemException.class, RuntimeException.class);
     }
 }

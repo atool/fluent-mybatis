@@ -176,19 +176,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
     }
 
     /**
-     * 根据Map查询数据SQL构造
-     * {@link IEntityMapper#listByMap(Map)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String listByMap(Map map) {
-        Map<String, Object> where = getParas(map, Param_CM);
-        assertNotEmpty("where", where);
-        return sqlKit.queryByMap(this, where);
-    }
-
-    /**
      * 根据Id列表查询数据SQL构造
      * {@link IEntityMapper#listByIds(Collection)}
      *

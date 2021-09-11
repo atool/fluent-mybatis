@@ -200,15 +200,6 @@ public interface SqlKit {
     String queryByQuery(SqlProvider provider, WrapperData ew);
 
     /**
-     * 按K-V构造查询条件语句
-     *
-     * @param provider SqlProvide
-     * @param where    查询条件
-     * @return sql
-     */
-    String queryByMap(SqlProvider provider, Map where);
-
-    /**
      * 按主键列表查询数据
      *
      * @param provider SqlProvider

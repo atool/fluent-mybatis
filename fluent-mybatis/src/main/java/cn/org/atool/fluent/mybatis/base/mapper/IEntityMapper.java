@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.If.isEmpty;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -136,7 +137,16 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
      */
-    E findOne(@Param(Param_EW) IQuery query);
+    default E findOne(@Param(Param_EW) IQuery query) {
+        List<E> list = this.listEntity(query);
+        if (isEmpty(list)) {
+            return null;
+        } else if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            throw new RuntimeException("Expected to return a single result, but found " + list.size() + " results.");
+        }
+    }
 
     /**
      * 查询（根据ID 批量查询）
@@ -144,7 +154,21 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param ids 主键ID列表(不能为 null 以及 empty)
      * @return ignore
      */
-    List<E> listByIds(@Param(Param_List) Collection ids);
+    default List<E> listByIds(Object... ids) {
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        return this.listEntity(query);
+    }
+
+    /**
+     * 查询（根据ID 批量查询）
+     *
+     * @param ids 主键ID列表(不能为 null 以及 empty)
+     * @return ignore
+     */
+    default List<E> listByIds(Collection ids) {
+        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        return this.listEntity(query);
+    }
 
     /**
      * 查询（根据 columnMap 条件）
@@ -152,7 +176,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param condition 表字段 map 对象
      * @return ignore
      */
-    default List<E> listByMap(@Param(Param_CM) Map<String, Object> condition) {
+    default List<E> listByMap(Map<String, Object> condition) {
         assertNotEmpty("condition", condition);
         IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
         return this.listEntity(query);

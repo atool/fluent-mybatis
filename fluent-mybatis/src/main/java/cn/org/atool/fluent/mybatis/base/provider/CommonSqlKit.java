@@ -289,14 +289,6 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String queryByMap(SqlProvider provider, Map where) {
-        MapperSql sql = new MapperSql();
-        sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
-        sql.WHERE(dbType, Param_CM, where);
-        return sql.toString();
-    }
-
-    @Override
     public String queryByIds(SqlProvider provider, Collection ids) {
         MapperSql sql = new MapperSql();
         sql.SELECT(provider.tableName(), provider.mapping().getSelectAll());
