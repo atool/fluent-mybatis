@@ -113,13 +113,24 @@ public class CommonSqlKit implements SqlKit {
     }
 
     /**
+     * 根据主键列表物理删除数据SQL构造
+     *
+     * @param mapping IMapping
+     * @param ids     主
+     * @return sql
+     */
+    public static IQuery deleteById(IMapping mapping, Collection ids) {
+        return deleteById(mapping, ids.toArray());
+    }
+
+    /**
      * 按主键物理删除
      *
      * @param mapping IMapping
      * @param ids     主键列表
      * @return sql
      */
-    public static IQuery deleteById(IMapping mapping, Serializable[] ids) {
+    public static IQuery deleteById(IMapping mapping, Object[] ids) {
         assertNotEmpty("ids", ids);
         IQuery query = mapping.query();
         String primary = mapping.primaryId(true);
@@ -129,14 +140,6 @@ public class CommonSqlKit implements SqlKit {
             query.where().apply(primary, SqlOp.IN, ids);
         }
         return query;
-    }
-
-    @Override
-    public String deleteByIds(SqlProvider provider, Collection ids) {
-        MapperSql sql = new MapperSql();
-        sql.DELETE_FROM(provider.tableName(), null);
-        whereEqIds(provider, sql, ids.toArray());
-        return sql.toString();
     }
 
     @Override

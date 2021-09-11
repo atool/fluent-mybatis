@@ -14,7 +14,7 @@ public class DeleteByIdTest extends BaseTest {
     private StudentExtDao dao;
 
     @Test
-    public void test_deleteById() throws Exception {
+    public void test_deleteById() {
         ATM.dataMap.student.initTable(10)
             .env.values("test_env")
             .cleanAndInsert();
@@ -25,14 +25,14 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
-    public void test_logicDeleteById() throws Exception {
+    public void test_logicDeleteById() {
         dao.logicDeleteById(4L);
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` = ?");
     }
 
     @Test
-    public void test_deleteById2() throws Exception {
+    public void test_deleteById2() {
         ATM.dataMap.student.initTable(10)
             .env.values("test_env")
             .cleanAndInsert();
@@ -43,15 +43,20 @@ public class DeleteByIdTest extends BaseTest {
     }
 
     @Test
-    public void test_deleteByIds() throws Exception {
-        ATM.dataMap.student.initTable(10).cleanAndInsert();
+    public void test_deleteByIds() {
+        ATM.dataMap.student.initTable(10)
+            .env.values("test_env")
+            .cleanAndInsert();
         dao.deleteByIds(Arrays.asList(4L, 6L, 9L));
-        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
+        db.sqlList().wantFirstSql()
+            .eq("DELETE FROM fluent_mybatis.student " +
+                    "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)"
+                , StringMode.SameAsSpace);
         db.table(ATM.table.student).count().eq(7);
     }
 
     @Test
-    public void test_logicDeleteByIds() throws Exception {
+    public void test_logicDeleteByIds() {
         dao.logicDeleteByIds(Arrays.asList(4L, 6L, 9L));
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student SET `is_deleted` = true WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);

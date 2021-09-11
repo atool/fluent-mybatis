@@ -18,10 +18,12 @@ public class DeleteByIdsTest extends BaseTest {
         ATM.dataMap.student.initTable(5)
             .id.values(23L, 24L, 25L, 26L, 27L)
             .userName.values("user1", "user2")
+            .env.values("test_env")
             .cleanAndInsert();
         mapper.deleteByIds(Arrays.asList(24, 27, 25));
         db.sqlList().wantFirstSql()
-            .eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?, ?)", StringMode.SameAsSpace);
+            .eq("DELETE FROM fluent_mybatis.student " +
+                "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?)", StringMode.SameAsSpace);
         ATM.dataMap.student.table(2)
             .id.values(23L, 26L)
             .userName.values("user1", "user2")

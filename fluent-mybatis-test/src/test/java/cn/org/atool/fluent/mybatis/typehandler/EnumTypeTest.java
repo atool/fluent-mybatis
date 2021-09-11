@@ -164,14 +164,16 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void deleteByIds() {
-        mocks.SqlProvider.deleteByIds.restAnswer(f -> {
+        mocks.SqlProvider.delete.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
             return sql;
         });
         mapper.deleteByIds(Arrays.asList(1L));
+        aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
-            "DELETE  FROM `my_enum_type` " +
-            "WHERE `id` = #{list[0], javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+                "DELETE FROM `my_enum_type` " +
+                "WHERE `id` = #{ew.wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}"
+            , StringMode.SameAsSpace);
     }
 }

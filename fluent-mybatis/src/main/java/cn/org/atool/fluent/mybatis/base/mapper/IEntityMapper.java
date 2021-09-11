@@ -25,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author wudarui 2019-06-25 14:00
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     /**
      * 调用存储过程
@@ -202,7 +202,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
      * @param ids 主键列表
      * @return ignore
      */
-    default int deleteById(@Param(Param_List) Serializable... ids) {
+    default int deleteById(Serializable... ids) {
         IQuery query = CommonSqlKit.deleteById(this.mapping(), ids);
         return this.delete(query);
     }
@@ -210,10 +210,13 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E> {
     /**
      * 根据id列表批量删除
      *
-     * @param idList id列表（值不能为null或者empty）
+     * @param ids id列表（值不能为null或者empty）
      * @return ignore
      */
-    int deleteByIds(@Param(Param_List) Collection<? extends Serializable> idList);
+    default int deleteByIds(Collection ids) {
+        IQuery query = CommonSqlKit.deleteById(this.mapping(), ids);
+        return this.delete(query);
+    }
 
     /**
      * 根据 columnMap key值删除记录

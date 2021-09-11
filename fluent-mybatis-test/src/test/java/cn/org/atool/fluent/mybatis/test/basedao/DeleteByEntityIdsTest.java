@@ -19,9 +19,13 @@ public class DeleteByEntityIdsTest extends BaseTest {
 
     @Test
     public void test_deleteByEntityIds() throws Exception {
-        ATM.dataMap.student.initTable(10).cleanAndInsert();
+        ATM.dataMap.student.initTable(10)
+            .env.values("test_env")
+            .cleanAndInsert();
         dao.deleteByEntityIds(Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(5L)));
-        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?)");
+        db.sqlList().wantFirstSql().eq("" +
+            "DELETE FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)");
         db.table(ATM.table.student).count().isEqualTo(8);
     }
 
@@ -35,9 +39,13 @@ public class DeleteByEntityIdsTest extends BaseTest {
 
     @Test
     public void test_deleteByEntityIds2() throws Exception {
-        ATM.dataMap.student.initTable(10).cleanAndInsert();
+        ATM.dataMap.student.initTable(10)
+            .env.values("test_env")
+            .cleanAndInsert();
         dao.deleteByEntityIds(new StudentEntity().setId(1L), new StudentEntity().setId(5L));
-        db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student WHERE `id` IN (?, ?)");
+        db.sqlList().wantFirstSql().eq("" +
+            "DELETE FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)");
         db.table(ATM.table.student).count().isEqualTo(8);
     }
 

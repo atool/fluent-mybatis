@@ -239,19 +239,6 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
     }
 
     /**
-     * 根据主键列表物理删除数据SQL构造
-     * {@link IEntityMapper#deleteByIds(Collection)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String deleteByIds(Map map) {
-        Collection ids = getParas(map, Param_List);
-        assertNotEmpty("ids", ids);
-        return sqlKit.deleteByIds(this, ids);
-    }
-
-    /**
      * 根据主键列表逻辑删除数据SQL构造
      * {@link IEntityMapper#logicDeleteByIds(Collection)}
      *
