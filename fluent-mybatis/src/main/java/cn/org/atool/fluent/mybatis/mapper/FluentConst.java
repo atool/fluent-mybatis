@@ -55,11 +55,7 @@ public interface FluentConst {
 
     String Param_List = "list";
 
-    String Param_CM = "cm";
-
     String Param_EW = "ew";
-
-    String Param_ET = "et";
 
     String Param_Fields = "fields";
 
@@ -75,33 +71,9 @@ public interface FluentConst {
 
     String M_InsertSelect = "insertSelect";
 
-    String M_DeleteById = "deleteById";
-
-    String M_LogicDeleteById = "logicDeleteById";
-
-    String M_deleteByIds = "deleteByIds";
-
-    String M_LogicDeleteByIds = "logicDeleteByIds";
-
-    String M_DeleteByMap = "deleteByMap";
-
-    String M_LogicDeleteByMap = "logicDeleteByMap";
-
     String M_Delete = "delete";
 
-    String M_LogicDelete = "logicDelete";
-
-    String M_updateById = "updateById";
-
     String M_updateBy = "updateBy";
-
-    String M_findById = "findById";
-
-    String M_findOne = "findOne";
-
-    String M_listByIds = "listByIds";
-
-    String M_listByMap = "listByMap";
 
     String M_listEntity = "listEntity";
 

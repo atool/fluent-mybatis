@@ -316,17 +316,6 @@ public class MapperFiler extends AbstractFiler {
 
     /**
      * <pre>
-     *      ResultMap("ResultMap")
-     * </pre>
-     *
-     * @return AnnotationSpec
-     */
-    private AnnotationSpec annotation_ResultMap() {
-        return AnnotationSpec.builder(ResultMap.class).addMember("value", "ResultMap").build();
-    }
-
-    /**
-     * <pre>
      *      Results(id="", value={Result()}
      * </pre>
      *
@@ -353,7 +342,6 @@ public class MapperFiler extends AbstractFiler {
             results.add(CodeBlock.join(blocks, ""));
         }
         return AnnotationSpec.builder(Results.class)
-//            .addMember("id", "ResultMap")
             .addMember("value", "{\n$L\n}", CodeBlock.join(results, ",\n"))
             .build();
     }
