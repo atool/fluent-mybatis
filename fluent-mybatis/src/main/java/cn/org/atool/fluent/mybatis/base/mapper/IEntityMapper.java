@@ -285,8 +285,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDeleteById(Object... ids) {
         assertNotEmpty("ids", ids);
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
-        return this.logicDelete(query);
+        IUpdate update = SqlKit.factory(this).logicDeleteByIds(this.mapping(), ids);
+        return this.updateBy(update);
     }
 
     /**
@@ -297,8 +297,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDeleteByIds(Collection ids) {
         assertNotEmpty("ids", ids);
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
-        return this.logicDelete(query);
+        IUpdate update = SqlKit.factory(this).logicDeleteByIds(this.mapping(), ids);
+        return this.updateBy(update);
     }
 
     /**

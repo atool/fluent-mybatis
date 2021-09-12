@@ -117,7 +117,7 @@ public interface IMapping extends IDefaultGetter {
      *
      * @return ignore
      */
-    default String versionField() {
+    default String versionColumn() {
         return this.findField(UniqueFieldType.LOCK_VERSION)
             .map(m -> m.column).orElse(null);
     }
@@ -127,7 +127,7 @@ public interface IMapping extends IDefaultGetter {
      *
      * @return ignore
      */
-    default String logicDeleteField() {
+    default String logicDeleteColumn() {
         return this.findField(UniqueFieldType.LOGIC_DELETED)
             .map(c -> c.column).orElse(null);
     }

@@ -99,6 +99,6 @@ public class DeleteByIdTest extends BaseTest {
         );
         want.exception(() -> noPrimaryMapper.logicDeleteById(3L),
             MyBatisSystemException.class, RuntimeException.class)
-            .contains("the primary not found.");
+            .contains("logic delete column(@LogicDelete) not found.");
     }
 }

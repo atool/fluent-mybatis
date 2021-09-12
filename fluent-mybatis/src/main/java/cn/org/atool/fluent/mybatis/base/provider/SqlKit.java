@@ -88,6 +88,24 @@ public interface SqlKit {
     IQuery queryByMap(IMapping mapping, Map<String, Object> condition);
 
     /**
+     * 根据主键列表逻辑删除
+     *
+     * @param mapping IMapping
+     * @param ids     要逻辑删除的数据主键列表
+     * @return IUpdate
+     */
+    IUpdate logicDeleteByIds(IMapping mapping, Collection ids);
+
+    /**
+     * 根据主键列表逻辑删除
+     *
+     * @param mapping IMapping
+     * @param ids     要逻辑删除的数据主键列表
+     * @return IUpdate
+     */
+    IUpdate logicDeleteByIds(IMapping mapping, Object[] ids);
+
+    /**
      * 根据IQuery条件构造逻辑删除更新IUpdate
      *
      * @param mapping IMapping

@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.model.*;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -112,6 +113,37 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
+    public IUpdate logicDeleteByIds(IMapping mapping, Collection ids) {
+        return this.logicDeleteByIds(mapping, ids.toArray());
+    }
+
+    @Override
+    public IUpdate logicDeleteByIds(IMapping mapping, Object[] ids) {
+        assertNotEmpty("ids", ids);
+        /* 根据id的条件不用附加默认条件 */
+        IUpdate updater = mapping.updater();
+        updater.getWrapperData().mergeSegments().getWhere().clean();
+        /* 按主键删除, 忽略版本约束 */
+        updater.getWrapperData().setIgnoreLockVersion(true);
+        String logicDeleteColumn = mapping.logicDeleteColumn();
+        if (isBlank(logicDeleteColumn)) {
+            throw new FluentMybatisException("logic delete column(@LogicDelete) not found.");
+        }
+        if (mapping.longTypeOfLogicDelete()) {
+            updater.updateSet(logicDeleteColumn, currentTimeMillis());
+        } else {
+            updater.updateSet(logicDeleteColumn, true);
+        }
+        String primary = mapping.primaryId(true);
+        if (ids.length == 1) {
+            updater.where().apply(primary, SqlOp.EQ, ids[0]);
+        } else {
+            updater.where().apply(primary, SqlOp.IN, ids);
+        }
+        return updater;
+    }
+
+    @Override
     public IQuery queryByIds(IMapping mapping, Collection ids) {
         return this.queryByIds(mapping, ids.toArray());
     }
@@ -164,7 +196,7 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
         IUpdate update = mapping.updater();
-        String logicDeleted = mapping.logicDeleteField();
+        String logicDeleted = mapping.logicDeleteColumn();
         assertNotNull("logical delete field of table(" + mapping.getTableName() + ")", logicDeleted);
         if (mapping.longTypeOfLogicDelete()) {
             update.updateSet(logicDeleted, currentTimeMillis());
@@ -205,9 +237,9 @@ public class CommonSqlKit implements SqlKit {
         sql.UPDATE(ew.getTable(), ew);
         List<String> needDefaults = updateDefaults(provider, updates, ew.isIgnoreLockVersion());
         // 如果忽略版本锁, 则移除版本锁更新的默认值
-        String versionField = provider.mapping().versionField();
-        if (ew.isIgnoreLockVersion() && notBlank(versionField)) {
-            needDefaults.remove(provider.mapping().versionField());
+        String versionColumn = provider.mapping().versionColumn();
+        if (ew.isIgnoreLockVersion() && notBlank(versionColumn)) {
+            needDefaults.remove(versionColumn);
         }
         needDefaults.add(ew.getUpdateStr());
         sql.SET(needDefaults);
@@ -342,30 +374,14 @@ public class CommonSqlKit implements SqlKit {
         return entity.findPk() != null;
     }
 
-    protected void whereEqIds(SqlProvider provider, MapperSql sql, Object[] ids) {
-        FieldMapping pk = (FieldMapping) provider.mapping().primaryApplier(true, f -> f);
-        if (ids.length == 1) {
-            sql.WHERE(pk.columnEqVar(dbType, null, "list[0]"));
-        } else {
-            StringBuilder values = new StringBuilder();
-            for (int index = 0; index < ids.length; index++) {
-                if (index > 0) {
-                    values.append(", ");
-                }
-                values.append(pk.var(null, "list[" + index + "]"));
-            }
-            sql.WHERE(format("%s IN (%s)", dbType.wrap(pk.column), values));
-        }
-    }
-
     /**
      * 更新时, 检查乐观锁字段条件是否设置
      */
     private void checkUpdateVersionWhere(SqlProvider provider, List<String> wheres) {
-        String versionField = provider.mapping().versionField();
-        if (If.notBlank(versionField) &&
-            !wheres.contains(versionField) &&
-            !wheres.contains(provider.dbType().wrap(versionField))) {
+        String versionColumn = provider.mapping().versionColumn();
+        if (If.notBlank(versionColumn) &&
+            !wheres.contains(versionColumn) &&
+            !wheres.contains(provider.dbType().wrap(versionColumn))) {
             throw new RuntimeException("The version lock field was explicitly set, but no version condition was found in the update condition.");
         }
     }
