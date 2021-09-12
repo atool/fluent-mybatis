@@ -87,13 +87,7 @@ public interface StrConstant {
      */
     char DOUBLE_QUOTATION = '"';
     /**
-     * 空格
+     * MapperSqlProvider
      */
-    char SPACE_CHAR = ' ';
-    /**
-     * 反引号
-     */
-    char BACK_QUOTE = '`';
-
     String MapperSqlProvider = "MapperSqlProvider";
 }
