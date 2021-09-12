@@ -14,6 +14,8 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -21,6 +23,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes"})
 public class OracleSqlKit extends CommonSqlKit {
     public OracleSqlKit(DbType dbType) {
         super(dbType);
@@ -72,14 +75,15 @@ public class OracleSqlKit extends CommonSqlKit {
                 } else {
                     first = false;
                 }
-                sql.APPEND(el("list[" + index + "].", f, maps.get(index).get(f.column), f.insert));
+                Object value = maps.get(index).get(f.column);
+                String el = el("list[" + index + "].", f, value, f.insert);
+                sql.APPEND(el + (value == null ? SPACE + f.column : EMPTY));
             }
             sql.APPEND(" FROM dual");
         }
         sql.APPEND(") TMP");
         return sql.toString();
     }
-
 
     @Override
     public String updateBy(SqlProvider provider, IUpdate[] updaters) {
