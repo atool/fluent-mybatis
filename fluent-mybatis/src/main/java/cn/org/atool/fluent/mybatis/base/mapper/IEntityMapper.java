@@ -231,9 +231,9 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 查询（根据 columnMap 条件）
+     * 查询（根据属性字段条件）
      *
-     * @param condition 表字段 map 对象
+     * @param condition 属性字段 map 对象
      * @return ignore
      */
     default List<E> listByMap(Map<String, Object> condition) {
@@ -267,9 +267,9 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 根据 columnMap key值删除记录
+     * 根据属性字段删除记录
      *
-     * @param condition k-v条件
+     * @param condition 属性字段k-v条件
      * @return ignore
      */
     default int deleteByMap(Map<String, Object> condition) {
@@ -302,9 +302,9 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 根据 columnMap key值逻辑删除记录
+     * 根据属性字段逻辑删除记录
      *
-     * @param condition k-v条件
+     * @param condition 属性字段k-v条件
      * @return ignore
      */
     default int logicDeleteByMap(Map<String, Object> condition) {

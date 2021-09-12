@@ -167,7 +167,7 @@ public class CommonSqlKit implements SqlKit {
         IQuery query = mapping.query();
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
             String column = entry.getKey();
-            FieldMapping f = mapping.getColumnMap().get(column);
+            FieldMapping f = mapping.getFieldsMap().get(column);
             if (f == null) {
                 throw new IllegalArgumentException("Column[" + column + "] of Entity[" + mapping.entityClass().getSimpleName() + "] is not found.");
             }
