@@ -231,14 +231,15 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 查询（根据属性字段条件）
+     * 根据数据库字段(或Entity属性)查询
      *
-     * @param condition 属性字段 map 对象
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性) k-v条件
      * @return ignore
      */
-    default List<E> listByMap(Map<String, Object> condition) {
+    default List<E> listByMap(boolean isColumn, Map<String, Object> condition) {
         assertNotEmpty("condition", condition);
-        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
+        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), isColumn, condition);
         return this.listEntity(query);
     }
 
@@ -267,13 +268,14 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 根据属性字段删除记录
+     * 根据数据库字段(或Entity属性)删除记录
      *
-     * @param condition 属性字段k-v条件
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性)k-v条件
      * @return ignore
      */
-    default int deleteByMap(Map<String, Object> condition) {
-        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
+    default int deleteByMap(boolean isColumn, Map<String, Object> condition) {
+        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), isColumn, condition);
         return this.delete(query);
     }
 
@@ -302,14 +304,15 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     }
 
     /**
-     * 根据属性字段逻辑删除记录
+     * 根据数据库字段(或Entity属性)逻辑删除记录
      *
-     * @param condition 属性字段k-v条件
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性)k-v条件
      * @return ignore
      */
-    default int logicDeleteByMap(Map<String, Object> condition) {
+    default int logicDeleteByMap(boolean isColumn, Map<String, Object> condition) {
         assertNotEmpty("ids", condition);
-        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), condition);
+        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), isColumn, condition);
         return this.logicDelete(query);
     }
 

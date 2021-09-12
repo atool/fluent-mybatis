@@ -188,7 +188,7 @@ public abstract class IRef {
             case RichEntity_ListByNotNull:
                 Map<String, Object> where = entity.toColumnMap();
                 assertNotEmpty("the property of entity can't be all empty.", where);
-                List list = mapper(entity).listByMap(where);
+                List list = mapper(entity).listByMap(true, where);
                 return (T) list;
             default:
                 return this.invokeRefMethod(methodOfEntity, args);

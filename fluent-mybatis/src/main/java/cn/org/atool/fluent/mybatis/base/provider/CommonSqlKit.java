@@ -163,13 +163,21 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public IQuery queryByMap(IMapping mapping, Map<String, Object> condition) {
+    public IQuery queryByMap(IMapping mapping, boolean isColumn, Map<String, Object> condition) {
         IQuery query = mapping.query();
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
-            String column = entry.getKey();
-            FieldMapping f = mapping.getFieldsMap().get(column);
-            if (f == null) {
-                throw new IllegalArgumentException("Column[" + column + "] of Entity[" + mapping.entityClass().getSimpleName() + "] is not found.");
+            String key = entry.getKey();
+            FieldMapping f;
+            if (isColumn) {
+                f = mapping.getColumnMap().get(key);
+                if (f == null) {
+                    throw new FluentMybatisException("Column[" + key + "] of Table[" + mapping.getTableName() + "] is not found.");
+                }
+            } else {
+                f = mapping.getFieldsMap().get(key);
+                if (f == null) {
+                    throw new FluentMybatisException("Field[" + key + "] of Entity[" + mapping.entityClass().getSimpleName() + "] is not found.");
+                }
             }
             Object value = entry.getValue();
             if (value == null) {

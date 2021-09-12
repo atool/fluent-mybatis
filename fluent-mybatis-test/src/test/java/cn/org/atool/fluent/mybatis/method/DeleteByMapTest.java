@@ -27,7 +27,7 @@ public class DeleteByMapTest extends BaseTest {
             .userName.values("user1", "user2")
             .env.values("test_env")
             .cleanAndInsert();
-        mapper.deleteByMap(new HashMap<String, Object>() {
+        mapper.deleteByMap(true, new HashMap<String, Object>() {
             {
                 this.put("id", 24);
                 this.put("user_name", "user2");
@@ -43,7 +43,7 @@ public class DeleteByMapTest extends BaseTest {
 
     @Test
     public void testLogicDeleteByIds() {
-        mapper.logicDeleteByMap(new HashMap<String, Object>() {
+        mapper.logicDeleteByMap(true, new HashMap<String, Object>() {
             {
                 this.put("id", 24);
                 this.put("user_name", "user2");
@@ -65,15 +65,16 @@ public class DeleteByMapTest extends BaseTest {
                 return 1631365798622L;
             }
         };
-        idcardMapper.logicDeleteByMap(new HashMap<String, Object>() {
+        idcardMapper.logicDeleteByMap(false, new HashMap<String, Object>() {
             {
                 this.put("id", 24);
+                this.put("isDeleted", false);
             }
         });
         db.sqlList().wantFirstSql()
             .start("UPDATE `idcard` " +
                 "SET `is_deleted` = ? " +
-                "WHERE `id` = ?");
-        db.sqlList().wantFirstPara().eqList(1631365798622L, 24);
+                "WHERE `is_deleted` = ? AND `id` = ?");
+        db.sqlList().wantFirstPara().eqList(1631365798622L, false, 24);
     }
 }

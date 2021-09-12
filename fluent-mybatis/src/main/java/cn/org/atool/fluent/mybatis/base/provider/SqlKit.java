@@ -82,10 +82,11 @@ public interface SqlKit {
      * 根据map(k-v)条件构造查询条件IQuery
      *
      * @param mapping   IMapping
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
      * @param condition 查询条件
      * @return IQuery
      */
-    IQuery queryByMap(IMapping mapping, Map<String, Object> condition);
+    IQuery queryByMap(IMapping mapping, boolean isColumn, Map<String, Object> condition);
 
     /**
      * 根据主键列表逻辑删除

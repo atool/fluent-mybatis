@@ -26,7 +26,7 @@ public class SelectByMapTest extends BaseTest {
             .env.values("test_env")
             .cleanAndInsert();
 
-        List<StudentEntity> users = mapper.listByMap(new HashMap<String, Object>() {
+        List<StudentEntity> users = mapper.listByMap(true, new HashMap<String, Object>() {
             {
                 this.put(FieldRef.Student.userName.column, "u2");
             }
