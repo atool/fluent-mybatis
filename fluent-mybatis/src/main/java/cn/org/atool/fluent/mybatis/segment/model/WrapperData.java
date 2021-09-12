@@ -98,6 +98,11 @@ public class WrapperData implements IWrapperData {
      */
     private IQuery where;
 
+    /**
+     * where条件由IQuery提供, 只在 logicDelete(IQuery)场景下使用
+     *
+     * @param query IQuery
+     */
     public void replacedWhere(IQuery query) {
         this.where = query;
         query.getWrapperData().sharedParameter(this);
