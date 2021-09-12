@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -239,7 +240,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default List<E> listByMap(boolean isColumn, Map<String, Object> condition) {
         assertNotEmpty("condition", condition);
-        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), isColumn, condition);
+        IQuery query = this.mapping().query();
+        SqlKit.factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
         return this.listEntity(query);
     }
 
@@ -275,7 +277,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default int deleteByMap(boolean isColumn, Map<String, Object> condition) {
-        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), isColumn, condition);
+        IQuery query = this.mapping().query();
+        SqlKit.factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
         return this.delete(query);
     }
 
@@ -312,8 +315,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDeleteByMap(boolean isColumn, Map<String, Object> condition) {
         assertNotEmpty("ids", condition);
-        IQuery query = SqlKit.factory(this).queryByMap(this.mapping(), isColumn, condition);
-        return this.logicDelete(query);
+        IUpdate update = this.mapping().updater();
+        /* 逻辑删除忽略版本号 */
+        update.getWrapperData().setIgnoreLockVersion(true);
+        SqlKit.factory(this).setLogicDeleted(this.mapping(), update);
+        SqlKit.factory(this).eqByMap(this.mapping(), (IWrapper) update, isColumn, condition);
+        return this.updateBy(update);
     }
 
     /**
@@ -324,6 +331,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDelete(IQuery query) {
         assertNotNull("query", query);
+        /* 逻辑删除忽略版本号 */
         query.getWrapperData().setIgnoreLockVersion(true);
         IUpdate update = SqlKit.factory(this).logicDeleteBy(this.mapping(), query);
         return this.updateBy(update);

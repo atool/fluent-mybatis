@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -79,14 +80,22 @@ public interface SqlKit {
     IQuery queryByIds(IMapping mapping, Object[] ids);
 
     /**
-     * 根据map(k-v)条件构造查询条件IQuery
+     * 设置IUpdate逻辑更新设置值
+     *
+     * @param mapping IMapping
+     * @param update  IUpdate
+     */
+    void setLogicDeleted(IMapping mapping, IUpdate update);
+
+    /**
+     * 设置IWrapper相等条件(condition)
      *
      * @param mapping   IMapping
-     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
-     * @param condition 查询条件
-     * @return IQuery
+     * @param wrapper   IQuery/IUpdate
+     * @param isColumn  isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性)k-v条件
      */
-    IQuery queryByMap(IMapping mapping, boolean isColumn, Map<String, Object> condition);
+    void eqByMap(IMapping mapping, IWrapper wrapper, boolean isColumn, Map<String, Object> condition);
 
     /**
      * 根据主键列表逻辑删除

@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
@@ -123,7 +124,7 @@ public class CommonSqlKit implements SqlKit {
         /* 根据id的条件不用附加默认条件 */
         IUpdate updater = mapping.updater();
         updater.getWrapperData().mergeSegments().getWhere().clean();
-        /* 按主键删除, 忽略版本约束 */
+        /* 逻辑删除忽略版本号 */
         updater.getWrapperData().setIgnoreLockVersion(true);
         String logicDeleteColumn = mapping.logicDeleteColumn();
         if (isBlank(logicDeleteColumn)) {
@@ -163,33 +164,6 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public IQuery queryByMap(IMapping mapping, boolean isColumn, Map<String, Object> condition) {
-        IQuery query = mapping.query();
-        for (Map.Entry<String, Object> entry : condition.entrySet()) {
-            String key = entry.getKey();
-            FieldMapping f;
-            if (isColumn) {
-                f = mapping.getColumnMap().get(key);
-                if (f == null) {
-                    throw new FluentMybatisException("Column[" + key + "] of Table[" + mapping.getTableName() + "] is not found.");
-                }
-            } else {
-                f = mapping.getFieldsMap().get(key);
-                if (f == null) {
-                    throw new FluentMybatisException("Field[" + key + "] of Entity[" + mapping.entityClass().getSimpleName() + "] is not found.");
-                }
-            }
-            Object value = entry.getValue();
-            if (value == null) {
-                query.where().apply(f.column, SqlOp.IS_NULL);
-            } else {
-                query.where().apply(f.column, SqlOp.EQ, value);
-            }
-        }
-        return query;
-    }
-
-    @Override
     public String deleteBy(SqlProvider provider, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
@@ -202,11 +176,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
-        if (notBlank(query.getWrapperData().getCustomizedSql())) {
-            throw new FluentMybatisException("Logical deletion does not support custom SQL.");
-        }
-        IUpdate update = mapping.updater();
+    public void setLogicDeleted(IMapping mapping, IUpdate update) {
         String logicDeleted = mapping.logicDeleteColumn();
         assertNotNull("logical delete field of table(" + mapping.getTableName() + ")", logicDeleted);
         if (mapping.longTypeOfLogicDelete()) {
@@ -214,8 +184,39 @@ public class CommonSqlKit implements SqlKit {
         } else {
             update.updateSet(logicDeleted, true);
         }
-        update.getWrapperData().replacedWhere(query);
-        return update;
+    }
+
+    @Override
+    public void eqByMap(IMapping mapping, IWrapper wrapper, boolean isColumn, Map<String, Object> condition) {
+        Map<String, FieldMapping> fields = isColumn ? mapping.getColumnMap() : mapping.getFieldsMap();
+        for (Map.Entry<String, Object> entry : condition.entrySet()) {
+            String key = entry.getKey();
+            FieldMapping f = fields.get(key);
+            if (f == null) {
+                String err = isColumn
+                    ? "Column[" + key + "] of Table[" + mapping.getTableName() + "]"
+                    : "Field[" + key + "] of Entity[" + mapping.entityClass().getSimpleName() + "]";
+                throw new FluentMybatisException(err + " is not found.");
+            }
+            Object value = entry.getValue();
+            if (value == null) {
+                wrapper.where().apply(f.column, SqlOp.IS_NULL);
+            } else {
+                wrapper.where().apply(f.column, SqlOp.EQ, value);
+            }
+        }
+    }
+
+    @Override
+    public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
+        if (notBlank(query.getWrapperData().getCustomizedSql())) {
+            throw new FluentMybatisException("Logical deletion does not support custom SQL.");
+        } else {
+            IUpdate update = mapping.updater();
+            this.setLogicDeleted(mapping, update);
+            update.getWrapperData().replacedWhere(query);
+            return update;
+        }
     }
 
     private static long currentTimeMillis() {
