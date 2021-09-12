@@ -203,6 +203,9 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
+        if (notBlank(query.getWrapperData().getCustomizedSql())) {
+            throw new FluentMybatisException("Logical deletion does not support custom SQL.");
+        }
         IUpdate update = mapping.updater();
         String logicDeleted = mapping.logicDeleteColumn();
         assertNotNull("logical delete field of table(" + mapping.getTableName() + ")", logicDeleted);
