@@ -86,6 +86,7 @@ public class MapperRefFiler extends AbstractFile {
             spec.addStatement("allMappers.put($T.class, this.$LMapper)",
                 fluent.entity(), fluent.lowerNoSuffix());
         }
+        spec.addStatement("allMappers.unmodified()");
         return spec.build();
     }
 

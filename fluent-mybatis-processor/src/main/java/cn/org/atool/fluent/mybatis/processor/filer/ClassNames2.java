@@ -28,8 +28,6 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName FM_IRichMapper = ClassName.get(IRichMapper.class);
 
-    ClassName FM_SqlProvider = ClassName.get(SqlProvider.class);
-
     ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
 
     ClassName FN_FieldMapping = ClassName.get(FieldMapping.class);
@@ -57,8 +55,6 @@ public interface ClassNames2 extends ClassNames {
     ParameterizedTypeName CN_Optional_IMapping = ParameterizedTypeName.get(Optional.class, IMapping.class);
 
     ClassName CN_Long = ClassName.get(Long.class);
-
-    ClassName CN_Set = ClassName.get(Set.class);
 
     ClassName CN_ClassMap = ClassName.get(ClassMap.class);
 

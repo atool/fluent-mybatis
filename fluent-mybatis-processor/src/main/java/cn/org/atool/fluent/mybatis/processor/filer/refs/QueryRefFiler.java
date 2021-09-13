@@ -150,26 +150,24 @@ public class QueryRefFiler extends AbstractFile {
         FieldSpec.Builder spec = FieldSpec.builder(CN_Map_AMapping, "ENTITY_DEFAULTS", PRIVATE_STATIC_FINAL);
 
         List<CodeBlock> list = new ArrayList<>();
-        list.add(CodeBlock.of("new $T() {\n", CN_Map_AMapping));
-        list.add(CodeBlock.of("\t{\n"));
+        list.add(CodeBlock.of("new $T()", CN_Map_AMapping));
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("\t\tthis.put($T.class, $L);\n", fluent.entity(), fluent.lowerNoSuffix()));
+            list.add(CodeBlock.of(".put($T.class, $L)", fluent.entity(), fluent.lowerNoSuffix()));
         }
-        list.add(CodeBlock.of("\t}\n}"));
-        return spec.initializer(CodeBlock.join(list, "")).build();
+        list.add(CodeBlock.of(".unmodified()"));
+        return spec.initializer(CodeBlock.join(list, "\n\t")).build();
     }
 
     private FieldSpec f_allProvider() {
         FieldSpec.Builder spec = FieldSpec.builder(CN_Map_Provider, "ENTITY_SQL_PROVIDER", PUBLIC_STATIC_FINAL);
 
         List<CodeBlock> list = new ArrayList<>();
-        list.add(CodeBlock.of("new $T() {\n", CN_Map_Provider));
-        list.add(CodeBlock.of("\t{\n"));
+        list.add(CodeBlock.of("new $T()", CN_Map_Provider));
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of("\t\tthis.put($T.class, new $T.MapperSqlProvider());\n", fluent.entity(), fluent.mapper()));
+            list.add(CodeBlock.of(".put($T.class, new $T.MapperSqlProvider())", fluent.entity(), fluent.mapper()));
         }
-        list.add(CodeBlock.of("\t}\n}"));
-        return spec.initializer(CodeBlock.join(list, "")).build();
+        list.add(CodeBlock.of(".unmodified()"));
+        return spec.initializer(CodeBlock.join(list, "\n\t")).build();
     }
 
     private FieldSpec f_allEntityClass() {
