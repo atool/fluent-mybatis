@@ -11,11 +11,8 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 联合查询条件
@@ -156,20 +153,6 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     @Override
     public JoinQueryWhere where() {
         return this.where;
-    }
-
-    private static final Map<Class, Constructor> QueryAliasConstructors = new HashMap<>(128);
-
-    private static <Q extends BaseQuery<?, Q>> Q newQuery(Class<Q> queryClass, String alias) {
-        try {
-            if (!QueryAliasConstructors.containsKey(queryClass)) {
-                QueryAliasConstructors.put(queryClass, queryClass.getConstructor(String.class));
-            }
-            return (Q) QueryAliasConstructors.get(queryClass).newInstance(alias);
-        } catch (Exception e) {
-            throw new RuntimeException(String.format("new %s(String, ParameterPair) error: %s",
-                queryClass.getSimpleName(), e.getMessage()), e);
-        }
     }
 
     @Override

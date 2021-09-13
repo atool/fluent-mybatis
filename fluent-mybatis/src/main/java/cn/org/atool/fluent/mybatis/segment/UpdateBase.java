@@ -80,7 +80,7 @@ public abstract class UpdateBase<
      */
     public <E extends IEntity> S byEntity(E entity, IGetter<E> getter, IGetter<E>... getters) {
         assertNotNull("entity", entity);
-        Class klass = IRef.instance().findFluentEntityClass(entity.getClass());
+        Class klass = IRef.instance().findFluentEntityClass(entity.entityClass());
         String[] arr = MappingKits.toColumns(klass, getter, getters);
         return this.byEntity(entity, arr);
     }
@@ -127,7 +127,7 @@ public abstract class UpdateBase<
      */
     public <E extends IEntity> S byExclude(E entity, IGetter<E> exclude, IGetter<E>... excludes) {
         assertNotNull("entity", entity);
-        Class klass = IRef.instance().findFluentEntityClass(entity.getClass());
+        Class klass = IRef.instance().findFluentEntityClass(entity.entityClass());
         String[] arr = MappingKits.toColumns(klass, exclude, excludes);
         return this.byExclude(entity, arr);
     }

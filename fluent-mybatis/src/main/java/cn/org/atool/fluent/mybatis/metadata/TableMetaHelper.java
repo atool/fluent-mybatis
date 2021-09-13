@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.metadata;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.model.ClassMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +12,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
@@ -31,25 +29,21 @@ public class TableMetaHelper {
      * 储存反射类表信息
      * Key: entity class
      */
-    private static final Map<Class, TableMeta> TABLE_INFO_CACHE = new ConcurrentHashMap<>();
+    private static final ClassMap<TableMeta> TABLE_INFO_CACHE = new ClassMap<>();
 
     /**
      * <p>
      * 获取实体映射表信息
      * </p>
      *
-     * @param clazz 反射实体类
+     * @param entityClass 反射实体类
      * @return 数据库表反射信息
      */
-    public static TableMeta getTableInfo(Class<?> clazz) {
-        if (!IEntity.class.isAssignableFrom(clazz)) {
-            return null;
+    public static TableMeta getTableInfo(Class entityClass) {
+        if (!TABLE_INFO_CACHE.containsKey(entityClass)) {
+            initTableInfo(entityClass);
         }
-        Class<?> currentClass = MybatisUtil.getProxyTargetClass(clazz);
-        if (!TABLE_INFO_CACHE.containsKey(currentClass)) {
-            initTableInfo(currentClass);
-        }
-        return TABLE_INFO_CACHE.get(currentClass);
+        return TABLE_INFO_CACHE.get(entityClass);
     }
 
     /**
@@ -59,7 +53,7 @@ public class TableMetaHelper {
      *
      * @param clazz Entity实体类
      */
-    synchronized static void initTableInfo(Class<?> clazz) {
+    synchronized static void initTableInfo(Class clazz) {
         if (!TABLE_INFO_CACHE.containsKey(clazz)) {
             TableMeta tableMeta = new TableMeta(clazz);
             /* 初始化表名相关 */
@@ -102,7 +96,7 @@ public class TableMetaHelper {
      * @param clazz     实体类
      * @param tableMeta 数据库表反射信息
      */
-    private static void initTableFields(Class<?> clazz, TableMeta tableMeta) {
+    private static void initTableFields(Class clazz, TableMeta tableMeta) {
         List<Field> fields = MybatisUtil.getFieldList(clazz);
 
         List<TableFieldMeta> fieldList = new ArrayList<>();

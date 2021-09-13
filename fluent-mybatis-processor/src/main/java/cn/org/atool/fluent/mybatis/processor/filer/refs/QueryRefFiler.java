@@ -19,8 +19,8 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_HashMap_AMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_Provider;
 
 public class QueryRefFiler extends AbstractFile {
     private static final String QueryRef = "QueryRef";
@@ -38,7 +38,7 @@ public class QueryRefFiler extends AbstractFile {
     @Override
     protected void staticImport(JavaFile.Builder builder) {
         builder.addStaticImport(MybatisUtil.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
-        super.staticImport(builder);
+        builder.skipJavaLangImports(true);
     }
 
     @Override
@@ -47,6 +47,7 @@ public class QueryRefFiler extends AbstractFile {
             spec.addField(this.f_mapping(fluent));
         }
         spec.addField(this.f_allDefaults())
+            .addField(this.f_allProvider())
             .addField(this.f_allEntityClass())
             .addMethod(m_defaultQuery(false))
             .addMethod(m_emptyQuery(false))
@@ -57,7 +58,7 @@ public class QueryRefFiler extends AbstractFile {
 
     private FieldSpec f_mapping(FluentEntity fluent) {
         return FieldSpec.builder(fluent.entityMapping(), fluent.lowerNoSuffix(),
-            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$T.MAPPING", fluent.entityMapping())
             .build();
     }
@@ -145,25 +146,34 @@ public class QueryRefFiler extends AbstractFile {
         return spec.build();
     }
 
-    private CodeBlock m_initEntityDefaults() {
+    private FieldSpec f_allDefaults() {
+        FieldSpec.Builder spec = FieldSpec.builder(CN_Map_AMapping, "ENTITY_DEFAULTS", PRIVATE_STATIC_FINAL);
+
         List<CodeBlock> list = new ArrayList<>();
-        list.add(CodeBlock.of("new $T() {\n", CN_HashMap_AMapping));
+        list.add(CodeBlock.of("new $T() {\n", CN_Map_AMapping));
         list.add(CodeBlock.of("\t{\n"));
         for (FluentEntity fluent : FluentList.getFluents()) {
             list.add(CodeBlock.of("\t\tthis.put($T.class, $L);\n", fluent.entity(), fluent.lowerNoSuffix()));
         }
         list.add(CodeBlock.of("\t}\n}"));
-        return CodeBlock.join(list, "");
+        return spec.initializer(CodeBlock.join(list, "")).build();
     }
 
-    private FieldSpec f_allDefaults() {
-        return FieldSpec.builder(CN_Map_AMapping, "ENTITY_DEFAULTS", PRIVATE_STATIC_FINAL)
-            .initializer(this.m_initEntityDefaults())
-            .build();
+    private FieldSpec f_allProvider() {
+        FieldSpec.Builder spec = FieldSpec.builder(CN_Map_Provider, "ENTITY_SQL_PROVIDER", PUBLIC_STATIC_FINAL);
+
+        List<CodeBlock> list = new ArrayList<>();
+        list.add(CodeBlock.of("new $T() {\n", CN_Map_Provider));
+        list.add(CodeBlock.of("\t{\n"));
+        for (FluentEntity fluent : FluentList.getFluents()) {
+            list.add(CodeBlock.of("\t\tthis.put($T.class, new $T.MapperSqlProvider());\n", fluent.entity(), fluent.mapper()));
+        }
+        list.add(CodeBlock.of("\t}\n}"));
+        return spec.initializer(CodeBlock.join(list, "")).build();
     }
 
     private FieldSpec f_allEntityClass() {
-        return FieldSpec.builder(parameterizedType(Set.class, Class.class), "All_Entity_Class", PUBLIC_STATIC_FINAL)
+        return FieldSpec.builder(parameterizedType(Set.class, String.class), "All_Entity_Class", PUBLIC_STATIC_FINAL)
             .initializer("$T.unmodifiableSet(ENTITY_DEFAULTS.keySet())", Collections.class)
             .build();
     }

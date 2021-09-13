@@ -1,17 +1,13 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.model.ClassMap;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
@@ -35,17 +31,20 @@ public class MapperRefFiler extends AbstractFile {
     }
 
     @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.skipJavaLangImports(true);
+    }
+
+    @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addField(this.f_allMappers())
-            .addField(this.f_allEntityClass())
             .addField(this.f_instance());
         for (FluentEntity fluent : FluentList.getFluents()) {
             spec.addField(this.f_mapper(fluent));
         }
         spec.addMethod(this.m_constructor())
             .addMethod(this.m_instance())
-            .addMethod(this.m_mapper())
-            .addMethod(this.m_allEntityClass());
+            .addMethod(this.m_mapper());
     }
 
     private MethodSpec m_mapper() {
@@ -57,30 +56,15 @@ public class MapperRefFiler extends AbstractFile {
             .build();
     }
 
-    private MethodSpec m_allEntityClass() {
-        return MethodSpec.methodBuilder("allEntityClass")
-            .addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
-            .returns(parameterizedType(CN_Set, CN_Class_IEntity))
-            .addStatement("return allEntityClass")
-            .build();
-    }
-
     private FieldSpec f_instance() {
         return FieldSpec.builder(getClassName(), "instance", Modifier.STATIC, Modifier.PRIVATE)
             .build();
     }
 
     private FieldSpec f_allMappers() {
-        return FieldSpec.builder(parameterizedType(CN_Map, CN_Class_IEntity, FM_IRichMapper),
-            "allMappers", PRIVATE_STATIC_FINAL)
-            .initializer("new $T<>()", HashMap.class)
-            .build();
-    }
-
-    private FieldSpec f_allEntityClass() {
-        return FieldSpec.builder(parameterizedType(CN_Set, CN_Class_IEntity),
-            "allEntityClass", PRIVATE_STATIC_FINAL)
-            .initializer("new $T<>()", HashSet.class)
+        return FieldSpec.builder(parameterizedType(CN_ClassMap, FM_IRichMapper),
+                "allMappers", PRIVATE_STATIC_FINAL)
+            .initializer("new $T<>()", ClassMap.class)
             .build();
     }
 
@@ -102,7 +86,6 @@ public class MapperRefFiler extends AbstractFile {
             spec.addStatement("allMappers.put($T.class, this.$LMapper)",
                 fluent.entity(), fluent.lowerNoSuffix());
         }
-        spec.addStatement("allEntityClass.addAll(allMappers.keySet())");
         return spec.build();
     }
 

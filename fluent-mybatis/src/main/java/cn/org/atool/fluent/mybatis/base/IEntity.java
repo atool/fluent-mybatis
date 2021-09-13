@@ -37,9 +37,7 @@ public interface IEntity extends Serializable {
      *
      * @return 实例类
      */
-    default Class<? extends IEntity> entityClass() {
-        return this.getClass();
-    }
+    Class<? extends IEntity> entityClass();
 
     /**
      * 将实体对象转换为map对象, 不包括空字段

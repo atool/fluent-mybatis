@@ -6,6 +6,8 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.model.ClassMap;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import lombok.Setter;
@@ -225,10 +227,10 @@ public abstract class IRef {
      * @return ignore
      */
     public Class<? extends IEntity> findFluentEntityClass(Class clazz) {
-        Set<Class> all = this.allEntityClass();
+        Set<String> all = this.allEntityClass();
         Class aClass = clazz;
         while (aClass != Object.class && aClass != RichEntity.class) {
-            if (all.contains(aClass)) {
+            if (all.contains(aClass.getName())) {
                 return aClass;
             } else {
                 aClass = aClass.getSuperclass();
@@ -237,12 +239,21 @@ public abstract class IRef {
         throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity.");
     }
 
+    public SqlProvider findSqlProvider(Class klass) {
+        if (allSqlProvider().containsKey(klass)) {
+            return allSqlProvider().get(klass);
+        }
+        throw new RuntimeException("the class[" + klass.getName() + "] is not a @FluentMybatis Entity.");
+    }
+
+    protected abstract ClassMap<SqlProvider> allSqlProvider();
+
     /**
      * 所有Entity Class
      *
      * @return ignore
      */
-    protected abstract Set<Class> allEntityClass();
+    protected abstract Set<String> allEntityClass();
 
     /**
      * 返回spring管理对应的mapper bean
@@ -251,7 +262,7 @@ public abstract class IRef {
      * @return ignore
      */
     public static IRichMapper mapper(IEntity entity) {
-        return IRef.mapper(entity.getClass());
+        return IRef.mapper(entity.entityClass());
     }
 
     /**

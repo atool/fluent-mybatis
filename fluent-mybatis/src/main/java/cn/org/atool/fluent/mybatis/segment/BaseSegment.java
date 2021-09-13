@@ -113,7 +113,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
         assertNotNull("entity", entity);
         Map<String, Object> map = entity.toColumnMap(false);
 
-        String pk = IRef.instance().primaryColumn(entity.getClass());
+        String pk = IRef.instance().primaryColumn(entity.entityClass());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
@@ -136,7 +136,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     protected void byExclude(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> excludes) {
         assertNotNull("entity", entity);
         Map<String, Object> map = entity.toColumnMap(false);
-        String pk = IRef.instance().primaryColumn(entity.getClass());
+        String pk = IRef.instance().primaryColumn(entity.entityClass());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();

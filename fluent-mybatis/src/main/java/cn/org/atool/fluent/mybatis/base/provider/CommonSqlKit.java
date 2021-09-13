@@ -290,7 +290,7 @@ public class CommonSqlKit implements SqlKit {
             }
         }
         if (primary == null) {
-            throw new IllegalArgumentException("Primary of entity[" + entity.getClass().getSimpleName() + "] is not found.");
+            throw new IllegalArgumentException("Primary of entity[" + entity.entityClass().getSimpleName() + "] is not found.");
         } else {
             update.where().apply(primary.column, SqlOp.EQ, values.get(primary.column));
         }

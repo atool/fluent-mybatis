@@ -33,7 +33,6 @@ public class FormRefFiler extends AbstractFile {
     protected void staticImport(JavaFile.Builder builder) {
         builder.addStaticImport(MybatisUtil.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
         builder.skipJavaLangImports(true);
-        super.staticImport(builder);
     }
 
     @Override

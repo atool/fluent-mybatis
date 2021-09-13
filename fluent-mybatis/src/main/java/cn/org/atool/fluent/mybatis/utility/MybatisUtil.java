@@ -51,21 +51,17 @@ public class MybatisUtil {
      * 获取该类的所有属性列表
      * </p>
      *
-     * @param clazz 反射类
+     * @param entityClass 反射类
      */
-    public static List<Field> getFieldList(Class<?> clazz) {
-        Class current = getProxyTargetClass(clazz);
+    public static List<Field> getFieldList(Class entityClass) {
         Map<String, Field> map = new HashMap<>();
-        while (current.getSuperclass() != null && current != Object.class) {
-            Field[] fields = current.getDeclaredFields();
-            for (Field field : fields) {
-                if (!isStatic(field) &&
-                    field.getAnnotation(NotField.class) == null &&
-                    !map.containsKey(field.getName())) {
-                    map.put(field.getName(), field);
-                }
+        Field[] fields = entityClass.getDeclaredFields();
+        for (Field field : fields) {
+            if (!isStatic(field) &&
+                field.getAnnotation(NotField.class) == null &&
+                !map.containsKey(field.getName())) {
+                map.put(field.getName(), field);
             }
-            current = current.getSuperclass();
         }
         return new ArrayList<>(map.values());
     }
@@ -78,37 +74,6 @@ public class MybatisUtil {
      */
     private static boolean isStatic(Field field) {
         return Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers());
-    }
-
-    /**
-     * 代理 class 的名称
-     */
-    private static final List<String> PROXY_CLASS_NAMES = Arrays.asList(
-        // cglib
-        "net.sf.cglib.proxy.Factory",
-        "org.springframework.cglib.proxy.Factory",
-        // javassist
-        "javassist.util.proxy.ProxyObject",
-        "org.apache.ibatis.javassist.util.proxy.ProxyObject"
-    );
-
-    /**
-     * <p>
-     * 获取代理对象的target class
-     * </p>
-     *
-     * @param clazz 传入
-     * @return 如果是代理的class，返回父 class，否则返回自身
-     */
-    public static Class<?> getProxyTargetClass(Class<?> clazz) {
-        if (clazz != null) {
-            for (Class klass : clazz.getInterfaces()) {
-                if (PROXY_CLASS_NAMES.contains(klass.getName())) {
-                    return clazz.getSuperclass();
-                }
-            }
-        }
-        return clazz;
     }
 
     /**

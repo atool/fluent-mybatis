@@ -3,17 +3,20 @@ package cn.org.atool.fluent.mybatis.processor.filer;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.model.ClassMap;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import cn.org.atool.generator.util.ClassNames;
-import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.WildcardTypeName;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -24,6 +27,8 @@ public interface ClassNames2 extends ClassNames {
     ClassName Spring_Resource = ClassName.get(Resource.class);
 
     ClassName FM_IRichMapper = ClassName.get(IRichMapper.class);
+
+    ClassName FM_SqlProvider = ClassName.get(SqlProvider.class);
 
     ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
 
@@ -37,11 +42,11 @@ public interface ClassNames2 extends ClassNames {
 
     ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
 
-    ParameterizedTypeName CN_Map_AMapping = ParameterizedTypeName.get(Map.class, Class.class, AMapping.class);
+    ParameterizedTypeName CN_Map_AMapping = ParameterizedTypeName.get(ClassMap.class, AMapping.class);
 
-    ParameterizedTypeName CN_HashMap_AMapping = ParameterizedTypeName.get(HashMap.class, Class.class, AMapping.class);
+    ParameterizedTypeName CN_Map_Provider = ParameterizedTypeName.get(ClassMap.class, SqlProvider.class);
 
-    ParameterizedTypeName CN_Set_Class = ParameterizedTypeName.get(Set.class, Class.class);
+    ParameterizedTypeName CN_Set_ClassName = ParameterizedTypeName.get(Set.class, String.class);
 
     ParameterizedTypeName CN_Supplier_Str = ParameterizedTypeName.get(Supplier.class, String.class);
 
@@ -51,15 +56,11 @@ public interface ClassNames2 extends ClassNames {
 
     ParameterizedTypeName CN_Optional_IMapping = ParameterizedTypeName.get(Optional.class, IMapping.class);
 
-    ArrayTypeName CN_SerializableArray = ArrayTypeName.of(Serializable.class);
-
     ClassName CN_Long = ClassName.get(Long.class);
-
-    ClassName CN_Map = ClassName.get(Map.class);
 
     ClassName CN_Set = ClassName.get(Set.class);
 
-    ClassName CN_List = ClassName.get(List.class);
+    ClassName CN_ClassMap = ClassName.get(ClassMap.class);
 
     static ClassName getClassName(String fullClassName) {
         int index = fullClassName.lastIndexOf('.');

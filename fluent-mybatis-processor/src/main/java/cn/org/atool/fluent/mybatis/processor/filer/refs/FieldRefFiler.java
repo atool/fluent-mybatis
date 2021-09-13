@@ -27,7 +27,7 @@ public class FieldRefFiler extends AbstractFile {
     @Override
     protected void staticImport(JavaFile.Builder builder) {
         builder.addStaticImport(MybatisUtil.class, M_NOT_FLUENT_MYBATIS_EXCEPTION);
-        super.staticImport(builder);
+        builder.skipJavaLangImports(true);
     }
 
     public FieldRefFiler() {

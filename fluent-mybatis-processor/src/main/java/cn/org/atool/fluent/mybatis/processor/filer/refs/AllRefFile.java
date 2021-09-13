@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
@@ -34,6 +35,11 @@ public class AllRefFile extends AbstractFile {
             "\n o - 查询器，更新器工厂类单例引用" +
             "\n o - 应用所有Mapper Bean引用" +
             "\n o - Entity关联对象延迟加载查询实现";
+    }
+
+    @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.skipJavaLangImports(true);
     }
 
     @Override

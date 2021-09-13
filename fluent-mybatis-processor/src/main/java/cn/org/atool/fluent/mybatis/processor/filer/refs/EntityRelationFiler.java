@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
@@ -26,6 +27,11 @@ public class EntityRelationFiler extends AbstractFile {
         this.packageName = FluentList.refsPackage();
         this.klassName = EntityRelation;
         this.comment = "实体类间自定义的关联关系接口";
+    }
+
+    @Override
+    protected void staticImport(JavaFile.Builder builder) {
+        builder.skipJavaLangImports(true);
     }
 
     @Override

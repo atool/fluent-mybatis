@@ -16,10 +16,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.MapperSqlProvider;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
 
@@ -72,34 +73,8 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
         return this;
     }
 
-    private static final Map<Class, SqlProvider> SQL_PROVIDER_MAP = new HashMap<>();
-
     private SqlProvider findSqlProvider(Class<? extends IEntity> klass) {
-        if (SQL_PROVIDER_MAP.containsKey(klass)) {
-            return SQL_PROVIDER_MAP.get(klass);
-        }
-        synchronized (SQL_PROVIDER_MAP) {
-            if (SQL_PROVIDER_MAP.containsKey(klass)) {
-                return SQL_PROVIDER_MAP.get(klass);
-            }
-            String klassName = buildSqlProviderClassName(klass);
-            try {
-                Class providerKlass = Class.forName(klassName);
-                SqlProvider provider = (SqlProvider) providerKlass.getDeclaredConstructor().newInstance();
-                SQL_PROVIDER_MAP.put(klass, provider);
-                return provider;
-            } catch (Exception e) {
-                throw new RuntimeException("findSqlProvider[" + klassName + "] error:" + e.getMessage(), e);
-            }
-        }
-    }
-
-    private String buildSqlProviderClassName(Class<? extends IEntity> klass) {
-        Class mapper = IRef.mapper(klass).getClass();
-        if (mapper.getName().contains("$Proxy")) {
-            mapper = mapper.getInterfaces()[0];
-        }
-        return mapper.getName() + "$" + MapperSqlProvider;
+        return IRef.instance().findSqlProvider(klass);
     }
 
     private static final String ENTITY_LIST_KEY = "list";
@@ -113,7 +88,7 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
             if (!wrapperData.getParameters().containsKey(ENTITY_LIST_KEY)) {
                 wrapperData.getParameters().put(ENTITY_LIST_KEY, new ArrayList<>());
             }
-            SqlProvider provider = this.findSqlProvider(entity.getClass());
+            SqlProvider provider = this.findSqlProvider(entity.entityClass());
             List values = (List) wrapperData.getParameters().get(ENTITY_LIST_KEY);
             int index = values.size();
             values.add(entity);
