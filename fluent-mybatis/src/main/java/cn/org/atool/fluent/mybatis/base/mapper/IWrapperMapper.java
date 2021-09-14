@@ -15,7 +15,8 @@ import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
  * @author wudarui
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>> {
+public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
+    extends IEntityMapper<E>, IRichMapper<E> {
     /**
      * 返回对应的默认构造器
      *

@@ -31,6 +31,17 @@ public class ClassMap<T> {
         return this;
     }
 
+    /**
+     * klass1和klass2同时关联同一个对象
+     *
+     * @return ignore
+     */
+    public ClassMap<T> put(Class klass1, Class klass2, T value) {
+        this.map.put(klass1.getName(), value);
+        this.map.put(klass2.getName(), value);
+        return this;
+    }
+
     public boolean containsKey(Class klass) {
         return this.map.containsKey(klass.getName());
     }

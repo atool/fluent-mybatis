@@ -20,7 +20,6 @@ import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_Provider;
 
 public class QueryRefFiler extends AbstractFile {
     private static final String QueryRef = "QueryRef";
@@ -47,7 +46,6 @@ public class QueryRefFiler extends AbstractFile {
             spec.addField(this.f_mapping(fluent));
         }
         spec.addField(this.f_allDefaults())
-            .addField(this.f_allProvider())
             .addField(this.f_allEntityClass())
             .addMethod(m_defaultQuery(false))
             .addMethod(m_emptyQuery(false))
@@ -152,19 +150,7 @@ public class QueryRefFiler extends AbstractFile {
         List<CodeBlock> list = new ArrayList<>();
         list.add(CodeBlock.of("new $T()", CN_Map_AMapping));
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of(".put($T.class, $L)", fluent.entity(), fluent.lowerNoSuffix()));
-        }
-        list.add(CodeBlock.of(".unmodified()"));
-        return spec.initializer(CodeBlock.join(list, "\n\t")).build();
-    }
-
-    private FieldSpec f_allProvider() {
-        FieldSpec.Builder spec = FieldSpec.builder(CN_Map_Provider, "ENTITY_SQL_PROVIDER", PUBLIC_STATIC_FINAL);
-
-        List<CodeBlock> list = new ArrayList<>();
-        list.add(CodeBlock.of("new $T()", CN_Map_Provider));
-        for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of(".put($T.class, new $T.MapperSqlProvider())", fluent.entity(), fluent.mapper()));
+            list.add(CodeBlock.of(".put($T.class, $T.class, $L)", fluent.entity(), fluent.mapper(), fluent.lowerNoSuffix()));
         }
         list.add(CodeBlock.of(".unmodified()"));
         return spec.initializer(CodeBlock.join(list, "\n\t")).build();

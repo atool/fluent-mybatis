@@ -83,7 +83,6 @@ class Oracle11Test extends BaseTest {
     @Test
     void testBatchCRUD() {
         userMapper.batchCrud(BatchCrud.batch()
-            .setDbType(DbType.ORACLE)
             .addInsert(newEntity(11L, "code"))
             .addUpdate(new OracleUserUpdate()
                 .set.code().is("code2").end()

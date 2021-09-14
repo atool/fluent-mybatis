@@ -8,5 +8,8 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
  * @author darui.wu
  */
 public interface IHasDbType {
+    /**
+     * 返回对应的数据库类型
+     */
     DbType dbType();
 }

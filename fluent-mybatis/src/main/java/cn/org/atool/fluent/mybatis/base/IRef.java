@@ -239,15 +239,6 @@ public abstract class IRef {
         throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity.");
     }
 
-    public SqlProvider findSqlProvider(Class klass) {
-        if (allSqlProvider().containsKey(klass)) {
-            return allSqlProvider().get(klass);
-        }
-        throw new RuntimeException("the class[" + klass.getName() + "] is not a @FluentMybatis Entity.");
-    }
-
-    protected abstract ClassMap<SqlProvider> allSqlProvider();
-
     /**
      * 所有Entity Class
      *

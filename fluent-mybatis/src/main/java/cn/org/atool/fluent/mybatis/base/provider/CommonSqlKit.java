@@ -47,12 +47,12 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public <E extends IEntity> String insertEntity(SqlProvider provider, String prefix, E entity, boolean withPk) {
+    public <E extends IEntity> String insertEntity(IMapping mapping, String prefix, E entity, boolean withPk) {
         assertNotNull(Param_Entity, entity);
-        withPk = validateInsertEntity(entity, withPk, provider::setEntityByDefault);
+        withPk = validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault);
         MapperSql sql = new MapperSql();
-        sql.INSERT_INTO(dynamic(entity, provider.tableName()));
-        InsertList inserts = this.insertColumns(provider, prefix, entity, withPk);
+        sql.INSERT_INTO(dynamic(entity, mapping.getTableName()));
+        InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
         sql.INSERT_COLUMNS(this.dbType, inserts.columns);
         sql.VALUES();
         sql.INSERT_VALUES(inserts.values);
@@ -65,9 +65,9 @@ public class CommonSqlKit implements SqlKit {
      * @param entity 实体实例
      * @param withPk true:with id; false: without id
      */
-    private InsertList insertColumns(SqlProvider provider, String prefix, IEntity entity, boolean withPk) {
+    private InsertList insertColumns(IMapping mapping, String prefix, IEntity entity, boolean withPk) {
         InsertList inserts = new InsertList();
-        List<FieldMapping> fields = provider.mapping().allFields();
+        List<FieldMapping> fields = mapping.allFields();
         Map map = entity.toEntityMap();
         for (FieldMapping f : fields) {
             if (!f.isPrimary() || withPk) {
@@ -90,15 +90,15 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public <E extends IEntity> String insertBatch(SqlProvider provider, List<E> entities, boolean withPk) {
+    public <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk) {
         MapperSql sql = new MapperSql();
-        List<Map> maps = this.toMaps(provider, entities, withPk);
+        List<Map> maps = this.toMaps(mapping, entities, withPk);
         /* 所有非空字段 */
-        List<FieldMapping> nonFields = this.nonFields(provider, maps, withPk);
-        String tableName = dynamic(entities.get(0), provider.tableName());
-        sql.INSERT_INTO(tableName == null ? provider.tableName() : tableName);
+        List<FieldMapping> nonFields = this.nonFields(mapping, maps, withPk);
+        String tableName = dynamic(entities.get(0), mapping.getTableName());
+        sql.INSERT_INTO(tableName);
 
-        sql.INSERT_COLUMNS(provider.dbType(), nonFields.stream().map(f -> f.column).collect(toList()));
+        sql.INSERT_COLUMNS(mapping.dbType(), nonFields.stream().map(f -> f.column).collect(toList()));
         sql.VALUES();
         for (int index = 0; index < maps.size(); index++) {
             if (index > 0) {
@@ -164,7 +164,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String deleteBy(SqlProvider provider, WrapperData ew) {
+    public String deleteBy(IMapping mapping, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         } else {
@@ -224,11 +224,11 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String updateBy(SqlProvider provider, IUpdate[] updaters) {
+    public String updateBy(IMapping mapping, IUpdate[] updaters) {
         List<String> list = new ArrayList<>(updaters.length);
         int index = 0;
         for (IUpdate updater : updaters) {
-            String sql = updateBy(provider, updater.getWrapperData());
+            String sql = updateBy(mapping, updater.getWrapperData());
             sql = SqlProviderKit.addEwParaIndex(sql, format("[%d]", index));
             index++;
             list.add(sql);
@@ -237,7 +237,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String updateBy(SqlProvider provider, WrapperData ew) {
+    public String updateBy(IMapping mapping, WrapperData ew) {
         assertNotNull("wrapperData of updater", ew);
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
@@ -247,9 +247,9 @@ public class CommonSqlKit implements SqlKit {
 
         MapperSql sql = new MapperSql();
         sql.UPDATE(ew.getTable(), ew);
-        List<String> needDefaults = updateDefaults(provider, updates, ew.isIgnoreLockVersion());
+        List<String> needDefaults = updateDefaults(mapping, updates, ew.isIgnoreLockVersion());
         // 如果忽略版本锁, 则移除版本锁更新的默认值
-        String versionColumn = provider.mapping().versionColumn();
+        String versionColumn = mapping.versionColumn();
         if (ew.isIgnoreLockVersion() && notBlank(versionColumn)) {
             needDefaults.remove(versionColumn);
         }
@@ -257,7 +257,7 @@ public class CommonSqlKit implements SqlKit {
         sql.SET(needDefaults);
         // 如果忽略版本锁, 则跳过版本锁条件检查
         if (!ew.isIgnoreLockVersion()) {
-            checkUpdateVersionWhere(provider, ew.findWhereColumns());
+            checkUpdateVersionWhere(mapping, ew.findWhereColumns());
         }
         sql.WHERE_GROUP_ORDER_BY(ew);
         sql.LIMIT(ew, true);
@@ -302,7 +302,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String countNoLimit(SqlProvider provider, WrapperData ew) {
+    public String countNoLimit(IMapping mapping, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         }
@@ -317,34 +317,34 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String count(SqlProvider provider, WrapperData ew) {
+    public String count(IMapping mapping, WrapperData ew) {
         if (notBlank(ew.getCustomizedSql())) {
             return ew.getCustomizedSql();
         } else {
             MapperSql sql = new MapperSql();
             sql.COUNT(ew.getTable(), ew);
             sql.WHERE_GROUP_ORDER_BY(ew);
-            return ew.wrappedByPaged(sql.toString());
+            return ew.wrappedByPaged(mapping, sql.toString());
         }
     }
 
     @Override
-    public String queryBy(SqlProvider provider, WrapperData ew) {
-        return ew.sqlWithPaged();
+    public String queryBy(IMapping mapping, WrapperData ew) {
+        return ew.sqlWithPaged(mapping);
     }
 
     /**
      * 批量转换为Map
      *
-     * @param provider SqlProvider
+     * @param mapping  IMapping
      * @param entities entity list
      * @param withPk   with pk column
      * @return entity map list
      */
-    protected <E extends IEntity> List<Map> toMaps(SqlProvider provider, List<E> entities, boolean withPk) {
+    protected <E extends IEntity> List<Map> toMaps(IMapping mapping, List<E> entities, boolean withPk) {
         List<Map> maps = new ArrayList<>(entities.size());
         for (IEntity entity : entities) {
-            validateInsertEntity(entity, withPk, provider::setEntityByDefault);
+            validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault);
             maps.add(entity.toColumnMap());
         }
         return maps;
@@ -358,11 +358,11 @@ public class CommonSqlKit implements SqlKit {
      * @param withPk   是否包含主键
      * @return 非空字段列表
      */
-    protected List<FieldMapping> nonFields(SqlProvider provider, List<Map> maps, boolean withPk) {
+    protected List<FieldMapping> nonFields(IMapping mapping, List<Map> maps, boolean withPk) {
         Set<String> set = new HashSet<>();
         maps.forEach(m -> set.addAll(m.keySet()));
-
-        return provider.mapping().allFields().stream()
+        List<FieldMapping> fields = mapping.allFields();
+        return fields.stream()
             .filter(f -> set.contains(f.column) || notBlank(f.insert))
             .filter(f -> !f.isPrimary() || withPk)
             .collect(toList());
@@ -389,11 +389,11 @@ public class CommonSqlKit implements SqlKit {
     /**
      * 更新时, 检查乐观锁字段条件是否设置
      */
-    private void checkUpdateVersionWhere(SqlProvider provider, List<String> wheres) {
-        String versionColumn = provider.mapping().versionColumn();
+    private void checkUpdateVersionWhere(IMapping mapping, List<String> wheres) {
+        String versionColumn = mapping.versionColumn();
         if (If.notBlank(versionColumn) &&
             !wheres.contains(versionColumn) &&
-            !wheres.contains(provider.dbType().wrap(versionColumn))) {
+            !wheres.contains(mapping.dbType().wrap(versionColumn))) {
             throw new RuntimeException("The version lock field was explicitly set, but no version condition was found in the update condition.");
         }
     }
@@ -420,15 +420,15 @@ public class CommonSqlKit implements SqlKit {
      * @param updates 显式update字段
      * @return ignore
      */
-    static List<String> updateDefaults(SqlProvider provider, Map<String, String> updates, boolean ignoreLockVersion) {
-        List<FieldMapping> fields = provider.mapping().allFields();
+    static List<String> updateDefaults(IMapping mapping, Map<String, String> updates, boolean ignoreLockVersion) {
+        List<FieldMapping> fields = mapping.allFields();
         UpdateDefault defaults = new UpdateDefault(updates);
         for (FieldMapping f : fields) {
             if (isBlank(f.update)) {
                 continue;
             }
             if (!f.isVersion() || !ignoreLockVersion) {
-                defaults.add(provider.dbType(), f, f.update);
+                defaults.add(mapping.dbType(), f, f.update);
             }
         }
         return defaults.getUpdateDefaults();

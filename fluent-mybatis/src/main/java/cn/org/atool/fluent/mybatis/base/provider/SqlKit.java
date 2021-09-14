@@ -51,12 +51,12 @@ public interface SqlKit {
         }
     }
 
-    static SqlKit factory(IHasDbType hasDbType) {
-        return factory(hasDbType.dbType());
+    static SqlKit factory(IHasMapping obj) {
+        return factory(obj.mapping());
     }
 
-    static SqlKit factory(IHasMapping mapping) {
-        return factory(mapping.mapping().getDbType());
+    static SqlKit factory(IHasDbType mapping) {
+        return factory(mapping.dbType());
     }
 
     /* ======== IQuery/IUpdate ====== */
@@ -142,7 +142,7 @@ public interface SqlKit {
      * @return sql
      */
     default String batchCrud(BatchCrudImpl crud) {
-        return crud.batchSql();
+        return crud.batchSql(this);
     }
 
     /**
@@ -153,7 +153,7 @@ public interface SqlKit {
      * @param withPk 包含主键?
      * @return ignore
      */
-    <E extends IEntity> String insertEntity(SqlProvider provider, String prefix, E entity, boolean withPk);
+    <E extends IEntity> String insertEntity(IMapping mapping, String prefix, E entity, boolean withPk);
 
     /**
      * 生成 insertSelect 对应的sql语句
@@ -168,65 +168,65 @@ public interface SqlKit {
     /**
      * 批量插入
      *
-     * @param provider SqlProvider
+     * @param mapping  IMapping
      * @param entities Entity list
      * @param withPk   是否带主键
      * @return sql
      */
-    <E extends IEntity> String insertBatch(SqlProvider provider, List<E> entities, boolean withPk);
+    <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk);
 
     /**
      * 根据WrapperData设置构建物理删除语句
      *
-     * @param provider SqlProvide
-     * @param ew       更新/查询 条件
+     * @param mapping IMapping
+     * @param ew      更新/查询 条件
      * @return sql
      */
-    String deleteBy(SqlProvider provider, WrapperData ew);
+    String deleteBy(IMapping mapping, WrapperData ew);
 
     /**
      * update(IQuery) SQL构造
      * {@link IEntityMapper#updateBy(IUpdate[])}
      *
-     * @param provider SqlProvide
+     * @param mapping  IMapping
      * @param updaters 更新条件
      * @return sql
      */
-    String updateBy(SqlProvider provider, IUpdate[] updaters);
+    String updateBy(IMapping mapping, IUpdate[] updaters);
 
     /**
      * 根据IUpdate构造sql语句, 考虑版本锁字段
      *
-     * @param provider SqlProvider
-     * @param ew       IUpdate数据
+     * @param mapping IMapping
+     * @param ew      IUpdate数据
      * @return sql
      */
-    String updateBy(SqlProvider provider, WrapperData ew);
+    String updateBy(IMapping mapping, WrapperData ew);
 
     /**
      * 去掉limit部分 count(IQuery) SQL构造
      *
-     * @param provider    SqlProvide
+     * @param mapping     IMapping
      * @param wrapperData query查询条件
      * @return sql
      */
-    String countNoLimit(SqlProvider provider, WrapperData wrapperData);
+    String countNoLimit(IMapping mapping, WrapperData wrapperData);
 
     /**
      * 包含limit部分 count(IQuery) SQL构造
      *
-     * @param provider    SqlProvide
+     * @param mapping     IMapping
      * @param wrapperData query查询条件
      * @return sql
      */
-    String count(SqlProvider provider, WrapperData wrapperData);
+    String count(IMapping mapping, WrapperData wrapperData);
 
     /**
      * 构造IQuery查询条件语句
      *
-     * @param provider SqlProvide
-     * @param ew       query查询条件
+     * @param mapping IMapping
+     * @param ew      query查询条件
      * @return sql
      */
-    String queryBy(SqlProvider provider, WrapperData ew);
+    String queryBy(IMapping mapping, WrapperData ew);
 }

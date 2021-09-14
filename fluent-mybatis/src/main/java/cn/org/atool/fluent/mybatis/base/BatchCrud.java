@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.crud.*;
+import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.util.stream.Stream;
 
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
  * @author wudarui
  */
 @SuppressWarnings({"rawtypes"})
-public interface BatchCrud extends IWrapper {
+public interface BatchCrud {
     /**
      * 构造批量增删改构造器
      *
@@ -61,7 +62,7 @@ public interface BatchCrud extends IWrapper {
      * @param updates 更新列表
      * @return BatchCrud
      */
-    BatchCrud addUpdate(IBaseUpdate... updates);
+    BatchCrud addUpdate(IUpdate... updates);
 
     /**
      * 按顺序添加delete语句
@@ -69,13 +70,5 @@ public interface BatchCrud extends IWrapper {
      * @param deletes 生成条件列表
      * @return BatchCrud
      */
-    BatchCrud addDelete(IBaseQuery... deletes);
-
-    /**
-     * 数据库类型
-     *
-     * @param dbType
-     * @return
-     */
-    BatchCrud setDbType(DbType dbType);
+    BatchCrud addDelete(IQuery... deletes);
 }

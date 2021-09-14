@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
@@ -16,6 +17,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -44,6 +46,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     /**
      * 数据库类型
      */
+    @Getter(AccessLevel.NONE)
     private final DbType dbType;
     /**
      * 数据库字段对应的FieldMapping
@@ -192,4 +195,20 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     static final List<DbType> NeedSchemaDb = Arrays.asList(
         DbType.DERBY, DbType.POSTGRE_SQL, DbType.SQL_SERVER2012, DbType.SQL_SERVER2005
     );
+
+    @Override
+    public DbType dbType() {
+        return this.dbType;
+    }
+
+    /**
+     * 获取IQuery或IUpdate对应的表名称
+     *
+     * @param wrapper IQuery或IUpdate
+     * @return 表名称
+     */
+    public String dynamic(IWrapper wrapper) {
+        String table = (String) wrapper.getTable().get();
+        return isBlank(table) ? this.getTableName() : table;
+    }
 }

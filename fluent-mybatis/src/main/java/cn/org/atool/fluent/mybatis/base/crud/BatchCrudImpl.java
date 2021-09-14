@@ -2,27 +2,22 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.IRef;
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
-import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
-import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 /**
  * 批量增删改语句构造实现
@@ -31,50 +26,48 @@ import static java.lang.String.format;
  */
 @Accessors(chain = true)
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class BatchCrudImpl implements BatchCrud, IHasDbType {
+public class BatchCrudImpl implements BatchCrud {
     @Getter
     protected final WrapperData wrapperData;
 
-    private final List<String> list = new ArrayList<>();
+    private final List<Function<SqlKit, String>> list = new ArrayList<>();
 
     public BatchCrudImpl() {
-        this.wrapperData = new WrapperData(this);
+        this.wrapperData = new WrapperData(EmptyWrapper.INSTANCE);
     }
 
-    public String batchSql() {
-        return String.join(";\n", list);
+    public String batchSql(SqlKit sqlKit) {
+        return list.stream().map(fun -> fun.apply(sqlKit)).collect(joining(";\n"));
     }
 
     @Override
-    public BatchCrud addUpdate(IBaseUpdate... updates) {
-        for (IBaseUpdate updater : updates) {
+    public BatchCrud addUpdate(IUpdate... updates) {
+        for (IUpdate updater : updates) {
             if (!(updater instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
             }
-            SqlProvider provider = this.findSqlProvider(((BaseWrapper) updater).getEntityClass());
-            String sql = SqlKit.factory(provider).updateBy(provider, updater.getWrapperData());
+            AMapping mapping = this.findMapping(((BaseWrapper) updater).getEntityClass());
             updater.getWrapperData().sharedParameter(wrapperData);
-            list.add(sql);
+            list.add(kit -> kit.updateBy(mapping, updater.getWrapperData()));
         }
         return this;
     }
 
     @Override
-    public BatchCrud addDelete(IBaseQuery... deletes) {
-        for (IBaseQuery query : deletes) {
+    public BatchCrud addDelete(IQuery... deletes) {
+        for (IQuery query : deletes) {
             if (!(query instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
-            SqlProvider provider = this.findSqlProvider(((BaseWrapper) query).getEntityClass());
-            String sql = SqlKit.factory(provider).deleteBy(provider, query.getWrapperData());
             query.getWrapperData().sharedParameter(wrapperData);
-            list.add(sql);
+            AMapping mapping = this.findMapping(((BaseWrapper) query).getEntityClass());
+            list.add(kit -> kit.deleteBy(mapping, query.getWrapperData()));
         }
         return this;
     }
 
-    private SqlProvider findSqlProvider(Class<? extends IEntity> klass) {
-        return IRef.instance().findSqlProvider(klass);
+    private AMapping findMapping(Class<? extends IEntity> klass) {
+        return (AMapping) IRef.instance().mapping(klass);
     }
 
     private static final String ENTITY_LIST_KEY = "list";
@@ -88,14 +81,13 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
             if (!wrapperData.getParameters().containsKey(ENTITY_LIST_KEY)) {
                 wrapperData.getParameters().put(ENTITY_LIST_KEY, new ArrayList<>());
             }
-            SqlProvider provider = this.findSqlProvider(entity.entityClass());
             List values = (List) wrapperData.getParameters().get(ENTITY_LIST_KEY);
             int index = values.size();
             values.add(entity);
             String prefix = format("ew.wrapperData.parameters.%s[%d].", ENTITY_LIST_KEY, index);
             PkGeneratorKits.setPkByGenerator(entity);
-            String sql = SqlKit.factory(this).insertEntity(provider, prefix, entity, entity.findPk() != null);
-            list.add(sql);
+            AMapping mapping = this.findMapping(entity.entityClass());
+            list.add(kit -> kit.insertEntity(mapping, prefix, entity, entity.findPk() != null));
         }
         return this;
     }
@@ -104,35 +96,7 @@ public class BatchCrudImpl implements BatchCrud, IHasDbType {
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
         query.getWrapperData().sharedParameter(wrapperData);
-        String sql = SqlKit.factory(this).insertSelect(insertTable, fields, query);
-        list.add(sql);
+        list.add(kit -> kit.insertSelect(insertTable, fields, query));
         return this;
-    }
-
-    @Override
-    public WhereBase where() {
-        throw new IllegalStateException("not supported by BatchUpdater.");
-    }
-
-    @Setter
-    private DbType dbType;
-
-    public DbType dbType() {
-        return dbType == null ? IRef.instance().defaultDbType() : dbType;
-    }
-
-    @Override
-    public List<String> allFields() {
-        throw new RuntimeException("The method is not supported by BatchCrudImpl.");
-    }
-
-    @Override
-    public Supplier<String> getTable() {
-        throw new RuntimeException("The method is not supported by BatchCrudImpl.");
-    }
-
-    @Override
-    public Optional<IMapping> mapping() {
-        throw new RuntimeException("The method is not supported by BatchCrudImpl.");
     }
 }

@@ -149,7 +149,7 @@ public abstract class BaseWrapper<
      * @return DbType
      */
     public DbType dbType() {
-        return this.mapping().map(IMapping::getDbType).orElseThrow(() -> new RuntimeException("DbType is not set."));
+        return this.mapping().map(IMapping::dbType).orElseThrow(() -> new RuntimeException("DbType is not set."));
     }
 
     /**

@@ -3,67 +3,36 @@ package cn.org.atool.fluent.mybatis.base.provider;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IHasDbType;
-import cn.org.atool.fluent.mybatis.base.crud.*;
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import org.apache.ibatis.builder.annotation.ProviderContext;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
-import static cn.org.atool.fluent.mybatis.utility.SqlProviderKit.*;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderKit.getParas;
+import static cn.org.atool.fluent.mybatis.utility.SqlProviderKit.getWrapperData;
 
 /**
  * SqlProvider: 动态SQL构造基类
  *
  * @author wudarui
  */
-@SuppressWarnings({"rawtypes", "unused"})
-public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
-    private final SqlKit sqlKit;
-
-    public SqlProvider() {
-        this.sqlKit = SqlKit.factory(this);
-    }
-
-    /**
-     * 批量更新, 插入, 删除操作语句构造
-     * {@link IEntityMapper#batchCrud(BatchCrud)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public static String batchCrud(Map map) {
-        IWrapper wrapper = getWrapper(map, Param_EW);
-        if (!(wrapper instanceof BatchCrudImpl)) {
-            throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
-        } else {
-            BatchCrudImpl crud = (BatchCrudImpl) wrapper;
-            return SqlKit.factory(crud).batchCrud(crud);
-        }
-    }
-
-    /**
-     * 构造 insert ... select ... SQL语句
-     * {@link IEntityMapper#insertSelect(String[], IQuery)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String insertSelect(Map map) {
-        String[] fields = (String[]) map.get(Param_Fields);
-        BaseQuery query = (BaseQuery) map.get(Param_EW);
-        String table = this.dynamic(query);
-        return sqlKit.insertSelect(table, fields, query);
+@SuppressWarnings({"rawtypes", "unused", "unchecked"})
+public class SqlProvider {
+    private SqlProvider() {
     }
 
     /**
@@ -73,21 +42,10 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param entity 实体实例
      * @return sql
      */
-    public String insert(E entity) {
+    public static String insert(IEntity entity, ProviderContext context) {
         assertNotNull("entity", entity);
-        return sqlKit.insertEntity(this, EMPTY, entity, false);
-    }
-
-    /**
-     * 插入id已赋值的entity
-     * {@link IEntityMapper#insertWithPk(IEntity)}
-     *
-     * @param entity 实体实例
-     * @return sql
-     */
-    public String insertWithPk(E entity) {
-        assertNotNull("entity", entity);
-        return sqlKit.insertEntity(this, EMPTY, entity, true);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).insertEntity(mapping, EMPTY, entity, false);
     }
 
     /**
@@ -96,46 +54,11 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      *
      * @return sql
      */
-    public String insertBatch(Map map) {
-        assertNotEmpty(Param_List, map);
-        List<E> entities = getParas(map, Param_List);
-        return sqlKit.insertBatch(this, entities, false);
-    }
-
-    /**
-     * 批量插入实例
-     * {@link IEntityMapper#insertBatchWithPk(Collection)}
-     *
-     * @return sql
-     */
-    public String insertBatchWithPk(Map map) {
-        assertNotEmpty(Param_List, map);
-        List<E> entities = getParas(map, Param_List);
-        return sqlKit.insertBatch(this, entities, true);
-    }
-
-    /**
-     * 去掉limit部分 count(IQuery) SQL构造
-     * {@link IEntityMapper#countNoLimit(IQuery)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String countNoLimit(Map map) {
-        WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.countNoLimit(this, ew);
-    }
-
-    /**
-     * count(IQuery) SQL构造
-     * {@link IEntityMapper#count(IQuery)}
-     *
-     * @param map k-v条件
-     * @return ignore
-     */
-    public String count(Map map) {
-        WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.count(this, ew);
+    public static String insertBatch(Map map, ProviderContext context) {
+        List entities = getParas(map, Param_List);
+        assertNotEmpty(Param_List, entities);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).insertBatch(mapping, entities, false);
     }
 
     /**
@@ -145,9 +68,98 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param map k-v条件
      * @return ignore
      */
-    public String listEntity(Map map) {
+    public static String listEntity(Map map, ProviderContext context) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryBy(this, ew);
+        assertNotNull(Param_EW, ew);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).queryBy(mapping, ew);
+    }
+
+    /* ==============public static============= */
+
+    /**
+     * 批量更新, 插入, 删除操作语句构造
+     * {@link IEntityMapper#batchCrud(BatchCrud)}
+     *
+     * @param map k-v条件
+     * @return ignore
+     */
+    public static String batchCrud(Map map, ProviderContext context) {
+        BatchCrud crud = (BatchCrud) map.get(Param_EW);
+        if (!(crud instanceof BatchCrudImpl)) {
+            throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
+        }
+        AMapping mapping = mapping(context);
+        return SqlKit.factory(mapping).batchCrud((BatchCrudImpl) crud);
+    }
+
+    /**
+     * 构造 insert ... select ... SQL语句
+     * {@link IEntityMapper#insertSelect(String[], IQuery)}
+     *
+     * @param map k-v条件
+     * @return ignore
+     */
+    public static String insertSelect(Map map, ProviderContext context) {
+        String[] fields = (String[]) map.get(Param_Fields);
+        BaseQuery query = (BaseQuery) map.get(Param_EW);
+        AMapping mapping = mapping(context);
+        String table = mapping.dynamic(query);
+        return sqlKit(mapping).insertSelect(table, fields, query);
+    }
+
+    /**
+     * 插入id已赋值的entity
+     * {@link IEntityMapper#insertWithPk(IEntity)}
+     *
+     * @param entity 实体实例insertWithPk
+     * @return sql
+     */
+    public static String insertWithPk(IEntity entity, ProviderContext context) {
+        assertNotNull("entity", entity);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).insertEntity(mapping, EMPTY, entity, true);
+    }
+
+    /**
+     * 批量插入实例
+     * {@link IEntityMapper#insertBatchWithPk(Collection)}
+     *
+     * @return sql
+     */
+    public static String insertBatchWithPk(Map map, ProviderContext context) {
+        assertNotEmpty(Param_List, map);
+        List entities = getParas(map, Param_List);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).insertBatch(mapping, entities, true);
+    }
+
+    /**
+     * 去掉limit部分 count(IQuery) SQL构造
+     * {@link IEntityMapper#countNoLimit(IQuery)}
+     *
+     * @param map k-v条件
+     * @return ignore
+     */
+    public static String countNoLimit(Map map, ProviderContext context) {
+        WrapperData ew = getWrapperData(map, Param_EW);
+        assertNotNull(Param_EW, ew);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).countNoLimit(mapping, ew);
+    }
+
+    /**
+     * count(IQuery) SQL构造
+     * {@link IEntityMapper#count(IQuery)}
+     *
+     * @param map k-v条件
+     * @return ignore
+     */
+    public static String count(Map map, ProviderContext context) {
+        WrapperData ew = getWrapperData(map, Param_EW);
+        assertNotNull(Param_EW, ew);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).count(mapping, ew);
     }
 
     /**
@@ -157,9 +169,11 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param map k-v条件
      * @return ignore
      */
-    public String listMaps(Map map) {
+    public static String listMaps(Map map, ProviderContext context) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryBy(this, ew);
+        assertNotNull(Param_EW, ew);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).queryBy(mapping, ew);
     }
 
     /**
@@ -169,9 +183,11 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param map k-v条件
      * @return ignore
      */
-    public String listObjs(Map map) {
+    public static String listObjs(Map map, ProviderContext context) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.queryBy(this, ew);
+        assertNotNull(Param_EW, ew);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).queryBy(mapping, ew);
     }
 
     /**
@@ -181,9 +197,11 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param map k-v条件
      * @return ignore
      */
-    public String delete(Map map) {
+    public static String delete(Map map, ProviderContext context) {
         WrapperData ew = getWrapperData(map, Param_EW);
-        return sqlKit.deleteBy(this, ew);
+        assertNotNull(Param_EW, ew);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).deleteBy(mapping, ew);
     }
 
     /**
@@ -193,59 +211,23 @@ public abstract class SqlProvider<E extends IEntity> implements IHasDbType {
      * @param map k-v条件
      * @return ignore
      */
-    public String updateBy(Map<String, Object> map) {
+    public static String updateBy(Map<String, Object> map, ProviderContext context) {
         Object wrapper = map.get(Param_EW);
         if (If.isEmpty(wrapper)) {
             throw FluentMybatisException.instance("the parameter[%s] can't be empty.", Param_EW);
         } else if (!(wrapper instanceof IUpdate[])) {
-            throw new IllegalArgumentException("the parameter should be an array of IUpdate");
-        } else {
-            return sqlKit.updateBy(this, (IUpdate[]) wrapper);
+            wrapper = new IUpdate[]{(IUpdate) wrapper};
         }
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).updateBy(mapping, (IUpdate[]) wrapper);
     }
 
-    /**
-     * 根据{@link IDefaultSetter#setInsertDefault(IEntity)}设置默认值
-     *
-     * @param entity 实体实例
-     */
-    public void setEntityByDefault(IEntity entity) {
-        mapping().defaultSetter().setInsertDefault(entity);
+    private static SqlKit sqlKit(AMapping mapping) {
+        return SqlKit.factory(mapping);
     }
 
-    /**
-     * 数据库类型
-     *
-     * @return ignore
-     */
-    public DbType dbType() {
-        return mapping().getDbType();
-    }
-
-    /**
-     * 返回表名
-     *
-     * @return ignore
-     */
-    public String tableName() {
-        return mapping().getTableName();
-    }
-
-    /**
-     * 获取字段映射关系
-     *
-     * @return 字段映射
-     */
-    public abstract IMapping mapping();
-
-    /**
-     * 获取IQuery或IUpdate对应的表名称
-     *
-     * @param wrapper IQuery或IUpdate
-     * @return 表名称
-     */
-    private String dynamic(IWrapper wrapper) {
-        String table = (String) wrapper.getTable().get();
-        return isBlank(table) ? this.tableName() : table;
+    private static AMapping mapping(ProviderContext context) {
+        Class mapperClass = context.getMapperType();
+        return (AMapping) IRef.instance().mapping(mapperClass);
     }
 }

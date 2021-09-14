@@ -63,27 +63,9 @@ public interface FluentConst {
 
     String M_Insert = "insert";
 
-    String M_Insert_With_Pk = "insertWithPk";
-
     String M_InsertBatch = "insertBatch";
 
-    String M_InsertBatch_With_Pk = "insertBatchWithPk";
-
-    String M_InsertSelect = "insertSelect";
-
-    String M_Delete = "delete";
-
-    String M_updateBy = "updateBy";
-
     String M_listEntity = "listEntity";
-
-    String M_listMaps = "listMaps";
-
-    String M_listObjs = "listObjs";
-
-    String M_count = "count";
-
-    String M_countNoLimit = "countNoLimit";
 
     /**
      * RichEntity save 方法

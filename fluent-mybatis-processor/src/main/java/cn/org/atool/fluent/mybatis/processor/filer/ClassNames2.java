@@ -5,7 +5,6 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.ClassMap;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ClassName;
@@ -14,7 +13,6 @@ import com.squareup.javapoet.WildcardTypeName;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -38,11 +36,7 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName Mybatis_UnknownTypeHandler = ClassName.get("org.apache.ibatis.type", "UnknownTypeHandler");
 
-    ParameterizedTypeName CN_Map_StrObj = ParameterizedTypeName.get(Map.class, String.class, Object.class);
-
     ParameterizedTypeName CN_Map_AMapping = ParameterizedTypeName.get(ClassMap.class, AMapping.class);
-
-    ParameterizedTypeName CN_Map_Provider = ParameterizedTypeName.get(ClassMap.class, SqlProvider.class);
 
     ParameterizedTypeName CN_Set_ClassName = ParameterizedTypeName.get(Set.class, String.class);
 

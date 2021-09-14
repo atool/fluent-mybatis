@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * @author darui.wu
  */
 @SuppressWarnings("rawtypes")
-public interface IMapping extends IDefaultGetter {
+public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库表名
      */
@@ -30,11 +30,6 @@ public interface IMapping extends IDefaultGetter {
     default String getTableName() {
         return this.table().get();
     }
-
-    /**
-     * 返回对应的数据库类型
-     */
-    DbType getDbType();
 
     /**
      * 返回数据库字段映射关系

@@ -14,7 +14,8 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set_ClassName;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
 
 /**
@@ -57,9 +58,7 @@ public class RefFiler extends AbstractFile {
             .addMethod(this.m_mapping(Suffix_mapping, IMapping.class))
             .addMethod(this.m_mapping("defaults", BaseDefaults.class))
             .addMethod(this.m_allEntityClass())
-            .addMethod(this.m_initEntityMapper())
-            .addMethod(this.m_allSqlProvider())
-        ;
+            .addMethod(this.m_initEntityMapper());
 
         spec.addType(this.class_field())
             .addType(this.class_query())
@@ -99,15 +98,6 @@ public class RefFiler extends AbstractFile {
             .addAnnotation(Override.class)
             .returns(CN_Set_ClassName)
             .addStatement("return $T.All_Entity_Class", QueryRefFiler.getClassName())
-            .build();
-    }
-
-    private MethodSpec m_allSqlProvider(){
-        return MethodSpec.methodBuilder("allSqlProvider")
-            .addModifiers(Modifier.PROTECTED, Modifier.FINAL)
-            .addAnnotation(Override.class)
-            .returns(CN_Map_Provider)
-            .addStatement("return $T.ENTITY_SQL_PROVIDER", QueryRefFiler.getClassName())
             .build();
     }
 

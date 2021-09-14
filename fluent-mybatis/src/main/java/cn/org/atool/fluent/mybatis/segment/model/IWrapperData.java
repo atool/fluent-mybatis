@@ -1,5 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -74,7 +77,7 @@ public interface IWrapperData {
      *
      * @return sql with page
      */
-    String sqlWithPaged();
+    String sqlWithPaged(IMapping mapping);
 
     /**
      * select ... from table where ...

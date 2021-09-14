@@ -180,22 +180,22 @@ public class WrapperData implements IWrapperData {
      * @param sql 非分页查询sql
      * @return sql segment
      */
-    public String wrappedByPaged(String sql) {
+    public String wrappedByPaged(IMapping mapping, String sql) {
         PagedOffset paged = this.getPaged();
         if (paged != null) {
             Parameters p = this.getParameters();
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
-            return this.wrapper.dbType().paged(sql, offset, size, endOffset);
+            return mapping.dbType().paged(sql, offset, size, endOffset);
         } else {
             return sql;
         }
     }
 
     @Override
-    public String sqlWithPaged() {
-        return this.wrappedByPaged(sqlWithoutPaged());
+    public String sqlWithPaged(IMapping mapping) {
+        return this.wrappedByPaged(mapping, sqlWithoutPaged());
     }
 
     @Override

@@ -8,7 +8,6 @@ import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressUpdate;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +41,6 @@ public class BatchCrudTest extends BaseTest {
             .set.address().is("address 24").end()
             .where.id().eq(24L).end();
         mapper.batchCrud(BatchCrud.batch()
-            .setDbType(DbType.MYSQL)
             .addInsert(
                 new StudentEntity().setId(100L).setUserName("user 100"),
                 new HomeAddressEntity().setAddress("address 100").setStudentId(100L))

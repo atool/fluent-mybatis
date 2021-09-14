@@ -9,10 +9,8 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.mapping.StatementType;
 
 import java.io.Serializable;
@@ -38,6 +36,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param entity 实例
      * @return 1: 插入成功
+     * @see SqlProvider#insert(IEntity, ProviderContext)
      */
     int insert(E entity);
 
@@ -46,7 +45,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param entity 实例
      * @return ignore
+     * @see SqlProvider#insertBatchWithPk(Map, ProviderContext)
      */
+    @InsertProvider(
+        type = SqlProvider.class,
+        method = "insertWithPk"
+    )
     int insertWithPk(E entity);
 
     /**
@@ -54,6 +58,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param entities 实例列表
      * @return ignore
+     * @see SqlProvider#insertBatch(Map, ProviderContext)
      */
     int insertBatch(@Param(Param_List) Collection<E> entities);
 
@@ -62,7 +67,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param entities 实例列表
      * @return ignore
+     * @see SqlProvider#insertBatchWithPk(Map)
      */
+    @InsertProvider(
+        type = SqlProvider.class,
+        method = "insertBatchWithPk"
+    )
     int insertBatchWithPk(@Param(Param_List) Collection<E> entities);
 
     /**
@@ -71,8 +81,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param fields 要插入的字段
      * @param query  select数据
      * @return 拷贝插入的记录数
-     * @see SqlProvider#insertSelect(Map)
+     * @see SqlProvider#insertSelect(Map, ProviderContext)
      */
+    @InsertProvider(
+        type = SqlProvider.class,
+        method = "insertSelect"
+    )
     int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
     /**
@@ -85,7 +99,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param updates 更新列表
      * @return ignore
+     * @see SqlProvider#updateBy(Map, ProviderContext)
      */
+    @UpdateProvider(
+        type = SqlProvider.class,
+        method = "updateBy"
+    )
     int updateBy(@Param(Param_EW) IUpdate... updates);
 
     /**
@@ -93,6 +112,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
+     * @see SqlProvider#listEntity(Map, ProviderContext)
      */
     List<E> listEntity(@Param(Param_EW) IQuery query);
 
@@ -103,7 +123,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
+     * @see SqlProvider#listObjs(Map, ProviderContext)
      */
+    @SelectProvider(
+        type = SqlProvider.class,
+        method = "listObjs"
+    )
     <O> List<O> listObjs(@Param(Param_EW) IQuery query);
 
     /**
@@ -111,7 +136,13 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return map列表
+     * @see SqlProvider#listMaps(Map, ProviderContext)
      */
+    @SelectProvider(
+        type = SqlProvider.class,
+        method = "listMaps"
+    )
+    @ResultType(Map.class)
     List<Map<String, Object>> listMaps(@Param(Param_EW) IQuery query);
 
     /**
@@ -119,7 +150,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
+     * @see SqlProvider#count(Map, ProviderContext)
      */
+    @SelectProvider(
+        type = SqlProvider.class,
+        method = "count"
+    )
     Integer count(@Param(Param_EW) IQuery query);
 
     /**
@@ -129,6 +165,10 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      * @see SqlProvider#countNoLimit(Map)
      */
+    @SelectProvider(
+        type = SqlProvider.class,
+        method = "countNoLimit"
+    )
     Integer countNoLimit(@Param(Param_EW) IQuery query);
 
     /**
@@ -136,7 +176,12 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param wrapper 实体对象封装操作类（属性条件可以为null）
      * @return ignore
+     * @see SqlProvider#delete(Map, ProviderContext)
      */
+    @DeleteProvider(
+        type = SqlProvider.class,
+        method = "delete"
+    )
     int delete(@Param(Param_EW) IQuery wrapper);
 
     /* =========== 静态引用 =========== */
@@ -161,6 +206,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * </pre>
      *
      * @param crud 增删改操作
+     * @see SqlProvider#batchCrud(Map, ProviderContext)
      */
     @UpdateProvider(
         type = SqlProvider.class,
