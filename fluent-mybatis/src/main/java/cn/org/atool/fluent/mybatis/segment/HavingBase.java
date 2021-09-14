@@ -13,7 +13,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
  *
  * @author darui.wu 2020/6/21 6:22 下午
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class HavingBase<
     H extends HavingBase<H, Q>,
     Q extends IBaseQuery<?, Q>

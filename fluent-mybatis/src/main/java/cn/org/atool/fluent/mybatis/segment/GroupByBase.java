@@ -16,7 +16,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
  *
  * @author darui.wu 2020/6/21 8:09 下午
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class GroupByBase<
     G extends GroupByBase<G, Q>,
     Q extends IBaseQuery<?, Q>

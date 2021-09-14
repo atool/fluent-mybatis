@@ -17,6 +17,7 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
  *
  * @author darui.wu  2020/6/21 3:13 下午
  */
+@SuppressWarnings({"rawtypes"})
 public abstract class SelectorBase<
     S extends SelectorBase<S, Q>,
     Q extends IBaseQuery<?, Q>

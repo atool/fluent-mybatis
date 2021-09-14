@@ -19,7 +19,7 @@ import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
  * @param <O> 排序对象
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class OrderByBase<
     O extends OrderByBase<O, W>,
     W extends IWrapper<?, W, ?>
