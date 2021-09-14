@@ -86,8 +86,4 @@ public interface StrConstant {
      * 双引号
      */
     char DOUBLE_QUOTATION = '"';
-    /**
-     * MapperSqlProvider
-     */
-    String MapperSqlProvider = "MapperSqlProvider";
 }

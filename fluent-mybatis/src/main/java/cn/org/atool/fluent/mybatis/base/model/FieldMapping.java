@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.base.model;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.ISetter;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -94,17 +93,6 @@ public class FieldMapping<E extends IEntity> {
     @Override
     public String toString() {
         return this.column;
-    }
-
-    /**
-     * column = #{prefix.field, javaType=?, typeHandler=?}
-     *
-     * @param prefix 前缀
-     * @return ignore
-     */
-    public String columnEqVar(DbType dbType, final String prefix, String varName) {
-        String _prefix = isBlank(prefix) ? EMPTY : prefix + ".";
-        return dbType.wrap(this.column) + " = " + var(_prefix, varName);
     }
 
     /**
