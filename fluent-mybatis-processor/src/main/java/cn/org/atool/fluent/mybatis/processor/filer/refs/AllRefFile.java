@@ -46,7 +46,8 @@ public class AllRefFile extends AbstractFile {
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(RefFiler.getClassName())
             .addModifiers(Modifier.FINAL)
-            .addMethod(this.m_instance());
+            .addMethod(this.m_instance())
+            .addMethod(this.m_assertRelation());
         for (FluentEntity fluent : FluentList.getFluents()) {
             for (EntityRefMethod refMethod : fluent.getRefMethods()) {
                 if (refMethod.isAbstractMethod()) {
@@ -58,6 +59,18 @@ public class AllRefFile extends AbstractFile {
         }
     }
 
+    private MethodSpec m_assertRelation() {
+        return MethodSpec.methodBuilder("relation")
+            .addModifiers(Modifier.PRIVATE)
+            .returns(EntityRelationFiler.getClassName())
+            .beginControlFlow("if (relation instanceof IEntityRelation)")
+            .addStatement("return (IEntityRelation)relation")
+            .endControlFlow()
+            .addStatement("throw new $T($S)", RuntimeException.class,
+                "It must implement IEntityRelation and add the implementation to spring management.")
+            .build();
+    }
+
     private MethodSpec m_refMethod(FluentEntity fluent, EntityRefMethod refMethod) {
         String methodName = refMethod.getRefMethod(fluent);
         return MethodSpec.methodBuilder(methodName)
@@ -65,11 +78,7 @@ public class AllRefFile extends AbstractFile {
             .addModifiers(Modifier.PUBLIC)
             .returns(refMethod.getJavaType())
             .addJavadoc("{@link $L#$L}", fluent.getClassName(), refMethod.getName())
-            .addCode("if (relation instanceof $T) {\n", EntityRelationFiler.getClassName())
-            .addStatement("\treturn (($T)relation).$L(entity)", EntityRelationFiler.getClassName(), methodName)
-            .addCode("} else {\n")
-            .addStatement("\tthrow new $T($S)", RuntimeException.class, "It must implement IEntityRelation and add the implementation to spring management.")
-            .addCode("}")
+            .addStatement("return this.relation().$L(entity)", methodName)
             .build();
     }
 
