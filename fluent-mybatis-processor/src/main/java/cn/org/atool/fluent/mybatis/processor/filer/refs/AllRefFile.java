@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
@@ -46,7 +45,6 @@ public class AllRefFile extends AbstractFile {
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(RefFiler.getClassName())
             .addModifiers(Modifier.FINAL)
-            .addMethod(this.m_instance())
             .addMethod(this.m_assertRelation());
         for (FluentEntity fluent : FluentList.getFluents()) {
             for (EntityRefMethod refMethod : fluent.getRefMethods()) {
@@ -100,15 +98,6 @@ public class AllRefFile extends AbstractFile {
         }
         spec.addStatement("\t.end())");
         return spec.build();
-    }
-
-    private MethodSpec m_instance() {
-        return MethodSpec.methodBuilder("instance")
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .addJavadoc("Refs 单例")
-            .returns(AllRefFile.getClassName())
-            .addStatement("return ($L) $T.instance()", AllRef, IRef.class)
-            .build();
     }
 
     @Override
