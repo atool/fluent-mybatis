@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -49,7 +49,7 @@ public class EntityMappingFiler extends AbstractFiler {
     @Override
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(Optional.class, "ofNullable");
-        spec.addStaticImport(UniqueFieldType.class, "*");
+        spec.addStaticImport(UniqueType.class, "*");
         spec.skipJavaLangImports(true);
     }
 
@@ -109,7 +109,7 @@ public class EntityMappingFiler extends AbstractFiler {
         FieldSpec.Builder spec = FieldSpec
             .builder(ParameterizedTypeName.get(FN_FieldMapping, fluent.entity()), f.getName(), PUBLIC_STATIC_FINAL)
             .addJavadoc("实体属性 : 数据库字段 映射\n $L : $L", name, f.getColumn());
-        UniqueFieldType type = this.getUniqueType(f);
+        UniqueType type = this.getUniqueType(f);
         CodeBlock.Builder init = CodeBlock.builder();
         init.add("new FieldMapping<$T>", fluent.entity());
         init.add("\n\t(")
@@ -128,13 +128,13 @@ public class EntityMappingFiler extends AbstractFiler {
         return spec.initializer(init.build()).build();
     }
 
-    private UniqueFieldType getUniqueType(CommonField field) {
+    private UniqueType getUniqueType(CommonField field) {
         if (field.isPrimary()) {
-            return UniqueFieldType.PRIMARY_ID;
+            return UniqueType.PRIMARY_ID;
         } else if (Objects.equals(field.getName(), fluent.getVersionField())) {
-            return UniqueFieldType.LOCK_VERSION;
+            return UniqueType.LOCK_VERSION;
         } else if (Objects.equals(field.getName(), fluent.getLogicDelete())) {
-            return UniqueFieldType.LOGIC_DELETED;
+            return UniqueType.LOGIC_DELETED;
         } else {
             return null;
         }

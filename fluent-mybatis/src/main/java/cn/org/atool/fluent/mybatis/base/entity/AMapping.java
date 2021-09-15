@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import lombok.AccessLevel;
@@ -70,7 +70,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      */
     public final String selectAll;
 
-    protected Map<UniqueFieldType, FieldMapping> uniqueFields = new HashMap<>(4);
+    protected Map<UniqueType, FieldMapping> uniqueFields = new HashMap<>(4);
 
     protected AMapping(DbType dbType) {
         this.dbType = dbType;
@@ -185,7 +185,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     }
 
     @Override
-    public Optional<FieldMapping> findField(UniqueFieldType type) {
+    public Optional<FieldMapping> findField(UniqueType type) {
         return Optional.ofNullable(uniqueFields.get(type));
     }
 

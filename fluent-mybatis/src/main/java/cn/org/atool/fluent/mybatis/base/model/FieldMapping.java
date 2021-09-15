@@ -27,7 +27,7 @@ public class FieldMapping<E extends IEntity> {
     /**
      * 字段类型
      */
-    public final UniqueFieldType uniqueFieldType;
+    public final UniqueType uniqueType;
     /**
      * 插入时的默认值
      */
@@ -71,10 +71,10 @@ public class FieldMapping<E extends IEntity> {
         return this;
     }
 
-    public FieldMapping(String name, String column, UniqueFieldType uniqueFieldType, String insert, String update, Class javaType, Class typeHandler) {
+    public FieldMapping(String name, String column, UniqueType uniqueType, String insert, String update, Class javaType, Class typeHandler) {
         this.name = name;
         this.column = column;
-        this.uniqueFieldType = uniqueFieldType;
+        this.uniqueType = uniqueType;
         this.insert = insert;
         this.update = update;
         this.javaType = javaType;
@@ -141,7 +141,7 @@ public class FieldMapping<E extends IEntity> {
      * @return true:主键字段
      */
     public boolean isPrimary() {
-        return this.uniqueFieldType == UniqueFieldType.PRIMARY_ID;
+        return this.uniqueType == UniqueType.PRIMARY_ID;
     }
 
     /**
@@ -150,6 +150,6 @@ public class FieldMapping<E extends IEntity> {
      * @return true:版本号字段
      */
     public boolean isVersion() {
-        return this.uniqueFieldType == UniqueFieldType.LOCK_VERSION;
+        return this.uniqueType == UniqueType.LOCK_VERSION;
     }
 }

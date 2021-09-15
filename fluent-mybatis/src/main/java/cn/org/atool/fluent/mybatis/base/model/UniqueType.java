@@ -5,7 +5,7 @@ package cn.org.atool.fluent.mybatis.base.model;
  *
  * @author wudarui
  */
-public enum UniqueFieldType {
+public enum UniqueType {
     /**
      * 主键字段
      */

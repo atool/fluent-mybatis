@@ -94,7 +94,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param entities 实例列表
      * @return ignore
-     * @see SqlProvider#insertBatchWithPk(Map)
+     * @see SqlProvider#insertBatchWithPk(Map, ProviderContext)
      */
     @InsertProvider(
         type = SqlProvider.class,
@@ -181,7 +181,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
-     * @see SqlProvider#countNoLimit(Map)
+     * @see SqlProvider#countNoLimit(Map, ProviderContext)
      */
     @SelectProvider(
         type = SqlProvider.class,

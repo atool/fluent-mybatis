@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.base.entity;
 import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * @param type 字段类型
      * @return 字段映射
      */
-    Optional<FieldMapping> findField(UniqueFieldType type);
+    Optional<FieldMapping> findField(UniqueType type);
 
     /**
      * 返回实体类对应的所有数据库字段列表
@@ -92,7 +92,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     }
 
     default FieldMapping primaryMapping() {
-        return this.findField(UniqueFieldType.PRIMARY_ID).orElse(null);
+        return this.findField(UniqueType.PRIMARY_ID).orElse(null);
     }
 
     /**
@@ -103,7 +103,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * @return ignore
      */
     default Object primaryApplier(boolean nullError, Function<FieldMapping, Object> applier) {
-        FieldMapping f = this.findField(UniqueFieldType.PRIMARY_ID).orElse(null);
+        FieldMapping f = this.findField(UniqueType.PRIMARY_ID).orElse(null);
         if (nullError && f == null) {
             throw new FluentMybatisException("the primary not found.");
         } else {
@@ -117,7 +117,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * @return ignore
      */
     default String versionColumn() {
-        return this.findField(UniqueFieldType.LOCK_VERSION)
+        return this.findField(UniqueType.LOCK_VERSION)
             .map(m -> m.column).orElse(null);
     }
 
@@ -127,7 +127,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * @return ignore
      */
     default String logicDeleteColumn() {
-        return this.findField(UniqueFieldType.LOGIC_DELETED)
+        return this.findField(UniqueType.LOGIC_DELETED)
             .map(c -> c.column).orElse(null);
     }
 
@@ -137,7 +137,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * @return ignore
      */
     default boolean longTypeOfLogicDelete() {
-        return this.findField(UniqueFieldType.LOGIC_DELETED)
+        return this.findField(UniqueType.LOGIC_DELETED)
             .map(m -> m.javaType == Long.class)
             .orElse(false);
     }

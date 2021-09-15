@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 
 /**
  * 以下方法在EntityMapper中实现接口default方法
@@ -63,7 +63,7 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      * @return ignore
      */
     default FieldMapping primaryField() {
-        return this.mapping().findField(UniqueFieldType.PRIMARY_ID)
+        return this.mapping().findField(UniqueType.PRIMARY_ID)
             .orElseThrow(() -> new RuntimeException("primary key not found."));
     }
 

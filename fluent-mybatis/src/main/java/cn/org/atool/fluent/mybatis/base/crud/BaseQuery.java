@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.Column;
-import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -53,7 +53,7 @@ public abstract class BaseQuery<
 
     @Override
     public Q selectId() {
-        String primary = this.fieldName(UniqueFieldType.PRIMARY_ID);
+        String primary = this.fieldName(UniqueType.PRIMARY_ID);
         if (primary == null) {
             throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
         } else {

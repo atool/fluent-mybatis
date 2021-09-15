@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.UniqueFieldType;
+import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
@@ -88,7 +88,7 @@ public abstract class BaseWrapper<
      *
      * @return 指定类型的字段
      */
-    public String fieldName(UniqueFieldType type) {
+    public String fieldName(UniqueType type) {
         return this.mapping().flatMap(m -> m.findField(type)).map(c -> c.column).orElse(null);
     }
 
