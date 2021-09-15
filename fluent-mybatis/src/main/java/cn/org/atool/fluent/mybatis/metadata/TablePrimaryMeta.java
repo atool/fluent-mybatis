@@ -25,6 +25,8 @@ public class TablePrimaryMeta extends FieldMeta {
      */
     private final String seqName;
 
+    private final boolean seqIsBeforeOrder;
+
     public TablePrimaryMeta(Field field, TableId tableId) {
         super(tableId.value(), field);
         this.setJdbcType(tableId.jdbcType());
@@ -33,5 +35,6 @@ public class TablePrimaryMeta extends FieldMeta {
         this.el = el();
         this.autoIncrease = tableId.auto();
         this.seqName = tableId.seqName();
+        this.seqIsBeforeOrder = tableId.before();
     }
 }

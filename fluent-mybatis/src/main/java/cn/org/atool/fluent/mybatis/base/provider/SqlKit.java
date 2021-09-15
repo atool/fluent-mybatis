@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.IHasMapping;
@@ -9,8 +10,10 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,39 +28,28 @@ import java.util.Map;
 @SuppressWarnings("rawtypes")
 public interface SqlKit {
     /**
-     * 工具类单例
+     * 构造insert方法的主键生成器KeyGenerator
+     *
+     * @param builder statement构造器
+     * @param primary 主键映射
+     * @param tableId 主键注解
+     * @return KeyGenerator
+     * @see org.apache.ibatis.annotations.Options
+     * @see org.apache.ibatis.annotations.SelectKey
      */
-    Map<DbType, SqlKit> kits = new HashMap<>(8);
+    KeyGenerator insert(StatementBuilder builder, FieldMapping primary, TableId tableId);
 
-    static SqlKit factory(DbType dbType) {
-        SqlKit kit = kits.get(dbType);
-        if (kit == null) {
-            synchronized (kits) {
-                if (kits.containsKey(dbType)) {
-                    return kits.get(dbType);
-                }
-                switch (dbType) {
-                    case ORACLE:
-                    case ORACLE12:
-                        kits.put(dbType, new OracleSqlKit(dbType));
-                        break;
-                    default:
-                        kits.put(dbType, new CommonSqlKit(dbType));
-                }
-                return kits.get(dbType);
-            }
-        } else {
-            return kit;
-        }
-    }
-
-    static SqlKit factory(IHasMapping obj) {
-        return factory(obj.mapping());
-    }
-
-    static SqlKit factory(IHasDbType mapping) {
-        return factory(mapping.dbType());
-    }
+    /**
+     * 构造insertBatch方法的主键生成器KeyGenerator
+     *
+     * @param builder statement构造器
+     * @param primary 主键映射
+     * @param tableId 主键注解
+     * @return KeyGenerator
+     * @see org.apache.ibatis.annotations.Options
+     * @see org.apache.ibatis.annotations.SelectKey
+     */
+    KeyGenerator insertBatch(StatementBuilder builder, FieldMapping primary, TableId tableId);
 
     /* ======== IQuery/IUpdate ====== */
 

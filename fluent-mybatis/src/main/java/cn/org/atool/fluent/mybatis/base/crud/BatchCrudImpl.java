@@ -67,7 +67,7 @@ public class BatchCrudImpl implements BatchCrud {
     }
 
     private AMapping findMapping(Class<? extends IEntity> klass) {
-        return (AMapping) IRef.instance().mapping(klass);
+        return (AMapping) IRef.instance().byEntity(klass);
     }
 
     private static final String ENTITY_LIST_KEY = "list";

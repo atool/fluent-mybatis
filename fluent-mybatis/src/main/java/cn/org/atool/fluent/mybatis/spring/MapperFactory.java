@@ -2,6 +2,8 @@ package cn.org.atool.fluent.mybatis.spring;
 
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import org.apache.ibatis.session.ConfigurationKit;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,14 @@ import javax.annotation.PostConstruct;
  *
  * @author wudarui
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"all"})
 public class MapperFactory {
+    @Autowired
     private ApplicationContext context;
 
     @Autowired
+    private SqlSessionFactory sqlSession;
+
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         this.context = context;
     }
@@ -40,6 +45,11 @@ public class MapperFactory {
         Object relation = this.findEntityRelation();
         refs.setEntityRelation(relation, this);
         refs.wiredMapper();
+        new ConfigurationKit(sqlSession.getConfiguration())
+            .inserts()
+            .batchInserts()
+            .listEntity()
+        ;
     }
 
     /**

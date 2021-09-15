@@ -3,11 +3,11 @@ package cn.org.atool.fluent.mybatis.base;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.ClassMap;
-import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import lombok.Setter;
@@ -51,7 +51,7 @@ public abstract class IRef {
     }
 
     public static IEntityKit entityKit(Class clazz) {
-        return (IEntityKit) instance().mapping(clazz);
+        return (IEntityKit) instance().byEntity(clazz);
     }
 
     /**
@@ -126,7 +126,15 @@ public abstract class IRef {
      * @param clazz Entity类类型
      * @return IMapping
      */
-    public abstract IMapping mapping(Class clazz);
+    public abstract IMapping byEntity(Class clazz);
+
+    /**
+     * 返回对应Mapper类的映射关系
+     *
+     * @param clazz Mapper类类型
+     * @return IMapping
+     */
+    public abstract IMapping byMapper(Class clazz);
 
     /**
      * 返回clazz属性field对应的数据库字段名称
@@ -136,7 +144,7 @@ public abstract class IRef {
      * @return 数据库字段名称
      */
     public final String columnOfField(Class clazz, String field) {
-        IMapping mapping = this.mapping(clazz);
+        IMapping mapping = this.byEntity(clazz);
         if (mapping == null) {
             throw notFluentMybatisException(clazz);
         } else {
@@ -151,7 +159,7 @@ public abstract class IRef {
      * @return 主键字段
      */
     public String primaryColumn(Class clazz) {
-        IMapping mapping = this.mapping(clazz);
+        IMapping mapping = this.byEntity(clazz);
         if (mapping == null) {
             throw notFluentMybatisException(clazz);
         } else {
@@ -245,6 +253,13 @@ public abstract class IRef {
      * @return ignore
      */
     protected abstract Set<String> allEntityClass();
+
+    /**
+     * 返回所有的Mapper类
+     *
+     * @return ClassMap
+     */
+    public abstract ClassMap<AMapping> allMapperClass();
 
     /**
      * 返回spring管理对应的mapper bean

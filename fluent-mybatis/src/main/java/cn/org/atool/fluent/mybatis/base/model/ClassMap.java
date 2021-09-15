@@ -59,4 +59,8 @@ public class ClassMap<T> {
     public Set<String> keySet() {
         return this.map.keySet();
     }
+
+    public Set<Map.Entry<String, T>> entrySet() {
+        return this.map.entrySet();
+    }
 }

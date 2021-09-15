@@ -91,6 +91,10 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
         return (String) this.primaryApplier(nullError, f -> f == null ? null : f.column);
     }
 
+    default FieldMapping primaryMapping() {
+        return this.findField(UniqueFieldType.PRIMARY_ID).orElse(null);
+    }
+
     /**
      * 返回主键加工对象
      *

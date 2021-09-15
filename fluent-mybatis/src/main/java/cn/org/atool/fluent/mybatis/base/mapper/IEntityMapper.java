@@ -6,8 +6,8 @@ import cn.org.atool.fluent.mybatis.base.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
-import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
+import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderContext;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
+import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -37,8 +38,43 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param entity 实例
      * @return 1: 插入成功
      * @see SqlProvider#insert(IEntity, ProviderContext)
+     * @see StatementBuilder#insertStatement()
      */
+    @InsertProvider(
+        type = SqlProvider.class,
+        method = M_Insert
+    )
     int insert(E entity);
+
+    /**
+     * 批量插入数据，实例主键必须全部未赋值
+     *
+     * @param entities 实例列表
+     * @return ignore
+     * @see SqlProvider#insertBatch(Map, ProviderContext)
+     * @see StatementBuilder#insertBatchStatement()
+     */
+    @InsertProvider(
+        type = SqlProvider.class,
+        method = M_InsertBatch
+    )
+    int insertBatch(@Param(Param_List) Collection<E> entities);
+
+    /**
+     * 根据 query 条件，查询全部记录
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
+     * @see SqlProvider#listEntity(Map, ProviderContext)
+     * @see StatementBuilder#listEntityStatement()
+     */
+    @SelectProvider(
+        type = SqlProvider.class,
+        method = M_listEntity
+    )
+    List<E> listEntity(@Param(Param_EW) IQuery query);
+
+    /* =================================*/
 
     /**
      * 插入一条记录, 主键字段不为空
@@ -52,15 +88,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         method = "insertWithPk"
     )
     int insertWithPk(E entity);
-
-    /**
-     * 批量插入数据，实例主键必须全部未赋值
-     *
-     * @param entities 实例列表
-     * @return ignore
-     * @see SqlProvider#insertBatch(Map, ProviderContext)
-     */
-    int insertBatch(@Param(Param_List) Collection<E> entities);
 
     /**
      * 批量插入数据，实例主键必须全部已赋值
@@ -106,15 +133,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         method = "updateBy"
     )
     int updateBy(@Param(Param_EW) IUpdate... updates);
-
-    /**
-     * 根据 query 条件，查询全部记录
-     *
-     * @param query 实体对象封装操作类（可以为 null）
-     * @return ignore
-     * @see SqlProvider#listEntity(Map, ProviderContext)
-     */
-    List<E> listEntity(@Param(Param_EW) IQuery query);
 
     /**
      * 根据 query 条件，查询全部记录
@@ -223,7 +241,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default int updateById(E entity) {
-        IUpdate update = SqlKit.factory(this).updateById(this.mapping(), entity);
+        IUpdate update = factory(this).updateById(this.mapping(), entity);
         return this.updateBy(update);
     }
 
@@ -234,7 +252,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default E findById(Serializable id) {
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), new Object[]{id});
+        IQuery query = factory(this).queryByIds(this.mapping(), new Object[]{id});
         return this.findOne(query);
     }
 
@@ -262,7 +280,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default List<E> listByIds(Object... ids) {
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
         return this.listEntity(query);
     }
 
@@ -273,7 +291,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      */
     default List<E> listByIds(Collection ids) {
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
         return this.listEntity(query);
     }
 
@@ -287,7 +305,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     default List<E> listByMap(boolean isColumn, Map<String, Object> condition) {
         assertNotEmpty("condition", condition);
         IQuery query = this.mapping().query();
-        SqlKit.factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
+        factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
         return this.listEntity(query);
     }
 
@@ -299,7 +317,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int deleteById(Serializable... ids) {
         assertNotEmpty("ids", ids);
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
         return this.delete(query);
     }
 
@@ -311,7 +329,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int deleteByIds(Collection ids) {
         assertNotEmpty("ids", ids);
-        IQuery query = SqlKit.factory(this).queryByIds(this.mapping(), ids);
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
         return this.delete(query);
     }
 
@@ -324,7 +342,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int deleteByMap(boolean isColumn, Map<String, Object> condition) {
         IQuery query = this.mapping().query();
-        SqlKit.factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
+        factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
         return this.delete(query);
     }
 
@@ -336,7 +354,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDeleteById(Object... ids) {
         assertNotEmpty("ids", ids);
-        IUpdate update = SqlKit.factory(this).logicDeleteByIds(this.mapping(), ids);
+        IUpdate update = factory(this).logicDeleteByIds(this.mapping(), ids);
         return this.updateBy(update);
     }
 
@@ -348,7 +366,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default int logicDeleteByIds(Collection ids) {
         assertNotEmpty("ids", ids);
-        IUpdate update = SqlKit.factory(this).logicDeleteByIds(this.mapping(), ids);
+        IUpdate update = factory(this).logicDeleteByIds(this.mapping(), ids);
         return this.updateBy(update);
     }
 
@@ -364,8 +382,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         IUpdate update = this.mapping().updater();
         /* 逻辑删除忽略版本号 */
         update.getWrapperData().setIgnoreLockVersion(true);
-        SqlKit.factory(this).setLogicDeleted(this.mapping(), update);
-        SqlKit.factory(this).eqByMap(this.mapping(), (IWrapper) update, isColumn, condition);
+        factory(this).setLogicDeleted(this.mapping(), update);
+        factory(this).eqByMap(this.mapping(), (IWrapper) update, isColumn, condition);
         return this.updateBy(update);
     }
 
@@ -379,7 +397,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         assertNotNull("query", query);
         /* 逻辑删除忽略版本号 */
         query.getWrapperData().setIgnoreLockVersion(true);
-        IUpdate update = SqlKit.factory(this).logicDeleteBy(this.mapping(), query);
+        IUpdate update = factory(this).logicDeleteBy(this.mapping(), query);
         return this.updateBy(update);
     }
 }

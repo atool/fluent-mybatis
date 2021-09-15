@@ -26,7 +26,7 @@ public class NestedQueryFactory {
             query.setDbType(wrapper.dbType());
             return (Q) query;
         }
-        IMapping mapping = IRef.instance().mapping(wrapper.getEntityClass());
+        IMapping mapping = IRef.instance().byEntity(wrapper.getEntityClass());
         if (mapping == null) {
             throw new FluentMybatisException("create nested Query[" + wrapper.getClass().getName() + "] error.");
         }

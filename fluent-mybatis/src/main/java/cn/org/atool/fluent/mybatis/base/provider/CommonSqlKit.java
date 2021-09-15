@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -16,6 +17,8 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderKit;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -44,6 +47,28 @@ public class CommonSqlKit implements SqlKit {
 
     public CommonSqlKit(DbType dbType) {
         this.dbType = dbType;
+    }
+
+    @Override
+    public KeyGenerator insert(StatementBuilder builder, FieldMapping primary, TableId tableId) {
+        if (this.isAutoKeyGenerator(tableId)) {
+            return Jdbc3KeyGenerator.INSTANCE;
+        } else {
+            return builder.handleSelectKey(primary, tableId);
+        }
+    }
+
+    @Override
+    public KeyGenerator insertBatch(StatementBuilder builder, FieldMapping primary, TableId tableId) {
+        if (this.isAutoKeyGenerator(tableId)) {
+            return Jdbc3KeyGenerator.INSTANCE;
+        } else {
+            return builder.handleSelectKey(primary, tableId);
+        }
+    }
+
+    protected boolean isAutoKeyGenerator(TableId tableId) {
+        return tableId.auto() && isBlank(tableId.seqName());
     }
 
     @Override

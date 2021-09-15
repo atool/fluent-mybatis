@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -7,6 +8,8 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +31,20 @@ import static java.util.stream.Collectors.toList;
 public class OracleSqlKit extends CommonSqlKit {
     public OracleSqlKit(DbType dbType) {
         super(dbType);
+    }
+
+    @Override
+    public KeyGenerator insert(StatementBuilder builder, FieldMapping primary, TableId tableId) {
+        if (this.isAutoKeyGenerator(tableId)) {
+            return NoKeyGenerator.INSTANCE;
+        } else {
+            return builder.handleSelectKey(primary, tableId);
+        }
+    }
+
+    @Override
+    public KeyGenerator insertBatch(StatementBuilder builder, FieldMapping primary, TableId tableId) {
+        return NoKeyGenerator.INSTANCE;
     }
 
     @Override

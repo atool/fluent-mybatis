@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
@@ -90,7 +91,7 @@ public class SqlProvider {
             throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
         }
         AMapping mapping = mapping(context);
-        return SqlKit.factory(mapping).batchCrud((BatchCrudImpl) crud);
+        return factory(mapping).batchCrud((BatchCrudImpl) crud);
     }
 
     /**
@@ -223,11 +224,11 @@ public class SqlProvider {
     }
 
     private static SqlKit sqlKit(AMapping mapping) {
-        return SqlKit.factory(mapping);
+        return factory(mapping);
     }
 
     private static AMapping mapping(ProviderContext context) {
         Class mapperClass = context.getMapperType();
-        return (AMapping) IRef.instance().mapping(mapperClass);
+        return (AMapping) IRef.instance().byMapper(mapperClass);
     }
 }

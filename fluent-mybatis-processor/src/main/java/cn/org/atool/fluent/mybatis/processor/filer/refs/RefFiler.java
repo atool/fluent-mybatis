@@ -12,10 +12,8 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Class_IEntity;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set_ClassName;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler.*;
 
 /**
@@ -55,9 +53,11 @@ public class RefFiler extends AbstractFile {
             .addMethod(m_emptyQuery(true))
             .addMethod(m_defaultUpdater(true))
             .addMethod(m_emptyUpdater(true))
-            .addMethod(this.m_mapping(Suffix_mapping, IMapping.class))
-            .addMethod(this.m_mapping("defaults", BaseDefaults.class))
+            .addMethod(this.m_mapping("byEntity", IMapping.class, "byEntity"))
+            .addMethod(this.m_mapping("byMapper", IMapping.class, "byMapper"))
+            .addMethod(this.m_mapping("defaults", BaseDefaults.class, "byEntity"))
             .addMethod(this.m_allEntityClass())
+            .addMethod(this.m_allMapperClass())
             .addMethod(this.m_initEntityMapper());
 
         spec.addType(this.class_field())
@@ -65,13 +65,13 @@ public class RefFiler extends AbstractFile {
             .addType(this.class_setter());
     }
 
-    private MethodSpec m_mapping(String method, Class rClass) {
+    private MethodSpec m_mapping(String method, Class rClass, String call) {
         MethodSpec.Builder spec = MethodSpec.methodBuilder(method)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addParameter(Class.class, "clazz")
             .returns(rClass);
         spec.addAnnotation(Override.class)
-            .addStatement("return $T.mapping(clazz)", QueryRefFiler.getClassName());
+            .addStatement("return $T.$L(clazz)", QueryRefFiler.getClassName(), call);
 
         return spec.build();
     }
@@ -91,13 +91,21 @@ public class RefFiler extends AbstractFile {
         }
         return spec.build();
     }
-
     private MethodSpec m_allEntityClass() {
         return MethodSpec.methodBuilder("allEntityClass")
             .addModifiers(Modifier.PROTECTED, Modifier.FINAL)
             .addAnnotation(Override.class)
             .returns(CN_Set_ClassName)
             .addStatement("return $T.All_Entity_Class", QueryRefFiler.getClassName())
+            .build();
+    }
+
+    private MethodSpec m_allMapperClass() {
+        return MethodSpec.methodBuilder("allMapperClass")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addAnnotation(Override.class)
+            .returns(CN_Map_AMapping)
+            .addStatement("return $T.MAPPER_MAPPING", QueryRefFiler.getClassName())
             .build();
     }
 
