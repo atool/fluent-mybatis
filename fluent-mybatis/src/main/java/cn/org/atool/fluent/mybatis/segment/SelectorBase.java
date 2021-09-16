@@ -67,6 +67,33 @@ public abstract class SelectorBase<
     }
 
     /**
+     * 排除查询字段
+     *
+     * @param columns 查询字段
+     * @return 查询字段选择器
+     */
+    public S notApply(FieldMapping... columns) {
+        if (If.isEmpty(columns)) {
+            throw new RuntimeException("Apply column missing.");
+        } else if (this.aggregate != null && columns.length > 1) {
+            throw new RuntimeException("Aggregate functions allow only one column.");
+        }
+
+        List<String> fields = this.wrapper.allFields();
+        head:
+        for (String field : fields) {
+            for (FieldMapping column : columns) {
+                if (column.column.equals(field)) {
+                    continue head;
+                }
+            }
+            Column _column = Column.column(field, this.wrapper);
+            this.selectColumn(_column, null);
+        }
+        return super.getOrigin();
+    }
+
+    /**
      * 增加带别名的查询字段
      *
      * @param field 查询字段
