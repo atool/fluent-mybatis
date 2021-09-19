@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.segment2;
 
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
-import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
+import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;

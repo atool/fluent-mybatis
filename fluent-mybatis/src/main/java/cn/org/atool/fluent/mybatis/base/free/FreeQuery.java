@@ -1,11 +1,11 @@
-package cn.org.atool.fluent.mybatis.base.splice;
+package cn.org.atool.fluent.mybatis.base.free;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.GroupBy;
-import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.Having;
-import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.QueryOrderBy;
-import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.Selector;
+import cn.org.atool.fluent.mybatis.base.free.FreeSegment.GroupBy;
+import cn.org.atool.fluent.mybatis.base.free.FreeSegment.Having;
+import cn.org.atool.fluent.mybatis.base.free.FreeSegment.QueryOrderBy;
+import cn.org.atool.fluent.mybatis.base.free.FreeSegment.Selector;
 import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import lombok.experimental.Accessors;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.base.splice.FreeSegment.QueryWhere;
+import static cn.org.atool.fluent.mybatis.base.free.FreeSegment.QueryWhere;
 
 /**
  * 字符串形式自由拼接查询器构造
@@ -22,7 +22,7 @@ import static cn.org.atool.fluent.mybatis.base.splice.FreeSegment.QueryWhere;
  */
 @Accessors(chain = true)
 @SuppressWarnings({"rawtypes"})
-public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
+public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
     /**
      * 指定查询字段, 默认无需设置
      */
@@ -50,23 +50,23 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
     public final QueryWhere where = new QueryWhere(this);
 
     public FreeQuery() {
-        super((IFragment) null, null, EmptyEntity.class);
+        super((IFragment) null, null, FreeEntity.class);
     }
 
     public FreeQuery(String table) {
-        super(table == null ? null : () -> table, null, EmptyEntity.class);
+        super(table == null ? null : () -> table, null, FreeEntity.class);
     }
 
     public FreeQuery(String table, String alias) {
-        super(table == null ? null : () -> table, alias, EmptyEntity.class);
+        super(table == null ? null : () -> table, alias, FreeEntity.class);
     }
 
     public FreeQuery(Supplier<String> table, String alias) {
-        super(table, alias, EmptyEntity.class);
+        super(table, alias, FreeEntity.class);
     }
 
     public FreeQuery(IFragment table, String alias) {
-        super(table, alias, EmptyEntity.class);
+        super(table, alias, FreeEntity.class);
     }
 
     /**
@@ -76,7 +76,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @param alias 别名
      */
     public FreeQuery(IQuery child, String alias) {
-        super(BracketFrag.set(child), alias, EmptyEntity.class);
+        super(BracketFrag.set(child), alias, FreeEntity.class);
         child.data().sharedParameter(this.data);
     }
 

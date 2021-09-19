@@ -10,15 +10,14 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 /**
  * SelectorTest
  *
- * @author darui.wu
- * @create 2020/6/21 3:40 下午
+ * @author darui.wu 2020/6/21 3:40 下午
  */
 public class SelectorTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
     @Test
-    public void test_select() throws Exception {
+    public void test_select() {
         StudentQuery query = StudentQuery.emptyQuery();
 
         query.select
@@ -38,7 +37,7 @@ public class SelectorTest extends BaseTest {
     }
 
     @Test
-    public void test_select_alias() throws Exception {
+    public void test_select_alias() {
         StudentQuery query = StudentQuery.emptyQuery()
             .select
             .id("pk")
@@ -60,7 +59,7 @@ public class SelectorTest extends BaseTest {
     }
 
     @Test
-    public void test_select_no_alias() throws Exception {
+    public void test_select_no_alias() {
         StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .select
@@ -83,7 +82,7 @@ public class SelectorTest extends BaseTest {
     }
 
     @Test
-    public void test_select2() throws Exception {
+    public void test_select2() {
         StudentQuery query = StudentQuery.emptyQuery()
             .selectId()
             .select.apply(f -> f.getProperty().startsWith("gmt")).end()

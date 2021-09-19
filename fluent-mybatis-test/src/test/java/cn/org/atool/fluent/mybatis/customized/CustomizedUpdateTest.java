@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.customized;
 
-import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
-import cn.org.atool.fluent.mybatis.base.splice.FreeUpdate;
+import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
+import cn.org.atool.fluent.mybatis.base.free.FreeUpdate;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;

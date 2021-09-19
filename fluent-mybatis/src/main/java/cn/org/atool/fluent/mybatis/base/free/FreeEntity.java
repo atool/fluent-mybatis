@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base.splice;
+package cn.org.atool.fluent.mybatis.base.free;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
@@ -8,9 +8,9 @@ import cn.org.atool.fluent.mybatis.base.RichEntity;
  *
  * @author darui.wu
  */
-final class EmptyEntity extends RichEntity {
+final class FreeEntity extends RichEntity {
     @Override
     public Class<? extends IEntity> entityClass() {
-        return EmptyEntity.class;
+        return FreeEntity.class;
     }
 }

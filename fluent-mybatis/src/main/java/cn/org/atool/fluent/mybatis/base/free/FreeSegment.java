@@ -1,15 +1,17 @@
-package cn.org.atool.fluent.mybatis.base.splice;
+package cn.org.atool.fluent.mybatis.base.free;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.*;
+import cn.org.atool.fluent.mybatis.segment.model.Aggregate;
 
 /**
  * FreeWrapperHelper
  *
  * @author darui.wu
  */
-final class FreeWrapperHelper {
+@SuppressWarnings("rawtypes")
+final class FreeSegment {
     public interface ISegment<R> {
         R set(FieldMapping fieldMapping);
     }
@@ -17,12 +19,12 @@ final class FreeWrapperHelper {
     /**
      * select字段设置
      */
-    public static final class Selector extends SelectorBase<Selector, FreeQuery> implements ISegment<Selector> {
+    public static final class Selector extends SelectorBase<Selector, FreeQuery> implements ISegment {
         public Selector(FreeQuery query) {
             super(query);
         }
 
-        protected Selector(Selector selector, IAggregate aggregate) {
+        private Selector(Selector selector, IAggregate aggregate) {
             super(selector, aggregate);
         }
 
@@ -32,26 +34,22 @@ final class FreeWrapperHelper {
         }
 
         public Selector avg(String column, String alias) {
-            String _column = BaseWrapperHelper.appendAlias(column, super.wrapper);
-            this.applyAs(String.format("AVG(%s)", _column), alias);
+            this.applyFunc(Aggregate.AVG, column, alias);
             return this;
         }
 
         public Selector sum(String column, String alias) {
-            String _column = BaseWrapperHelper.appendAlias(column, super.wrapper);
-            this.applyAs(String.format("SUM(%s)", _column), alias);
+            this.applyFunc(Aggregate.SUM, column, alias);
             return this;
         }
 
         public Selector max(String column, String alias) {
-            String _column = BaseWrapperHelper.appendAlias(column, super.wrapper);
-            this.applyAs(String.format("MAX(%s)", _column), alias);
+            this.applyFunc(Aggregate.MAX, column, alias);
             return this;
         }
 
         public Selector min(String column, String alias) {
-            String _column = BaseWrapperHelper.appendAlias(column, super.wrapper);
-            this.applyAs(String.format("MIN(%s)", _column), alias);
+            this.applyFunc(Aggregate.MIN, column, alias);
             return this;
         }
     }
@@ -95,7 +93,7 @@ final class FreeWrapperHelper {
     /**
      * 分组设置
      */
-    public static final class GroupBy extends GroupByBase<GroupBy, FreeQuery> implements ISegment<GroupBy> {
+    public static final class GroupBy extends GroupByBase<GroupBy, FreeQuery> implements ISegment {
         public GroupBy(FreeQuery query) {
             super(query);
         }
@@ -104,12 +102,12 @@ final class FreeWrapperHelper {
     /**
      * 分组Having条件设置
      */
-    public static final class Having extends HavingBase<Having, FreeQuery> implements ISegment<HavingOperator<Having>> {
+    public static final class Having extends HavingBase<Having, FreeQuery> implements ISegment {
         public Having(FreeQuery query) {
             super(query);
         }
 
-        protected Having(Having having, IAggregate aggregate) {
+        private Having(Having having, IAggregate aggregate) {
             super(having, aggregate);
         }
 
@@ -122,7 +120,7 @@ final class FreeWrapperHelper {
     /**
      * Query OrderBy设置
      */
-    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, FreeQuery> implements ISegment<OrderByApply<QueryOrderBy, FreeQuery>> {
+    public static final class QueryOrderBy extends OrderByBase<QueryOrderBy, FreeQuery> implements ISegment {
         public QueryOrderBy(FreeQuery query) {
             super(query);
         }
@@ -131,7 +129,7 @@ final class FreeWrapperHelper {
     /**
      * Update OrderBy设置
      */
-    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, FreeUpdate> implements ISegment<OrderByApply<UpdateOrderBy, FreeUpdate>> {
+    public static final class UpdateOrderBy extends OrderByBase<UpdateOrderBy, FreeUpdate> implements ISegment {
         public UpdateOrderBy(FreeUpdate updater) {
             super(updater);
         }
@@ -140,7 +138,7 @@ final class FreeWrapperHelper {
     /**
      * Update set 设置
      */
-    public static final class UpdateSetter extends UpdateBase<UpdateSetter, FreeUpdate> implements ISegment<UpdateApply<UpdateSetter, FreeUpdate>> {
+    public static final class UpdateSetter extends UpdateBase<UpdateSetter, FreeUpdate> implements ISegment {
         public UpdateSetter(FreeUpdate updater) {
             super(updater);
         }
