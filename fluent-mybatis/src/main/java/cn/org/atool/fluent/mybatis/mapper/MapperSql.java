@@ -16,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.SELECT;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -23,7 +24,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unused", "UnusedReturnValue", "rawtypes"})
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class MapperSql {
     private final StringBuilder buffer = new StringBuilder();
 
@@ -33,13 +34,13 @@ public class MapperSql {
     }
 
     public MapperSql SELECT(String table, String columns) {
-        buffer.append("SELECT ").append(columns).append(" FROM ").append(table);
+        buffer.append(SELECT.get(null)).append(columns).append(" FROM ").append(table);
         return this;
     }
 
     public MapperSql COUNT(DbType dbType, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
-        buffer.append("SELECT ");
+        buffer.append(SELECT.get(dbType));
         this.hint(data, HintType.After_CrudKey);
         buffer.append("COUNT(");
         String select = data.select().get(dbType);
@@ -175,7 +176,7 @@ public class MapperSql {
 
     public MapperSql SELECT(DbType dbType, IFragment table, WrapperData data, IFragment defaultColumns) {
         this.hint(data, HintType.Before_All);
-        buffer.append("SELECT ");
+        buffer.append(SELECT.get(dbType));
         this.hint(data, HintType.After_CrudKey);
         this.APPEND(data.isDistinct() ? "DISTINCT " : SPACE);
         buffer.append(isBlank(data.select().get(dbType)) ? defaultColumns.get(dbType) : data.select().get(dbType));

@@ -14,19 +14,6 @@ public interface StrConstant {
      * 空串
      */
     String EMPTY = "";
-
-    /**
-     * SELECT
-     */
-    String SELECT = "SELECT";
-    /**
-     * FROM
-     */
-    String FROM = "FROM";
-    /**
-     * where
-     */
-    String WHERE = "WHERE";
     /**
      * asc
      */

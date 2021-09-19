@@ -15,6 +15,10 @@ public enum KeyFrag implements IFragment {
      */
     SELECT("SELECT"),
     /**
+     * FROM
+     */
+    FROM("FROM"),
+    /**
      * WHERE
      */
     WHERE("WHERE"),

@@ -20,6 +20,7 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.SELECT;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -124,7 +125,7 @@ public class OracleSqlKit extends CommonSqlKit {
             synchronized (SEQs) {
                 String upper = seq.toUpperCase().trim();
                 int index = upper.indexOf("FROM");
-                if (index > 0 && upper.startsWith("SELECT") && upper.endsWith("DUAL")) {
+                if (index > 0 && upper.startsWith(SELECT.name()) && upper.endsWith("DUAL")) {
                     SEQs.put(seq, seq.substring(6, index).trim());
                 } else {
                     SEQs.put(seq, seq);
