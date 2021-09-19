@@ -2,8 +2,9 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
-import cn.org.atool.fluent.mybatis.base.model.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -56,7 +57,7 @@ public class Parameters extends HashMap<String, Object> {
      * @return 经过占位符处理的sql
      */
     public static String parseSql(IWrapper wrapper, String sql, Object... args) {
-        return wrapper.getWrapperData().getParameters().paramSql(null, sql, args);
+        return wrapper.data().getParameters().paramSql(null, sql, args);
     }
 
     /**
@@ -67,7 +68,7 @@ public class Parameters extends HashMap<String, Object> {
      * @param params sql语句参数
      * @return 参数化的sql语句
      */
-    public String paramSql(Column column, String sqlStr, Object... params) {
+    public String paramSql(IFragment column, String sqlStr, Object... params) {
         if (If.isBlank(sqlStr)) {
             throw new FluentMybatisException("sql parameter can't be null.");
         }
@@ -108,10 +109,10 @@ public class Parameters extends HashMap<String, Object> {
      * @param para   变量
      * @return 占位符
      */
-    public String putParameter(Column column, Object para) {
+    public String putParameter(IFragment column, Object para) {
         String paramName = WRAPPER_PARAM + this.instanceNo + "_" + this.sequence.incrementAndGet();
         this.put(paramName, para);
-        return Column.wrapColumn(column, paramName, para);
+        return Column.expression(column, paramName, para);
     }
 
     private static final char char_question = '?';

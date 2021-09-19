@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +33,20 @@ public class Issue_I3QVPB extends BaseTest {
     @Test
     public void issue() {
         FreeQuery query11 = new FreeQuery("code_repository_statistics")
-            .setDbType(DbType.MYSQL)
             .select("repository_id", "COALESCE(total_sec_issue_count, 0) as total_sec_issue_count")
             .where.apply("repository_id", SqlOp.EQ, "1")
             .and.apply("gmt_create", SqlOp.EQ, "2021-05-11 17:12:33.322")
             .and.apply("organization_id", SqlOp.EQ, "1")
             .end();
         FreeQuery query1 = new FreeQuery(query11, "crs")
-            .setDbType(DbType.MYSQL)
             .select("csr.*");
 
         FreeQuery query21 = new FreeQuery("code_repository")
-            .setDbType(DbType.MYSQL)
             .select("identifier")
             .where.apply("organization_id", SqlOp.EQ, "1")
             .and.apply("project_report_value", SqlOp.EQ, "2")
             .end();
-        FreeQuery query2 = new FreeQuery(query21, "cr").setDbType(DbType.MYSQL);
+        FreeQuery query2 = new FreeQuery(query21, "cr");
         IQuery join = JoinBuilder.from(query1)
             .join(query2)
             .onEq("repository_id", "identifier").endJoin()
@@ -60,7 +56,7 @@ public class Issue_I3QVPB extends BaseTest {
                 .select("*")
                 .orderBy.desc("total_sec_issue_count").end()
                 .limit(10));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM " +
@@ -82,7 +78,6 @@ public class Issue_I3QVPB extends BaseTest {
     @Test
     public void issue_1() {
         FreeQuery query1 = new FreeQuery("code_repository_statistics")
-            .setDbType(DbType.MYSQL)
             .select("repository_id", "COALESCE(total_sec_issue_count, 0) as total_sec_issue_count")
             .where.apply("repository_id", SqlOp.EQ, "1")
             .and.apply("gmt_create", SqlOp.EQ, "2021-05-11 17:12:33.322")
@@ -90,7 +85,6 @@ public class Issue_I3QVPB extends BaseTest {
             .end();
 
         FreeQuery query2 = new FreeQuery("code_repository")
-            .setDbType(DbType.MYSQL)
             .select("identifier")
             .where.apply("organization_id", SqlOp.EQ, "1")
             .and.apply("project_report_value", SqlOp.EQ, "2")
@@ -105,7 +99,7 @@ public class Issue_I3QVPB extends BaseTest {
                 .select("*")
                 .orderBy.desc("total_sec_issue_count").end()
                 .limit(10));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         db.sqlList().wantFirstSql().eq("" +
             "SELECT * FROM " +

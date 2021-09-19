@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+
 /**
  * 关联查询类型
  */
@@ -17,13 +19,13 @@ public enum JoinType {
      */
     RightJoin("RIGHT JOIN");
 
-    private final String join;
+    private final CachedFrag join;
 
     JoinType(String join) {
-        this.join = join;
+        this.join = CachedFrag.set(join);
     }
 
-    public String join() {
+    public CachedFrag join() {
         return this.join;
     }
 }

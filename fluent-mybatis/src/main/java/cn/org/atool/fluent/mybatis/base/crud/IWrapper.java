@@ -2,15 +2,14 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
@@ -42,7 +41,7 @@ public interface IWrapper<
      *
      * @return WrapperData
      */
-    WrapperData getWrapperData();
+    WrapperData data();
 
     /**
      * 在select或update指定位置插入hint语句
@@ -52,7 +51,7 @@ public interface IWrapper<
      * @return W
      */
     default W hint(HintType type, String hint) {
-        this.getWrapperData().hint(type, hint);
+        this.data().hint(type, hint);
         return (W) this;
     }
 
@@ -78,9 +77,10 @@ public interface IWrapper<
     /**
      * query/update表名
      *
-     * @return Supplier<String>
+     * @param notFoundError 未找到表名时, 是否抛出异常
+     * @return ISqlSegment
      */
-    Supplier<String> getTable();
+    IFragment table(boolean notFoundError);
 
     /**
      * 数据库映射定义
@@ -89,12 +89,5 @@ public interface IWrapper<
      */
     Optional<IMapping> mapping();
 
-    /**
-     * 数据库类型
-     *
-     * @return DbType
-     */
-    DbType dbType();
-    
     List<String> allFields();
 }

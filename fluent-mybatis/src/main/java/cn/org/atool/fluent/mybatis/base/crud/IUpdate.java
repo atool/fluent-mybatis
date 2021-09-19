@@ -4,9 +4,9 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.UpdaterExecutor;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.function.Function;
@@ -30,7 +30,7 @@ public interface IUpdate<E extends IEntity> {
      * @return self
      */
     default <U extends IUpdate<E>> U updateSet(String column, Object value) {
-        this.getWrapperData().updateSet(Column.column(column, (BaseWrapper) this), value);
+        this.data().updateSet(Column.set((IWrapper) this, column), value);
         return (U) this;
     }
 
@@ -65,7 +65,7 @@ public interface IUpdate<E extends IEntity> {
      *
      * @return WrapperData
      */
-    WrapperData getWrapperData();
+    WrapperData data();
 
     /**
      * 根据Updater定义执行后续操作

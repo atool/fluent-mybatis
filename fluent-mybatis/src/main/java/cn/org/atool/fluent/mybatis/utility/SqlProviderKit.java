@@ -16,10 +16,10 @@ import static java.lang.Integer.min;
 public class SqlProviderKit {
     public static WrapperData getWrapperData(Map map, String paraName) {
         IWrapper wrapper = getWrapper(map, paraName);
-        if (wrapper.getWrapperData() == null) {
+        if (wrapper.data() == null) {
             throw new RuntimeException("no query condition found.");
         }
-        return wrapper.getWrapperData();
+        return wrapper.data();
     }
 
     public static IWrapper getWrapper(Map map, String paraName) {
@@ -40,11 +40,11 @@ public class SqlProviderKit {
 
     private final static char[] EW_CONST = "#{ew.".toCharArray();
 
-    private final static String sub = ".wrapperData.parameters.";
+    private final static String sub = ".data.parameters.";
 
     /**
      * 替换变量占位符, 增加ew数组下标
-     * #{ew.wrapperData.parameters.xxx}替换为#{ew[0].wrapperData.parameters.xxx}
+     * #{ew.data.parameters.xxx}替换为#{ew[0].data.parameters.xxx}
      * 不采用正则表达式方式替换, 是编码方式替换简单，一次字符串扫描即可完成
      *
      * @param sql    sql语句

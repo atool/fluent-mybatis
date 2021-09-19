@@ -75,9 +75,9 @@ public class EnumTypeTest extends BaseTest {
         aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
                 "UPDATE `my_enum_type` " +
-                "SET `enum-num` = #{ew[0].wrapperData.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},\n" +
-                "`enum_string` = #{ew[0].wrapperData.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumTypeHandler} " +
-                "WHERE `id` = #{ew[0].wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
+                "SET `enum-num` = #{ew[0].data.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},\n" +
+                "`enum_string` = #{ew[0].data.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumTypeHandler} " +
+                "WHERE `id` = #{ew[0].data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
             StringMode.SameAsSpace);
         ATM.dataMap.myEnumType.table(3)
             .id.values(1, 2, 3)
@@ -114,7 +114,8 @@ public class EnumTypeTest extends BaseTest {
 
         aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).end("" +
-            "WHERE `id` = #{ew.wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}");
+                "WHERE `id` = #{ew.data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
+            StringMode.SameAsSpace);
     }
 
     @Test
@@ -130,8 +131,8 @@ public class EnumTypeTest extends BaseTest {
         want.string(aSql[0]).eq("" +
             "DELETE FROM `my_enum_type` " +
             "WHERE `id` IN (" +
-            "#{ew.wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}, " +
-            "#{ew.wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}" +
+            "#{ew.data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}, " +
+            "#{ew.data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}" +
             ")", StringMode.SameAsSpace);
     }
 
@@ -146,8 +147,8 @@ public class EnumTypeTest extends BaseTest {
         aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+", ".var");
         want.string(aSql[0]).eq("" +
                 "UPDATE `my_enum_type` " +
-                "SET `is_deleted` = #{ew[0].wrapperData.parameters.var} " +
-                "WHERE `id` = #{ew[0].wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}"
+                "SET `is_deleted` = #{ew[0].data.parameters.var} " +
+                "WHERE `id` = #{ew[0].data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}"
             , StringMode.SameAsSpace);
     }
 
@@ -162,8 +163,8 @@ public class EnumTypeTest extends BaseTest {
         aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
                 "UPDATE `my_enum_type` " +
-                "SET `enum-num` = #{ew[0].wrapperData.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler} " +
-                "WHERE `id` = #{ew[0].wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
+                "SET `enum-num` = #{ew[0].data.parameters.var, javaType=cn.org.atool.fluent.mybatis.customize.model.MyEnum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler} " +
+                "WHERE `id` = #{ew[0].data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}",
             StringMode.SameAsSpace);
     }
 
@@ -178,7 +179,7 @@ public class EnumTypeTest extends BaseTest {
         aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
                 "DELETE FROM `my_enum_type` " +
-                "WHERE `id` = #{ew.wrapperData.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}"
+                "WHERE `id` = #{ew.data.parameters.var, javaType=java.lang.Long, typeHandler=org.apache.ibatis.type.LongTypeHandler}"
             , StringMode.SameAsSpace);
     }
 }

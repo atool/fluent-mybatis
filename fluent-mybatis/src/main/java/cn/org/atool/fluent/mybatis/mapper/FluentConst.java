@@ -41,7 +41,7 @@ public interface FluentConst {
 
     String Suffix_EntityFormSetter = "FormSetter";
 
-    String Suffix_ISegment = "ISegment";
+    String Suffix_ISegment = "ASegment";
 
     String Suffix_Segment = "Segment";
 

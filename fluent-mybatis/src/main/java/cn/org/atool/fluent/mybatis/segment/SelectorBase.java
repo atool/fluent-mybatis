@@ -2,10 +2,11 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -60,8 +61,8 @@ public abstract class SelectorBase<
             throw new RuntimeException("Aggregate functions allow only one column.");
         }
         for (FieldMapping column : columns) {
-            Column _column = Column.column(column, this.wrapper);
-            this.selectColumn(_column, null);
+            Column _column = Column.set(this.wrapper, column);
+            this.addSelectSeg(this.aggregate, _column, null);
         }
         return super.getOrigin();
     }
@@ -74,8 +75,8 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S applyAs(FieldMapping field, String alias) {
-        Column column = Column.column(field, this.wrapper);
-        this.selectColumn(column, alias);
+        Column column = Column.set(this.wrapper, field);
+        this.addSelectSeg(this.aggregate, column, alias);
         return super.getOrigin();
     }
 
@@ -87,20 +88,27 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S applyAs(final String column, final String alias) {
-        Column _column = Column.column(column, this.wrapper);
-        this.selectColumn(_column, alias);
+        Column _column = Column.set(this.wrapper, column);
+        this.addSelectSeg(this.aggregate, _column, alias);
         return super.getOrigin();
     }
 
-    private void selectColumn(Column column, String alias) {
-        String wrapper = column.wrapColumn();
-        if (this.aggregate != null) {
-            wrapper = aggregate.aggregate(wrapper);
+    public S applyFunc(final IAggregate func, final String column, final String alias) {
+        Column _column = Column.set(this.wrapper, column);
+        this.addSelectSeg(func, _column, alias);
+        return super.getOrigin();
+    }
+
+    private void addSelectSeg(IAggregate aggregate, Column column, String alias) {
+        IFragment frag = column;
+        if (aggregate != null) {
+            frag = aggregate.aggregate(column);
         }
         if (notBlank(alias)) {
-            wrapper = wrapper + AS + alias;
+            this.data().getFieldAlias().add(alias);
+            frag = frag.plus(AS).plus(alias);
         }
-        this.wrapperData().addSelectColumn(wrapper);
+        this.data().addSelectColumn(frag);
     }
 
     /**

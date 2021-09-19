@@ -9,15 +9,15 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -68,7 +68,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     /**
      * 数据库所有字段列表用逗号分隔
      */
-    public final String selectAll;
+    public final CachedFrag selectAll;
 
     protected Map<UniqueType, FieldMapping> uniqueFields = new HashMap<>(4);
 
@@ -77,7 +77,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         this.columnMap = this.allFields().stream().collect(Collectors.toMap(f -> f.column, f -> f));
         this.fieldsMap = this.allFields().stream().collect(Collectors.toMap(f -> f.name, f -> f));
         this.allColumns = Collections.unmodifiableList(this.allFields().stream().map(f -> f.column).collect(toList()));
-        this.selectAll = this.allColumns.stream().map(dbType::wrap).collect(joining(", "));
+        this.selectAll = CachedFrag.set(db -> this.allColumns.stream().map(db::wrap).collect(joining(", ")));
         this.allFields = Collections.unmodifiableList(this.allFields().stream().map(f -> f.name).collect(toList()));
     }
 
@@ -112,19 +112,19 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     /**
      * entity转换为Map
      *
-     * @param entity     Entity
-     * @param isProperty true: 实体属性值, false: 数据库字段值
-     * @param isNoN      is not null, true: 只允许非空值, false: 允许空值
+     * @param entity      Entity
+     * @param isProperty  true: 实体属性值, false: 数据库字段值
+     * @param allowedNull is allowed null, true:  允许空值, false:只允许非空值
      * @return entity value map
      */
-    private Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean isNoN) {
+    private Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean allowedNull) {
         Map<String, Object> map = new HashMap<>(this.allFields.size());
         if (entity == null) {
             return map;
         }
         for (FieldMapping f : this.allFields()) {
             Object value = f.getter.get(entity);
-            if (!isNoN || value != null) {
+            if (allowedNull || value != null) {
                 map.put(isProperty ? f.name : f.column, value);
             }
         }
@@ -132,13 +132,13 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     }
 
     @Override
-    public Map<String, Object> toColumnMap(IEntity entity, boolean isNoN) {
-        return this.toMap(entity, false, isNoN);
+    public Map<String, Object> toColumnMap(IEntity entity, boolean allowedNull) {
+        return this.toMap(entity, false, allowedNull);
     }
 
     @Override
-    public Map<String, Object> toEntityMap(IEntity entity, boolean isNoN) {
-        return this.toMap(entity, true, isNoN);
+    public Map<String, Object> toEntityMap(IEntity entity, boolean allowedNull) {
+        return this.toMap(entity, true, allowedNull);
     }
 
     @Override
@@ -170,18 +170,20 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         return copy;
     }
 
+    private final CachedFrag tableSegment = CachedFrag.set(db -> {
+        if (NeedSchemaDb.contains(db) && notBlank(schema)) {
+            return this.schema + "." + db.wrap(this.tableName);
+        } else {
+            return db.wrap(this.tableName);
+        }
+    });
+
     /**
      * 获取表名
      */
     @Override
-    public Supplier<String> table() {
-        if (tableDynamic != null) {
-            return () -> tableDynamic.get(this.tableName);
-        } else if (NeedSchemaDb.contains(dbType) && notBlank(schema)) {
-            return () -> this.schema + "." + this.dbType.wrap(this.tableName);
-        } else {
-            return () -> this.dbType.wrap(this.tableName);
-        }
+    public IFragment table() {
+        return tableDynamic == null ? this.tableSegment : db -> tableDynamic.get(this.tableName);
     }
 
     @Override
@@ -207,8 +209,8 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * @param wrapper IQuery或IUpdate
      * @return 表名称
      */
-    public String dynamic(IWrapper wrapper) {
-        String table = (String) wrapper.getTable().get();
-        return isBlank(table) ? this.getTableName() : table;
+    public IFragment dynamic(IWrapper wrapper) {
+        IFragment table = wrapper.table(false);
+        return table != null && table.notEmpty() ? table : this.table();
     }
 }

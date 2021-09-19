@@ -1,64 +1,59 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.segment.*;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
+import cn.org.atool.fluent.mybatis.segment.list.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.Setter;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.trim;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 
 /**
  * 合并 SQL 片段
  *
  * @author darui.wu
  */
-@Getter
 public class MergeSegments extends BaseSegmentList {
 
-    private final WhereSegmentList where = new WhereSegmentList();
+    public final WhereSegmentList where = new WhereSegmentList();
 
-    private final GroupBySegmentList groupBy = new GroupBySegmentList();
+    public final GroupBySegmentList groupBy = new GroupBySegmentList();
 
-    private final HavingSegmentList having = new HavingSegmentList();
+    public final HavingSegmentList having = new HavingSegmentList();
 
-    private final OrderBySegmentList orderBy = new OrderBySegmentList();
+    public final OrderBySegmentList orderBy = new OrderBySegmentList();
 
     @Setter(AccessLevel.NONE)
     private String lastSql = EMPTY;
 
-    public MergeSegments setLastSql(String lastSql) {
-        this.lastSql = isBlank(this.lastSql) ? lastSql : this.lastSql + SPACE + lastSql;
-        return this;
-    }
-
     /**
      * 添加sql片段
      *
-     * @param first    sql
+     * @param keyword  关键字
      * @param segments sql片段
      */
     @Override
-    public MergeSegments add(ISqlSegment first, ISqlSegment... segments) {
-        if (first == null) {
-            return this;
+    public MergeSegments add(KeyFrag keyword, IFragment... segments) {
+        switch (keyword) {
+            case ORDER_BY:
+                this.orderBy.add(ORDER_BY, segments);
+                break;
+            case GROUP_BY:
+                this.groupBy.add(GROUP_BY, segments);
+                break;
+            case HAVING:
+                this.having.add(HAVING, segments);
+                break;
+            default:
+                where.add(keyword, segments);
+                break;
         }
-        if (ORDER_BY == first) {
-            orderBy.add(first, segments);
-        } else if (GROUP_BY == first) {
-            groupBy.add(first, segments);
-        } else if (HAVING == first) {
-            having.add(first, segments);
-        } else {
-            where.add(first, segments);
-        }
-        super.cache = null;
+        super.cached = null;
         return this;
     }
-
 
     /**
      * <pre>
@@ -73,39 +68,16 @@ public class MergeSegments extends BaseSegmentList {
      * @return sql
      */
     @Override
-    protected String build() {
-        String sql = where.sql() + groupBy.sql() + having.sql() + orderBy.sql();
-        return sql.trim() + last();
+    public IFragment get() {
+        return where.get().plus(groupBy.get()).plus(having.get()).plus(orderBy.get()).plus(last());
     }
 
     public String last() {
         return isBlank(lastSql) ? EMPTY : SPACE + lastSql.trim();
     }
 
-    /**
-     * 返回where语句
-     *
-     * @return ignore
-     */
-    public String whereSql() {
-        return trim(where.sql());
-    }
-
-    /**
-     * groupBy... having... 部分
-     *
-     * @return ignore
-     */
-    public String groupBy() {
-        return trim(groupBy.sql() + having.sql());
-    }
-
-    /**
-     * orderBy... 部分
-     *
-     * @return ignore
-     */
-    public String orderBy() {
-        return trim(orderBy.sql());
+    public MergeSegments last(String lastSql) {
+        this.lastSql = isBlank(this.lastSql) ? lastSql : this.lastSql + SPACE + lastSql;
+        return this;
     }
 }

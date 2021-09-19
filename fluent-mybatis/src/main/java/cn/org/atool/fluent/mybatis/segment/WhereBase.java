@@ -1,15 +1,15 @@
 package cn.org.atool.fluent.mybatis.segment;
 
-import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.*;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
@@ -21,10 +21,10 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
-import static cn.org.atool.fluent.mybatis.base.model.Column.EMPTY_COLUMN;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.AND;
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.OR;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.EMPTY_COLUMN;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.AND;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.OR;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -49,7 +49,7 @@ public abstract class WhereBase<
     /**
      * 当前连接符: AND 连接, OR 连接
      */
-    private final KeyWordSegment currOp;
+    private final KeyFrag currOp;
 
     public WHERE and;
 
@@ -120,7 +120,7 @@ public abstract class WhereBase<
      */
     public WHERE eqByEntity(IEntity entity, BiPredicate<String, Object> predicate) {
         assertNotNull("entity", entity);
-        Map<String, Object> map = entity.toColumnMap(false);
+        Map<String, Object> map = entity.toColumnMap(true);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();
             Object value = entry.getValue();
@@ -246,11 +246,11 @@ public abstract class WhereBase<
      */
     public <V> WHERE eqMap(Map<String, V> params, boolean ignoreNull) {
         params.forEach((k, v) -> {
-            Column column = Column.column(k, this.wrapper);
+            Column column = Column.set(this.wrapper, k);
             if (notNull(v)) {
-                this.wrapper.getWrapperData().apply(AND, column, EQ, v);
+                this.wrapper.data().apply(AND, column, EQ, v);
             } else if (!ignoreNull) {
-                this.wrapper.getWrapperData().apply(AND, column, IS_NULL);
+                this.wrapper.data().apply(AND, column, IS_NULL);
             }
         });
         return this.and;
@@ -266,7 +266,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE exists(String select, Object... values) {
-        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, select, values);
+        wrapper.data().apply(currOp, EMPTY_COLUMN, EXISTS, select, values);
         return this.and;
     }
 
@@ -327,7 +327,7 @@ public abstract class WhereBase<
      */
     public WHERE exists(IQuery query) {
         ((BaseWrapper) query).sharedParameter(wrapper);
-        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().sqlWithoutPaged());
+        wrapper.data().apply(currOp, EMPTY_COLUMN, EXISTS, query.data().sql(false));
         return this.and;
     }
 
@@ -341,7 +341,7 @@ public abstract class WhereBase<
     public WHERE exists(boolean condition, IQuery query) {
         if (condition) {
             ((BaseWrapper) query).sharedParameter(wrapper);
-            wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, EXISTS, query.getWrapperData().sqlWithoutPaged());
+            wrapper.data().apply(currOp, EMPTY_COLUMN, EXISTS, query.data().sql(false));
         }
         return this.and;
     }
@@ -356,7 +356,7 @@ public abstract class WhereBase<
      * @return self
      */
     public WHERE notExists(String select, Object... values) {
-        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, select, values);
+        wrapper.data().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, select, values);
         return this.and;
     }
 
@@ -419,7 +419,7 @@ public abstract class WhereBase<
      */
     public WHERE notExists(IQuery query) {
         ((BaseWrapper) query).sharedParameter(wrapper);
-        wrapper.getWrapperData().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, query.getWrapperData().sqlWithoutPaged());
+        wrapper.data().apply(currOp, EMPTY_COLUMN, NOT_EXISTS, query.data().sql(false));
         return this.and;
     }
 
@@ -448,7 +448,7 @@ public abstract class WhereBase<
      * @return children
      */
     public WHERE applyFunc(String applySql, Object... paras) {
-        wrapper.getWrapperData().apply(this.currOp, EMPTY_COLUMN, RETAIN, applySql, paras);
+        wrapper.data().apply(this.currOp, EMPTY_COLUMN, RETAIN, applySql, paras);
         return this.and;
     }
 
@@ -486,8 +486,8 @@ public abstract class WhereBase<
      * @return 条件设置器
      */
     public WHERE apply(String column, ISqlOp op, Object... paras) {
-        Column _column = Column.column(column, this.wrapper);
-        this.wrapper.getWrapperData().apply(this.currOp, _column, op, paras);
+        Column _column = Column.set(this.wrapper, column);
+        this.wrapper.data().apply(this.currOp, _column, op, paras);
         return this.and;
     }
 
@@ -507,7 +507,7 @@ public abstract class WhereBase<
      * @return 条件设置器
      */
     public WHERE apply(Column column, ISqlOp op, Object... paras) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, op, paras);
+        this.wrapper.data().apply(this.currOp, column, op, paras);
         return this.and;
     }
 
@@ -528,7 +528,12 @@ public abstract class WhereBase<
      * @return WHERE
      */
     WHERE apply(Column column, ISqlOp op, String expression, Object... args) {
-        this.wrapper.getWrapperData().apply(this.currOp, column, op, expression, args);
+        this.wrapper.data().apply(this.currOp, column, op, expression, args);
+        return this.and;
+    }
+
+    WHERE apply(Column column, ISqlOp op, IFragment expression, Object... args) {
+        this.wrapper.data().apply(this.currOp, column, op, expression, args);
         return this.and;
     }
 
@@ -585,23 +590,21 @@ public abstract class WhereBase<
         return nestedWhere(OR, query);
     }
 
-    private WHERE nestedWhere(KeyWordSegment andOr, QFunction query) {
+    private WHERE nestedWhere(KeyFrag andOr, QFunction query) {
         final IQuery nested = NestedQueryFactory.nested(this.wrapper, true);
         query.apply(nested);
         return this.nestedWhere(andOr, nested);
     }
 
-    private WHERE nestedWhere(KeyWordSegment andOr, IQuery query) {
-        String sql = query.getWrapperData().getMergeSql();
-        if (If.notBlank(sql)) {
-            ((BaseWrapper) query).sharedParameter(this.wrapper);
-            wrapper.getWrapperData().apply(andOr, EMPTY_COLUMN, BRACKET, sql);
-        }
+    private WHERE nestedWhere(KeyFrag andOr, IQuery query) {
+        IFragment seg = query.data().getMerged();
+        ((BaseWrapper) query).sharedParameter(this.wrapper);
+        wrapper.data().apply(andOr, EMPTY_COLUMN, BRACKET, seg);
         return this.and;
     }
 
     Parameters getParameters() {
-        return this.wrapper.getWrapperData().getParameters();
+        return this.wrapper.data().getParameters();
     }
 
     @Override

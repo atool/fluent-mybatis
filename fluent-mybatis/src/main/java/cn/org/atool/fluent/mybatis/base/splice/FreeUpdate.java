@@ -1,16 +1,13 @@
 package cn.org.atool.fluent.mybatis.base.splice;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
-import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateSetter;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
-import lombok.Setter;
+import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.UpdateSetter;
 import lombok.experimental.Accessors;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateOrderBy;
-import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.UpdateWhere;
+import static cn.org.atool.fluent.mybatis.base.splice.FreeSegment.UpdateOrderBy;
+import static cn.org.atool.fluent.mybatis.base.splice.FreeSegment.UpdateWhere;
 
 /**
  * FreeUpdate
@@ -48,7 +45,7 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
      * @return self
      */
     public FreeUpdate customizedByPlaceholder(String sql, Object parameter) {
-        this.wrapperData.customizedSql(sql, parameter);
+        this.data.customizedSql(sql, parameter);
         return this;
     }
 
@@ -61,16 +58,8 @@ public class FreeUpdate extends BaseUpdate<EmptyEntity, FreeUpdate, FreeQuery> {
      * @return self
      */
     public FreeUpdate customizedByQuestion(String sql, Object... paras) {
-        String placeholder = this.wrapperData.paramSql(null, sql, paras);
-        this.wrapperData.customizedSql(placeholder, null);
+        String placeholder = this.data.paramSql(null, sql, paras);
+        this.data.customizedSql(placeholder, null);
         return this;
-    }
-
-    @Setter
-    private DbType dbType;
-
-    @Override
-    public DbType dbType() {
-        return dbType == null ? IRef.instance().defaultDbType() : dbType;
     }
 }

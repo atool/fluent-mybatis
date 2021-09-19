@@ -22,8 +22,7 @@ public class NestedQueryFactory {
      */
     public static <Q extends IBaseQuery> Q nested(BaseWrapper wrapper, boolean sameAlias) {
         if (wrapper instanceof FreeQuery) {
-            FreeQuery query = new FreeQuery(wrapper.getTable(), sameAlias ? wrapper.getTableAlias() : null);
-            query.setDbType(wrapper.dbType());
+            FreeQuery query = new FreeQuery(wrapper.table(false), sameAlias ? wrapper.getTableAlias() : null);
             return (Q) query;
         }
         IMapping mapping = IRef.instance().byEntity(wrapper.getEntityClass());

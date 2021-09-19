@@ -14,6 +14,7 @@ public interface StrConstant {
      * 空串
      */
     String EMPTY = "";
+
     /**
      * SELECT
      */
@@ -86,4 +87,6 @@ public interface StrConstant {
      * 双引号
      */
     char DOUBLE_QUOTATION = '"';
+
+    char DOT = '.';
 }

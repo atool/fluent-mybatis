@@ -71,6 +71,6 @@ public class VersionTest extends BaseTest {
                 .set.code().is("new").end()
                 .where.id().eq(1L).end())
             , MyBatisSystemException.class)
-            .contains("no version condition was found");
+            .contains("@Version field of where condition not set.");
     }
 }

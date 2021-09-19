@@ -1,12 +1,14 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.HAVING;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_COUNT_1;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.HAVING;
 
 /**
  * BaseHaving: having设置
@@ -38,13 +40,13 @@ public abstract class HavingBase<
      * @param args      参数列表
      * @return Having设置器
      */
-    H aggregate(String aggregate, ISqlOp op, Object... args) {
-        this.wrapper.getWrapperData().apply(HAVING, Column.column(aggregate, this.wrapper), op, args);
+    H aggregate(IFragment aggregate, ISqlOp op, Object... args) {
+        this.wrapper.data().apply(HAVING, aggregate, op, args);
         return (H) this;
     }
 
-    H apply(String aggregate, ISqlOp op, String func, Object... args) {
-        this.wrapper.getWrapperData().apply(HAVING, Column.column(aggregate, this.wrapper), op, func, args);
+    H apply(IFragment aggregate, ISqlOp op, IFragment func, Object... args) {
+        this.wrapper.data().apply(HAVING, aggregate, op, func, args);
         return (H) this;
     }
 
@@ -56,8 +58,7 @@ public abstract class HavingBase<
      * @return Having条件判断
      */
     protected HavingOperator<H> apply(FieldMapping column, IAggregate aggregate) {
-        Column _column = Column.column(column, this.wrapper);
-        return this.operator.aggregate(_column.wrapColumn(), aggregate);
+        return this.operator.aggregate(Column.set(this.wrapper, column), aggregate);
     }
 
     /**
@@ -66,7 +67,7 @@ public abstract class HavingBase<
      * @return Having条件判断
      */
     public HavingOperator<H> count() {
-        return this.operator.aggregate(null, (c) -> "count(1)");
+        return this.operator.aggregate(null, (c) -> SEG_COUNT_1);
     }
 
     /**
@@ -76,8 +77,8 @@ public abstract class HavingBase<
      * @return Having条件判断
      */
     public HavingOperator<H> apply(String column) {
-        Column _column = Column.column(column, this.wrapper);
-        return this.operator.aggregate(_column.wrapColumn(),
+        Column _column = Column.set(this.wrapper, column);
+        return this.operator.aggregate(_column,
             this.aggregate == null ? c -> c : this.aggregate);
     }
 

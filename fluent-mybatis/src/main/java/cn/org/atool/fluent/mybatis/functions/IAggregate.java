@@ -1,5 +1,8 @@
 package cn.org.atool.fluent.mybatis.functions;
 
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+
 /**
  * 聚合接口
  *
@@ -13,5 +16,9 @@ public interface IAggregate {
      * @param column 聚合字段
      * @return 聚合表达式
      */
-    String aggregate(String column);
+    IFragment aggregate(IFragment column);
+
+    default IFragment aggregate(String column) {
+        return this.aggregate(Column.set(column));
+    }
 }

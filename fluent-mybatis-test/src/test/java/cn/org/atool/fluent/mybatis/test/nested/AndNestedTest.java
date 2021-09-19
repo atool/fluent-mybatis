@@ -35,7 +35,7 @@ public class AndNestedTest extends BaseTest {
             .eq("SELECT COUNT(*) " +
                 "FROM fluent_mybatis.student " +
                 "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?) " +
-                "AND ( `age` = ? AND `id` = ? )");
+                "AND (`age` = ? AND `id` = ?)");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class AndNestedTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
-            "WHERE `id` < ? AND ( `age` = ? AND `id` > ? )");
+            "WHERE `id` < ? AND (`age` = ? AND `id` > ?)");
         db.sqlList().wantFirstPara().eqList("test", 100, 24, 3L);
     }
 
@@ -70,7 +70,7 @@ public class AndNestedTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
-            "WHERE `id` < ? OR ( `age` = ? AND `id` > ? )");
+            "WHERE `id` < ? OR (`age` = ? AND `id` > ?)");
         db.sqlList().wantFirstPara().eqList("test", 100, 24, 3L);
     }
 
@@ -90,19 +90,21 @@ public class AndNestedTest extends BaseTest {
             .eq("SELECT COUNT(*) " +
                 "FROM fluent_mybatis.student " +
                 "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?) " +
-                "AND ( `age` = ? AND `id` = ? )");
+                "AND (`age` = ? AND `id` = ?)");
     }
 
     @DisplayName("And嵌套查询为空的场景")
     @Test
     void test_and_nested_is_null() {
         StudentQuery query = StudentQuery.emptyQuery()
-            .where.id().in(q -> q
+            .where
+            .id().in(q -> q
                 .selectId()
                 .where.id().eq(3L).end())
             .and(q -> q
                 .where.age().eq(24, If::everFalse)
-                .or.id().eq(3L, If::everFalse).end()
+                .or.id().eq(3L, If::everFalse)
+                .end()
             )
             .end();
         mapper.count(query);
@@ -148,6 +150,6 @@ public class AndNestedTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("SELECT COUNT(*) FROM fluent_mybatis.student " +
                 "WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?) " +
-                "OR ( ( `age` = ? OR `id` = ? AND `id` = ? ) AND ( `id` = ? OR `id` = ? ) )");
+                "OR ((`age` = ? OR `id` = ? AND `id` = ?) AND (`id` = ? OR `id` = ?))");
     }
 }

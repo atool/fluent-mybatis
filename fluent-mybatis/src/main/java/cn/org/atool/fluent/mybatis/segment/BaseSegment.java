@@ -34,25 +34,6 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      */
     protected FieldMapping current;
 
-    /**
-     * 加上表别名的字段名称
-     *
-     * @return [t.]column
-     */
-    protected String currentWithAlias() {
-        return this.columnWithAlias(this.current);
-    }
-
-    /**
-     * 加上表别名的字段名称
-     *
-     * @param column [t.]column
-     * @return [t.]column
-     */
-    protected String columnWithAlias(FieldMapping column) {
-        return BaseWrapperHelper.appendAlias(column.column, this.wrapper);
-    }
-
     protected BaseSegment(W wrapper) {
         this.wrapper = (BaseWrapper) wrapper;
     }
@@ -93,8 +74,8 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      *
      * @return WrapperData
      */
-    WrapperData wrapperData() {
-        return this.wrapper.getWrapperData();
+    WrapperData data() {
+        return this.wrapper.data();
     }
 
     /**
@@ -111,7 +92,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      */
     protected void byEntity(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> columns) {
         assertNotNull("entity", entity);
-        Map<String, Object> map = entity.toColumnMap(false);
+        Map<String, Object> map = entity.toColumnMap(true);
 
         String pk = IRef.instance().primaryColumn(entity.entityClass());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -135,7 +116,7 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
 
     protected void byExclude(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> excludes) {
         assertNotNull("entity", entity);
-        Map<String, Object> map = entity.toColumnMap(false);
+        Map<String, Object> map = entity.toColumnMap(true);
         String pk = IRef.instance().primaryColumn(entity.entityClass());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String column = entry.getKey();

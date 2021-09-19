@@ -45,17 +45,17 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toEntityMap() {
-        return this.toEntityMap(true);
+        return this.toEntityMap(false);
     }
 
     /**
      * 将实体对象转换为map对象
      *
-     * @param isNoN true:仅仅非空字段; false: 所有字段
+     * @param allowedNull true:所有字段; false: 仅仅非空字段
      * @return map对象
      */
-    default Map<String, Object> toEntityMap(boolean isNoN) {
-        return IRef.entityKit(this.entityClass()).toEntityMap(this, isNoN);
+    default Map<String, Object> toEntityMap(boolean allowedNull) {
+        return IRef.entityKit(this.entityClass()).toEntityMap(this, allowedNull);
     }
 
     /**
@@ -64,17 +64,17 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toColumnMap() {
-        return this.toColumnMap(true);
+        return this.toColumnMap(false);
     }
 
     /**
      * 将实体对象转换为数据库字段为key的map对象
      *
-     * @param isNoN true:仅仅非空字段; false: 所有字段
+     * @param allowNull true:仅仅非空字段; false: 所有字段
      * @return map对象
      */
-    default Map<String, Object> toColumnMap(boolean isNoN) {
-        return IRef.entityKit(this.entityClass()).toColumnMap(this, isNoN);
+    default Map<String, Object> toColumnMap(boolean allowNull) {
+        return IRef.entityKit(this.entityClass()).toColumnMap(this, allowNull);
     }
 
     /**

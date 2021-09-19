@@ -1,15 +1,13 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.segment.model.ISqlSegment;
-
-import java.util.ArrayList;
-import java.util.List;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.GROUP_BY;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.GROUP_BY;
 
 /**
  * BaseGroupBy
@@ -26,7 +24,7 @@ public abstract class GroupByBase<
     /**
      * 排序字段
      */
-    private final List<ISqlSegment> apply = new ArrayList<>();
+    private final JoiningFrag apply = JoiningFrag.get();
 
     protected GroupByBase(Q query) {
         super(query);
@@ -41,8 +39,7 @@ public abstract class GroupByBase<
     public G apply(String... columns) {
         for (String column : columns) {
             if (notBlank(column)) {
-                Column _column = Column.column(column, this.wrapper);
-                apply.add(_column::wrapColumn);
+                apply.add(Column.set(this.wrapper, column));
             }
         }
         return (G) this;
@@ -68,8 +65,7 @@ public abstract class GroupByBase<
     public G apply(FieldMapping... columns) {
         for (FieldMapping column : columns) {
             if (column != null) {
-                Column _column = Column.column(column, this.wrapper);
-                apply.add(_column::wrapColumn);
+                apply.add(Column.set(this.wrapper, column));
             }
         }
         return (G) this;
@@ -94,8 +90,8 @@ public abstract class GroupByBase<
 
     @Override
     public Q end() {
-        for (ISqlSegment segment : this.apply) {
-            this.wrapper.getWrapperData().apply(GROUP_BY, segment);
+        for (IFragment segment : this.apply.getSegments()) {
+            this.wrapper.data().apply(GROUP_BY, segment);
         }
         return super.end();
     }

@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.segment.fragment.FormatFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
 /**
  * 聚合函数枚举
@@ -39,7 +41,7 @@ public enum Aggregate implements IAggregate {
         this.expression = expression;
     }
 
-    public String aggregate(String column) {
-        return String.format(expression, column);
+    public IFragment aggregate(IFragment column) {
+        return FormatFrag.format(expression, column);
     }
 }

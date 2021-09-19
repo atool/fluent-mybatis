@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.ifs.IfsPredicate;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 
 import java.util.function.Predicate;
 
@@ -35,8 +35,8 @@ public class UpdateApply<
      * @return 更新器
      */
     public S is(Object value) {
-        Column column = Column.column(this.current(), this.segment.wrapper);
-        this.segment.wrapperData().updateSet(column, value);
+        Column column = Column.set(this.segment.wrapper, this.current());
+        this.segment.data().updateSet(column, value);
         return segment;
     }
 
@@ -92,8 +92,8 @@ public class UpdateApply<
      */
     public S applyFunc(String function, Object... args) {
         assertNotBlank("function", function);
-        Column column = Column.column(this.current(), this.segment.wrapper);
-        this.segment.wrapperData().updateSql(column, function, args);
+        Column column = Column.set(this.segment.wrapper, this.current());
+        this.segment.data().updateSql(column, function, args);
         return this.segment;
     }
 

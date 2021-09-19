@@ -2,16 +2,17 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.base.model.Column.EMPTY_COLUMN;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
-import static cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment.ORDER_BY;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.EMPTY_COLUMN;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.ORDER_BY;
 
 /**
  * BaseOrder: 排序对象基类
@@ -158,12 +159,10 @@ public abstract class OrderByBase<
      * @param isAsc 是否顺序
      */
     private void applyField(String column, boolean isAsc) {
-        if (isBlank(column)) {
-            return;
+        if (notBlank(column)) {
+            IFragment segment = Column.set(this.wrapper, column).plus(SPACE).plus(isAsc ? ASC : DESC);
+            this.wrapper.data().apply(ORDER_BY, EMPTY_COLUMN, RETAIN, segment);
         }
-        Column _column = Column.column(column, this.wrapper);
-        String segment = _column.wrapColumn() + SPACE + (isAsc ? ASC : DESC);
-        this.wrapper.getWrapperData().apply(ORDER_BY, EMPTY_COLUMN, RETAIN, segment);
     }
 
     /**

@@ -1,25 +1,23 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
@@ -39,19 +37,18 @@ public abstract class BaseWrapper<
     W extends IWrapper<E, W, NQ>,
     NQ extends IBaseQuery<E, NQ>
     >
-    implements IWrapper<E, W, NQ>, IHasDbType {
+    implements IWrapper<E, W, NQ> {
     private static final long serialVersionUID = 2674302532927710150L;
 
-    @Getter
-    protected Supplier<String> table;
+    protected IFragment table;
     /**
      * 表别名
      */
     @Getter
     protected String tableAlias;
 
-    @Getter
-    protected WrapperData wrapperData;
+    @Getter(AccessLevel.NONE)
+    protected WrapperData data;
 
     @Getter
     protected Class entityClass;
@@ -60,16 +57,15 @@ public abstract class BaseWrapper<
         this.tableAlias = tableAlias;
     }
 
-    protected BaseWrapper(Supplier<String> table, String tableAlias, Class<E> entityClass) {
+    protected BaseWrapper(IFragment table, String tableAlias, Class<E> entityClass) {
         this(table, tableAlias, new Parameters(), entityClass);
-        this.entityClass = entityClass;
     }
 
-    protected BaseWrapper(Supplier<String> table, String tableAlias, Parameters parameters, Class<E> entityClass) {
+    protected BaseWrapper(IFragment table, String tableAlias, Parameters parameters, Class<E> entityClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
         this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();
-        this.wrapperData = new WrapperData(this, parameters);
+        this.data = new WrapperData(this, parameters);
         this.entityClass = entityClass;
     }
 
@@ -80,6 +76,17 @@ public abstract class BaseWrapper<
      */
     public Optional<IMapping> mapping() {
         return Optional.empty();
+    }
+
+    @Override
+    public IFragment table(boolean notFoundError) {
+        if (this.table != null && this.table.notEmpty()) {
+            return this.table;
+        } else if (notFoundError) {
+            return this.mapping().map(IMapping::table).orElseThrow(() -> new RuntimeException("table name not found."));
+        } else {
+            return this.mapping().map(IMapping::table).orElse(null);
+        }
     }
 
     /**
@@ -101,18 +108,12 @@ public abstract class BaseWrapper<
         return this.mapping().map(IMapping::getAllColumns).orElse(Collections.emptyList());
     }
 
-    protected TableMeta getTableMeta() {
-        return TableMetaHelper.getTableInfo(this.entityClass);
+    public WrapperData data() {
+        return data;
     }
 
-    /**
-     * 给字段名称追加上表别名
-     *
-     * @param column 字段
-     * @return taleAlias.column
-     */
-    protected String appendAlias(String column) {
-        return Column.column(column, this).wrapColumn();
+    protected TableMeta getTableMeta() {
+        return TableMetaHelper.getTableInfo(this.entityClass);
     }
 
     /**
@@ -121,7 +122,7 @@ public abstract class BaseWrapper<
      * @param parameters 参数
      */
     protected void sharedParameter(Parameters parameters) {
-        this.wrapperData.getParameters().sharedParameter(parameters);
+        this.data.getParameters().sharedParameter(parameters);
     }
 
     /**
@@ -130,7 +131,7 @@ public abstract class BaseWrapper<
      * @param wrapper BaseWrapper
      */
     protected void sharedParameter(BaseWrapper wrapper) {
-        this.wrapperData.getParameters().sharedParameter(wrapper.getWrapperData().getParameters());
+        this.data.getParameters().sharedParameter(wrapper.data().getParameters());
     }
 
     /**
@@ -141,15 +142,6 @@ public abstract class BaseWrapper<
      */
     public FieldMapping column(String column) {
         return this.column2mapping().get(column);
-    }
-
-    /**
-     * 数据库类型
-     *
-     * @return DbType
-     */
-    public DbType dbType() {
-        return this.mapping().map(IMapping::dbType).orElseThrow(() -> new RuntimeException("DbType is not set."));
     }
 
     /**

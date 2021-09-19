@@ -1,10 +1,12 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
-import static cn.org.atool.fluent.mybatis.If.isEmpty;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.If.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.STR_FORMAT;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
 
 /**
  * 操作符定义接口类
@@ -53,7 +55,10 @@ public interface ISqlOp {
      * @param paras      参数列表
      * @return sql片段
      */
-    default String operator(Column column, Parameters parameters, String expression, Object... paras) {
+    default IFragment operator(IFragment column, Parameters parameters, String expression, Object... paras) {
+        if (!column.notEmpty() && isBlank(expression) && isEmpty(paras)) {
+            return SEG_EMPTY;
+        }
         final String placeHolder = this.getPlaceHolder();
         String sql = placeHolder;
         if (notBlank(expression)) {
@@ -61,6 +66,10 @@ public interface ISqlOp {
         } else if (placeHolder.contains(STR_FORMAT)) {
             sql = SqlOp.placeHolder(placeHolder, paras);
         }
-        return isEmpty(paras) ? sql : parameters.paramSql(column, sql, paras);
+        return CachedFrag.set(isEmpty(paras) ? sql : parameters.paramSql(column, sql, paras));
+    }
+
+    default IFragment operator(IFragment column, Parameters parameters, IFragment expression, Object... paras) {
+        return db -> this.operator(column, parameters, expression.get(db), paras).get(db);
     }
 }

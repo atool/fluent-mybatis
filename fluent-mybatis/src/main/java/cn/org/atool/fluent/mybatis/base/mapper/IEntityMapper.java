@@ -381,7 +381,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
         assertNotEmpty("ids", condition);
         IUpdate update = this.mapping().updater();
         /* 逻辑删除忽略版本号 */
-        update.getWrapperData().setIgnoreLockVersion(true);
+        update.data().setIgnoreLockVersion(true);
         factory(this).setLogicDeleted(this.mapping(), update);
         factory(this).eqByMap(this.mapping(), (IWrapper) update, isColumn, condition);
         return this.updateBy(update);
@@ -396,7 +396,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     default int logicDelete(IQuery query) {
         assertNotNull("query", query);
         /* 逻辑删除忽略版本号 */
-        query.getWrapperData().setIgnoreLockVersion(true);
+        query.data().setIgnoreLockVersion(true);
         IUpdate update = factory(this).logicDeleteBy(this.mapping(), query);
         return this.updateBy(update);
     }

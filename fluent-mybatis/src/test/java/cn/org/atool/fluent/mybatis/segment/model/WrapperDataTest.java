@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.test4j.hamcrest.IWant;
@@ -16,7 +17,7 @@ class WrapperDataTest implements IWant {
     @MethodSource("data4parseAlias")
     @ParameterizedTest
     void parseAlias(String select, List<String> expected) {
-        List<String> list = WrapperData.parseAlias(select);
+        List<String> list = MybatisUtil.parseAlias(select);
         want.list(list).eq(expected);
     }
 

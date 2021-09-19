@@ -105,7 +105,7 @@ public class SqlProvider {
         String[] fields = (String[]) map.get(Param_Fields);
         BaseQuery query = (BaseQuery) map.get(Param_EW);
         AMapping mapping = mapping(context);
-        String table = mapping.dynamic(query);
+        String table = mapping.dynamic(query).get(mapping.dbType());
         return sqlKit(mapping).insertSelect(table, fields, query);
     }
 

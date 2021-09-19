@@ -1,11 +1,13 @@
 package cn.org.atool.fluent.mybatis.base.model;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 追加更新默认值
@@ -17,14 +19,14 @@ public class UpdateDefault {
      * 待追加更新默认值列表
      */
     @Getter
-    private final List<String> updateDefaults = new ArrayList<>();
+    private final JoiningFrag updateDefaults = JoiningFrag.get(",\n");
     /**
      * 显式指定的更新字段列表
      */
-    private final Map<String, String> updates;
+    private final Set<IFragment> existsColumn;
 
-    public UpdateDefault(Map<String, String> updates) {
-        this.updates = updates;
+    public UpdateDefault(Map<IFragment, String> updates) {
+        this.existsColumn = updates.keySet();
     }
 
     /**
@@ -35,11 +37,10 @@ public class UpdateDefault {
      * @param _default 默认值
      * @return UpdateDefault
      */
-    public UpdateDefault add(DbType dbType, FieldMapping field, String _default) {
-        String column = field.column;
-        String wrap = dbType == null ? column : dbType.wrap(column);
-        if (!updates.containsKey(column) && !updates.containsKey(wrap)) {
-            updateDefaults.add(wrap + " = " + _default);
+    public UpdateDefault add(IWrapper wrapper, FieldMapping field, String _default) {
+        Column column = Column.set(wrapper, field);
+        if (!existsColumn.contains(column)) {
+            updateDefaults.add(column.plus(" = ").plus(_default));
         }
         return this;
     }

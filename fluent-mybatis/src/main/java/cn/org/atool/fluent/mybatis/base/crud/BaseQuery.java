@@ -1,12 +1,13 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
 import java.util.function.Supplier;
@@ -31,12 +32,16 @@ public abstract class BaseQuery<
     implements IBaseQuery<E, Q> {
 
     protected BaseQuery(Supplier<String> table, String alias, Class entityClass) {
+        super(table == null ? null : db -> table.get(), alias, entityClass);
+    }
+
+    protected BaseQuery(IFragment table, String alias, Class entityClass) {
         super(table, alias, entityClass);
     }
 
     @Override
     public Q distinct() {
-        this.wrapperData.setDistinct(true);
+        this.data.setDistinct(true);
         return (Q) this;
     }
 
@@ -55,7 +60,7 @@ public abstract class BaseQuery<
     public Q selectId() {
         String primary = this.fieldName(UniqueType.PRIMARY_ID);
         if (primary == null) {
-            throw new FluentMybatisException("The primary key of in table[" + this.wrapperData.getTable() + "] was not found.");
+            throw new FluentMybatisException("The primary key of in table[" + this.mapping().get().getTableName() + "] was not found.");
         } else {
             return this.select(primary);
         }
@@ -72,8 +77,7 @@ public abstract class BaseQuery<
             return (Q) this;
         }
         for (String column : columns) {
-            Column _column = Column.column(column, this);
-            this.wrapperData.addSelectColumn(_column.wrapColumn());
+            this.data.addSelectColumn(Column.set(this, column));
         }
         return (Q) this;
     }
@@ -85,13 +89,13 @@ public abstract class BaseQuery<
 
     @Override
     public Q limit(int from, int limit) {
-        this.wrapperData.setPaged(new PagedOffset(from, limit));
+        this.data.setPaged(new PagedOffset(from, limit));
         return (Q) this;
     }
 
     @Override
     public Q last(String lastSql) {
-        this.wrapperData.last(lastSql);
+        this.data.last(lastSql);
         return (Q) this;
     }
 
@@ -103,7 +107,7 @@ public abstract class BaseQuery<
      * @param queries 查询条件列表
      * @return ignore
      */
-    public Q union(IBaseQuery... queries) {
+    public Q union(IQuery... queries) {
         return this.union(UNION, queries);
     }
 
@@ -115,20 +119,20 @@ public abstract class BaseQuery<
      * @param queries 查询条件列表
      * @return ignore
      */
-    public Q unionAll(IBaseQuery... queries) {
+    public Q unionAll(IQuery... queries) {
         return this.union(UNION_ALL, queries);
     }
 
-    private Q union(String key, IBaseQuery... queries) {
-        if (this.wrapperData.getPaged() != null) {
+    private Q union(String key, IQuery... queries) {
+        if (this.data.paged() != null) {
             throw new RuntimeException("Limit syntax is not supported for union queries.");
         }
         if (queries == null || queries.length == 0) {
             throw new IllegalArgumentException("The size of parameter[queries] should be greater than zero.");
         }
-        for (IBaseQuery query : queries) {
-            this.wrapperData.union(key, query);
-            query.getWrapperData().sharedParameter(this.wrapperData);
+        for (IQuery query : queries) {
+            this.data.union(key, query);
+            query.data().sharedParameter(this.data);
         }
         return (Q) this;
     }

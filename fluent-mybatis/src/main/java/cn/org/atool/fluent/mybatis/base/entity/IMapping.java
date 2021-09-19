@@ -5,12 +5,13 @@ import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * EntityMapping基类
@@ -22,13 +23,13 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库表名
      */
-    Supplier<String> table();
+    IFragment table();
 
     /**
      * 返回表名
      */
     default String getTableName() {
-        return this.table().get();
+        return this.table().get(this.dbType());
     }
 
     /**
@@ -48,7 +49,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回用 ', ' 连接好的所有字段
      */
-    String getSelectAll();
+    CachedFrag getSelectAll();
 
     /**
      * 根据Entity属性换取数据库字段名称

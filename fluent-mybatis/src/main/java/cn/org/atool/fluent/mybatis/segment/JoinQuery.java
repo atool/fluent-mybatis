@@ -1,18 +1,20 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
-import cn.org.atool.fluent.mybatis.base.crud.*;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.JoinToBuilder;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
  * 联合查询条件
@@ -54,7 +56,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         this.query = query;
         Parameters parameters = new Parameters();
         this.query.sharedParameter(parameters);
-        super.wrapperData = new JoinWrapperData(this.query, this.queries, parameters);
+        super.data = new JoinWrapperData(this.query, this.queries, parameters);
         this.alias.add(this.query.tableAlias);
     }
 
@@ -91,7 +93,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      */
     private <QR extends BaseQuery<?, QR>> void assertQueryAlias(QR query) {
         MybatisUtil.assertNotNull("query", query);
-        if (BaseWrapperHelper.isBlankAlias(query)) {
+        if (isBlank(query.tableAlias)) {
             String err = String.format("the table alias of join query must be set, " +
                 "please use constructor: new %s(String alias)", query.getClass().getSimpleName());
             throw new RuntimeException(err);
@@ -101,32 +103,32 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     @Override
     public JoinBuilder<QL> select(String... columns) {
         for (String column : columns) {
-            this.wrapperData.addSelectColumn(column);
+            this.data.addSelectColumn(column);
         }
         return this;
     }
 
     @Override
     public JoinQuery<QL> distinct() {
-        this.wrapperData.setDistinct(true);
+        this.data.setDistinct(true);
         return this;
     }
 
     @Override
     public JoinQuery<QL> limit(int limit) {
-        this.wrapperData.setPaged(new PagedOffset(0, limit));
+        this.data.setPaged(new PagedOffset(0, limit));
         return this;
     }
 
     @Override
     public JoinQuery<QL> limit(int start, int limit) {
-        this.wrapperData.setPaged(new PagedOffset(start, limit));
+        this.data.setPaged(new PagedOffset(start, limit));
         return this;
     }
 
     @Override
     public JoinQuery<QL> last(String lastSql) {
-        this.wrapperData.last(lastSql);
+        this.data.last(lastSql);
         return this;
     }
 
@@ -156,8 +158,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     @Override
-    public JoinWrapperData getWrapperData() {
-        return (JoinWrapperData) super.wrapperData;
+    public JoinWrapperData data() {
+        return (JoinWrapperData) super.data;
     }
 
     @Override
@@ -167,27 +169,5 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
             all.addAll(query.allFields());
         }
         return all;
-    }
-
-    @Setter
-    private DbType dbType;
-
-    @Override
-    public DbType dbType() {
-        if (dbType != null) {
-            return dbType;
-        }
-        dbType = this.query.dbType();
-        if (dbType != null) {
-            return dbType;
-        }
-        for (IQuery query : this.queries) {
-            dbType = ((BaseWrapper) query).dbType();
-            if (dbType != null) {
-                return dbType;
-            }
-        }
-        dbType = IRef.instance().defaultDbType();
-        return dbType;
     }
 }

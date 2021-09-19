@@ -32,7 +32,7 @@ public class NestedQueryTest extends BaseTest {
             "SELECT t1.`id` " +
             "FROM fluent_mybatis.student t1 " +
             "WHERE t1.`id` IN (?, ?, ?) " +
-            "AND ( t1.`address` LIKE ? OR t1.`age` >= ? )", StringMode.SameAsSpace);
+            "AND (t1.`address` LIKE ? OR t1.`age` >= ?)", StringMode.SameAsSpace);
     }
 
     @Test

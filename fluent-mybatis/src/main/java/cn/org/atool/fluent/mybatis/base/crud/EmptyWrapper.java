@@ -1,13 +1,12 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * IWrapper空实现
@@ -26,22 +25,17 @@ public class EmptyWrapper implements IWrapper {
     }
 
     @Override
-    public WrapperData getWrapperData() {
+    public WrapperData data() {
         throw new RuntimeException("not support.");
     }
 
     @Override
-    public Supplier<String> getTable() {
+    public IFragment table(boolean notFoundError) {
         throw new RuntimeException("not support.");
     }
 
     @Override
     public Optional<IMapping> mapping() {
-        throw new RuntimeException("not support.");
-    }
-
-    @Override
-    public DbType dbType() {
         throw new RuntimeException("not support.");
     }
 

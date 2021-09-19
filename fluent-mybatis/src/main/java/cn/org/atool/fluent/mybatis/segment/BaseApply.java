@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
-import cn.org.atool.fluent.mybatis.base.model.Column;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 
 /**
  * BaseApply
@@ -34,7 +34,7 @@ public abstract class BaseApply<
      * @return Column
      */
     public Column column() {
-        return Column.column(this.segment.current, this.segment.wrapper);
+        return Column.set(this.segment.wrapper, this.segment.current);
     }
 
     BaseApply(SEGMENT segment) {

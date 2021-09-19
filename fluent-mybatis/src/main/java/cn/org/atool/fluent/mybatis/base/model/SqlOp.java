@@ -82,7 +82,7 @@ public enum SqlOp implements ISqlOp {
     /**
      * 子查询
      */
-    BRACKET("( %s )", -1),
+    BRACKET("(%s)", -1),
     /**
      * 保留不动
      */

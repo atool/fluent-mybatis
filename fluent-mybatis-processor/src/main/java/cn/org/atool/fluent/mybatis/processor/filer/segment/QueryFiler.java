@@ -3,12 +3,14 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -47,7 +49,7 @@ public class QueryFiler extends AbstractFiler {
         spec.addStaticImport(If.class, "notBlank");
         spec.addStaticImport(StrConstant.class, "EMPTY");
         spec.addStaticImport(fluent.entityMapping(), Suffix_MAPPING);
-        spec.addStaticImport(MapperSql.class, "brackets");
+        spec.addStaticImport(MybatisUtil.class, "assertNotNull");
     }
 
     @Override
@@ -82,7 +84,7 @@ public class QueryFiler extends AbstractFiler {
      */
     private FieldSpec f_select() {
         return FieldSpec.builder(fluent.selector(),
-            "select", Modifier.PUBLIC, Modifier.FINAL)
+                "select", Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc("指定查询字段, 默认无需设置")
             .initializer("new $T(this)", fluent.selector())
             .build();
@@ -168,7 +170,7 @@ public class QueryFiler extends AbstractFiler {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(boolean.class, "defaults")
-            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(IFragment.class, "table")
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "shared")
             .addStatement("super(table == null ? $L.table() : table, alias, $T.class)", Suffix_MAPPING, fluent.entity())
@@ -213,7 +215,7 @@ public class QueryFiler extends AbstractFiler {
         return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(false, table, null, null)", fluent.query())
+            .addStatement("return new $T(false, table == null ? null : db -> table.get(), null, null)", fluent.query())
             .build();
     }
 
@@ -244,7 +246,8 @@ public class QueryFiler extends AbstractFiler {
         return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(true, table, null, null)", fluent.query())
+            .addStatement("assertNotNull($S, table)", "table")
+            .addStatement("return new $T(true, db -> table.get(), null, null)", fluent.query())
             .build();
     }
 
@@ -253,7 +256,8 @@ public class QueryFiler extends AbstractFiler {
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
-            .addStatement("return new $T(true, table, alias, null)", fluent.query())
+            .addStatement("assertNotNull($S, table)", "table")
+            .addStatement("return new $T(true, db -> table.get(), alias, null)", fluent.query())
             .build();
     }
 
@@ -265,7 +269,8 @@ public class QueryFiler extends AbstractFiler {
             .addJavadoc("@param alias 子查询别名")
             .addParameter(IQuery.class, "query")
             .addParameter(String.class, "alias")
-            .addStatement("return new $T(true, () -> brackets(query), alias, null)", fluent.query())
+            .addStatement("assertNotNull($S, query)", "query")
+            .addStatement("return new $T(true, $T.set(query), alias, null)", fluent.query(), BracketFrag.class)
             .build();
     }
 

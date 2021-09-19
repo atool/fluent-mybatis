@@ -5,7 +5,6 @@ import cn.org.atool.fluent.mybatis.base.splice.FreeUpdate;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,6 @@ public class CustomizedUpdateTest extends BaseTest {
             .age.values(34, 45, 55)
             .cleanAndInsert();
         FreeQuery query = new FreeQuery(null)
-            .setDbType(DbType.MYSQL)
             .customizedByPlaceholder("" +
                     "SELECT address, age FROM fluent_mybatis.student " +
                     "WHERE id IN (#{value[0]}, #{value[1]}, #{value[2]})",

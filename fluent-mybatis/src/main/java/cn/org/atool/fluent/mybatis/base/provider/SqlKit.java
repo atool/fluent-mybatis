@@ -2,8 +2,6 @@ package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IHasDbType;
-import cn.org.atool.fluent.mybatis.base.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -11,12 +9,10 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -199,19 +195,19 @@ public interface SqlKit {
      * 去掉limit部分 count(IQuery) SQL构造
      *
      * @param mapping     IMapping
-     * @param wrapperData query查询条件
+     * @param data query查询条件
      * @return sql
      */
-    String countNoLimit(IMapping mapping, WrapperData wrapperData);
+    String countNoLimit(IMapping mapping, WrapperData data);
 
     /**
      * 包含limit部分 count(IQuery) SQL构造
      *
      * @param mapping     IMapping
-     * @param wrapperData query查询条件
+     * @param data query查询条件
      * @return sql
      */
-    String count(IMapping mapping, WrapperData wrapperData);
+    String count(IMapping mapping, WrapperData data);
 
     /**
      * 构造IQuery查询条件语句

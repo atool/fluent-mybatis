@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.free;
 
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +15,13 @@ public class FreeQueryTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
+    @SuppressWarnings("all")
     @Test
     void select() {
         FreeQuery query = new FreeQuery("dual")
-            .setDbType(DbType.MYSQL)
             .select.apply("SEQ_xxx_ID.nextval").end();
         try {
-            Object o = mapper.listObjs(query).get(0);
+            mapper.listObjs(query).get(0);
             want.fail("不可能执行到这里");
         } catch (Exception e) {
             db.sqlList().wantFirstSql().eq("SELECT SEQ_xxx_ID.nextval FROM dual");
@@ -32,7 +31,6 @@ public class FreeQueryTest extends BaseTest {
     @Test
     void test2() {
         FreeQuery factQuery = new FreeQuery("a")
-            .setDbType(DbType.MYSQL)
             .select.apply("id").end()
             .where
             .and(q -> q.where.apply("name", LIKE, "1-%")
@@ -41,10 +39,10 @@ public class FreeQueryTest extends BaseTest {
             ).end();
         try {
             mapper.listObjs(factQuery);
-        } catch (Exception e) {
+        } catch (Exception ignore) {
         }
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT `id` FROM a WHERE ( `name` LIKE ? OR `age` LIKE ? )");
+            "SELECT `id` FROM a WHERE (`name` LIKE ? OR `age` LIKE ?)");
         db.sqlList().wantFirstPara().eq(new String[]{"1-%", "2-%"});
     }
 }

@@ -13,6 +13,7 @@ import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
 import org.test4j.module.database.IDatabase;
 
 import static java.lang.String.format;
@@ -67,7 +68,7 @@ public class JoinQueryTest_Alias1 extends BaseTest {
                 format("GROUP BY %s.`age`, %s.`id`, %s.`student_id` ", a1, a1, a2) +
                 format("HAVING MAX(%s.`age`) > ? ", a1) +
                 format("ORDER BY %s.`id` DESC, %s.`id` ASC ", a1, a2) +
-                "LIMIT ?, ?");
+                "LIMIT ?, ?", StringMode.SameAsSpace);
     }
 
     @Test
@@ -195,12 +196,12 @@ public class JoinQueryTest_Alias1 extends BaseTest {
             .build();
         this.mapper.listMaps(query);
         IDatabase.db.sqlList().wantFirstSql()
-            .contains(new String[]{"t1.id", "t2.id", "t3.id"})
+            .contains(new String[]{"t1.`id`", "t2.`id`", "t3.`id`"})
             .end("FROM fluent_mybatis.student t1 LEFT JOIN `home_address` t2 " +
                 "ON t1.`home_address_id` = t2.`id` " +
                 "LEFT JOIN `student_score` t3 ON t1.`id` = t3.`student_id` " +
                 "WHERE t1.`age` = ? " +
                 "AND t2.`address` LIKE ? " +
-                "AND t3.`subject` IN (?, ?, ?)");
+                "AND t3.`subject` IN (?, ?, ?)", StringMode.SameAsSpace);
     }
 }

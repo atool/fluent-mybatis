@@ -3,11 +3,11 @@ package cn.org.atool.fluent.mybatis.segment.model;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.base.model.Column;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
-import cn.org.atool.fluent.mybatis.segment.WhereSegmentList;
+import cn.org.atool.fluent.mybatis.segment.fragment.*;
 import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,9 +17,11 @@ import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_ASTERISK;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.parseAlias;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -39,16 +41,16 @@ public class WrapperData implements IWrapperData {
      * select 前面是否加 DISTINCT 关键字
      */
     @Setter
-    protected boolean isDistinct = false;
+    protected boolean distinct = false;
     /**
      * 查询字段
      */
-    protected List<String> sqlSelect = new ArrayList<>(8);
+    public final JoiningFrag select = JoiningFrag.get(COMMA_SPACE);
 
     /**
      * SQL 更新字段内容，例如：name='1', age=2
      */
-    private final Map<String, String> updates = new LinkedHashMap<>(16);
+    private final Map<IFragment, String> updates = new LinkedHashMap<>(16);
     /**
      * sql 中 hint 维护
      */
@@ -63,11 +65,23 @@ public class WrapperData implements IWrapperData {
      * where, group, having ,order by对象列表
      */
     @Getter(AccessLevel.NONE)
-    private final MergeSegments mergeSegments = new MergeSegments();
+    private MergeSegments segments = new MergeSegments();
+
+
+    /**
+     * 外部传入的where条件, 只在 {@link IEntityMapper#logicDelete(IQuery)}场景下使用
+     *
+     * @param query IQuery
+     */
+    public void replacedByQuery(IQuery query) {
+        this.segments = query.data().segments();
+        this.ignoreLockVersion = query.data().ignoreLockVersion;
+        query.data().sharedParameter(this);
+    }
 
     @Override
-    public MergeSegments mergeSegments() {
-        return this.where == null ? this.mergeSegments : this.where.getWrapperData().mergeSegments();
+    public MergeSegments segments() {
+        return this.segments;
     }
 
     /**
@@ -77,8 +91,8 @@ public class WrapperData implements IWrapperData {
     @Getter(AccessLevel.NONE)
     protected PagedOffset paged;
 
-    public PagedOffset getPaged() {
-        return this.where == null ? this.paged : this.where.getWrapperData().paged;
+    public PagedOffset paged() {
+        return this.paged;
     }
 
     /**
@@ -89,23 +103,8 @@ public class WrapperData implements IWrapperData {
     @Getter(AccessLevel.NONE)
     private boolean ignoreLockVersion = false;
 
-    public boolean isIgnoreLockVersion() {
-        return this.where == null ? ignoreLockVersion : this.where.getWrapperData().isIgnoreLockVersion();
-    }
-
-    /**
-     * 外部传入的where条件
-     */
-    private IQuery where;
-
-    /**
-     * where条件由IQuery提供, 只在 logicDelete(IQuery)场景下使用
-     *
-     * @param query IQuery
-     */
-    public void replacedWhere(IQuery query) {
-        this.where = query;
-        query.getWrapperData().sharedParameter(this);
+    public boolean ignoreVersion() {
+        return ignoreLockVersion;
     }
 
     public WrapperData(IWrapper wrapper) {
@@ -119,33 +118,28 @@ public class WrapperData implements IWrapperData {
         this.parameters = parameters;
     }
 
-    public String getTable() {
+    public IFragment table() {
         String alias = this.wrapper.getTableAlias();
-        String table = (String) this.wrapper.getTable().get();
-        return isBlank(alias) ? table : table + " " + alias;
+        IFragment table = this.wrapper.table(true);
+        return isBlank(alias) ? table : table.plus(SPACE + alias);
     }
 
     @Override
-    public String getSqlSelect() {
-        if (this.sqlSelect.isEmpty()) {
+    public IFragment select() {
+        if (this.select.isEmpty()) {
             Optional<IMapping> mapping = wrapper.mapping();
-            return mapping.map(IMapping::getSelectAll).orElse(ASTERISK);
+            return mapping.map(IMapping::getSelectAll).orElse(SEG_ASTERISK);
         } else {
-            String sql = String.join(COMMA_SPACE, sqlSelect);
-            return isBlank(sql) ? null : sql.trim();
+            return this.select;
         }
-    }
-
-    public List<String> sqlSelect() {
-        return this.sqlSelect;
     }
 
     /**
      * 用户完整自定义的sql语句
      */
-    private String customizedSql = null;
+    private CachedFrag customizedSql = SEG_EMPTY;
 
-    private List<Union> unions = null;
+    private final List<Union> unions = new ArrayList<>();
 
     /**
      * 增加union查询
@@ -154,9 +148,6 @@ public class WrapperData implements IWrapperData {
      * @param query union query
      */
     public void union(String union, IQuery query) {
-        if (this.unions == null) {
-            this.unions = new ArrayList<>();
-        }
         this.unions.add(new Union(union, query));
     }
 
@@ -168,9 +159,10 @@ public class WrapperData implements IWrapperData {
      */
     public void customizedSql(String sql, Object parameter) {
         if (parameter == null) {
-            this.customizedSql = sql;
+            this.customizedSql = CachedFrag.set(sql);
         } else {
-            this.customizedSql = CustomizedSql.rewriteSql(sql, this.parameters, parameter);
+            String newSql = CustomizedSql.rewriteSql(sql, this.parameters, parameter);
+            this.customizedSql = CachedFrag.set(newSql);
         }
     }
 
@@ -180,44 +172,57 @@ public class WrapperData implements IWrapperData {
      * @param sql 非分页查询sql
      * @return sql segment
      */
-    public String wrappedByPaged(IMapping mapping, String sql) {
-        PagedOffset paged = this.getPaged();
-        if (paged != null) {
+    public IFragment wrappedByPaged(String sql) {
+        PagedOffset paged = this.paged();
+        if (paged == null) {
+            return CachedFrag.set(sql);
+        }
+        return db -> {
             Parameters p = this.getParameters();
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
-            return mapping.dbType().paged(sql, offset, size, endOffset);
-        } else {
-            return sql;
+            return db.paged(sql, offset, size, endOffset);
+        };
+    }
+
+    @Override
+    public IFragment sql(boolean withPaged) {
+        IFragment withoutPaged = this.withoutPaged();
+        if (!withPaged || this.paged == null) {
+            return withoutPaged;
         }
+        return db -> {
+            Parameters p = this.getParameters();
+            String offset = p.putParameter(null, paged.getOffset());
+            String size = p.putParameter(null, paged.getLimit());
+            String endOffset = p.putParameter(null, paged.getEndOffset());
+            return db.paged(withoutPaged.get(db), offset, size, endOffset);
+        };
     }
 
-    @Override
-    public String sqlWithPaged(IMapping mapping) {
-        return this.wrappedByPaged(mapping, sqlWithoutPaged());
-    }
-
-    @Override
-    public String sqlWithoutPaged() {
-        if (notBlank(customizedSql)) {
+    private IFragment withoutPaged() {
+        if (customizedSql.notEmpty()) {
             return customizedSql;
         }
-        MapperSql text = new MapperSql();
-        text.SELECT(this.getTable(), this, this.getSqlSelect());
-        text.WHERE_GROUP_ORDER_BY(this);
-        String sql = text.toString();
-        if (unions == null || unions.isEmpty()) {
-            return sql;
-        } else {
-            return brackets(sql) + SPACE + unions.stream().map(Union::sql).collect(joining(SPACE));
+        IFragment segment = db -> {
+            MapperSql text = new MapperSql();
+            text.SELECT(db, this.table(), this, this.select());
+            text.WHERE_GROUP_ORDER_BY(db, this);
+            return text.toString();
+        };
+        segment = unions.isEmpty() ? segment : BracketFrag.set(segment);
+        for (Union union : this.unions) {
+            segment = segment.plus(SPACE + union.key + SPACE).plus(BracketFrag.set(union.query));
         }
+        return segment;
     }
 
     @Override
-    public String getUpdateStr() {
-        String sql = this.updates.entrySet().stream().map(i -> i.getKey() + " = " + i.getValue()).collect(joining(COMMA_SPACE));
-        return isBlank(sql) ? null : sql.trim();
+    public IFragment update() {
+        return db -> this.updates.entrySet().stream()
+            .map(i -> i.getKey().get(db) + " = " + i.getValue())
+            .collect(joining(COMMA_SPACE));
     }
 
     /*
@@ -234,8 +239,8 @@ public class WrapperData implements IWrapperData {
      * @param operator 条件操作
      * @param paras    条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, Column column, ISqlOp operator, Object... paras) {
-        this.apply(keyWord, column, operator, null, paras);
+    public void apply(KeyFrag keyWord, IFragment column, ISqlOp operator, Object... paras) {
+        this.apply(keyWord, column, operator, (String) null, paras);
     }
 
     /**
@@ -245,42 +250,13 @@ public class WrapperData implements IWrapperData {
      */
     public void addSelectColumn(String column) {
         if (notBlank(column)) {
-            this.sqlSelect.add(column);
+            this.select.add(Column.set(this.wrapper, column));
             this.fieldAlias.addAll(parseAlias(column));
         }
     }
 
-    /**
-     * 解析别名列表
-     *
-     * @param column 字段
-     * @return ignore
-     */
-    static List<String> parseAlias(String column) {
-        int pos = -1;
-        List<String> list = new ArrayList<>();
-        StringBuilder buff = new StringBuilder();
-        for (char c : (column + SPACE).toCharArray()) {
-            if (pos <= 0 && isSpace(c)) {
-                pos = 0;
-            } else if (pos == 0 && (c == 'a' || c == 'A')) {
-                pos = 1;
-            } else if (pos == 1 && (c == 's' || c == 'S')) {
-                pos = 2;
-            } else if ((pos == 2 || pos == 3) && isSpace(c)) {
-                pos = 3;
-            } else if (pos >= 3 && (isLetterOrDigit(c))) {
-                pos = 4;
-                buff.append(c);
-            } else if (pos == 4 && (isSpace(c) || c == ',')) {
-                list.add(buff.toString());
-                buff = new StringBuilder();
-                pos = -1;
-            } else {
-                pos = -1;
-            }
-        }
-        return list;
+    public void addSelectColumn(IFragment column) {
+        this.select.add(column);
     }
 
     /**
@@ -292,19 +268,27 @@ public class WrapperData implements IWrapperData {
      * @param format   格式化sql语句
      * @param args     条件参数（填充 operator 中占位符?)
      */
-    public void apply(KeyWordSegment keyWord, Column column, ISqlOp operator, String format, Object... args) {
+    public void apply(KeyFrag keyWord, IFragment column, ISqlOp operator, String format, Object... args) {
         if (keyWord == null) {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
-        String segment = operator.operator(column, this.getParameters(), format, args);
-        this.mergeSegments().add(keyWord, column.columnSegment(), () -> segment);
+        IFragment value = operator.operator(column, this.getParameters(), format, args);
+        this.segments().add(keyWord, column, value);
     }
 
-    public void apply(KeyWordSegment keyWord, ISqlSegment... segments) {
+    public void apply(KeyFrag keyWord, IFragment column, ISqlOp operator, IFragment format, Object... args) {
         if (keyWord == null) {
             throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
         }
-        this.mergeSegments().add(keyWord, segments);
+        IFragment segment = operator.operator(column, this.getParameters(), format, args);
+        this.segments().add(keyWord, column, segment);
+    }
+
+    public void apply(KeyFrag keyWord, IFragment... segments) {
+        if (keyWord == null) {
+            throw new FluentMybatisException("the first segment should be: 'AND', 'OR', 'GROUP BY', 'HAVING' or 'ORDER BY'");
+        }
+        this.segments().add(keyWord, segments);
     }
 
     /**
@@ -338,27 +322,8 @@ public class WrapperData implements IWrapperData {
      */
     public void updateSql(Column column, String functionSql, Object... values) {
         if (notBlank(functionSql)) {
-            updates.put(column.wrapColumn(), this.paramSql(column, functionSql, values));
+            updates.put(column, this.paramSql(column, functionSql, values));
         }
-    }
-
-    /**
-     * 获取where条件字段
-     *
-     * @return ignore
-     */
-    public List<String> findWhereColumns() {
-        WhereSegmentList list = this.mergeSegments().getWhere();
-        if (list == null || list.getSegments() == null) {
-            return Collections.EMPTY_LIST;
-        }
-        List<String> columns = new ArrayList<>();
-        for (ISqlSegment segment : list.getSegments()) {
-            if (segment instanceof ColumnSegment) {
-                columns.add(segment.getSqlSegment());
-            }
-        }
-        return columns;
     }
 
     public void hint(HintType type, String hint) {
@@ -372,16 +337,12 @@ public class WrapperData implements IWrapperData {
         return isBlank(hint) ? SPACE : SPACE + hint + SPACE;
     }
 
-    public void sharedParameter(WrapperData wrapperData) {
-        this.getParameters().sharedParameter(wrapperData.getParameters());
+    public void sharedParameter(WrapperData data) {
+        this.getParameters().sharedParameter(data.getParameters());
     }
 
     public void sharedParameter(Parameters parameters) {
         this.getParameters().sharedParameter(parameters);
-    }
-
-    public ISqlSegment[] whereSegments() {
-        return this.mergeSegments().getWhere().getSegments().toArray(new ISqlSegment[0]);
     }
 
     /**
@@ -390,7 +351,7 @@ public class WrapperData implements IWrapperData {
      * @return true: has group by
      */
     public boolean hasGroupBy() {
-        return !this.mergeSegments().getGroupBy().isEmpty();
+        return !this.segments().groupBy.isEmpty();
     }
 
     /**
@@ -400,26 +361,21 @@ public class WrapperData implements IWrapperData {
      * @return true: has next page
      */
     public boolean hasNext(long total) {
-        return this.getPaged() != null && total > this.getPaged().getEndOffset();
+        return this.paged() != null && total > this.paged().getEndOffset();
     }
 
     public boolean hasSelect() {
-        return !this.sqlSelect.isEmpty();
+        return !this.select.isEmpty();
     }
 
-    @Getter
-    public static class Union {
-        private final String key;
+    private static class Union {
+        final String key;
 
-        private final IQuery query;
+        final IQuery query;
 
         Union(String key, IQuery query) {
             this.key = key;
             this.query = query;
-        }
-
-        public String sql() {
-            return key + SPACE + brackets(query);
         }
     }
 }

@@ -91,7 +91,7 @@ public class FormQuery<E extends IEntity, S extends BaseFormSetter> implements I
     }
 
     @Override
-    public WrapperData getWrapperData() {
-        return this.query.getWrapperData();
+    public WrapperData data() {
+        return this.query.data();
     }
 }

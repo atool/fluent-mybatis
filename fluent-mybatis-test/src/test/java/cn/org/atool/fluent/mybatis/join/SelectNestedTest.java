@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.join;
 import cn.org.atool.fluent.mybatis.base.splice.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.MemberQuery;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,13 +40,13 @@ public class SelectNestedTest extends BaseTest {
     @Test
     void test_select_nested2() {
         FreeQuery child = new FreeQuery("t_member", "t1");
-        child.setDbType(DbType.MYSQL)
+        child
             .select("t1.id", "count(t1.gmt_modified) as _count")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("t1.id").end();
 
         FreeQuery query2 = new FreeQuery(child, "t2");
-        query2.setDbType(DbType.MYSQL)
+        query2
             .select("t2.id", "t2._count")
             .where.apply("id", EQ, "1").end()
             .groupBy.apply("t2.id").end();

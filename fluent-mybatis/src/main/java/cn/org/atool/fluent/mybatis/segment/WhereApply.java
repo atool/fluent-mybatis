@@ -9,6 +9,8 @@ import cn.org.atool.fluent.mybatis.functions.QFunction;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.ifs.IfsPredicate;
 import cn.org.atool.fluent.mybatis.mapper.SqlLike;
+import cn.org.atool.fluent.mybatis.segment.fragment.AppendFlag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
@@ -181,7 +183,7 @@ public class WhereApply<
     @Override
     public WHERE in(IQuery query) {
         ((BaseWrapper) query).sharedParameter(this.segment.getParameters());
-        return this.segment.apply(this.column(), IN, query.getWrapperData().sqlWithoutPaged());
+        return this.segment.apply(this.column(), IN, query.data().sql(false));
     }
 
     @Override
@@ -210,7 +212,7 @@ public class WhereApply<
     @Override
     public WHERE notIn(IQuery query) {
         ((BaseWrapper) query).sharedParameter(this.segment.getParameters());
-        return this.segment.apply(this.column(), NOT_IN, query.getWrapperData().sqlWithoutPaged());
+        return this.segment.apply(this.column(), NOT_IN, query.data().sql(false));
     }
 
     @Override
@@ -231,7 +233,7 @@ public class WhereApply<
     @Override
     public WHERE applyFunc(ISqlOp op, String expression, Object... args) {
         int prev = 0;
-        StringBuilder buff = new StringBuilder();
+        AppendFlag buff = new AppendFlag();
         List<Object> list = new ArrayList<>();
         for (Object arg : args) {
             int next = expression.indexOf('?', prev);
@@ -240,7 +242,7 @@ public class WhereApply<
             }
             buff.append(expression, prev, next);
             if (arg instanceof IQuery) {
-                String nest = ((IQuery) arg).getWrapperData().sqlWithoutPaged();
+                IFragment nest = ((IQuery) arg).data().sql(false);
                 buff.append(nest);
                 ((BaseQuery) arg).sharedParameter(this.segment.wrapper);
             } else {
@@ -250,7 +252,7 @@ public class WhereApply<
             prev = next + 1;
         }
         buff.append(expression, prev, expression.length());
-        return this.segment.apply(this.column(), op, buff.toString(), list.toArray());
+        return this.segment.apply(this.column(), op, buff, list.toArray());
     }
 
     @Override

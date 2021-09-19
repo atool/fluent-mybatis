@@ -3,10 +3,11 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.IOperator;
 
-import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -21,7 +22,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
     /**
      * 表达式
      */
-    private String expression;
+    private IFragment expression;
 
     private final H having;
 
@@ -31,7 +32,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
 
     @Override
     public H apply(ISqlOp op, Object... args) {
-        assertNotBlank("expression", expression);
+        assertNotNull("expression", expression);
         return this.having.aggregate(expression, op, args);
     }
 
@@ -44,9 +45,8 @@ public class HavingOperator<H extends HavingBase<H, ?>>
      */
     public H apply(ISqlOp op, IQuery query) {
         assertNotNull("query", query);
-        String sql = query.getWrapperData().sqlWithoutPaged();
-        query.getWrapperData().sharedParameter(this.having.wrapperData());
-        return this.having.apply(expression, op, brackets(sql));
+        query.data().sharedParameter(this.having.data());
+        return this.having.apply(expression, op, BracketFrag.set(query));
     }
 
     /**
@@ -59,7 +59,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
      */
     public H applyFunc(ISqlOp op, String func, Object... args) {
         assertNotNull("func", func);
-        return this.having.apply(expression, op, func, args);
+        return this.having.apply(expression, op, CachedFrag.set(func), args);
     }
 
     /**
@@ -69,7 +69,7 @@ public class HavingOperator<H extends HavingBase<H, ?>>
      * @param aggregate 聚合函数
      * @return 操作器
      */
-    HavingOperator<H> aggregate(String column, IAggregate aggregate) {
+    HavingOperator<H> aggregate(IFragment column, IAggregate aggregate) {
         this.expression = aggregate.aggregate(column);
         return this;
     }

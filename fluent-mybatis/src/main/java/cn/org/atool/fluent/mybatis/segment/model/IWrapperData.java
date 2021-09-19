@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
-
-import static cn.org.atool.fluent.mybatis.If.isBlank;
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 
 /**
  * IWrapperData: 提供给xml文件调用的方法
@@ -23,7 +22,7 @@ public interface IWrapperData {
      *
      * @return 查询字段列表
      */
-    String getSqlSelect();
+    IFragment select();
 
     /**
      * (update)
@@ -33,34 +32,28 @@ public interface IWrapperData {
      *
      * @return 更新语句
      */
-    String getUpdateStr();
-
-    /**
-     * where + groupBy + having + orderBy + limit + last 语句部分
-     *
-     * @return where sql
-     */
-    default String getMergeSql() {
-        String sql = mergeSegments().sql();
-        return isBlank(sql) ? null : sql.trim();
-    }
+    IFragment update();
 
     /**
      * 返回where部分sql
      *
      * @return ignore
      */
-    default String getWhereSql() {
-        return this.mergeSegments().whereSql();
+    default JoiningFrag where() {
+        return this.segments().where.getSegments();
     }
 
     /**
-     * 返回 groupBy + having + orderBy + last 组合起来的语句
+     * 返回 groupBy + having  组合起来的语句
      *
      * @return ignore
      */
-    default String getGroupBy() {
-        return this.mergeSegments().groupBy();
+    default JoiningFrag groupBy() {
+        return this.segments().groupBy.getSegments();
+    }
+
+    default JoiningFrag having() {
+        return this.segments().having.getSegments();
     }
 
     /**
@@ -68,42 +61,45 @@ public interface IWrapperData {
      *
      * @return ignore
      */
-    default String getOrderBy() {
-        return this.mergeSegments().orderBy();
+    default JoiningFrag orderBy() {
+        return this.segments().orderBy.getSegments();
     }
 
     /**
-     * 根据数据库类型返回带分页的语法
+     * where + groupBy + having + orderBy + limit + last 语句部分
      *
-     * @return sql with page
+     * @return where sql
      */
-    String sqlWithPaged(IMapping mapping);
+    default IFragment getMerged() {
+        return segments().get();
+    }
 
     /**
      * select ... from table where ...
      * 不包含分页部分
      *
+     * @param withPaged 是否带上分页部分语法
      * @return select ... from table where ...
      */
-    String sqlWithoutPaged();
+    IFragment sql(boolean withPaged);
 
     /**
      * 返回last sql部分
      *
      * @return ignore
      */
-    default String getLastSql() {
-        return this.mergeSegments().last();
+    default IFragment last() {
+        return CachedFrag.set(this.segments().last());
     }
 
     /**
      * 附加sql,只允许执行一次
      *
-     * @param lastSql 附加sql
+     * @param sql 附加sql
      */
-    default void last(String lastSql) {
-        this.mergeSegments().setLastSql(lastSql);
+    default void last(String sql) {
+        this.segments().last(sql);
     }
 
-    MergeSegments mergeSegments();
+    MergeSegments segments();
 }

@@ -1,8 +1,9 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
@@ -36,17 +37,17 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql COUNT(String table, WrapperData data) {
+    public MapperSql COUNT(DbType dbType, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
         buffer.append("SELECT ");
         this.hint(data, HintType.After_CrudKey);
         buffer.append("COUNT(");
-        String select = data.getSqlSelect();
+        String select = data.select().get(dbType);
         // select 单字段和多字段判断
         buffer.append(isBlank(select) || select.contains(",") ? ASTERISK : select.trim());
         buffer.append(") FROM ");
         this.hint(data, HintType.Before_Table);
-        buffer.append(table);
+        buffer.append(table.get(dbType));
         this.hint(data, HintType.After_Table);
         return this;
     }
@@ -75,27 +76,27 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql DELETE_FROM(String table, WrapperData data) {
+    public MapperSql DELETE_FROM(DbType dbType, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
         buffer.append(" DELETE ");
         this.hint(data, HintType.After_CrudKey);
         buffer.append(" FROM ");
         this.hint(data, HintType.Before_Table);
-        buffer.append(table);
+        buffer.append(table.get(dbType));
         this.hint(data, HintType.After_Table);
         return this;
     }
 
-    public MapperSql UPDATE(String table) {
-        return this.UPDATE(table, null);
+    public MapperSql UPDATE(DbType dbType, IFragment table) {
+        return this.UPDATE(dbType, table, null);
     }
 
-    public MapperSql UPDATE(String table, WrapperData data) {
+    public MapperSql UPDATE(DbType dbType, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
         buffer.append(" UPDATE ");
         this.hint(data, HintType.After_CrudKey);
         this.hint(data, HintType.Before_Table);
-        buffer.append(table);
+        buffer.append(table.get(dbType));
         this.hint(data, HintType.After_Table);
         return this;
     }
@@ -105,13 +106,15 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql SET(List<String> sets) {
-        buffer.append(" SET ").append(String.join(",\n", sets));
+    public MapperSql SET(DbType dbType, JoiningFrag sets) {
+        buffer.append(" SET ").append(sets.get(dbType));
         return this;
     }
 
-    public MapperSql WHERE(String whereSql) {
-        buffer.append(" WHERE ").append(whereSql);
+    public MapperSql WHERE(String where) {
+        if (notBlank(where)) {
+            buffer.append(" WHERE ").append(where.trim());
+        }
         return this;
     }
 
@@ -134,33 +137,35 @@ public class MapperSql {
         return this.WHERE(ands);
     }
 
-    public MapperSql WHERE_GROUP_BY(WrapperData data) {
-        if (notBlank(data.getWhereSql())) {
-            this.WHERE(data.getWhereSql());
-        }
-        if (notBlank(data.getGroupBy())) {
-            this.APPEND(data.getGroupBy());
-        }
-        if (notBlank(data.getLastSql())) {
-            this.APPEND(data.getLastSql());
+    public MapperSql WHERE_GROUP_BY(DbType dbType, WrapperData data) {
+        this.WHERE_GROUP_HAVING(dbType, data);
+        if (data.last().notEmpty()) {
+            this.APPEND(data.segments().last());
         }
         return this;
     }
 
-    public MapperSql WHERE_GROUP_ORDER_BY(WrapperData data) {
-        if (notBlank(data.getWhereSql())) {
-            this.WHERE(data.getWhereSql());
+    public MapperSql WHERE_GROUP_ORDER_BY(DbType dbType, WrapperData data) {
+        this.WHERE_GROUP_HAVING(dbType, data);
+        if (data.orderBy().notEmpty()) {
+            this.APPEND(data.segments().orderBy.get(dbType));
         }
-        if (notBlank(data.getGroupBy())) {
-            this.APPEND(data.getGroupBy());
-        }
-        if (notBlank(data.getOrderBy())) {
-            this.APPEND(data.getOrderBy());
-        }
-        if (notBlank(data.getLastSql())) {
-            this.APPEND(data.getLastSql());
+        if (data.last().notEmpty()) {
+            this.APPEND(data.segments().last());
         }
         return this;
+    }
+
+    private void WHERE_GROUP_HAVING(DbType dbType, WrapperData data) {
+        if (data.where().notEmpty()) {
+            this.WHERE(data.segments().where.get(dbType));
+        }
+        if (data.groupBy().notEmpty()) {
+            this.APPEND(data.segments().groupBy.get(dbType));
+        }
+        if (data.having().notEmpty()) {
+            this.APPEND(data.segments().having.get(dbType));
+        }
     }
 
     public MapperSql APPEND(String sql) {
@@ -168,15 +173,15 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql SELECT(String table, WrapperData data, String defaultColumns) {
+    public MapperSql SELECT(DbType dbType, IFragment table, WrapperData data, IFragment defaultColumns) {
         this.hint(data, HintType.Before_All);
         buffer.append("SELECT ");
         this.hint(data, HintType.After_CrudKey);
         this.APPEND(data.isDistinct() ? "DISTINCT " : SPACE);
-        buffer.append(isBlank(data.getSqlSelect()) ? defaultColumns : data.getSqlSelect());
+        buffer.append(isBlank(data.select().get(dbType)) ? defaultColumns.get(dbType) : data.select().get(dbType));
         buffer.append(" FROM ");
         this.hint(data, HintType.Before_Table);
-        buffer.append(table);
+        buffer.append(table.get(dbType));
         this.hint(data, HintType.After_Table);
         return this;
     }
@@ -189,13 +194,13 @@ public class MapperSql {
      * @return MapperSql
      */
     public MapperSql LIMIT(WrapperData data, boolean offsetEverZero) {
-        if (data == null || data.getPaged() == null) {
+        if (data == null || data.paged() == null) {
             return this;
         }
         if (offsetEverZero) {
-            this.APPEND(" LIMIT #{ew.wrapperData.paged.limit}");
+            this.APPEND(" LIMIT #{ew.data.paged.limit}");
         } else {
-            this.APPEND(" LIMIT #{ew.wrapperData.paged.offset}, #{ew.wrapperData.paged.limit}");
+            this.APPEND(" LIMIT #{ew.data.paged.offset}, #{ew.data.paged.limit}");
         }
         return this;
     }
@@ -207,39 +212,13 @@ public class MapperSql {
     }
 
     /**
-     * 给 query sql 加上括弧
-     *
-     * @param query IQuery
-     * @return (query sql)
-     */
-    public static String brackets(IQuery query) {
-        return brackets(query.getWrapperData().sqlWithoutPaged());
-    }
-
-    /**
      * 给sql加上括弧
      *
-     * @param sql sql
-     * @return (sql)
+     * @param obj sql
+     * @return (obj)
      */
-    public static String brackets(MapperSql sql) {
-        return brackets(sql.toString());
-    }
-
-    /**
-     * 给sql加上括弧
-     *
-     * @param sql sql
-     * @return (sql)
-     */
-    public static String brackets(String sql) {
-        if (sql == null) {
-            return null;
-        } else if (sql.startsWith("(") && sql.endsWith(")")) {
-            return sql;
-        } else {
-            return "(" + sql.trim() + ")";
-        }
+    public static String brackets(Object obj) {
+        return obj == null ? "()" : "(" + obj + ")";
     }
 
     static final AtomicLong tmp = new AtomicLong(0);

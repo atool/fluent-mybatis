@@ -213,7 +213,7 @@ public class PoJoHelper {
      * @return 最大查询数
      */
     public static int validateTagPaged(IQuery query) {
-        PagedOffset paged = query.getWrapperData().getPaged();
+        PagedOffset paged = query.data().paged();
         if (paged == null) {
             throw new FluentMybatisException("Paged parameter not set");
         }

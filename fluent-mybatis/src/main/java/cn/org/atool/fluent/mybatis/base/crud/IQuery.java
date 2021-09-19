@@ -81,7 +81,7 @@ public interface IQuery<E extends IEntity> {
      *
      * @return self
      */
-    WrapperData getWrapperData();
+    WrapperData data();
 
     /**
      * 根据Query定义执行后续操作

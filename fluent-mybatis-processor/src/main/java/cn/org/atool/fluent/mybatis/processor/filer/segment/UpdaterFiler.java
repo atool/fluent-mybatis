@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
@@ -58,12 +59,12 @@ public class UpdaterFiler extends AbstractFiler {
             .addMethod(this.m_emptyUpdater_table())
             .addMethod(this.m_updater())
             .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_dupdater_table());
+            .addMethod(this.m_updater_table());
     }
 
     private FieldSpec f_setter() {
         return FieldSpec.builder(fluent.updateSetter(),
-            "set", Modifier.PUBLIC, Modifier.FINAL)
+                "set", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new $T(this)", fluent.updateSetter())
             .build();
     }
@@ -75,7 +76,7 @@ public class UpdaterFiler extends AbstractFiler {
      */
     private FieldSpec f_where() {
         return FieldSpec.builder(fluent.updateWhere(),
-            "where", Modifier.PUBLIC, Modifier.FINAL)
+                "where", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new $T(this)", fluent.updateWhere())
             .build();
     }
@@ -87,7 +88,7 @@ public class UpdaterFiler extends AbstractFiler {
      */
     private FieldSpec f_orderBy() {
         return FieldSpec.builder(fluent.updateOrderBy(),
-            "orderBy", Modifier.PUBLIC, Modifier.FINAL)
+                "orderBy", Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new $T(this)", fluent.updateOrderBy())
             .build();
     }
@@ -108,7 +109,7 @@ public class UpdaterFiler extends AbstractFiler {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(boolean.class, "defaults")
-            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(IFragment.class, "table")
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "shared")
             .addStatement("super(table == null ? $L.table() : table, alias, $T.class)", Suffix_MAPPING, fluent.entity())
@@ -151,7 +152,7 @@ public class UpdaterFiler extends AbstractFiler {
         return super.publicMethod(M_EMPTY_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(false, table, null, null)", fluent.updater())
+            .addStatement("return new $T(false, db -> table.get(), null, null)", fluent.updater())
             .build();
     }
 
@@ -169,11 +170,11 @@ public class UpdaterFiler extends AbstractFiler {
             .build();
     }
 
-    private MethodSpec m_dupdater_table() {
+    private MethodSpec m_updater_table() {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(true, table, null, null)", fluent.updater())
+            .addStatement("return new $T(true, db -> table.get(), null, null)", fluent.updater())
             .build();
     }
 

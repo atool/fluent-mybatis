@@ -20,9 +20,9 @@ class SqlProviderTest implements IWant {
 
     static Iterator dataForAddEwParaIndex() {
         return new DataProvider()
-            .data("#{ew.wrapperData.parameters.xxx}", "#{ew[0].wrapperData.parameters.xxx}")
-            .data("#{ew.wrapperData.parameters.}", "#{ew[0].wrapperData.parameters.}")
-            .data("add#{ew.wrapperData.parameters.xxx}add", "add#{ew[0].wrapperData.parameters.xxx}add")
-            .data("add#{ew.wrapperData.parametersX.xxx}add", "add#{ew.wrapperData.parametersX.xxx}add");
+            .data("#{ew.data.parameters.xxx}", "#{ew[0].data.parameters.xxx}")
+            .data("#{ew.data.parameters.}", "#{ew[0].data.parameters.}")
+            .data("add#{ew.data.parameters.xxx}add", "add#{ew[0].data.parameters.xxx}add")
+            .data("add#{ew.data.parametersX.xxx}add", "add#{ew.data.parametersX.xxx}add");
     }
 }

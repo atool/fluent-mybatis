@@ -28,12 +28,12 @@ import static java.util.stream.Collectors.joining;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BatchCrudImpl implements BatchCrud {
     @Getter
-    protected final WrapperData wrapperData;
+    protected final WrapperData data;
 
     private final List<Function<SqlKit, String>> list = new ArrayList<>();
 
     public BatchCrudImpl() {
-        this.wrapperData = new WrapperData(EmptyWrapper.INSTANCE);
+        this.data = new WrapperData(EmptyWrapper.INSTANCE);
     }
 
     public String batchSql(SqlKit sqlKit) {
@@ -47,8 +47,8 @@ public class BatchCrudImpl implements BatchCrud {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
             }
             AMapping mapping = this.findMapping(((BaseWrapper) updater).getEntityClass());
-            updater.getWrapperData().sharedParameter(wrapperData);
-            list.add(kit -> kit.updateBy(mapping, updater.getWrapperData()));
+            updater.data().sharedParameter(data);
+            list.add(kit -> kit.updateBy(mapping, updater.data()));
         }
         return this;
     }
@@ -59,9 +59,9 @@ public class BatchCrudImpl implements BatchCrud {
             if (!(query instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
-            query.getWrapperData().sharedParameter(wrapperData);
+            query.data().sharedParameter(data);
             AMapping mapping = this.findMapping(((BaseWrapper) query).getEntityClass());
-            list.add(kit -> kit.deleteBy(mapping, query.getWrapperData()));
+            list.add(kit -> kit.deleteBy(mapping, query.data()));
         }
         return this;
     }
@@ -78,13 +78,13 @@ public class BatchCrudImpl implements BatchCrud {
             if (entity == null) {
                 continue;
             }
-            if (!wrapperData.getParameters().containsKey(ENTITY_LIST_KEY)) {
-                wrapperData.getParameters().put(ENTITY_LIST_KEY, new ArrayList<>());
+            if (!data.getParameters().containsKey(ENTITY_LIST_KEY)) {
+                data.getParameters().put(ENTITY_LIST_KEY, new ArrayList<>());
             }
-            List values = (List) wrapperData.getParameters().get(ENTITY_LIST_KEY);
+            List values = (List) data.getParameters().get(ENTITY_LIST_KEY);
             int index = values.size();
             values.add(entity);
-            String prefix = format("ew.wrapperData.parameters.%s[%d].", ENTITY_LIST_KEY, index);
+            String prefix = format("ew.data.parameters.%s[%d].", ENTITY_LIST_KEY, index);
             PkGeneratorKits.setPkByGenerator(entity);
             AMapping mapping = this.findMapping(entity.entityClass());
             list.add(kit -> kit.insertEntity(mapping, prefix, entity, entity.findPk() != null));
@@ -95,7 +95,7 @@ public class BatchCrudImpl implements BatchCrud {
     @Override
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
-        query.getWrapperData().sharedParameter(wrapperData);
+        query.data().sharedParameter(data);
         list.add(kit -> kit.insertSelect(insertTable, fields, query));
         return this;
     }

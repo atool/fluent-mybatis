@@ -56,7 +56,7 @@ public class WhereApplyTest2 extends BaseTest {
             .select("*").orderBy.asc("gmt_created").end());
         db.sqlList().wantSql(1)
             .start("SELECT * FROM (SELECT `id`,")
-            .end("FROM fluent_mybatis.student ORDER BY `gmt_created` DESC) a1 ORDER BY a1.`gmt_created` ASC");
+            .end("FROM fluent_mybatis.student ORDER BY `gmt_created` DESC LIMIT ?, ?) a1 ORDER BY a1.`gmt_created` ASC");
     }
 
     @Test

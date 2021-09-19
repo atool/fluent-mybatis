@@ -201,8 +201,8 @@ public class EntityMappingFiler extends AbstractFiler {
             .addParameter(boolean.class, "defaults")
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
-            .addParameter(Parameters.class, "parameters")
-            .addStatement("return new $T(defaults, table, alias, parameters)", fluent.query())
+            .addParameter(Parameters.class, "shared")
+            .addStatement("return new $T(defaults, table == null ? null : db -> table.get(), alias, shared)", fluent.query())
             .build();
     }
 
@@ -212,7 +212,8 @@ public class EntityMappingFiler extends AbstractFiler {
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "shared")
-            .addStatement("return new $T(defaults, table, alias, shared)", fluent.updater()).build();
+            .addStatement("return new $T(defaults, table == null ? null : db -> table.get(), alias, shared)", fluent.updater())
+            .build();
     }
 
     private MethodSpec m_defaultSetter() {

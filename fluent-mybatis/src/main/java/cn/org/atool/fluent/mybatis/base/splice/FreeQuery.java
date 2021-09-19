@@ -1,22 +1,19 @@
 package cn.org.atool.fluent.mybatis.base.splice;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.GroupBy;
-import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Having;
-import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryOrderBy;
-import cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.Selector;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
-import lombok.Setter;
+import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.GroupBy;
+import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.Having;
+import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.QueryOrderBy;
+import cn.org.atool.fluent.mybatis.base.splice.FreeSegment.Selector;
+import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.base.splice.FreeWrapperHelper.QueryWhere;
-import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
+import static cn.org.atool.fluent.mybatis.base.splice.FreeSegment.QueryWhere;
 
 /**
  * 字符串形式自由拼接查询器构造
@@ -52,16 +49,24 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      */
     public final QueryWhere where = new QueryWhere(this);
 
+    public FreeQuery() {
+        super((IFragment) null, null, EmptyEntity.class);
+    }
+
+    public FreeQuery(String table) {
+        super(table == null ? null : () -> table, null, EmptyEntity.class);
+    }
+
+    public FreeQuery(String table, String alias) {
+        super(table == null ? null : () -> table, alias, EmptyEntity.class);
+    }
+
     public FreeQuery(Supplier<String> table, String alias) {
         super(table, alias, EmptyEntity.class);
     }
 
-    public FreeQuery(String table) {
-        this(() -> table, null);
-    }
-
-    public FreeQuery(String table, String alias) {
-        this(() -> table, alias);
+    public FreeQuery(IFragment table, String alias) {
+        super(table, alias, EmptyEntity.class);
     }
 
     /**
@@ -71,13 +76,12 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @param alias 别名
      */
     public FreeQuery(IQuery child, String alias) {
-        this(() -> brackets(child), alias);
-        this.setDbType(((BaseWrapper) child).dbType());
-        child.getWrapperData().sharedParameter(this.wrapperData);
+        super(BracketFrag.set(child), alias, EmptyEntity.class);
+        child.data().sharedParameter(this.data);
     }
 
     public FreeQuery emptyQuery() {
-        return new FreeQuery(super.table, super.tableAlias);
+        return new FreeQuery();
     }
 
     @Override
@@ -94,7 +98,7 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @return self
      */
     public FreeQuery customizedByPlaceholder(String sql, Object parameter) {
-        this.wrapperData.customizedSql(sql, parameter);
+        this.data.customizedSql(sql, parameter);
         return this;
     }
 
@@ -107,17 +111,9 @@ public class FreeQuery extends BaseQuery<EmptyEntity, FreeQuery> {
      * @return self
      */
     public FreeQuery customizedByQuestion(String sql, Object... paras) {
-        String placeholder = this.wrapperData.paramSql(null, sql, paras);
-        this.wrapperData.customizedSql(placeholder, null);
+        String placeholder = this.data.paramSql(null, sql, paras);
+        this.data.customizedSql(placeholder, null);
         return this;
-    }
-
-    @Setter
-    private DbType dbType;
-
-    @Override
-    public DbType dbType() {
-        return dbType == null ? IRef.instance().defaultDbType() : dbType;
     }
 
     @Override

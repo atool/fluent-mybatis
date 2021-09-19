@@ -1,14 +1,19 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
-import cn.org.atool.fluent.mybatis.segment.model.KeyWordSegment;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 
 /**
  * 关联查询条件设置
@@ -23,94 +28,93 @@ public class JoinWrapperData extends WrapperData {
     public JoinWrapperData(BaseQuery query, List<BaseQuery> queries, Parameters shared) {
         super(query, shared);
         this.queries = queries;
-        this.tables.add(this.wrapper.getWrapperData().getTable());
+        this.tables.add(this.wrapper.data().table());
     }
 
-    private final List<String> tables = new ArrayList<>();
+    private final JoiningFrag tables = JoiningFrag.get();
 
-    public void addTable(String table) {
+    public void addTable(IFragment table) {
         tables.add(table);
     }
 
     @Override
-    public String getTable() {
-        return String.join(" ", this.tables);
+    public IFragment table() {
+        return this.tables.setDelimiter(SPACE);
     }
 
-    private boolean selectMerged = false;
+    /**
+     * 已聚合的标识
+     */
+    private final Set<KeyFrag> mergedFlag = new HashSet<>(8);
 
     @Override
-    public String getSqlSelect() {
-        if (selectMerged) {
-            return super.getSqlSelect();
-        }
-        this.sqlSelect.addAll(this.wrapper.getWrapperData().sqlSelect());
-        for (BaseQuery query : this.queries) {
-            this.sqlSelect.addAll(query.wrapperData.sqlSelect());
-        }
-        if (this.sqlSelect.isEmpty()) {
-            this.wrapper.allFields().forEach(c -> this.sqlSelect.add(alias(wrapper.getTableAlias(), (String) c)));
+    public IFragment select() {
+        if (!mergedFlag.contains(SELECT)) {
+            this.select.add(this.wrapper.data().select);
             for (BaseQuery query : this.queries) {
-                query.allFields().forEach(c -> this.sqlSelect.add(alias(query.tableAlias, (String) c)));
+                this.select.add(query.data.select);
             }
-        }
-        selectMerged = true;
-        return super.getSqlSelect();
-    }
-
-    private boolean whereMerged = false;
-
-    @Override
-    public String getWhereSql() {
-        if (whereMerged) {
-            return super.getWhereSql();
-        }
-        this.mergeSegments().getWhere().add(KeyWordSegment.AND, this.wrapper.getWrapperData().whereSegments());
-        for (BaseQuery query : this.queries) {
-            this.mergeSegments().getWhere().add(KeyWordSegment.AND, query.wrapperData.whereSegments());
-        }
-        whereMerged = true;
-        return super.getWhereSql();
-    }
-
-    private boolean groupByMerged = false;
-
-    @Override
-    public String getGroupBy() {
-        if (groupByMerged) {
-            return super.getGroupBy();
-        }
-        this.wrapper.getWrapperData().mergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments().getGroupBy()::addAll);
-        this.wrapper.getWrapperData().mergeSegments().getHaving().getSegments().forEach(this.mergeSegments().getHaving()::addAll);
-        for (BaseQuery query : this.queries) {
-            query.wrapperData.mergeSegments().getGroupBy().getSegments().forEach(this.mergeSegments().getGroupBy()::addAll);
-            if (!this.mergeSegments().getHaving().isEmpty() &&
-                !query.wrapperData.mergeSegments().getHaving().getSegments().isEmpty()) {
-                this.mergeSegments().getHaving().addAll(KeyWordSegment.AND);
+            if (this.select.isEmpty()) {
+                this.wrapper.allFields().forEach(c -> this.select.add(Column.set(wrapper, (String) c)));
+                for (BaseQuery query : this.queries) {
+                    query.allFields().forEach(c -> this.select.add(Column.set(query, (String) c)));
+                }
             }
-            query.wrapperData.mergeSegments().getHaving().getSegments().forEach(this.mergeSegments().getHaving()::addAll);
+            mergedFlag.add(SELECT);
         }
-        this.groupByMerged = true;
-        return super.getGroupBy();
-    }
-
-    private boolean orderByMerged = false;
-
-    @Override
-    public String getOrderBy() {
-        if (orderByMerged) {
-            return super.getOrderBy();
-        }
-        this.wrapper.getWrapperData().mergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments().getOrderBy()::addAll);
-        for (BaseQuery query : this.queries) {
-            query.wrapperData.mergeSegments().getOrderBy().getSegments().forEach(this.mergeSegments().getOrderBy()::addAll);
-        }
-        orderByMerged = true;
-        return super.getOrderBy();
+        return super.select();
     }
 
     @Override
-    public String getUpdateStr() {
+    public JoiningFrag where() {
+        if (!mergedFlag.contains(WHERE)) {
+            this.segments().where.add(AND, this.wrapper.data().where());
+            for (BaseQuery query : this.queries) {
+                this.segments().where.add(AND, query.data.where());
+            }
+            mergedFlag.add(WHERE);
+        }
+        return super.where();
+    }
+
+    @Override
+    public JoiningFrag groupBy() {
+        if (!mergedFlag.contains(GROUP_BY)) {
+            this.segments().groupBy.add(GROUP_BY, this.wrapper.data().groupBy());
+            for (BaseQuery query : this.queries) {
+                this.segments().groupBy.add(GROUP_BY, query.data.groupBy());
+            }
+            mergedFlag.add(GROUP_BY);
+        }
+        return super.groupBy();
+    }
+
+    @Override
+    public JoiningFrag having() {
+        if (!mergedFlag.contains(HAVING)) {
+            this.segments().having.add(HAVING, this.wrapper.data().having());
+            for (BaseQuery query : this.queries) {
+                this.segments().having.add(HAVING, query.data.having());
+            }
+            mergedFlag.add(HAVING);
+        }
+        return super.groupBy();
+    }
+
+    @Override
+    public JoiningFrag orderBy() {
+        if (mergedFlag.add(ORDER_BY)) {
+            this.segments().orderBy.add(ORDER_BY, this.wrapper.data().orderBy());
+            for (BaseQuery query : this.queries) {
+                this.segments().orderBy.add(ORDER_BY, query.data.orderBy());
+            }
+            mergedFlag.add(ORDER_BY);
+        }
+        return super.orderBy();
+    }
+
+    @Override
+    public IFragment update() {
         throw new RuntimeException("not support!");
     }
 }

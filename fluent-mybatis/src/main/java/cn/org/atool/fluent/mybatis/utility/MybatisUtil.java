@@ -10,6 +10,7 @@ import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 
 /**
  * MybatisUtil
@@ -431,6 +432,50 @@ public class MybatisUtil {
      */
     public static boolean isDigit(char ch) {
         return ch >= '0' && ch <= '9';
+    }
+
+    /**
+     * 解析别名列表
+     *
+     * @param column 字段
+     * @return ignore
+     */
+    public static List<String> parseAlias(String column) {
+        int pos = -1;
+        List<String> list = new ArrayList<>();
+        StringBuilder buff = new StringBuilder();
+        for (char c : (column + SPACE).toCharArray()) {
+            if (pos <= 0 && isSpace(c)) {
+                pos = 0;
+            } else if (pos == 0 && (c == 'a' || c == 'A')) {
+                pos = 1;
+            } else if (pos == 1 && (c == 's' || c == 'S')) {
+                pos = 2;
+            } else if ((pos == 2 || pos == 3) && isSpace(c)) {
+                pos = 3;
+            } else if (pos >= 3 && (isLetterOrDigit(c))) {
+                pos = 4;
+                buff.append(c);
+            } else if (pos == 4 && (isSpace(c) || c == ',')) {
+                list.add(buff.toString());
+                buff = new StringBuilder();
+                pos = -1;
+            } else {
+                pos = -1;
+            }
+        }
+        return list;
+    }
+
+    public static String unwrap(String column) {
+        int len = column.length();
+        char begin = column.charAt(0);
+        char last = column.charAt(len - 1);
+        if (!isLetterOrDigit(begin) && !isLetterOrDigit(last)) {
+            return column.substring(1, len - 1);
+        } else {
+            return column;
+        }
     }
 
     /**

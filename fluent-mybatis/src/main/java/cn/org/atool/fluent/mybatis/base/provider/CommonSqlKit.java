@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
-import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
@@ -10,11 +9,16 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
-import cn.org.atool.fluent.mybatis.base.model.*;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.InsertList;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderKit;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -108,10 +112,10 @@ public class CommonSqlKit implements SqlKit {
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
         String columns = Stream.of(fields).map(dbType::wrap).collect(joining(", "));
-        if (!query.getWrapperData().hasSelect()) {
+        if (!query.data().hasSelect()) {
             ((BaseQuery) query).select(fields);
         }
-        return "INSERT INTO " + tableName + " (" + columns + ") " + query.getWrapperData().sqlWithoutPaged();
+        return "INSERT INTO " + tableName + " (" + columns + ") " + query.data().sql(false).get(dbType);
     }
 
     @Override
@@ -148,9 +152,9 @@ public class CommonSqlKit implements SqlKit {
         assertNotEmpty("ids", ids);
         /* 根据id的条件不用附加默认条件 */
         IUpdate updater = mapping.updater();
-        updater.getWrapperData().mergeSegments().getWhere().clean();
+        updater.data().segments().where.clear();
         /* 逻辑删除忽略版本号 */
-        updater.getWrapperData().setIgnoreLockVersion(true);
+        updater.data().setIgnoreLockVersion(true);
         String logicDeleteColumn = mapping.logicDeleteColumn();
         if (isBlank(logicDeleteColumn)) {
             throw new FluentMybatisException("logic delete column(@LogicDelete) not found.");
@@ -190,13 +194,13 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public String deleteBy(IMapping mapping, WrapperData ew) {
-        if (notBlank(ew.getCustomizedSql())) {
-            return ew.getCustomizedSql();
+        if (ew.getCustomizedSql().notEmpty()) {
+            return ew.getCustomizedSql().get(dbType);
         } else {
-            MapperSql sql = new MapperSql();
-            sql.DELETE_FROM(ew.getTable(), ew);
-            sql.WHERE_GROUP_ORDER_BY(ew);
-            return sql.toString();
+            MapperSql mapperSql = new MapperSql();
+            mapperSql.DELETE_FROM(dbType, ew.table(), ew);
+            mapperSql.WHERE_GROUP_ORDER_BY(dbType, ew);
+            return mapperSql.toString();
         }
     }
 
@@ -234,12 +238,12 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public IUpdate logicDeleteBy(IMapping mapping, IQuery query) {
-        if (notBlank(query.getWrapperData().getCustomizedSql())) {
+        if (query.data().getCustomizedSql().notEmpty()) {
             throw new FluentMybatisException("Logical deletion does not support custom SQL.");
         } else {
             IUpdate update = mapping.updater();
             this.setLogicDeleted(mapping, update);
-            update.getWrapperData().replacedWhere(query);
+            update.data().replacedByQuery(query);
             return update;
         }
     }
@@ -253,7 +257,7 @@ public class CommonSqlKit implements SqlKit {
         List<String> list = new ArrayList<>(updaters.length);
         int index = 0;
         for (IUpdate updater : updaters) {
-            String sql = updateBy(mapping, updater.getWrapperData());
+            String sql = updateBy(mapping, updater.data());
             sql = SqlProviderKit.addEwParaIndex(sql, format("[%d]", index));
             index++;
             list.add(sql);
@@ -263,30 +267,30 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public String updateBy(IMapping mapping, WrapperData ew) {
-        assertNotNull("wrapperData of updater", ew);
-        if (notBlank(ew.getCustomizedSql())) {
-            return ew.getCustomizedSql();
+        assertNotNull("data of updater", ew);
+        if (ew.getCustomizedSql().notEmpty()) {
+            return ew.getCustomizedSql().get(dbType);
         }
-        Map<String, String> updates = ew.getUpdates();
+        Map<IFragment, String> updates = ew.getUpdates();
         assertNotEmpty("updates", updates);
 
-        MapperSql sql = new MapperSql();
-        sql.UPDATE(ew.getTable(), ew);
-        List<String> needDefaults = updateDefaults(mapping, updates, ew.isIgnoreLockVersion());
+        MapperSql mapperSql = new MapperSql();
+        mapperSql.UPDATE(dbType, ew.table(), ew);
+        JoiningFrag needDefaults = updateDefaults(mapping, ew.getWrapper(), updates, ew.ignoreVersion());
         // 如果忽略版本锁, 则移除版本锁更新的默认值
-        String versionColumn = mapping.versionColumn();
-        if (ew.isIgnoreLockVersion() && notBlank(versionColumn)) {
-            needDefaults.remove(versionColumn);
+        String version = mapping.versionColumn();
+        if (notBlank(version)) {
+            if (ew.ignoreVersion()) {
+                needDefaults.removeColumn(version);
+            } else if (!ew.segments().where.containColumn(version)) {
+                throw new RuntimeException("@Version field of where condition not set.");
+            }
         }
-        needDefaults.add(ew.getUpdateStr());
-        sql.SET(needDefaults);
-        // 如果忽略版本锁, 则跳过版本锁条件检查
-        if (!ew.isIgnoreLockVersion()) {
-            checkUpdateVersionWhere(mapping, ew.findWhereColumns());
-        }
-        sql.WHERE_GROUP_ORDER_BY(ew);
-        sql.LIMIT(ew, true);
-        return sql.toString();
+        needDefaults.add(ew.update());
+        mapperSql.SET(dbType, needDefaults);
+        mapperSql.WHERE_GROUP_ORDER_BY(dbType, ew);
+        mapperSql.LIMIT(ew, true);
+        return mapperSql.toString();
     }
 
     @Override
@@ -294,7 +298,7 @@ public class CommonSqlKit implements SqlKit {
         assertNotNull("entity", entity);
         IUpdate update = mapping.updater();
         /* 清空byId场景下默认条件设置 */
-        update.getWrapperData().mergeSegments().getWhere().clean();
+        update.data().segments().where.clear();
 
         List<FieldMapping> fields = mapping.allFields();
         FieldMapping primary = null;
@@ -302,16 +306,16 @@ public class CommonSqlKit implements SqlKit {
         Map values = entity.toColumnMap();
         for (FieldMapping f : fields) {
             Object value = values.get(f.column);
-            Column column = Column.column(f.column, (BaseWrapper) update);
+            Column column = Column.set((IWrapper) update, f.column);
             if (f.isPrimary()) {
                 primary = f;
             } else if (f.isVersion()) {
                 version = f;
-                update.getWrapperData().updateSql(column, f.update);
+                update.data().updateSql(column, f.update);
             } else if (value != null) {
                 update.updateSet(f.column, value);
             } else if (notBlank(f.update)) {
-                update.getWrapperData().updateSql(column, f.update);
+                update.data().updateSql(column, f.update);
             }
         }
         if (primary == null) {
@@ -328,12 +332,12 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public String countNoLimit(IMapping mapping, WrapperData ew) {
-        if (notBlank(ew.getCustomizedSql())) {
-            return ew.getCustomizedSql();
+        if (ew.getCustomizedSql().notEmpty()) {
+            return ew.getCustomizedSql().get(dbType);
         }
         MapperSql sql = new MapperSql();
-        sql.COUNT(ew.getTable(), ew);
-        sql.WHERE_GROUP_BY(ew);
+        sql.COUNT(dbType, ew.table(), ew);
+        sql.WHERE_GROUP_BY(dbType, ew);
         if (ew.hasGroupBy()) {
             return "SELECT COUNT(*) FROM" + brackets(sql) + SPACE + tmpTable();
         } else {
@@ -343,19 +347,19 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public String count(IMapping mapping, WrapperData ew) {
-        if (notBlank(ew.getCustomizedSql())) {
-            return ew.getCustomizedSql();
+        if (ew.getCustomizedSql().notEmpty()) {
+            return ew.getCustomizedSql().get(dbType);
         } else {
             MapperSql sql = new MapperSql();
-            sql.COUNT(ew.getTable(), ew);
-            sql.WHERE_GROUP_ORDER_BY(ew);
-            return ew.wrappedByPaged(mapping, sql.toString());
+            sql.COUNT(dbType, ew.table(), ew);
+            sql.WHERE_GROUP_ORDER_BY(dbType, ew);
+            return ew.wrappedByPaged(sql.toString()).get(dbType);
         }
     }
 
     @Override
     public String queryBy(IMapping mapping, WrapperData ew) {
-        return ew.sqlWithPaged(mapping);
+        return ew.sql(true).get(dbType);
     }
 
     /**
@@ -412,18 +416,6 @@ public class CommonSqlKit implements SqlKit {
     }
 
     /**
-     * 更新时, 检查乐观锁字段条件是否设置
-     */
-    private void checkUpdateVersionWhere(IMapping mapping, List<String> wheres) {
-        String versionColumn = mapping.versionColumn();
-        if (If.notBlank(versionColumn) &&
-            !wheres.contains(versionColumn) &&
-            !wheres.contains(mapping.dbType().wrap(versionColumn))) {
-            throw new RuntimeException("The version lock field was explicitly set, but no version condition was found in the update condition.");
-        }
-    }
-
-    /**
      * 获取指定的动态表名称
      *
      * @param entity 要插入的实例
@@ -445,16 +437,14 @@ public class CommonSqlKit implements SqlKit {
      * @param updates 显式update字段
      * @return ignore
      */
-    static List<String> updateDefaults(IMapping mapping, Map<String, String> updates, boolean ignoreLockVersion) {
+    static JoiningFrag updateDefaults(IMapping mapping, IWrapper wrapper, Map<IFragment, String> updates, boolean ignoreLockVersion) {
         List<FieldMapping> fields = mapping.allFields();
         UpdateDefault defaults = new UpdateDefault(updates);
         for (FieldMapping f : fields) {
-            if (isBlank(f.update)) {
+            if (isBlank(f.update) || f.isVersion() && ignoreLockVersion) {
                 continue;
             }
-            if (!f.isVersion() || !ignoreLockVersion) {
-                defaults.add(mapping.dbType(), f, f.update);
-            }
+            defaults.add(wrapper, f, f.update);
         }
         return defaults.getUpdateDefaults();
     }

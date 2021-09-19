@@ -2,9 +2,8 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
@@ -25,22 +24,22 @@ public abstract class BaseUpdate<
     implements IBaseUpdate<E, U, NQ> {
 
     protected BaseUpdate(String table, Class entityClass) {
-        super(() -> table, EMPTY, entityClass);
+        super(db -> table, EMPTY, entityClass);
     }
 
-    protected BaseUpdate(Supplier<String> table, String alias, Class entityClass) {
+    protected BaseUpdate(IFragment table, String alias, Class entityClass) {
         super(table, alias, entityClass);
     }
 
     @Override
     public U limit(int limit) {
-        this.wrapperData.setPaged(new PagedOffset(0, limit));
+        this.data.setPaged(new PagedOffset(0, limit));
         return (U) this;
     }
 
     @Override
     public U last(String lastSql) {
-        this.wrapperData.last(lastSql);
+        this.data.last(lastSql);
         return (U) this;
     }
 
@@ -51,7 +50,7 @@ public abstract class BaseUpdate<
      * @return self
      */
     public U ignoreLockVersion() {
-        this.wrapperData.setIgnoreLockVersion(true);
+        this.data.setIgnoreLockVersion(true);
         return (U) this;
     }
 }
