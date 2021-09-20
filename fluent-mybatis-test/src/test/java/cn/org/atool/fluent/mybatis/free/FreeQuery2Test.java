@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.splice;
+package cn.org.atool.fluent.mybatis.free;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
@@ -17,7 +17,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 
 @SuppressWarnings({"rawtypes"})
-public class FreeQueryTest extends BaseTest {
+public class FreeQuery2Test extends BaseTest {
     @Autowired
     MemberMapper mapper;
 
