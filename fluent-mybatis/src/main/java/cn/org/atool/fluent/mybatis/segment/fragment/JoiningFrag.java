@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -46,18 +46,18 @@ public class JoiningFrag implements IFragment {
     }
 
     @Override
-    public String get(DbType db) {
+    public String get(IMapping mapping) {
         if (this.isEmpty()) {
             return EMPTY;
         } else {
-            return merge(db);
+            return merge(mapping);
         }
     }
 
-    private String merge(DbType db) {
+    private String merge(IMapping mapping) {
         List<String> list = new ArrayList<>(segments.size());
         for (IFragment seg : segments) {
-            String text = seg.get(db);
+            String text = seg.get(mapping);
             if (filter == null || filter.test(text)) {
                 list.add(text);
             }

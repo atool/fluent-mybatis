@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import java.util.Arrays;
 
@@ -20,11 +20,11 @@ public class FormatFrag implements IFragment {
     }
 
     @Override
-    public String get(DbType db) {
+    public String get(IMapping mapping) {
         Object[] _args = new Object[0];
         if (args != null && args.length > 0) {
             _args = Arrays.stream(this.args)
-                .map(o -> o instanceof IFragment ? ((IFragment) o).get(db) : String.valueOf(o))
+                .map(o -> o instanceof IFragment ? ((IFragment) o).get(mapping) : String.valueOf(o))
                 .toArray();
         }
         return String.format(format, _args);

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
@@ -34,9 +34,9 @@ public class CachedFrag implements IFragment {
     }
 
     @Override
-    public String get(DbType db) {
+    public String get(IMapping mapping) {
         if (this.cached == null) {
-            this.cached = segment.get(db);
+            this.cached = segment.get(mapping);
         }
         return this.cached;
     }

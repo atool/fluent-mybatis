@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
@@ -38,17 +39,17 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql COUNT(DbType dbType, IFragment table, WrapperData data) {
+    public MapperSql COUNT(IMapping mapping, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
-        buffer.append(SELECT.get(dbType));
+        buffer.append(SELECT.get(mapping));
         this.hint(data, HintType.After_CrudKey);
         buffer.append("COUNT(");
-        String select = data.select().get(dbType);
+        String select = data.select().get(mapping);
         // select 单字段和多字段判断
         buffer.append(isBlank(select) || select.contains(",") ? ASTERISK : select.trim());
         buffer.append(") FROM ");
         this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(dbType));
+        buffer.append(table.get(mapping));
         this.hint(data, HintType.After_Table);
         return this;
     }
@@ -63,10 +64,10 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql INSERT_COLUMNS(DbType dbType, List<String> columns) {
+    public MapperSql INSERT_COLUMNS(IMapping mapping, List<String> columns) {
         String joining = columns.stream()
             .map(String::trim)
-            .map(dbType::wrap)
+            .map(mapping.dbType()::wrap)
             .collect(joining(", "));
         buffer.append(brackets(joining));
         return this;
@@ -77,27 +78,27 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql DELETE_FROM(DbType dbType, IFragment table, WrapperData data) {
+    public MapperSql DELETE_FROM(IMapping mapping, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
         buffer.append(" DELETE ");
         this.hint(data, HintType.After_CrudKey);
         buffer.append(" FROM ");
         this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(dbType));
+        buffer.append(table.get(mapping));
         this.hint(data, HintType.After_Table);
         return this;
     }
 
-    public MapperSql UPDATE(DbType dbType, IFragment table) {
-        return this.UPDATE(dbType, table, null);
+    public MapperSql UPDATE(IMapping mapping, IFragment table) {
+        return this.UPDATE(mapping, table, null);
     }
 
-    public MapperSql UPDATE(DbType dbType, IFragment table, WrapperData data) {
+    public MapperSql UPDATE(IMapping mapping, IFragment table, WrapperData data) {
         this.hint(data, HintType.Before_All);
         buffer.append(" UPDATE ");
         this.hint(data, HintType.After_CrudKey);
         this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(dbType));
+        buffer.append(table.get(mapping));
         this.hint(data, HintType.After_Table);
         return this;
     }
@@ -107,8 +108,8 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql SET(DbType dbType, JoiningFrag sets) {
-        buffer.append(" SET ").append(sets.get(dbType));
+    public MapperSql SET(IMapping mapping, JoiningFrag sets) {
+        buffer.append(" SET ").append(sets.get(mapping));
         return this;
     }
 
@@ -138,18 +139,18 @@ public class MapperSql {
         return this.WHERE(ands);
     }
 
-    public MapperSql WHERE_GROUP_BY(DbType dbType, WrapperData data) {
-        this.WHERE_GROUP_HAVING(dbType, data);
+    public MapperSql WHERE_GROUP_BY(IMapping mapping, WrapperData data) {
+        this.WHERE_GROUP_HAVING(mapping, data);
         if (data.last().notEmpty()) {
             this.APPEND(data.segments().last());
         }
         return this;
     }
 
-    public MapperSql WHERE_GROUP_ORDER_BY(DbType dbType, WrapperData data) {
-        this.WHERE_GROUP_HAVING(dbType, data);
+    public MapperSql WHERE_GROUP_ORDER_BY(IMapping mapping, WrapperData data) {
+        this.WHERE_GROUP_HAVING(mapping, data);
         if (data.orderBy().notEmpty()) {
-            this.APPEND(data.segments().orderBy.get(dbType));
+            this.APPEND(data.segments().orderBy.get(mapping));
         }
         if (data.last().notEmpty()) {
             this.APPEND(data.segments().last());
@@ -157,15 +158,15 @@ public class MapperSql {
         return this;
     }
 
-    private void WHERE_GROUP_HAVING(DbType dbType, WrapperData data) {
+    private void WHERE_GROUP_HAVING(IMapping mapping, WrapperData data) {
         if (data.where().notEmpty()) {
-            this.WHERE(data.segments().where.get(dbType));
+            this.WHERE(data.segments().where.get(mapping));
         }
         if (data.groupBy().notEmpty()) {
-            this.APPEND(data.segments().groupBy.get(dbType));
+            this.APPEND(data.segments().groupBy.get(mapping));
         }
         if (data.having().notEmpty()) {
-            this.APPEND(data.segments().having.get(dbType));
+            this.APPEND(data.segments().having.get(mapping));
         }
     }
 
@@ -174,15 +175,15 @@ public class MapperSql {
         return this;
     }
 
-    public MapperSql SELECT(DbType dbType, IFragment table, WrapperData data, IFragment defaultColumns) {
+    public MapperSql SELECT(IMapping mapping, IFragment table, WrapperData data, IFragment defaultColumns) {
         this.hint(data, HintType.Before_All);
-        buffer.append(SELECT.get(dbType));
+        buffer.append(SELECT.get(mapping));
         this.hint(data, HintType.After_CrudKey);
         this.APPEND(data.isDistinct() ? "DISTINCT " : SPACE);
-        buffer.append(isBlank(data.select().get(dbType)) ? defaultColumns.get(dbType) : data.select().get(dbType));
+        buffer.append(isBlank(data.select().get(mapping)) ? defaultColumns.get(mapping) : data.select().get(mapping));
         buffer.append(" FROM ");
         this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(dbType));
+        buffer.append(table.get(mapping));
         this.hint(data, HintType.After_Table);
         return this;
     }

@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
@@ -41,6 +42,7 @@ public class UpdaterFiler extends AbstractFiler {
     protected void staticImport(JavaFile.Builder spec) {
         spec.addStaticImport(If.class, "notBlank");
         spec.addStaticImport(fluent.entityMapping(), Suffix_MAPPING);
+        spec.addStaticImport(Fragments.class, "fragment");
     }
 
     @Override
@@ -152,7 +154,7 @@ public class UpdaterFiler extends AbstractFiler {
         return super.publicMethod(M_EMPTY_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(false, db -> table.get(), null, null)", fluent.updater())
+            .addStatement("return new $T(false, fragment(table), null, null)", fluent.updater())
             .build();
     }
 
@@ -174,7 +176,7 @@ public class UpdaterFiler extends AbstractFiler {
         return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(true, db -> table.get(), null, null)", fluent.updater())
+            .addStatement("return new $T(true, fragment(table), null, null)", fluent.updater())
             .build();
     }
 

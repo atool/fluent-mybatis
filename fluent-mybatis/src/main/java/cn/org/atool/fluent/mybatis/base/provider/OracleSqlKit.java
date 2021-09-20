@@ -7,7 +7,6 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 
@@ -30,8 +29,8 @@ import static java.util.stream.Collectors.toList;
  */
 @SuppressWarnings({"rawtypes"})
 public class OracleSqlKit extends CommonSqlKit {
-    public OracleSqlKit(DbType dbType) {
-        super(dbType);
+    public OracleSqlKit() {
+        super();
     }
 
     @Override
@@ -49,14 +48,14 @@ public class OracleSqlKit extends CommonSqlKit {
     }
 
     @Override
-    public String batchCrud(BatchCrudImpl crud) {
-        String sql = crud.batchSql(this);
+    public String batchCrud(IMapping mapping, BatchCrudImpl crud) {
+        String sql = crud.batchSql(mapping, this);
         return wrapperBeginEnd(sql);
     }
 
     @Override
     public <E extends IEntity> String insertEntity(IMapping mapping, String prefix, E entity, boolean withPk) {
-        withPk = notBlank(dbType.feature.getSeq());
+        withPk = notBlank(mapping.dbType().feature.getSeq());
         return super.insertEntity(mapping, prefix, entity, withPk);
     }
 
@@ -76,10 +75,10 @@ public class OracleSqlKit extends CommonSqlKit {
         List<FieldMapping> nonFields = this.nonFields(mapping, maps, withPk);
 
         sql.INSERT_INTO(tableName);
-        sql.INSERT_COLUMNS(mapping.dbType(), nonFields.stream().map(f -> f.column).collect(toList()));
+        sql.INSERT_COLUMNS(mapping, nonFields.stream().map(f -> f.column).collect(toList()));
         sql.APPEND("SELECT");
         if (!withPk) {
-            sql.APPEND(getSeq(dbType.feature.getSeq()) + ",");
+            sql.APPEND(getSeq(mapping.dbType().feature.getSeq()) + ",");
         }
         sql.APPEND("TMP.* FROM (");
         for (int index = 0; index < maps.size(); index++) {

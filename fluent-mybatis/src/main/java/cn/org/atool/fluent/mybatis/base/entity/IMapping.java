@@ -29,7 +29,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * 返回表名
      */
     default String getTableName() {
-        return this.table().get(this.dbType());
+        return this.table().get(this);
     }
 
     /**

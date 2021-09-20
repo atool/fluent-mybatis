@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,11 @@ public class AppendFlag implements IFragment {
     }
 
     @Override
-    public String get(DbType db) {
+    public String get(IMapping mapping) {
         if (this.cached == null) {
             this.cached = list.stream().map(o -> {
                 if (o instanceof IFragment) {
-                    return ((IFragment) o).get(db);
+                    return ((IFragment) o).get(mapping);
                 } else {
                     return String.valueOf(o);
                 }

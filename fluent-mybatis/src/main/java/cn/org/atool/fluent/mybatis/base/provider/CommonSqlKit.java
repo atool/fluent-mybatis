@@ -15,7 +15,6 @@ import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.UpdateDefault;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
@@ -47,10 +46,7 @@ import static java.util.stream.Collectors.toList;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class CommonSqlKit implements SqlKit {
-    protected final DbType dbType;
-
-    public CommonSqlKit(DbType dbType) {
-        this.dbType = dbType;
+    public CommonSqlKit() {
     }
 
     @Override
@@ -82,7 +78,7 @@ public class CommonSqlKit implements SqlKit {
         MapperSql sql = new MapperSql();
         sql.INSERT_INTO(dynamic(entity, mapping.getTableName()));
         InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
-        sql.INSERT_COLUMNS(this.dbType, inserts.columns);
+        sql.INSERT_COLUMNS(mapping, inserts.columns);
         sql.VALUES();
         sql.INSERT_VALUES(inserts.values);
         return sql.toString();
@@ -107,15 +103,15 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public String insertSelect(String tableName, String[] fields, IQuery query) {
+    public String insertSelect(IMapping mapping, String tableName, String[] fields, IQuery query) {
         assertNotBlank("tableName", tableName);
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
-        String columns = Stream.of(fields).map(dbType::wrap).collect(joining(", "));
+        String columns = Stream.of(fields).map(mapping.dbType()::wrap).collect(joining(", "));
         if (!query.data().hasSelect()) {
             ((BaseQuery) query).select(fields);
         }
-        return "INSERT INTO " + tableName + " (" + columns + ") " + query.data().sql(false).get(dbType);
+        return "INSERT INTO " + tableName + " (" + columns + ") " + query.data().sql(false).get(mapping);
     }
 
     @Override
@@ -127,7 +123,7 @@ public class CommonSqlKit implements SqlKit {
         String tableName = dynamic(entities.get(0), mapping.getTableName());
         sql.INSERT_INTO(tableName);
 
-        sql.INSERT_COLUMNS(mapping.dbType(), nonFields.stream().map(f -> f.column).collect(toList()));
+        sql.INSERT_COLUMNS(mapping, nonFields.stream().map(f -> f.column).collect(toList()));
         sql.VALUES();
         for (int index = 0; index < maps.size(); index++) {
             if (index > 0) {
@@ -195,11 +191,11 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public String deleteBy(IMapping mapping, WrapperData ew) {
         if (ew.getCustomizedSql().notEmpty()) {
-            return ew.getCustomizedSql().get(dbType);
+            return ew.getCustomizedSql().get(mapping);
         } else {
             MapperSql mapperSql = new MapperSql();
-            mapperSql.DELETE_FROM(dbType, ew.table(), ew);
-            mapperSql.WHERE_GROUP_ORDER_BY(dbType, ew);
+            mapperSql.DELETE_FROM(mapping, ew.table(), ew);
+            mapperSql.WHERE_GROUP_ORDER_BY(mapping, ew);
             return mapperSql.toString();
         }
     }
@@ -269,13 +265,13 @@ public class CommonSqlKit implements SqlKit {
     public String updateBy(IMapping mapping, WrapperData ew) {
         assertNotNull("data of updater", ew);
         if (ew.getCustomizedSql().notEmpty()) {
-            return ew.getCustomizedSql().get(dbType);
+            return ew.getCustomizedSql().get(mapping);
         }
         Map<IFragment, String> updates = ew.getUpdates();
         assertNotEmpty("updates", updates);
 
         MapperSql mapperSql = new MapperSql();
-        mapperSql.UPDATE(dbType, ew.table(), ew);
+        mapperSql.UPDATE(mapping, ew.table(), ew);
         JoiningFrag needDefaults = updateDefaults(mapping, ew.getWrapper(), updates, ew.ignoreVersion());
         // 如果忽略版本锁, 则移除版本锁更新的默认值
         String version = mapping.versionColumn();
@@ -287,8 +283,8 @@ public class CommonSqlKit implements SqlKit {
             }
         }
         needDefaults.add(ew.update());
-        mapperSql.SET(dbType, needDefaults);
-        mapperSql.WHERE_GROUP_ORDER_BY(dbType, ew);
+        mapperSql.SET(mapping, needDefaults);
+        mapperSql.WHERE_GROUP_ORDER_BY(mapping, ew);
         mapperSql.LIMIT(ew, true);
         return mapperSql.toString();
     }
@@ -333,11 +329,11 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public String countNoLimit(IMapping mapping, WrapperData ew) {
         if (ew.getCustomizedSql().notEmpty()) {
-            return ew.getCustomizedSql().get(dbType);
+            return ew.getCustomizedSql().get(mapping);
         }
         MapperSql sql = new MapperSql();
-        sql.COUNT(dbType, ew.table(), ew);
-        sql.WHERE_GROUP_BY(dbType, ew);
+        sql.COUNT(mapping, ew.table(), ew);
+        sql.WHERE_GROUP_BY(mapping, ew);
         if (ew.hasGroupBy()) {
             return "SELECT COUNT(*) FROM" + brackets(sql) + SPACE + tmpTable();
         } else {
@@ -348,18 +344,18 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public String count(IMapping mapping, WrapperData ew) {
         if (ew.getCustomizedSql().notEmpty()) {
-            return ew.getCustomizedSql().get(dbType);
+            return ew.getCustomizedSql().get(mapping);
         } else {
             MapperSql sql = new MapperSql();
-            sql.COUNT(dbType, ew.table(), ew);
-            sql.WHERE_GROUP_ORDER_BY(dbType, ew);
-            return ew.wrappedByPaged(sql.toString()).get(dbType);
+            sql.COUNT(mapping, ew.table(), ew);
+            sql.WHERE_GROUP_ORDER_BY(mapping, ew);
+            return ew.wrappedByPaged(sql.toString()).get(mapping);
         }
     }
 
     @Override
     public String queryBy(IMapping mapping, WrapperData ew) {
-        return ew.sql(true).get(dbType);
+        return ew.sql(true).get(mapping);
     }
 
     /**
@@ -382,9 +378,9 @@ public class CommonSqlKit implements SqlKit {
     /**
      * 所有非空字段
      *
-     * @param provider SqlProvider
-     * @param maps     entity列表
-     * @param withPk   是否包含主键
+     * @param mapping IMapping
+     * @param maps    entity列表
+     * @param withPk  是否包含主键
      * @return 非空字段列表
      */
     protected List<FieldMapping> nonFields(IMapping mapping, List<Map> maps, boolean withPk) {

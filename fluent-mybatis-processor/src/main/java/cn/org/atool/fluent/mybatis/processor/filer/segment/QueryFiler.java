@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -50,6 +51,7 @@ public class QueryFiler extends AbstractFiler {
         spec.addStaticImport(StrConstant.class, "EMPTY");
         spec.addStaticImport(fluent.entityMapping(), Suffix_MAPPING);
         spec.addStaticImport(MybatisUtil.class, "assertNotNull");
+        spec.addStaticImport(Fragments.class, "fragment");
     }
 
     @Override
@@ -215,7 +217,7 @@ public class QueryFiler extends AbstractFiler {
         return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(false, table == null ? null : db -> table.get(), null, null)", fluent.query())
+            .addStatement("return new $T(false, fragment(table), null, null)", fluent.query())
             .build();
     }
 
@@ -247,7 +249,7 @@ public class QueryFiler extends AbstractFiler {
             .addModifiers(Modifier.STATIC)
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("assertNotNull($S, table)", "table")
-            .addStatement("return new $T(true, db -> table.get(), null, null)", fluent.query())
+            .addStatement("return new $T(true, fragment(table), null, null)", fluent.query())
             .build();
     }
 
@@ -257,7 +259,7 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
             .addStatement("assertNotNull($S, table)", "table")
-            .addStatement("return new $T(true, db -> table.get(), alias, null)", fluent.query())
+            .addStatement("return new $T(true, fragment(table), alias, null)", fluent.query())
             .build();
     }
 

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 
@@ -10,6 +10,7 @@ import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
  *
  * @author darui.wu
  */
+@SuppressWarnings("rawtypes")
 public class BracketFrag implements IFragment {
     private final IFragment fragment;
 
@@ -18,8 +19,8 @@ public class BracketFrag implements IFragment {
     }
 
     @Override
-    public String get(DbType db) {
-        return "(" + fragment.get(db) + ")";
+    public String get(IMapping mapping) {
+        return "(" + fragment.get(mapping) + ")";
     }
 
     @Override

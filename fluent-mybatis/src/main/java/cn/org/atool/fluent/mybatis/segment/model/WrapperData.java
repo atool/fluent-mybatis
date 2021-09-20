@@ -177,12 +177,12 @@ public class WrapperData implements IWrapperData {
         if (paged == null) {
             return CachedFrag.set(sql);
         }
-        return db -> {
+        return m -> {
             Parameters p = this.getParameters();
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
-            return db.paged(sql, offset, size, endOffset);
+            return m.dbType().paged(sql, offset, size, endOffset);
         };
     }
 
@@ -192,12 +192,12 @@ public class WrapperData implements IWrapperData {
         if (!withPaged || this.paged == null) {
             return withoutPaged;
         }
-        return db -> {
+        return m -> {
             Parameters p = this.getParameters();
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
-            return db.paged(withoutPaged.get(db), offset, size, endOffset);
+            return m.dbType().paged(withoutPaged.get(m), offset, size, endOffset);
         };
     }
 
@@ -205,10 +205,10 @@ public class WrapperData implements IWrapperData {
         if (customizedSql.notEmpty()) {
             return customizedSql;
         }
-        IFragment segment = db -> {
+        IFragment segment = m -> {
             MapperSql text = new MapperSql();
-            text.SELECT(db, this.table(), this, this.select());
-            text.WHERE_GROUP_ORDER_BY(db, this);
+            text.SELECT(m, this.table(), this, this.select());
+            text.WHERE_GROUP_ORDER_BY(m, this);
             return text.toString();
         };
         segment = unions.isEmpty() ? segment : BracketFrag.set(segment);

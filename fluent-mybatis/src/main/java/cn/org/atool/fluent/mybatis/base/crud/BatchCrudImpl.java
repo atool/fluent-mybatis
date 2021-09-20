@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -13,7 +14,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
@@ -30,14 +31,14 @@ public class BatchCrudImpl implements BatchCrud {
     @Getter
     protected final WrapperData data;
 
-    private final List<Function<SqlKit, String>> list = new ArrayList<>();
+    private final List<BiFunction<IMapping, SqlKit, String>> list = new ArrayList<>();
 
     public BatchCrudImpl() {
         this.data = new WrapperData(EmptyWrapper.INSTANCE);
     }
 
-    public String batchSql(SqlKit sqlKit) {
-        return list.stream().map(fun -> fun.apply(sqlKit)).collect(joining(";\n"));
+    public String batchSql(IMapping mapping, SqlKit sqlKit) {
+        return list.stream().map(fun -> fun.apply(mapping, sqlKit)).collect(joining(";\n"));
     }
 
     @Override
@@ -46,9 +47,8 @@ public class BatchCrudImpl implements BatchCrud {
             if (!(updater instanceof BaseWrapper)) {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
             }
-            AMapping mapping = this.findMapping(((BaseWrapper) updater).getEntityClass());
             updater.data().sharedParameter(data);
-            list.add(kit -> kit.updateBy(mapping, updater.data()));
+            list.add((m, kit) -> kit.updateBy(m, updater.data()));
         }
         return this;
     }
@@ -60,8 +60,7 @@ public class BatchCrudImpl implements BatchCrud {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
             query.data().sharedParameter(data);
-            AMapping mapping = this.findMapping(((BaseWrapper) query).getEntityClass());
-            list.add(kit -> kit.deleteBy(mapping, query.data()));
+            list.add((m, kit) -> kit.deleteBy(m, query.data()));
         }
         return this;
     }
@@ -87,7 +86,7 @@ public class BatchCrudImpl implements BatchCrud {
             String prefix = format("ew.data.parameters.%s[%d].", ENTITY_LIST_KEY, index);
             PkGeneratorKits.setPkByGenerator(entity);
             AMapping mapping = this.findMapping(entity.entityClass());
-            list.add(kit -> kit.insertEntity(mapping, prefix, entity, entity.findPk() != null));
+            list.add((m, kit) -> kit.insertEntity(mapping, prefix, entity, entity.findPk() != null));
         }
         return this;
     }
@@ -96,7 +95,7 @@ public class BatchCrudImpl implements BatchCrud {
     public BatchCrud addInsertSelect(String insertTable, String[] fields, IQuery query) {
         assertNotNull("query", query);
         query.data().sharedParameter(data);
-        list.add(kit -> kit.insertSelect(insertTable, fields, query));
+        list.add((m, kit) -> kit.insertSelect(m, insertTable, fields, query));
         return this;
     }
 }

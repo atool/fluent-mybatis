@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import lombok.Getter;
 
@@ -35,14 +35,14 @@ public class Column extends CachedFrag {
     private final FieldMapping mapping;
 
     private Column(IWrapper wrapper, String column, FieldMapping mapping) {
-        super(db -> wrap(db, wrapper, column));
+        super(m -> wrap(m, wrapper, column));
         this.column = column;
         this.tAlias = wrapper.getTableAlias();
         this.mapping = mapping == null ? ((BaseWrapper) wrapper).column(column) : mapping;
     }
 
     private Column(String tAlias, String column, FieldMapping mapping) {
-        super(db -> wrap(db, tAlias, column));
+        super(m -> wrap(m, tAlias, column));
         this.tAlias = tAlias;
         this.column = column;
         this.mapping = mapping;
@@ -127,13 +127,13 @@ public class Column extends CachedFrag {
 
     /* ================ */
 
-    private static String wrap(DbType db, String tAlias, String column) {
+    private static String wrap(IMapping mapping, String tAlias, String column) {
         if (isBlank(column)) {
             return EMPTY;
         } else if (isBlank(tAlias)) {
-            return db.wrap(column);
+            return mapping.dbType().wrap(column);
         } else {
-            return tAlias + DOT + db.wrap(column);
+            return tAlias + DOT + mapping.dbType().wrap(column);
         }
     }
 
@@ -142,13 +142,13 @@ public class Column extends CachedFrag {
      *
      * @return 字段部分 [t.]`column`
      */
-    private static String wrap(DbType db, IWrapper wrapper, String column) {
+    private static String wrap(IMapping mapping, IWrapper wrapper, String column) {
         if (isBlank(column)) {
             return EMPTY;
         }
         String columnAs = column;
         if (isColumnNameAndNotAlias(wrapper, column)) {
-            columnAs = db.wrap(column);
+            columnAs = mapping.dbType().wrap(column);
         }
         if (wrapper == null || isBlank(wrapper.getTableAlias())) {
             return columnAs;

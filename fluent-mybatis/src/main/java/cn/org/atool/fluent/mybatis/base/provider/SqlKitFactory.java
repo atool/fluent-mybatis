@@ -56,10 +56,10 @@ public class SqlKitFactory {
         switch (dbType) {
             case ORACLE:
             case ORACLE12:
-                kits.put(dbType, new OracleSqlKit(dbType));
+                kits.put(dbType, new OracleSqlKit());
                 break;
             default:
-                kits.put(dbType, new CommonSqlKit(dbType));
+                kits.put(dbType, new CommonSqlKit());
         }
         return kits.get(dbType);
     }

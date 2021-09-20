@@ -126,11 +126,12 @@ public interface SqlKit {
     /**
      * 批量更新, 插入, 删除操作语句构造
      *
-     * @param crud BatchCrudImpl
+     * @param mapping IMapping
+     * @param crud    BatchCrudImpl
      * @return sql
      */
-    default String batchCrud(BatchCrudImpl crud) {
-        return crud.batchSql(this);
+    default String batchCrud(IMapping mapping, BatchCrudImpl crud) {
+        return crud.batchSql(mapping, this);
     }
 
     /**
@@ -151,7 +152,7 @@ public interface SqlKit {
      * @param query     select query
      * @return sql语句
      */
-    String insertSelect(String tableName, String[] fields, IQuery query);
+    String insertSelect(IMapping mapping, String tableName, String[] fields, IQuery query);
 
     /**
      * 批量插入
@@ -194,8 +195,8 @@ public interface SqlKit {
     /**
      * 去掉limit部分 count(IQuery) SQL构造
      *
-     * @param mapping     IMapping
-     * @param data query查询条件
+     * @param mapping IMapping
+     * @param data    query查询条件
      * @return sql
      */
     String countNoLimit(IMapping mapping, WrapperData data);
@@ -203,8 +204,8 @@ public interface SqlKit {
     /**
      * 包含limit部分 count(IQuery) SQL构造
      *
-     * @param mapping     IMapping
-     * @param data query查询条件
+     * @param mapping IMapping
+     * @param data    query查询条件
      * @return sql
      */
     String count(IMapping mapping, WrapperData data);

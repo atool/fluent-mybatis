@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.list;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
@@ -32,9 +32,9 @@ public abstract class BaseSegmentList {
 
     protected String cached;
 
-    public String get(DbType dbType) {
+    public String get(IMapping mapping) {
         if (cached == null) {
-            cached = this.get().get(dbType);
+            cached = this.get().get(mapping);
         }
         return this.cached;
     }

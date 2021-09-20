@@ -77,7 +77,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         this.columnMap = this.allFields().stream().collect(Collectors.toMap(f -> f.column, f -> f));
         this.fieldsMap = this.allFields().stream().collect(Collectors.toMap(f -> f.name, f -> f));
         this.allColumns = Collections.unmodifiableList(this.allFields().stream().map(f -> f.column).collect(toList()));
-        this.selectAll = CachedFrag.set(db -> this.allColumns.stream().map(db::wrap).collect(joining(", ")));
+        this.selectAll = CachedFrag.set(m -> this.allColumns.stream().map(m.dbType()::wrap).collect(joining(", ")));
         this.allFields = Collections.unmodifiableList(this.allFields().stream().map(f -> f.name).collect(toList()));
     }
 
@@ -170,7 +170,8 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         return copy;
     }
 
-    private final CachedFrag tableSegment = CachedFrag.set(db -> {
+    private final CachedFrag tableSegment = CachedFrag.set(m -> {
+        DbType db = m.dbType();
         if (NeedSchemaDb.contains(db) && notBlank(schema)) {
             return this.schema + "." + db.wrap(this.tableName);
         } else {

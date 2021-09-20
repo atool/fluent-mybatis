@@ -91,7 +91,7 @@ public class SqlProvider {
             throw new IllegalArgumentException("the wrapper should be an instance of BatchUpdaterImpl.");
         }
         AMapping mapping = mapping(context);
-        return factory(mapping).batchCrud((BatchCrudImpl) crud);
+        return factory(mapping).batchCrud(mapping, (BatchCrudImpl) crud);
     }
 
     /**
@@ -105,8 +105,8 @@ public class SqlProvider {
         String[] fields = (String[]) map.get(Param_Fields);
         BaseQuery query = (BaseQuery) map.get(Param_EW);
         AMapping mapping = mapping(context);
-        String table = mapping.dynamic(query).get(mapping.dbType());
-        return sqlKit(mapping).insertSelect(table, fields, query);
+        String table = mapping.dynamic(query).get(mapping);
+        return sqlKit(mapping).insertSelect(mapping, table, fields, query);
     }
 
     /**

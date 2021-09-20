@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 
@@ -53,7 +53,7 @@ public enum KeyFrag implements IFragment {
     }
 
     @Override
-    public String get(DbType db) {
+    public String get(IMapping mapping) {
         return this.keyWord + SPACE;
     }
 

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public interface IFragment extends Serializable {
      *
      * @return ignore
      */
-    String get(DbType db);
+    String get(IMapping mapping);
 
     default IFragment plus(IFragment segment) {
         return AppendFlag.set(this).append(segment);
