@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.ISetter;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -17,7 +18,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 @SuppressWarnings("rawtypes")
 @Accessors(chain = true)
 @EqualsAndHashCode(of = {"name", "column"})
-public class FieldMapping<E extends IEntity> {
+public class FieldMapping<E extends IEntity> implements Comparable<String> {
     /**
      * 属性名称
      */
@@ -94,7 +95,7 @@ public class FieldMapping<E extends IEntity> {
      */
     @Override
     public String toString() {
-        return this.column;
+        return this.name;
     }
 
     /**
@@ -153,5 +154,10 @@ public class FieldMapping<E extends IEntity> {
      */
     public boolean isVersion() {
         return this.uniqueType == UniqueType.LOCK_VERSION;
+    }
+
+    @Override
+    public int compareTo(@NonNull String fieldName) {
+        return this.name.compareTo(fieldName);
     }
 }
