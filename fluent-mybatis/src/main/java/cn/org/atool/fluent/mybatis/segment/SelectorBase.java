@@ -63,12 +63,6 @@ public abstract class SelectorBase<
         return super.getOrigin();
     }
 
-    private void assertColumns(Object[] columns) {
-        if (If.notEmpty(columns) && this.aggregate != null) {
-            throw new RuntimeException("Aggregate functions allow only one apply column.");
-        }
-    }
-
     /**
      * 增加带别名的查询字段
      *
@@ -166,6 +160,7 @@ public abstract class SelectorBase<
         return this.applyAs(field, alias);
     }
 
+    /* ================= PRIVATE METHOD ====================== */
     private static final String AS = " AS ";
 
     /**
@@ -198,7 +193,7 @@ public abstract class SelectorBase<
     private S addSelectColumn(IAggregate aggregate, Object column, String alias) {
         IFragment frag;
         if (column instanceof FieldMapping) {
-            frag = Column.set(this.wrapper, ((FieldMapping) column).column);
+            frag = Column.set(this.wrapper, (FieldMapping) column);
         } else {
             frag = Column.set(this.wrapper, String.valueOf(column));
         }
@@ -211,5 +206,11 @@ public abstract class SelectorBase<
         }
         this.data().select(frag);
         return super.getOrigin();
+    }
+
+    private void assertColumns(Object[] columns) {
+        if (If.notEmpty(columns) && this.aggregate != null) {
+            throw new RuntimeException("Aggregate functions allow only one apply column.");
+        }
     }
 }
