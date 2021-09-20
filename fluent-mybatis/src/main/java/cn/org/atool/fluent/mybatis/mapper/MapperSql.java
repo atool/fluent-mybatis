@@ -67,7 +67,7 @@ public class MapperSql {
     public MapperSql INSERT_COLUMNS(IMapping mapping, List<String> columns) {
         String joining = columns.stream()
             .map(String::trim)
-            .map(mapping.dbType()::wrap)
+            .map(mapping.db()::wrap)
             .collect(joining(", "));
         buffer.append(brackets(joining));
         return this;

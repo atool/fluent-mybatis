@@ -107,8 +107,8 @@ public class StatementBuilder extends MappedStatement.Builder {
     public KeyGenerator handleSelectKey(FieldMapping primary, TableId tableId) {
         String selectId = this.id + SelectKeyGenerator.SELECT_KEY_SUFFIX;
 
-        boolean executeBefore = mapping.dbType().feature.isBefore();
-        String seqName = mapping.dbType().feature.getSeq();
+        boolean executeBefore = mapping.db().feature.isBefore();
+        String seqName = mapping.db().feature.getSeq();
         if (notBlank(tableId.seqName())) {
             seqName = tableId.seqName();
             executeBefore = tableId.before();

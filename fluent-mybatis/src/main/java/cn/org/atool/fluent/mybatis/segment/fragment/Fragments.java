@@ -29,7 +29,17 @@ public interface Fragments {
 
     Function<IFragment, FormatFrag> SUM = frag -> FormatFrag.format("SUM(%)", frag);
 
-    static IFragment fragment(Supplier<String> table) {
-        return table == null ? null : m -> table.get();
+    /**
+     * 构造IFragment
+     *
+     * @param supplier Supplier<String>
+     * @return IFragment
+     */
+    static IFragment fragment(Supplier<String> supplier) {
+        return supplier == null ? null : m -> supplier.get();
+    }
+
+    static IFragment fragment(String segment) {
+        return m -> segment;
     }
 }

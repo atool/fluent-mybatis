@@ -57,9 +57,9 @@ public abstract class BaseSegmentList {
      * @return IFragment
      */
     protected final IFragment merge(IFragment keyword) {
-        return db -> {
-            String text = this.segments.get(db).trim();
-            return isBlank(text) ? EMPTY : keyword.get(db) + text;
+        return m -> {
+            String text = this.segments.get(m).trim();
+            return isBlank(text) ? EMPTY : keyword.get(m) + text;
         };
     }
 

@@ -70,6 +70,6 @@ public interface ISqlOp {
     }
 
     default IFragment operator(IFragment column, Parameters parameters, IFragment expression, Object... paras) {
-        return db -> this.operator(column, parameters, expression.get(db), paras).get(db);
+        return m -> this.operator(column, parameters, expression.get(m), paras).get(m);
     }
 }

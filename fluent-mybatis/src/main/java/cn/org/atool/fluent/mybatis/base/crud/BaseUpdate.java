@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.fragment;
 
 /**
  * AbstractUpdateWrapper
@@ -24,7 +25,7 @@ public abstract class BaseUpdate<
     implements IBaseUpdate<E, U, NQ> {
 
     protected BaseUpdate(String table, Class entityClass) {
-        super(db -> table, EMPTY, entityClass);
+        super(fragment(table), EMPTY, entityClass);
     }
 
     protected BaseUpdate(IFragment table, String alias, Class entityClass) {

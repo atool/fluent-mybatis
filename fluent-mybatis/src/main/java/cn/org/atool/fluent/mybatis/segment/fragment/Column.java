@@ -131,9 +131,9 @@ public class Column extends CachedFrag {
         if (isBlank(column)) {
             return EMPTY;
         } else if (isBlank(tAlias)) {
-            return mapping.dbType().wrap(column);
+            return mapping.db().wrap(column);
         } else {
-            return tAlias + DOT + mapping.dbType().wrap(column);
+            return tAlias + DOT + mapping.db().wrap(column);
         }
     }
 
@@ -148,7 +148,7 @@ public class Column extends CachedFrag {
         }
         String columnAs = column;
         if (isColumnNameAndNotAlias(wrapper, column)) {
-            columnAs = mapping.dbType().wrap(column);
+            columnAs = mapping.db().wrap(column);
         }
         if (wrapper == null || isBlank(wrapper.getTableAlias())) {
             return columnAs;

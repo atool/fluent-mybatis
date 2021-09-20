@@ -107,7 +107,7 @@ public class CommonSqlKit implements SqlKit {
         assertNotBlank("tableName", tableName);
         assertNotEmpty(Param_Fields, fields);
         assertNotNull(Param_EW, query);
-        String columns = Stream.of(fields).map(mapping.dbType()::wrap).collect(joining(", "));
+        String columns = Stream.of(fields).map(mapping.db()::wrap).collect(joining(", "));
         if (!query.data().hasSelect()) {
             ((BaseQuery) query).select(fields);
         }

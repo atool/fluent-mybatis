@@ -55,7 +55,7 @@ public class OracleSqlKit extends CommonSqlKit {
 
     @Override
     public <E extends IEntity> String insertEntity(IMapping mapping, String prefix, E entity, boolean withPk) {
-        withPk = notBlank(mapping.dbType().feature.getSeq());
+        withPk = notBlank(mapping.db().feature.getSeq());
         return super.insertEntity(mapping, prefix, entity, withPk);
     }
 
@@ -78,7 +78,7 @@ public class OracleSqlKit extends CommonSqlKit {
         sql.INSERT_COLUMNS(mapping, nonFields.stream().map(f -> f.column).collect(toList()));
         sql.APPEND("SELECT");
         if (!withPk) {
-            sql.APPEND(getSeq(mapping.dbType().feature.getSeq()) + ",");
+            sql.APPEND(getSeq(mapping.db().feature.getSeq()) + ",");
         }
         sql.APPEND("TMP.* FROM (");
         for (int index = 0; index < maps.size(); index++) {

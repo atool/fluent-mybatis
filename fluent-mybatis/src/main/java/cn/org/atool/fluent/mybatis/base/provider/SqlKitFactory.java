@@ -24,7 +24,7 @@ public class SqlKitFactory {
     }
 
     public static SqlKit factory(IHasDbType mapping) {
-        return factory(mapping.dbType());
+        return factory(mapping.db());
     }
 
     protected SqlKitFactory() {

@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
 
@@ -52,6 +53,7 @@ public class EntityMappingFiler extends AbstractFiler {
         spec.addStaticImport(Optional.class, "ofNullable");
         spec.addStaticImport(UniqueType.class, "*");
         spec.skipJavaLangImports(true);
+        spec.addStaticImport(Fragments.class, "fragment");
     }
 
     @Override
@@ -203,7 +205,7 @@ public class EntityMappingFiler extends AbstractFiler {
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "shared")
-            .addStatement("return new $T(defaults, table == null ? null : db -> table.get(), alias, shared)", fluent.query())
+            .addStatement("return new $T(defaults, fragment(table), alias, shared)", fluent.query())
             .build();
     }
 
@@ -213,7 +215,7 @@ public class EntityMappingFiler extends AbstractFiler {
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
             .addParameter(Parameters.class, "shared")
-            .addStatement("return new $T(defaults, table == null ? null : db -> table.get(), alias, shared)", fluent.updater())
+            .addStatement("return new $T(defaults, fragment(table), alias, shared)", fluent.updater())
             .build();
     }
 

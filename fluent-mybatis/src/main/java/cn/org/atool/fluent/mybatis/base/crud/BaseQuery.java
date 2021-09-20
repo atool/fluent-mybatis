@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
@@ -32,7 +33,7 @@ public abstract class BaseQuery<
     implements IBaseQuery<E, Q> {
 
     protected BaseQuery(Supplier<String> table, String alias, Class entityClass) {
-        super(table == null ? null : db -> table.get(), alias, entityClass);
+        super(Fragments.fragment(table), alias, entityClass);
     }
 
     protected BaseQuery(IFragment table, String alias, Class entityClass) {

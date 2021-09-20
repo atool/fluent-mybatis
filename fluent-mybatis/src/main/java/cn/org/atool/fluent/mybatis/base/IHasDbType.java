@@ -11,5 +11,5 @@ public interface IHasDbType {
     /**
      * 返回对应的数据库类型
      */
-    DbType dbType();
+    DbType db();
 }

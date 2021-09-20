@@ -182,7 +182,7 @@ public class WrapperData implements IWrapperData {
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
-            return m.dbType().paged(sql, offset, size, endOffset);
+            return m.db().paged(sql, offset, size, endOffset);
         };
     }
 
@@ -197,7 +197,7 @@ public class WrapperData implements IWrapperData {
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
-            return m.dbType().paged(withoutPaged.get(m), offset, size, endOffset);
+            return m.db().paged(withoutPaged.get(m), offset, size, endOffset);
         };
     }
 
@@ -220,8 +220,8 @@ public class WrapperData implements IWrapperData {
 
     @Override
     public IFragment update() {
-        return db -> this.updates.entrySet().stream()
-            .map(i -> i.getKey().get(db) + " = " + i.getValue())
+        return m -> this.updates.entrySet().stream()
+            .map(i -> i.getKey().get(m) + " = " + i.getValue())
             .collect(joining(COMMA_SPACE));
     }
 
