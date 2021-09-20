@@ -44,7 +44,7 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S apply(String column, String... columns) {
-        assertColumns(columns);
+        this.assertColumns(columns);
         this.applyAs(column, null);
         Stream.of(columns).forEach(c -> this.applyAs(c, null));
         return super.getOrigin();
@@ -57,7 +57,7 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S apply(FieldMapping column, FieldMapping... columns) {
-        assertColumns(columns);
+        this.assertColumns(columns);
         this.applyAs(column, null);
         Stream.of(columns).forEach(c -> this.applyAs(c, null));
         return super.getOrigin();
