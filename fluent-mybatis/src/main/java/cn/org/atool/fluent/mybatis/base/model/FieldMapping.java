@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base.model;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.ISetter;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -15,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
  */
 @SuppressWarnings("rawtypes")
 @Accessors(chain = true)
+@EqualsAndHashCode(of = {"name", "column"})
 public class FieldMapping<E extends IEntity> {
     /**
      * 属性名称

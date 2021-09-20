@@ -2,13 +2,16 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -73,23 +76,27 @@ public abstract class SelectorBase<
      * @param columns 查询字段
      * @return 查询字段选择器
      */
-    public S notApply(FieldMapping... columns) {
+    public S applyNot(FieldMapping... columns) {
         if (If.isEmpty(columns)) {
             throw new RuntimeException("Apply column missing.");
         } else if (this.aggregate != null && columns.length > 1) {
             throw new RuntimeException("Aggregate functions allow only one column.");
         }
+        IMapping mapping = ((Optional<IMapping>) this.wrapper.mapping())
+            .orElseThrow(() -> new RuntimeException(""));
 
-        List<String> fields = this.wrapper.allFields();
+        List<FieldMapping> excludes = Arrays.asList(columns);
+        List<FieldMapping> fields = mapping.allFields();
+        fields.removeAll(Arrays.asList(columns));
         head:
-        for (String field : fields) {
+        for (FieldMapping field : fields) {
+
             for (FieldMapping column : columns) {
                 if (column.column.equals(field)) {
                     continue head;
                 }
             }
-            Column _column = Column.column(field, this.wrapper);
-            this.selectColumn(_column, null);
+            this.addSelectSeg(null, Column.set(this.wrapper, field), null);
         }
         return super.getOrigin();
     }

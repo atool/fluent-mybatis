@@ -15,6 +15,7 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -100,7 +101,7 @@ public class EntityMappingFiler extends AbstractFiler {
             .map(CommonField::getName)
             .collect(joining(", "));
         return FieldSpec.builder(CN_List_FMapping, "ALL_FIELD_MAPPING", PUBLIC_STATIC_FINAL)
-            .initializer("$T.asList($L)", Arrays.class, fields)
+            .initializer("$T.unmodifiableList($T\n\t.asList($L))", Collections.class, Arrays.class, fields)
             .build();
     }
 
