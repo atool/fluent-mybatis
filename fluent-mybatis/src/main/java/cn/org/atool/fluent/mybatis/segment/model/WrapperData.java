@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment.model;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
@@ -45,7 +46,7 @@ public class WrapperData implements IWrapperData {
     /**
      * 查询字段
      */
-    public final JoiningFrag select = JoiningFrag.get(COMMA_SPACE);
+    public final JoiningFrag select = JoiningFrag.get(COMMA_SPACE).setFilter(If::notBlank);
 
     /**
      * SQL 更新字段内容，例如：name='1', age=2
@@ -248,14 +249,14 @@ public class WrapperData implements IWrapperData {
      *
      * @param column 字段
      */
-    public void addSelectColumn(String column) {
+    public void select(String column) {
         if (notBlank(column)) {
             this.select.add(Column.set(this.wrapper, column));
             this.fieldAlias.addAll(parseAlias(column));
         }
     }
 
-    public void addSelectColumn(IFragment column) {
+    public void select(IFragment column) {
         this.select.add(column);
     }
 

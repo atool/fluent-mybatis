@@ -78,7 +78,7 @@ public abstract class BaseQuery<
             return (Q) this;
         }
         for (String column : columns) {
-            this.data.addSelectColumn(Column.set(this, column));
+            this.data.select(Column.set(this, column));
         }
         return (Q) this;
     }

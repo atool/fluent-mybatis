@@ -11,15 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
- * @author darui.wu
- * @create 2019/10/29 9:33 下午
+ * @author darui.wu 2019/10/29 9:33 下午
  */
 public class SelectObjsTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
     @Test
-    public void test_selectObjs() throws Exception {
+    public void test_selectObjs() {
         db.table(ATM.table.student).clean()
             .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)
@@ -37,7 +36,7 @@ public class SelectObjsTest extends BaseTest {
     }
 
     @Test
-    public void test_selectObjs_hasMultiple() throws Exception {
+    public void test_selectObjs_hasMultiple() {
         db.table(ATM.table.student).clean()
             .insert(ATM.dataMap.student.initTable(4)
                 .id.values(23, 24, 25, 26)

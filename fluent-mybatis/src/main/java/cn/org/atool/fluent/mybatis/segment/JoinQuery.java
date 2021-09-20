@@ -103,7 +103,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     @Override
     public JoinBuilder<QL> select(String... columns) {
         for (String column : columns) {
-            this.data.addSelectColumn(column);
+            this.data.select(column);
         }
         return this;
     }

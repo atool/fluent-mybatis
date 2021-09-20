@@ -1,8 +1,5 @@
 package cn.org.atool.fluent.mybatis.functions;
 
-import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
-import lombok.NonNull;
-
 import java.io.Serializable;
 
 /**
@@ -11,7 +8,7 @@ import java.io.Serializable;
  * @author wudarui
  */
 @FunctionalInterface
-public interface IGetter<E> extends Serializable, Comparable<String> {
+public interface IGetter<E> extends Serializable {
     /**
      * 返回属性值
      *
@@ -19,10 +16,4 @@ public interface IGetter<E> extends Serializable, Comparable<String> {
      * @return 属性值
      */
     Object get(E entity);
-
-    @Override
-    default int compareTo(@NonNull String o) {
-        String fieldName = LambdaUtil.resolve(this);
-        return fieldName.compareTo(o);
-    }
 }
