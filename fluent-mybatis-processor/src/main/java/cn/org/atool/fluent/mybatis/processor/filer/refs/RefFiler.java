@@ -15,15 +15,13 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_FINAL;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.*;
 
 /**
  * AllRef 文件构造
  *
  * @author darui.wu
  */
-@SuppressWarnings("rawtypes")
 public class RefFiler extends AbstractFile {
     private static final String Ref = "Ref";
 
@@ -47,7 +45,7 @@ public class RefFiler extends AbstractFile {
         spec.superclass(IRef.class)
             .addModifiers(Modifier.ABSTRACT);
 
-        spec.addField(f_mappers())
+        spec.addField(this.f_mappers())
             .addMethod(this.m_constructor())
             .addMethod(this.m_mappers())
             .addMethod(this.m_getMapper())
@@ -67,19 +65,15 @@ public class RefFiler extends AbstractFile {
     }
 
     private MethodSpec m_mapping(String method, String call) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(method)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+        return publicMethod(method, IMapping.class)
+            .addModifiers(Modifier.FINAL)
             .addParameter(String.class, "clazz")
-            .returns(IMapping.class);
-        spec.addAnnotation(Override.class)
-            .addStatement("return $T.$L(clazz)", QueryRefFiler.getClassName(), call);
-
-        return spec.build();
+            .addStatement("return $T.$L(clazz)", QueryRefFiler.getClassName(), call)
+            .build();
     }
 
     private FieldSpec f_mappers() {
-        return FieldSpec.builder(MapperRefFiler.getClassName(), "mappers",
-            Modifier.PRIVATE, Modifier.STATIC).build();
+        return FieldSpec.builder(MapperRefFiler.getClassName(), "mappers", PRIVATE_STATIC).build();
     }
 
     private MethodSpec m_constructor() {
@@ -94,27 +88,21 @@ public class RefFiler extends AbstractFile {
     }
 
     private MethodSpec m_allEntityClass() {
-        return MethodSpec.methodBuilder("allEntityClass")
-            .addModifiers(Modifier.PROTECTED, Modifier.FINAL)
-            .addAnnotation(Override.class)
-            .returns(CN_Set_ClassName)
+        return protectMethod("allEntityClass", CN_Set_ClassName)
+            .addModifiers(Modifier.FINAL)
             .addStatement("return $T.All_Entity_Class", QueryRefFiler.getClassName())
             .build();
     }
 
     private MethodSpec m_allMapperClass() {
-        return MethodSpec.methodBuilder("allMapperClass")
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .addAnnotation(Override.class)
-            .returns(CN_Map_AMapping)
+        return publicMethod("allMapperClass", CN_Map_AMapping)
+            .addModifiers(Modifier.FINAL)
             .addStatement("return $T.MAPPER_MAPPING", QueryRefFiler.getClassName())
             .build();
     }
 
     private MethodSpec m_mappers() {
-        return MethodSpec.methodBuilder("mapper")
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .returns(MapperRefFiler.getClassName())
+        return staticMethod("mapper", MapperRefFiler.getClassName())
             .beginControlFlow("if (mappers == null)")
             .addStatement("validateMapperFactory()")
             .endControlFlow()
@@ -123,68 +111,51 @@ public class RefFiler extends AbstractFile {
     }
 
     private MethodSpec m_getMapper() {
-        return MethodSpec.methodBuilder("getMapper")
-            .addModifiers(Modifier.PROTECTED, Modifier.FINAL)
+        return protectMethod("getMapper", IRichMapper.class)
+            .addModifiers(Modifier.FINAL)
             .addParameter(CN_Class_IEntity, "clazz")
-            .returns(IRichMapper.class)
             .addStatement("Class<? extends IEntity> entityClass = super.findFluentEntityClass(clazz)")
             .addStatement("return MapperRef.mapper(entityClass)")
             .build();
     }
 
     private MethodSpec m_initEntityMapper() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder("initEntityMapper")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.FINAL, Modifier.PROTECTED);
-        spec.addStatement("mappers = $T.instance(super.mapperFactory)", MapperRefFiler.getClassName());
-        return spec.build();
+        return protectMethod("initEntityMapper", (TypeName) null)
+            .addModifiers(Modifier.FINAL)
+            .addStatement("mappers = $T.instance(super.mapperFactory)", MapperRefFiler.getClassName())
+            .build();
     }
 
     private MethodSpec m_defaultQuery() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_DEFAULT_QUERY)
-            .addModifiers(PUBLIC_FINAL)
+        return publicMethod(M_DEFAULT_QUERY, IQuery.class)
             .addParameter(Class.class, "clazz")
-            .returns(IQuery.class);
-        spec.addAnnotation(Override.class)
             .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_DEFAULT_QUERY);
-        return spec.build();
+            .addStatement("return QueryRef.$L(entityClass)", M_DEFAULT_QUERY)
+            .build();
     }
 
     private MethodSpec m_emptyQuery() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_EMPTY_QUERY)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+        return publicMethod(M_EMPTY_QUERY, IQuery.class)
             .addParameter(Class.class, "clazz")
-            .returns(IQuery.class);
-        spec.addAnnotation(Override.class)
             .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_EMPTY_QUERY);
-
-        return spec.build();
+            .addStatement("return QueryRef.$L(entityClass)", M_EMPTY_QUERY)
+            .build();
     }
 
     private MethodSpec m_defaultUpdater() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_DEFAULT_UPDATER)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+        return publicMethod(M_DEFAULT_UPDATER, IUpdate.class)
             .addParameter(Class.class, "clazz")
-            .returns(IUpdate.class);
-        spec.addAnnotation(Override.class)
             .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_DEFAULT_UPDATER);
-
-        return spec.build();
+            .addStatement("return QueryRef.$L(entityClass)", M_DEFAULT_UPDATER)
+            .build();
     }
 
-    private static MethodSpec m_emptyUpdater() {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_EMPTY_UPDATER)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .addParameter(Class.class, "clazz")
-            .returns(IUpdate.class);
-        spec.addAnnotation(Override.class)
-            .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_EMPTY_UPDATER);
-
-        return spec.build();
+    private MethodSpec m_emptyUpdater() {
+        return publicMethod(M_EMPTY_UPDATER, IUpdate.class)
+            .addParameter(Class.class, "klass")
+            .addStatement("Class entityClass = this.findFluentEntityClass(klass)")
+            .addStatement("return QueryRef.$L(entityClass)", M_EMPTY_UPDATER)
+            .build();
     }
 
     private TypeSpec class_field() {

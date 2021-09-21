@@ -8,9 +8,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
-import javax.lang.model.element.Modifier;
-
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 
 /**
  * IMappingRef 文件构造
@@ -45,7 +44,7 @@ public class FieldRefFiler extends AbstractFile {
 
     private TypeSpec class_mapping(FluentEntity fluent) {
         return TypeSpec.classBuilder(fluent.getNoSuffix())
-            .addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC)
+            .addModifiers(PUBLIC_STATIC_FINAL)
             .superclass(fluent.entityMapping())
             .build();
     }

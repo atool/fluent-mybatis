@@ -10,7 +10,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PRIVATE_STATIC_FINAL;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.*;
 
 /**
  * IMapperRef 文件构造
@@ -48,29 +48,25 @@ public class MapperRefFiler extends AbstractFile {
     }
 
     private MethodSpec m_mapper() {
-        return MethodSpec.methodBuilder("mapper")
-            .addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
+        return staticMethod("mapper", IRichMapper.class)
             .addParameter(CN_Class_IEntity, "entityClass")
-            .returns(IRichMapper.class)
             .addStatement("return allMappers.get(entityClass)")
             .build();
     }
 
     private FieldSpec f_instance() {
-        return FieldSpec.builder(getClassName(), "instance", Modifier.STATIC, Modifier.PRIVATE)
+        return FieldSpec.builder(getClassName(), "instance", PRIVATE_STATIC)
             .build();
     }
 
     private FieldSpec f_allMappers() {
-        return FieldSpec.builder(parameterizedType(CN_ClassMap, FM_IRichMapper),
-                "allMappers", PRIVATE_STATIC_FINAL)
+        return FieldSpec.builder(parameterizedType(CN_ClassMap, FM_IRichMapper), "allMappers", PRIVATE_STATIC_FINAL)
             .initializer("new $T<>()", ClassMap.class)
             .build();
     }
 
     private FieldSpec f_mapper(FluentEntity fluent) {
-        return FieldSpec.builder(fluent.mapper(), fluent.lowerNoSuffix() + "Mapper",
-            Modifier.PUBLIC, Modifier.FINAL).build();
+        return FieldSpec.builder(fluent.mapper(), fluent.lowerNoSuffix() + "Mapper", PUBLIC_FINAL).build();
     }
 
     private MethodSpec m_constructor() {
@@ -91,10 +87,9 @@ public class MapperRefFiler extends AbstractFile {
     }
 
     private MethodSpec m_instance() {
-        return MethodSpec.methodBuilder("instance")
-            .addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC, Modifier.SYNCHRONIZED)
+        return staticMethod("instance", getClassName())
+            .addModifiers(Modifier.SYNCHRONIZED)
             .addParameter(FM_MapperFactory, "factory")
-            .returns(getClassName())
             .beginControlFlow("if (instance == null)")
             .addStatement("instance = new MapperRef(factory)")
             .endControlFlow()

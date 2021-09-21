@@ -7,9 +7,8 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
 
-import javax.lang.model.element.Modifier;
-
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_NOT_FLUENT_MYBATIS_EXCEPTION;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 
 /**
  * IMapperRef 文件构造
@@ -45,7 +44,7 @@ public class FormRefFiler extends AbstractFile {
     private FieldSpec f_formSetter(FluentEntity fluent) {
         TypeName cn = fluent.formSetter();
         return FieldSpec.builder(parameterizedType(ClassName.get(FormFunction.class), fluent.entity(), cn)
-            , fluent.lowerNoSuffix(), Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+                , fluent.lowerNoSuffix(), PUBLIC_STATIC_FINAL)
             .addJavadoc("$T", fluent.wrapperHelper())
             .initializer("(obj, form) -> $T.by(obj, form)", cn)
             .build();

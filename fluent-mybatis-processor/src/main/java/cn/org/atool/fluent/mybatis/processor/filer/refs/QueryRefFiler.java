@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
 
-import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,8 +54,7 @@ public class QueryRefFiler extends AbstractFile {
     }
 
     private FieldSpec f_mapping(FluentEntity fluent) {
-        return FieldSpec.builder(fluent.entityMapping(), fluent.lowerNoSuffix(),
-                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+        return FieldSpec.builder(fluent.entityMapping(), fluent.lowerNoSuffix(), PUBLIC_STATIC_FINAL)
             .initializer("$T.MAPPING", fluent.entityMapping())
             .build();
     }

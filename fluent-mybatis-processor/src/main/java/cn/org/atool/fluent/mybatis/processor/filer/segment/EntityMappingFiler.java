@@ -204,6 +204,7 @@ public class EntityMappingFiler extends AbstractFiler {
 
     private MethodSpec m_newQuery() {
         return FilerKit.protectMethod("query", fluent.query())
+            .addModifiers(Modifier.FINAL)
             .addParameter(boolean.class, "defaults")
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
@@ -214,6 +215,7 @@ public class EntityMappingFiler extends AbstractFiler {
 
     private MethodSpec m_newUpdater() {
         return FilerKit.protectMethod("updater", fluent.updater())
+            .addModifiers(Modifier.FINAL)
             .addParameter(boolean.class, "defaults")
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")

@@ -9,6 +9,12 @@ import javax.lang.model.element.Modifier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * FilerKit
+ *
+ * @author wudarui
+ */
+@SuppressWarnings("rawtypes")
 public interface FilerKit {
 
     Modifier[] PUBLIC_STATIC_FINAL = {Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL};
@@ -16,6 +22,8 @@ public interface FilerKit {
     Modifier[] PUBLIC_FINAL = {Modifier.PUBLIC, Modifier.FINAL};
 
     Modifier[] PRIVATE_STATIC_FINAL = {Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL};
+
+    Modifier[] PRIVATE_STATIC = {Modifier.PRIVATE, Modifier.STATIC};
 
     static MethodSpec.Builder staticMethod(String methodName, TypeName returnKlass) {
         return publicMethod(methodName, false, returnKlass)
@@ -55,6 +63,10 @@ public interface FilerKit {
 
     static MethodSpec.Builder publicMethod(String methodName, TypeName returnKlass) {
         return publicMethod(methodName, true, returnKlass);
+    }
+
+    static MethodSpec.Builder protectMethod(String methodName, Class returnKlass) {
+        return protectMethod(methodName, ClassName.get(returnKlass));
     }
 
     static MethodSpec.Builder protectMethod(String methodName, TypeName returnKlass) {
