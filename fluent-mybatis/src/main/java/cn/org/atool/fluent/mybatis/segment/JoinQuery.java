@@ -8,13 +8,13 @@ import cn.org.atool.fluent.mybatis.base.crud.JoinToBuilder;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * 联合查询条件
@@ -88,15 +88,12 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     /**
      * 判断query查询表别名已经设置
      *
-     * @param query 右查询
-     * @param <QR>  右查询类型
+     * @param query BaseQuery
      */
-    private <QR extends BaseQuery<?, QR>> void assertQueryAlias(QR query) {
-        MybatisUtil.assertNotNull("query", query);
+    private void assertQueryAlias(BaseQuery query) {
+        assertNotNull("query", query);
         if (isBlank(query.tableAlias)) {
-            String err = String.format("the table alias of join query must be set, " +
-                "please use constructor: new %s(String alias)", query.getClass().getSimpleName());
-            throw new RuntimeException(err);
+            query.tableAlias = Parameters.alias();
         }
     }
 

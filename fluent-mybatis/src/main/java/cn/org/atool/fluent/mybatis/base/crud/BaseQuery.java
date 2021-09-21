@@ -61,7 +61,7 @@ public abstract class BaseQuery<
     public Q selectId() {
         String primary = this.fieldName(UniqueType.PRIMARY_ID);
         if (primary == null) {
-            throw new FluentMybatisException("The primary key of in table[" + this.mapping().get().getTableName() + "] was not found.");
+            throw new FluentMybatisException("The primary key of in table was not found.");
         } else {
             return this.select(primary);
         }
