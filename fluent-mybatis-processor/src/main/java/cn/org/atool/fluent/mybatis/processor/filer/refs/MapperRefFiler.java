@@ -9,8 +9,8 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PRIVATE_STATIC_FINAL;
 
 /**
  * IMapperRef 文件构造

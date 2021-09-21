@@ -352,6 +352,10 @@ public class MybatisUtil {
         return new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
     }
 
+    public static RuntimeException notFluentMybatisException(String clazz) {
+        return new RuntimeException("the class[" + clazz + "] is not a @FluentMybatis Entity or it's sub class.");
+    }
+
 
     /**
      * 判断是否是数据库表字段名称

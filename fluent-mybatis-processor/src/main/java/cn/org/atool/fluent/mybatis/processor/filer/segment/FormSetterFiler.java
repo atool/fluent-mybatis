@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.model.IFormApply;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import com.squareup.javapoet.*;
 
@@ -45,7 +46,7 @@ public class FormSetterFiler extends AbstractFiler {
 
     @Override
     protected MethodSpec m_mapping() {
-        return this.publicMethod("_" + Suffix_mapping, IMapping.class)
+        return FilerKit.publicMethod("_" + Suffix_mapping, IMapping.class)
             .addStatement("return $L", Suffix_MAPPING)
             .build();
     }
@@ -63,15 +64,13 @@ public class FormSetterFiler extends AbstractFiler {
     }
 
     private MethodSpec m_entityClass() {
-        return super.publicMethod("entityClass", Class.class)
+        return FilerKit.publicMethod("entityClass", Class.class)
             .addStatement("return $T.class", fluent.entity())
             .build();
     }
 
     private MethodSpec m_byObject() {
-        return super.publicMethod("by", false,
-                paraType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod("by", paraType(ClassName.get(IFormApply.class), fluent.entity(), this.setterName()))
             .addParameter(Object.class, "object")
             .addParameter(Form.class, "form")
             .addStatement("assertNotNull($S, object)", "object")

@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -138,43 +139,38 @@ public class UpdaterFiler extends AbstractFiler {
      * @return FieldSpec
      */
     private MethodSpec m_where() {
-        return super.publicMethod("where", true, fluent.updateWhere())
+        return FilerKit.publicMethod("where", fluent.updateWhere())
             .addStatement("return this.where")
             .build();
     }
 
     private MethodSpec m_emptyUpdater() {
-        return super.publicMethod(M_EMPTY_UPDATER, false, fluent.updater())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_EMPTY_UPDATER, fluent.updater())
             .addStatement("return new $T(false, null, null, null)", fluent.updater())
             .build();
     }
 
     private MethodSpec m_emptyUpdater_table() {
-        return super.publicMethod(M_EMPTY_UPDATER, false, fluent.updater())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_EMPTY_UPDATER, fluent.updater())
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("return new $T(false, fragment(table), null, null)", fluent.updater())
             .build();
     }
 
     private MethodSpec m_updater() {
-        return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_UPDATER, fluent.updater())
             .addStatement("return new $T(true, null, null, null)", fluent.updater())
             .build();
     }
 
     private MethodSpec m_defaultUpdater() {
-        return super.publicMethod("defaultUpdater", false, fluent.updater())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod("defaultUpdater", fluent.updater())
             .addStatement("return updater()")
             .build();
     }
 
     private MethodSpec m_updater_table() {
-        return super.publicMethod(M_DEFAULT_UPDATER, false, fluent.updater())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_UPDATER, fluent.updater())
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("return new $T(true, fragment(table), null, null)", fluent.updater())
             .build();

@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
@@ -191,7 +192,7 @@ public class QueryFiler extends AbstractFiler {
      * @return MethodSpec
      */
     private MethodSpec m_where() {
-        return super.publicMethod("where", true, fluent.queryWhere())
+        return FilerKit.publicMethod("where", fluent.queryWhere())
             .addStatement("return this.where")
             .build();
     }
@@ -199,45 +200,39 @@ public class QueryFiler extends AbstractFiler {
     /* =======static query method======= */
 
     private MethodSpec m_emptyQuery() {
-        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_EMPTY_QUERY, fluent.query())
             .addStatement("return new $T(false, null, null, null)", fluent.query())
             .build();
     }
 
     private MethodSpec m_emptyQuery_alias() {
-        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_EMPTY_QUERY, fluent.query())
             .addParameter(String.class, "alias")
             .addStatement("return new $T(false, null, alias, null)", fluent.query())
             .build();
     }
 
     private MethodSpec m_emptyQuery_Table() {
-        return super.publicMethod(M_EMPTY_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_EMPTY_QUERY, fluent.query())
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("return new $T(false, fragment(table), null, null)", fluent.query())
             .build();
     }
 
     private MethodSpec m_query() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
             .addStatement("return new $T()", fluent.query())
             .build();
     }
 
     private MethodSpec m_defaultQuery() {
-        return super.publicMethod("defaultQuery", false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod("defaultQuery", fluent.query())
             .addStatement("return query()")
             .build();
     }
 
     private MethodSpec m_query_Alias() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
             .addJavadoc(JavaDoc_Alias_Query_1)
             .addParameter(String.class, "alias")
             .addStatement("return new $T(alias)", fluent.query())
@@ -245,8 +240,7 @@ public class QueryFiler extends AbstractFiler {
     }
 
     private MethodSpec m_query_table() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
             .addParameter(CN_Supplier_Str, "table")
             .addStatement("assertNotNull($S, table)", "table")
             .addStatement("return new $T(true, fragment(table), null, null)", fluent.query())
@@ -254,8 +248,7 @@ public class QueryFiler extends AbstractFiler {
     }
 
     private MethodSpec m_query_table_Alias() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
             .addStatement("assertNotNull($S, table)", "table")
@@ -264,8 +257,7 @@ public class QueryFiler extends AbstractFiler {
     }
 
     private MethodSpec m_query_NestQuery_Alias() {
-        return super.publicMethod(M_DEFAULT_QUERY, false, fluent.query())
-            .addModifiers(Modifier.STATIC)
+        return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
             .addJavadoc("select * from (select query) alias\n")
             .addJavadoc("@param query 子查询\n")
             .addJavadoc("@param alias 子查询别名")

@@ -12,4 +12,11 @@ public interface IHasDbType {
      * 返回对应的数据库类型
      */
     DbType db();
+
+    /**
+     * 变更对应的数据库类型
+     *
+     * @param dbType DbType
+     */
+    void db(DbType dbType);
 }

@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PRIVATE_STATIC_FINAL;
-import static cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.*;
 
 public class QueryRefFiler extends AbstractFile {
     private static final String QueryRef = "QueryRef";
@@ -47,10 +46,10 @@ public class QueryRefFiler extends AbstractFile {
         spec.addField(this.f_allDefaults())
             .addField(this.f_allMappers())
             .addField(this.f_allEntityClass())
-            .addMethod(m_defaultQuery(false))
-            .addMethod(m_emptyQuery(false))
-            .addMethod(m_defaultUpdater(false))
-            .addMethod(m_emptyUpdater(false))
+            .addMethod(this.m_defaultQuery())
+            .addMethod(this.m_emptyQuery())
+            .addMethod(this.m_defaultUpdater())
+            .addMethod(this.m_emptyUpdater())
             .addMethod(this.m_mapping("byEntity", "ENTITY_MAPPING"))
             .addMethod(this.m_mapping("byMapper", "MAPPER_MAPPING"));
     }
@@ -62,87 +61,46 @@ public class QueryRefFiler extends AbstractFile {
             .build();
     }
 
-    public static MethodSpec m_defaultQuery(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_DEFAULT_QUERY)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    private MethodSpec m_defaultQuery() {
+        return staticMethod(M_DEFAULT_QUERY, IQuery.class)
             .addParameter(Class.class, "clazz")
-            .returns(IQuery.class);
-        if (isRef) {
-            spec.addAnnotation(Override.class)
-                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.$L(entityClass)", getClassName(), M_DEFAULT_QUERY);
-        } else {
-            spec.addModifiers(Modifier.STATIC)
-                .addJavadoc("返回clazz实体对应的默认Query实例")
-                .addStatement("\treturn byEntity(clazz).$L()", M_DEFAULT_QUERY);
-        }
-        return spec.build();
+            .addJavadoc("返回clazz实体对应的默认Query实例")
+            .addStatement("\treturn byEntity(clazz.getName()).$L()", M_DEFAULT_QUERY)
+            .build();
     }
 
-    public static MethodSpec m_emptyQuery(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_EMPTY_QUERY)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    private MethodSpec m_emptyQuery() {
+        return staticMethod(M_EMPTY_QUERY, IQuery.class)
             .addParameter(Class.class, "clazz")
-            .returns(IQuery.class);
-        if (isRef) {
-            spec.addAnnotation(Override.class)
-                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.$L(entityClass)", getClassName(), M_EMPTY_QUERY);
-        } else {
-            spec.addModifiers(Modifier.STATIC)
-                .addJavadoc("返回clazz实体对应的空Query实例")
-                .addStatement("\treturn byEntity(clazz).$L()", M_EMPTY_QUERY);
-        }
-        return spec.build();
+            .addJavadoc("返回clazz实体对应的空Query实例")
+            .addStatement("\treturn byEntity(clazz.getName()).$L()", M_EMPTY_QUERY)
+            .build();
     }
 
-    public static MethodSpec m_defaultUpdater(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_DEFAULT_UPDATER)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    private MethodSpec m_defaultUpdater() {
+        return staticMethod(M_DEFAULT_UPDATER, IUpdate.class)
             .addParameter(Class.class, "clazz")
-            .returns(IUpdate.class);
-        if (isRef) {
-            spec.addAnnotation(Override.class)
-                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.$L(entityClass)", getClassName(), M_DEFAULT_UPDATER);
-        } else {
-            spec.addModifiers(Modifier.STATIC)
-                .addJavadoc("返回clazz实体对应的默认Updater实例")
-                .addStatement("\treturn byEntity(clazz).$L()", M_DEFAULT_UPDATER);
-        }
-        return spec.build();
+            .addJavadoc("返回clazz实体对应的默认Updater实例")
+            .addStatement("\treturn byEntity(clazz.getName()).$L()", M_DEFAULT_UPDATER)
+            .build();
     }
 
-    public static MethodSpec m_emptyUpdater(boolean isRef) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(M_EMPTY_UPDATER)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    private MethodSpec m_emptyUpdater() {
+        return staticMethod(M_EMPTY_UPDATER, IUpdate.class)
             .addParameter(Class.class, "clazz")
-            .returns(IUpdate.class);
-        if (isRef) {
-            spec.addAnnotation(Override.class)
-                .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-                .addStatement("return $T.$L(entityClass)", getClassName(), M_EMPTY_UPDATER);
-        } else {
-            spec.addModifiers(Modifier.STATIC)
-                .addJavadoc("返回clazz实体对应的空Updater实例")
-                .addStatement("\treturn byEntity(clazz).$L()", M_EMPTY_UPDATER);
-        }
-        return spec.build();
+            .addJavadoc("返回clazz实体对应的空Updater实例")
+            .addStatement("\treturn byEntity(clazz.getName()).$L()", M_EMPTY_UPDATER)
+            .build();
     }
 
     private MethodSpec m_mapping(String method, String mapping) {
-        MethodSpec.Builder spec = MethodSpec.methodBuilder(method)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .addParameter(Class.class, "clazz")
-            .returns(AMapping.class);
-
-        spec.addModifiers(Modifier.STATIC)
-            .addCode("if ($L.containsKey(clazz)) {\n", mapping)
-            .addStatement("\treturn $L.get(clazz)", mapping)
+        return staticMethod(method, AMapping.class)
+            .addParameter(String.class, "className")
+            .addCode("if ($L.containsKey(className)) {\n", mapping)
+            .addStatement("\treturn $L.get(className)", mapping)
             .addCode("}\n")
-            .addStatement("throw $L(clazz)", M_NOT_FLUENT_MYBATIS_EXCEPTION);
-
-        return spec.build();
+            .addStatement("throw $L(className)", M_NOT_FLUENT_MYBATIS_EXCEPTION)
+            .build();
     }
 
     private FieldSpec f_allDefaults() {

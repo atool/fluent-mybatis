@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -64,13 +65,13 @@ public class BaseDaoFiler extends AbstractFiler {
      * @return MethodSpec
      */
     private MethodSpec m_mapper() {
-        return super.publicMethod("mapper", true, fluent.mapper())
+        return FilerKit.publicMethod("mapper", fluent.mapper())
             .addStatement(super.codeBlock("return mapper"))
             .build();
     }
 
     private MethodSpec m_defaults() {
-        return super.protectedMethod("defaults", ClassName.get(IDefaultGetter.class))
+        return FilerKit.protectMethod("defaults", ClassName.get(IDefaultGetter.class))
             .addStatement("return $T.MAPPING", fluent.entityMapping())
             .build();
     }

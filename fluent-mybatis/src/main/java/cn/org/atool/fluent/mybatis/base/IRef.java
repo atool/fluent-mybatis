@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -17,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * IRef: Entity @RefMethod关联关系, 关联加载基类
@@ -126,7 +129,11 @@ public abstract class IRef {
      * @param clazz Entity类类型
      * @return IMapping
      */
-    public abstract IMapping byEntity(Class clazz);
+    public IMapping byEntity(Class clazz) {
+        return this.byEntity(clazz.getName());
+    }
+
+    public abstract IMapping byEntity(String clazz);
 
     /**
      * 返回对应Mapper类的映射关系
@@ -134,7 +141,11 @@ public abstract class IRef {
      * @param clazz Mapper类类型
      * @return IMapping
      */
-    public abstract IMapping byMapper(Class clazz);
+    public IMapping byMapper(Class clazz) {
+        return byMapper(clazz.getName());
+    }
+
+    public abstract IMapping byMapper(String clazz);
 
     /**
      * 返回clazz属性field对应的数据库字段名称
@@ -325,5 +336,23 @@ public abstract class IRef {
      * @param clazz IEntity类型
      * @return IDefault
      */
-    public abstract BaseDefaults defaults(Class clazz);
+    public BaseDefaults defaults(Class clazz) {
+        return (BaseDefaults) byEntity(clazz.getName());
+    }
+
+    /**
+     * 设置对应的实体类对应的数据库类型
+     *
+     * @param dbType   要变更成的数据库类型
+     * @param entities 如果为空, 变更应用中所有的实体类对应数据库类型; 如果不为空, 变更指定类
+     */
+    public static void changeDbType(DbType dbType, IEntity... entities) {
+        Set<String> list = Stream.of(entities).map(e -> e.getClass().getName()).collect(toSet());
+        if (If.isEmpty(entities)) {
+            list = instance().allEntityClass();
+        }
+        for (String klass : list) {
+            instance().byEntity(klass).db(dbType);
+        }
+    }
 }

@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import com.squareup.javapoet.*;
@@ -25,6 +26,8 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_FINAL;
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -168,15 +171,15 @@ public class EntityMappingFiler extends AbstractFiler {
      * @return MethodSpec
      */
     private MethodSpec m_newEntity() {
-        return super.publicMethod("newEntity", true, TypeVariableName.get("E"))
+        return FilerKit.publicMethod("newEntity", TypeVariableName.get("E"))
             .addTypeVariable(TypeVariableName.get("E", IEntity.class))
             .addStatement("return (E) new $T()", fluent.entity())
             .build();
     }
 
     private MethodSpec m_allFields() {
-        MethodSpec.Builder spec = super.publicMethod("allFields", true, CN_List_FMapping);
-        spec.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+        MethodSpec.Builder spec = FilerKit.publicMethod("allFields", CN_List_FMapping);
+        spec.addModifiers(PUBLIC_FINAL)
             .addStatement("return ALL_FIELD_MAPPING");
         return spec.build();
     }
@@ -194,13 +197,13 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private MethodSpec m_entityClass() {
-        return super.publicMethod("entityClass", Class.class)
+        return FilerKit.publicMethod("entityClass", Class.class)
             .addStatement("return $T.class", fluent.entity())
             .build();
     }
 
     private MethodSpec m_newQuery() {
-        return super.protectedMethod("query", fluent.query())
+        return FilerKit.protectMethod("query", fluent.query())
             .addParameter(boolean.class, "defaults")
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
@@ -210,7 +213,7 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private MethodSpec m_newUpdater() {
-        return super.protectedMethod("updater", fluent.updater())
+        return FilerKit.protectMethod("updater", fluent.updater())
             .addParameter(boolean.class, "defaults")
             .addParameter(CN_Supplier_Str, "table")
             .addParameter(String.class, "alias")
@@ -220,7 +223,7 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private MethodSpec m_defaultSetter() {
-        return super.publicMethod("defaultSetter", IDefaultSetter.class)
+        return FilerKit.publicMethod("defaultSetter", IDefaultSetter.class)
             .addStatement("return DEFAULT_SETTER").build();
     }
 

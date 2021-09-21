@@ -111,57 +111,8 @@ public abstract class AbstractFiler {
      * @return ignore
      */
     protected MethodSpec m_mapping() {
-        return this.publicMethod(Suffix_mapping, true, CN_Optional_IMapping)
+        return FilerKit.publicMethod(Suffix_mapping, CN_Optional_IMapping)
             .addStatement("return Optional.of($L)", Suffix_MAPPING)
             .build();
     }
-
-    protected MethodSpec.Builder publicMethod(String methodName, Class returnKlass) {
-        return this.publicMethod(methodName, true, returnKlass == null ? null : ClassName.get(returnKlass));
-    }
-
-    /**
-     * 定义方式如下的方法
-     * <pre>
-     * public abstract Xyz methodName(...);
-     * </pre>
-     *
-     * @param methodName name of method
-     * @param isOverride 是否注解@Override
-     * @return ignore
-     */
-    protected MethodSpec.Builder publicMethod(String methodName, boolean isOverride, TypeName returnKlass) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
-        if (isOverride) {
-            builder.addAnnotation(Override.class);
-        }
-        if (returnKlass != null) {
-            builder.returns(returnKlass);
-        }
-        builder.addModifiers(Modifier.PUBLIC);
-        return builder;
-    }
-
-    protected MethodSpec.Builder protectedMethod(String methodName, TypeName returnKlass) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
-        builder.addAnnotation(Override.class);
-        if (returnKlass != null) {
-            builder.returns(returnKlass);
-        }
-        builder.addModifiers(Modifier.PROTECTED);
-        return builder;
-    }
-
-    @SuppressWarnings("all")
-    protected AnnotationSpec suppressWarnings(String... values) {
-        String format = Stream.of(values).map(s -> "$S")
-            .collect(Collectors.joining(", ", "{", "}"));
-        return AnnotationSpec.builder(SuppressWarnings.class)
-            .addMember("value", format, values)
-            .build();
-    }
-
-    public static Modifier[] PUBLIC_STATIC_FINAL = {Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL};
-
-    public static Modifier[] PRIVATE_STATIC_FINAL = {Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL};
 }

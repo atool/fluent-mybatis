@@ -23,6 +23,10 @@ public class ClassMap<T> {
         return this.map.get(klass.getName());
     }
 
+    public T get(String klass) {
+        return this.map.get(klass);
+    }
+
     public ClassMap<T> put(Class klass, T value) {
         this.map.put(klass.getName(), value);
         return this;
@@ -30,6 +34,10 @@ public class ClassMap<T> {
 
     public boolean containsKey(Class klass) {
         return this.map.containsKey(klass.getName());
+    }
+
+    public boolean containsKey(String klass) {
+        return this.map.containsKey(klass);
     }
 
     /**

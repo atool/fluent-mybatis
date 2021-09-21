@@ -47,7 +47,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * 数据库类型
      */
     @Getter(AccessLevel.NONE)
-    private final DbType dbType;
+    private DbType dbType;
     /**
      * 数据库字段对应的FieldMapping
      */
@@ -202,6 +202,11 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     @Override
     public DbType db() {
         return this.dbType;
+    }
+
+    @Override
+    public void db(DbType dbType) {
+        this.dbType = dbType;
     }
 
     /**

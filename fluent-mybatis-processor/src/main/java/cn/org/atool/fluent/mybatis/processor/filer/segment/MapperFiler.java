@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.CacheNamespace;
@@ -21,7 +22,6 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
  *
  * @author darui.wu
  */
-@SuppressWarnings("rawtypes")
 public class MapperFiler extends AbstractFiler {
 
     public MapperFiler(FluentEntity fluentEntity) {
@@ -62,7 +62,7 @@ public class MapperFiler extends AbstractFiler {
 
     @Override
     protected MethodSpec m_mapping() {
-        return this.publicMethod(Suffix_mapping, IMapping.class)
+        return FilerKit.publicMethod(Suffix_mapping, IMapping.class)
             .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
             .addStatement("return $L", Suffix_MAPPING)
             .build();
