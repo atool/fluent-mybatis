@@ -7,57 +7,50 @@ import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
-import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 
 /**
  * 表join条件构造
  *
  * @author wudarui
  */
-public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>> {
-    private final BaseQuery<?, QL> queryLeft;
+@SuppressWarnings("rawtypes")
+class JoinOnBuilder {
+    private final BaseQuery lQuery;
 
-    private final BaseQuery<?, QR> queryRight;
+    private final BaseQuery rQuery;
 
     private final JoinType joinType;
 
     final JoiningFrag ons = JoiningFrag.get().setDelimiter(" AND ").setFilter(If::notBlank);
 
-    public JoinOnBuilder(BaseQuery<?, QL> queryLeft, JoinType joinType, BaseQuery<?, QR> queryRight) {
-        this.queryLeft = queryLeft;
-        this.queryRight = queryRight;
+    JoinOnBuilder(BaseQuery queryLeft, JoinType joinType, BaseQuery queryRight) {
+        this.lQuery = queryLeft;
+        this.rQuery = queryRight;
         this.joinType = joinType;
     }
 
     /**
      * on left = right,各只取最后一个调用属性
      *
-     * @param left  左表条件,只取最后一个调用属性
-     * @param right 右表条件,只取最后一个调用属性
-     * @return {@link JoinOnBuilder}
+     * @param lWhere 左表条件,只取最后一个调用属性
+     * @param rWhere 右表条件,只取最后一个调用属性
      */
-    public JoinOnBuilder<QL, QR> on(BaseWhere<?, QL> left, BaseWhere<?, QR> right) {
-        return this.on(
-            ((WhereApply<?, ?>) left).current().column,
-            ((WhereApply<?, ?>) right).current().column
-        );
+    void on(WhereApply lWhere, WhereApply rWhere) {
+        this.ons.add(Column.set(lQuery, lWhere.current()).plus(" = ").plus(Column.set(rQuery, rWhere.current())));
     }
 
     /**
      * on leftValue = rightValue
      *
-     * @param leftValue  左
-     * @param rightValue 右
-     * @return {@link JoinOnBuilder}
+     * @param lColumn 左条件字段
+     * @param rColumn 右条件字段
      */
-    public JoinOnBuilder<QL, QR> on(String leftValue, String rightValue) {
-        this.ons.add(Column.set(this.queryLeft, leftValue).plus(" = ").plus(Column.set(this.queryRight, rightValue)));
-        return this;
+    void on(String lColumn, String rColumn) {
+        this.ons.add(Column.set(this.lQuery, lColumn).plus(" = ").plus(Column.set(this.rQuery, rColumn)));
     }
 
-    public JoinOnBuilder<QL, QR> on(String condition) {
+    void on(String condition) {
         this.ons.add(CachedFrag.set(condition));
-        return this;
     }
 
     /**
@@ -65,8 +58,8 @@ public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, 
      *
      * @return IFragment
      */
-    public IFragment joinTableOn() {
-        IFragment joinTable = this.joinType.plus(this.queryRight.data.table());
+    IFragment joinTableOn() {
+        IFragment joinTable = this.joinType.plus(this.rQuery.data.table());
         if (this.ons.isEmpty()) {
             return joinTable;
         } else {

@@ -33,11 +33,11 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
 
     private final QR onRight;
 
-    private final JoinOnBuilder<QL, QR> onBuilder;
+    private final JoinOnBuilder onBuilder;
 
     public JoinOn(JoinQuery<QL> joinQuery, QL qLeft, JoinType joinType, QR qRight) {
         this.joinQuery = joinQuery;
-        this.onBuilder = new JoinOnBuilder<>(qLeft, joinType, qRight);
+        this.onBuilder = new JoinOnBuilder(qLeft, joinType, qRight);
         /* 初始化左查询关联 */
         this.onLeft = this.emptyQuery(qLeft);
         /* 初始化右查询关联 */
@@ -78,7 +78,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinOn
      */
     public JoinOn<QL, QR, JB> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
-        this.onBuilder.on(l.apply(this.onLeft), r.apply(this.onRight));
+        this.onBuilder.on((WhereApply) l.apply(this.onLeft), (WhereApply) r.apply(this.onRight));
         return this;
     }
 
@@ -143,10 +143,10 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         return this.onQuery(this.onRight, r);
     }
 
-    private JoinOn onQuery(IQuery query, Function func) {
-        BaseQuery onQuery = this.emptyQuery((BaseQuery) query);
-        IFragment sql = ((BaseSegment) func.apply(onQuery)).end().data().where();
-        this.onBuilder.ons.add(sql);
+    private <Q extends BaseQuery<?, Q>> JoinOn onQuery(IQuery query, Function<Q, BaseSegment<?, Q>> func) {
+        Q onQuery = this.emptyQuery((BaseQuery) query);
+        IFragment onWhere = func.apply(onQuery).end().data().where();
+        this.onBuilder.ons.add(onWhere);
         return this;
     }
 
