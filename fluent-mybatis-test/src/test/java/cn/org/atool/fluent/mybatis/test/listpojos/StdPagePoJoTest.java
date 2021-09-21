@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.segment.JoinQuery;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,6 +33,7 @@ public class StdPagePoJoTest extends BaseTest {
             .cleanAndInsert();
     }
 
+    @DisplayName("join查询, 自动设置别名")
     @Test
     void stdPaged() {
         JoinQuery query = new StudentQuery().join(new StudentScoreQuery())

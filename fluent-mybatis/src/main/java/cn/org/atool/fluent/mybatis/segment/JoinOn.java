@@ -4,8 +4,8 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
@@ -146,7 +146,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     private JoinOn onQuery(IQuery query, Function func) {
         BaseQuery onQuery = this.emptyQuery((BaseQuery) query);
         IFragment sql = ((BaseSegment) func.apply(onQuery)).end().data().where();
-        this.onBuilder.on(sql);
+        this.onBuilder.ons.add(sql);
         return this;
     }
 
@@ -156,7 +156,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinBuilder
      */
     public JB endJoin() {
-        this.joinQuery.data().addTable(this.onBuilder.table());
+        this.joinQuery.data().addTable(this.onBuilder.joinTableOn());
         return (JB) this.joinQuery;
     }
 }

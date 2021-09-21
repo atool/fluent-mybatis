@@ -1,11 +1,14 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
-import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
 
 /**
  * 关联查询类型
  */
-public enum JoinType {
+public enum JoinType implements IFragment {
     /**
      * inner join
      */
@@ -19,13 +22,14 @@ public enum JoinType {
      */
     RightJoin("RIGHT JOIN");
 
-    private final CachedFrag join;
+    private final String join;
 
     JoinType(String join) {
-        this.join = CachedFrag.set(join);
+        this.join = join;
     }
 
-    public CachedFrag join() {
-        return this.join;
+    @Override
+    public String get(IMapping mapping) {
+        return this.join + SPACE;
     }
 }

@@ -44,8 +44,7 @@ public class FreeQueryAggregateTest extends BaseTest {
     @Test
     void count_apply() {
         FreeQuery query1 = new FreeQuery("t_member", "t1");
-        query1
-            .select.apply("t1.id").count.apply("t1.age").end()
+        query1.select.apply("t1.id").count.apply("t1.age").end()
             .where
             .applyIf(args -> args[0].equals("1"), "id", EQ, "1")
             .applyIf(args -> args[0].equals("1"), "id", EQ, "2")

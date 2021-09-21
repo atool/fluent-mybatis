@@ -119,10 +119,17 @@ public class WrapperData implements IWrapperData {
         this.parameters = parameters;
     }
 
+    /**
+     * 返回表名+表别名
+     *
+     * @return IFragment
+     */
     public IFragment table() {
-        String alias = this.wrapper.getTableAlias();
-        IFragment table = this.wrapper.table(true);
-        return isBlank(alias) ? table : table.plus(SPACE + alias);
+        return m -> {
+            String alias = this.wrapper.getTableAlias();
+            String table = this.wrapper.table(true).get(m);
+            return isBlank(alias) ? table : table + SPACE + alias;
+        };
     }
 
     @Override

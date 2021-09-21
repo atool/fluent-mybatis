@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.segment.model;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
-import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
 import java.lang.ref.WeakReference;
@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author darui.wu 2020/6/19 1:53 下午
  */
+@SuppressWarnings("rawtypes")
 public class Parameters extends HashMap<String, Object> {
     /**
      * 全局实例化的Parameters序号
@@ -41,7 +42,7 @@ public class Parameters extends HashMap<String, Object> {
      * @return ignore
      */
     public static String alias() {
-        return "t" + alias.incrementAndGet();
+        return "a_" + alias.incrementAndGet();
     }
 
     public Parameters() {

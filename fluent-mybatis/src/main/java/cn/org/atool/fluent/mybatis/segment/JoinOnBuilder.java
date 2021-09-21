@@ -1,8 +1,12 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
-import cn.org.atool.fluent.mybatis.segment.fragment.*;
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
+import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 
 /**
@@ -17,7 +21,7 @@ public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, 
 
     private final JoinType joinType;
 
-    private final JoiningFrag ons = JoiningFrag.get();
+    final JoiningFrag ons = JoiningFrag.get().setDelimiter(" AND ").setFilter(If::notBlank);
 
     public JoinOnBuilder(BaseQuery<?, QL> queryLeft, JoinType joinType, BaseQuery<?, QR> queryRight) {
         this.queryLeft = queryLeft;
@@ -51,28 +55,22 @@ public class JoinOnBuilder<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, 
         return this;
     }
 
-    /**
-     * on condition
-     *
-     * @param condition 条件
-     * @return {@link JoinOnBuilder}
-     */
-    public JoinOnBuilder<QL, QR> on(IFragment condition) {
-        this.ons.add(condition);
-        return this;
-    }
-
     public JoinOnBuilder<QL, QR> on(String condition) {
         this.ons.add(CachedFrag.set(condition));
         return this;
     }
 
-    public IFragment table() {
-        FormatFrag joinTable = FormatFrag.format("%s %s", this.joinType.join(), this.queryRight.data.table());
+    /**
+     * 构造 JOIN table alias ON where
+     *
+     * @return IFragment
+     */
+    public IFragment joinTableOn() {
+        IFragment joinTable = this.joinType.plus(this.queryRight.data.table());
         if (this.ons.isEmpty()) {
             return joinTable;
         } else {
-            return joinTable.plus(" ON ").plus(this.ons.setDelimiter(" AND "));
+            return joinTable.plus(" ON ").plus(this.ons);
         }
     }
 }
