@@ -5,9 +5,11 @@ import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
+import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +55,19 @@ public abstract class SelectorBase<
     /**
      * 增加查询字段
      *
+     * @param fields 查询字段(Entity属性名称)
+     * @return 查询字段选择器
+     */
+    public S applyField(String field, String... fields) {
+        this.assertColumns(fields);
+        this.applyColumn(this.aggregate, this.column(field), null);
+        Stream.of(fields).forEach(c -> this.applyColumn(this.aggregate, this.column(c), null));
+        return super.getOrigin();
+    }
+
+    /**
+     * 增加查询字段
+     *
      * @param columns 查询字段
      * @return 查询字段选择器
      */
@@ -64,6 +79,19 @@ public abstract class SelectorBase<
     }
 
     /**
+     * 增加查询字段
+     *
+     * @param getters 查询字段
+     * @return 查询字段选择器
+     */
+    public <E> S apply(IGetter<E> getter, IGetter<E>... getters) {
+        this.assertColumns(getters);
+        this.applyColumn(this.aggregate, this.column(LambdaUtil.resolve(getter)), null);
+        Stream.of(getters).forEach(c -> this.applyColumn(this.aggregate, this.column(LambdaUtil.resolve(c)), null));
+        return super.getOrigin();
+    }
+
+    /**
      * 增加带别名的查询字段
      *
      * @param column 查询字段
@@ -71,7 +99,29 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S applyAs(final String column, final String alias) {
-        return this.addSelectColumn(this.aggregate, column, alias);
+        return this.applyColumn(this.aggregate, Column.set(this.wrapper, column), alias);
+    }
+
+    /**
+     * 增加带别名的查询字段
+     *
+     * @param getter 查询字段
+     * @param alias  别名, 为空时没有别名
+     * @return 查询字段选择器
+     */
+    public <E> S applyAs(final IGetter<E> getter, final String alias) {
+        return this.applyColumn(this.aggregate, this.column(LambdaUtil.resolve(getter)), alias);
+    }
+
+    /**
+     * 增加带别名的查询字段
+     *
+     * @param field 查询字段(Entity属性名)
+     * @param alias 别名, 为空时没有别名
+     * @return 查询字段选择器
+     */
+    public S applyFieldAs(final String field, final String alias) {
+        return this.applyColumn(this.aggregate, this.column(field), alias);
     }
 
     /**
@@ -82,39 +132,79 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public S applyAs(final FieldMapping column, final String alias) {
-        return this.addSelectColumn(this.aggregate, column, alias);
+        return this.applyColumn(this.aggregate, Column.set(this.wrapper, column), alias);
     }
 
     /**
-     * 排除查询字段, 排除方式, 无需end()结尾
+     * 排除查询字段(按数据库字段名称), 无需end()结尾
      *
      * @param columns 要排除的查询字段
      * @return IQuery
      */
-    public Q applyExclude(String... columns) {
+    public Q exclude(String... columns) {
         this.assertColumns(columns);
         List<String> excludes = Arrays.asList(columns);
-        IFragment seg = this.excludeSelect(excludes);
+        IFragment seg = this.excludeSelect(excludes, true);
         this.data().select(seg);
         return (Q) super.wrapper;
     }
 
     /**
-     * 排除查询字段, 排除方式, 无需end()结尾
+     * 排除查询字段(按数据库字段名称), 无需end()结尾
      *
      * @param columns 要排除的查询字段
      * @return IQuery
      */
-    public Q applyExclude(FieldMapping... columns) {
+    public Q excludeField(String... columns) {
         this.assertColumns(columns);
-        List<String> excludes = Stream.of(columns).map(f -> f.column).collect(toList());
-        IFragment seg = this.excludeSelect(excludes);
+        List<String> excludes = Arrays.asList(columns);
+        IFragment seg = this.excludeSelect(excludes, false);
         this.data().select(seg);
         return (Q) super.wrapper;
     }
 
-    public S applyFunc(final IAggregate func, final Comparable<String> column, final String alias) {
-        return this.addSelectColumn(func, column, alias);
+    /**
+     * 排除查询字段, 无需end()结尾
+     *
+     * @param columns 要排除的查询字段
+     * @return IQuery
+     */
+    public <E> Q exclude(IGetter<E>... columns) {
+        this.assertColumns(columns);
+        List<String> excludes = Stream.of(columns).map(LambdaUtil::resolve).collect(toList());
+        IFragment seg = this.excludeSelect(excludes, false);
+        this.data().select(seg);
+        return (Q) super.wrapper;
+    }
+
+    /**
+     * 排除查询字段, 无需end()结尾
+     *
+     * @param columns 要排除的查询字段
+     * @return IQuery
+     */
+    public Q exclude(FieldMapping... columns) {
+        this.assertColumns(columns);
+        List<String> excludes = Stream.of(columns).map(f -> f.column).collect(toList());
+        IFragment seg = this.excludeSelect(excludes, true);
+        this.data().select(seg);
+        return (Q) super.wrapper;
+    }
+
+    public S applyFunc(final IAggregate func, final String column, final String alias) {
+        return this.applyColumn(func, Column.set(this.wrapper, column), alias);
+    }
+
+    public S applyFuncByField(final IAggregate func, final String field, final String alias) {
+        return this.applyColumn(func, this.column(field), alias);
+    }
+
+    public <E> S applyFunc(final IAggregate func, final IGetter<E> getter, final String alias) {
+        return this.applyColumn(func, this.column(LambdaUtil.resolve(getter)), alias);
+    }
+
+    public S applyFunc(final IAggregate func, final FieldMapping column, final String alias) {
+        return this.applyColumn(func, Column.set(this.wrapper, column), alias);
     }
 
     /**
@@ -124,7 +214,7 @@ public abstract class SelectorBase<
      * @return 选择器
      */
     public S count(String alias) {
-        return this.applyAs("count(*)", alias);
+        return this.applyAs("COUNT(*)", alias);
     }
 
     /**
@@ -143,6 +233,7 @@ public abstract class SelectorBase<
         return super.getOrigin();
     }
 
+    /* ================= 非PUBLIC方法 ====================== */
     @Override
     protected S apply() {
         return this.applyAs(this.current.column, null);
@@ -160,7 +251,6 @@ public abstract class SelectorBase<
         return this.applyAs(field, alias);
     }
 
-    /* ================= PRIVATE METHOD ====================== */
     private static final String AS = " AS ";
 
     /**
@@ -169,11 +259,13 @@ public abstract class SelectorBase<
      * @param excludes 排除查询的字段列表
      * @return ignore
      */
-    private IFragment excludeSelect(List<String> excludes) {
+    private IFragment excludeSelect(List<String> excludes, boolean byColumnName) {
         return m -> {
             JoiningFrag joining = new JoiningFrag(COMMA_SPACE);
             for (FieldMapping f : m.allFields()) {
-                if (excludes.contains(f.column)) {
+                if (byColumnName && excludes.contains(f.column)) {
+                    continue;
+                } else if (!byColumnName && excludes.contains(f.name)) {
                     continue;
                 }
                 joining.add(Column.set(this.wrapper, f));
@@ -190,22 +282,27 @@ public abstract class SelectorBase<
      * @param alias     别名
      * @return ignore
      */
-    private S addSelectColumn(IAggregate aggregate, Object column, String alias) {
-        IFragment frag;
-        if (column instanceof FieldMapping) {
-            frag = Column.set(this.wrapper, (FieldMapping) column);
-        } else {
-            frag = Column.set(this.wrapper, String.valueOf(column));
-        }
+    private S applyColumn(IAggregate aggregate, IFragment column, String alias) {
         if (aggregate != null) {
-            frag = aggregate.aggregate(frag);
+            column = aggregate.aggregate(column);
         }
         if (notBlank(alias)) {
             this.data().getFieldAlias().add(alias);
-            frag = frag.plus(AS).plus(alias);
+            column = column.plus(AS).plus(alias);
         }
-        this.data().select(frag);
+        this.data().select(column);
         return super.getOrigin();
+    }
+
+    private IFragment column(String fieldName) {
+        return m -> {
+            FieldMapping f = m.getFieldsMap().get(fieldName);
+            if (f == null) {
+                throw new RuntimeException("Field[" + fieldName + "] of Entity[" + m.entityClass().getName() + "] not defined.");
+            } else {
+                return Column.set(this.wrapper, f).get(m);
+            }
+        };
     }
 
     private void assertColumns(Object[] columns) {

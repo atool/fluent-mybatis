@@ -26,7 +26,7 @@ public class AggregateTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT `school_term`, " +
             "`subject`, " +
-            "count(*) AS count, " +
+            "COUNT(*) AS count, " +
             "MIN(`score`), " +
             "MAX(`score`) AS max_score, " +
             "AVG(`score`) AS avg_score, " +
