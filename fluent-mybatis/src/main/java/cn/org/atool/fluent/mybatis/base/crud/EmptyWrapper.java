@@ -13,6 +13,7 @@ import java.util.Optional;
  *
  * @author darui.wu
  */
+@SuppressWarnings("rawtypes")
 public class EmptyWrapper implements IWrapper {
     public static final EmptyWrapper INSTANCE = new EmptyWrapper();
 

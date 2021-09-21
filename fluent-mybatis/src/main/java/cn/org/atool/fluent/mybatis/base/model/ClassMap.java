@@ -11,12 +11,9 @@ import java.util.Set;
  * @param <T>
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public class ClassMap<T> {
     private Map<String, T> map;
-
-    public ClassMap(int initialCapacity) {
-        this.map = new HashMap<>(initialCapacity);
-    }
 
     public ClassMap() {
         this.map = new HashMap<>();
@@ -28,17 +25,6 @@ public class ClassMap<T> {
 
     public ClassMap<T> put(Class klass, T value) {
         this.map.put(klass.getName(), value);
-        return this;
-    }
-
-    /**
-     * klass1和klass2同时关联同一个对象
-     *
-     * @return ignore
-     */
-    public ClassMap<T> put(Class klass1, Class klass2, T value) {
-        this.map.put(klass1.getName(), value);
-        this.map.put(klass2.getName(), value);
         return this;
     }
 
