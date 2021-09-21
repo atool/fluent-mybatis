@@ -18,6 +18,7 @@ import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.base.free.FreeKit.newFreeQuery;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -52,7 +53,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     private <Q extends BaseQuery> Q emptyQuery(BaseQuery origQuery) {
         BaseQuery onQuery;
         if (origQuery instanceof FreeQuery) {
-            onQuery = new FreeQuery(origQuery.table, origQuery.tableAlias);
+            onQuery = newFreeQuery(origQuery);
         } else {
             onQuery = IRef.instance().byEntity(origQuery.entityClass).emptyQuery();
         }

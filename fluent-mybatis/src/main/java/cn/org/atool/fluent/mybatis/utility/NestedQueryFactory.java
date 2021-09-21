@@ -7,6 +7,8 @@ import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
+import static cn.org.atool.fluent.mybatis.base.free.FreeKit.newFreeQuery;
+
 /**
  * NestedQueryFactory
  *
@@ -17,12 +19,12 @@ public class NestedQueryFactory {
     /**
      * 构造查询对象
      *
-     * @param klass 嵌套查询对象类
+     * @param wrapper 嵌套查询对象类
      * @return 嵌套查询对象
      */
     public static <Q extends IBaseQuery> Q nested(BaseWrapper wrapper, boolean sameAlias) {
         if (wrapper instanceof FreeQuery) {
-            FreeQuery query = new FreeQuery(wrapper.table(false), sameAlias ? wrapper.getTableAlias() : null);
+            FreeQuery query = newFreeQuery(wrapper);
             return (Q) query;
         }
         IMapping mapping = IRef.instance().byEntity(wrapper.getEntityClass());

@@ -61,7 +61,7 @@ public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
         super(table, alias, FreeEntity.class);
     }
 
-    public FreeQuery(IFragment table, String alias) {
+    FreeQuery(IFragment table, String alias) {
         super(table, alias, FreeEntity.class);
     }
 
