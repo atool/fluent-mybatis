@@ -18,9 +18,9 @@ public class InsertDynamicTable extends BaseTest {
              StudentQuery.emptyQuery(() -> "my_student").where.id().eq(1L).end())
             , BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO my_student (`user_name`) " +
+            "INSERT INTO `my_student` (`user_name`) " +
             "SELECT `user_name` " +
-            "FROM my_student " +
+            "FROM `my_student` " +
             "WHERE `id` = ?");
     }
 

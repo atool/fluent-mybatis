@@ -21,7 +21,7 @@ public class PgILike extends BaseTest {
             mapper.listObjs(query);
         } catch (Exception ignored) {
         }
-        db.sqlList().wantFirstSql().eq("SELECT `id`, `name` FROM a WHERE `name` ILIKE ?");
+        db.sqlList().wantFirstSql().eq("SELECT `id`, `name` FROM `a` WHERE `name` ILIKE ?");
         db.sqlList().wantFirstPara().eqList("%name%");
     }
 }

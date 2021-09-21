@@ -49,10 +49,6 @@ public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
      */
     public final QueryWhere where = new QueryWhere(this);
 
-    public FreeQuery() {
-        super((IFragment) null, null, FreeEntity.class);
-    }
-
     public FreeQuery(String table) {
         super(table == null ? null : () -> table, null, FreeEntity.class);
     }
@@ -78,10 +74,6 @@ public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
     public FreeQuery(IQuery child, String alias) {
         super(BracketFrag.set(child), alias, FreeEntity.class);
         child.data().sharedParameter(this.data);
-    }
-
-    public FreeQuery emptyQuery() {
-        return new FreeQuery();
     }
 
     @Override

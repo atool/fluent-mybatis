@@ -31,7 +31,7 @@ public class JoinWrapperData extends WrapperData {
         this.tables.add(this.wrapper.data().table());
     }
 
-    private final JoiningFrag tables = JoiningFrag.get();
+    private final JoiningFrag tables = JoiningFrag.get().setDelimiter(SPACE);
 
     public void addTable(IFragment table) {
         tables.add(table);
@@ -39,7 +39,7 @@ public class JoinWrapperData extends WrapperData {
 
     @Override
     public IFragment table() {
-        return this.tables.setDelimiter(SPACE);
+        return this.tables;
     }
 
     /**

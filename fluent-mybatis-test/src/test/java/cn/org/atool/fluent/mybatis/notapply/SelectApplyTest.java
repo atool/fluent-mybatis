@@ -75,7 +75,7 @@ public class SelectApplyTest extends BaseTest {
             .notContain("`id`")
             .notContain("`user_name`")
             .contains("`gmt_created`, `gmt_modified`, `is_deleted`,")
-            .end("FROM student");
+            .end("FROM `student`");
     }
 
     @Test

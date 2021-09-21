@@ -27,7 +27,7 @@ public class PartitionTest extends BaseTest {
         want.exception(() -> mapper.listEntity(query),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().end("" +
-            "FROM  student_1 WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?", StringMode.SameAsSpace);
+            "FROM  `student_1` WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList(false, "test_env", "my_test_name");
     }
 
@@ -43,7 +43,7 @@ public class PartitionTest extends BaseTest {
         want.exception(() -> mapper.updateBy(updater),
             SQLSyntaxErrorException.class, BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().eq("" +
-            "UPDATE student_1 " +
+            "UPDATE `student_1` " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList("test", false, "test_env", "my_test_name");

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment.fragment;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isTableName;
 
 /**
  * 常量代码片段
@@ -33,7 +34,17 @@ public interface Fragments {
      * @return IFragment
      */
     static IFragment fragment(Supplier<String> supplier) {
-        return supplier == null ? null : m -> supplier.get();
+        if (supplier == null) {
+            return null;
+        }
+        return m -> {
+            String table = supplier.get();
+            if (isTableName(table)) {
+                return m.db().wrap(table);
+            } else {
+                return table;
+            }
+        };
     }
 
     static IFragment fragment(String segment) {

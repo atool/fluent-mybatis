@@ -33,8 +33,8 @@ public class FreeQueryAggregateTest extends BaseTest {
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
                 "SELECT t1.id, count(t1.age), t2.id, sum(t2.age) " +
-                "FROM t_member t1 " +
-                "JOIN t_member t2 " +
+                "FROM `t_member` t1 " +
+                "JOIN `t_member` t2 " +
                 "ON t1.id = t2.id " +
                 "WHERE t1.`id` = ? AND t2.`id` = ? " +
                 "GROUP BY t1.id, t2.id"
@@ -66,8 +66,8 @@ public class FreeQueryAggregateTest extends BaseTest {
         mapper.findOne(query.build());
         db.sqlList().wantFirstSql().eq("" +
                 "SELECT t1.id, COUNT(t1.age), t2.id, SUM(t2.age) " +
-                "FROM t_member t1 " +
-                "JOIN t_member t2 " +
+                "FROM `t_member` t1 " +
+                "JOIN `t_member` t2 " +
                 "ON t1.id = t2.id " +
                 "WHERE t1.`id` = ? AND t2.`id` = ? " +
                 "GROUP BY t1.id, t2.id " +

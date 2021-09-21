@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
@@ -8,8 +9,10 @@ import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
+import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
+import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
-import cn.org.atool.fluent.mybatis.segment.model.Parameters;
+import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
@@ -31,13 +34,15 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
 
     private final QL onLeft;
 
+    private final JoinType joinType;
+
     private final QR onRight;
 
-    private final JoinOnBuilder onBuilder;
+    private final JoiningFrag ons = JoiningFrag.get().setDelimiter(" AND ").setFilter(If::notBlank);
 
     public JoinOn(JoinQuery<QL> joinQuery, QL qLeft, JoinType joinType, QR qRight) {
         this.joinQuery = joinQuery;
-        this.onBuilder = new JoinOnBuilder(qLeft, joinType, qRight);
+        this.joinType = joinType;
         /* 初始化左查询关联 */
         this.onLeft = this.emptyQuery(qLeft);
         /* 初始化右查询关联 */
@@ -47,7 +52,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
     private <Q extends BaseQuery> Q emptyQuery(BaseQuery origQuery) {
         BaseQuery onQuery;
         if (origQuery instanceof FreeQuery) {
-            onQuery = ((FreeQuery) origQuery).emptyQuery();
+            onQuery = new FreeQuery(origQuery.table, origQuery.tableAlias);
         } else {
             onQuery = IRef.instance().byEntity(origQuery.entityClass).emptyQuery();
         }
@@ -65,8 +70,8 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinOn
      */
     public JoinOn<QL, QR, JB> onApply(String condition, Object... args) {
-        String sql = Parameters.parseSql(this.joinQuery, condition, args);
-        this.onBuilder.on(sql);
+        String sql = this.joinQuery.data().paramSql(null, condition, args);
+        this.ons.add(CachedFrag.set(sql));
         return this;
     }
 
@@ -78,7 +83,9 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinOn
      */
     public JoinOn<QL, QR, JB> on(Function<QL, BaseWhere> l, Function<QR, BaseWhere> r) {
-        this.onBuilder.on((WhereApply) l.apply(this.onLeft), (WhereApply) r.apply(this.onRight));
+        this.ons.add(Column.set(onLeft, ((WhereApply) l.apply(onLeft)).current())
+            .plus(" = ")
+            .plus(Column.set(onRight, ((WhereApply) r.apply(onRight)).current())));
         return this;
     }
 
@@ -107,7 +114,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinOn
      */
     public JoinOn<QL, QR, JB> onEq(String l, String r) {
-        this.onBuilder.on(l, r);
+        this.ons.add(Column.set(this.onLeft, l).plus(" = ").plus(Column.set(this.onRight, r)));
         return this;
     }
 
@@ -119,7 +126,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinOn
      */
     public JoinOn<QL, QR, JB> onEq(FieldMapping l, FieldMapping r) {
-        this.onBuilder.on(l.column, r.column);
+        this.ons.add(Column.set(this.onLeft, l).plus(" = ").plus(Column.set(this.onRight, r)));
         return this;
     }
 
@@ -145,8 +152,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
 
     private <Q extends BaseQuery<?, Q>> JoinOn onQuery(IQuery query, Function<Q, BaseSegment<?, Q>> func) {
         Q onQuery = this.emptyQuery((BaseQuery) query);
-        IFragment onWhere = func.apply(onQuery).end().data().where();
-        this.onBuilder.ons.add(onWhere);
+        this.ons.add(func.apply(onQuery).end().data().where());
         return this;
     }
 
@@ -156,7 +162,11 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
      * @return JoinBuilder
      */
     public JB endJoin() {
-        this.joinQuery.data().addTable(this.onBuilder.joinTableOn());
+        IFragment table = this.joinType.plus(this.onRight.data.table());
+        if (!this.ons.isEmpty()) {
+            table = table.plus(" ON ").plus(this.ons);
+        }
+        this.joinQuery.data().addTable(table);
         return (JB) this.joinQuery;
     }
 }

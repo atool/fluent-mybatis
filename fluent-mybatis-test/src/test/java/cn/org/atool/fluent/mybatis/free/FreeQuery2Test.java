@@ -29,20 +29,19 @@ public class FreeQuery2Test extends BaseTest {
             .groupBy.apply("id").end();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
-            "SELECT `id`, `gmt_modified` FROM t_member WHERE `id` = ? GROUP BY `id`");
+            "SELECT `id`, `gmt_modified` FROM `t_member` WHERE `id` = ? GROUP BY `id`");
     }
 
     @Test
     void test_alias() {
-        FreeQuery query = new FreeQuery("t_member", "t1");
-        query
+        FreeQuery query = new FreeQuery("t_member", "t1")
             .select.apply("id")
             .applyAs(FieldRef.Member.gmtModified, "modifiedDate").end()
             .where().apply("id", EQ, "1").end();
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t1.`id`, t1.`gmt_modified` AS modifiedDate " +
-            "FROM t_member t1 WHERE t1.`id` = ?");
+            "FROM `t_member` t1 WHERE t1.`id` = ?");
     }
 
     @Test
@@ -56,7 +55,7 @@ public class FreeQuery2Test extends BaseTest {
         mapper.findOne(query);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT t1.`id`, MAX(t1.`age`) AS _age " +
-            "FROM t_member t1 WHERE t1.`id` = ? " +
+            "FROM `t_member` t1 WHERE t1.`id` = ? " +
             "GROUP BY t1.`id`");
     }
 
@@ -113,9 +112,9 @@ public class FreeQuery2Test extends BaseTest {
         } catch (Exception e) {
             db.sqlList().wantFirstSql().eq("" +
                 "SELECT DISTINCT t1.id, t1.gmt_modified, t2.id, t2.gmt_modified, t3.id, t3.gmt_modified " +
-                "FROM  t_member t1 JOIN t_member t2 " +
+                "FROM  `t_member` t1 JOIN `t_member` t2 " +
                 "ON t1.id = t2.id " +
-                "LEFT JOIN t_member2 t3 " +
+                "LEFT JOIN `t_member2` t3 " +
                 "ON t1.id=t3.id  " +
                 "WHERE t1.`id` = ?  " +
                 "AND  t2.`id` = ?  " +
@@ -154,8 +153,8 @@ public class FreeQuery2Test extends BaseTest {
         want.exception(() -> mapper.findOne(query), DataAccessException.class);
         db.sqlList().wantFirstSql().eq("" +
                 "SELECT AVG(t1.`close_duration`) AS value, t2.`product_id` AS productId " +
-                "FROM  dwd_metric_bug_df t1 " +
-                "JOIN dim_metric_product_super_df t2 " +
+                "FROM  `dwd_metric_bug_df` t1 " +
+                "JOIN `dim_metric_product_super_df` t2 " +
                 "ON t1.product_id = t2.product_id " +
                 "WHERE t1.`gmt_closed` >= ? " +
                 "AND  t1.`gmt_create` <= ? " +

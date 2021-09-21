@@ -394,6 +394,18 @@ public class MybatisUtil {
         return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '-';
     }
 
+    public static boolean isTableName(String table) {
+        if (isBlank(table)) {
+            return false;
+        }
+        for (char c : table.toCharArray()) {
+            if (c >= 128 || letterAndDigit[c] == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * a-z, A-Z, 0-9, -, _, $
      *

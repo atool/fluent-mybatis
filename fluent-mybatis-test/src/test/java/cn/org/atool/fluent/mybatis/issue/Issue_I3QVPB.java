@@ -62,12 +62,12 @@ public class Issue_I3QVPB extends BaseTest {
             "SELECT * FROM " +
             "(SELECT csr.* FROM " +
             "(SELECT `repository_id`, COALESCE(total_sec_issue_count, 0) as total_sec_issue_count " +
-            "FROM code_repository_statistics " +
+            "FROM `code_repository_statistics` " +
             "WHERE `repository_id` = ? " +
             "AND `gmt_create` = ? " +
             "AND `organization_id` = ?) crs " +
             "JOIN " +
-            "(SELECT `identifier` FROM code_repository " +
+            "(SELECT `identifier` FROM `code_repository` " +
             "WHERE `organization_id` = ? AND `project_report_value` = ?) cr " +
             "ON crs.`repository_id` = cr.`identifier`) ccsr " +
             "ORDER BY ccsr.`total_sec_issue_count` DESC " +
@@ -105,12 +105,12 @@ public class Issue_I3QVPB extends BaseTest {
             "SELECT * FROM " +
             "(SELECT csr.* FROM " +
             "(SELECT `repository_id`, COALESCE(total_sec_issue_count, 0) as total_sec_issue_count " +
-            "FROM code_repository_statistics " +
+            "FROM `code_repository_statistics` " +
             "WHERE `repository_id` = ? " +
             "AND `gmt_create` = ? " +
             "AND `organization_id` = ?) crs " +
             "JOIN " +
-            "(SELECT `identifier` FROM code_repository " +
+            "(SELECT `identifier` FROM `code_repository` " +
             "WHERE `organization_id` = ? AND `project_report_value` = ?) cr " +
             "ON crs.`repository_id` = cr.`identifier`) ccsr " +
             "ORDER BY ccsr.`total_sec_issue_count` DESC " +

@@ -128,7 +128,7 @@ public class WrapperData implements IWrapperData {
         return m -> {
             String alias = this.wrapper.getTableAlias();
             String table = this.wrapper.table(true).get(m);
-            return isBlank(alias) ? table : table + SPACE + alias;
+            return table + (isBlank(alias) ? EMPTY : SPACE + alias);
         };
     }
 
