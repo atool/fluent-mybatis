@@ -104,7 +104,7 @@ public class MapperSql {
     }
 
     public MapperSql SET(String... sets) {
-        buffer.append(" SET ").append(String.join(",\n", sets));
+        buffer.append(" SET ").append(String.join(", ", sets));
         return this;
     }
 

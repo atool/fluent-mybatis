@@ -85,7 +85,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @InsertProvider(
         type = SqlProvider.class,
-        method = "insertWithPk"
+        method = M_insertWithPk
     )
     int insertWithPk(E entity);
 
@@ -98,7 +98,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @InsertProvider(
         type = SqlProvider.class,
-        method = "insertBatchWithPk"
+        method = M_insertBatchWithPk
     )
     int insertBatchWithPk(@Param(Param_List) Collection<E> entities);
 
@@ -112,7 +112,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @InsertProvider(
         type = SqlProvider.class,
-        method = "insertSelect"
+        method = M_insertSelect
     )
     int insertSelect(@Param(Param_Fields) String[] fields, @Param(Param_EW) IQuery query);
 
@@ -130,7 +130,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @UpdateProvider(
         type = SqlProvider.class,
-        method = "updateBy"
+        method = M_updateBy
     )
     int updateBy(@Param(Param_EW) IUpdate... updates);
 
@@ -145,7 +145,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @SelectProvider(
         type = SqlProvider.class,
-        method = "listObjs"
+        method = M_listObjs
     )
     <O> List<O> listObjs(@Param(Param_EW) IQuery query);
 
@@ -158,7 +158,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @SelectProvider(
         type = SqlProvider.class,
-        method = "listMaps"
+        method = M_listMaps
     )
     @ResultType(Map.class)
     List<Map<String, Object>> listMaps(@Param(Param_EW) IQuery query);
@@ -172,7 +172,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @SelectProvider(
         type = SqlProvider.class,
-        method = "count"
+        method = M_count
     )
     Integer count(@Param(Param_EW) IQuery query);
 
@@ -185,22 +185,22 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @SelectProvider(
         type = SqlProvider.class,
-        method = "countNoLimit"
+        method = M_countNoLimit
     )
-    Integer countNoLimit(@Param(Param_EW) IQuery query);
+    int countNoLimit(@Param(Param_EW) IQuery query);
 
     /**
      * 根据wrapper删除记录
      *
-     * @param wrapper 实体对象封装操作类（属性条件可以为null）
+     * @param query 实体对象封装操作类（属性条件可以为null）
      * @return ignore
      * @see SqlProvider#delete(Map, ProviderContext)
      */
     @DeleteProvider(
         type = SqlProvider.class,
-        method = "delete"
+        method = M_delete
     )
-    int delete(@Param(Param_EW) IQuery wrapper);
+    int delete(@Param(Param_EW) IQuery query);
 
     /* =========== 静态引用 =========== */
 
@@ -228,7 +228,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     @UpdateProvider(
         type = SqlProvider.class,
-        method = "batchCrud"
+        method = M_batchCrud
     )
     void batchCrud(@Param(Param_EW) BatchCrud crud);
 

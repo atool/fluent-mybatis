@@ -19,7 +19,7 @@ public class UpdateDefault {
      * 待追加更新默认值列表
      */
     @Getter
-    private final JoiningFrag updateDefaults = JoiningFrag.get(",\n");
+    private final JoiningFrag updateDefaults = JoiningFrag.get(", ");
     /**
      * 显式指定的更新字段列表
      */
