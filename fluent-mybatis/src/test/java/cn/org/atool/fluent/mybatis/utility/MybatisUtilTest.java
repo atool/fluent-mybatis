@@ -1,9 +1,13 @@
 package cn.org.atool.fluent.mybatis.utility;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.test4j.integration.DataProvider;
 import org.test4j.junit5.Test4J;
+import org.test4j.tools.Kits;
+
+import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 
@@ -60,5 +64,26 @@ class MybatisUtilTest extends Test4J {
             .data("`xx", false)
             .data("xx`", false)
             ;
+    }
+
+    @MethodSource("data4splitBy")
+    @ParameterizedTest
+    void splitBy(String text, List<String> expected) {
+        List<String> items = MybatisUtil.splitByComma(text);
+        want.list(items).eq(expected);
+    }
+
+    static DataProvider data4splitBy() {
+        return new DataProvider()
+            .data("a,b,,,c", Kits.list("a", "b", "", "", "c"))
+            .data("'a,bc, c','b ',c", Kits.list("'a,bc, c'", "'b '", "c"))
+            .data("'a,\\\"bc,c', c ", Kits.list("'a,\\\"bc,c'", " c "))
+            ;
+    }
+
+    @Test
+    void splitBySpace() {
+        List<String> items = MybatisUtil.splitBySpace(" \t\na b\rc");
+        want.list(items).eqList("", "", "", "a", "b", "c");
     }
 }

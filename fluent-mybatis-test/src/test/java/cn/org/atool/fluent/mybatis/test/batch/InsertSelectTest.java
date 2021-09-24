@@ -89,9 +89,9 @@ public class InsertSelectTest extends BaseTest {
 
         db.sqlList().wantFirstSql()
             .containsInOrder(
-                "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
-                "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
-                "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)")
+                "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
+                "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
+                "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)")
             .end("INSERT INTO student (`user_name`, `age`, `address`) " +
                     "SELECT `user_name`, 40, 'test address' " +
                     "FROM fluent_mybatis.student " +

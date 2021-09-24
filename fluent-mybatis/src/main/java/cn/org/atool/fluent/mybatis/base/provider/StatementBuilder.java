@@ -21,6 +21,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA;
 
 /**
  * MappedStatement重建构造
@@ -193,6 +194,6 @@ public class StatementBuilder extends MappedStatement.Builder {
     }
 
     private String joining(String[] arr) {
-        return arr == null ? null : String.join(",", arr);
+        return arr == null ? null : String.join(COMMA, arr);
     }
 }

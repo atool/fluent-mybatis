@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA_SPACE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
 
@@ -52,7 +53,7 @@ public class FormItem implements Serializable {
         if (isBlank(op)) {
             op = OP_EQ;
         } else if (!ALL_OP.contains(op)) {
-            throw new RuntimeException("only support operation:" + String.join(", ", ALL_OP) + ", but find:" + op);
+            throw new RuntimeException("only support operation:" + String.join(COMMA_SPACE, ALL_OP) + ", but find:" + op);
         }
         if (OP_BETWEEN.equals(op) || OP_NOT_BETWEEN.equals(op)) {
             assertNotEmpty("value", value);

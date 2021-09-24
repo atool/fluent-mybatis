@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 
 /**
  * FieldMeta: 实体字段和数据库字段映射信息
@@ -105,11 +105,11 @@ public class FieldMapping<E extends IEntity> {
      * @return 变量表达式
      */
     public String var(String prefix, String name) {
-        String full = (isBlank(prefix) ? EMPTY : (prefix.endsWith(".") ? prefix : prefix + "."))
+        String full = (isBlank(prefix) ? EMPTY : (prefix.endsWith(DOT_STR) ? prefix : prefix + DOT_STR))
             +
             (isBlank(name) ? this.name : name);
         if (this.typeHandler == null) {
-            return "#{" + full + "}";
+            return HASH_MARK_LEFT_CURLY + full + RIGHT_CURLY_BRACKET;
         } else {
             return String.format("#{%s, javaType=%s, typeHandler=%s}",
                 full, this.javaType.getName(), this.typeHandler.getName());

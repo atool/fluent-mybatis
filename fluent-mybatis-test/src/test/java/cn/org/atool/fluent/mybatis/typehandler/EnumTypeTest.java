@@ -30,7 +30,7 @@ public class EnumTypeTest extends BaseTest {
             .setEnumNum(MyEnum.test3)
             .setEnumString(MyEnum.test2));
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO `my_enum_type`(`is_deleted`, `enum-num`, `enum_string`) VALUES (0, ?, ?)");
+            "INSERT INTO `my_enum_type` (`is_deleted`, `enum-num`, `enum_string`) VALUES (0, ?, ?)");
         db.sqlList().wantFirstPara().eqList(MyEnum.test3, MyEnum.test2);
     }
 
@@ -44,8 +44,10 @@ public class EnumTypeTest extends BaseTest {
                 .setEnumNum(MyEnum.test1)
                 .setEnumString(MyEnum.test2)));
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO `my_enum_type`(`is_deleted`, `enum-num`, `enum_string`) " +
-            "VALUES (0, ?, ?) , " +
+            "INSERT INTO `my_enum_type` " +
+            "(`is_deleted`, `enum-num`, `enum_string`) " +
+            "VALUES " +
+            "(0, ?, ?), " +
             "(0, ?, ?)");
         db.sqlList().wantFirstPara().eqList(MyEnum.test3, MyEnum.test2, MyEnum.test1, MyEnum.test2);
         ATM.dataMap.myEnumType.table(2)

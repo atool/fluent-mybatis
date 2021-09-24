@@ -3,10 +3,13 @@ package cn.org.atool.fluent.mybatis.utility;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
@@ -495,6 +498,78 @@ public class MybatisUtil {
     }
 
     /**
+     * 按逗号分割字符串
+     *
+     * @param text 字符串
+     * @return 分割好的子字符串列表
+     */
+    public static List<String> splitByComma(String text) {
+        return splitBy(Collections.singletonList(','), text);
+    }
+
+    public static List<String> splitBySpace(String text) {
+        return splitBy(Arrays.asList(' ', '\t', '\n', '\r'), text);
+    }
+
+    /**
+     * 按分隔符分割字符串
+     *
+     * @param delimiter 分隔符
+     * @param text      字符串
+     * @return 分割好的子字符串列表
+     */
+    public static List<String> splitBy(Collection<Character> delimiters, String text) {
+        List<String> list = new ArrayList<>();
+        StringBuilder item = new StringBuilder();
+        char quotation = 0;
+        char slash = 0;
+        for (char ch : text.toCharArray()) {
+            if (ch == '\\') {
+                item.append(ch);
+                slash++;
+                continue;
+            }
+            if (delimiters.contains(ch) && quotation == 0) {
+                list.add(item.toString());
+                item = new StringBuilder();
+                slash = 0;
+                continue;
+            }
+            item.append(ch);
+            if (slash % 2 == 1) {
+                slash = 0;
+                continue;
+            }
+            if (ch == '\'' || ch == '"') {
+                if (quotation == 0) {
+                    quotation = ch;
+                } else if (quotation == ch) {
+                    quotation = 0;
+                }
+            }
+            slash = 0;
+        }
+        list.add(item.toString());
+        return list;
+    }
+
+    public static String joinWithSpace(Object... objects) {
+        return Stream.of(objects).map(String::valueOf).map(String::trim)
+            .filter(If::notBlank).collect(Collectors.joining(SPACE));
+    }
+
+    public static void isMapperFactoryInited() {
+        if (MapperFactory.isInited()) {
+            return;
+        }
+        throw new FluentMybatisException("Please add MapperFactory to spring container management: \n\n" +
+            "    @Bean\n" +
+            "    public MapperFactory mapperFactory() {\n" +
+            "        return new MapperFactory();\n" +
+            "    }");
+    }
+
+    /**
      * fluent mybatis version
      *
      * @return ignore
@@ -502,18 +577,17 @@ public class MybatisUtil {
     public static String getVersionBanner() {
         Package pkg = MybatisUtil.class.getPackage();
         String version = (pkg != null ? pkg.getImplementationVersion() : "");
-        return "" +
-            "  _____   _                          _    \n" +
-            " |  ___| | |  _   _    ___   _ __   | |_  \n" +
-            " | |_    | | | | | |  ( _ ) | '_ L  | __| \n" +
-            " |  _|   | | | |_| | |  __) | | | | | |_  \n" +
-            " |_|     |_| |___,_| |____| |_| |_| |___| \n" +
-            " __  __         ____          _    _      \n" +
-            "| )  ( | _   _ | __ )   __ _ | |_ (_) ___ \n" +
-            "| |)(| || | | ||  _ L  { _` || __|| || __|\n" +
-            "| |  | || |_| || |_) || (_| || |_ | |(__ )\n" +
-            "|_|  |_| L__, ||____)  (__,_| L__||_||___}\n" +
-            "         |___)                            \n" +
-            (version == null ? "" : version + " \n");
+        return "\n\n" +
+            "      _____   _                          _       \n" +
+            "     |  ___| | |  _   _    ___   _ __   | |_     \n" +
+            "     | |_    | | | | | |  / _ \\ | '_ \\  | __|    \n" +
+            "     |  _|   | | | |_| | |  __/ | | | | | |_     \n" +
+            "  __ |_|     |_|  \\__,_|  \\___| |_|_|_|  \\__|    \n" +
+            " |  \\/  |  _   _  | |__     __ _  | |_  (_)  ___ \n" +
+            " | |\\/| | | | | | | '_ \\   / _` | | __| | | / __|\n" +
+            " | |  | | | |_| | | |_) | | (_| | | |_  | | \\__ \\\n" +
+            " |_|  |_|  \\__, | |_.__/   \\__,_|  \\__| |_| |___/\n" +
+            "           |___/                                 " +
+            (version == null ? "" : "\n" + version + " \n");
     }
 }

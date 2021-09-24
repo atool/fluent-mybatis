@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
@@ -33,7 +34,8 @@ import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.tmpTable;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
@@ -80,7 +82,7 @@ public class CommonSqlKit implements SqlKit {
         InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
         sql.INSERT_COLUMNS(mapping, inserts.columns);
         sql.VALUES();
-        sql.INSERT_VALUES(inserts.values);
+        sql.APPEND(brackets(COMMA_SPACE, inserts.values));
         return sql.toString();
     }
 
@@ -105,13 +107,25 @@ public class CommonSqlKit implements SqlKit {
     @Override
     public String insertSelect(IMapping mapping, String tableName, String[] fields, IQuery query) {
         assertNotBlank("tableName", tableName);
-        assertNotEmpty(Param_Fields, fields);
-        assertNotNull(Param_EW, query);
         String columns = Stream.of(fields).map(mapping.db()::wrap).collect(joining(", "));
+        if (isBlank(columns)) {
+            List<String> list = new ArrayList<>();
+            List<String> items = splitByComma(query.data().getSelect().get(mapping));
+            for (String item : items) {
+                String[] arr = splitBySpace(item).stream().filter(If::notBlank).toArray(String[]::new);
+                list.add(arr[arr.length - 1]);
+            }
+            columns = String.join(COMMA_SPACE, list);
+        }
+        assertNotBlank(Param_Fields, columns);
+        assertNotNull(Param_EW, query);
         if (!query.data().hasSelect()) {
             ((BaseQuery) query).select(fields);
         }
-        return "INSERT INTO " + tableName + " (" + columns + ") " + query.data().sql(false).get(mapping);
+        return joinWithSpace(
+            INSERT_INTO.key(), tableName,
+            brackets(columns),
+            query.data().sql(false).get(mapping));
     }
 
     @Override
@@ -125,16 +139,15 @@ public class CommonSqlKit implements SqlKit {
 
         sql.INSERT_COLUMNS(mapping, nonFields.stream().map(f -> f.column).collect(toList()));
         sql.VALUES();
+        List<String> values = new ArrayList<>();
         for (int index = 0; index < maps.size(); index++) {
-            if (index > 0) {
-                sql.APPEND(", ");
-            }
-            List<String> values = new ArrayList<>();
+            List<String> lines = new ArrayList<>();
             for (FieldMapping f : nonFields) {
-                values.add(el("list[" + index + "].", f, maps.get(index).get(f.column), f.insert));
+                lines.add(el("list[" + index + "].", f, maps.get(index).get(f.column), f.insert));
             }
-            sql.INSERT_VALUES(values);
+            values.add(brackets(COMMA_SPACE, lines));
         }
+        sql.APPEND(String.join(COMMA_SPACE, values));
         return sql.toString();
     }
 
@@ -256,9 +269,9 @@ public class CommonSqlKit implements SqlKit {
             String sql = updateBy(mapping, updater.data());
             sql = SqlProviderKit.addEwParaIndex(sql, format("[%d]", index));
             index++;
-            list.add(sql);
+            list.add(sql.trim());
         }
-        return String.join(";\n", list);
+        return String.join(SEMICOLON_NEWLINE, list);
     }
 
     @Override
@@ -330,14 +343,8 @@ public class CommonSqlKit implements SqlKit {
     public String countNoLimit(IMapping mapping, WrapperData ew) {
         if (ew.getCustomizedSql().notEmpty()) {
             return ew.getCustomizedSql().get(mapping);
-        }
-        MapperSql sql = new MapperSql();
-        sql.COUNT(mapping, ew.table(), ew);
-        sql.WHERE_GROUP_BY(mapping, ew);
-        if (ew.hasGroupBy()) {
-            return "SELECT COUNT(*) FROM" + brackets(sql) + SPACE + tmpTable();
         } else {
-            return sql.toString();
+            return this.count(mapping, ew, false);
         }
     }
 
@@ -346,10 +353,22 @@ public class CommonSqlKit implements SqlKit {
         if (ew.getCustomizedSql().notEmpty()) {
             return ew.getCustomizedSql().get(mapping);
         } else {
-            MapperSql sql = new MapperSql();
-            sql.COUNT(mapping, ew.table(), ew);
-            sql.WHERE_GROUP_ORDER_BY(mapping, ew);
-            return ew.wrappedByPaged(sql.toString()).get(mapping);
+            return this.count(mapping, ew, true);
+        }
+    }
+
+    private String count(IMapping mapping, WrapperData ew, boolean withLimit) {
+        MapperSql text = new MapperSql();
+        text.COUNT(mapping, ew.table(), ew);
+        text.WHERE_GROUP_BY(mapping, ew);
+        String sql = text.toString();
+        if (withLimit) {
+            sql = ew.wrappedByPaged(sql).get(mapping);
+        }
+        if (ew.hasGroupBy()) {
+            return joinWithSpace(SELECT.key(), COUNT_ASTERISK, FROM.key(), brackets(sql), tmpTable());
+        } else {
+            return sql;
         }
     }
 

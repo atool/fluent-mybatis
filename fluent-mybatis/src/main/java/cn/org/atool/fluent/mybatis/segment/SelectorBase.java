@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA_SPACE;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COUNT_ASTERISK;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -214,7 +215,7 @@ public abstract class SelectorBase<
      * @return 选择器
      */
     public S count(String alias) {
-        return this.applyAs("COUNT(*)", alias);
+        return this.applyAs(COUNT_ASTERISK, alias);
     }
 
     /**

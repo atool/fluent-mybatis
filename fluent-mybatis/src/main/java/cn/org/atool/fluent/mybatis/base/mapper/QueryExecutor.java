@@ -28,10 +28,6 @@ public class QueryExecutor<E extends IEntity> {
         this.query = query;
     }
 
-    public int delete() {
-        return this.mapper.delete(this.query);
-    }
-
     public Optional<E> findOne() {
         return Optional.ofNullable((E) this.mapper.findOne(this.query));
     }
@@ -46,7 +42,7 @@ public class QueryExecutor<E extends IEntity> {
         return this.mapper.findOne(clazz, this.query);
     }
 
-    public Optional<Map<String, Object>> findOneMap() {
+    public Optional<Map> findOneMap() {
         return this.mapper.findOneMap(this.query);
     }
 
@@ -58,16 +54,8 @@ public class QueryExecutor<E extends IEntity> {
         return this.mapper.listEntity(this.query);
     }
 
-    public List<Map<String, Object>> listMaps() {
+    public List<Map> listMaps() {
         return this.mapper.listMaps(this.query);
-    }
-
-    public Integer count() {
-        return this.mapper.count(this.query);
-    }
-
-    public Integer countNoLimit() {
-        return this.mapper.countNoLimit(this.query);
     }
 
     public List listObjs() {
@@ -112,5 +100,25 @@ public class QueryExecutor<E extends IEntity> {
 
     public <POJO> TagPagedList<POJO> tagPagedPoJo(Class<POJO> clazz) {
         return this.mapper.tagPagedPoJo(clazz, this.query);
+    }
+
+    public int count() {
+        return this.mapper.count(this.query);
+    }
+
+    public int countNoLimit() {
+        return this.mapper.countNoLimit(this.query);
+    }
+
+    public int delete() {
+        return this.mapper.delete(this.query);
+    }
+
+    public int insertSelect(String... fields) {
+        return this.mapper.insertSelect(fields, this.query);
+    }
+
+    public int logicDelete() {
+        return this.mapper.logicDelete(this.query);
     }
 }

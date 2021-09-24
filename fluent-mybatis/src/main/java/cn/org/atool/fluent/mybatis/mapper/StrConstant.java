@@ -31,6 +31,10 @@ public interface StrConstant {
      */
     String COMMA = ",";
     /**
+     * 分号
+     */
+    String SEMICOLON = ";";
+    /**
      * 星号
      */
     String ASTERISK = "*";
@@ -46,6 +50,10 @@ public interface StrConstant {
     String UNION = "UNION";
 
     String UNION_ALL = "UNION ALL";
+
+    String COUNT_1 = "COUNT(1)";
+
+    String COUNT_ASTERISK = "COUNT(*)";
     /**
      * 换行
      */
@@ -54,6 +62,8 @@ public interface StrConstant {
      * 逗号 + 空格
      */
     String COMMA_SPACE = COMMA + SPACE;
+
+    String SEMICOLON_NEWLINE = SEMICOLON + NEWLINE;
     /**
      * 右花括号
      */
@@ -76,4 +86,6 @@ public interface StrConstant {
     char DOUBLE_QUOTATION = '"';
 
     char DOT = '.';
+
+    String DOT_STR = ".";
 }

@@ -18,6 +18,7 @@ import lombok.experimental.Accessors;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.If.notNull;
@@ -540,6 +541,20 @@ public abstract class WhereBase<
     WHERE applyIf(Predicate<Object[]> predicate, Column column, ISqlOp op, String expression, Object... args) {
         if (predicate.test(args)) {
             this.apply(column, op, expression, args);
+        }
+        return this.and;
+    }
+
+    /**
+     * 当条件满足时, 执行apply条件设置
+     *
+     * @param condition 设置条件
+     * @param nested    条件设置
+     * @return ignore
+     */
+    public WHERE applyIf(boolean condition, Function<WHERE, WHERE> apply) {
+        if (condition) {
+            apply.apply((WHERE) this);
         }
         return this.and;
     }

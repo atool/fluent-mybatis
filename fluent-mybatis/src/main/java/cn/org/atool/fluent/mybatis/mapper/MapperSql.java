@@ -1,24 +1,25 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
-import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.ASTERISK;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
-import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.SELECT;
-import static java.util.stream.Collectors.joining;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
+import static cn.org.atool.fluent.mybatis.segment.model.HintType.*;
 
 /**
  * Mapper SQL组装
@@ -27,40 +28,43 @@ import static java.util.stream.Collectors.joining;
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class MapperSql {
-    private final StringBuilder buffer = new StringBuilder();
+    private final List<String> text = new ArrayList<>();
 
     @Override
     public String toString() {
-        return buffer.toString().trim();
+        return text.stream().map(String::trim)
+            .filter(If::notBlank).collect(Collectors.joining(SPACE));
     }
 
     public MapperSql SELECT(String table, String columns) {
-        buffer.append(SELECT.get(null)).append(columns).append(" FROM ").append(table);
+        this.add(SELECT.key(), columns, FROM.key(), table);
         return this;
     }
 
+    private void add(String... objects) {
+        text.addAll(Arrays.asList(objects));
+    }
+
     public MapperSql COUNT(IMapping mapping, IFragment table, WrapperData data) {
-        this.hint(data, HintType.Before_All);
-        buffer.append(SELECT.get(mapping));
-        this.hint(data, HintType.After_CrudKey);
-        buffer.append("COUNT(");
         String select = data.select().get(mapping);
         // select 单字段和多字段判断
-        buffer.append(isBlank(select) || select.contains(",") ? ASTERISK : select.trim());
-        buffer.append(") FROM ");
-        this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(mapping));
-        this.hint(data, HintType.After_Table);
+        select = isBlank(select) || select.contains(",") ? ASTERISK : select.trim();
+        this.add(
+            data.hint(Before_All), SELECT.key(), data.hint(After_CrudKey),
+            "COUNT(" + select + ")",
+            FROM.key(),
+            data.hint(Before_Table), table.get(mapping), data.hint(After_Table)
+        );
         return this;
     }
 
     public MapperSql INSERT_INTO(String table) {
-        buffer.append("INSERT INTO ").append(table);
+        this.add(INSERT_INTO.key(), table);
         return this;
     }
 
     public MapperSql VALUES() {
-        buffer.append(" VALUES ");
+        this.add("VALUES");
         return this;
     }
 
@@ -68,60 +72,53 @@ public class MapperSql {
         String joining = columns.stream()
             .map(String::trim)
             .map(mapping.db()::wrap)
-            .collect(joining(", "));
-        buffer.append(brackets(joining));
-        return this;
-    }
-
-    public MapperSql INSERT_VALUES(List<String> values) {
-        buffer.append(brackets(String.join(", ", values)));
+            .collect(Collectors.joining(COMMA_SPACE));
+        this.add(brackets(joining));
         return this;
     }
 
     public MapperSql DELETE_FROM(IMapping mapping, IFragment table, WrapperData data) {
-        this.hint(data, HintType.Before_All);
-        buffer.append(" DELETE ");
-        this.hint(data, HintType.After_CrudKey);
-        buffer.append(" FROM ");
-        this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(mapping));
-        this.hint(data, HintType.After_Table);
+        this.add(
+            data.hint(Before_All), DELETE.key(), data.hint(After_CrudKey),
+            FROM.key(),
+            data.hint(Before_Table), table.get(mapping), data.hint(After_Table));
         return this;
     }
 
     public MapperSql UPDATE(IMapping mapping, IFragment table) {
-        return this.UPDATE(mapping, table, null);
+        this.add(UPDATE.key(), table.get(mapping));
+        return this;
     }
 
     public MapperSql UPDATE(IMapping mapping, IFragment table, WrapperData data) {
-        this.hint(data, HintType.Before_All);
-        buffer.append(" UPDATE ");
-        this.hint(data, HintType.After_CrudKey);
-        this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(mapping));
-        this.hint(data, HintType.After_Table);
+        this.add(
+            data.hint(Before_All), UPDATE.key(), data.hint(After_CrudKey),
+            data.hint(Before_Table), table.get(mapping), data.hint(After_Table)
+        );
         return this;
     }
 
     public MapperSql SET(String... sets) {
-        buffer.append(" SET ").append(String.join(", ", sets));
+        this.add(SET.key(), String.join(COMMA_SPACE, sets));
         return this;
     }
 
     public MapperSql SET(IMapping mapping, JoiningFrag sets) {
-        buffer.append(" SET ").append(sets.get(mapping));
+        this.add(SET.key(), sets.get(mapping));
         return this;
     }
 
     public MapperSql WHERE(String where) {
         if (notBlank(where)) {
-            buffer.append(" WHERE ").append(where.trim());
+            this.add(WHERE.key(), where);
         }
         return this;
     }
 
     public MapperSql WHERE(List<String> where) {
-        buffer.append(" WHERE ").append(String.join(" AND ", where));
+        if (!where.isEmpty()) {
+            this.add(WHERE.key(), String.join(" AND ", where));
+        }
         return this;
     }
 
@@ -171,20 +168,18 @@ public class MapperSql {
     }
 
     public MapperSql APPEND(String sql) {
-        buffer.append(SPACE).append(sql).append(SPACE);
+        this.add(sql);
         return this;
     }
 
     public MapperSql SELECT(IMapping mapping, IFragment table, WrapperData data, IFragment defaultColumns) {
-        this.hint(data, HintType.Before_All);
-        buffer.append(SELECT.get(mapping));
-        this.hint(data, HintType.After_CrudKey);
-        this.APPEND(data.isDistinct() ? "DISTINCT " : SPACE);
-        buffer.append(isBlank(data.select().get(mapping)) ? defaultColumns.get(mapping) : data.select().get(mapping));
-        buffer.append(" FROM ");
-        this.hint(data, HintType.Before_Table);
-        buffer.append(table.get(mapping));
-        this.hint(data, HintType.After_Table);
+        String select = data.select().get(mapping);
+        this.add(
+            data.hint(Before_All), SELECT.key(), data.hint(After_CrudKey),
+            data.isDistinct() ? DISTINCT.key() : EMPTY,
+            isBlank(select) ? defaultColumns.get(mapping) : select,
+            FROM.key(), data.hint(Before_Table), table.get(mapping), data.hint(After_Table)
+        );
         return this;
     }
 
@@ -200,17 +195,11 @@ public class MapperSql {
             return this;
         }
         if (offsetEverZero) {
-            this.APPEND(" LIMIT #{ew.data.paged.limit}");
+            this.add("LIMIT #{ew.data.paged.limit}");
         } else {
-            this.APPEND(" LIMIT #{ew.data.paged.offset}, #{ew.data.paged.limit}");
+            this.add("LIMIT #{ew.data.paged.offset}, #{ew.data.paged.limit}");
         }
         return this;
-    }
-
-    private void hint(WrapperData data, HintType hintType) {
-        if (data != null) {
-            buffer.append(data.hint(hintType));
-        }
     }
 
     /**
@@ -220,7 +209,11 @@ public class MapperSql {
      * @return (obj)
      */
     public static String brackets(Object obj) {
-        return obj == null ? "()" : "(" + obj + ")";
+        return obj == null ? "()" : "(" + String.valueOf(obj).trim() + ")";
+    }
+
+    public static String brackets(String delimiter, List<String> list) {
+        return "(" + String.join(COMMA_SPACE, list) + ")";
     }
 
     static final AtomicLong tmp = new AtomicLong(0);

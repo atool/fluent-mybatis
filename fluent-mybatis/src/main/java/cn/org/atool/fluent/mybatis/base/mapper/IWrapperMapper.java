@@ -25,10 +25,9 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      * 不实际执行sql语句, 仅仅返回构造好的mybatis SQL语句
      *
      * @param simulators 模拟执行数据操作, 例: m -> m.listEntity(query)
-     * @param <M>        IEntityMapper
      * @return sql列表
      */
-    default List<String> print(Consumer<PrinterMapper>... simulators) {
+    default List<String> print(Consumer<IWrapperMapper>... simulators) {
         return this.print(0, simulators);
     }
 
@@ -37,15 +36,18 @@ public interface IWrapperMapper<E extends IEntity, Q extends IQuery<E>, U extend
      *
      * @param mode       0: '?'占位符模式; 1: 变量替换模式; 2: mybatis变量占位模式
      * @param simulators 模拟执行数据操作, 例: m -> m.listEntity(query)
-     * @param <M>        IEntityMapper
      * @return sql列表
      */
-    default List<String> print(int mode, Consumer<PrinterMapper>... simulators) {
-        PrinterMapper handler = new PrinterMapper(mode, this);
-        for (Consumer<PrinterMapper> simulator : simulators) {
-            simulator.accept(handler);
+    default List<String> print(int mode, Consumer<IWrapperMapper>... simulators) {
+        try {
+            PrinterMapper mapper = (PrinterMapper) PrinterMapper.set(mode, this);
+            for (Consumer<IWrapperMapper> simulator : simulators) {
+                simulator.accept(mapper);
+            }
+            return mapper.getSql();
+        } finally {
+            PrinterMapper.clear();
         }
-        return handler.getSql();
     }
 
     /**

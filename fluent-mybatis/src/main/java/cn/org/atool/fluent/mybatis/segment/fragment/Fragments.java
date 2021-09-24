@@ -25,7 +25,7 @@ public interface Fragments {
     /**
      * count(1)
      */
-    CachedFrag SEG_COUNT_1 = CachedFrag.set("COUNT(1)");
+    CachedFrag SEG_COUNT_1 = CachedFrag.set(COUNT_1);
 
     /**
      * 构造IFragment

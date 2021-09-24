@@ -57,6 +57,10 @@ public interface FluentConst {
 
     String Param_EW = "ew";
 
+    String Param_Procedure = "procedure";
+
+    String Param_P = "p";
+
     String Param_Fields = "fields";
 
     String Param_Entity = "entity";

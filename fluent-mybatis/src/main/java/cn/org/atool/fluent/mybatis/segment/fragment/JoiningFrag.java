@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SEMICOLON;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Column.columnEquals;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
 import static java.util.stream.Collectors.joining;
@@ -120,6 +121,6 @@ public class JoiningFrag implements IFragment {
     public String toString() {
         return this.segments.stream()
             .map(IFragment::toString)
-            .collect(joining(delimiter == null ? ";" : delimiter));
+            .collect(joining(delimiter == null ? SEMICOLON : delimiter));
     }
 }

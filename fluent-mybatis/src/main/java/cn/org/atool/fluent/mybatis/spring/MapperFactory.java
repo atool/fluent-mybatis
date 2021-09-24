@@ -2,6 +2,9 @@ package cn.org.atool.fluent.mybatis.spring;
 
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ConfigurationKit;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;
@@ -17,7 +20,11 @@ import javax.annotation.PostConstruct;
  * @author wudarui
  */
 @SuppressWarnings({"all"})
+@Slf4j
 public class MapperFactory {
+    @Getter
+    private static boolean inited = false;
+
     @Autowired
     private ApplicationContext context;
 
@@ -50,6 +57,8 @@ public class MapperFactory {
             .batchInserts()
             .listEntity()
         ;
+        log.info(MybatisUtil.getVersionBanner());
+        MapperFactory.inited = true;
     }
 
     /**
@@ -62,7 +71,7 @@ public class MapperFactory {
         try {
             Class klass = Class.forName(IRef.Fix_Package + ".IEntityRelation");
             return context.getBean(klass);
-        } catch (NoSuchBeanDefinitionException be) {
+        } catch (NoSuchBeanDefinitionException ignored) {
             // do nothing
             return null;
         }

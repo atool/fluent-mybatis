@@ -26,7 +26,7 @@ public class InsertDefaultTest extends BaseTest {
             .isDeleted.values(0)
             .eqTable();
         db.sqlList().wantFirstSql().eq(
-            "INSERT INTO fluent_mybatis.student(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`, `user_name`) " +
+            "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`, `user_name`) " +
                 "VALUES (now(), now(), 0, ?, ?, ?)");
     }
 

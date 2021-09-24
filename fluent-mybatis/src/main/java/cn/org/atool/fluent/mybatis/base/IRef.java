@@ -8,7 +8,9 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.ClassMap;
+import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import lombok.Setter;
@@ -181,35 +183,35 @@ public abstract class IRef {
     /**
      * 实现entityClass#methodName方法
      *
-     * @param entityClass Entity class name
-     * @param methodName  Entity @RefMethod方法
-     * @param args        入参(第一个参数是entity)
-     * @param <T>         ignore
+     * @param eClass     Entity class name
+     * @param methodName Entity @RefMethod方法
+     * @param args       入参(第一个参数是entity)
+     * @param <T>        ignore
      * @return ignore
      */
-    public <T> T invoke(Class entityClass, String methodName, Object[] args) {
+    public <T> T invoke(Class eClass, String methodName, Object[] args) {
         IEntity entity = (IEntity) args[0];
-        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentEntityClass(entityClass));
+        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentEntityClass(eClass));
         switch (methodName) {
             case Rich_Entity_Save:
-                mapper(entity).save(entity);
+                mapper(eClass).save(entity);
                 return (T) entity;
             case Rich_Entity_UpdateById:
-                mapper(entity).updateById(entity);
+                mapper(eClass).updateById(entity);
                 return (T) entity;
             case Rich_Entity_FindById:
-                IEntity result = mapper(entity).findById(entity.findPk());
+                IEntity result = mapper(eClass).findById(entity.findPk());
                 return (T) result;
             case Rich_Entity_DeleteById:
-                mapper(entity).deleteById(entity.findPk());
+                mapper(eClass).deleteById(entity.findPk());
                 return null;
             case Rich_Entity_LogicDeleteById:
-                mapper(entity).logicDeleteById(entity.findPk());
+                mapper(eClass).logicDeleteById(entity.findPk());
                 return null;
             case RichEntity_ListByNotNull:
                 Map<String, Object> where = entity.toColumnMap();
                 assertNotEmpty("the property of entity can't be all empty.", where);
-                List list = mapper(entity).listByMap(true, where);
+                List list = mapper(eClass).listByMap(true, where);
                 return (T) list;
             default:
                 return this.invokeRefMethod(methodOfEntity, args);
@@ -275,21 +277,13 @@ public abstract class IRef {
     /**
      * 返回spring管理对应的mapper bean
      *
-     * @param entity 数据库实体类实例
+     * @param eClass 实体类
      * @return ignore
      */
-    public static IRichMapper mapper(IEntity entity) {
-        return IRef.mapper(entity.entityClass());
-    }
-
-    /**
-     * 返回spring管理对应的mapper bean
-     *
-     * @param clazz 实体类
-     * @return ignore
-     */
-    public static IRichMapper mapper(Class<? extends IEntity> clazz) {
-        return instance().getMapper(clazz);
+    public static IRichMapper mapper(Class<? extends IEntity> eClass) {
+        IWrapperMapper mapper = (IWrapperMapper) instance().getMapper(eClass);
+        mapper = PrinterMapper.get(mapper);
+        return mapper;
     }
 
     protected abstract IRichMapper getMapper(Class<? extends IEntity> clazz);

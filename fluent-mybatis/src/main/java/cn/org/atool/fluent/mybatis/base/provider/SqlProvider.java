@@ -20,9 +20,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderKit.getParas;
 import static cn.org.atool.fluent.mybatis.utility.SqlProviderKit.getWrapperData;
 
@@ -43,10 +41,11 @@ public class SqlProvider {
      * @param entity 实体实例
      * @return sql
      */
-    public static String insert(IEntity entity, ProviderContext context) {
-        assertNotNull("entity", entity);
+    public static String insert(Map map, ProviderContext context) {
+        IEntity entity = getParas(map, Param_EW);
+        assertNotNull(Param_Entity, entity);
         AMapping mapping = mapping(context);
-        return sqlKit(mapping).insertEntity(mapping, EMPTY, entity, false);
+        return sqlKit(mapping).insertEntity(mapping, Param_EW, entity, false);
     }
 
     /**
@@ -116,10 +115,11 @@ public class SqlProvider {
      * @param entity 实体实例insertWithPk
      * @return sql
      */
-    public static String insertWithPk(IEntity entity, ProviderContext context) {
-        assertNotNull("entity", entity);
+    public static String insertWithPk(Map map, ProviderContext context) {
+        IEntity entity = getParas(map, Param_EW);
+        assertNotNull(Param_Entity, entity);
         AMapping mapping = mapping(context);
-        return sqlKit(mapping).insertEntity(mapping, EMPTY, entity, true);
+        return sqlKit(mapping).insertEntity(mapping, Param_EW, entity, true);
     }
 
     /**
@@ -228,6 +228,7 @@ public class SqlProvider {
     }
 
     private static AMapping mapping(ProviderContext context) {
+        isMapperFactoryInited();
         Class mapperClass = context.getMapperType();
         return (AMapping) IRef.instance().byMapper(mapperClass);
     }

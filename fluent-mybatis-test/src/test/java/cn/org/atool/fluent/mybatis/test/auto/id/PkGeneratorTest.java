@@ -86,7 +86,7 @@ public class PkGeneratorTest extends BaseTest {
             .setStudentId(0L)
         );
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO `home_address`(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
+            "INSERT INTO `home_address` (`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
             "VALUES (?, now(), now(), 0, ?, ?, ?, ?)");
         db.sqlList().wantFirstPara().eqList(400L, "add", "test_env", 0L, 234567L);
     }

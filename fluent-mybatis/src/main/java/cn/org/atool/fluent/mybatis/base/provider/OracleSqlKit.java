@@ -17,8 +17,7 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.SELECT;
 import static java.util.stream.Collectors.toList;
 
@@ -89,7 +88,7 @@ public class OracleSqlKit extends CommonSqlKit {
             boolean first = true;
             for (FieldMapping f : nonFields) {
                 if (!first) {
-                    sql.APPEND(", ");
+                    sql.APPEND(COMMA_SPACE);
                 } else {
                     first = false;
                 }

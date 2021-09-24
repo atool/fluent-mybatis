@@ -27,12 +27,20 @@ public class CountNoLimitTest extends BaseTest {
 
         mapper.count(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT COUNT(*)")
-            .end("FROM fluent_mybatis.student WHERE `id` = ? GROUP BY `user_name` ORDER BY `user_name` ASC LIMIT ?, ?");
+            .start("" +
+                "SELECT COUNT(*) " +
+                "FROM (SELECT COUNT(*) " +
+                "FROM fluent_mybatis.student WHERE `id` = ? " +
+                "GROUP BY `user_name` " +
+                "LIMIT ?, ?) TMP_");
 
         mapper.countNoLimit(query);
         db.sqlList().wantSql(1).start("" +
-            "SELECT COUNT(*) FROM(SELECT COUNT(*) FROM fluent_mybatis.student WHERE `id` = ? GROUP BY `user_name`) TMP_");
+            "SELECT COUNT(*) " +
+            "FROM (SELECT COUNT(*) " +
+            "FROM fluent_mybatis.student " +
+            "WHERE `id` = ? " +
+            "GROUP BY `user_name`) TMP_");
     }
 
     @Test

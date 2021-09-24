@@ -36,7 +36,7 @@ public class InsertDynamicTable extends BaseTest {
                     .setUserName("name")
                 )
             ), BadSqlGrammarException.class);
-        db.sqlList().wantFirstSql().start("INSERT INTO my_student(`");
+        db.sqlList().wantFirstSql().start("INSERT INTO my_student (`");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class InsertDynamicTable extends BaseTest {
                 .changeTableBelongTo("my_student")
                 .setUserName("name")
             ), BadSqlGrammarException.class);
-        db.sqlList().wantFirstSql().start("INSERT INTO my_student(`");
+        db.sqlList().wantFirstSql().start("INSERT INTO my_student (`");
     }
 
     @Test
@@ -57,6 +57,6 @@ public class InsertDynamicTable extends BaseTest {
                 .setId(1L)
                 .setUserName("name")
             ), BadSqlGrammarException.class);
-        db.sqlList().wantFirstSql().start("INSERT INTO my_student(`id`,");
+        db.sqlList().wantFirstSql().start("INSERT INTO my_student (`id`,");
     }
 }

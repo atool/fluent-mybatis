@@ -14,6 +14,16 @@ public enum KeyFrag implements IFragment {
      * SELECT
      */
     SELECT("SELECT"),
+
+    DISTINCT("DISTINCT"),
+
+    INSERT_INTO("INSERT INTO"),
+
+    DELETE("DELETE"),
+
+    UPDATE("UPDATE"),
+
+    SET("SET"),
     /**
      * FROM
      */

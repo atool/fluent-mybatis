@@ -2,10 +2,9 @@ package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -16,7 +15,11 @@ import lombok.NonNull;
 import java.io.Serializable;
 import java.util.*;
 
+import static cn.org.atool.fluent.mybatis.If.isEmpty;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
+import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -24,8 +27,177 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
+    /**
+     * 根据id修改
+     *
+     * @param entity 实体对象
+     * @return ignore
+     */
+    default int updateById(E entity) {
+        IUpdate update = factory(this).updateById(this.mapping(), entity);
+        return this.updateBy(update);
+    }
+
+    /**
+     * 根据 ID 查询
+     *
+     * @param id 主键ID
+     * @return ignore
+     */
+    default E findById(Serializable id) {
+        IQuery query = factory(this).queryByIds(this.mapping(), new Object[]{id});
+        return this.findOne(query);
+    }
+
+    /**
+     * 根据 query 条件，查询一条记录
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
+     */
+    default E findOne(IQuery query) {
+        List<E> list = this.listEntity(query);
+        if (isEmpty(list)) {
+            return null;
+        } else if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            throw new FluentMybatisException("Expected one result (or null) to be returned, but found " + list.size() + " results.");
+        }
+    }
+
+    /**
+     * 查询（根据ID 批量查询）
+     *
+     * @param ids 主键ID列表(不能为 null 以及 empty)
+     * @return ignore
+     */
+    default List<E> listByIds(Object... ids) {
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
+        return this.listEntity(query);
+    }
+
+    /**
+     * 查询（根据ID 批量查询）
+     *
+     * @param ids 主键ID列表(不能为 null 以及 empty)
+     * @return ignore
+     */
+    default List<E> listByIds(Collection ids) {
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
+        return this.listEntity(query);
+    }
+
+    /**
+     * 根据数据库字段(或Entity属性)查询
+     *
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性) k-v条件
+     * @return ignore
+     */
+    default List<E> listByMap(boolean isColumn, Map<String, Object> condition) {
+        assertNotEmpty("condition", condition);
+        IQuery query = this.mapping().query();
+        factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
+        return this.listEntity(query);
+    }
+
+    /**
+     * 根据id删除记录
+     *
+     * @param ids 主键列表
+     * @return ignore
+     */
+    default int deleteById(Serializable... ids) {
+        assertNotEmpty("ids", ids);
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
+        return this.delete(query);
+    }
+
+    /**
+     * 根据id列表批量删除
+     *
+     * @param ids id列表（值不能为null或者empty）
+     * @return ignore
+     */
+    default int deleteByIds(Collection ids) {
+        assertNotEmpty("ids", ids);
+        IQuery query = factory(this).queryByIds(this.mapping(), ids);
+        return this.delete(query);
+    }
+
+    /**
+     * 根据数据库字段(或Entity属性)删除记录
+     *
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性)k-v条件
+     * @return ignore
+     */
+    default int deleteByMap(boolean isColumn, Map<String, Object> condition) {
+        IQuery query = this.mapping().query();
+        factory(this).eqByMap(this.mapping(), (IWrapper) query, isColumn, condition);
+        return this.delete(query);
+    }
+
+    /**
+     * 根据id逻辑删除
+     *
+     * @param ids 主键值列表
+     * @return ignore
+     */
+    default int logicDeleteById(Object... ids) {
+        assertNotEmpty("ids", ids);
+        IUpdate update = factory(this).logicDeleteByIds(this.mapping(), ids);
+        return this.updateBy(update);
+    }
+
+    /**
+     * 根据id列表批量逻辑删除
+     *
+     * @param ids id列表（值不能为null或者empty）
+     * @return ignore
+     */
+    default int logicDeleteByIds(Collection ids) {
+        assertNotEmpty("ids", ids);
+        IUpdate update = factory(this).logicDeleteByIds(this.mapping(), ids);
+        return this.updateBy(update);
+    }
+
+    /**
+     * 根据数据库字段(或Entity属性)逻辑删除记录
+     *
+     * @param isColumn  true: key值为数据库字段; false: key值为Entity属性字段
+     * @param condition 数据库字段(或Entity属性)k-v条件
+     * @return ignore
+     */
+    default int logicDeleteByMap(boolean isColumn, Map<String, Object> condition) {
+        assertNotEmpty("ids", condition);
+        IUpdate update = this.mapping().updater();
+        /* 逻辑删除忽略版本号 */
+        update.data().setIgnoreLockVersion(true);
+        factory(this).setLogicDeleted(this.mapping(), update);
+        factory(this).eqByMap(this.mapping(), (IWrapper) update, isColumn, condition);
+        return this.updateBy(update);
+    }
+
+    /**
+     * 根据wrapper删除记录
+     *
+     * @param query 实体对象封装操作类（属性条件可以为null）
+     * @return ignore
+     */
+    default int logicDelete(IQuery query) {
+        assertNotNull("query", query);
+        /* 逻辑删除忽略版本号 */
+        query.data().setIgnoreLockVersion(true);
+        IUpdate update = factory(this).logicDeleteBy(this.mapping(), query);
+        return this.updateBy(update);
+    }
+
+    /* ======================================== */
+
     /**
      * 判断主键id记录是否已经存在
      * 只设置id，不添加默认值
@@ -37,8 +209,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
         IBaseQuery<E, ?> query = (IBaseQuery) ((IWrapperMapper) this).emptyQuery();
         Column pk = Column.set(query, ((IWrapperMapper) this).primaryField());
         query.where().apply(pk, EQ, id).end().limit(1);
-        Integer count = this.count(query);
-        return count != null && count > 0;
+        int count = this.count(query);
+        return count > 0;
     }
 
     /**
@@ -127,7 +299,6 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
         Optional<Map<String, Object>> optional = this.findOneMap(query);
         return optional.map(m -> PoJoHelper.toPoJo(clazz, m));
     }
-
 
     /**
      * 根据query查询满足条件的第一条记录

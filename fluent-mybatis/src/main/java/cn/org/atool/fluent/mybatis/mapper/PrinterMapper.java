@@ -39,35 +39,38 @@ import static org.apache.ibatis.builder.annotation.ProviderContextKit.newProvide
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class PrinterMapper implements IWrapperMapper {
 
-    private final IWrapperMapper delegate;
+    private IWrapperMapper delegate;
+
+    private Class<? extends IWrapperMapper> klass;
 
     private final int mode;
 
-    private final Class<? extends IWrapperMapper> klass;
+    private Configuration configuration;
 
-    private final Configuration configuration;
-
-    private final TypeHandlerRegistry typeHandlerRegistry;
+    private TypeHandlerRegistry typeHandlerRegistry;
 
     @Getter
     private final List<String> sql = new ArrayList<>();
 
-    public PrinterMapper(int mode, IWrapperMapper mapper) {
-        this.delegate = mapper;
+    private PrinterMapper(int mode, IWrapperMapper mapper) {
         this.mode = mode;
-        MapperProxy proxy = this.getValue(this.delegate, f_proxyHandler);
-        SqlSessionTemplate sqlSession = this.getValue(proxy, f_sqlSession);
-        this.configuration = sqlSession.getConfiguration();
-        this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
+        this.setDelegate(mapper);
+    }
 
-        Class<?>[] interfaces = this.delegate.getClass().getInterfaces();
-        this.klass = (Class) interfaces[0];
+    private PrinterMapper setDelegate(IWrapperMapper mapper) {
+        this.delegate = mapper;
+        this.klass = (Class) this.delegate.getClass().getInterfaces()[0];
+        SqlSessionTemplate sqlSession = this.value(this.delegate, f_proxyHandler, f_sqlSession);
+        configuration = sqlSession.getConfiguration();
+        typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+        return this;
     }
 
     @Override
     public int insert(IEntity entity) {
         ProviderContext context = newProviderContext(this.klass, this.method(M_Insert));
-        this.addSQL(entity, () -> SqlProvider.insert(entity, context));
+        Map<String, Object> map = ew(entity);
+        this.addSQL(map, () -> SqlProvider.insert(map, context));
         return 1;
     }
 
@@ -83,7 +86,8 @@ public class PrinterMapper implements IWrapperMapper {
     @Override
     public int insertWithPk(IEntity entity) {
         ProviderContext context = newProviderContext(this.klass, this.method(M_insertWithPk));
-        this.addSQL(entity, () -> SqlProvider.insertWithPk(entity, context));
+        Map<String, Object> map = ew(entity);
+        this.addSQL(map, () -> SqlProvider.insertWithPk(map, context));
         return 1;
     }
 
@@ -139,7 +143,7 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
     @Override
-    public Integer count(IQuery query) {
+    public int count(IQuery query) {
         ProviderContext context = newProviderContext(this.klass, this.method(M_count));
         Map<String, Object> map = this.ew(query);
         this.addSQL(map, () -> SqlProvider.count(map, context));
@@ -181,13 +185,11 @@ public class PrinterMapper implements IWrapperMapper {
 
     /* ============================================= */
 
-    private Map<String, Object> ew(Object query) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(Param_EW, query);
-        return map;
-    }
-
     private static Map<String, Method> methods = null;
+
+    private static final Field f_proxyHandler = field(Proxy.class, "h");
+
+    private static final Field f_sqlSession = field(MapperProxy.class, "sqlSession");
 
     private Method method(String methodName) {
         if (methods == null) {
@@ -199,17 +201,20 @@ public class PrinterMapper implements IWrapperMapper {
         return methods.get(methodName);
     }
 
+    private Map<String, Object> ew(Object query) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Param_EW, query);
+        return map;
+    }
+
     private <P> void addSQL(P object, Supplier<String> supplier) {
         String text = supplier.get();
-        if (isBlank(text)) {
-            return;
-        }
-        if (mode == 2) {
+        if (isBlank(text) || mode == 2) {
             this.sql.add(text);
             return;
         }
         TextSqlNode textSqlNode = new TextSqlNode(text);
-        RawSqlSource sqlSource = new RawSqlSource(this.configuration, textSqlNode, object.getClass());
+        RawSqlSource sqlSource = new RawSqlSource(configuration, textSqlNode, object.getClass());
         BoundSql boundSql = sqlSource.getBoundSql(object);
         if (mode == 0) {
             this.sql.add(boundSql.getSql());
@@ -220,15 +225,20 @@ public class PrinterMapper implements IWrapperMapper {
             String expression = "#{" + entry.getKey() + "}";
             Object value = entry.getValue();
 
-            if (value == null) {
-                text = text.replace(expression, "null");
-            } else if (value.getClass().isPrimitive() || value instanceof Number || value instanceof Boolean) {
-                text = text.replace(expression, String.valueOf(value));
-            } else {
-                text = text.replace(expression, "'" + value + "'");
-            }
+            text = this.replaceBy(text, expression, value);
         }
         this.sql.add(text);
+    }
+
+    private String replaceBy(String text, String expression, Object value) {
+        if (value == null) {
+            text = text.replace(expression, "null");
+        } else if (value.getClass().isPrimitive() || value instanceof Number || value instanceof Boolean) {
+            text = text.replace(expression, String.valueOf(value));
+        } else {
+            text = text.replace(expression, "'" + value + "'");
+        }
+        return text;
     }
 
     private Map<String, Object> getParameters(BoundSql boundSql) {
@@ -257,10 +267,6 @@ public class PrinterMapper implements IWrapperMapper {
         }
     }
 
-    private static final Field f_proxyHandler = field(Proxy.class, "h");
-
-    private static final Field f_sqlSession = field(MapperProxy.class, "sqlSession");
-
     private static Field field(Class declared, String fieldName) {
         try {
             Field field = declared.getDeclaredField(fieldName);
@@ -271,11 +277,54 @@ public class PrinterMapper implements IWrapperMapper {
         }
     }
 
-    private <T> T getValue(Object target, Field f) {
+    /**
+     * 获取target的属性的属性
+     *
+     * @param target Object
+     * @param fields 级联属性
+     * @param <T>    属性值
+     * @return Object
+     */
+    private <T> T value(Object target, Field... fields) {
+        Object value = target;
         try {
-            return (T) f.get(target);
+            for (Field f : fields) {
+                value = f.get(value);
+            }
+            return (T) value;
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static final ThreadLocal<PrinterMapper> local = new ThreadLocal<>();
+
+    /**
+     * 设置PrinterMapper
+     *
+     * @param mode   打印SQL模式
+     * @param mapper 原生mapper实例
+     * @return PrinterMapper
+     */
+    public static IWrapperMapper set(int mode, IWrapperMapper mapper) {
+        local.set(new PrinterMapper(mode, mapper));
+        return local.get();
+    }
+
+    /**
+     * 清除线程中的PrinterMapper实例
+     */
+    public static void clear() {
+        local.remove();
+    }
+
+    /**
+     * 返回线程中的PrinterMapper
+     *
+     * @return PrinterMapper
+     */
+    public static IWrapperMapper get(IWrapperMapper mapper) {
+        PrinterMapper printerMapper = local.get();
+        return printerMapper == null ? mapper : printerMapper.setDelegate(mapper);
     }
 }

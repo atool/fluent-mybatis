@@ -3,6 +3,8 @@ package cn.org.atool.fluent.mybatis.utility;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+
 /**
  * 简单判断有没有sql注入风险
  *
@@ -16,15 +18,15 @@ public class SqlInject {
     /**
      * 可能产生注入的危险字符串
      */
-    private static final List<String> DANGER_CHAR = Arrays.asList(";", "--", "*", "%", "\\", "'", "#", "/");
+    private static final List<String> DANGER_CHAR = Arrays.asList(SEMICOLON, "--", ASTERISK, "%", "\\", "'", "#", "/");
 
     private static final Map<Character, List<char[]>> KEYWORD_MAP = initMap(KEYWORDS);
 
     private static final Map<Character, List<char[]>> DANGER_MAP = initMap(DANGER_CHAR.toArray(new String[0]));
 
-    private static final String KEYWORD_STR = "[" + String.join(",", KEYWORDS) + "]";
+    private static final String KEYWORD_STR = "[" + String.join(COMMA, KEYWORDS) + "]";
 
-    private static final String DANGER_STR = "[" + String.join(",", DANGER_CHAR) + "]";
+    private static final String DANGER_STR = "[" + String.join(COMMA, DANGER_CHAR) + "]";
 
     private static final int TO_UPPER = 'A' - 'a';
 
