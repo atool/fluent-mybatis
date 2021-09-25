@@ -25,10 +25,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.field;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.value;
 import static org.apache.ibatis.builder.annotation.ProviderContextKit.newProviderContext;
 
 /**
@@ -54,116 +57,76 @@ public class PrinterMapper implements IWrapperMapper {
 
     private PrinterMapper(int mode, IWrapperMapper mapper) {
         this.mode = mode;
-        this.setDelegate(mapper);
-    }
-
-    private PrinterMapper setDelegate(IWrapperMapper mapper) {
-        this.delegate = mapper;
-        this.klass = (Class) this.delegate.getClass().getInterfaces()[0];
-        SqlSessionTemplate sqlSession = this.value(this.delegate, f_proxyHandler, f_sqlSession);
-        configuration = sqlSession.getConfiguration();
-        typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        return this;
+        this.delegate(mapper);
     }
 
     @Override
     public int insert(IEntity entity) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_Insert));
-        Map<String, Object> map = ew(entity);
-        this.addSQL(map, () -> SqlProvider.insert(map, context));
-        return 1;
+        return this.simulate(M_Insert, map(Param_EW, entity), SqlProvider::insert);
     }
 
     @Override
     public int insertBatch(Collection entities) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_InsertBatch));
-        Map<String, Object> map = new HashMap<>();
-        map.put(Param_List, entities);
-        this.addSQL(map, () -> SqlProvider.insertBatch(map, context));
-        return 1;
+        return this.simulate(M_InsertBatch, map(Param_List, entities), SqlProvider::insertBatch);
     }
 
     @Override
     public int insertWithPk(IEntity entity) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_insertWithPk));
-        Map<String, Object> map = ew(entity);
-        this.addSQL(map, () -> SqlProvider.insertWithPk(map, context));
-        return 1;
+        return this.simulate(M_insertWithPk, map(Param_EW, entity), SqlProvider::insertWithPk);
     }
 
     @Override
     public int insertBatchWithPk(Collection entities) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_insertBatchWithPk));
-        Map<String, Object> map = new HashMap<>();
-        map.put(Param_List, entities);
-        this.addSQL(map, () -> SqlProvider.insertBatchWithPk(map, context));
-        return 1;
+        return this.simulate(M_insertBatchWithPk, map(Param_List, entities), SqlProvider::insertBatchWithPk);
     }
 
     @Override
     public int insertSelect(String[] fields, IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_insertSelect));
-        Map<String, Object> map = this.ew(query);
-        map.put(Param_Fields, fields);
-        this.addSQL(map, () -> SqlProvider.insertSelect(map, context));
-        return 1;
+        Map<String, Object> map = this.map(Param_EW, query, Param_Fields, fields);
+        return this.simulate(M_insertSelect, map, SqlProvider::insertSelect);
     }
 
     @Override
     public int updateBy(IUpdate... updates) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_updateBy));
-        Map<String, Object> map = new HashMap<>();
-        map.put(Param_EW, updates);
-        this.addSQL(map, () -> SqlProvider.updateBy(map, context));
-        return 1;
+        return this.simulate(M_updateBy, map(Param_EW, updates), SqlProvider::updateBy);
     }
 
     @Override
     public List listEntity(IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_listEntity));
-        Map<String, Object> map = this.ew(query);
-        this.addSQL(map, () -> SqlProvider.listEntity(map, context));
+        this.simulate(M_listEntity, map(Param_EW, query), SqlProvider::listEntity);
         return Collections.emptyList();
     }
 
     @Override
     public List<Map<String, Object>> listMaps(IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_listMaps));
-        Map<String, Object> map = this.ew(query);
-        this.addSQL(map, () -> SqlProvider.listMaps(map, context));
+        this.simulate(M_listMaps, map(Param_EW, query), SqlProvider::listMaps);
         return Collections.emptyList();
     }
 
     @Override
     public List listObjs(IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_listObjs));
-        Map<String, Object> map = this.ew(query);
-        this.addSQL(map, () -> SqlProvider.listObjs(map, context));
+        this.simulate(M_listObjs, map(Param_EW, query), SqlProvider::listObjs);
         return Collections.emptyList();
     }
 
     @Override
     public int count(IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_count));
-        Map<String, Object> map = this.ew(query);
-        this.addSQL(map, () -> SqlProvider.count(map, context));
-        return 1;
+        return this.simulate(M_count, map(Param_EW, query), SqlProvider::count);
     }
 
     @Override
     public int countNoLimit(IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_countNoLimit));
-        Map<String, Object> map = this.ew(query);
-        this.addSQL(map, () -> SqlProvider.countNoLimit(map, context));
-        return 1;
+        return this.simulate(M_countNoLimit, map(Param_EW, query), SqlProvider::countNoLimit);
     }
 
     @Override
     public int delete(IQuery query) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_delete));
-        Map<String, Object> map = this.ew(query);
-        this.addSQL(map, () -> SqlProvider.delete(map, context));
-        return 1;
+        return this.simulate(M_delete, map(Param_EW, query), SqlProvider::delete);
+    }
+
+    @Override
+    public void batchCrud(BatchCrud crud) {
+        this.simulate(M_batchCrud, map(Param_EW, crud), SqlProvider::batchCrud);
     }
 
     @Override
@@ -172,18 +135,33 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
     @Override
-    public void batchCrud(BatchCrud crud) {
-        ProviderContext context = newProviderContext(this.klass, this.method(M_batchCrud));
-        Map<String, Object> map = this.ew(crud);
-        this.addSQL(map, () -> SqlProvider.batchCrud(map, context));
-    }
-
-    @Override
     public IMapping mapping() {
         return this.delegate.mapping();
     }
 
     /* ============================================= */
+    private PrinterMapper delegate(IWrapperMapper mapper) {
+        this.delegate = mapper;
+        this.klass = (Class) this.delegate.getClass().getInterfaces()[0];
+        SqlSessionTemplate session = value(this.delegate, f_proxyHandler, f_sqlSession);
+        configuration = session == null ? null : session.getConfiguration();
+        typeHandlerRegistry = configuration == null ? null : configuration.getTypeHandlerRegistry();
+        return this;
+    }
+
+    private int simulate(String method, Map map, BiFunction<Map, ProviderContext, String> simulator) {
+        ProviderContext context = newProviderContext(this.klass, this.method(method));
+        this.addSQL(map, () -> simulator.apply(map, context));
+        return 1;
+    }
+
+    private Map<String, Object> map(Object... kvs) {
+        Map<String, Object> map = new HashMap<>();
+        for (int index = 1; index < kvs.length; index += 2) {
+            map.put((String) kvs[index - 1], kvs[index]);
+        }
+        return map;
+    }
 
     private static Map<String, Method> methods = null;
 
@@ -199,12 +177,6 @@ public class PrinterMapper implements IWrapperMapper {
             }
         }
         return methods.get(methodName);
-    }
-
-    private Map<String, Object> ew(Object query) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(Param_EW, query);
-        return map;
     }
 
     private <P> void addSQL(P object, Supplier<String> supplier) {
@@ -267,40 +239,10 @@ public class PrinterMapper implements IWrapperMapper {
         }
     }
 
-    private static Field field(Class declared, String fieldName) {
-        try {
-            Field field = declared.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field;
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 获取target的属性的属性
-     *
-     * @param target Object
-     * @param fields 级联属性
-     * @param <T>    属性值
-     * @return Object
-     */
-    private <T> T value(Object target, Field... fields) {
-        Object value = target;
-        try {
-            for (Field f : fields) {
-                value = f.get(value);
-            }
-            return (T) value;
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private static final ThreadLocal<PrinterMapper> local = new ThreadLocal<>();
 
     /**
-     * 设置PrinterMapper
+     * 主动设置PrinterMapper
      *
      * @param mode   打印SQL模式
      * @param mapper 原生mapper实例
@@ -325,6 +267,6 @@ public class PrinterMapper implements IWrapperMapper {
      */
     public static IWrapperMapper get(IWrapperMapper mapper) {
         PrinterMapper printerMapper = local.get();
-        return printerMapper == null ? mapper : printerMapper.setDelegate(mapper);
+        return printerMapper == null ? mapper : printerMapper.delegate(mapper);
     }
 }

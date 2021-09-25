@@ -498,6 +498,39 @@ public class MybatisUtil {
     }
 
     /**
+     * 获取target的属性的属性
+     *
+     * @param target Object
+     * @param fields 级联属性
+     * @param <T>    属性值
+     * @return Object
+     */
+    public static <T> T value(Object target, Field... fields) {
+        Object value = target;
+        try {
+            for (Field f : fields) {
+                if (value == null) {
+                    return null;
+                }
+                value = f.get(value);
+            }
+            return (T) value;
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Field field(Class declared, String fieldName) {
+        try {
+            Field field = declared.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field;
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * 按逗号分割字符串
      *
      * @param text 字符串
@@ -514,8 +547,8 @@ public class MybatisUtil {
     /**
      * 按分隔符分割字符串
      *
-     * @param delimiter 分隔符
-     * @param text      字符串
+     * @param delimiters 分隔符
+     * @param text       字符串
      * @return 分割好的子字符串列表
      */
     public static List<String> splitBy(Collection<Character> delimiters, String text) {
