@@ -4,11 +4,11 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
-import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import lombok.NonNull;
 
@@ -207,8 +207,8 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default boolean existPk(Serializable id) {
         IBaseQuery<E, ?> query = (IBaseQuery) ((IWrapperMapper) this).emptyQuery();
-        Column pk = Column.set(query, ((IWrapperMapper) this).primaryField());
-        query.where().apply(pk, EQ, id).end().limit(1);
+        FieldMapping pk = ((IWrapperMapper) this).primaryField();
+        query.where().apply(pk.column, EQ, id).end().limit(1);
         int count = this.count(query);
         return count > 0;
     }

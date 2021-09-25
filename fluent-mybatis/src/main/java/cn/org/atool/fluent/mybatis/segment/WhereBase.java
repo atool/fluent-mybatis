@@ -454,16 +454,6 @@ public abstract class WhereBase<
     }
 
     /**
-     * 自定义column赋值比较
-     *
-     * @param column 自定义的column值
-     * @return WhereApply
-     */
-    public WhereApply<WHERE, NestedQ> apply(String column) {
-        return this.set(new FieldMapping(null, column));
-    }
-
-    /**
      * 根据条件拼接 sql
      *
      * @param predicate if true: 拼接applySql; false: 丢弃条件拼接
@@ -471,11 +461,21 @@ public abstract class WhereBase<
      * @param paras     sql参数
      * @return WHERE
      */
-    public WHERE applyIf(Predicate<Object[]> predicate, String applySql, Object... paras) {
+    public WHERE applyFunc(Predicate<Object[]> predicate, String applySql, Object... paras) {
         if (predicate.test(paras)) {
             this.applyFunc(applySql, paras);
         }
         return this.and;
+    }
+
+    /**
+     * 自定义column赋值比较
+     *
+     * @param column 自定义的column值
+     * @return WhereApply
+     */
+    public WhereApply<WHERE, NestedQ> apply(String column) {
+        return this.set(new FieldMapping(null, column));
     }
 
     /**
@@ -492,13 +492,6 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    public WHERE applyIf(Predicate<Object[]> predicate, String column, ISqlOp op, Object... paras) {
-        if (predicate.test(paras)) {
-            this.apply(column, op, paras);
-        }
-        return this.and;
-    }
-
     /**
      * 增加and[or]条件
      *
@@ -507,15 +500,8 @@ public abstract class WhereBase<
      * @param paras  操作参数
      * @return 条件设置器
      */
-    public WHERE apply(Column column, ISqlOp op, Object... paras) {
+    WHERE apply(Column column, ISqlOp op, Object... paras) {
         this.wrapper.data().apply(this.currOp, column, op, paras);
-        return this.and;
-    }
-
-    public WHERE applyIf(Predicate<Object[]> predicate, Column column, ISqlOp op, Object... paras) {
-        if (predicate.test(paras)) {
-            this.apply(column, op, paras);
-        }
         return this.and;
     }
 
@@ -538,9 +524,18 @@ public abstract class WhereBase<
         return this.and;
     }
 
-    WHERE applyIf(Predicate<Object[]> predicate, Column column, ISqlOp op, String expression, Object... args) {
-        if (predicate.test(args)) {
-            this.apply(column, op, expression, args);
+    /**
+     * 按条件条件条件where
+     *
+     * @param predicate if true: 添加where条件; false: 丢弃条件
+     * @param column    自定义字段, 比如 avg(column_name), 别名字段等
+     * @param op        比较符
+     * @param paras     参数列表
+     * @return WHERE
+     */
+    public WHERE applyIf(Predicate<Object[]> predicate, String column, ISqlOp op, Object... paras) {
+        if (predicate.test(paras)) {
+            this.apply(column, op, paras);
         }
         return this.and;
     }
