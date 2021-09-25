@@ -21,7 +21,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes", "unused"})
+@SuppressWarnings({"rawtypes", "unused", "unchecked"})
 public class MybatisUtil {
     /**
      * 安全的进行字符串 format
