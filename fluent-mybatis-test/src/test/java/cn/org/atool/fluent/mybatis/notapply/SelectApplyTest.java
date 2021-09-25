@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.SUM;
 
+@SuppressWarnings("unchecked")
 public class SelectApplyTest extends BaseTest {
     @Autowired
     StudentMapper mapper;

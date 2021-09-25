@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test;
 
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
@@ -35,6 +36,7 @@ public abstract class BaseTest extends Test4J {
 @Configuration
 class TestSpringConfig {
     static {
+        IRef.changeDbType(DbType.MYSQL);
         Ref.Query.student.setTableSupplier(t -> "fluent_mybatis." + t);
         DbType.ORACLE.setEscapeExpress("[?]"); // 只是示例, ORACLE的转义方式不是[?], SQL Server才是
         DbType.ORACLE.setPagedFormat(ORACLE_LIMIT.getFormat() + "/**测试而已**/");

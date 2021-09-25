@@ -549,7 +549,7 @@ public abstract class WhereBase<
      * 当条件满足时, 执行apply条件设置
      *
      * @param condition 设置条件
-     * @param nested    条件设置
+     * @param apply     条件设置
      * @return ignore
      */
     public WHERE applyIf(boolean condition, Function<WHERE, WHERE> apply) {

@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import org.apache.ibatis.builder.annotation.ProviderContext;
@@ -28,7 +27,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA;
  *
  * @author darui.wu
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class StatementBuilder extends MappedStatement.Builder {
     private final String id;
     private final Configuration configuration;
@@ -64,7 +63,7 @@ public class StatementBuilder extends MappedStatement.Builder {
     }
 
     /**
-     * 补充方法 {@link SqlProvider#insert(IEntity, ProviderContext)} 声明
+     * 补充方法 {@link SqlProvider#insert(Map, ProviderContext)} 声明
      */
     public MappedStatement insertStatement() {
         FieldMapping primary = mapping.primaryMapping();
@@ -160,6 +159,7 @@ public class StatementBuilder extends MappedStatement.Builder {
             .build();
     }
 
+    @SuppressWarnings("all")
     /**
      * @see org.apache.ibatis.builder.BaseBuilder#resolveTypeHandler(Class, Class)
      */
