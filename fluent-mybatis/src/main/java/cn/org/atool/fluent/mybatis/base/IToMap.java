@@ -15,7 +15,7 @@ public interface IToMap {
     /**
      * 实现对象转map操作
      *
-     * @return
+     * @return Map<String, Object>
      */
     default Map<String, Object> toMap() {
         return toMap(this);
