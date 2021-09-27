@@ -12,8 +12,21 @@ import java.util.Map;
  * @author darui.wu
  */
 public interface IToMap {
-    Map<String, Object> toMap();
+    /**
+     * 实现对象转map操作
+     *
+     * @return
+     */
+    default Map<String, Object> toMap() {
+        return toMap(this);
+    }
 
+    /**
+     * 实现对象转map操作
+     *
+     * @param obj 目标对象
+     * @return Map<String, Object>
+     */
     static Map<String, Object> toMap(Object obj) {
         Map<String, Object> map = new HashMap<>();
         if (obj == null) {
