@@ -94,25 +94,29 @@ public interface FluentConst {
     /**
      * RichEntity save 方法
      */
-    String Rich_Entity_Save = "save";
+    String RE_Save = "save";
     /**
      * RichEntity updateById 方法
      */
-    String Rich_Entity_UpdateById = "updateById";
+    String RE_UpdateById = "updateById";
     /**
      * RichEntity findById 方法
      */
-    String Rich_Entity_FindById = "findById";
+    String RE_FindById = "findById";
     /**
      * RichEntity deleteById 方法
      */
-    String Rich_Entity_DeleteById = "deleteById";
+    String RE_DeleteById = "deleteById";
     /**
      * RichEntity logicDeleteById 方法
      */
-    String Rich_Entity_LogicDeleteById = "logicDeleteById";
+    String RE_LogicDeleteById = "logicDeleteById";
     /**
      * RichEntity listByNotNull 方法
      */
-    String RichEntity_ListByNotNull = "listByNotNull";
+    String RE_ListByNotNull = "listByNotNull";
+
+    String RE_byEntity = "byEntity";
+
+    String RE_byMapper = "byMapper";
 }

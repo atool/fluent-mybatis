@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.and;
 
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +45,8 @@ public class OrderTest extends BaseTest {
         StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().like("user").end()
             .orderBy
-            .apply(true, false, FieldRef.Student.id, FieldRef.Student.homeAddressId)
-            .apply(false, true, FieldRef.Student.userName)
+            .apply(true, false, Ref.Field.Student.id, Ref.Field.Student.homeAddressId)
+            .apply(false, true, Ref.Field.Student.userName)
             .asc("id+0")
             .end();
         mapper.listEntity(query);

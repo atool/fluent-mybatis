@@ -228,7 +228,7 @@ public class SqlProvider {
     }
 
     private static AMapping mapping(ProviderContext context) {
-        isMapperFactoryInited();
+        isMapperFactoryInitialized();
         Class mapperClass = context.getMapperType();
         return (AMapping) IRef.instance().byMapper(mapperClass);
     }

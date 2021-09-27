@@ -1,8 +1,12 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.NotField;
+import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 
 import java.lang.reflect.Field;
@@ -591,8 +595,25 @@ public class MybatisUtil {
             .filter(If::notBlank).collect(Collectors.joining(SPACE));
     }
 
-    public static void isMapperFactoryInited() {
-        if (MapperFactory.isInited()) {
+    /**
+     * 返回标注@FluentMybatis注解Entity类
+     *
+     * @param eClass 实例类
+     * @return ignore
+     */
+    public static Class<? extends IEntity> entityClass(Class eClass) {
+        Class aClass = eClass;
+        while (aClass != Object.class && aClass != RichEntity.class) {
+            if (aClass.getAnnotation(FluentMybatis.class) != null) {
+                return aClass;
+            }
+            aClass = aClass.getSuperclass();
+        }
+        throw new RuntimeException("the class[" + eClass.getName() + "] is not a @FluentMybatis Entity.");
+    }
+
+    public static void isMapperFactoryInitialized() {
+        if (MapperFactory.isInited() || PrinterMapper.isPrint()) {
             return;
         }
         throw new FluentMybatisException("Please add MapperFactory to spring container management: \n\n" +

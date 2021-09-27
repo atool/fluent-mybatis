@@ -20,7 +20,7 @@ public interface IRichEntity extends IRich, IEntity {
      * @return ignore
      */
     default <E extends IEntity> E save() {
-        this.invoke(Rich_Entity_Save, false);
+        this.invoke(RE_Save, false);
         return (E) this;
     }
 
@@ -34,7 +34,7 @@ public interface IRichEntity extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        this.invoke(Rich_Entity_UpdateById, false);
+        this.invoke(RE_UpdateById, false);
         return (E) this;
     }
 
@@ -48,7 +48,7 @@ public interface IRichEntity extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        IEntity entity = this.invoke(Rich_Entity_FindById, false);
+        IEntity entity = this.invoke(RE_FindById, false);
         return (E) entity;
     }
 
@@ -59,7 +59,7 @@ public interface IRichEntity extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        this.invoke(Rich_Entity_DeleteById, false);
+        this.invoke(RE_DeleteById, false);
     }
 
     /**
@@ -69,7 +69,7 @@ public interface IRichEntity extends IRich, IEntity {
         if (this.findPk() == null) {
             throw new RuntimeException("the primary of entity can't be null.");
         }
-        this.invoke(Rich_Entity_LogicDeleteById, false);
+        this.invoke(RE_LogicDeleteById, false);
     }
 
     /**
@@ -79,6 +79,6 @@ public interface IRichEntity extends IRich, IEntity {
      * @return ignore
      */
     default <E extends IEntity> List<E> listByNotNull() {
-        return this.<List>invoke(RichEntity_ListByNotNull, false);
+        return this.<List>invoke(RE_ListByNotNull, false);
     }
 }

@@ -130,7 +130,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     /**
      * 根据 query 条件，查询总记录数
      *
-     * @param query 实体对象封装操作类（可以为 null）
+     * @param query 实体对象封装操作类 (允许value值为 null)
+     *              if value=null then column IS NULL; other column = value
      * @return ignore
      * @see SqlProvider#count(Map, ProviderContext)
      */

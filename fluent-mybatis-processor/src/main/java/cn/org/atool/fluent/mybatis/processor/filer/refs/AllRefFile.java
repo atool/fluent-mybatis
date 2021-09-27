@@ -89,7 +89,7 @@ public class AllRefFile extends AbstractFile {
             .returns(refMethod.getJavaType())
             .addJavadoc("{@link $L#$L}", fluent.getClassName(), refMethod.getName());
         String method = refMethod.returnList() ? "listEntity" : "findOne";
-        spec.addCode("return mapper().$LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
+        spec.addCode("return mappers.$LMapper.$L(new $T()\n", ref.lowerNoSuffix(), method, ref.query());
         int index = 0;
         for (Map.Entry<String, String> pair : refMethod.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")

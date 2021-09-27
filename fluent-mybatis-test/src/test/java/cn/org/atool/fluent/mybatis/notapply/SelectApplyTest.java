@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.notapply;
 import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class SelectApplyTest extends BaseTest {
 
     @Test
     void test_apply_not_fieldMapping() {
-        mapper.emptyQuery().select.exclude(FieldRef.Student.id, FieldRef.Student.userName)
+        mapper.emptyQuery().select.exclude(Ref.Field.Student.id, Ref.Field.Student.userName)
             .to().listEntity();
         db.sqlList().wantFirstSql()
             .notContain("`id`")

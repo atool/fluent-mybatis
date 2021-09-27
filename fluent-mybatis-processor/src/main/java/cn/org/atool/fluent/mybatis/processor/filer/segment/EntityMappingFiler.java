@@ -74,6 +74,7 @@ public class EntityMappingFiler extends AbstractFiler {
 
         spec.addMethod(this.m_constructor())
             .addMethod(this.m_entityClass())
+            .addMethod(this.m_mapperClass())
             .addMethod(this.m_newEntity())
             .addMethod(this.m_allFields())
             .addMethod(this.m_defaultSetter())
@@ -199,6 +200,12 @@ public class EntityMappingFiler extends AbstractFiler {
     private MethodSpec m_entityClass() {
         return FilerKit.publicMethod("entityClass", Class.class)
             .addStatement("return $T.class", fluent.entity())
+            .build();
+    }
+
+    private MethodSpec m_mapperClass() {
+        return FilerKit.publicMethod("mapperClass", Class.class)
+            .addStatement("return $T.class", fluent.mapper())
             .build();
     }
 

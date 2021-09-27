@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.mapper;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
@@ -9,7 +10,7 @@ import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import lombok.Getter;
-import org.apache.ibatis.binding.MapperProxy;
+import lombok.Setter;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -18,20 +19,15 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.mybatis.spring.SqlSessionTemplate;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.field;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.value;
 import static org.apache.ibatis.builder.annotation.ProviderContextKit.newProviderContext;
 
 /**
@@ -41,23 +37,27 @@ import static org.apache.ibatis.builder.annotation.ProviderContextKit.newProvide
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class PrinterMapper implements IWrapperMapper {
+    @Setter
+    private static Configuration configuration = new Configuration();
 
-    private IWrapperMapper delegate;
+    private static final ThreadLocal<PrinterMapper> local = new ThreadLocal<>();
 
-    private Class<? extends IWrapperMapper> klass;
+    private IMapping mapping;
+
+    private Class<? extends IWrapperMapper> mapperClass;
 
     private final int mode;
-
-    private Configuration configuration;
-
-    private TypeHandlerRegistry typeHandlerRegistry;
 
     @Getter
     private final List<String> sql = new ArrayList<>();
 
-    private PrinterMapper(int mode, IWrapperMapper mapper) {
+    private PrinterMapper(int mode, IMapping mapping) {
         this.mode = mode;
-        this.delegate(mapper);
+        this.mapping(mapping);
+    }
+
+    public static boolean isPrint() {
+        return local.get() != null;
     }
 
     @Override
@@ -136,21 +136,12 @@ public class PrinterMapper implements IWrapperMapper {
 
     @Override
     public IMapping mapping() {
-        return this.delegate.mapping();
+        return this.mapping;
     }
 
-    /* ============================================= */
-    private PrinterMapper delegate(IWrapperMapper mapper) {
-        this.delegate = mapper;
-        this.klass = (Class) this.delegate.getClass().getInterfaces()[0];
-        SqlSessionTemplate session = value(this.delegate, f_proxyHandler, f_sqlSession);
-        configuration = session == null ? null : session.getConfiguration();
-        typeHandlerRegistry = configuration == null ? null : configuration.getTypeHandlerRegistry();
-        return this;
-    }
 
     private int simulate(String method, Map map, BiFunction<Map, ProviderContext, String> simulator) {
-        ProviderContext context = newProviderContext(this.klass, this.method(method));
+        ProviderContext context = newProviderContext(this.mapperClass, this.method(method));
         this.addSQL(map, () -> simulator.apply(map, context));
         return 1;
     }
@@ -164,10 +155,6 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
     private static Map<String, Method> methods = null;
-
-    private static final Field f_proxyHandler = field(Proxy.class, "h");
-
-    private static final Field f_sqlSession = field(MapperProxy.class, "sqlSession");
 
     private Method method(String methodName) {
         if (methods == null) {
@@ -231,15 +218,13 @@ public class PrinterMapper implements IWrapperMapper {
             return boundSql.getAdditionalParameter(property);
         } else if (parameterObject == null) {
             return null;
-        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+        } else if (configuration.getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass())) {
             return parameterObject;
         } else {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
             return metaObject.getValue(property);
         }
     }
-
-    private static final ThreadLocal<PrinterMapper> local = new ThreadLocal<>();
 
     /**
      * 主动设置PrinterMapper
@@ -248,8 +233,8 @@ public class PrinterMapper implements IWrapperMapper {
      * @param mapper 原生mapper实例
      * @return PrinterMapper
      */
-    public static IWrapperMapper set(int mode, IWrapperMapper mapper) {
-        local.set(new PrinterMapper(mode, mapper));
+    public static IWrapperMapper set(int mode, IMapping mapping) {
+        local.set(new PrinterMapper(mode, mapping));
         return local.get();
     }
 
@@ -265,8 +250,29 @@ public class PrinterMapper implements IWrapperMapper {
      *
      * @return PrinterMapper
      */
-    public static IWrapperMapper get(IWrapperMapper mapper) {
-        PrinterMapper printerMapper = local.get();
-        return printerMapper == null ? mapper : printerMapper.delegate(mapper);
+    public static IWrapperMapper get(IWrapperMapper mapper, Class eClass) {
+        if (local.get() == null) {
+            return mapper;
+        } else {
+            local.get().mapping(IRef.instance().byEntity(eClass));
+            return local.get();
+        }
+    }
+
+    private void mapping(IMapping mapping) {
+        this.mapping = mapping;
+        this.mapperClass = mapping.mapperClass();
+    }
+
+    public static List<String> print(int mode, IMapping mapping, Consumer<IWrapperMapper>... simulators) {
+        try {
+            PrinterMapper mapper = (PrinterMapper) PrinterMapper.set(mode, mapping);
+            for (Consumer<IWrapperMapper> simulator : simulators) {
+                simulator.accept(mapper);
+            }
+            return mapper.getSql();
+        } finally {
+            PrinterMapper.clear();
+        }
     }
 }

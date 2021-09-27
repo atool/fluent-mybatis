@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -37,7 +38,9 @@ public interface IEntity extends Serializable {
      *
      * @return 实例类
      */
-    Class<? extends IEntity> entityClass();
+    default Class<? extends IEntity> entityClass() {
+        return MybatisUtil.entityClass(this.getClass());
+    }
 
     /**
      * 将实体对象转换为map对象, 不包括空字段

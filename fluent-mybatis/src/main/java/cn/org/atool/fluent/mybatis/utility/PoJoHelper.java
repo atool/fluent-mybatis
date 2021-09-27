@@ -1,17 +1,16 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.IToMap;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
+import cn.org.atool.fluent.mybatis.metadata.SetterMeta;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
+import cn.org.atool.fluent.mybatis.spring.IConvertor;
 import lombok.NonNull;
-import org.apache.ibatis.reflection.DefaultReflectorFactory;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.ReflectionException;
-import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
-import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -106,35 +105,38 @@ public class PoJoHelper {
         return toPoJo(clazz, map, true);
     }
 
-    private static <POJO> POJO toPoJo(@NonNull Class<POJO> clazz, @NonNull Map<String, Object> map, boolean ignoreNotFound) {
-        POJO target = newInstance(clazz);
-        MetaObject metaObject = MetaObject.forObject(target, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
+    private static <POJO> POJO toPoJo(@NonNull Class<POJO> klass, @NonNull Map<String, Object> map, boolean ignoreNotFound) {
+        POJO target = newInstance(klass);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String name = MybatisUtil.underlineToCamel(entry.getKey(), false);
-            Class<?> type;
-            try {
-                type = metaObject.getSetterType(name);
-            } catch (ReflectionException e) {
+            SetterMeta meta = SetterMeta.get(klass, name);
+            if (meta == null) {
                 if (ignoreNotFound) {
                     continue;
-                } else {
-                    throw e;
                 }
+                throw new RuntimeException("property[" + name + "] of class[" + klass.getName() + "] not found.");
             }
             try {
                 Object value = entry.getValue();
                 if (value == null) {
-                    metaObject.setValue(name, null);
-                } else {
-                    if (type.isAssignableFrom(value.getClass())) {
-                        metaObject.setValue(name, value);
+                    continue;
+                }
+                if (meta.fType instanceof Class) {
+                    if (((Class) meta.fType).isAssignableFrom(value.getClass())) {
+                        meta.setValue(target, value);
                     } else {
-                        setDefaultType(type, metaObject, name, value);
+                        setDefaultType(meta, target, value);
                     }
+                } else {
+                    IConvertor convertor = SetterMeta.findConvertor(meta.fType);
+                    if (convertor != null) {
+                        value = convertor.get(value);
+                    }
+                    meta.setValue(target, value);
                 }
             } catch (Exception e) {
-                String err = String.format("convert map to object[type=%s, property=%s, type=%s] error: %s",
-                    clazz.getName(), entry.getKey(), type == null ? "<null>" : type.getName(), e.getMessage());
+                String err = String.format("convert map to object[class=%s, property=%s, type=%s] error: %s",
+                    klass.getName(), name, meta.fType.toString(), e.getMessage());
                 throw new RuntimeException(err, e);
             }
         }
@@ -157,52 +159,49 @@ public class PoJoHelper {
      */
     public static Map toMap(Object object) {
         assertNotNull("object", object);
-        Map map = new HashMap();
         if (object instanceof IEntity) {
-            map = ((IEntity) object).toEntityMap();
+            return ((IEntity) object).toEntityMap();
         } else if (object instanceof Map) {
-            map.putAll((Map) object);
+            return new HashMap((Map) object);
+        } else if (object instanceof IToMap) {
+            return ((IToMap) object).toMap();
         } else {
-            MetaObject metaObject = MetaObject.forObject(object, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
-            for (String field : metaObject.getGetterNames()) {
-                map.put(field, metaObject.getValue(field));
-            }
+            return IToMap.toMap(object);
         }
-        return map;
     }
 
     /**
      * 进行默认类型的转换
      *
-     * @param type       类型
-     * @param metaObject 元数据
-     * @param name       属性名称
-     * @param value      属性值
+     * @param meta   setter方法
+     * @param target 目标对象
+     * @param value  属性值
      */
-    private static void setDefaultType(Class type, MetaObject metaObject, String name, Object value) {
+    private static void setDefaultType(SetterMeta meta, Object target, Object value) throws InvocationTargetException, IllegalAccessException {
+        Class type = (Class) meta.fType;
         if (type == Long.class) {
-            metaObject.setValue(name, Long.parseLong(value.toString()));
+            meta.setValue(target, Long.parseLong(value.toString()));
         } else if (type == Integer.class) {
-            metaObject.setValue(name, Integer.parseInt(value.toString()));
+            meta.setValue(target, Integer.parseInt(value.toString()));
         } else if (type == Boolean.class) {
-            metaObject.setValue(name, ObjectArray.toBoolean(value));
+            meta.setValue(target, ObjectArray.toBoolean(value));
         } else if (type == BigDecimal.class) {
-            metaObject.setValue(name, new BigDecimal(value.toString()));
+            meta.setValue(target, new BigDecimal(value.toString()));
         } else if (type == BigInteger.class) {
-            metaObject.setValue(name, new BigInteger(value.toString()));
+            meta.setValue(target, new BigInteger(value.toString()));
         } else if (value instanceof Timestamp) {
             Timestamp t = (Timestamp) value;
             if (type == LocalDateTime.class) {
-                metaObject.setValue(name, t.toLocalDateTime());
+                meta.setValue(target, t.toLocalDateTime());
             } else if (type == LocalDate.class) {
-                metaObject.setValue(name, LocalDate.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
+                meta.setValue(target, LocalDate.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
             } else if (type == LocalTime.class) {
-                metaObject.setValue(name, LocalTime.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
+                meta.setValue(target, LocalTime.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
             } else {
-                metaObject.setValue(name, value);
+                meta.setValue(target, value);
             }
         } else {
-            metaObject.setValue(name, value);
+            meta.setValue(target, value);
         }
     }
 

@@ -3,19 +3,16 @@ package cn.org.atool.fluent.mybatis.test.nested;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
-import java.util.List;
-
 /**
  * InNestQueryTest
  *
- * @author darui.wu
- * @create 2020/6/19 10:54 下午
+ * @author darui.wu 2020/6/19 10:54 下午
  */
 public class InNestQueryTest extends BaseTest {
     @Autowired
@@ -43,7 +40,7 @@ public class InNestQueryTest extends BaseTest {
     @Test
     void test_and_in_nested() {
         StudentQuery query = StudentQuery.emptyQuery()
-            .select.apply(FieldRef.Student.id).sum.age().end()
+            .select.apply(Ref.Field.Student.id).sum.age().end()
             .where.id().in(q -> q.selectId()
                 .where.id().eq(3L).end())
             .and.userName().like("user")
@@ -69,7 +66,7 @@ public class InNestQueryTest extends BaseTest {
                 .where.id().eq(3L).end())
             .and.userName().like("user").end();
 
-        List list = mapper.listEntity(query);
+        mapper.listEntity(query);
         db.sqlList().wantFirstSql()
             .end("WHERE `id` IN (SELECT `id` FROM fluent_mybatis.student WHERE `id` = ?) " +
                 "AND `user_name` LIKE ?");

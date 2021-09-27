@@ -6,35 +6,39 @@ import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.MemberQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
-import cn.org.atool.fluent.mybatis.test.BaseTest;
+import cn.org.atool.fluent.mybatis.refs.Ref;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.junit5.Test4J;
 
 import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class PrintSqlTest extends BaseTest {
-    @Autowired
-    private StudentMapper mapper;
+public class PrintSqlTest extends Test4J {
+
+    @BeforeAll
+    static void setup() {
+        Ref.Query.student.setTableSupplier(t -> "fluent_mybatis." + t);
+    }
 
     @Test
     void insert() {
-        List<String> sql = mapper.print(m -> m.insert(new StudentEntity()));
+        List<String> sql = StudentMapper.print(0, m -> m.insert(new StudentEntity()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
             "VALUES " +
             "(now(), now(), 0, ?, ?)");
 
-        sql = mapper.print(1, m -> m.insert(new StudentEntity()));
+        sql = StudentMapper.print(1, m -> m.insert(new StudentEntity()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
             "VALUES " +
             "(now(), now(), 0, 'test_env', 234567)");
 
-        sql = mapper.print(2, m -> m.insert(new StudentEntity()));
+        sql = StudentMapper.print(2, m -> m.insert(new StudentEntity()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
@@ -44,7 +48,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void insertWithPk() {
-        List<String> sql = mapper.print(m -> m.insertWithPk(new StudentEntity().setId(1L)));
+        List<String> sql = StudentMapper.print(0, m -> m.insertWithPk(new StudentEntity().setId(1L)));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
@@ -55,7 +59,7 @@ public class PrintSqlTest extends BaseTest {
     @Test
     void insertBatch() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity(), new StudentEntity());
-        List<String> sql = mapper.print(m -> m.insertBatch(list));
+        List<String> sql = StudentMapper.print(0, m -> m.insertBatch(list));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
@@ -67,7 +71,7 @@ public class PrintSqlTest extends BaseTest {
     @Test
     void insertBatchWithPk() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(2L));
-        List<String> sql = mapper.print(m -> m.insertBatchWithPk(list));
+        List<String> sql = StudentMapper.print(0, m -> m.insertBatchWithPk(list));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
@@ -78,7 +82,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void listEntity() {
-        List<String> sql = mapper.print(m -> m.listEntity(new StudentQuery()));
+        List<String> sql = StudentMapper.print(0, m -> m.listEntity(new StudentQuery()));
         want.list(sql).eqList("" +
             "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
             "FROM fluent_mybatis.student " +
@@ -88,7 +92,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void insertSelect() {
-        List<String> sql = mapper.print(m -> m.insertSelect(new String[]{"id", "address", "bonus_points"}, new StudentQuery()));
+        List<String> sql = StudentMapper.print(0, m -> m.insertSelect(new String[]{"id", "address", "bonus_points"}, new StudentQuery()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`id`, `address`, `bonus_points`) " +
@@ -101,7 +105,7 @@ public class PrintSqlTest extends BaseTest {
     @Test
     void updateBy() {
         StudentUpdate update = new StudentUpdate().set.email().is("test@163.com").end();
-        List<String> sql = mapper.print(m -> m.updateBy(update, update));
+        List<String> sql = StudentMapper.print(0, m -> m.updateBy(update, update));
         want.list(sql).eqList("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
@@ -117,7 +121,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void listObjs() {
-        List<String> sql = mapper.print(m -> m.listObjs(new StudentQuery()));
+        List<String> sql = StudentMapper.print(0, m -> m.listObjs(new StudentQuery()));
         want.list(sql).eqList("" +
             "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
             "FROM fluent_mybatis.student " +
@@ -127,7 +131,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void listMaps() {
-        List<String> sql = mapper.print(m -> m.listMaps(new StudentQuery().limit(10)));
+        List<String> sql = StudentMapper.print(0, m -> m.listMaps(new StudentQuery().limit(10)));
         want.list(sql).eqList("" +
             "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
             "FROM fluent_mybatis.student " +
@@ -138,7 +142,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void count() {
-        List<String> sql = mapper.print(1, m -> m.count(new StudentQuery().limit(10)));
+        List<String> sql = StudentMapper.print(1, m -> m.count(new StudentQuery().limit(10)));
         want.list(sql).eqList("" +
             "SELECT COUNT(*) " +
             "FROM fluent_mybatis.student " +
@@ -149,7 +153,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void stdPagedEntity() {
-        List<String> sql = mapper.print(m -> m.stdPagedEntity(new StudentQuery()));
+        List<String> sql = StudentMapper.print(0, m -> m.stdPagedEntity(new StudentQuery()));
         want.list(sql).eqList(
             "SELECT COUNT(*) " +
                 "FROM fluent_mybatis.student " +
@@ -163,7 +167,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void entitySave() {
-        List<String> sql = mapper.print(m -> new StudentEntity().save());
+        List<String> sql = StudentMapper.print(0, m -> new StudentEntity().save());
         want.list(sql).eqList("" +
             "INSERT INTO " +
             "fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
@@ -172,7 +176,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void queryToLogicalDelete() {
-        List list = mapper.print(m -> new MemberQuery()
+        List list = StudentMapper.print(0, m -> new MemberQuery()
             .where.age().in(new int[]{1, 2, 4}).end().to().logicDelete());
         want.list(list).eqList("" +
             "UPDATE `t_member` SET `gmt_modified` = now(), `is_deleted` = ? WHERE `age` IN (?, ?, ?)");
@@ -180,7 +184,7 @@ public class PrintSqlTest extends BaseTest {
 
     @Test
     void insertSelect2() {
-        List list = mapper.print(m -> new MemberQuery()
+        List list = StudentMapper.print(0, m -> new MemberQuery()
             .select.exclude(MemberEntity::getId)
             .where.age().in(new int[]{1, 2, 4}).end().to().insertSelect());
         want.list(list).eqList("" +

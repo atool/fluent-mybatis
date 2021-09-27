@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,7 @@ import java.util.List;
 import static org.test4j.tools.datagen.DataGenerator.increase;
 
 /**
- * @author darui.wu
- * @create 2019/10/31 6:18 下午
+ * @author darui.wu 2019/10/31 6:18 下午
  */
 public class DistinctTest extends BaseTest {
     @Autowired
@@ -30,7 +29,7 @@ public class DistinctTest extends BaseTest {
             .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .distinct()
-            .select.apply(FieldRef.Student.userName).end()
+            .select.apply(Ref.Field.Student.userName).end()
             .where.age().eq(30).end();
 
         List<StudentEntity> users = mapper.listEntity(query);

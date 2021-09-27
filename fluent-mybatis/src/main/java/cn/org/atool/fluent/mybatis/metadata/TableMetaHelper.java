@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.metadata;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.model.ClassMap;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class TableMetaHelper {
      * 储存反射类表信息
      * Key: entity class
      */
-    private static final ClassMap<TableMeta> TABLE_INFO_CACHE = new ClassMap<>();
+    private static final KeyMap<TableMeta> TABLE_INFO_CACHE = new KeyMap<>();
 
     /**
      * <p>

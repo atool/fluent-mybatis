@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
@@ -80,8 +79,7 @@ public abstract class UpdateBase<
      */
     public <E extends IEntity> S byEntity(E entity, IGetter<E> getter, IGetter<E>... getters) {
         assertNotNull("entity", entity);
-        Class klass = IRef.instance().findFluentEntityClass(entity.entityClass());
-        String[] arr = MappingKits.toColumns(klass, getter, getters);
+        String[] arr = MappingKits.toColumns((Class) entity.entityClass(), getter, getters);
         return this.byEntity(entity, arr);
     }
 
@@ -127,8 +125,7 @@ public abstract class UpdateBase<
      */
     public <E extends IEntity> S byExclude(E entity, IGetter<E> exclude, IGetter<E>... excludes) {
         assertNotNull("entity", entity);
-        Class klass = IRef.instance().findFluentEntityClass(entity.entityClass());
-        String[] arr = MappingKits.toColumns(klass, exclude, excludes);
+        String[] arr = MappingKits.toColumns((Class) entity.entityClass(), exclude, excludes);
         return this.byExclude(entity, arr);
     }
 

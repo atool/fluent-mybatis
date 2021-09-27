@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.segment1;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class WhereTest_EqMap extends BaseTest {
             .selectId()
             .where.eqNotNull(new HashMap<String, Object>() {
                 {
-                    this.put(FieldRef.Student.userName.column, "user1");
+                    this.put(Ref.Field.Student.userName.column, "user1");
                 }
             }).end();
         mapper.listEntity(query);

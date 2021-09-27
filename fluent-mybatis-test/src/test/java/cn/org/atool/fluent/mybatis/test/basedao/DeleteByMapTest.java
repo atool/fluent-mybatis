@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.basedao;
 
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
 import cn.org.atool.fluent.mybatis.generate.ATM;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,22 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 
 /**
- * @author darui.wu
- * @create 2019/10/29 9:36 下午
+ * @author darui.wu 2019/10/29 9:36 下午
  */
+@SuppressWarnings("unchecked")
 public class DeleteByMapTest extends BaseTest {
     @Autowired
     private StudentExtDao dao;
 
     @Test
-    public void test_deleteByMap() throws Exception {
+    public void test_deleteByMap() {
         ATM.dataMap.student.initTable(10)
             .userName.values("test1", "test12", "test3", "test12", "tess2")
             .env.values("test_env")
             .cleanAndInsert();
         dao.deleteByMap(new HashMap<String, Object>() {
             {
-                this.put(FieldRef.Student.userName.column, "test12");
+                this.put(Ref.Field.Student.userName.column, "test12");
             }
         });
         db.sqlList().wantFirstSql().eq("" +
@@ -38,7 +38,7 @@ public class DeleteByMapTest extends BaseTest {
     public void test_logicDeleteByMap() {
         dao.logicDeleteByMap(new HashMap<String, Object>() {
             {
-                this.put(FieldRef.Student.userName.column, "test12");
+                this.put(Ref.Field.Student.userName.column, "test12");
             }
         });
         db.sqlList().wantFirstSql().eq("" +

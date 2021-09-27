@@ -25,6 +25,8 @@ public interface FilerKit {
 
     Modifier[] PRIVATE_STATIC = {Modifier.PRIVATE, Modifier.STATIC};
 
+    Modifier[] PUBLIC_STATIC = {Modifier.PUBLIC, Modifier.STATIC};
+
     static MethodSpec.Builder staticMethod(String methodName, TypeName returnKlass) {
         return publicMethod(methodName, false, returnKlass)
             .addModifiers(Modifier.STATIC);

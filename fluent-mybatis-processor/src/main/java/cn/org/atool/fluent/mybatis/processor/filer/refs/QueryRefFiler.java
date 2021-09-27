@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.RE_byEntity;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.RE_byMapper;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.*;
@@ -49,8 +51,8 @@ public class QueryRefFiler extends AbstractFile {
             .addMethod(this.m_emptyQuery())
             .addMethod(this.m_defaultUpdater())
             .addMethod(this.m_emptyUpdater())
-            .addMethod(this.m_mapping("byEntity", "ENTITY_MAPPING"))
-            .addMethod(this.m_mapping("byMapper", "MAPPER_MAPPING"));
+            .addMethod(this.m_mapping(RE_byEntity, "ENTITY_MAPPING"))
+            .addMethod(this.m_mapping(RE_byMapper, "MAPPER_MAPPING"));
     }
 
     private FieldSpec f_mapping(FluentEntity fluent) {
@@ -119,7 +121,7 @@ public class QueryRefFiler extends AbstractFile {
         List<CodeBlock> list = new ArrayList<>();
         list.add(CodeBlock.of("new $T()", CN_Map_AMapping));
         for (FluentEntity fluent : FluentList.getFluents()) {
-            list.add(CodeBlock.of(".put( $T.class, $L)", fluent.mapper(), fluent.lowerNoSuffix()));
+            list.add(CodeBlock.of(".put($T.class, $L)", fluent.mapper(), fluent.lowerNoSuffix()));
         }
         list.add(CodeBlock.of(".unmodified()"));
         return spec.initializer(CodeBlock.join(list, "\n\t")).build();

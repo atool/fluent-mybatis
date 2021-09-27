@@ -26,6 +26,13 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     IFragment table();
 
     /**
+     * Mapper class
+     *
+     * @return mapper class
+     */
+    Class mapperClass();
+
+    /**
      * 返回表名
      */
     default String getTableName() {

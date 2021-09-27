@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 /**
  * SelectPagedListTest
  *
- * @author darui.wu
- * @create 2020/6/24 11:05 上午
+ * @author darui.wu 2020/6/24 11:05 上午
  */
+@SuppressWarnings("unchecked")
 public class SelectPagedListTest extends BaseTest {
 
     @Autowired
@@ -32,7 +32,7 @@ public class SelectPagedListTest extends BaseTest {
 
     @DisplayName("准备100条数据, 分页查询，一次操作返回总数和符合条件的列表")
     @Test
-    public void test_select_paged_list() throws Exception {
+    public void test_select_paged_list() {
         ATM.dataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
@@ -59,7 +59,7 @@ public class SelectPagedListTest extends BaseTest {
     }
 
     @Test
-    public void test_select_paged_list2() throws Exception {
+    public void test_select_paged_list2() {
         ATM.dataMap.student.initTable(100)
             .id.autoIncrease()
             .userName.formatAutoIncrease("user_%d")
@@ -76,7 +76,7 @@ public class SelectPagedListTest extends BaseTest {
         // 验证总记录数
         want.number(list.getTotal()).eq(80);
         // 验证list结果值
-        MapFunction<Integer> convert = (m) -> ((Number) m.get(FieldRef.Student.id.column)).intValue();
+        MapFunction<Integer> convert = (m) -> ((Number) m.get(Ref.Field.Student.id.column)).intValue();
         List<Integer> ids = list.getData().stream().map(convert).collect(Collectors.toList());
         want.list(ids).eqReflect(new int[]{21, 22, 23, 24, 25, 26, 27, 28, 29, 30});
     }

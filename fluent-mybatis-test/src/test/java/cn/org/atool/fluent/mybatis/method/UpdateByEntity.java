@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.method;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class UpdateByEntity extends BaseTest {
             .setAddress("test");
 
         StudentUpdate updater = mapper.emptyUpdater()
-            .set.byEntity(student, FieldRef.Student.userName, FieldRef.Student.grade).end()
+            .set.byEntity(student, Ref.Field.Student.userName, Ref.Field.Student.grade).end()
             .where.id().eq(1).end();
         mapper.updateBy(updater);
 
@@ -105,10 +105,10 @@ public class UpdateByEntity extends BaseTest {
 
         StudentUpdate updater = mapper.emptyUpdater()
             .set.byExclude(student,
-                FieldRef.Student.id,
-                FieldRef.Student.address,
-                FieldRef.Student.tenant,
-                FieldRef.Student.birthday).end()
+                Ref.Field.Student.id,
+                Ref.Field.Student.address,
+                Ref.Field.Student.tenant,
+                Ref.Field.Student.birthday).end()
             .where.id().eq(1).end();
         mapper.updateBy(updater);
 

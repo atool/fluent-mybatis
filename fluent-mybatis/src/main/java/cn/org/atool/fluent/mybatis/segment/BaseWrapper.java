@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isMapperFactoryInited;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notNull;
 
 /**

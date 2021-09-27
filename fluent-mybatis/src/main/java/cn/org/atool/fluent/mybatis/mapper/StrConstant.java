@@ -6,6 +6,9 @@ package cn.org.atool.fluent.mybatis.mapper;
  * @author darui.wu
  */
 public interface StrConstant {
+    // Ref 文件生成的固定路径
+    String Ref_Package = "cn.org.atool.fluent.mybatis.refs";
+
     /**
      * Entity后缀
      */

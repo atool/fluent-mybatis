@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
-import cn.org.atool.fluent.mybatis.refs.FormRef;
 import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ public class FormDemo extends BaseTest {
             .setAge(2)
             .setAddress("宇宙深处");
 
-        IQuery<StudentEntity> query = Ref.Forms.student.with(student)
+        IQuery<StudentEntity> query = Ref.Form.student.with(student)
             .eq().userName()
             .eq().age()
             .query();
@@ -53,13 +52,13 @@ public class FormDemo extends BaseTest {
             .setAge(2)
             .setAddress("宇宙深处");
 
-        List<StudentEntity> students = FormRef.student.with(student)
+        List<StudentEntity> students = Ref.Form.student.with(student)
             .eq(StudentEntity::getUserName)
             .like(StudentEntity::getAddress)
             .query().to().listEntity();
         want.list(students).sizeEq(0);
 
-        IQuery<StudentEntity> query = FormRef.student.with(student)
+        IQuery<StudentEntity> query = Ref.Form.student.with(student)
             .eq().userName()
             .eq().age()
             .query();

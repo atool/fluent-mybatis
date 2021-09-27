@@ -39,7 +39,7 @@ public class FormHelper {
         if (form.getNextId() != null && form.getCurrPage() != null) {
             throw new RuntimeException("nextId and currPage can only have one value");
         }
-        IQuery query = IRef.instance().query(entityClass);
+        IQuery query = IRef.query(entityClass);
         WhereBase where = query.where();
         for (FormItem item : form.getItems()) {
             String column = IRef.instance().columnOfField(entityClass, item.getKey());

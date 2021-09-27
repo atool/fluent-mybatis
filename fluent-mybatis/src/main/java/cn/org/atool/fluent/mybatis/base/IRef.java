@@ -9,13 +9,15 @@ import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
-import cn.org.atool.fluent.mybatis.base.model.ClassMap;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.metadata.SetterMeta;
+import cn.org.atool.fluent.mybatis.spring.IConvertor;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
-import lombok.Setter;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Ref_Package;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.toSet;
 
@@ -33,30 +36,13 @@ import static java.util.stream.Collectors.toSet;
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
 public abstract class IRef {
-    // Ref 文件生成的固定路径
-    public static final String Fix_Package = "cn.org.atool.fluent.mybatis.refs";
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
      */
     private static IRef INSTANCE;
 
-    @Setter
-    private DbType defaultDbType;
-
-    /**
-     * 返回框架默认的数据库类型
-     *
-     * @return DbType
-     */
-    public DbType defaultDbType() {
-        if (instance().defaultDbType == null) {
-            throw new RuntimeException("please setDefaultDbType(dbType) first.");
-        }
-        return instance().defaultDbType;
-    }
-
     public static IEntityKit entityKit(Class clazz) {
-        return (IEntityKit) instance().byEntity(clazz);
+        return (IEntityKit) byEntity(clazz);
     }
 
     /**
@@ -74,7 +60,7 @@ public abstract class IRef {
                 return INSTANCE;
             }
             try {
-                Class klass = Class.forName(IRef.Fix_Package + ".AllRef");
+                Class klass = Class.forName(Ref_Package + ".AllRef");
                 INSTANCE = (IRef) klass.getDeclaredConstructor().newInstance();
                 return INSTANCE;
             } catch (Exception e) {
@@ -84,46 +70,44 @@ public abstract class IRef {
     }
 
     /**
-     * 验证MapperFactory实例是否已被spring容器管理
-     */
-    protected static void validateMapperFactory() {
-        if (IRef.instance().mapperFactory != null) {
-            return;
-        }
-        throw new RuntimeException("The cn.org.atool.fluent.mybatis.spring.MapperFactory must be configured as spring bean.");
-    }
-
-    /**
      * 返回clazz实体对应的默认Query实例
      *
-     * @param clazz Entity类类型
+     * @param eClass Entity类类型
      * @return IQuery
      */
-    public abstract IQuery query(Class<? extends IEntity> clazz);
+    public static IQuery query(Class<? extends IEntity> eClass) {
+        return byEntity(entityClass(eClass)).query();
+    }
 
     /**
      * 返回clazz实体对应的空Query实例
      *
-     * @param clazz Entity类类型
+     * @param eClass Entity类类型
      * @return IQuery
      */
-    public abstract IQuery emptyQuery(Class<? extends IEntity> clazz);
+    public static IQuery emptyQuery(Class<? extends IEntity> eClass) {
+        return byEntity(entityClass(eClass)).emptyQuery();
+    }
 
     /**
      * 返回clazz实体对应的默认Updater实例
      *
-     * @param clazz Entity类类型
+     * @param eClass Entity类类型
      * @return IUpdate
      */
-    public abstract IUpdate updater(Class<? extends IEntity> clazz);
+    public static IUpdate updater(Class<? extends IEntity> eClass) {
+        return byEntity(entityClass(eClass)).updater();
+    }
 
     /**
      * 返回clazz实体对应的空Updater实例
      *
-     * @param clazz Entity类类型
+     * @param eClass Entity类类型
      * @return IUpdate
      */
-    public abstract IUpdate emptyUpdater(Class<? extends IEntity> clazz);
+    public static IUpdate emptyUpdater(Class<? extends IEntity> eClass) {
+        return byEntity(entityClass(eClass)).emptyUpdater();
+    }
 
     /**
      * 返回对应实体类的映射关系
@@ -131,11 +115,11 @@ public abstract class IRef {
      * @param clazz Entity类类型
      * @return IMapping
      */
-    public IMapping byEntity(Class clazz) {
-        return this.byEntity(clazz.getName());
+    public static IMapping byEntity(Class clazz) {
+        return instance().byEntity(clazz.getName());
     }
 
-    public abstract IMapping byEntity(String clazz);
+    protected abstract IMapping byEntity(String clazz);
 
     /**
      * 返回对应Mapper类的映射关系
@@ -143,11 +127,11 @@ public abstract class IRef {
      * @param clazz Mapper类类型
      * @return IMapping
      */
-    public IMapping byMapper(Class clazz) {
-        return byMapper(clazz.getName());
+    public static IMapping byMapper(Class clazz) {
+        return instance().byMapper(clazz.getName());
     }
 
-    public abstract IMapping byMapper(String clazz);
+    protected abstract IMapping byMapper(String clazz);
 
     /**
      * 返回clazz属性field对应的数据库字段名称
@@ -157,7 +141,7 @@ public abstract class IRef {
      * @return 数据库字段名称
      */
     public final String columnOfField(Class clazz, String field) {
-        IMapping mapping = this.byEntity(clazz);
+        IMapping mapping = byEntity(clazz);
         if (mapping == null) {
             throw notFluentMybatisException(clazz);
         } else {
@@ -172,7 +156,7 @@ public abstract class IRef {
      * @return 主键字段
      */
     public String primaryColumn(Class clazz) {
-        IMapping mapping = this.byEntity(clazz);
+        IMapping mapping = byEntity(clazz);
         if (mapping == null) {
             throw notFluentMybatisException(clazz);
         } else {
@@ -191,24 +175,24 @@ public abstract class IRef {
      */
     public <T> T invoke(Class eClass, String methodName, Object[] args) {
         IEntity entity = (IEntity) args[0];
-        String methodOfEntity = methodNameOfEntity(methodName, this.findFluentEntityClass(eClass));
+        String methodOfEntity = methodNameOfEntity(methodName, eClass);
         switch (methodName) {
-            case Rich_Entity_Save:
+            case RE_Save:
                 mapper(eClass).save(entity);
                 return (T) entity;
-            case Rich_Entity_UpdateById:
+            case RE_UpdateById:
                 mapper(eClass).updateById(entity);
                 return (T) entity;
-            case Rich_Entity_FindById:
+            case RE_FindById:
                 IEntity result = mapper(eClass).findById(entity.findPk());
                 return (T) result;
-            case Rich_Entity_DeleteById:
+            case RE_DeleteById:
                 mapper(eClass).deleteById(entity.findPk());
                 return null;
-            case Rich_Entity_LogicDeleteById:
+            case RE_LogicDeleteById:
                 mapper(eClass).logicDeleteById(entity.findPk());
                 return null;
-            case RichEntity_ListByNotNull:
+            case RE_ListByNotNull:
                 Map<String, Object> where = entity.toColumnMap();
                 assertNotEmpty("the property of entity can't be all empty.", where);
                 List list = mapper(eClass).listByMap(true, where);
@@ -241,24 +225,6 @@ public abstract class IRef {
 
     private final Map<String, Method> refMethods = new ConcurrentHashMap<>(32);
 
-    /**
-     * 返回标注@FluentMybatis注解Entity类
-     *
-     * @param clazz 实例类
-     * @return ignore
-     */
-    public Class<? extends IEntity> findFluentEntityClass(Class clazz) {
-        Set<String> all = this.allEntityClass();
-        Class aClass = clazz;
-        while (aClass != Object.class && aClass != RichEntity.class) {
-            if (all.contains(aClass.getName())) {
-                return aClass;
-            } else {
-                aClass = aClass.getSuperclass();
-            }
-        }
-        throw new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity.");
-    }
 
     /**
      * 所有Entity Class
@@ -272,7 +238,7 @@ public abstract class IRef {
      *
      * @return ClassMap
      */
-    public abstract ClassMap<AMapping> allMapperClass();
+    public abstract KeyMap<AMapping> mapperMapping();
 
     /**
      * 返回spring管理对应的mapper bean
@@ -281,12 +247,13 @@ public abstract class IRef {
      * @return ignore
      */
     public static IRichMapper mapper(Class<? extends IEntity> eClass) {
-        IWrapperMapper mapper = (IWrapperMapper) instance().getMapper(eClass);
-        mapper = PrinterMapper.get(mapper);
+        eClass = entityClass(eClass);
+        IWrapperMapper mapper = (IWrapperMapper) instance().mapper(eClass.getName());
+        mapper = PrinterMapper.get(mapper, eClass);
         return mapper;
     }
 
-    protected abstract IRichMapper getMapper(Class<? extends IEntity> clazz);
+    protected abstract IRichMapper mapper(String eClass);
 
     /**
      * 从spring容器中获取Mapper
@@ -348,5 +315,13 @@ public abstract class IRef {
         for (String klass : list) {
             instance().byEntity(klass).db(dbType);
         }
+    }
+
+    public static void register(Type type, IConvertor convertor) {
+        SetterMeta.register(type, convertor);
+    }
+
+    public static void register(String typeName, IConvertor convertor) {
+        SetterMeta.register(typeName, convertor);
     }
 }

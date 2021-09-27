@@ -14,6 +14,8 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Ref_Package;
+
 /**
  * 所有Mapper实例登记, 需spring bean初始化
  *
@@ -22,6 +24,7 @@ import javax.annotation.PostConstruct;
 @SuppressWarnings({"all"})
 @Slf4j
 public class MapperFactory {
+
     @Getter
     private static boolean inited = false;
 
@@ -69,7 +72,7 @@ public class MapperFactory {
      */
     private Object findEntityRelation() throws ClassNotFoundException {
         try {
-            Class klass = Class.forName(IRef.Fix_Package + ".IEntityRelation");
+            Class klass = Class.forName(Ref_Package + ".IEntityRelation");
             return context.getBean(klass);
         } catch (NoSuchBeanDefinitionException ignored) {
             // do nothing

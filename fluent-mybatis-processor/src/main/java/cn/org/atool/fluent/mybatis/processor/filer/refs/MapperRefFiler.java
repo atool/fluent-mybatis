@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
-import cn.org.atool.fluent.mybatis.base.model.ClassMap;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
@@ -49,7 +49,7 @@ public class MapperRefFiler extends AbstractFile {
 
     private MethodSpec m_mapper() {
         return staticMethod("mapper", IRichMapper.class)
-            .addParameter(CN_Class_IEntity, "entityClass")
+            .addParameter(String.class, "entityClass")
             .addStatement("return allMappers.get(entityClass)")
             .build();
     }
@@ -61,7 +61,7 @@ public class MapperRefFiler extends AbstractFile {
 
     private FieldSpec f_allMappers() {
         return FieldSpec.builder(parameterizedType(CN_ClassMap, FM_IRichMapper), "allMappers", PRIVATE_STATIC_FINAL)
-            .initializer("new $T<>()", ClassMap.class)
+            .initializer("new $T<>()", KeyMap.class)
             .build();
     }
 

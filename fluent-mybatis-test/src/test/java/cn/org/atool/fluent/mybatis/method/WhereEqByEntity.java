@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.method;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class WhereEqByEntity extends BaseTest {
             .setAddress("address");
 
         StudentQuery query = mapper.emptyQuery()
-            .where.eqByEntity(student, FieldRef.Student.userName, FieldRef.Student.age)
+            .where.eqByEntity(student, Ref.Field.Student.userName, Ref.Field.Student.age)
             .end();
 
         mapper.listEntity(query);

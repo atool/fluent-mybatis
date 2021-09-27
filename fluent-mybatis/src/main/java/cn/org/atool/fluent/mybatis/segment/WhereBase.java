@@ -183,8 +183,7 @@ public abstract class WhereBase<
      */
     public <E extends IEntity> WHERE eqByEntity(E entity, IGetter<E> column, IGetter<E>... columns) {
         assertNotNull("entity", entity);
-        Class klass = IRef.instance().findFluentEntityClass(entity.entityClass());
-        String[] arr = MappingKits.toColumns(klass, column, columns);
+        String[] arr = MappingKits.toColumns((Class) entity.entityClass(), column, columns);
         return this.eqByEntity(entity, arr);
     }
 
@@ -212,8 +211,7 @@ public abstract class WhereBase<
 
     public <E extends IEntity> WHERE eqByExclude(E entity, IGetter<E> exclude, IGetter<E>... excludes) {
         assertNotNull("entity", entity);
-        Class klass = IRef.instance().findFluentEntityClass(entity.entityClass());
-        String[] arr = MappingKits.toColumns(klass, exclude, excludes);
+        String[] arr = MappingKits.toColumns((Class) entity.entityClass(), exclude, excludes);
         return this.eqByExclude(entity, arr);
     }
 

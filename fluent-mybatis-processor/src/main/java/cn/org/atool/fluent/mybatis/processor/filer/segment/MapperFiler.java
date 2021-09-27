@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
+import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -16,6 +17,8 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Consumer_Mapper;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
 
 /**
  * 生成Entity对应的Mapper类
@@ -57,7 +60,8 @@ public class MapperFiler extends AbstractFiler {
                 .addMember("blocking", "true").build()
             );
         }
-        spec.addMethod(this.m_mapping());
+        spec.addMethod(this.m_mapping())
+            .addMethod(this.m_print());
     }
 
     @Override
@@ -65,6 +69,15 @@ public class MapperFiler extends AbstractFiler {
         return FilerKit.publicMethod(Suffix_mapping, IMapping.class)
             .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
             .addStatement("return $L", Suffix_MAPPING)
+            .build();
+    }
+
+    private MethodSpec m_print() {
+        return FilerKit.publicMethod("print", false, CN_List_Str)
+            .addModifiers(Modifier.STATIC)
+            .addParameter(int.class, "mode")
+            .addParameter(CN_Consumer_Mapper, "simulators")
+            .addStatement("return $T.print(mode, MAPPING, simulators)", PrinterMapper.class)
             .build();
     }
 

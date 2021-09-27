@@ -3,7 +3,7 @@ package org.apache.ibatis.session;
 import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.base.model.ClassMap;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -29,7 +29,7 @@ public class ConfigurationKit {
 
     public ConfigurationKit(Configuration configuration) {
         this.configuration = configuration;
-        ClassMap<AMapping> mappers = IRef.instance().allMapperClass();
+        KeyMap<AMapping> mappers = IRef.instance().mapperMapping();
         for (Map.Entry<String, AMapping> entry : mappers.entrySet()) {
             inserts.put(entry.getKey() + "." + M_Insert, entry.getValue());
             batchInserts.put(entry.getKey() + "." + M_InsertBatch, entry.getValue());

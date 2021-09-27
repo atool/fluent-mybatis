@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.FieldRef;
+import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class JoinQueryTest_Lambda2 extends BaseTest {
 
         IQuery query = leftQuery
             .join(rightQuery)
-            .onEq(FieldRef.Student.homeAddressId, FieldRef.HomeAddress.id).endJoin()
+            .onEq(Ref.Field.Student.homeAddressId, Ref.Field.HomeAddress.id).endJoin()
             .build();
         List<StudentEntity> entities = this.mapper.listEntity(query);
         db.sqlList().wantFirstSql().end("" +

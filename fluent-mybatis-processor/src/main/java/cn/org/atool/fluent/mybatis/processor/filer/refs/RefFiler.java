@@ -1,20 +1,20 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.IRef;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
-import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.functions.FormFunction;
+import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.RE_byEntity;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.RE_byMapper;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Map_AMapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Set_ClassName;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.*;
 
 /**
@@ -46,45 +46,28 @@ public class RefFiler extends AbstractFile {
             .addModifiers(Modifier.ABSTRACT);
 
         spec.addField(this.f_mappers())
-            .addMethod(this.m_constructor())
-            .addMethod(this.m_mappers())
+            .addMethod(this.m_mapperMapping())
             .addMethod(this.m_getMapper())
-            .addMethod(this.m_defaultQuery())
-            .addMethod(this.m_emptyQuery())
-            .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_emptyUpdater())
-            .addMethod(this.m_mapping("byEntity", "byEntity"))
-            .addMethod(this.m_mapping("byMapper", "byMapper"))
+            .addMethod(this.m_mapping(RE_byEntity))
+            .addMethod(this.m_mapping(RE_byMapper))
             .addMethod(this.m_allEntityClass())
-            .addMethod(this.m_allMapperClass())
             .addMethod(this.m_initEntityMapper());
 
         spec.addType(this.class_field())
             .addType(this.class_query())
-            .addType(this.class_setter());
+            .addType(this.type_form());
     }
 
-    private MethodSpec m_mapping(String method, String call) {
-        return publicMethod(method, IMapping.class)
+    private MethodSpec m_mapping(String method) {
+        return protectMethod(method, IMapping.class)
             .addModifiers(Modifier.FINAL)
             .addParameter(String.class, "clazz")
-            .addStatement("return $T.$L(clazz)", QueryRefFiler.getClassName(), call)
+            .addStatement("return $T.$L(clazz)", QueryRefFiler.getClassName(), method)
             .build();
     }
 
     private FieldSpec f_mappers() {
-        return FieldSpec.builder(MapperRefFiler.getClassName(), "mappers", PRIVATE_STATIC).build();
-    }
-
-    private MethodSpec m_constructor() {
-        MethodSpec.Builder spec = MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC);
-        if (isBlank(FluentList.getDbType())) {
-            spec.addStatement("super.setDefaultDbType(null)");
-        } else {
-            spec.addStatement("super.setDefaultDbType($T.$L)", DbType.class, FluentList.getDbType());
-        }
-        return spec.build();
+        return FieldSpec.builder(MapperRefFiler.getClassName(), "mappers", Modifier.PROTECTED).build();
     }
 
     private MethodSpec m_allEntityClass() {
@@ -94,28 +77,18 @@ public class RefFiler extends AbstractFile {
             .build();
     }
 
-    private MethodSpec m_allMapperClass() {
-        return publicMethod("allMapperClass", CN_Map_AMapping)
+    private MethodSpec m_mapperMapping() {
+        return publicMethod("mapperMapping", CN_Map_AMapping)
             .addModifiers(Modifier.FINAL)
             .addStatement("return $T.MAPPER_MAPPING", QueryRefFiler.getClassName())
             .build();
     }
 
-    private MethodSpec m_mappers() {
-        return staticMethod("mapper", MapperRefFiler.getClassName())
-            .beginControlFlow("if (mappers == null)")
-            .addStatement("validateMapperFactory()")
-            .endControlFlow()
-            .addStatement("return mappers")
-            .build();
-    }
-
     private MethodSpec m_getMapper() {
-        return protectMethod("getMapper", IRichMapper.class)
+        return protectMethod("mapper", IRichMapper.class)
             .addModifiers(Modifier.FINAL)
-            .addParameter(CN_Class_IEntity, "clazz")
-            .addStatement("Class<? extends IEntity> entityClass = super.findFluentEntityClass(clazz)")
-            .addStatement("return MapperRef.mapper(entityClass)")
+            .addParameter(String.class, "eClass")
+            .addStatement("return MapperRef.mapper(eClass)")
             .build();
     }
 
@@ -126,42 +99,20 @@ public class RefFiler extends AbstractFile {
             .build();
     }
 
-    private MethodSpec m_defaultQuery() {
-        return publicMethod(M_DEFAULT_QUERY, IQuery.class)
-            .addParameter(Class.class, "clazz")
-            .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_DEFAULT_QUERY)
-            .build();
-    }
-
-    private MethodSpec m_emptyQuery() {
-        return publicMethod(M_EMPTY_QUERY, IQuery.class)
-            .addParameter(Class.class, "clazz")
-            .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_EMPTY_QUERY)
-            .build();
-    }
-
-    private MethodSpec m_defaultUpdater() {
-        return publicMethod(M_DEFAULT_UPDATER, IUpdate.class)
-            .addParameter(Class.class, "clazz")
-            .addStatement("Class entityClass = this.findFluentEntityClass(clazz)")
-            .addStatement("return QueryRef.$L(entityClass)", M_DEFAULT_UPDATER)
-            .build();
-    }
-
-    private MethodSpec m_emptyUpdater() {
-        return publicMethod(M_EMPTY_UPDATER, IUpdate.class)
-            .addParameter(Class.class, "klass")
-            .addStatement("Class entityClass = this.findFluentEntityClass(klass)")
-            .addStatement("return QueryRef.$L(entityClass)", M_EMPTY_UPDATER)
-            .build();
-    }
-
     private TypeSpec class_field() {
-        return TypeSpec.classBuilder("Field")
+        TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Field")
+            .addJavadoc("所有Entity FieldMapping引用")
+            .addModifiers(PUBLIC_STATIC);
+        for (FluentEntity fluent : FluentList.getFluents()) {
+            spec.addType(this.type_mapping(fluent));
+        }
+        return spec.build();
+    }
+
+    private TypeSpec type_mapping(FluentEntity fluent) {
+        return TypeSpec.classBuilder(fluent.getNoSuffix())
             .addModifiers(PUBLIC_STATIC_FINAL)
-            .addSuperinterface(FieldRefFiler.getClassName())
+            .superclass(fluent.entityMapping())
             .build();
     }
 
@@ -172,10 +123,22 @@ public class RefFiler extends AbstractFile {
             .build();
     }
 
-    private TypeSpec class_setter() {
-        return TypeSpec.classBuilder("Forms")
-            .addModifiers(PUBLIC_STATIC_FINAL)
-            .addSuperinterface(FormRefFiler.getClassName())
+    private TypeSpec type_form() {
+        TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Form")
+            .addModifiers(PUBLIC_STATIC)
+            .addJavadoc("所有Entity Form Setter引用");
+        for (FluentEntity fluent : FluentList.getFluents()) {
+            spec.addField(this.f_formSetter(fluent));
+        }
+        return spec.build();
+    }
+
+    private FieldSpec f_formSetter(FluentEntity fluent) {
+        TypeName cn = fluent.formSetter();
+        return FieldSpec.builder(parameterizedType(ClassName.get(FormFunction.class), fluent.entity(), cn)
+                , fluent.lowerNoSuffix(), PUBLIC_STATIC_FINAL)
+            .addJavadoc("$T", fluent.wrapperHelper())
+            .initializer("(obj, form) -> $T.by(obj, form)", cn)
             .build();
     }
 
