@@ -438,7 +438,7 @@ public class CommonSqlKit implements SqlKit {
      */
     static String dynamic(IEntity entity, String tableName) {
         if (entity instanceof IRichEntity) {
-            String dynamic = entity.findTableBelongTo();
+            String dynamic = entity.tableSupplier();
             return isBlank(dynamic) ? tableName : dynamic;
         } else {
             return tableName;

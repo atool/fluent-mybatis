@@ -95,7 +95,7 @@ public abstract class RichEntity implements IEntity, IRichEntity {
     }
 
     @Override
-    public String findTableBelongTo() {
+    public String tableSupplier() {
         return this.supplier == null ? null : this.supplier.get(this);
     }
 }

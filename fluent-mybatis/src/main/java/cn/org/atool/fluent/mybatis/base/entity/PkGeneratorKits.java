@@ -2,9 +2,9 @@ package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.refs.RefKit;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -23,8 +23,8 @@ public class PkGeneratorKits {
         if (entity == null || entity.findPk() != null) {
             return;
         }
-        Consumer consumer = entity.pkSetter();
-        if (consumer == null) {
+        FieldMapping primary = RefKit.byEntity(entity.entityClass()).primaryMapping();
+        if (primary == null) {
             return;
         }
         Class klass = entity.entityClass();
@@ -34,7 +34,7 @@ public class PkGeneratorKits {
         }
         Supplier pkSupplier = defaults.defaultSetter().pkGenerator(entity);
         if (pkSupplier != null) {
-            consumer.accept(pkSupplier.get());
+            primary.setter.set(entity, pkSupplier.get());
         }
     }
 }

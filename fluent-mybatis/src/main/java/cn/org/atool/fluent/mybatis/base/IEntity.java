@@ -7,14 +7,13 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * IEntity 实体基类
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public interface IEntity extends Serializable {
     /**
      * 返回实体主键
@@ -24,16 +23,6 @@ public interface IEntity extends Serializable {
     default Serializable findPk() {
         FieldMapping f = RefKit.byEntity(this.entityClass()).primaryMapping();
         return f == null ? null : (Serializable) f.getter.get(this);
-    }
-
-    /**
-     * 返回主键设置方法
-     *
-     * @return 主键设置方法
-     */
-    default Consumer pkSetter() {
-        FieldMapping f = RefKit.byEntity(this.entityClass()).primaryMapping();
-        return f == null ? null : o -> f.setter.set(this, o);
     }
 
     /**
@@ -119,7 +108,7 @@ public interface IEntity extends Serializable {
      *
      * @return 动态归属表
      */
-    default String findTableBelongTo() {
+    default String tableSupplier() {
         return null;
     }
 }
