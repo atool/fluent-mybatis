@@ -13,6 +13,8 @@ public interface FluentConst {
 
     String Suffix_EntityMapping = "Mapping";
 
+    String Suffix_Ref = "Ref";
+
     String Suffix_mapping = "mapping";
 
     String Suffix_MAPPING = "MAPPING";

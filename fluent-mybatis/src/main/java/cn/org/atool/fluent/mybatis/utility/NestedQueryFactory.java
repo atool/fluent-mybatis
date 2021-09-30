@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.utility;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 
 import static cn.org.atool.fluent.mybatis.base.free.FreeKit.newFreeQuery;
@@ -27,7 +27,7 @@ public class NestedQueryFactory {
             FreeQuery query = newFreeQuery(wrapper);
             return (Q) query;
         }
-        IMapping mapping = IRef.instance().byEntity(wrapper.getEntityClass());
+        IMapping mapping = RefKit.byEntity(wrapper.getEntityClass());
         if (mapping == null) {
             throw new FluentMybatisException("create nested Query[" + wrapper.getClass().getName() + "] error.");
         }

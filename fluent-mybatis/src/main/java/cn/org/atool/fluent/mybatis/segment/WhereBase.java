@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
@@ -87,7 +87,7 @@ public abstract class WhereBase<
      * @return WHERE
      */
     public WHERE defaults() {
-        BaseDefaults defaults = IRef.instance().defaults(this.wrapper.entityClass);
+        BaseDefaults defaults = RefKit.defaults(this.wrapper.entityClass);
         if (defaults == null) {
             return this.and;
         }

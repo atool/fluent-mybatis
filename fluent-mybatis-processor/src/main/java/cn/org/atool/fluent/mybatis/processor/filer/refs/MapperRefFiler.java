@@ -75,7 +75,7 @@ public class MapperRefFiler extends AbstractFile {
             .addParameter(FM_MapperFactory, "factory");
 
         for (FluentEntity fluent : FluentList.getFluents()) {
-            spec.addStatement("this.$LMapper = factory.getBean($T.class)",
+            spec.addStatement("this.$LMapper = factory.getMapper($T.class)",
                 fluent.lowerNoSuffix(), fluent.mapper());
         }
         for (FluentEntity fluent : FluentList.getFluents()) {

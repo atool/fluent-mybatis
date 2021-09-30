@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.refs.IRef;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 
@@ -42,6 +42,6 @@ public class MappingKits {
      */
     public static <E extends IEntity> String toColumn(Class<E> klass, IGetter<E> func) {
         String field = LambdaUtil.resolve(func);
-        return IRef.instance().columnOfField(klass, field);
+        return IRef.columnOfField(klass, field);
     }
 }

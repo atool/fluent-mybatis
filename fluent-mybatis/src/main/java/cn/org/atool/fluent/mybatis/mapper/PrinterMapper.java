@@ -2,13 +2,13 @@ package cn.org.atool.fluent.mybatis.mapper;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.builder.annotation.ProviderContext;
@@ -254,7 +254,7 @@ public class PrinterMapper implements IWrapperMapper {
         if (local.get() == null) {
             return mapper;
         } else {
-            local.get().mapping(IRef.instance().byEntity(eClass));
+            local.get().mapping(RefKit.byEntity(eClass));
             return local.get();
         }
     }

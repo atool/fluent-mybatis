@@ -2,7 +2,10 @@ package cn.org.atool.fluent.mybatis.processor.entity;
 
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.*;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.EntityRelationFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.MapperRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.RefFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
 import cn.org.atool.generator.javafile.AbstractFile;
 import cn.org.atool.generator.util.GeneratorHelper;
@@ -98,8 +101,7 @@ public class FluentList {
             new EntityRelationFiler(),
             new QueryRefFiler(),
             new MapperRefFiler(),
-            new RefFiler(),
-            new AllRefFile()
+            new RefFiler()
         );
     }
 

@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.functions.IGetter;
+import cn.org.atool.fluent.mybatis.functions.RelateFunction;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
@@ -23,7 +24,12 @@ public class LambdaUtil {
         return validateMethod(method);
     }
 
-    private static <E> String lambdaName(IGetter<E> lambda) {
+    public static String resolve(RelateFunction method) {
+        return lambdaName(method);
+    }
+
+    @SuppressWarnings("all")
+    private static String lambdaName(Object lambda) {
         try {
             String m_WRITE_REPLACE = "writeReplace";
             Method writeReplace = lambda.getClass().getDeclaredMethod(m_WRITE_REPLACE);
@@ -47,5 +53,4 @@ public class LambdaUtil {
             throw new RuntimeException("not a getter method, please use lambda as 'entity::getXyz'");
         }
     }
-
 }

@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.entity;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.refs.Ref;
+import cn.org.atool.fluent.mybatis.refs.IRef;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
@@ -57,7 +57,7 @@ public class EntityTest extends Test4J {
         map.put("age", 3);
         map.put("version", "1.3.0");
 
-        StudentEntity student = IRef.entityKit(StudentEntity.class).toEntity(map);
+        StudentEntity student = RefKit.entityKit(StudentEntity.class).toEntity(map);
         want.object(student).eqDataMap(ATM.dataMap.student.entity()
             .userName.values("fluent mybatis")
             .age.values(3)
@@ -67,22 +67,22 @@ public class EntityTest extends Test4J {
     @Test
     void valueByField() {
         StudentEntity entity = new StudentEntity().setUserName("test1").setAddress("add_123");
-        String userName = Ref.entityKit(StudentEntity.class).valueByField(entity, "userName");
+        String userName = RefKit.entityKit(StudentEntity.class).valueByField(entity, "userName");
         want.string(userName).eq("test1");
-        String address = Ref.entityKit(StudentEntity.class).valueByField(entity, "address");
+        String address = IRef.valueByField(entity, "address");
         want.string(address).eq("add_123");
-        String age1 = Ref.entityKit(StudentEntity.class).valueByField(entity, "age1");
+        String age1 = IRef.valueByField(entity, "age1");
         want.string(age1).isNull();
     }
 
     @Test
     void valueByColumn() {
         StudentEntity entity = new StudentEntity().setUserName("test1").setAddress("add_123");
-        String userName = Ref.entityKit(StudentEntity.class).valueByColumn(entity, "user_name");
+        String userName = IRef.valueByColumn(entity, "user_name");
         want.string(userName).eq("test1");
-        String address = Ref.entityKit(StudentEntity.class).valueByColumn(entity, "address");
+        String address = IRef.valueByColumn(entity, "address");
         want.string(address).eq("add_123");
-        String age1 = Ref.entityKit(StudentEntity.class).valueByColumn(entity, "age1");
+        String age1 = IRef.valueByColumn(entity, "age1");
         want.string(age1).isNull();
     }
 }

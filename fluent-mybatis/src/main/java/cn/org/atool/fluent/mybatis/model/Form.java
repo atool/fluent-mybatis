@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.model;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 import cn.org.atool.fluent.mybatis.functions.FormFunction;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -49,7 +49,7 @@ public class Form implements Serializable {
     private int pageSize = 1;
 
     public <E extends IEntity> QueryExecutor<E> to(Class<E> entityClass) {
-        IRichMapper mapper = IRef.mapper(entityClass);
+        IRichMapper mapper = RefKit.mapper(entityClass);
         IQuery query = FormHelper.toQuery(entityClass, this);
         return new QueryExecutor(mapper, query);
     }

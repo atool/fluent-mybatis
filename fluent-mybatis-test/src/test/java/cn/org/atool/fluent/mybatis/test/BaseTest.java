@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.refs.IRef;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;

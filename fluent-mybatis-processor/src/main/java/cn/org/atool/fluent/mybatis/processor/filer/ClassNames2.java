@@ -4,13 +4,12 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.spring.MapperFactory;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.spring.IMapperFactory;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.WildcardTypeName;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,7 +27,7 @@ public interface ClassNames2 extends ClassNames {
 
     ClassName FM_IRichMapper = ClassName.get(IRichMapper.class);
 
-    ClassName FM_MapperFactory = ClassName.get(MapperFactory.class);
+    ClassName FM_MapperFactory = ClassName.get(IMapperFactory.class);
 
     ClassName FN_FieldMapping = ClassName.get(FieldMapping.class);
 
@@ -43,8 +42,6 @@ public interface ClassNames2 extends ClassNames {
     ParameterizedTypeName CN_Supplier_Str = ParameterizedTypeName.get(Supplier.class, String.class);
 
     ParameterizedTypeName CN_Consumer_Mapper = ParameterizedTypeName.get(Consumer.class, IWrapperMapper.class);
-
-    ParameterizedTypeName CN_Class_IEntity = ParameterizedTypeName.get(CN_Class, WildcardTypeName.subtypeOf(FM_IEntity));
 
     ParameterizedTypeName CN_List_FMapping = ParameterizedTypeName.get(List.class, FieldMapping.class);
 

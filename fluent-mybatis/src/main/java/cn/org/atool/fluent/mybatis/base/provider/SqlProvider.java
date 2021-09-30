@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.base.provider;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -11,6 +10,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 
@@ -230,6 +230,6 @@ public class SqlProvider {
     private static AMapping mapping(ProviderContext context) {
         isMapperFactoryInitialized();
         Class mapperClass = context.getMapperType();
-        return (AMapping) IRef.instance().byMapper(mapperClass);
+        return (AMapping) RefKit.byMapper(mapperClass);
     }
 }

@@ -2,11 +2,11 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.Getter;
@@ -67,7 +67,7 @@ public class BatchCrudImpl implements BatchCrud {
     }
 
     private AMapping findMapping(Class<? extends IEntity> klass) {
-        return (AMapping) IRef.instance().byEntity(klass);
+        return (AMapping) RefKit.byEntity(klass);
     }
 
     private static final String ENTITY_LIST_KEY = "list";

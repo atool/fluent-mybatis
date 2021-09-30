@@ -1,15 +1,15 @@
 package org.apache.ibatis.session;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
@@ -29,7 +29,7 @@ public class ConfigurationKit {
 
     public ConfigurationKit(Configuration configuration) {
         this.configuration = configuration;
-        KeyMap<AMapping> mappers = IRef.instance().mapperMapping();
+        KeyMap<AMapping> mappers = RefKit.mapperMapping();
         for (Map.Entry<String, AMapping> entry : mappers.entrySet()) {
             inserts.put(entry.getKey() + "." + M_Insert, entry.getValue());
             batchInserts.put(entry.getKey() + "." + M_InsertBatch, entry.getValue());
@@ -44,14 +44,10 @@ public class ConfigurationKit {
      */
     public ConfigurationKit inserts() {
         for (Map.Entry<String, IMapping> entry : inserts.entrySet()) {
-            IMapping mapping = entry.getValue();
-            FieldMapping primary = mapping.primaryMapping();
-            if (primary == null) {
-                continue;
+            IMapping m = entry.getValue();
+            if (m.primaryMapping() != null) {
+                this.replaced(entry.getKey(), m, StatementBuilder::insertStatement);
             }
-            MappedStatement statement = this.configuration.getMappedStatement(entry.getKey());
-            MappedStatement replaced = new StatementBuilder(mapping, statement).insertStatement();
-            this.replaced(replaced);
         }
         this.inserts.clear();
         return this;
@@ -59,14 +55,10 @@ public class ConfigurationKit {
 
     public ConfigurationKit batchInserts() {
         for (Map.Entry<String, IMapping> entry : batchInserts.entrySet()) {
-            IMapping mapping = entry.getValue();
-            FieldMapping primary = mapping.primaryMapping();
-            if (primary == null) {
-                continue;
+            IMapping m = entry.getValue();
+            if (m.primaryMapping() != null) {
+                this.replaced(entry.getKey(), m, StatementBuilder::insertBatchStatement);
             }
-            MappedStatement statement = this.configuration.getMappedStatement(entry.getKey());
-            MappedStatement replaced = new StatementBuilder(mapping, statement).insertBatchStatement();
-            this.replaced(replaced);
         }
         this.batchInserts.clear();
         return this;
@@ -74,18 +66,19 @@ public class ConfigurationKit {
 
     public ConfigurationKit listEntity() {
         for (Map.Entry<String, IMapping> entry : listEntities.entrySet()) {
-            IMapping mapping = entry.getValue();
-
-            MappedStatement statement = this.configuration.getMappedStatement(entry.getKey());
-            MappedStatement replaced = new StatementBuilder(mapping, statement).listEntityStatement();
-            this.replaced(replaced);
+            IMapping m = entry.getValue();
+            this.replaced(entry.getKey(), m, StatementBuilder::listEntityStatement);
         }
         this.listEntities.clear();
         return this;
     }
 
-    private void replaced(MappedStatement statement) {
-        configuration.mappedStatements.remove(statement.getId());
-        configuration.addMappedStatement(statement);
+    private void replaced(String statementId, IMapping mapping, Function<StatementBuilder, MappedStatement> replaced) {
+        MappedStatement existed = this.configuration.getMappedStatement(statementId, false);
+        if (existed != null) {
+            MappedStatement newer = replaced.apply(new StatementBuilder(mapping, existed));
+            configuration.mappedStatements.remove(statementId);
+            configuration.addMappedStatement(newer);
+        }
     }
 }

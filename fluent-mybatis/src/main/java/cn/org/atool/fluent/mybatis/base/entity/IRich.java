@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.refs.IRef;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 
 /**

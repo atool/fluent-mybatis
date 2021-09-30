@@ -2,13 +2,13 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
@@ -55,7 +55,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         if (origQuery instanceof FreeQuery) {
             onQuery = newFreeQuery(origQuery);
         } else {
-            onQuery = IRef.instance().byEntity(origQuery.entityClass).emptyQuery();
+            onQuery = RefKit.byEntity(origQuery.entityClass).emptyQuery();
         }
         onQuery.tableAlias = origQuery.tableAlias;
         onQuery.sharedParameter(this.joinQuery);

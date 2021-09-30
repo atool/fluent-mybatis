@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
+import cn.org.atool.fluent.mybatis.refs.IRef;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import java.io.Serializable;
@@ -58,7 +60,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toEntityMap(boolean allowedNull) {
-        return IRef.entityKit(this.entityClass()).toEntityMap(this, allowedNull);
+        return RefKit.entityKit(this.entityClass()).toEntityMap(this, allowedNull);
     }
 
     /**
@@ -77,7 +79,7 @@ public interface IEntity extends Serializable {
      * @return map对象
      */
     default Map<String, Object> toColumnMap(boolean allowNull) {
-        return IRef.entityKit(this.entityClass()).toColumnMap(this, allowNull);
+        return RefKit.entityKit(this.entityClass()).toColumnMap(this, allowNull);
     }
 
     /**
@@ -87,7 +89,7 @@ public interface IEntity extends Serializable {
      * @return 实例对象
      */
     default <E extends IEntity> E copy() {
-        return IRef.entityKit(this.entityClass()).copy(this);
+        return RefKit.entityKit(this.entityClass()).copy(this);
     }
 
     /**

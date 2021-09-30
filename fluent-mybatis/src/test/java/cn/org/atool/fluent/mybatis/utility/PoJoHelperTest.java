@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
-import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.refs.IRef;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;

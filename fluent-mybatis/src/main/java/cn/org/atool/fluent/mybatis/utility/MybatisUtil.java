@@ -613,14 +613,14 @@ public class MybatisUtil {
     }
 
     public static void isMapperFactoryInitialized() {
-        if (MapperFactory.isInited() || PrinterMapper.isPrint()) {
+        if (MapperFactory.isInitialized() || PrinterMapper.isPrint()) {
             return;
         }
         throw new FluentMybatisException("Please add MapperFactory to spring container management: \n\n" +
             "    @Bean\n" +
             "    public MapperFactory mapperFactory() {\n" +
             "        return new MapperFactory();\n" +
-            "    }");
+            "    }\n\n");
     }
 
     /**

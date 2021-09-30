@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRef;
+import cn.org.atool.fluent.mybatis.refs.IRef;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -42,7 +42,7 @@ public class FormHelper {
         IQuery query = IRef.query(entityClass);
         WhereBase where = query.where();
         for (FormItem item : form.getItems()) {
-            String column = IRef.instance().columnOfField(entityClass, item.getKey());
+            String column = IRef.columnOfField(entityClass, item.getKey());
             if (isBlank(column)) {
                 throw new RuntimeException("the field[" + item.getKey() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
             }
@@ -67,7 +67,7 @@ public class FormHelper {
             int from = form.getPageSize() * (form.getCurrPage() - 1);
             query.limit(from, form.getPageSize());
         } else if (form.getNextId() != null) {
-            String column = IRef.instance().primaryColumn(entityClass);
+            String column = IRef.primaryColumn(entityClass);
             where.and.apply(column, SqlOp.GE, form.getNextId());
             query.limit(form.getPageSize());
         }
