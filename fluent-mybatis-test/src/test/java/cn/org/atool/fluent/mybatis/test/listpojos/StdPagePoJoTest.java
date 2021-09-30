@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 
 public class StdPagePoJoTest extends BaseTest {
@@ -31,6 +32,14 @@ public class StdPagePoJoTest extends BaseTest {
             .studentId.values(10)
             .env.values("test_env")
             .cleanAndInsert();
+    }
+
+    @DisplayName("验证toPoJo时, 驼峰转换处理")
+    @Test
+    void listPoJo() {
+        List<StudentEntity> student = new StudentQuery().select.userName("userName").end()
+            .to().listPoJo(StudentEntity.class);
+        want.list(student).eqByProperties("userName", new String[]{"user1"});
     }
 
     @DisplayName("join查询, 自动设置别名")

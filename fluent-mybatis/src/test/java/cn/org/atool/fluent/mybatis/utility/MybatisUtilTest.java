@@ -30,6 +30,9 @@ class MybatisUtilTest extends Test4J {
             .data("__a_bc_", "aBc")
             .data("__a_b_", "aB")
             .data("_a", "a")
+            .data("userName", "userName")
+            .data("USER_NAME", "userName")
+            .data("user_name", "userName")
             ;
     }
 

@@ -264,6 +264,7 @@ public class MybatisUtil {
         if (If.isBlank(input)) {
             return "";
         }
+        boolean isAllUpper = MybatisUtil.isAllUpper(input);
         boolean first = true;
         boolean underline = false;
         StringBuilder buff = new StringBuilder(input.length());
@@ -280,15 +281,31 @@ public class MybatisUtil {
             } else if (underline) {
                 /* 下划线转驼峰 **/
                 buff.append(Character.toUpperCase(ch));
-            } else {
+            } else if (isAllUpper) {
                 /* 默认将其他位置的字母转为小写 **/
-                // buff.append(ch);
                 buff.append(Character.toLowerCase(ch));
+            } else {
+                buff.append(ch);
             }
             first = false;
             underline = false;
         }
         return buff.toString();
+    }
+
+    /**
+     * 判断是否所有字母都大写
+     *
+     * @param text
+     * @return true: 无小写字母
+     */
+    private static boolean isAllUpper(String text) {
+        for (char ch : text.toCharArray()) {
+            if (ch >= 'a' && ch <= 'z') {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
