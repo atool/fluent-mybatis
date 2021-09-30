@@ -3,12 +3,8 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.ICustomizedMapper;
-import cn.org.atool.fluent.mybatis.functions.TableSupplier;
-import java.io.Serializable;
-import java.util.function.Consumer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,7 +15,7 @@ import org.apache.ibatis.type.BlobTypeHandler;
  *
  * @author Powered By Fluent Mybatis
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Data
 @Accessors(
     chain = true
@@ -66,27 +62,7 @@ public class BlobValuePoJo extends RichEntity {
   private String origin;
 
   @Override
-  public Serializable findPk() {
-    return this.id;
-  }
-
-  @Override
-  public Consumer<Long> pkSetter() {
-    return this::setId;
-  }
-
-  @Override
-  public final Class<? extends IEntity> entityClass() {
+  public final Class entityClass() {
     return BlobValuePoJo.class;
-  }
-
-  @Override
-  public final BlobValuePoJo changeTableBelongTo(TableSupplier supplier) {
-    return super.changeTableBelongTo(supplier);
-  }
-
-  @Override
-  public final BlobValuePoJo changeTableBelongTo(String table) {
-    return super.changeTableBelongTo(table);
   }
 }

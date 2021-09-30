@@ -38,7 +38,7 @@ public abstract class BaseTest extends Test4J {
 class TestSpringConfig {
     static {
         Ref.changeDbType(DbType.MYSQL);
-        Ref.setTableSupplier(t -> "fluent_mybatis." + t, StudentEntity.class);
+        Ref.tableSupplier(t -> "fluent_mybatis." + t, StudentEntity.class);
 //        Ref.Query.student.setTableSupplier(t -> "fluent_mybatis." + t);
         DbType.ORACLE.setEscapeExpress("[?]"); // 只是示例, ORACLE的转义方式不是[?], SQL Server才是
         DbType.ORACLE.setPagedFormat(ORACLE_LIMIT.getFormat() + "/**测试而已**/");

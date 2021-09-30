@@ -4,24 +4,21 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
-import cn.org.atool.fluent.mybatis.functions.TableSupplier;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.function.Consumer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * HomeAddressEntity: 数据映射实体定义
  *
  * @author Powered By Fluent Mybatis
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Data
 @Accessors(
     chain = true
@@ -116,27 +113,7 @@ public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddres
   private Long tenant;
 
   @Override
-  public Serializable findPk() {
-    return this.id;
-  }
-
-  @Override
-  public Consumer<Long> pkSetter() {
-    return this::setId;
-  }
-
-  @Override
-  public final Class<? extends IEntity> entityClass() {
+  public final Class entityClass() {
     return HomeAddressEntity.class;
-  }
-
-  @Override
-  public final HomeAddressEntity changeTableBelongTo(TableSupplier supplier) {
-    return super.changeTableBelongTo(supplier);
-  }
-
-  @Override
-  public final HomeAddressEntity changeTableBelongTo(String table) {
-    return super.changeTableBelongTo(table);
   }
 }

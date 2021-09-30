@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.db.oracle11.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.IdcardEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -9,8 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Data
 @Accessors(
     chain = true
@@ -57,12 +55,7 @@ public class OracleEntity extends RichEntity {
     private Long version;
 
     @Override
-    public Serializable findPk() {
-        return this.id;
-    }
-
-    @Override
-    public final Class<? extends IEntity> entityClass() {
+    public final Class entityClass() {
         return IdcardEntity.class;
     }
 }

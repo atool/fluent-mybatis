@@ -83,13 +83,13 @@ public abstract class RichEntity implements IEntity, IRichEntity {
     private TableSupplier supplier;
 
     @Override
-    public <E extends IEntity> E changeTableBelongTo(TableSupplier supplier) {
+    public <E extends IEntity> E tableSupplier(TableSupplier supplier) {
         this.supplier = supplier;
         return (E) this;
     }
 
     @Override
-    public <E extends IEntity> E changeTableBelongTo(String table) {
+    public <E extends IEntity> E tableSupplier(String table) {
         this.supplier = e -> table;
         return (E) this;
     }

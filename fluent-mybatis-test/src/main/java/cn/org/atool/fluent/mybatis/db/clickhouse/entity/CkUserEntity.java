@@ -2,9 +2,7 @@ package cn.org.atool.fluent.mybatis.db.clickhouse.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.typehandler.ClickArrayHandler;
 import lombok.Data;
@@ -19,7 +17,7 @@ import java.util.Date;
  *
  * @author Powered By Fluent Mybatis
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Data
 @Accessors(
     chain = true
@@ -77,17 +75,7 @@ public class CkUserEntity extends RichEntity {
     private Integer state;
 
     @Override
-    public final Class<? extends IEntity> entityClass() {
+    public final Class entityClass() {
         return CkUserEntity.class;
-    }
-
-    @Override
-    public final CkUserEntity changeTableBelongTo(TableSupplier supplier) {
-        return super.changeTableBelongTo(supplier);
-    }
-
-    @Override
-    public final CkUserEntity changeTableBelongTo(String table) {
-        return super.changeTableBelongTo(table);
     }
 }

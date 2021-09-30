@@ -115,7 +115,7 @@ public abstract class IRef {
      * @param tableSupplier 表的命名策略
      * @param eClasses      如果为空, 变更应用中所有的实体类对应数据库类型; 如果不为空, 变更指定类
      */
-    public static void setTableSupplier(TableDynamic tableSupplier, Class<? extends IEntity>... eClasses) {
+    public static void tableSupplier(TableDynamic tableSupplier, Class<? extends IEntity>... eClasses) {
         Set<String> list = RefKit.getEntityClass(eClasses);
         for (String klass : list) {
             instance().byEntity(klass).setTableSupplier(tableSupplier);

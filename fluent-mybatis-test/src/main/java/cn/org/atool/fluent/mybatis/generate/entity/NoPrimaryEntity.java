@@ -2,9 +2,7 @@ package cn.org.atool.fluent.mybatis.generate.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,7 +12,7 @@ import lombok.experimental.Accessors;
  *
  * @author Powered By Fluent Mybatis
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Data
 @Accessors(
     chain = true
@@ -46,17 +44,7 @@ public class NoPrimaryEntity extends RichEntity {
   private String alias;
 
   @Override
-  public final Class<? extends IEntity> entityClass() {
+  public final Class entityClass() {
     return NoPrimaryEntity.class;
-  }
-
-  @Override
-  public final NoPrimaryEntity changeTableBelongTo(TableSupplier supplier) {
-    return super.changeTableBelongTo(supplier);
-  }
-
-  @Override
-  public final NoPrimaryEntity changeTableBelongTo(String table) {
-    return super.changeTableBelongTo(table);
   }
 }

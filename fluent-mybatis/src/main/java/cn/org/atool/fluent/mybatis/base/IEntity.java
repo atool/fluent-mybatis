@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -21,7 +22,8 @@ public interface IEntity extends Serializable {
      * @return 主键
      */
     default Serializable findPk() {
-        return null;
+        FieldMapping f = RefKit.byEntity(this.entityClass()).primaryMapping();
+        return f == null ? null : (Serializable) f.getter.get(this);
     }
 
     /**
@@ -30,7 +32,8 @@ public interface IEntity extends Serializable {
      * @return 主键设置方法
      */
     default Consumer pkSetter() {
-        return null;
+        FieldMapping f = RefKit.byEntity(this.entityClass()).primaryMapping();
+        return f == null ? null : o -> f.setter.set(this, o);
     }
 
     /**
@@ -97,7 +100,7 @@ public interface IEntity extends Serializable {
      *
      * @param supplier 动态归属表
      */
-    default <E extends IEntity> E changeTableBelongTo(TableSupplier supplier) {
+    default <E extends IEntity> E tableSupplier(TableSupplier supplier) {
         return (E) this;
     }
 
@@ -107,7 +110,7 @@ public interface IEntity extends Serializable {
      *
      * @param supplier 动态归属表
      */
-    default <E extends IEntity> E changeTableBelongTo(String supplier) {
+    default <E extends IEntity> E tableSupplier(String supplier) {
         return (E) this;
     }
 
