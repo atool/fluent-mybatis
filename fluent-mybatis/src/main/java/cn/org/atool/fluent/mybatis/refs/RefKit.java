@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.refs;
 
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
@@ -14,27 +15,30 @@ import cn.org.atool.fluent.mybatis.spring.IMapperFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.refs.ARef.instance;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * 框架内部使用方法入口
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "unused"})
-public interface RefKit extends IRef {
+@SuppressWarnings({"unchecked", "unused", "rawtypes"})
+public final class RefKit extends IRef {
     /**
      * 初始化 entity mapper 和 关联方法
      */
-    static void initialize(IMapperFactory factory) {
+    public static void initialize(IMapperFactory factory) {
         ARef.instance().initialize(factory);
     }
 
-    static IEntityKit entityKit(Class clazz) {
-        return (IEntityKit) instance().byEntity(clazz.getName());
+    public static IEntityKit entityKit(Class clazz) {
+        return instance().byEntity(clazz.getName());
     }
 
     /**
@@ -43,7 +47,7 @@ public interface RefKit extends IRef {
      * @param clazz Entity类类型
      * @return IMapping
      */
-    static IMapping byEntity(Class clazz) {
+    public static IMapping byEntity(Class clazz) {
         return instance().byEntity(clazz.getName());
     }
 
@@ -53,7 +57,7 @@ public interface RefKit extends IRef {
      * @param clazz Mapper类类型
      * @return IMapping
      */
-    static IMapping byMapper(Class clazz) {
+    public static IMapping byMapper(Class clazz) {
         return instance().byMapper(clazz.getName());
     }
 
@@ -63,7 +67,7 @@ public interface RefKit extends IRef {
      * @param clazz IEntity类型
      * @return IDefault
      */
-    static BaseDefaults defaults(Class clazz) {
+    public static BaseDefaults defaults(Class clazz) {
         return (BaseDefaults) byEntity(clazz);
     }
 
@@ -72,7 +76,7 @@ public interface RefKit extends IRef {
      *
      * @return ClassMap
      */
-    static KeyMap<AMapping> mapperMapping() {
+    public static KeyMap<AMapping> mapperMapping() {
         return ARef.instance().mapperMapping();
     }
 
@@ -86,7 +90,7 @@ public interface RefKit extends IRef {
      * @param <T>        ignore
      * @return ignore
      */
-    static <T> T invoke(Class eClass, String methodName, Object[] args) {
+    public static <T> T invoke(Class eClass, String methodName, Object[] args) {
         IEntity entity = (IEntity) args[0];
         String methodOfEntity = methodNameOfEntity(methodName, eClass);
         switch (methodName) {
@@ -126,10 +130,18 @@ public interface RefKit extends IRef {
      * @param eClass 实体类
      * @return ignore
      */
-    static IRichMapper mapper(Class<? extends IEntity> eClass) {
+    public static IRichMapper mapper(Class<? extends IEntity> eClass) {
         eClass = entityClass(eClass);
         IWrapperMapper mapper = (IWrapperMapper) instance().mapper(eClass.getName());
         mapper = PrinterMapper.get(mapper, eClass);
         return mapper;
+    }
+
+    public static Set<String> getEntityClass(Class<? extends IEntity>[] eClasses) {
+        if (If.isEmpty(eClasses)) {
+            return instance().allEntityClass();
+        } else {
+            return Stream.of(eClasses).map(Class::getName).collect(toSet());
+        }
     }
 }

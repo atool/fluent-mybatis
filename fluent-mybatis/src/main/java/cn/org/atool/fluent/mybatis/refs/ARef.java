@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.refs;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.functions.RelateFunction;
@@ -21,7 +20,7 @@ import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Ref_Package;
  * @author darui.wu
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
-public abstract class ARef {
+public abstract class ARef extends IRef {
 
     /**
      * 单例变量, 需要被Spring容器初始化时赋值
@@ -69,9 +68,9 @@ public abstract class ARef {
      */
     protected abstract KeyMap<AMapping> mapperMapping();
 
-    protected abstract IMapping byEntity(String clazz);
+    protected abstract AMapping byEntity(String clazz);
 
-    protected abstract IMapping byMapper(String clazz);
+    protected abstract AMapping byMapper(String clazz);
 
     /**
      * 所有Entity Class

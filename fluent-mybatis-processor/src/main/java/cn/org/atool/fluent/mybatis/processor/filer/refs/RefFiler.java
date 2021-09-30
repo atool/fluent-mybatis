@@ -1,13 +1,12 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.functions.FormFunction;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.refs.ARef;
-import cn.org.atool.fluent.mybatis.refs.IRef;
 import cn.org.atool.fluent.mybatis.spring.IMapperFactory;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
@@ -49,7 +48,6 @@ public class RefFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(ARef.class)
-            .addSuperinterface(IRef.class)
             .addModifiers(Modifier.FINAL)
             .addMethod(this.m_mapperMapping())
             .addMethod(this.m_getMapper())
@@ -63,7 +61,7 @@ public class RefFiler extends AbstractFile {
     }
 
     private MethodSpec m_mapping(String method) {
-        return protectMethod(method, IMapping.class)
+        return protectMethod(method, AMapping.class)
             .addParameter(String.class, "clazz")
             .addStatement("return $T.$L(clazz)", QueryRefFiler.getClassName(), method)
             .build();
