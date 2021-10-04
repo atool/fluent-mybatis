@@ -22,7 +22,7 @@
         <fluent-assert.version>1.0.5</fluent-assert.version>
         <fluent-mock.version>1.1.4</fluent-mock.version>
         <fluent-dbtest.version>1.0.8</fluent-dbtest.version>
-        <test4j-junit5.version>2.7.9</test4j-junit5.version>
+        <test4j-junit5.version>2.7.10</test4j-junit5.version>
     </properties>
     <modules>
         <module>fluent-mybatis</module>

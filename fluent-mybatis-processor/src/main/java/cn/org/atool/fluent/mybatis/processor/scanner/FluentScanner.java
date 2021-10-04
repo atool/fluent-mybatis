@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 
@@ -110,7 +111,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
      * @return ignore
      */
     private CommonField parseCommonField(String fieldName, VariableElement var) {
-        CommonField field = new CommonField(fieldName, ClassName.get(var.asType()));
+        CommonField field = new CommonField(fieldName, getJavaType(var));
         TableField tableField = var.getAnnotation(TableField.class);
         if (tableField == null) {
             return field;
@@ -126,6 +127,15 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         return field;
     }
 
+    private TypeName getJavaType(VariableElement var) {
+        TypeName type = ClassName.get(var.asType());
+        if (type instanceof ParameterizedTypeName) {
+            return ((ParameterizedTypeName) type).rawType;
+        } else {
+            return type;
+        }
+    }
+
     /**
      * 解析主键主机信息
      *
@@ -135,7 +145,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
      * @return ignore
      */
     private PrimaryField parsePrimaryField(String fieldName, VariableElement var, TableId tableId) {
-        PrimaryField field = new PrimaryField(fieldName, ClassName.get(var.asType()));
+        PrimaryField field = new PrimaryField(fieldName, getJavaType(var));
         field.setColumn(tableId.value());
         field.setAutoIncrease(tableId.auto());
         field.setSeqIsBeforeOrder(tableId.before());

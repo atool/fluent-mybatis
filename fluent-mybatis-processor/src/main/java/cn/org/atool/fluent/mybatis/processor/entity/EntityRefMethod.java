@@ -23,7 +23,7 @@ import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 @Getter
 @ToString
 @Accessors(chain = true)
-public class EntityRefMethod extends FieldOrMethod<EntityRefMethod> {
+public class EntityRefMethod extends FieldOrMethod {
     private final Map<String, String> mapping = new HashMap<>();
 
     public EntityRefMethod(String property, TypeName javaType) {

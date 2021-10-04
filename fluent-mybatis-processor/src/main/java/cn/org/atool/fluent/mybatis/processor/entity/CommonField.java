@@ -24,7 +24,7 @@ import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 @Setter
 @ToString
 @Accessors(chain = true)
-public class CommonField extends FieldOrMethod<CommonField> {
+public class CommonField extends FieldOrMethod {
     /**
      * 字段对应的表字段
      * 对关联字段非必须
