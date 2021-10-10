@@ -19,7 +19,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class EnumTypeTest extends BaseTest {
     static EnumTypeTestMocks mocks = EnumTypeTestMocks.mocks;
-    final String[] aSql = {""};
 
     @Autowired
     MyEnumTypeMapper mapper;
@@ -63,7 +62,7 @@ public class EnumTypeTest extends BaseTest {
             .enumNum.values(1, 0, 2)
             .enumString.values("test1", "test3", "test2")
             .cleanAndInsert();
-
+        final String[] aSql = {""};
         mocks.SqlProvider.updateBy.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
@@ -107,6 +106,7 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void findById() {
+        final String[] aSql = {""};
         mocks.SqlProvider.listEntity.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
@@ -122,6 +122,7 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void deleteById() {
+        final String[] aSql = {""};
         mocks.SqlProvider.delete.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
@@ -140,6 +141,7 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void logicDeleteById() {
+        final String[] aSql = {""};
         mocks.SqlProvider.updateBy.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
@@ -156,6 +158,7 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void updateByEntityId() {
+        final String[] aSql = {""};
         mocks.SqlProvider.updateBy.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
@@ -172,12 +175,13 @@ public class EnumTypeTest extends BaseTest {
 
     @Test
     void deleteByIds() {
+        final String[] aSql = {""};
         mocks.SqlProvider.delete.restAnswer(f -> {
             String sql = f.proceed();
             aSql[0] = sql;
             return sql;
         });
-        mapper.deleteByIds(Arrays.asList(1L));
+        mapper.deleteByIds(list(1L));
         aSql[0] = aSql[0].replaceAll("\\.variable_\\d+_\\d+,", ".var,");
         want.string(aSql[0]).eq("" +
                 "DELETE FROM `my_enum_type` " +

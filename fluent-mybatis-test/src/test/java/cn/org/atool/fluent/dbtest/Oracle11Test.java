@@ -11,9 +11,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
-import org.test4j.tools.Kits;
 
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({})
 @Disabled
 class Oracle11Test extends BaseTest {
     @Autowired
@@ -57,7 +56,7 @@ class Oracle11Test extends BaseTest {
     void test_batchInsert() {
         OracleUserEntity e1 = newEntity(null, "code1");
         OracleUserEntity e2 = newEntity(null, "code2");
-        userMapper.insertBatch(Kits.arr(e1, e2));
+        userMapper.insertBatch(list(e1, e2));
         db.sqlList().wantSql(0).eq("" +
                 "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
                 "SELECT TEST_USER_SEQ.nextval AS ID, TMP.* FROM ( " +
@@ -72,7 +71,7 @@ class Oracle11Test extends BaseTest {
         OracleUserEntity e1 = newEntity(21L, "code1");
         OracleUserEntity e2 = newEntity(22L, "code2");
 
-        userMapper.insertBatchWithPk(Kits.arr(e1, e2));
+        userMapper.insertBatchWithPk(list(e1, e2));
         db.sqlList().wantFirstSql().eq("" +
                 "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
                 "SELECT TMP.* " +
