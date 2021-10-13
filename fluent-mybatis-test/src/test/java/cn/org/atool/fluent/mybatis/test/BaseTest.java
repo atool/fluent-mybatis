@@ -54,11 +54,12 @@ class TestSpringConfig {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(newDataSource());
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        // 路径正则表达式方式加载
+        // 以下部分根据自己的实际情况配置
+        // 如果有mybatis原生文件, 请在这里加载
         bean.setMapperLocations(resolver.getResources("classpath*:mapper/*.xml"));
         /* bean.setMapperLocations(
-        /*      new ClassPathResource("mapper/MyXmlMapper.xml"),
-        /*      new ClassPathResource("mapper/BatchUpdate.xml")
+        /*      new ClassPathResource("mapper/xml1.xml"),
+        /*      new ClassPathResource("mapper/xml2.xml")
         /* );
         */
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
