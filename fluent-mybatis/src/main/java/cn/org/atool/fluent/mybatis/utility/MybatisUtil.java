@@ -296,7 +296,7 @@ public class MybatisUtil {
     /**
      * 判断是否所有字母都大写
      *
-     * @param text
+     * @param text 输入字符串
      * @return true: 无小写字母
      */
     private static boolean isAllUpper(String text) {
@@ -392,16 +392,12 @@ public class MybatisUtil {
         if (isBlank(input)) {
             return false;
         }
-
-        int len = input.length();
-        if (input.charAt(0) == '`' && input.charAt(len - 1) == '`') {
-            len--;
-        } else if (!isLetter(input.charAt(0))) {
+        input = input.toLowerCase();
+        if (!isLetter(input.charAt(0)) || "true".equals(input) || "false".equals(input)) {
             return false;
         }
-        for (int index = 1; index < len; index++) {
-            char ch = input.charAt(index);
-            if (!isLetterOrDigit(ch)) {
+        for (char ch : input.toCharArray()) {
+            if (!isVariantChar(ch)) {
                 return false;
             }
         }
@@ -415,7 +411,7 @@ public class MybatisUtil {
      * @return ignore
      */
     public static boolean isLetter(char ch) {
-        return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '-';
+        return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '$';
     }
 
     public static boolean isTableName(String table) {
@@ -423,7 +419,7 @@ public class MybatisUtil {
             return false;
         }
         for (char c : table.toCharArray()) {
-            if (c >= 128 || letterAndDigit[c] == 0) {
+            if (c >= 128 || Variant_Char[c] == 0) {
                 return false;
             }
         }
@@ -431,33 +427,33 @@ public class MybatisUtil {
     }
 
     /**
-     * a-z, A-Z, 0-9, -, _, $
+     * 是否变量字符: a-z, A-Z, 0-9, -, _, $
      *
      * @param ch char
      * @return ignore
      */
-    public static boolean isLetterOrDigit(char ch) {
-        return ch < 128 && letterAndDigit[ch] == 1;
+    public static boolean isVariantChar(char ch) {
+        return ch < 128 && Variant_Char[ch] == 1;
     }
 
-    private static final char[] letterAndDigit = new char[128];
+    private static final char[] Variant_Char = new char[128];
 
     static {
         for (int i = 0; i < 128; i++) {
-            letterAndDigit[i] = 0;
+            Variant_Char[i] = 0;
         }
         for (char c = 'A'; c <= 'Z'; c++) {
-            letterAndDigit[c] = 1;
+            Variant_Char[c] = 1;
         }
         for (char c = 'a'; c <= 'z'; c++) {
-            letterAndDigit[c] = 1;
+            Variant_Char[c] = 1;
         }
         for (char c = '0'; c <= '9'; c++) {
-            letterAndDigit[c] = 1;
+            Variant_Char[c] = 1;
         }
-        letterAndDigit['_'] = 1;
-        letterAndDigit['-'] = 1;
-        letterAndDigit['$'] = 1;
+        Variant_Char['_'] = 1;
+        Variant_Char['-'] = 1;
+        Variant_Char['$'] = 1;
     }
 
     public static boolean isSpace(char ch) {
@@ -493,7 +489,7 @@ public class MybatisUtil {
                 pos = 2;
             } else if ((pos == 2 || pos == 3) && isSpace(c)) {
                 pos = 3;
-            } else if (pos >= 3 && (isLetterOrDigit(c))) {
+            } else if (pos >= 3 && (isVariantChar(c))) {
                 pos = 4;
                 buff.append(c);
             } else if (pos == 4 && (isSpace(c) || c == ',')) {
@@ -511,7 +507,7 @@ public class MybatisUtil {
         int len = column.length();
         char begin = column.charAt(0);
         char last = column.charAt(len - 1);
-        if (!isLetterOrDigit(begin) && !isLetterOrDigit(last)) {
+        if (!isVariantChar(begin) && !isVariantChar(last)) {
             return column.substring(1, len - 1);
         } else {
             return column;

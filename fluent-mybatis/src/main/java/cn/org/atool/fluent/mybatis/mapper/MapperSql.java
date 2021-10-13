@@ -46,12 +46,9 @@ public class MapperSql {
     }
 
     public MapperSql COUNT(IMapping mapping, IFragment table, WrapperData data) {
-        String select = data.select().get(mapping);
-        // select 单字段和多字段判断
-        select = isBlank(select) || select.contains(",") ? ASTERISK : select.trim();
         this.add(
             data.hint(Before_All), SELECT.key(), data.hint(After_CrudKey),
-            "COUNT(" + select + ")",
+            COUNT_ASTERISK,
             FROM.key(),
             data.hint(Before_Table), table.get(mapping), data.hint(After_Table)
         );

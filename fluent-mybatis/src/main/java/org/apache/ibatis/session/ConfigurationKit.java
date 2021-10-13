@@ -74,8 +74,8 @@ public class ConfigurationKit {
     }
 
     private void replaced(String statementId, IMapping mapping, Function<StatementBuilder, MappedStatement> replaced) {
-        MappedStatement existed = this.configuration.getMappedStatement(statementId, false);
-        if (existed != null) {
+        if (this.configuration.hasStatement(statementId, false)) {
+            MappedStatement existed = this.configuration.getMappedStatement(statementId, false);
             MappedStatement newer = replaced.apply(new StatementBuilder(mapping, existed));
             configuration.mappedStatements.remove(statementId);
             configuration.addMappedStatement(newer);
