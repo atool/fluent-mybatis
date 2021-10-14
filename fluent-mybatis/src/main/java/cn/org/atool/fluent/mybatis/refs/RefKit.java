@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
@@ -40,7 +41,7 @@ public final class RefKit {
     /**
      * EntityClass 和 Mapper实例关联关系
      */
-    public static final KeyMap<IWrapperMapper> ENTITY_MAPPER = new KeyMap<>();
+    public static final KeyMap<IEntityMapper> ENTITY_MAPPER = new KeyMap<>();
     /**
      * MapperClass 和 AMapping关联关系
      */
@@ -49,7 +50,7 @@ public final class RefKit {
     /**
      * 返回对应实体类的映射关系
      *
-     * @param clazz Entity类类型
+     * @param entityClass Entity类类型
      * @return AMapping
      */
     public static AMapping byEntity(String entityClass) {
@@ -76,7 +77,7 @@ public final class RefKit {
     /**
      * 返回对应Mapper类的映射关系
      *
-     * @param clazz Mapper类类型
+     * @param mapperClass Mapper类类型
      * @return AMapping
      */
     public static AMapping byMapper(String mapperClass) {
@@ -96,11 +97,11 @@ public final class RefKit {
         return byMapper(clazz.getName());
     }
 
-    public static <M extends IWrapperMapper> M mapperByEntity(Class entityClass) {
+    public static <M extends IEntityMapper> M mapperByEntity(Class entityClass) {
         return mapperByEntity(entityClass.getName());
     }
 
-    public static <M extends IWrapperMapper> M mapperByEntity(String entityClass) {
+    public static <M extends IEntityMapper> M mapperByEntity(String entityClass) {
         if (ENTITY_MAPPER.containsKey(entityClass)) {
             return (M) ENTITY_MAPPER.get(entityClass);
         }
