@@ -4,15 +4,16 @@ import cn.org.atool.fluent.mybatis.base.IRelation;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
+import cn.org.atool.fluent.mybatis.refs.RefKit;
 import cn.org.atool.generator.javafile.AbstractFile;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.publicMethod;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**
@@ -20,15 +21,14 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
  *
  * @author darui.wu
  */
-public class EntityRelationFiler extends AbstractFile {
+public class RelationFiler extends AbstractFile {
     private static final String EntityRelation = "IEntityRelation";
 
-    public static ClassName getClassName() {
-        return ClassName.get(FluentList.refsPackage(), EntityRelation);
-    }
+    private final List<FluentEntity> fluents;
 
-    public EntityRelationFiler() {
-        this.packageName = FluentList.refsPackage();
+    public RelationFiler(String basePackage, List<FluentEntity> fluents) {
+        this.packageName = basePackage;
+        this.fluents = fluents;
         this.klassName = EntityRelation;
         this.comment = "实体类间自定义的关联关系接口";
     }
@@ -41,11 +41,12 @@ public class EntityRelationFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addSuperinterface(IRelation.class);
-        for (FluentEntity fluent : FluentList.getFluents()) {
+        for (FluentEntity fluent : this.fluents) {
             for (EntityRefMethod method : fluent.getRefMethods()) {
                 spec.addMethod(this.buildMethod(fluent, method));
             }
         }
+        spec.addMethod(this.m_initialize());
     }
 
     private MethodSpec buildMethod(FluentEntity fluent, EntityRefMethod method) {
@@ -83,6 +84,20 @@ public class EntityRelationFiler extends AbstractFile {
         }
         spec.addCode("\t.end()\n", method);
         spec.addStatement("\t" + method);
+        return spec.build();
+    }
+
+    private MethodSpec m_initialize() {
+        MethodSpec.Builder spec = publicMethod("initialize", (TypeName) null)
+            .addModifiers(Modifier.DEFAULT);
+        List<CodeBlock> codes = new ArrayList<>();
+        for (FluentEntity fluent : this.fluents) {
+            for (EntityRefMethod refMethod : fluent.getRefMethods()) {
+                String methodName = refMethod.getRefMethod(fluent);
+                codes.add(CodeBlock.of("$T.put(this::$L);", RefKit.class, methodName));
+            }
+        }
+        spec.addCode(CodeBlock.join(codes, "\n"));
         return spec.build();
     }
 

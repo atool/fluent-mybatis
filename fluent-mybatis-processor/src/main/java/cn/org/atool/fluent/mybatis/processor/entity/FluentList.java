@@ -1,23 +1,17 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
-import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.EntityRelationFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.MapperRefFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.QueryRefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.RelationFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.RefFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
 import cn.org.atool.generator.javafile.AbstractFile;
 import cn.org.atool.generator.util.GeneratorHelper;
-import lombok.Getter;
 
 import javax.annotation.processing.Filer;
 import java.util.*;
 import java.util.function.Consumer;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.Ref_Package;
-import static cn.org.atool.generator.util.GeneratorHelper.sameStartPackage;
 
 /**
  * 所有Entity的FluentEntity信息列表
@@ -30,26 +24,19 @@ public class FluentList {
      */
     /**
      * 项目所有编译Entity类列表
+     * key: base package
      */
-    @Getter
-    private static final List<FluentEntity> fluents = new ArrayList<>();
+    private static final Map<String, List<FluentEntity>> fluents = new HashMap<>();
 
     private static final Map<String, FluentEntity> map = new HashMap<>();
 
-    /**
-     * 所有entity对象的共同基础package
-     */
-    @Getter
-    private static String samePackage = null;
-
     public static void addFluent(FluentEntity fluent) {
         map.put(fluent.getClassName(), fluent);
-        fluents.add(fluent);
-        samePackage = sameStartPackage(samePackage, fluent.getBasePack());
-    }
-
-    public static String refsPackage() {
-        return Ref_Package;
+        String _package = fluent.getBasePack();
+        if (!fluents.containsKey(_package)) {
+            fluents.put(_package, new ArrayList<>());
+        }
+        fluents.get(_package).add(fluent);
     }
 
     public static FluentEntity getFluentEntity(String entityName) {
@@ -63,45 +50,44 @@ public class FluentList {
      * @param logger Consumer
      */
     public static void generate(Filer filer, Consumer<String> logger) {
-        fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
-        boolean first = true;
-        for (FluentEntity fluent : FluentList.getFluents()) {
-            try {
-                List<AbstractFiler> javaFiles = generateJavaFile(fluent);
-                for (AbstractFiler javaFile : javaFiles) {
-                    javaFile.javaFile().writeTo(filer);
-                }
-            } catch (Exception e) {
-                logger.accept("FluentEntityInfo:" + fluent + NEWLINE + GeneratorHelper.toString(e));
-                throw new RuntimeException(e);
+        for (Map.Entry<String, List<FluentEntity>> entry : fluents.entrySet()) {
+            String basePackage = entry.getKey();
+            List<FluentEntity> fluents = entry.getValue();
+            fluents.sort(Comparator.comparing(FluentEntity::getNoSuffix));
+            for (FluentEntity fluent : fluents) {
+                generate(filer, logger, fluent);
             }
-            if (first) {
-                dbType = fluent.getDbType();
-            } else if (dbType != null && !Objects.equals(dbType, fluent.getDbType())) {
-                // 如果有多个数据源, 设置为未知态
-                dbType = null;
-            }
-            first = false;
-        }
-        if (fluents.isEmpty()) {
-            return;
-        }
-        for (AbstractFile file : refFiles()) {
-            try {
-                file.writeTo(filer);
-            } catch (Exception e) {
-                logger.accept("Generate Refs error:\n" + GeneratorHelper.toString(e));
-                throw new RuntimeException(e);
+            for (AbstractFile file : refFiles(basePackage, fluents)) {
+                generateRef(filer, logger, file);
             }
         }
     }
 
-    private static List<AbstractFile> refFiles() {
+    private static void generateRef(Filer filer, Consumer<String> logger, AbstractFile file) {
+        try {
+            file.writeTo(filer);
+        } catch (Exception e) {
+            logger.accept("Generate Refs error:\n" + GeneratorHelper.toString(e));
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void generate(Filer filer, Consumer<String> logger, FluentEntity fluent) {
+        try {
+            List<AbstractFiler> javaFiles = generateJavaFile(fluent);
+            for (AbstractFiler javaFile : javaFiles) {
+                javaFile.javaFile().writeTo(filer);
+            }
+        } catch (Exception e) {
+            logger.accept("FluentEntityInfo:" + fluent + NEWLINE + GeneratorHelper.toString(e));
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static List<AbstractFile> refFiles(String _package, List<FluentEntity> fluents) {
         return Arrays.asList(
-            new EntityRelationFiler(),
-            new QueryRefFiler(),
-            new MapperRefFiler(),
-            new RefFiler()
+            new RelationFiler(_package, fluents),
+            new RefFiler(_package, fluents)
         );
     }
 
@@ -119,11 +105,5 @@ public class FluentList {
             new UpdaterFiler(fluent),
             new BaseDaoFiler(fluent)
         );
-    }
-
-    private static DbType dbType;
-
-    public static String getDbType() {
-        return dbType == null ? null : dbType.name();
     }
 }

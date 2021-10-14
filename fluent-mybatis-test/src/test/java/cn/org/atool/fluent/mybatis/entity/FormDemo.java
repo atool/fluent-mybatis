@@ -2,9 +2,9 @@ package cn.org.atool.fluent.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.generate.ATM;
+import cn.org.atool.fluent.mybatis.generate.Ref;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
-import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 

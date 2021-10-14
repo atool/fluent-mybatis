@@ -10,8 +10,6 @@ import org.test4j.module.database.proxy.DataSourceCreator;
 
 import javax.sql.DataSource;
 
-import static cn.org.atool.fluent.generator.FluentMyBatisGeneratorMain.BasePack;
-
 public class HsqldbGenerator {
     DataSource hsqlDataSource() {
         return DataSourceCreator.create("dataSource",

@@ -1,10 +1,7 @@
 package cn.org.atool.fluent.dbtest;
 
-import cn.org.atool.fluent.mybatis.db.pg.mapper.PgStudentMapper;
-import cn.org.atool.fluent.mybatis.db.pg.wrapper.PgStudentQuery;
 import cn.org.atool.fluent.mybatis.db.sqlite.mapper.SqliteStudentMapper;
 import cn.org.atool.fluent.mybatis.db.sqlite.wrapper.SqliteStudentQuery;
-import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

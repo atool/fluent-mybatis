@@ -12,8 +12,8 @@ public class SqlLikeTest extends BaseTest {
             .userName.values("user1", "user2")
             .cleanAndInsert();
         want.exception(() -> StudentQuery.emptyQuery()
-            .where.userName().like("%").end()
-            .to().listEntity(), IllegalArgumentException.class)
+                .where.userName().like("%").end()
+                .to().listEntity(), IllegalArgumentException.class)
             .contains("The like operation cannot be string '%' or empty only");
     }
 }

@@ -55,7 +55,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         if (origQuery instanceof FreeQuery) {
             onQuery = newFreeQuery(origQuery);
         } else {
-            onQuery = RefKit.byEntity(origQuery.entityClass).emptyQuery();
+            onQuery = (BaseQuery) RefKit.byEntity(origQuery.entityClass).emptyQuery();
         }
         onQuery.tableAlias = origQuery.tableAlias;
         onQuery.sharedParameter(this.joinQuery);

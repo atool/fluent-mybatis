@@ -1,21 +1,22 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
+import cn.org.atool.fluent.mybatis.generate.Ref;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.QueryRef;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+@SuppressWarnings("all")
 public class QueryExecutorTest_FindOne extends BaseTest {
     @Test
     void findOne() {
         ATM.dataMap.student.table().clean();
-        Object o = QueryRef.student.query().to().findOne().orElse(null);
+        Object o = Ref.Query.student.query().to().findOne().orElse(null);
         want.object(o).isNull();
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ?");
@@ -26,7 +27,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        StudentEntity o = QueryRef.student.emptyQuery()
+        StudentEntity o = Ref.Query.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOne(StudentEntity.class).orElse(null);
         want.object(o.getUserName()).eq("test1");
@@ -38,7 +39,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        String o = QueryRef.student.emptyQuery()
+        String o = Ref.Query.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOne(StudentEntity::getUserName).orElse(null);
         want.object(o).eq("test1");
@@ -50,7 +51,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        StudentEntity o = QueryRef.student.emptyQuery()
+        StudentEntity o = Ref.Query.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOneMap(map -> new StudentEntity()
                 .setUserName((String) map.get("user_name"))
@@ -88,7 +89,7 @@ public class QueryExecutorTest_FindOne extends BaseTest {
         ATM.dataMap.student.table(1)
             .userName.values("test1")
             .cleanAndInsert();
-        Map<String, Object> map = QueryRef.student.emptyQuery()
+        Map<String, Object> map = Ref.Query.student.emptyQuery()
             .where.userName().eq("test1").end()
             .to().findOneMap().orElse(null);
         want.object(map.get("user_name")).eq("test1");

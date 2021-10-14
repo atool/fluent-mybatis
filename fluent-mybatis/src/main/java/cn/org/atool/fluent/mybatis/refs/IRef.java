@@ -14,8 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static cn.org.atool.fluent.mybatis.refs.ARef.instance;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
+import static cn.org.atool.fluent.mybatis.refs.RefKit.notFluentMybatisEntity;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.entityClass;
 
 /**
  * 常用工具方法入口
@@ -23,15 +24,14 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
  * @author darui.wu
  */
 @SuppressWarnings({"unused", "rawtypes", "unchecked"})
-public abstract class IRef {
-
+public interface IRef {
     /**
      * 返回clazz实体对应的默认Query实例
      *
      * @param eClass Entity类类型
      * @return IQuery
      */
-    public static <E extends IEntity> IQuery query(Class<E> eClass) {
+    static <E extends IEntity> IQuery query(Class<E> eClass) {
         return RefKit.byEntity(entityClass(eClass)).query();
     }
 
@@ -41,7 +41,7 @@ public abstract class IRef {
      * @param eClass Entity类类型
      * @return IQuery
      */
-    public static <E extends IEntity> IQuery emptyQuery(Class<E> eClass) {
+    static <E extends IEntity> IQuery emptyQuery(Class<E> eClass) {
         return RefKit.byEntity(entityClass(eClass)).emptyQuery();
     }
 
@@ -51,7 +51,7 @@ public abstract class IRef {
      * @param eClass Entity类类型
      * @return IUpdate
      */
-    public static <E extends IEntity> IUpdate updater(Class<E> eClass) {
+    static <E extends IEntity> IUpdate updater(Class<E> eClass) {
         return RefKit.byEntity(entityClass(eClass)).updater();
     }
 
@@ -61,7 +61,7 @@ public abstract class IRef {
      * @param eClass Entity类类型
      * @return IUpdate
      */
-    public static <E extends IEntity> IUpdate emptyUpdater(Class<E> eClass) {
+    static <E extends IEntity> IUpdate emptyUpdater(Class<E> eClass) {
         return RefKit.byEntity(entityClass(eClass)).emptyUpdater();
     }
 
@@ -72,10 +72,10 @@ public abstract class IRef {
      * @param field  entity属性名
      * @return 数据库字段名称
      */
-    public static <E extends IEntity> String columnOfField(Class<E> eClass, String field) {
+    static <E extends IEntity> String columnOfField(Class<E> eClass, String field) {
         IMapping mapping = RefKit.byEntity(eClass);
         if (mapping == null) {
-            throw notFluentMybatisException(eClass);
+            throw notFluentMybatisEntity(eClass);
         } else {
             return mapping.columnOfField(field);
         }
@@ -87,10 +87,10 @@ public abstract class IRef {
      * @param eClass Entity类类型
      * @return 主键字段
      */
-    public static <E extends IEntity> String primaryColumn(Class<E> eClass) {
+    static <E extends IEntity> String primaryColumn(Class<E> eClass) {
         IMapping mapping = RefKit.byEntity(eClass);
         if (mapping == null) {
-            throw notFluentMybatisException(eClass);
+            throw notFluentMybatisEntity(eClass);
         } else {
             return mapping.primaryId(false);
         }
@@ -102,10 +102,10 @@ public abstract class IRef {
      * @param dbType   要变更成的数据库类型
      * @param eClasses 如果为空, 变更应用中所有的实体类对应数据库类型; 如果不为空, 变更指定类
      */
-    public static void changeDbType(DbType dbType, Class<? extends IEntity>... eClasses) {
+    static void changeDbType(DbType dbType, Class<? extends IEntity>... eClasses) {
         Set<String> list = RefKit.getEntityClass(eClasses);
         for (String klass : list) {
-            instance().byEntity(klass).db(dbType);
+            RefKit.byEntity(klass).db(dbType);
         }
     }
 
@@ -115,13 +115,12 @@ public abstract class IRef {
      * @param tableSupplier 表的命名策略
      * @param eClasses      如果为空, 变更应用中所有的实体类对应数据库类型; 如果不为空, 变更指定类
      */
-    public static void tableSupplier(TableDynamic tableSupplier, Class<? extends IEntity>... eClasses) {
+    static void tableSupplier(TableDynamic tableSupplier, Class<? extends IEntity>... eClasses) {
         Set<String> list = RefKit.getEntityClass(eClasses);
         for (String klass : list) {
-            instance().byEntity(klass).setTableSupplier(tableSupplier);
+            RefKit.byEntity(klass).setTableSupplier(tableSupplier);
         }
     }
-
 
     /**
      * 注册PoJoHelper.toPoJo时特定类型的转换器
@@ -129,7 +128,7 @@ public abstract class IRef {
      * @param type      类型
      * @param convertor 类型转换器
      */
-    public static void register(Type type, IConvertor convertor) {
+    static void register(Type type, IConvertor convertor) {
         SetterMeta.register(type, convertor);
     }
 
@@ -139,7 +138,7 @@ public abstract class IRef {
      * @param typeName  类型, 比如 java.util.List&lt;java.lang.String&gt;
      * @param convertor 类型转换器
      */
-    public static void register(String typeName, IConvertor convertor) {
+    static void register(String typeName, IConvertor convertor) {
         SetterMeta.register(typeName, convertor);
     }
 
@@ -151,7 +150,7 @@ public abstract class IRef {
      * @param <T>    属性值类型
      * @return 属性值
      */
-    public static <T> T valueByField(IEntity entity, String field) {
+    static <T> T valueByField(IEntity entity, String field) {
         assertNotNull("entity", entity);
         return RefKit.entityKit(entity.entityClass()).valueByField(entity, field);
     }
@@ -164,7 +163,7 @@ public abstract class IRef {
      * @param <T>    属性值类型
      * @return 属性值
      */
-    public static <T> T valueByColumn(IEntity entity, String column) {
+    static <T> T valueByColumn(IEntity entity, String column) {
         assertNotNull("entity", entity);
         return RefKit.entityKit(entity.entityClass()).valueByColumn(entity, column);
     }
@@ -175,7 +174,7 @@ public abstract class IRef {
      * @param entity 实例
      * @return 拷贝
      */
-    public static <E extends IEntity> E copy(E entity) {
+    static <E extends IEntity> E copy(E entity) {
         return entity == null ? null : RefKit.entityKit(entity.entityClass()).copy(entity);
     }
 
@@ -185,7 +184,7 @@ public abstract class IRef {
      * @param map map
      * @return map转对象
      */
-    public static <E extends IEntity> E toEntity(Class<E> eClass, Map<String, Object> map) {
+    static <E extends IEntity> E toEntity(Class<E> eClass, Map<String, Object> map) {
         return map == null ? null : RefKit.entityKit(eClass).toEntity(map);
     }
 
@@ -196,7 +195,7 @@ public abstract class IRef {
      * @param entity 实例
      * @return 实例属性名称:属性值
      */
-    public static Map<String, Object> toMap(IEntity entity) {
+    static Map<String, Object> toMap(IEntity entity) {
         if (entity == null) {
             return new HashMap<>();
         } else {

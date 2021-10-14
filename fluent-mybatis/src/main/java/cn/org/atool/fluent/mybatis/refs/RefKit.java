@@ -2,16 +2,16 @@ package cn.org.atool.fluent.mybatis.refs;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.RelateFunction;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
-import cn.org.atool.fluent.mybatis.spring.IMapperFactory;
+import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.refs.ARef.instance;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.toSet;
 
@@ -29,57 +28,93 @@ import static java.util.stream.Collectors.toSet;
  * @author darui.wu
  */
 @SuppressWarnings({"unchecked", "unused", "rawtypes"})
-public final class RefKit extends IRef {
+public final class RefKit {
     /**
-     * 初始化 entity mapper 和 关联方法
+     * 关联方法实现引用
      */
-    public static void initialize(IMapperFactory factory) {
-        ARef.instance().initialize(factory);
-    }
+    public static final KeyMap<RelateFunction<IEntity>> relations = new KeyMap<>();
+    /**
+     * EntityClass 和 AMapping关联关系
+     */
+    public static final KeyMap<AMapping> ENTITY_MAPPING = new KeyMap<>();
+    /**
+     * EntityClass 和 Mapper实例关联关系
+     */
+    public static final KeyMap<IWrapperMapper> ENTITY_MAPPER = new KeyMap<>();
+    /**
+     * MapperClass 和 AMapping关联关系
+     */
+    public static final KeyMap<AMapping> MAPPER_MAPPING = new KeyMap<>();
 
-    public static IEntityKit entityKit(Class clazz) {
-        return instance().byEntity(clazz.getName());
+    /**
+     * 返回对应实体类的映射关系
+     *
+     * @param clazz Entity类类型
+     * @return AMapping
+     */
+    public static AMapping byEntity(String entityClass) {
+        if (ENTITY_MAPPING.containsKey(entityClass)) {
+            return ENTITY_MAPPING.get(entityClass);
+        }
+        throw new RuntimeException("the class[" + entityClass + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
     }
 
     /**
      * 返回对应实体类的映射关系
      *
      * @param clazz Entity类类型
-     * @return IMapping
+     * @return AMapping
      */
-    public static IMapping byEntity(Class clazz) {
-        return instance().byEntity(clazz.getName());
+    public static AMapping byEntity(Class clazz) {
+        return byEntity(clazz.getName());
+    }
+
+    public static IEntityKit entityKit(Class clazz) {
+        return byEntity(clazz.getName());
     }
 
     /**
      * 返回对应Mapper类的映射关系
      *
      * @param clazz Mapper类类型
-     * @return IMapping
+     * @return AMapping
+     */
+    public static AMapping byMapper(String mapperClass) {
+        if (MAPPER_MAPPING.containsKey(mapperClass)) {
+            return MAPPER_MAPPING.get(mapperClass);
+        }
+        throw notFluentMybatisMapper(mapperClass);
+    }
+
+    /**
+     * 返回对应Mapper类的映射关系
+     *
+     * @param clazz Mapper类类型
+     * @return AMapping
      */
     public static IMapping byMapper(Class clazz) {
-        return instance().byMapper(clazz.getName());
+        return byMapper(clazz.getName());
+    }
+
+    public static <M extends IWrapperMapper> M mapperByEntity(Class entityClass) {
+        return mapperByEntity(entityClass.getName());
+    }
+
+    public static <M extends IWrapperMapper> M mapperByEntity(String entityClass) {
+        if (ENTITY_MAPPER.containsKey(entityClass)) {
+            return (M) ENTITY_MAPPER.get(entityClass);
+        }
+        throw notFluentMybatisEntity(entityClass);
     }
 
     /**
-     * 根据IEntity类型返回对应的IDefault实例
+     * 所有Entity Class
      *
-     * @param clazz IEntity类型
-     * @return IDefault
+     * @return ignore
      */
-    public static BaseDefaults defaults(Class clazz) {
-        return (BaseDefaults) byEntity(clazz);
+    public static Set<String> allEntityClass() {
+        return ENTITY_MAPPER.keySet();
     }
-
-    /**
-     * 返回所有的Mapper类
-     *
-     * @return ClassMap
-     */
-    public static KeyMap<AMapping> mapperMapping() {
-        return ARef.instance().mapperMapping();
-    }
-
 
     /**
      * 实现entityClass#methodName方法
@@ -115,9 +150,9 @@ public final class RefKit extends IRef {
                 List list = mapper(eClass).listByMap(true, where);
                 return (T) list;
             default:
-                RelateFunction func = instance().relations.get(methodOfEntity);
+                RelateFunction func = relations.get(methodOfEntity);
                 if (func == null) {
-                    String err = "the method[" + methodOfEntity + "] not defined or wrong define.";
+                    String err = "the method[" + methodOfEntity + "] not found or IEntityRelation not defined as spring bean.";
                     throw new RuntimeException(err);
                 }
                 return (T) func.apply(entity);
@@ -132,16 +167,57 @@ public final class RefKit extends IRef {
      */
     public static IRichMapper mapper(Class<? extends IEntity> eClass) {
         eClass = entityClass(eClass);
-        IWrapperMapper mapper = (IWrapperMapper) instance().mapper(eClass.getName());
+        IWrapperMapper mapper = mapperByEntity(eClass.getName());
         mapper = PrinterMapper.get(mapper, eClass);
         return mapper;
     }
 
     public static Set<String> getEntityClass(Class<? extends IEntity>[] eClasses) {
         if (If.isEmpty(eClasses)) {
-            return instance().allEntityClass();
+            return allEntityClass();
         } else {
             return Stream.of(eClasses).map(Class::getName).collect(toSet());
         }
+    }
+
+    /**
+     * 设置实体类的关联自定义实现
+     *
+     * @param method 方法引用
+     * @param <E>    实体类型
+     */
+    public static <E extends IEntity> void put(RelateFunction<E> method) {
+        String name = LambdaUtil.resolve(method);
+        relations.put(name, (RelateFunction) method);
+    }
+
+    /**
+     * Entity Class不是@FluentMybatis注解类异常
+     *
+     * @param eClass class
+     * @return ignore
+     */
+    public static FluentMybatisException notFluentMybatisEntity(Class eClass) {
+        return new FluentMybatisException("the class[" + eClass.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
+    }
+
+    /**
+     * Entity Class不是@FluentMybatis注解类异常
+     *
+     * @param eClass class
+     * @return ignore
+     */
+    public static FluentMybatisException notFluentMybatisEntity(String eClass) {
+        return new FluentMybatisException("the class[" + eClass + "] is not a @FluentMybatis Entity or it's sub class.");
+    }
+
+    /**
+     * Entity Class不是@FluentMybatis注解类异常
+     *
+     * @param mapperClass class
+     * @return ignore
+     */
+    public static FluentMybatisException notFluentMybatisMapper(String mapperClass) {
+        return new FluentMybatisException("the class[" + mapperClass + "] is not a fluent mybatis Mapper bean.");
     }
 }

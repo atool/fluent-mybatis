@@ -24,7 +24,7 @@ public class SelectOneTest extends BaseTest {
             .cleanAndInsert();
 
         want.exception(() -> dao.selectOne("username"),
-            FluentMybatisException.class)
+                FluentMybatisException.class)
             .contains("Expected one result (or null) to be returned, but found 10 results.");
         db.sqlList().wantFirstSql().start("SELECT")
             .end("FROM fluent_mybatis.student " +

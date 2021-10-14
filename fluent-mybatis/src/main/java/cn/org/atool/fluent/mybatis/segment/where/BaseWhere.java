@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 

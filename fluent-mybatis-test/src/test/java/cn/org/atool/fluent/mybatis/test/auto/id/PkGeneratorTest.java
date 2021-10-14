@@ -56,25 +56,25 @@ public class PkGeneratorTest extends BaseTest {
     @Test
     void insertBatch() {
         want.exception(() ->
-            mapper.insertBatch(list(
-                new HomeAddressEntity()
-                    .setAddress("add")
-                    .setStudentId(0L),
-                new HomeAddressEntity()
-                    .setAddress("add")
-                    .setStudentId(0L)
-            )), Exception.class)
+                mapper.insertBatch(list(
+                    new HomeAddressEntity()
+                        .setAddress("add")
+                        .setStudentId(0L),
+                    new HomeAddressEntity()
+                        .setAddress("add")
+                        .setStudentId(0L)
+                )), Exception.class)
             .contains("The pk of insert entity must be null");
     }
 
     @Test
     void insert() {
         want.exception(() ->
-                mapper.insert(new HomeAddressEntity()
-                    .setAddress("add")
-                    .setStudentId(0L)
-                ),
-            Exception.class)
+                    mapper.insert(new HomeAddressEntity()
+                        .setAddress("add")
+                        .setStudentId(0L)
+                    ),
+                Exception.class)
             .contains("The pk of insert entity must be null");
     }
 

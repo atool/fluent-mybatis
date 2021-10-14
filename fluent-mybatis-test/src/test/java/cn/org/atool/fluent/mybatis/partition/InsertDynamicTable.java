@@ -15,7 +15,7 @@ public class InsertDynamicTable extends BaseTest {
     @Test
     void insertSelect() {
         want.exception(() -> mapper.insertSelect(new String[]{"user_name"},
-             StudentQuery.emptyQuery(() -> "my_student").where.id().eq(1L).end())
+                StudentQuery.emptyQuery(() -> "my_student").where.id().eq(1L).end())
             , BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO `my_student` (`user_name`) " +
@@ -28,12 +28,12 @@ public class InsertDynamicTable extends BaseTest {
     void insertBatch() {
         want.exception(() ->
             mapper.insertBatch(list(
-                new StudentEntity()
-                    .setUserName("name")
-                    .tableSupplier("my_student"),
-                new StudentEntity()
-                    .setUserName("name")
-                    .tableSupplier("my_student")
+                    new StudentEntity()
+                        .setUserName("name")
+                        .tableSupplier("my_student"),
+                    new StudentEntity()
+                        .setUserName("name")
+                        .tableSupplier("my_student")
                 )
             ), BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().start("INSERT INTO my_student (`");

@@ -26,8 +26,8 @@ public class LockVersionTest extends BaseTest {
     @Test
     void updateById_NoSetVersion() {
         want.exception(() -> mapper
-                .updateById(new NoAutoIdEntity().setColumn1("new").setId("1")),
-            MyBatisSystemException.class, FluentMybatisException.class)
+                    .updateById(new NoAutoIdEntity().setColumn1("new").setId("1")),
+                MyBatisSystemException.class, FluentMybatisException.class)
             .contains("the parameter[lock version field(lockVersion)] can't be null");
     }
 
@@ -48,9 +48,9 @@ public class LockVersionTest extends BaseTest {
     @Test
     void updateByUpdater_NoVersionWhere() {
         want.exception(() -> mapper
-            .updateBy(new NoAutoIdUpdate()
-                .set.column1().is("new").end()
-                .where.id().eq("1").end()), MyBatisSystemException.class)
+                .updateBy(new NoAutoIdUpdate()
+                    .set.column1().is("new").end()
+                    .where.id().eq("1").end()), MyBatisSystemException.class)
             .contains("@Version field of where condition not set.");
     }
 

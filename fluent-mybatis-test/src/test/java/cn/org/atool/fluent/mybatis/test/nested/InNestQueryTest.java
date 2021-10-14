@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.nested;
 
+import cn.org.atool.fluent.mybatis.generate.Ref;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

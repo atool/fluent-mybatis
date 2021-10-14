@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.printsql;
 
+import cn.org.atool.fluent.mybatis.generate.Ref;
 import cn.org.atool.fluent.mybatis.generate.entity.MemberEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generate.wrapper.MemberQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentUpdate;
-import cn.org.atool.fluent.mybatis.refs.Ref;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;

@@ -98,7 +98,7 @@ public class DeleteByIdTest extends BaseTest {
             .column2.values("c1", "c2", "c3")
         );
         want.exception(() -> noPrimaryMapper.logicDeleteById(3L),
-            MyBatisSystemException.class, RuntimeException.class)
+                MyBatisSystemException.class, RuntimeException.class)
             .contains("logic delete column(@LogicDelete) not found.");
     }
 }

@@ -367,21 +367,6 @@ public class MybatisUtil {
     }
 
     /**
-     * Entity Class不是@FluentMybatis注解类异常
-     *
-     * @param clazz class
-     * @return ignore
-     */
-    public static RuntimeException notFluentMybatisException(Class clazz) {
-        return new RuntimeException("the class[" + clazz.getName() + "] is not a @FluentMybatis Entity or it's sub class.");
-    }
-
-    public static RuntimeException notFluentMybatisException(String clazz) {
-        return new RuntimeException("the class[" + clazz + "] is not a @FluentMybatis Entity or it's sub class.");
-    }
-
-
-    /**
      * 判断是否是数据库表字段名称
      * 非全数字, 只包含数字+字母+下划线组成
      *

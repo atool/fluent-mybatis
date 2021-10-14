@@ -6,4 +6,5 @@ package cn.org.atool.fluent.mybatis.base;
  * @author darui.wu
  */
 public interface IRelation {
+    void initialize();
 }

@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
 import cn.org.atool.fluent.mybatis.generate.ATM;
+import cn.org.atool.fluent.mybatis.generate.Ref;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.refs.QueryRef;
-import cn.org.atool.fluent.mybatis.refs.Ref;
 import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ class QueryExecutorTest_Delete extends BaseTest {
             .env.values("test_env")
             .isDeleted.values(0)
             .cleanAndInsert();
-        QueryRef.student.emptyQuery()
+        Ref.Query.student.emptyQuery()
             .where.defaults()
             .and.userName().eq("test1").end()
             .to().delete();

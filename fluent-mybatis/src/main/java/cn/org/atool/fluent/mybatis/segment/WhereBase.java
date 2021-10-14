@@ -87,7 +87,7 @@ public abstract class WhereBase<
      * @return WHERE
      */
     public WHERE defaults() {
-        BaseDefaults defaults = RefKit.defaults(this.wrapper.entityClass);
+        BaseDefaults defaults = RefKit.byEntity(this.wrapper.entityClass);
         if (defaults == null) {
             return this.and;
         }

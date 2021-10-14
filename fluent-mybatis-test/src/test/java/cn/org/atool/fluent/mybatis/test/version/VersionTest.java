@@ -31,9 +31,9 @@ public class VersionTest extends BaseTest {
     @Test
     public void test_updateById_noVersion2() {
         want.exception(() -> dao.updateEntityByIds(new IdcardEntity()
-                .setCode("xxx")
-                .setId(1L))
-            , FluentMybatisException.class)
+                    .setCode("xxx")
+                    .setId(1L))
+                , FluentMybatisException.class)
             .contains("In updateById method, the lock version value cannot be null");
     }
 
@@ -49,8 +49,8 @@ public class VersionTest extends BaseTest {
     @Test
     public void test_updateById_noVersion() {
         want.exception(() ->
-                mapper.updateById(new IdcardEntity().setCode("new").setId(1L))
-            , MyBatisSystemException.class, FluentMybatisException.class)
+                    mapper.updateById(new IdcardEntity().setCode("new").setId(1L))
+                , MyBatisSystemException.class, FluentMybatisException.class)
             .contains("the parameter[lock version field(version)] can't be null");
     }
 
@@ -68,9 +68,9 @@ public class VersionTest extends BaseTest {
     @Test
     public void test_updateBy_noVersion() {
         want.exception(() -> mapper.updateBy(new IdcardUpdate()
-                .set.code().is("new").end()
-                .where.id().eq(1L).end())
-            , MyBatisSystemException.class)
+                    .set.code().is("new").end()
+                    .where.id().eq(1L).end())
+                , MyBatisSystemException.class)
             .contains("@Version field of where condition not set.");
     }
 }

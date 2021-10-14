@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.HashMap;
@@ -27,9 +26,8 @@ public class ConfigurationKit {
     private final Map<String, IMapping> batchInserts = new HashMap<>();
     private final Map<String, IMapping> listEntities = new HashMap<>();
 
-    public ConfigurationKit(Configuration configuration) {
+    public ConfigurationKit(Configuration configuration, KeyMap<AMapping> mappers) {
         this.configuration = configuration;
-        KeyMap<AMapping> mappers = RefKit.mapperMapping();
         for (Map.Entry<String, AMapping> entry : mappers.entrySet()) {
             inserts.put(entry.getKey() + "." + M_Insert, entry.getValue());
             batchInserts.put(entry.getKey() + "." + M_InsertBatch, entry.getValue());

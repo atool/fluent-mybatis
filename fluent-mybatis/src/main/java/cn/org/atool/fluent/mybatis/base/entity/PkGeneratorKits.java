@@ -28,7 +28,7 @@ public class PkGeneratorKits {
             return;
         }
         Class klass = entity.entityClass();
-        BaseDefaults defaults = RefKit.defaults(klass);
+        BaseDefaults defaults = RefKit.byEntity(klass);
         if (defaults == null) {
             return;
         }
