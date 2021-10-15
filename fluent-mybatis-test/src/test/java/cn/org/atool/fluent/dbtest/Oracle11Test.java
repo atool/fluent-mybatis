@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.dbtest;
 
-import cn.org.atool.fluent.mybatis.base.BatchCrud;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.db.oracle11.entity.OracleUserEntity;
 import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleUserMapper;
 import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleUserUpdate;

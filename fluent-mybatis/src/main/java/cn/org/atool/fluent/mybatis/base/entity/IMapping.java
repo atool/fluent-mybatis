@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
-import cn.org.atool.fluent.mybatis.base.IHasDbType;
+import cn.org.atool.fluent.mybatis.base.intf.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;

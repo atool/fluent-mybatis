@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.customize.impl;
 
+import cn.org.atool.fluent.mybatis.generate.IEntityRelation;
 import cn.org.atool.fluent.mybatis.generate.entity.MemberEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentScoreEntity;
@@ -8,7 +9,6 @@ import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.StudentTeacherRelationQuery;
 import cn.org.atool.fluent.mybatis.generate.wrapper.TeacherQuery;
-import cn.org.atool.fluent.mybatis.generate.IEntityRelation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

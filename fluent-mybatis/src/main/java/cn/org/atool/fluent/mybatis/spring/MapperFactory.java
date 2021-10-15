@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.spring;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IRelation;
+import cn.org.atool.fluent.mybatis.base.intf.IRelation;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.functions.IExecutor;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;

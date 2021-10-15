@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
-import cn.org.atool.fluent.mybatis.base.IHasDbType;
-import cn.org.atool.fluent.mybatis.base.IHasMapping;
+import cn.org.atool.fluent.mybatis.base.intf.IHasDbType;
+import cn.org.atool.fluent.mybatis.base.intf.IHasMapping;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 
 import java.util.HashMap;

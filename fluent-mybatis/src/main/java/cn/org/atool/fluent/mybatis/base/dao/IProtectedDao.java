@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.dao;
 
-import cn.org.atool.fluent.mybatis.base.BatchCrud;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;

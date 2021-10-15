@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.batch;
 
-import cn.org.atool.fluent.mybatis.base.BatchCrud;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.generate.ATM;
 import cn.org.atool.fluent.mybatis.generate.Ref;

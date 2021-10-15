@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
-import cn.org.atool.fluent.mybatis.base.BatchCrud;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.IHasMapping;
+import cn.org.atool.fluent.mybatis.base.intf.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;

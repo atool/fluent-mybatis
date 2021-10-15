@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
-import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.Map;
@@ -10,12 +9,12 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Entity Rich基类
+ * Entity基类, 充血模式
  *
  * @author darui.wu
  */
 @SuppressWarnings({"unchecked"})
-public abstract class RichEntity implements IEntity, IRichEntity {
+public abstract class RichEntity extends BaseEntity implements IRichEntity {
 
     /**
      * 数据缓存, 避免多次查询
@@ -75,27 +74,5 @@ public abstract class RichEntity implements IEntity, IRichEntity {
         reArgs[0] = this;
         System.arraycopy(args, 0, reArgs, 1, args.length);
         return reArgs;
-    }
-
-    /**
-     * 归属表, 默认无需设置
-     */
-    private TableSupplier supplier;
-
-    @Override
-    public <E extends IEntity> E tableSupplier(TableSupplier supplier) {
-        this.supplier = supplier;
-        return (E) this;
-    }
-
-    @Override
-    public <E extends IEntity> E tableSupplier(String table) {
-        this.supplier = e -> table;
-        return (E) this;
-    }
-
-    @Override
-    public String tableSupplier() {
-        return this.supplier == null ? null : this.supplier.get(this);
     }
 }

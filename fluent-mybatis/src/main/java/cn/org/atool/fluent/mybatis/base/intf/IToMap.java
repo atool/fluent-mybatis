@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.base;
+package cn.org.atool.fluent.mybatis.base.intf;
 
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.metadata.GetterMeta;

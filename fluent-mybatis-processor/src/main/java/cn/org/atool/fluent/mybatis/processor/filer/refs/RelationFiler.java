@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.base.IRelation;
+import cn.org.atool.fluent.mybatis.base.intf.IRelation;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
@@ -35,6 +35,7 @@ public class RelationFiler extends AbstractFile {
 
     @Override
     protected void staticImport(JavaFile.Builder builder) {
+        builder.addStaticImport(RefKit.class, "put");
         builder.skipJavaLangImports(true);
     }
 
@@ -92,9 +93,8 @@ public class RelationFiler extends AbstractFile {
             .addModifiers(Modifier.DEFAULT);
         List<CodeBlock> codes = new ArrayList<>();
         for (FluentEntity fluent : this.fluents) {
-            for (EntityRefMethod refMethod : fluent.getRefMethods()) {
-                String methodName = refMethod.getRefMethod(fluent);
-                codes.add(CodeBlock.of("$T.put(this::$L);", RefKit.class, methodName));
+            for (EntityRefMethod method : fluent.getRefMethods()) {
+                codes.add(CodeBlock.of("put(this::$L);", method.getRefMethod(fluent)));
             }
         }
         spec.addCode(CodeBlock.join(codes, "\n"));
