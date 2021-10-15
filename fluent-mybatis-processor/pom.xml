@@ -12,9 +12,24 @@
 
     <artifactId>fluent-mybatis-processor</artifactId>
     <properties>
+        <fluent-generator.version>1.3.9</fluent-generator.version>
         <mysql.version>8.0.20</mysql.version>
         <skipTests>true</skipTests>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.atool</groupId>
+                <artifactId>generator</artifactId>
+                <version>${fluent-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>

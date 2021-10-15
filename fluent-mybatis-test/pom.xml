@@ -19,6 +19,16 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.test4j</groupId>
+                <artifactId>fluent-dbtest</artifactId>
+                <version>${fluent-dbtest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>

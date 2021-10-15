@@ -25,6 +25,7 @@ class PoJoHelperTest implements IWant {
 
     @Test
     void toPoJo2() {
+        RefKit.register("java.util.List<java.lang.String>", obj -> Arrays.asList(String.valueOf(obj).split(";")));
         TestBean bean = (TestBean) PoJoHelper.toPoJoIgnoreNotFound(TestBean.class, DataMap.create(1)
             .kv("user_name", "myName")
             .kv("post_code", "310000")

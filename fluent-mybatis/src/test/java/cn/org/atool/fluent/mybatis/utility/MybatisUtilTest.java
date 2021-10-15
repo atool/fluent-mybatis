@@ -63,7 +63,7 @@ class MybatisUtilTest extends Test4J {
             .data("_abc1", true)
             .data("_ABC1", true)
             .data("1we", false)
-            .data("`xx`", true)
+            .data("`xx`", false)
             .data("`xx", false)
             .data("xx`", false)
             ;
