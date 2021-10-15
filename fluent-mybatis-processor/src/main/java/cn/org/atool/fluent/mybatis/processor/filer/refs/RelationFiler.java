@@ -74,7 +74,7 @@ public class RelationFiler extends AbstractFile {
             .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
             .returns(refMethod.getJavaType())
-            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refMethod.getName());
+            .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refMethod.getName());
         String method = refMethod.returnList() ? ".to().listEntity()" : ".to().findOne().orElse(null)";
         spec.addCode("return new $T()\n", ref.query());
         int index = 0;
