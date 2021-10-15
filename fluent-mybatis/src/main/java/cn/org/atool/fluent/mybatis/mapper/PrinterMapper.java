@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.builder.annotation.ProviderContext;

@@ -4,11 +4,12 @@ import cn.org.atool.fluent.mybatis.base.IRelation;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.functions.IExecutor;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.apache.ibatis.session.ConfigurationKit;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * IMapperFactory
@@ -37,9 +38,9 @@ public interface IMapperFactory {
     Collection<SqlSessionFactory> getSessionFactories();
 
     /**
-     * 初始化环境定义
+     * 初始化环境定义脚本列表
      */
-    IExecutor getInitializer();
+    List<IExecutor> getInitializers();
 
     /**
      * 初始化FluentMybatis启动前置步骤
@@ -63,9 +64,8 @@ public interface IMapperFactory {
         RefKit.ENTITY_MAPPER.unmodified();
         RefKit.MAPPER_MAPPING.unmodified();
         // 执行初始化环境方法
-        if (this.getInitializer() != null) {
-            this.getInitializer().execute();
-        }
+        this.getInitializers().forEach(IExecutor::execute);
+
         // 设置实体关联关系方法
         Collection<IRelation> relations = this.getRelations();
         for (IRelation relation : relations) {

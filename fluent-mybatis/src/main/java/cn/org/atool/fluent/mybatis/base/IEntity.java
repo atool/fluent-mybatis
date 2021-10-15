@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 
 import java.io.Serializable;
@@ -110,5 +110,38 @@ public interface IEntity extends Serializable {
      */
     default String tableSupplier() {
         return null;
+    }
+
+    /**
+     * 获取entity的属性field值
+     *
+     * @param field 属性名称
+     * @param <T>   属性值类型
+     * @return 属性值
+     */
+    default <T> T valueByField(String field) {
+        return RefKit.entityKit(this.entityClass()).valueByField(this, field);
+    }
+
+    /**
+     * 获取entity的对应数据库字段的属性值
+     *
+     * @param column 数据库字段名称
+     * @param <T>    属性值类型
+     * @return 属性值
+     */
+    default <T> T valueByColumn(String column) {
+        return RefKit.entityKit(this.entityClass()).valueByColumn(this, column);
+    }
+
+    /**
+     * 获取entity的对应字段的属性值
+     *
+     * @param fieldMapping 字段映射
+     * @param <T>          属性值类型
+     * @return 属性值
+     */
+    default <T> T valueBy(FieldMapping fieldMapping) {
+        return (T) fieldMapping.getter.get(this);
     }
 }

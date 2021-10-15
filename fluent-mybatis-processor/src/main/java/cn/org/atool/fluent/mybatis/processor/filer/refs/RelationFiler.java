@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IRelation;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
 

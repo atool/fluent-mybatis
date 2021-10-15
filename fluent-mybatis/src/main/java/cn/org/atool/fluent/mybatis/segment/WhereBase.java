@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;

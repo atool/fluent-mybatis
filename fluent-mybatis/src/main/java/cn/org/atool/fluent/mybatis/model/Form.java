@@ -6,7 +6,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 import cn.org.atool.fluent.mybatis.functions.FormFunction;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
 import lombok.AccessLevel;
 import lombok.Data;

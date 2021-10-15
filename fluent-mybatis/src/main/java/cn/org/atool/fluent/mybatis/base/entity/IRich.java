@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.refs.RefKit;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 /**
  * IRich: Entity类@RefMethod方法实现定义

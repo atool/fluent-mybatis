@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.utility;
 
-import cn.org.atool.fluent.mybatis.refs.IRef;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ class PoJoHelperTest implements IWant {
 
     @Test
     void toPoJo() {
-        TestBean bean = PoJoHelper.toPoJo(TestBean.class, DataMap.create(1)
+        TestBean bean = (TestBean) PoJoHelper.toPoJo(TestBean.class, DataMap.create(1)
             .kv("user_name", "myName")
             .kv("post_code", "310000")
             .map());
@@ -26,8 +25,7 @@ class PoJoHelperTest implements IWant {
 
     @Test
     void toPoJo2() {
-        IRef.register("java.util.List<java.lang.String>", obj -> Arrays.asList(String.valueOf(obj).split(";")));
-        TestBean bean = PoJoHelper.toPoJoIgnoreNotFound(TestBean.class, DataMap.create(1)
+        TestBean bean = (TestBean) PoJoHelper.toPoJoIgnoreNotFound(TestBean.class, DataMap.create(1)
             .kv("user_name", "myName")
             .kv("post_code", "310000")
             .kv("alias", "alias")

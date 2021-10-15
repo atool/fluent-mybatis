@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.refs;
+package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -11,9 +11,13 @@ import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.RelateFunction;
+import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
-import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
+import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.metadata.SetterMeta;
+import cn.org.atool.fluent.mybatis.spring.IConvertor;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +28,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * 框架内部使用方法入口
+ * 常用工具方法入口
  *
  * @author darui.wu
  */
@@ -108,6 +112,38 @@ public final class RefKit {
         throw notFluentMybatisEntity(entityClass);
     }
 
+
+    /**
+     * 返回clazz属性field对应的数据库字段名称
+     *
+     * @param eClass Entity类类型
+     * @param field  entity属性名
+     * @return 数据库字段名称
+     */
+    public static <E extends IEntity> String columnOfField(Class<E> eClass, String field) {
+        IMapping mapping = RefKit.byEntity(eClass);
+        if (mapping == null) {
+            throw notFluentMybatisEntity(eClass);
+        } else {
+            return mapping.columnOfField(field);
+        }
+    }
+
+    /**
+     * 返回clazz实体的主键字段
+     *
+     * @param eClass Entity类类型
+     * @return 主键字段
+     */
+    public static <E extends IEntity> String primaryId(Class<E> eClass) {
+        IMapping mapping = RefKit.byEntity(eClass);
+        if (mapping == null) {
+            throw notFluentMybatisEntity(eClass);
+        } else {
+            return mapping.primaryId(false);
+        }
+    }
+
     /**
      * 所有Entity Class
      *
@@ -115,6 +151,52 @@ public final class RefKit {
      */
     public static Set<String> allEntityClass() {
         return ENTITY_MAPPER.keySet();
+    }
+
+    /**
+     * 设置对应的实体类对应的数据库类型
+     *
+     * @param dbType   要变更成的数据库类型
+     * @param eClasses 如果为空, 变更应用中所有的实体类对应数据库类型; 如果不为空, 变更指定类
+     */
+    public static void dbType(DbType dbType, Class<? extends IEntity>... eClasses) {
+        Set<String> list = RefKit.getEntityClass(eClasses);
+        for (String klass : list) {
+            RefKit.byEntity(klass).db(dbType);
+        }
+    }
+
+    /**
+     * 设置对应表的命名策略
+     *
+     * @param tableSupplier 表的命名策略
+     * @param eClasses      如果为空, 变更应用中所有的实体类对应数据库类型; 如果不为空, 变更指定类
+     */
+    public static void tableSupplier(TableDynamic tableSupplier, Class<? extends IEntity>... eClasses) {
+        Set<String> list = RefKit.getEntityClass(eClasses);
+        for (String klass : list) {
+            RefKit.byEntity(klass).setTableSupplier(tableSupplier);
+        }
+    }
+
+    /**
+     * 注册PoJoHelper.toPoJo时特定类型的转换器
+     *
+     * @param type      类型
+     * @param convertor 类型转换器
+     */
+    public static void register(Type type, IConvertor convertor) {
+        SetterMeta.register(type, convertor);
+    }
+
+    /**
+     * 注册PoJoHelper.toPoJo时特定类型的转换器
+     *
+     * @param typeName  类型, 比如 java.util.List&lt;java.lang.String&gt;
+     * @param convertor 类型转换器
+     */
+    public static void register(String typeName, IConvertor convertor) {
+        SetterMeta.register(typeName, convertor);
     }
 
     /**
@@ -153,7 +235,7 @@ public final class RefKit {
             default:
                 RelateFunction func = relations.get(methodOfEntity);
                 if (func == null) {
-                    String err = "the method[" + methodOfEntity + "] not found or IEntityRelation not defined as spring bean.";
+                    String err = "the method[" + methodOfEntity + "] not found or IEntityRelation's implement not defined as spring bean.";
                     throw new RuntimeException(err);
                 }
                 return (T) func.apply(entity);
