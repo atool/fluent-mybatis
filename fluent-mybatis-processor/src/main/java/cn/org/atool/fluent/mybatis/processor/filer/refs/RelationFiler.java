@@ -63,7 +63,7 @@ public class RelationFiler extends AbstractFile {
             .addParameter(fluent.entity(), "entity")
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .returns(refField.getJavaType())
-            .addJavadoc("{@link $L#$L}", fluent.getClassName(), refField.getName())
+            .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refField.getName())
             .build();
     }
 

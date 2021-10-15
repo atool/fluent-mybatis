@@ -118,7 +118,7 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findStudentOfStudentScoreEntity(StudentScoreEntity)}
    */
   @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
   public StudentEntity findStudent() {

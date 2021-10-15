@@ -1,6 +1,5 @@
-package cn.org.atool.fluent.mybatis.base.intf;
+package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 
 import java.io.Serializable;

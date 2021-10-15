@@ -85,7 +85,7 @@ public class TeacherEntity extends RichEntity {
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findStudentListOfTeacherEntity(TeacherEntity)}
    */
   @RefMethod
   public List<StudentEntity> findStudentList() {

@@ -176,7 +176,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findDeskMateOfStudentEntity(StudentEntity)}
    */
   @RefMethod("deskMateId = id")
   public StudentEntity findDeskMate() {
@@ -184,7 +184,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findStudentScoreListOfStudentEntity(StudentEntity)}
    */
   @RefMethod("studentId = id && isDeleted = isDeleted && env = env")
   public List<StudentScoreEntity> findStudentScoreList() {
@@ -192,7 +192,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findEnglishScoreOfStudentEntity(StudentEntity)}
    */
   @RefMethod
   public StudentScoreEntity findEnglishScore() {
@@ -200,7 +200,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findTeacherListOfStudentEntity(StudentEntity)}
    */
   @RefMethod
   public List<TeacherEntity> findTeacherList() {

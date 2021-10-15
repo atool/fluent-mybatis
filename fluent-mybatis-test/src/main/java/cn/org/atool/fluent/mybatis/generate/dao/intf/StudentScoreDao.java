@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.generate.dao.intf;
 
-import cn.org.atool.fluent.mybatis.base.intf.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.customize.model.ScoreStatistics;
 import cn.org.atool.fluent.mybatis.generate.entity.StudentScoreEntity;
 

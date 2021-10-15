@@ -1,5 +1,8 @@
 package cn.org.atool.fluent.mybatis.generate.dm;
 
+import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.test4j.hamcrest.matcher.modes.EqMode;
 import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
@@ -7,10 +10,6 @@ import org.test4j.module.database.annotations.ScriptTable;
 import org.test4j.tools.datagen.DataMap;
 import org.test4j.tools.datagen.IDataMap;
 import org.test4j.tools.datagen.KeyValue;
-
-import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * StudentScoreDataMap: 表(实体)数据对比(插入)构造器
@@ -20,201 +19,201 @@ import java.util.function.Supplier;
 @ScriptTable("student_score")
 @SuppressWarnings({"unused", "rawtypes"})
 public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
-    private boolean isTable;
+  private boolean isTable;
 
-    private final Supplier<Boolean> supplier = () -> this.isTable;
+  private final Supplier<Boolean> supplier = () -> this.isTable;
 
-    @ColumnDef(
-        value = "id",
-        type = "BIGINT",
-        primary = true,
-        autoIncrease = true,
-        notNull = true
-    )
-    public final transient KeyValue<StudentScoreDataMap> id = new KeyValue<>(this, "id", "id", supplier);
+  @ColumnDef(
+      value = "id",
+      type = "BIGINT",
+      primary = true,
+      autoIncrease = true,
+      notNull = true
+  )
+  public final transient KeyValue<StudentScoreDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
-    @ColumnDef(
-        value = "gmt_created",
-        type = "DATETIME",
-        notNull = true
-    )
-    public final transient KeyValue<StudentScoreDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
+  @ColumnDef(
+      value = "gmt_created",
+      type = "DATETIME",
+      notNull = true
+  )
+  public final transient KeyValue<StudentScoreDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
-    @ColumnDef(
-        value = "gmt_modified",
-        type = "DATETIME",
-        notNull = true
-    )
-    public final transient KeyValue<StudentScoreDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
+  @ColumnDef(
+      value = "gmt_modified",
+      type = "DATETIME",
+      notNull = true
+  )
+  public final transient KeyValue<StudentScoreDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
 
-    @ColumnDef(
-        value = "is_deleted",
-        type = "TINYINT",
-        notNull = true,
-        defaultValue = "0"
-    )
-    public final transient KeyValue<StudentScoreDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
+  @ColumnDef(
+      value = "is_deleted",
+      type = "TINYINT",
+      notNull = true,
+      defaultValue = "0"
+  )
+  public final transient KeyValue<StudentScoreDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
-    @ColumnDef(
-        value = "env",
-        type = "VARCHAR(10)"
-    )
-    public final transient KeyValue<StudentScoreDataMap> env = new KeyValue<>(this, "env", "env", supplier);
+  @ColumnDef(
+      value = "env",
+      type = "VARCHAR(10)"
+  )
+  public final transient KeyValue<StudentScoreDataMap> env = new KeyValue<>(this, "env", "env", supplier);
 
-    @ColumnDef(
-        value = "gender",
-        type = "TINYINT",
-        notNull = true,
-        defaultValue = "0"
-    )
-    public final transient KeyValue<StudentScoreDataMap> gender = new KeyValue<>(this, "gender", "gender", supplier);
+  @ColumnDef(
+      value = "gender",
+      type = "TINYINT",
+      notNull = true,
+      defaultValue = "0"
+  )
+  public final transient KeyValue<StudentScoreDataMap> gender = new KeyValue<>(this, "gender", "gender", supplier);
 
-    @ColumnDef(
-        value = "school_term",
-        type = "INT"
-    )
-    public final transient KeyValue<StudentScoreDataMap> schoolTerm = new KeyValue<>(this, "school_term", "schoolTerm", supplier);
+  @ColumnDef(
+      value = "school_term",
+      type = "INT"
+  )
+  public final transient KeyValue<StudentScoreDataMap> schoolTerm = new KeyValue<>(this, "school_term", "schoolTerm", supplier);
 
-    @ColumnDef(
-        value = "score",
-        type = "INT"
-    )
-    public final transient KeyValue<StudentScoreDataMap> score = new KeyValue<>(this, "score", "score", supplier);
+  @ColumnDef(
+      value = "score",
+      type = "INT"
+  )
+  public final transient KeyValue<StudentScoreDataMap> score = new KeyValue<>(this, "score", "score", supplier);
 
-    @ColumnDef(
-        value = "student_id",
-        type = "BIGINT",
-        notNull = true
-    )
-    public final transient KeyValue<StudentScoreDataMap> studentId = new KeyValue<>(this, "student_id", "studentId", supplier);
+  @ColumnDef(
+      value = "student_id",
+      type = "BIGINT",
+      notNull = true
+  )
+  public final transient KeyValue<StudentScoreDataMap> studentId = new KeyValue<>(this, "student_id", "studentId", supplier);
 
-    @ColumnDef(
-        value = "subject",
-        type = "VARCHAR(30)"
-    )
-    public final transient KeyValue<StudentScoreDataMap> subject = new KeyValue<>(this, "subject", "subject", supplier);
+  @ColumnDef(
+      value = "subject",
+      type = "VARCHAR(30)"
+  )
+  public final transient KeyValue<StudentScoreDataMap> subject = new KeyValue<>(this, "subject", "subject", supplier);
 
-    @ColumnDef(
-        value = "tenant",
-        type = "BIGINT",
-        notNull = true,
-        defaultValue = "0"
-    )
-    public final transient KeyValue<StudentScoreDataMap> tenant = new KeyValue<>(this, "tenant", "tenant", supplier);
+  @ColumnDef(
+      value = "tenant",
+      type = "BIGINT",
+      notNull = true,
+      defaultValue = "0"
+  )
+  public final transient KeyValue<StudentScoreDataMap> tenant = new KeyValue<>(this, "tenant", "tenant", supplier);
 
-    StudentScoreDataMap(boolean isTable) {
-        super();
-        this.isTable = isTable;
+  StudentScoreDataMap(boolean isTable) {
+    super();
+    this.isTable = isTable;
+  }
+
+  StudentScoreDataMap(boolean isTable, int size) {
+    super(size);
+    this.isTable = isTable;
+  }
+
+  /**
+   * 创建StudentScoreDataMap
+   * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
+   */
+  public StudentScoreDataMap init() {
+    this.id.autoIncrease();
+    this.gmtCreated.values(new Date());
+    this.gmtModified.values(new Date());
+    this.isDeleted.values(false);
+    return this;
+  }
+
+  public StudentScoreDataMap with(Consumer<StudentScoreDataMap> init) {
+    init.accept(this);
+    return this;
+  }
+
+  public static StudentScoreDataMap table() {
+    return new StudentScoreDataMap(true, 1);
+  }
+
+  public static StudentScoreDataMap table(int size) {
+    return new StudentScoreDataMap(true, size);
+  }
+
+  public static StudentScoreDataMap entity() {
+    return new StudentScoreDataMap(false, 1);
+  }
+
+  public static StudentScoreDataMap entity(int size) {
+    return new StudentScoreDataMap(false, size);
+  }
+
+  /**
+   * DataMap数据和表[student_score]数据比较
+   */
+  public StudentScoreDataMap eqTable(EqMode... modes) {
+    IDatabase.db.table("student_score").query().eqDataMap(this, modes);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[student_score]数据比较
+   */
+  public StudentScoreDataMap eqQuery(String query, EqMode... modes) {
+    IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this, modes);
+    return this;
+  }
+
+  /**
+   * DataMap数据和表[student_score]数据比较
+   */
+  public StudentScoreDataMap eqQuery(IDataMap query, EqMode... modes) {
+    IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this, modes);
+    return this;
+  }
+
+  /**
+   * 清空[student_score]表数据
+   */
+  public StudentScoreDataMap clean() {
+    IDatabase.db.cleanTable("student_score");
+    return this;
+  }
+
+  /**
+   * 插入[student_score]表数据
+   */
+  public StudentScoreDataMap insert() {
+    IDatabase.db.table("student_score").insert(this);
+    return this;
+  }
+
+  /**
+   * 先清空, 再插入[student_score]表数据
+   */
+  public StudentScoreDataMap cleanAndInsert() {
+    return this.clean().insert();
+  }
+
+  public static class Factory {
+    public StudentScoreDataMap table() {
+      return StudentScoreDataMap.table();
     }
 
-    StudentScoreDataMap(boolean isTable, int size) {
-        super(size);
-        this.isTable = isTable;
+    public StudentScoreDataMap table(int size) {
+      return  StudentScoreDataMap.table(size);
     }
 
-    /**
-     * 创建StudentScoreDataMap
-     * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
-     */
-    public StudentScoreDataMap init() {
-        this.id.autoIncrease();
-        this.gmtCreated.values(new Date());
-        this.gmtModified.values(new Date());
-        this.isDeleted.values(false);
-        return this;
+    public StudentScoreDataMap initTable() {
+      return StudentScoreDataMap.table().init();
     }
 
-    public StudentScoreDataMap with(Consumer<StudentScoreDataMap> init) {
-        init.accept(this);
-        return this;
+    public StudentScoreDataMap initTable(int size) {
+      return  StudentScoreDataMap.table(size).init();
     }
 
-    public static StudentScoreDataMap table() {
-        return new StudentScoreDataMap(true, 1);
+    public StudentScoreDataMap entity() {
+      return StudentScoreDataMap.entity();
     }
 
-    public static StudentScoreDataMap table(int size) {
-        return new StudentScoreDataMap(true, size);
+    public StudentScoreDataMap entity(int size) {
+      return  StudentScoreDataMap.entity(size);
     }
-
-    public static StudentScoreDataMap entity() {
-        return new StudentScoreDataMap(false, 1);
-    }
-
-    public static StudentScoreDataMap entity(int size) {
-        return new StudentScoreDataMap(false, size);
-    }
-
-    /**
-     * DataMap数据和表[student_score]数据比较
-     */
-    public StudentScoreDataMap eqTable(EqMode... modes) {
-        IDatabase.db.table("student_score").query().eqDataMap(this, modes);
-        return this;
-    }
-
-    /**
-     * DataMap数据和表[student_score]数据比较
-     */
-    public StudentScoreDataMap eqQuery(String query, EqMode... modes) {
-        IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this, modes);
-        return this;
-    }
-
-    /**
-     * DataMap数据和表[student_score]数据比较
-     */
-    public StudentScoreDataMap eqQuery(IDataMap query, EqMode... modes) {
-        IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this, modes);
-        return this;
-    }
-
-    /**
-     * 清空[student_score]表数据
-     */
-    public StudentScoreDataMap clean() {
-        IDatabase.db.cleanTable("student_score");
-        return this;
-    }
-
-    /**
-     * 插入[student_score]表数据
-     */
-    public StudentScoreDataMap insert() {
-        IDatabase.db.table("student_score").insert(this);
-        return this;
-    }
-
-    /**
-     * 先清空, 再插入[student_score]表数据
-     */
-    public StudentScoreDataMap cleanAndInsert() {
-        return this.clean().insert();
-    }
-
-    public static class Factory {
-        public StudentScoreDataMap table() {
-            return StudentScoreDataMap.table();
-        }
-
-        public StudentScoreDataMap table(int size) {
-            return StudentScoreDataMap.table(size);
-        }
-
-        public StudentScoreDataMap initTable() {
-            return StudentScoreDataMap.table().init();
-        }
-
-        public StudentScoreDataMap initTable(int size) {
-            return StudentScoreDataMap.table(size).init();
-        }
-
-        public StudentScoreDataMap entity() {
-            return StudentScoreDataMap.entity();
-        }
-
-        public StudentScoreDataMap entity(int size) {
-            return StudentScoreDataMap.entity(size);
-        }
-    }
+  }
 }

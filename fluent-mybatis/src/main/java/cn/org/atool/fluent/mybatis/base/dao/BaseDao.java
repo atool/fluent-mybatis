@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.dao;
 
-import cn.org.atool.fluent.mybatis.base.intf.IBaseDao;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;

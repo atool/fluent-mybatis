@@ -1,16 +1,13 @@
 package cn.org.atool.fluent.mybatis.generate.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import java.util.Date;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * MemberEntity: 数据映射实体定义
@@ -94,7 +91,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findMyFavoriteOfMemberEntity(MemberEntity)}
    */
   @RefMethod("isDeleted = isDeleted && memberId = id")
   public List<MemberFavoriteEntity> findMyFavorite() {
@@ -102,7 +99,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findExFriendsOfMemberEntity(MemberEntity)}
    */
   @RefMethod
   public List<MemberEntity> findExFriends() {
@@ -110,7 +107,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 @see cn.org.atool.fluent.mybatis.refs.Ref
+   * 实现 {@link cn.org.atool.fluent.mybatis.generate.IEntityRelation#findCurrFriendOfMemberEntity(MemberEntity)}
    */
   @RefMethod
   public MemberEntity findCurrFriend() {

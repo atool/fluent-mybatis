@@ -1,11 +1,34 @@
 package cn.org.atool.fluent.mybatis.generate;
 
-import cn.org.atool.fluent.mybatis.generate.dm.*;
-import cn.org.atool.fluent.mybatis.generate.mix.*;
+import cn.org.atool.fluent.mybatis.generate.dm.BlobValueDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.HomeAddressDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.IdcardDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberFavoriteDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MemberLoveDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.MyEnumTypeDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.NoAutoIdDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.NoPrimaryDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentScoreDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.StudentTeacherRelationDataMap;
+import cn.org.atool.fluent.mybatis.generate.dm.TeacherDataMap;
+import cn.org.atool.fluent.mybatis.generate.mix.BlobValueTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.HomeAddressTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.IdcardTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberFavoriteTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberLoveTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MemberTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.MyEnumTypeTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.NoAutoIdTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.NoPrimaryTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentScoreTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.StudentTeacherRelationTableMix;
+import cn.org.atool.fluent.mybatis.generate.mix.TeacherTableMix;
+import java.util.List;
 import org.test4j.module.database.IDataSourceScript;
 import org.test4j.module.spec.internal.MixProxy;
-
-import java.util.List;
 
 /**
  * ATM: Application Table Manager
@@ -13,147 +36,147 @@ import java.util.List;
  * @author Powered By Test4J
  */
 public interface ATM {
-    DataMap dataMap = new DataMap();
+  DataMap dataMap = new DataMap();
 
-    Table table = new Table();
+  Table table = new Table();
 
-    Mixes mixes = new Mixes();
+  Mixes mixes = new Mixes();
 
-    /**
-     * 应用表名
-     */
-    class Table {
-        public final String noAutoId = "no_auto_id";
+  /**
+   * 应用表名
+   */
+  class Table {
+    public final String noAutoId = "no_auto_id";
 
-        public final String noPrimary = "no_primary";
+    public final String noPrimary = "no_primary";
 
-        public final String studentTeacherRelation = "student_teacher_relation";
+    public final String studentTeacherRelation = "student_teacher_relation";
 
-        public final String studentScore = "student_score";
+    public final String studentScore = "student_score";
 
-        public final String teacher = "teacher";
+    public final String teacher = "teacher";
 
-        public final String homeAddress = "home_address";
+    public final String homeAddress = "home_address";
 
-        public final String student = "student";
+    public final String student = "student";
 
-        public final String memberFavorite = "t_member_favorite";
+    public final String memberFavorite = "t_member_favorite";
 
-        public final String memberLove = "t_member_love";
+    public final String memberLove = "t_member_love";
 
-        public final String member = "t_member";
+    public final String member = "t_member";
 
-        public final String blobValue = "blob_value";
+    public final String blobValue = "blob_value";
 
-        public final String myEnumType = "my_enum_type";
+    public final String myEnumType = "my_enum_type";
 
-        public final String idcard = "idcard";
+    public final String idcard = "idcard";
+  }
+
+  /**
+   * table or entity data构造器
+   */
+  class DataMap {
+    public final NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
+
+    public final NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
+
+    public final StudentTeacherRelationDataMap.Factory studentTeacherRelation = new StudentTeacherRelationDataMap.Factory();
+
+    public final StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
+
+    public final TeacherDataMap.Factory teacher = new TeacherDataMap.Factory();
+
+    public final HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
+
+    public final StudentDataMap.Factory student = new StudentDataMap.Factory();
+
+    public final MemberFavoriteDataMap.Factory memberFavorite = new MemberFavoriteDataMap.Factory();
+
+    public final MemberLoveDataMap.Factory memberLove = new MemberLoveDataMap.Factory();
+
+    public final MemberDataMap.Factory member = new MemberDataMap.Factory();
+
+    public final BlobValueDataMap.Factory blobValue = new BlobValueDataMap.Factory();
+
+    public final MyEnumTypeDataMap.Factory myEnumType = new MyEnumTypeDataMap.Factory();
+
+    public final IdcardDataMap.Factory idcard = new IdcardDataMap.Factory();
+  }
+
+  /**
+   * 应用表数据操作
+   */
+  class Mixes {
+    public final NoAutoIdTableMix noAutoIdTableMix = MixProxy.proxy(NoAutoIdTableMix.class);
+
+    public final NoPrimaryTableMix noPrimaryTableMix = MixProxy.proxy(NoPrimaryTableMix.class);
+
+    public final StudentTeacherRelationTableMix studentTeacherRelationTableMix = MixProxy.proxy(StudentTeacherRelationTableMix.class);
+
+    public final StudentScoreTableMix studentScoreTableMix = MixProxy.proxy(StudentScoreTableMix.class);
+
+    public final TeacherTableMix teacherTableMix = MixProxy.proxy(TeacherTableMix.class);
+
+    public final HomeAddressTableMix homeAddressTableMix = MixProxy.proxy(HomeAddressTableMix.class);
+
+    public final StudentTableMix studentTableMix = MixProxy.proxy(StudentTableMix.class);
+
+    public final MemberFavoriteTableMix memberFavoriteTableMix = MixProxy.proxy(MemberFavoriteTableMix.class);
+
+    public final MemberLoveTableMix memberLoveTableMix = MixProxy.proxy(MemberLoveTableMix.class);
+
+    public final MemberTableMix memberTableMix = MixProxy.proxy(MemberTableMix.class);
+
+    public final BlobValueTableMix blobValueTableMix = MixProxy.proxy(BlobValueTableMix.class);
+
+    public final MyEnumTypeTableMix myEnumTypeTableMix = MixProxy.proxy(MyEnumTypeTableMix.class);
+
+    public final IdcardTableMix idcardTableMix = MixProxy.proxy(IdcardTableMix.class);
+
+    public void cleanAllTable() {
+      this.noAutoIdTableMix.cleanNoAutoIdTable();
+      this.noPrimaryTableMix.cleanNoPrimaryTable();
+      this.studentTeacherRelationTableMix.cleanStudentTeacherRelationTable();
+      this.studentScoreTableMix.cleanStudentScoreTable();
+      this.teacherTableMix.cleanTeacherTable();
+      this.homeAddressTableMix.cleanHomeAddressTable();
+      this.studentTableMix.cleanStudentTable();
+      this.memberFavoriteTableMix.cleanMemberFavoriteTable();
+      this.memberLoveTableMix.cleanMemberLoveTable();
+      this.memberTableMix.cleanMemberTable();
+      this.blobValueTableMix.cleanBlobValueTable();
+      this.myEnumTypeTableMix.cleanMyEnumTypeTable();
+      this.idcardTableMix.cleanIdcardTable();
+    }
+  }
+
+  /**
+   * 应用数据库创建脚本构造
+   */
+  class Script implements IDataSourceScript {
+    @Override
+    public List<Class> getTableKlass() {
+      return list(
+      	NoAutoIdDataMap.class,
+      	NoPrimaryDataMap.class,
+      	StudentTeacherRelationDataMap.class,
+      	StudentScoreDataMap.class,
+      	TeacherDataMap.class,
+      	HomeAddressDataMap.class,
+      	StudentDataMap.class,
+      	MemberFavoriteDataMap.class,
+      	MemberLoveDataMap.class,
+      	MemberDataMap.class,
+      	BlobValueDataMap.class,
+      	MyEnumTypeDataMap.class,
+      	IdcardDataMap.class
+      );
     }
 
-    /**
-     * table or entity data构造器
-     */
-    class DataMap {
-        public final NoAutoIdDataMap.Factory noAutoId = new NoAutoIdDataMap.Factory();
-
-        public final NoPrimaryDataMap.Factory noPrimary = new NoPrimaryDataMap.Factory();
-
-        public final StudentTeacherRelationDataMap.Factory studentTeacherRelation = new StudentTeacherRelationDataMap.Factory();
-
-        public final StudentScoreDataMap.Factory studentScore = new StudentScoreDataMap.Factory();
-
-        public final TeacherDataMap.Factory teacher = new TeacherDataMap.Factory();
-
-        public final HomeAddressDataMap.Factory homeAddress = new HomeAddressDataMap.Factory();
-
-        public final StudentDataMap.Factory student = new StudentDataMap.Factory();
-
-        public final MemberFavoriteDataMap.Factory memberFavorite = new MemberFavoriteDataMap.Factory();
-
-        public final MemberLoveDataMap.Factory memberLove = new MemberLoveDataMap.Factory();
-
-        public final MemberDataMap.Factory member = new MemberDataMap.Factory();
-
-        public final BlobValueDataMap.Factory blobValue = new BlobValueDataMap.Factory();
-
-        public final MyEnumTypeDataMap.Factory myEnumType = new MyEnumTypeDataMap.Factory();
-
-        public final IdcardDataMap.Factory idcard = new IdcardDataMap.Factory();
+    @Override
+    public IndexList getIndexList() {
+      return new IndexList();
     }
-
-    /**
-     * 应用表数据操作
-     */
-    class Mixes {
-        public final NoAutoIdTableMix noAutoIdTableMix = MixProxy.proxy(NoAutoIdTableMix.class);
-
-        public final NoPrimaryTableMix noPrimaryTableMix = MixProxy.proxy(NoPrimaryTableMix.class);
-
-        public final StudentTeacherRelationTableMix studentTeacherRelationTableMix = MixProxy.proxy(StudentTeacherRelationTableMix.class);
-
-        public final StudentScoreTableMix studentScoreTableMix = MixProxy.proxy(StudentScoreTableMix.class);
-
-        public final TeacherTableMix teacherTableMix = MixProxy.proxy(TeacherTableMix.class);
-
-        public final HomeAddressTableMix homeAddressTableMix = MixProxy.proxy(HomeAddressTableMix.class);
-
-        public final StudentTableMix studentTableMix = MixProxy.proxy(StudentTableMix.class);
-
-        public final MemberFavoriteTableMix memberFavoriteTableMix = MixProxy.proxy(MemberFavoriteTableMix.class);
-
-        public final MemberLoveTableMix memberLoveTableMix = MixProxy.proxy(MemberLoveTableMix.class);
-
-        public final MemberTableMix memberTableMix = MixProxy.proxy(MemberTableMix.class);
-
-        public final BlobValueTableMix blobValueTableMix = MixProxy.proxy(BlobValueTableMix.class);
-
-        public final MyEnumTypeTableMix myEnumTypeTableMix = MixProxy.proxy(MyEnumTypeTableMix.class);
-
-        public final IdcardTableMix idcardTableMix = MixProxy.proxy(IdcardTableMix.class);
-
-        public void cleanAllTable() {
-            this.noAutoIdTableMix.cleanNoAutoIdTable();
-            this.noPrimaryTableMix.cleanNoPrimaryTable();
-            this.studentTeacherRelationTableMix.cleanStudentTeacherRelationTable();
-            this.studentScoreTableMix.cleanStudentScoreTable();
-            this.teacherTableMix.cleanTeacherTable();
-            this.homeAddressTableMix.cleanHomeAddressTable();
-            this.studentTableMix.cleanStudentTable();
-            this.memberFavoriteTableMix.cleanMemberFavoriteTable();
-            this.memberLoveTableMix.cleanMemberLoveTable();
-            this.memberTableMix.cleanMemberTable();
-            this.blobValueTableMix.cleanBlobValueTable();
-            this.myEnumTypeTableMix.cleanMyEnumTypeTable();
-            this.idcardTableMix.cleanIdcardTable();
-        }
-    }
-
-    /**
-     * 应用数据库创建脚本构造
-     */
-    class Script implements IDataSourceScript {
-        @Override
-        public List<Class> getTableKlass() {
-            return list(
-                NoAutoIdDataMap.class,
-                NoPrimaryDataMap.class,
-                StudentTeacherRelationDataMap.class,
-                StudentScoreDataMap.class,
-                TeacherDataMap.class,
-                HomeAddressDataMap.class,
-                StudentDataMap.class,
-                MemberFavoriteDataMap.class,
-                MemberLoveDataMap.class,
-                MemberDataMap.class,
-                BlobValueDataMap.class,
-                MyEnumTypeDataMap.class,
-                IdcardDataMap.class
-            );
-        }
-
-        @Override
-        public IndexList getIndexList() {
-            return new IndexList();
-        }
-    }
+  }
 }
