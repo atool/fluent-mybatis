@@ -33,7 +33,7 @@ import lombok.experimental.Accessors;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class StudentEntity extends RichEntity implements MyEntity {
+public class StudentEntity extends RichEntity implements MyEntity<StudentEntity> {
   private static final long serialVersionUID = 1L;
 
   /**

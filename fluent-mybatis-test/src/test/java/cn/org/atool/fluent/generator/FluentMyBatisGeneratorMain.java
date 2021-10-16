@@ -19,7 +19,7 @@ public class FluentMyBatisGeneratorMain {
 
     static final String TestDir = "fluent-mybatis-test/src/test/java";
 
-    static final String BasePack = "cn.org.atool.fluent.mybatis.generate";
+    static final String BasePack = "cn.org.atool.fluent.mybatis.generator.shared";
 
     /**
      * 使用main函数，是避免全量跑test时，误执行生成代码
@@ -38,7 +38,7 @@ public class FluentMyBatisGeneratorMain {
     }
 
     @Tables(url = URL, username = "root", password = "password",
-        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack + 1,
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
             @Table(value = "no_auto_id", mapperPrefix = "new",
@@ -49,7 +49,7 @@ public class FluentMyBatisGeneratorMain {
     }
 
     @Tables(url = URL, username = "root", password = "password",
-        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack + 2,
         gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         tables = {
             @Table(value = {"home_address", "student", "student_score"},
@@ -74,7 +74,7 @@ public class FluentMyBatisGeneratorMain {
         /* 数据库连接信息 **/
         url = URL, username = "root", password = "password",
         /* Entity类parent package路径 **/
-        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack + 3,
         /* 如果表定义记录创建，记录修改，逻辑删除字段 **/
         gmtCreated = "gmt_create", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         /* 需要生成文件的表 ( 表名称:对应的Entity名称 ) **/
@@ -92,7 +92,7 @@ public class FluentMyBatisGeneratorMain {
     }
 
     @Tables(url = URL, username = "root", password = "password",
-        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack + 4,
         tables = {
             @Table(value = "blob_value",
                 columns = @Column(value = "blob_value", typeHandler = BlobTypeHandler.class),
@@ -108,12 +108,12 @@ public class FluentMyBatisGeneratorMain {
     }
 
     @Tables(url = URL, username = "root", password = "password",
-        srcDir = SrcDir, testDir = TestDir, basePack = BasePack,
+        srcDir = SrcDir, testDir = TestDir, basePack = BasePack + 5,
         tables = {
             @Table(value = "idcard",
                 columns = {@Column(value = "is_deleted", javaType = Long.class)})
         }, logicDeleted = "is_deleted", version = "version",
-        useCached = true)
+        useCached = true, isRichEntity = false)
     static class UpdateDefault {
     }
 }
