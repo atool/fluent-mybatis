@@ -1,21 +1,23 @@
 package cn.org.atool.fluent.mybatis.customize.impl;
 
-import cn.org.atool.fluent.mybatis.generate.IEntityRelation;
-import cn.org.atool.fluent.mybatis.generate.entity.MemberEntity;
-import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.generate.entity.StudentScoreEntity;
-import cn.org.atool.fluent.mybatis.generate.entity.TeacherEntity;
-import cn.org.atool.fluent.mybatis.generate.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.StudentScoreQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.StudentTeacherRelationQuery;
-import cn.org.atool.fluent.mybatis.generate.wrapper.TeacherQuery;
+import cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation;
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentScoreEntity;
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.TeacherEntity;
+import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
+import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentScoreQuery;
+import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentTeacherRelationQuery;
+import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.TeacherQuery;
+import cn.org.atool.fluent.mybatis.generator.shared3.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
 @Service
-public class EntityRelation implements IEntityRelation {
+public class EntityRelation implements
+    IEntityRelation,
+    cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation {
     @Override
     public List<MemberEntity> findExFriendsOfMemberEntity(MemberEntity entity) {
         return null;
@@ -59,5 +61,11 @@ public class EntityRelation implements IEntityRelation {
                     .end()
             ).end()
             .to().listEntity();
+    }
+
+    @Override
+    public void initialize() {
+        IEntityRelation.super.initialize();
+        cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation.super.initialize();
     }
 }

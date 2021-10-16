@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.mybatis.customize;
 
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
+import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressUpdate;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.generate.entity.HomeAddressEntity;
-import cn.org.atool.fluent.mybatis.generate.wrapper.HomeAddressUpdate;
 
 import java.util.function.Supplier;
 

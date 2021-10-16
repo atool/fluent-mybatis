@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.customize;
 
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
-import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
 
 import java.util.List;
 

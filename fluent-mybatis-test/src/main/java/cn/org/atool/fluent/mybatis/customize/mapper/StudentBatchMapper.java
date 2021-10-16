@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.customize.mapper;
 
-import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package cn.org.atool.fluent.mybatis.db.pg.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -30,110 +30,130 @@ import java.util.Date;
     dbType = DbType.POSTGRE_SQL
 )
 public class PgStudentEntity extends RichEntity {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   */
-  @TableId("id")
-  private Integer id;
+    /**
+     *
+     */
+    @TableId("id")
+    private Integer id;
 
-  /**
-   */
-  @TableField("address")
-  private String address;
+    /**
+     *
+     */
+    @TableField("address")
+    private String address;
 
-  /**
-   */
-  @TableField("age")
-  private Integer age;
+    /**
+     *
+     */
+    @TableField("age")
+    private Integer age;
 
-  /**
-   */
-  @TableField("birthday")
-  private Date birthday;
+    /**
+     *
+     */
+    @TableField("birthday")
+    private Date birthday;
 
-  /**
-   */
-  @TableField("bonus_points")
-  private Long bonusPoints;
+    /**
+     *
+     */
+    @TableField("bonus_points")
+    private Long bonusPoints;
 
-  /**
-   */
-  @TableField("desk_mate_id")
-  private Long deskMateId;
+    /**
+     *
+     */
+    @TableField("desk_mate_id")
+    private Long deskMateId;
 
-  /**
-   */
-  @TableField("email")
-  private String email;
+    /**
+     *
+     */
+    @TableField("email")
+    private String email;
 
-  /**
-   */
-  @TableField("env")
-  private String env;
+    /**
+     *
+     */
+    @TableField("env")
+    private String env;
 
-  /**
-   */
-  @TableField("gender")
-  private Integer gender;
+    /**
+     *
+     */
+    @TableField("gender")
+    private Integer gender;
 
-  /**
-   */
-  @TableField("gmt_created")
-  private Date gmtCreated;
+    /**
+     *
+     */
+    @TableField("gmt_created")
+    private Date gmtCreated;
 
-  /**
-   */
-  @TableField("gmt_modified")
-  private Date gmtModified;
+    /**
+     *
+     */
+    @TableField("gmt_modified")
+    private Date gmtModified;
 
-  /**
-   */
-  @TableField("grade")
-  private Integer grade;
+    /**
+     *
+     */
+    @TableField("grade")
+    private Integer grade;
 
-  /**
-   */
-  @TableField("home_address_id")
-  private Long homeAddressId;
+    /**
+     *
+     */
+    @TableField("home_address_id")
+    private Long homeAddressId;
 
-  /**
-   */
-  @TableField("home_county_id")
-  private Long homeCountyId;
+    /**
+     *
+     */
+    @TableField("home_county_id")
+    private Long homeCountyId;
 
-  /**
-   */
-  @TableField("is_deleted")
-  private Integer isDeleted;
+    /**
+     *
+     */
+    @TableField("is_deleted")
+    private Integer isDeleted;
 
-  /**
-   */
-  @TableField("phone")
-  private String phone;
+    /**
+     *
+     */
+    @TableField("phone")
+    private String phone;
 
-  /**
-   */
-  @TableField("status")
-  private String status;
+    /**
+     *
+     */
+    @TableField("status")
+    private String status;
 
-  /**
-   */
-  @TableField("tenant")
-  private Long tenant;
+    /**
+     *
+     */
+    @TableField("tenant")
+    private Long tenant;
 
-  /**
-   */
-  @TableField("user_name")
-  private String userName;
+    /**
+     *
+     */
+    @TableField("user_name")
+    private String userName;
 
-  /**
-   */
-  @TableField("version")
-  private String version;
+    /**
+     *
+     */
+    @TableField("version")
+    private String version;
 
-  @Override
-  public final Class entityClass() {
-    return PgStudentEntity.class;
-  }
+    @Override
+    public final Class entityClass() {
+        return PgStudentEntity.class;
+    }
 }

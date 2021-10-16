@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.dbtest;
 
-import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.db.oracle11.entity.OracleUserEntity;
 import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleUserMapper;
 import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleUserUpdate;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.test.BaseTest;
+import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.customize.impl;
 
-import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.customize.StudentExtDao;
-import cn.org.atool.fluent.mybatis.generate.Ref;
-import cn.org.atool.fluent.mybatis.generate.dao.base.StudentBaseDao;
-import cn.org.atool.fluent.mybatis.generate.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
+import cn.org.atool.fluent.mybatis.generator.shared2.dao.base.StudentBaseDao;
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

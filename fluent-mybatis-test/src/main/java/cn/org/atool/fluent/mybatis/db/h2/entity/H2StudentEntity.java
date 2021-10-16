@@ -3,8 +3,8 @@ package cn.org.atool.fluent.mybatis.db.h2.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -29,110 +29,130 @@ import java.util.Date;
     dbType = DbType.H2
 )
 public class H2StudentEntity extends RichEntity {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   */
-  @TableId("ID")
-  private Long id;
+    /**
+     *
+     */
+    @TableId("ID")
+    private Long id;
 
-  /**
-   */
-  @TableField("ADDRESS")
-  private String address;
+    /**
+     *
+     */
+    @TableField("ADDRESS")
+    private String address;
 
-  /**
-   */
-  @TableField("AGE")
-  private Integer age;
+    /**
+     *
+     */
+    @TableField("AGE")
+    private Integer age;
 
-  /**
-   */
-  @TableField("BIRTHDAY")
-  private Date birthday;
+    /**
+     *
+     */
+    @TableField("BIRTHDAY")
+    private Date birthday;
 
-  /**
-   */
-  @TableField("BONUS_POINTS")
-  private Long bonusPoints;
+    /**
+     *
+     */
+    @TableField("BONUS_POINTS")
+    private Long bonusPoints;
 
-  /**
-   */
-  @TableField("DESK_MATE_ID")
-  private Long deskMateId;
+    /**
+     *
+     */
+    @TableField("DESK_MATE_ID")
+    private Long deskMateId;
 
-  /**
-   */
-  @TableField("EMAIL")
-  private String email;
+    /**
+     *
+     */
+    @TableField("EMAIL")
+    private String email;
 
-  /**
-   */
-  @TableField("ENV")
-  private String env;
+    /**
+     *
+     */
+    @TableField("ENV")
+    private String env;
 
-  /**
-   */
-  @TableField("GENDER")
-  private Integer gender;
+    /**
+     *
+     */
+    @TableField("GENDER")
+    private Integer gender;
 
-  /**
-   */
-  @TableField("GMT_CREATED")
-  private Date gmtCreated;
+    /**
+     *
+     */
+    @TableField("GMT_CREATED")
+    private Date gmtCreated;
 
-  /**
-   */
-  @TableField("GMT_MODIFIED")
-  private Date gmtModified;
+    /**
+     *
+     */
+    @TableField("GMT_MODIFIED")
+    private Date gmtModified;
 
-  /**
-   */
-  @TableField("GRADE")
-  private Integer grade;
+    /**
+     *
+     */
+    @TableField("GRADE")
+    private Integer grade;
 
-  /**
-   */
-  @TableField("HOME_ADDRESS_ID")
-  private Long homeAddressId;
+    /**
+     *
+     */
+    @TableField("HOME_ADDRESS_ID")
+    private Long homeAddressId;
 
-  /**
-   */
-  @TableField("HOME_COUNTY_ID")
-  private Long homeCountyId;
+    /**
+     *
+     */
+    @TableField("HOME_COUNTY_ID")
+    private Long homeCountyId;
 
-  /**
-   */
-  @TableField("IS_DELETED")
-  private Integer isDeleted;
+    /**
+     *
+     */
+    @TableField("IS_DELETED")
+    private Integer isDeleted;
 
-  /**
-   */
-  @TableField("PHONE")
-  private String phone;
+    /**
+     *
+     */
+    @TableField("PHONE")
+    private String phone;
 
-  /**
-   */
-  @TableField("STATUS")
-  private String status;
+    /**
+     *
+     */
+    @TableField("STATUS")
+    private String status;
 
-  /**
-   */
-  @TableField("TENANT")
-  private Long tenant;
+    /**
+     *
+     */
+    @TableField("TENANT")
+    private Long tenant;
 
-  /**
-   */
-  @TableField("USER_NAME")
-  private String userName;
+    /**
+     *
+     */
+    @TableField("USER_NAME")
+    private String userName;
 
-  /**
-   */
-  @TableField("VERSION")
-  private String version;
+    /**
+     *
+     */
+    @TableField("VERSION")
+    private String version;
 
-  @Override
-  public final Class entityClass() {
-    return H2StudentEntity.class;
-  }
+    @Override
+    public final Class entityClass() {
+        return H2StudentEntity.class;
+    }
 }

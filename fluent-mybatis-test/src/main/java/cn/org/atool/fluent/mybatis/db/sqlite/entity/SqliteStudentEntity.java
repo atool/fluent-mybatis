@@ -3,8 +3,8 @@ package cn.org.atool.fluent.mybatis.db.sqlite.entity;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -27,110 +27,130 @@ import lombok.experimental.Accessors;
     dbType = DbType.SQLITE
 )
 public class SqliteStudentEntity extends RichEntity {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   */
-  @TableId("id")
-  private Integer id;
+    /**
+     *
+     */
+    @TableId("id")
+    private Integer id;
 
-  /**
-   */
-  @TableField("address")
-  private String address;
+    /**
+     *
+     */
+    @TableField("address")
+    private String address;
 
-  /**
-   */
-  @TableField("age")
-  private Integer age;
+    /**
+     *
+     */
+    @TableField("age")
+    private Integer age;
 
-  /**
-   */
-  @TableField("birthday")
-  private String birthday;
+    /**
+     *
+     */
+    @TableField("birthday")
+    private String birthday;
 
-  /**
-   */
-  @TableField("bonus_points")
-  private Integer bonusPoints;
+    /**
+     *
+     */
+    @TableField("bonus_points")
+    private Integer bonusPoints;
 
-  /**
-   */
-  @TableField("desk_mate_id")
-  private Integer deskMateId;
+    /**
+     *
+     */
+    @TableField("desk_mate_id")
+    private Integer deskMateId;
 
-  /**
-   */
-  @TableField("email")
-  private String email;
+    /**
+     *
+     */
+    @TableField("email")
+    private String email;
 
-  /**
-   */
-  @TableField("env")
-  private String env;
+    /**
+     *
+     */
+    @TableField("env")
+    private String env;
 
-  /**
-   */
-  @TableField("gender")
-  private Integer gender;
+    /**
+     *
+     */
+    @TableField("gender")
+    private Integer gender;
 
-  /**
-   */
-  @TableField("gmt_created")
-  private String gmtCreated;
+    /**
+     *
+     */
+    @TableField("gmt_created")
+    private String gmtCreated;
 
-  /**
-   */
-  @TableField("gmt_modified")
-  private String gmtModified;
+    /**
+     *
+     */
+    @TableField("gmt_modified")
+    private String gmtModified;
 
-  /**
-   */
-  @TableField("grade")
-  private Integer grade;
+    /**
+     *
+     */
+    @TableField("grade")
+    private Integer grade;
 
-  /**
-   */
-  @TableField("home_address_id")
-  private Integer homeAddressId;
+    /**
+     *
+     */
+    @TableField("home_address_id")
+    private Integer homeAddressId;
 
-  /**
-   */
-  @TableField("home_county_id")
-  private Integer homeCountyId;
+    /**
+     *
+     */
+    @TableField("home_county_id")
+    private Integer homeCountyId;
 
-  /**
-   */
-  @TableField("is_deleted")
-  private Integer isDeleted;
+    /**
+     *
+     */
+    @TableField("is_deleted")
+    private Integer isDeleted;
 
-  /**
-   */
-  @TableField("phone")
-  private String phone;
+    /**
+     *
+     */
+    @TableField("phone")
+    private String phone;
 
-  /**
-   */
-  @TableField("status")
-  private String status;
+    /**
+     *
+     */
+    @TableField("status")
+    private String status;
 
-  /**
-   */
-  @TableField("tenant")
-  private Integer tenant;
+    /**
+     *
+     */
+    @TableField("tenant")
+    private Integer tenant;
 
-  /**
-   */
-  @TableField("user_name")
-  private String userName;
+    /**
+     *
+     */
+    @TableField("user_name")
+    private String userName;
 
-  /**
-   */
-  @TableField("version")
-  private String version;
+    /**
+     *
+     */
+    @TableField("version")
+    private String version;
 
-  @Override
-  public final Class entityClass() {
-    return SqliteStudentEntity.class;
-  }
+    @Override
+    public final Class entityClass() {
+        return SqliteStudentEntity.class;
+    }
 }

@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.db.oracle11.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.generate.entity.IdcardEntity;
+import cn.org.atool.fluent.mybatis.generator.shared5.entity.IdcardEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
