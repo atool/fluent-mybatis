@@ -88,4 +88,6 @@ public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
     default QueryExecutor<E> to() {
         return this.query().to();
     }
+
+    Form getForm();
 }

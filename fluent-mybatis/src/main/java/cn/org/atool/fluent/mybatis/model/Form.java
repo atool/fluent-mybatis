@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 import cn.org.atool.fluent.mybatis.functions.FormApply;
 import cn.org.atool.fluent.mybatis.functions.FormFunction;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
+import cn.org.atool.fluent.mybatis.utility.GsonKit;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.AccessLevel;
@@ -46,11 +47,14 @@ public class Form implements Serializable {
     /**
      * Tag分页时, 当前页id值
      */
-    private Serializable nextId;
+    private String nextId;
     /**
      * 查询一页的数量
      */
     private int pageSize = 1;
+
+    public Form() {
+    }
 
     public <E extends IEntity> QueryExecutor<E> to(Class<E> entityClass) {
         IRichMapper mapper = RefKit.mapper(entityClass);
@@ -84,5 +88,11 @@ public class Form implements Serializable {
         Map map = PoJoHelper.toMap(o);
         IMapping mapping = RefKit.byEntity(eClass);
         return new FormApply(new EmptyFormSetter(mapping), map, new Form());
+    }
+
+    public static <E extends IEntity> IFormApply<E, ?> with(Class<E> eClass, String apply) {
+        Form form = GsonKit.form(apply);
+        IMapping mapping = RefKit.byEntity(eClass);
+        return new FormApply(new EmptyFormSetter(mapping), null, form);
     }
 }

@@ -9,7 +9,9 @@ import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.IFormApply;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
 import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
+import lombok.Getter;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -34,6 +36,7 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     /**
      * 要设置的表单
      */
+    @Getter
     private final Form form;
 
     public FormApply(Function<FormApply, BaseFormSetter> setterApply, Map map, Form form) {
@@ -44,7 +47,7 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
 
     public FormApply(S setter, Map map, Form form) {
         this.setter = setter;
-        this.map = map;
+        this.map = map == null ? Collections.emptyMap() : map;
         this.form = form == null ? new Form() : form;
     }
 

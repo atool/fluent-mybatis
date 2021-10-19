@@ -30,7 +30,7 @@ public class FormItem implements Serializable {
      * gt, ge, eq, le, lt
      * like(not like), between(not between), in(not in)
      */
-    private String op;
+    private String op = "EQ";
     /**
      * 条件值
      * between [min, max]

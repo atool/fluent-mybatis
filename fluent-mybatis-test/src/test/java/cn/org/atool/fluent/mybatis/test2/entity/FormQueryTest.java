@@ -36,9 +36,37 @@ public class FormQueryTest extends BaseTest {
         TagPagedList<StudentEntity> paged = new Form()
             .add.eq(userName, "xx")
             .add.between(age, 12, 40)
-            .setNextId(0)
+            .setNextId("0")
             .add(student, new StudentEntity().setAddress("kkk"))
             .likeLeft().address()
+            .query().to().tagPagedEntity();
+
+        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ? " +
+            "AND `address` LIKE ? " +
+            "AND `id` >= ? " +
+            "LIMIT ?, ?");
+    }
+
+    @Test
+    public void testTagPaged_Json() {
+        TagPagedList<StudentEntity> paged = Form.with(StudentEntity.class, ("" +
+                "{`items`:" +
+                "   [{   `key`: `userName`," +
+                "        `value`: [`xx`]" +
+                "    }," +
+                "    {   `key`: `age`," +
+                "        `op`: `BETWEEN`," +
+                "        `value`: [12, 40]" +
+                "    }," +
+                "    {   `key`: `address`," +
+                "        `op`: `LEFT_LIKE`," +
+                "        `value`: [`kkk`]" +
+                "    }], " +
+                "`nextId`:`0`}").replace('`', '"'))
             .query().to().tagPagedEntity();
 
         db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student " +
