@@ -74,7 +74,7 @@ public class RefFiler extends AbstractFile {
     }
 
     private TypeSpec type_form() {
-        TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Form")
+        TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Forms")
             .addModifiers(PUBLIC_STATIC)
             .addJavadoc("所有Entity Form Setter引用");
         for (FluentEntity fluent : this.fluents) {

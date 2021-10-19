@@ -3,11 +3,14 @@ package cn.org.atool.fluent.mybatis.model;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
+import cn.org.atool.fluent.mybatis.functions.FormApply;
 import cn.org.atool.fluent.mybatis.functions.FormFunction;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.utility.FormHelper;
+import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -16,6 +19,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 简单表单查询设置
@@ -58,8 +62,27 @@ public class Form implements Serializable {
         return FormHelper.toQuery(entityClass, this);
     }
 
+    /**
+     * 添加IEntity字段提取和实例
+     *
+     * @param apply IEntity字段值提取器
+     * @param value IEntity实例
+     * @return IFormApply
+     */
     public <E extends IEntity, S extends BaseFormSetter>
     IFormApply<E, S> add(FormFunction<E, S> apply, Object value) {
         return apply.apply(value, this);
+    }
+
+    public static <E extends IEntity> IFormApply<E, ?> with(E o) {
+        Map map = PoJoHelper.toMap(o);
+        IMapping mapping = RefKit.byEntity(o.entityClass());
+        return new FormApply(new EmptyFormSetter(mapping), map, new Form());
+    }
+
+    public static <E extends IEntity> IFormApply<E, ?> with(Class<E> eClass, Object o) {
+        Map map = PoJoHelper.toMap(o);
+        IMapping mapping = RefKit.byEntity(eClass);
+        return new FormApply(new EmptyFormSetter(mapping), map, new Form());
     }
 }

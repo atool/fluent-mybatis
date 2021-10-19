@@ -1,17 +1,17 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 
 import java.util.Collection;
@@ -38,7 +38,8 @@ public class SqlProvider {
      * 插入id未赋值的entity
      * {@link IEntityMapper#insert(IEntity)}
      *
-     * @param entity 实体实例
+     * @param map     实体实例
+     * @param context ProviderContext
      * @return sql
      */
     public static String insert(Map map, ProviderContext context) {
@@ -75,8 +76,6 @@ public class SqlProvider {
         return sqlKit(mapping).queryBy(mapping, ew);
     }
 
-    /* ==============public static============= */
-
     /**
      * 批量更新, 插入, 删除操作语句构造
      * {@link IEntityMapper#batchCrud(BatchCrud)}
@@ -112,7 +111,7 @@ public class SqlProvider {
      * 插入id已赋值的entity
      * {@link IEntityMapper#insertWithPk(IEntity)}
      *
-     * @param entity 实体实例insertWithPk
+     * @param map 实体实例
      * @return sql
      */
     public static String insertWithPk(Map map, ProviderContext context) {

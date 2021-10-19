@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.test2.entity;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
+import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -22,7 +23,7 @@ public class FormDemo extends BaseTest {
             .setAge(2)
             .setAddress("宇宙深处");
 
-        IQuery<StudentEntity> query = Ref.Form.student.with(student)
+        IQuery<StudentEntity> query = Ref.Forms.student.with(student)
             .eq().userName()
             .eq().age()
             .query();
@@ -52,13 +53,13 @@ public class FormDemo extends BaseTest {
             .setAge(2)
             .setAddress("宇宙深处");
 
-        List<StudentEntity> students = Ref.Form.student.with(student)
+        List students = Form.with(student)
             .eq(StudentEntity::getUserName)
             .like(StudentEntity::getAddress)
             .query().to().listEntity();
         want.list(students).sizeEq(0);
 
-        IQuery<StudentEntity> query = Ref.Form.student.with(student)
+        IQuery<StudentEntity> query = Ref.Forms.student.with(student)
             .eq().userName()
             .eq().age()
             .query();

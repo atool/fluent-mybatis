@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.RelationFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.refs.RefFiler;
+import cn.org.atool.fluent.mybatis.processor.filer.refs.RelationFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
 import cn.org.atool.generator.javafile.AbstractFile;
 import cn.org.atool.generator.util.GeneratorHelper;
@@ -85,10 +85,20 @@ public class FluentList {
     }
 
     private static List<AbstractFile> refFiles(String _package, List<FluentEntity> fluents) {
-        return Arrays.asList(
-            new RelationFiler(_package, fluents),
-            new RefFiler(_package, fluents)
-        );
+        boolean hasRefMethods = false;
+        for (FluentEntity fluent : fluents) {
+            /* 如果没有关联关系, 不生成IEntityRelation接口 */
+            if (fluent.getRefMethods().size() > 0) {
+                hasRefMethods = true;
+                break;
+            }
+        }
+        List<AbstractFile> files = new ArrayList<>();
+        if (hasRefMethods) {
+            files.add(new RelationFiler(_package, fluents));
+        }
+        files.add(new RefFiler(_package, fluents));
+        return files;
     }
 
     /**
