@@ -1,9 +1,7 @@
-package cn.org.atool.fluent.mybatis.model;
+package cn.org.atool.fluent.mybatis.model.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
@@ -19,11 +17,29 @@ public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
 
     S op(String op);
 
+    /**
+     * 设置更新字段
+     *
+     * @param getter 字段
+     * @return ignore
+     */
+    IFormApply<E, S> and(IGetter<E> getter);
+
+    /**
+     * 设置更新字段
+     *
+     * @param getter 字段
+     * @return ignore
+     */
+    IFormApply<E, S> and(String field);
+
     default S eq() {
         return this.op(OP_EQ);
     }
 
     IFormApply<E, S> eq(IGetter<E> getter);
+
+    IFormApply<E, S> eq(String field);
 
     default S ne() {
         return this.op(OP_NE);
@@ -31,11 +47,15 @@ public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
 
     IFormApply<E, S> ne(IGetter<E> getter);
 
+    IFormApply<E, S> ne(String field);
+
     default S gt() {
         return this.op(OP_GT);
     }
 
     IFormApply<E, S> gt(IGetter<E> getter);
+
+    IFormApply<E, S> gt(String field);
 
     default S ge() {
         return this.op(OP_GE);
@@ -43,11 +63,15 @@ public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
 
     IFormApply<E, S> ge(IGetter<E> getter);
 
+    IFormApply<E, S> ge(String field);
+
     default S lt() {
         return this.op(OP_LT);
     }
 
     IFormApply<E, S> lt(IGetter<E> getter);
+
+    IFormApply<E, S> lt(String field);
 
     default S le() {
         return this.op(OP_LE);
@@ -55,39 +79,29 @@ public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
 
     IFormApply<E, S> le(IGetter<E> getter);
 
+    IFormApply<E, S> le(String field);
+
     default S like() {
         return this.op(OP_LIKE);
     }
 
     IFormApply<E, S> like(IGetter<E> getter);
 
+    IFormApply<E, S> like(String field);
+
     default S likeLeft() {
-        return this.op(OP_LEFT_LIKE);
+        return this.op(OP_LIKE_LEFT);
     }
 
     IFormApply<E, S> likeLeft(IGetter<E> getter);
 
+    IFormApply<E, S> likeLeft(String field);
+
     default S likeRight() {
-        return this.op(OP_RIGHT_LIKE);
+        return this.op(OP_LIKE_RIGHT);
     }
 
     IFormApply<E, S> likeRight(IGetter<E> getter);
 
-    /**
-     * 把表单转换查询对象
-     *
-     * @return IQuery
-     */
-    IQuery<E> query();
-
-    /**
-     * 把表单直接转换为查询执行对象
-     *
-     * @return QueryExecutor
-     */
-    default QueryExecutor<E> to() {
-        return this.query().to();
-    }
-
-    Form getForm();
+    IFormApply<E, S> likeRight(String field);
 }

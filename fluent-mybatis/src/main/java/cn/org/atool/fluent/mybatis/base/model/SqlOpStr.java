@@ -26,9 +26,9 @@ public interface SqlOpStr {
 
     String OP_LIKE = "LIKE";
 
-    String OP_LEFT_LIKE = "LEFT_LIKE";
+    String OP_LIKE_LEFT = "LIKE_LEFT";
 
-    String OP_RIGHT_LIKE = "RIGHT_LIKE";
+    String OP_LIKE_RIGHT = "LIKE_RIGHT";
 
     String OP_NOT_LIKE = "NOT_LIKE";
 
@@ -46,7 +46,7 @@ public interface SqlOpStr {
 
     List<String> ALL_OP = Arrays.asList(
         OP_GT, OP_GE, OP_EQ, OP_NE, OP_LE, OP_LT,
-        OP_LIKE, OP_LEFT_LIKE, OP_NOT_LIKE, OP_BETWEEN, OP_NOT_BETWEEN,
+        OP_LIKE, OP_LIKE_LEFT, OP_NOT_LIKE, OP_BETWEEN, OP_NOT_BETWEEN,
         OP_IN, OP_NOT_IN, OP_IS_NULL, OP_NOT_NULL
     );
 }

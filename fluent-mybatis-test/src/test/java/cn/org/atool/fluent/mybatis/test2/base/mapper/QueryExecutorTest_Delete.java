@@ -34,10 +34,9 @@ class QueryExecutorTest_Delete extends BaseTest {
             .env.values("test_env")
             .isDeleted.values(0)
             .cleanAndInsert();
-        Ref.Forms.student
-            .with(new StudentEntity().setUserName("test1"))
+        Ref.Forms.student.with(new StudentEntity().setUserName("test1"), wrap -> wrap
             .eq().userName()
-            .to().delete();
+        ).delete();
 
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM fluent_mybatis.student " +

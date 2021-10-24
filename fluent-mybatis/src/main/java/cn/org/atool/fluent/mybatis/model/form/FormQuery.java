@@ -1,9 +1,10 @@
-package cn.org.atool.fluent.mybatis.model;
+package cn.org.atool.fluent.mybatis.model.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
+import cn.org.atool.fluent.mybatis.segment.OrderByBase;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import lombok.NonNull;
@@ -88,6 +89,11 @@ public class FormQuery<E extends IEntity, S extends BaseFormSetter> implements I
     @Override
     public WhereBase where() {
         return this.query.where();
+    }
+
+    @Override
+    public OrderByBase orderBy() {
+        return this.query.orderBy();
     }
 
     @Override

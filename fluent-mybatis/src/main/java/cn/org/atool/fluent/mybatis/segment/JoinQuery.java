@@ -147,11 +147,18 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     /**
      * 查询条件 where ...
      */
-    public final JoinQueryWhere where = new JoinQueryWhere(this);
+    public final JoinSegment.QueryWhere where = new JoinSegment.QueryWhere(this);
 
     @Override
-    public JoinQueryWhere where() {
+    public JoinSegment.QueryWhere where() {
         return this.where;
+    }
+
+    public final JoinSegment.OrderBy orderBy = new JoinSegment.OrderBy(this);
+
+    @Override
+    public JoinSegment.OrderBy orderBy() {
+        return this.orderBy;
     }
 
     @Override

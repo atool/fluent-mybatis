@@ -3,10 +3,11 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
+import cn.org.atool.fluent.mybatis.segment.OrderByBase;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.function.Function;
 
@@ -74,6 +75,13 @@ public interface IQuery<E extends IEntity> {
      * @return self
      */
     WhereBase where();
+
+    /**
+     * 返回order排序
+     *
+     * @return
+     */
+    OrderByBase orderBy();
 
     /**
      * 返回查询器或更新器对应的xml数据

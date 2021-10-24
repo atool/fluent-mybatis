@@ -39,6 +39,12 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>form-api</artifactId>
+            <version>1.8.7.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.4</version>
@@ -152,6 +158,12 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>form-api</artifactId>
+            <version>1.8.7.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

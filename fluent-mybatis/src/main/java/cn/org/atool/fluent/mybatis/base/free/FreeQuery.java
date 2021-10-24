@@ -6,6 +6,7 @@ import cn.org.atool.fluent.mybatis.base.free.FreeSegment.GroupBy;
 import cn.org.atool.fluent.mybatis.base.free.FreeSegment.Having;
 import cn.org.atool.fluent.mybatis.base.free.FreeSegment.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.free.FreeSegment.Selector;
+import cn.org.atool.fluent.mybatis.segment.OrderByBase;
 import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import lombok.experimental.Accessors;
@@ -78,7 +79,12 @@ public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
 
     @Override
     public QueryWhere where() {
-        return new QueryWhere(this);
+        return this.where;
+    }
+
+    @Override
+    public OrderByBase orderBy() {
+        return this.orderBy;
     }
 
     /**

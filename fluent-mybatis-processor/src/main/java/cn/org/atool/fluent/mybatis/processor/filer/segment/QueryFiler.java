@@ -67,6 +67,7 @@ public class QueryFiler extends AbstractFiler {
             .addMethod(this.constructor1_Alias())
             .addMethod(this.constructor4_Default_Table_Alias_Parameter())
             .addMethod(this.m_where())
+            .addMethod(this.m_orderBy())
             .addMethod(this.m_mapping());
         /* query builder */
         spec.addMethod(this.m_emptyQuery())
@@ -194,6 +195,12 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec m_where() {
         return FilerKit.publicMethod("where", fluent.queryWhere())
             .addStatement("return this.where")
+            .build();
+    }
+
+    private MethodSpec m_orderBy() {
+        return FilerKit.publicMethod("orderBy", fluent.queryOrderBy())
+            .addStatement("return this.orderBy")
             .build();
     }
 

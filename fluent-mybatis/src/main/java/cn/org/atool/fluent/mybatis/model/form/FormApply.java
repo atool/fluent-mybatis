@@ -1,13 +1,10 @@
-package cn.org.atool.fluent.mybatis.functions;
+package cn.org.atool.fluent.mybatis.model.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.model.Form;
-import cn.org.atool.fluent.mybatis.model.IFormApply;
-import cn.org.atool.fluent.mybatis.utility.FormHelper;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 import lombok.Getter;
 
@@ -28,30 +25,47 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     /**
      * IDE智能提示对象
      */
+    @Getter
     private final S setter;
     /**
      * 源数据(可以是任何数据)
      */
-    private final Map map;
+    private Map map;
     /**
      * 要设置的表单
      */
     @Getter
-    private final Form form;
+    private Form form;
 
     public FormApply(Function<FormApply, BaseFormSetter> setterApply, Map map, Form form) {
         this.setter = (S) setterApply.apply(this);
-        this.map = map;
-        this.form = form == null ? new Form() : form;
+        this.init(form, map);
     }
 
     public FormApply(S setter, Map map, Form form) {
         this.setter = setter;
+        this.init(form, map);
+    }
+
+    private void init(Form form, Map map) {
         this.map = map == null ? Collections.emptyMap() : map;
-        this.form = form == null ? new Form() : form;
+        this.form = form == null ? FormKit.newForm() : form;
+        this.form.setEntityClass(this.setter.entityClass());
     }
 
     private String op;
+
+    @Override
+    public FormApply<E, S> and(IGetter<E> getter) {
+        String field = LambdaUtil.resolve(getter);
+        return this.and(field);
+    }
+
+    @Override
+    public FormApply<E, S> and(String field) {
+        this.form.getUpdate().put(field, map.get(field));
+        return this;
+    }
 
     @Override
     public S op(String op) {
@@ -60,19 +74,29 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     }
 
     private FormApply<E, S> setFieldMapping(String op, IGetter<E> getter) {
-        this.op(op);
         String field = LambdaUtil.resolve(getter);
+        return this.setFieldMapping(op, field);
+    }
+
+    private FormApply<E, S> setFieldMapping(String op, String field) {
+        this.op(op);
         IMapping mapping = this.setter._mapping();
         FieldMapping f = mapping.getFieldsMap().get(field);
         if (f == null) {
             throw new RuntimeException("The property[" + field + "] of entity[" + mapping.entityClass().getSimpleName() + "] not found.");
         }
-        this.set(f);
+        this.addWhere(f);
         return this;
     }
 
+    @Override
     public IFormApply<E, S> eq(IGetter<E> getter) {
         return this.setFieldMapping(OP_EQ, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> eq(String field) {
+        return this.setFieldMapping(OP_EQ, field);
     }
 
     @Override
@@ -81,8 +105,18 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     }
 
     @Override
+    public IFormApply<E, S> ne(String field) {
+        return this.setFieldMapping(OP_NE, field);
+    }
+
+    @Override
     public IFormApply<E, S> gt(IGetter<E> getter) {
         return this.setFieldMapping(OP_GT, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> gt(String field) {
+        return this.setFieldMapping(OP_GT, field);
     }
 
     @Override
@@ -91,8 +125,18 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     }
 
     @Override
+    public IFormApply<E, S> ge(String field) {
+        return this.setFieldMapping(OP_GE, field);
+    }
+
+    @Override
     public IFormApply<E, S> lt(IGetter<E> getter) {
         return this.setFieldMapping(OP_LT, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> lt(String field) {
+        return this.setFieldMapping(OP_LT, field);
     }
 
     @Override
@@ -101,26 +145,41 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
     }
 
     @Override
+    public IFormApply<E, S> le(String field) {
+        return this.setFieldMapping(OP_LE, field);
+    }
+
+    @Override
     public IFormApply<E, S> like(IGetter<E> getter) {
         return this.setFieldMapping(OP_LIKE, getter);
     }
 
     @Override
+    public IFormApply<E, S> like(String field) {
+        return this.setFieldMapping(OP_LIKE, field);
+    }
+
+    @Override
     public IFormApply<E, S> likeLeft(IGetter<E> getter) {
-        return this.setFieldMapping(OP_LEFT_LIKE, getter);
+        return this.setFieldMapping(OP_LIKE_LEFT, getter);
+    }
+
+    @Override
+    public IFormApply<E, S> likeLeft(String field) {
+        return this.setFieldMapping(OP_LIKE_LEFT, field);
     }
 
     @Override
     public IFormApply<E, S> likeRight(IGetter<E> getter) {
-        return this.setFieldMapping(OP_RIGHT_LIKE, getter);
-    }
-
-    public void set(FieldMapping field) {
-        this.form.add.item(field.name, op, map.get(field.name));
+        return this.setFieldMapping(OP_LIKE_RIGHT, getter);
     }
 
     @Override
-    public IQuery<E> query() {
-        return FormHelper.toQuery(this.setter.entityClass(), this.form);
+    public IFormApply<E, S> likeRight(String field) {
+        return this.setFieldMapping(OP_LIKE_RIGHT, field);
+    }
+
+    public void addWhere(FieldMapping field) {
+        this.form.and.where(field.name, op, map.get(field.name));
     }
 }

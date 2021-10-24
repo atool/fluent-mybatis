@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.functions.FormApply;
-import cn.org.atool.fluent.mybatis.model.IFormApply;
+import cn.org.atool.fluent.mybatis.model.form.FormApply;
+import cn.org.atool.fluent.mybatis.model.form.IFormApply;
 
 import java.util.function.Consumer;
 
@@ -33,7 +33,7 @@ public abstract class BaseFormSetter {
      * @return ignore
      */
     public IFormApply set(FieldMapping field) {
-        this.formApply.set(field);
+        this.formApply.addWhere(field);
         return this.formApply;
     }
 

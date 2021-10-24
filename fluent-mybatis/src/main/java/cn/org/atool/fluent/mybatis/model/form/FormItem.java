@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model;
+package cn.org.atool.fluent.mybatis.model.form;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -24,7 +24,7 @@ public class FormItem implements Serializable {
     /**
      * 条件项key
      */
-    private String key;
+    private String field;
     /**
      * 操作符:
      * gt, ge, eq, le, lt
@@ -41,15 +41,15 @@ public class FormItem implements Serializable {
     public FormItem() {
     }
 
-    public FormItem(String key, String op, Object... value) {
-        this.key = key;
+    public FormItem(String item, String op, Object... value) {
+        this.field = item;
         this.op = op;
         this.value = value;
         this.validate();
     }
 
     private void validate() {
-        assertNotBlank("key", key);
+        assertNotBlank("key", field);
         if (isBlank(op)) {
             op = OP_EQ;
         } else if (!ALL_OP.contains(op)) {
@@ -58,14 +58,14 @@ public class FormItem implements Serializable {
         if (OP_BETWEEN.equals(op) || OP_NOT_BETWEEN.equals(op)) {
             assertNotEmpty("value", value);
             if (value.length != 2) {
-                throw new RuntimeException("The number of between operation parameters[" + key + "] must be two.");
+                throw new RuntimeException("The number of between operation parameters[" + field + "] must be two.");
             }
         } else if (OP_IN.equals(op) || OP_NOT_IN.equals(op)) {
-            assertNotEmpty("parameter of " + key, value);
+            assertNotEmpty("parameter of " + field, value);
         } else if (!OP_IS_NULL.equals(op) && !OP_NOT_NULL.equals(op)) {
-            assertNotEmpty("parameter of " + key, value);
+            assertNotEmpty("parameter of " + field, value);
             if (value.length != 1) {
-                throw new RuntimeException("The number of parameters[" + key + "] must be one.");
+                throw new RuntimeException("The number of parameters[" + field + "] must be one.");
             }
         }
     }

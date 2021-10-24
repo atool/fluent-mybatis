@@ -2,9 +2,9 @@ package cn.org.atool.fluent.mybatis.test2.entity;
 
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.model.Form;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.model.form.Form;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,28 @@ public class FormQueryTest extends BaseTest {
     @Test
     public void testStdPaged() {
         ATM.dataMap.student.table().clean();
-        StdPagedList<StudentEntity> paged = new Form()
-            .add.eq(userName, "xx")
-            .add.between(age, 12, 40)
+        StdPagedList<StudentEntity> paged = new Form(StudentEntity.class)
+            .and.eq(userName, "xx")
+            .and.between(age, 12, 40)
+            .orderBy(userName, false)
             .setCurrPage(0)
-            .to(StudentEntity.class).stdPagedEntity();
+            .stdPage();
+
+        db.sqlList().wantFirstSql().end("WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ?");
+    }
+
+    @DisplayName("使用字段硬编码")
+    @Test
+    public void testStdPaged_FieldName() {
+        ATM.dataMap.student.table().clean();
+        StdPagedList<StudentEntity> paged = new Form(StudentEntity.class)
+            .and.eq("userName", "xx")
+            .and.between("age", 12, 40)
+            .setPage(1, 10)
+            .stdPage();
 
         db.sqlList().wantFirstSql().end("WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
@@ -33,13 +50,15 @@ public class FormQueryTest extends BaseTest {
 
     @Test
     public void testTagPaged() {
-        TagPagedList<StudentEntity> paged = new Form()
-            .add.eq(userName, "xx")
-            .add.between(age, 12, 40)
-            .setNextId("0")
-            .add(student, new StudentEntity().setAddress("kkk"))
-            .likeLeft().address()
-            .query().to().tagPagedEntity();
+        TagPagedList<StudentEntity> paged = new Form(StudentEntity.class)
+            .and.eq(userName, "xx")
+            .and.between(age, 12, 40)
+            .setId(0)
+            .with(new StudentEntity().setAddress("kkk"), student, apply -> apply
+                .likeLeft().address()
+            )
+            .orderBy(userName, false)
+            .tagPage();
 
         db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
@@ -48,26 +67,31 @@ public class FormQueryTest extends BaseTest {
             "AND `age` BETWEEN ? AND ? " +
             "AND `address` LIKE ? " +
             "AND `id` >= ? " +
+            "ORDER BY `user_name` DESC " +
             "LIMIT ?, ?");
     }
 
     @Test
     public void testTagPaged_Json() {
         TagPagedList<StudentEntity> paged = Form.with(StudentEntity.class, ("" +
-                "{`items`:" +
-                "   [{   `key`: `userName`," +
+                "{`where`: [" +
+                "    {   `field`: `userName`," +
                 "        `value`: [`xx`]" +
                 "    }," +
-                "    {   `key`: `age`," +
+                "    {   `field`: `age`," +
                 "        `op`: `BETWEEN`," +
                 "        `value`: [12, 40]" +
                 "    }," +
-                "    {   `key`: `address`," +
-                "        `op`: `LEFT_LIKE`," +
+                "    {   `field`: `birthday`" +
+                "    }," +
+                "    {   `field`: `address`," +
+                "        `op`: `LIKE_LEFT`," +
                 "        `value`: [`kkk`]" +
                 "    }], " +
-                "`nextId`:`0`}").replace('`', '"'))
-            .query().to().tagPagedEntity();
+                " `order`: [{`field`: `userName`, `asc`: false}], " +
+                " `id`: `0`" +
+                "}").replace('`', '"'))
+            .tagPage();
 
         db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
@@ -76,6 +100,7 @@ public class FormQueryTest extends BaseTest {
             "AND `age` BETWEEN ? AND ? " +
             "AND `address` LIKE ? " +
             "AND `id` >= ? " +
+            "ORDER BY `user_name` DESC " +
             "LIMIT ?, ?");
     }
 }
