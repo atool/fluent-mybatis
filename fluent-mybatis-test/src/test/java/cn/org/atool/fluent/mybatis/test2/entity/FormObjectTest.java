@@ -4,7 +4,7 @@ import cn.org.atool.fluent.form.FormItem;
 import cn.org.atool.fluent.form.IForm;
 import cn.org.atool.fluent.form.ItemType;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.model.form.Form;
+import cn.org.atool.fluent.mybatis.model.form.FormKit;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ import java.util.List;
 public class FormObjectTest extends BaseTest {
     @Test
     public void testInsert() {
-        StudentEntity entity = Form.getEntity(StudentEntity.class, new Form1()
+        StudentEntity entity = FormKit.newEntity(StudentEntity.class, new Form1()
             .setUserName("form test")
             .setAge(23)
         ).save();
@@ -33,7 +33,7 @@ public class FormObjectTest extends BaseTest {
         Form2 form = this.newForm2()
             .setAges(new Integer[]{12, 56})
             .setAddresses(list("a1", "a2"));
-        Form.getUpdate(StudentEntity.class, form).to().updateBy();
+        FormKit.newUpdate(StudentEntity.class, form).to().updateBy();
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
@@ -53,7 +53,7 @@ public class FormObjectTest extends BaseTest {
     @Test
     public void testUpdate2() {
         Form2 form = newForm2();
-        Form.getUpdate(StudentEntity.class, form.setVersion(null).setAdd("address")).to().updateBy();
+        FormKit.newUpdate(StudentEntity.class, form.setVersion(null).setAdd("address")).to().updateBy();
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
@@ -69,7 +69,7 @@ public class FormObjectTest extends BaseTest {
     @Test
     public void testQuery() {
         Form2 form = newForm2();
-        Form.getQuery(StudentEntity.class, form.setVersion(null).setAdd("address")).to().listEntity();
+        FormKit.newQuery(StudentEntity.class, form.setVersion(null).setAdd("address")).to().listEntity();
         db.sqlList().wantFirstSql()
             .start("SELECT")
             .end("WHERE `is_deleted` = ? " +

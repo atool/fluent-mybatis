@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.mybatis.functions.FormFunction;
+import cn.org.atool.fluent.mybatis.model.form.FormFunction;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;

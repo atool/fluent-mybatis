@@ -49,7 +49,7 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
 
     private void init(Form form, Map map) {
         this.map = map == null ? Collections.emptyMap() : map;
-        this.form = form == null ? FormKit.newForm() : form;
+        this.form = form == null ? new Form() : form;
         this.form.setEntityClass(this.setter.entityClass());
     }
 

@@ -28,7 +28,7 @@ public interface IFormApply<E extends IEntity, S extends BaseFormSetter> {
     /**
      * 设置更新字段
      *
-     * @param getter 字段
+     * @param field 字段
      * @return ignore
      */
     IFormApply<E, S> and(String field);

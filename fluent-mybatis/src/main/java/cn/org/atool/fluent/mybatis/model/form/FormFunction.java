@@ -1,11 +1,7 @@
-package cn.org.atool.fluent.mybatis.functions;
+package cn.org.atool.fluent.mybatis.model.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
-import cn.org.atool.fluent.mybatis.model.form.Form;
-import cn.org.atool.fluent.mybatis.model.form.FormApply;
-import cn.org.atool.fluent.mybatis.model.form.FormKit;
-import cn.org.atool.fluent.mybatis.model.form.IFormApply;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -26,7 +22,7 @@ public interface FormFunction<E extends IEntity, S extends BaseFormSetter>
      * @return entity条件设置器
      */
     default Form with(Object entity, Consumer<IFormApply<E, S>> apply) {
-        Form form = FormKit.newForm();
+        Form form = new Form();
         FormApply formApply = (FormApply) this.apply(entity, form);
         form.setEntityClass(formApply.getSetter().entityClass());
         apply.accept(formApply);

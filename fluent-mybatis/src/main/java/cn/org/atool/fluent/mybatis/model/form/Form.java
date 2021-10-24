@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.model.form;
 
-import cn.org.atool.fluent.form.IForm;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -8,7 +7,6 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.functions.FormFunction;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -179,7 +177,7 @@ public class Form implements Serializable {
     public <E extends IEntity> List<E> list() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.listEntity(query);
     }
 
@@ -191,7 +189,7 @@ public class Form implements Serializable {
     public int count() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.count(query);
     }
 
@@ -204,7 +202,7 @@ public class Form implements Serializable {
     public <E extends IEntity> StdPagedList<E> stdPage() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.stdPagedEntity(query);
     }
 
@@ -217,7 +215,7 @@ public class Form implements Serializable {
     public <E extends IEntity> TagPagedList<E> tagPage() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.tagPagedEntity(query);
     }
 
@@ -230,7 +228,7 @@ public class Form implements Serializable {
     public <E extends IEntity> E findOne() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         query.limit(1);
         return (E) mapper.findOne(query);
     }
@@ -243,7 +241,7 @@ public class Form implements Serializable {
     public int update() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IUpdate update = FormKit.toUpdate(this.entityClass, this);
+        IUpdate update = FormHelper.toUpdate(this.entityClass, this);
         return mapper.updateBy(update);
     }
 
@@ -268,7 +266,7 @@ public class Form implements Serializable {
     public int delete() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.delete(query);
     }
 
@@ -280,7 +278,7 @@ public class Form implements Serializable {
     public int logicDelete() {
         assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
-        IQuery query = FormKit.toQuery(this.entityClass, this);
+        IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.logicDelete(query);
     }
 
@@ -306,17 +304,5 @@ public class Form implements Serializable {
         FormApply formApply = new FormApply(new EmptyFormSetter(mapping), map, new Form(eClass));
         apply.accept(formApply);
         return formApply.getForm();
-    }
-
-    public static <E extends IEntity> E getEntity(Class<E> eClass, IForm form) {
-        return FormKit.newEntity(eClass, form);
-    }
-
-    public static <E extends IEntity> IQuery<E> getQuery(Class<E> eClass, IForm form) {
-        return FormKit.newQuery(eClass, form);
-    }
-
-    public static <E extends IEntity> IUpdate<E> getUpdate(Class<E> eClass, IForm form) {
-        return FormKit.newUpdate(eClass, form);
     }
 }
