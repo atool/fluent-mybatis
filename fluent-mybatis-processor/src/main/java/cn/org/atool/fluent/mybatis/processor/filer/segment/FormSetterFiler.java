@@ -64,7 +64,7 @@ public class FormSetterFiler extends AbstractFiler {
     }
 
     private MethodSpec m_entityClass() {
-        return FilerKit.publicMethod("entityClass", Class.class)
+        return FilerKit.publicMethod(F_Entity_Class, Class.class)
             .addStatement("return $T.class", fluent.entity())
             .build();
     }

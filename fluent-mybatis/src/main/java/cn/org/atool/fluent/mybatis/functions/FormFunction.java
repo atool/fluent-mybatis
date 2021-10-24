@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @FunctionalInterface
 public interface FormFunction<E extends IEntity, S extends BaseFormSetter>
     extends BiFunction<Object, Form, IFormApply<E, S>> {

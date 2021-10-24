@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.stream.Stream;
 
+@SuppressWarnings({"rawtypes"})
 public class FormDemo extends BaseTest {
     @Test
     public void formDemo1() {

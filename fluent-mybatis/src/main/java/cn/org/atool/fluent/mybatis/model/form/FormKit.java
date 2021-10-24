@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.F_Entity_Class;
 import static cn.org.atool.fluent.mybatis.model.form.FormMetaList.FormMetas;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -46,7 +47,7 @@ public class FormKit {
      * @return IQuery
      */
     public static IQuery toQuery(Class entityClass, Form form) {
-        assertNotNull("entityClass", entityClass);
+        assertNotNull(F_Entity_Class, entityClass);
         if (form.getId() != null && form.getCurrPage() != null) {
             throw new RuntimeException("nextId and currPage can only have one value");
         }
@@ -58,7 +59,7 @@ public class FormKit {
     }
 
     public static IUpdate toUpdate(Class entityClass, Form form) {
-        assertNotNull("entityClass", entityClass);
+        assertNotNull(F_Entity_Class, entityClass);
         IUpdate updater = RefKit.byEntity(entityClass).updater();
 
         updateBy(entityClass, form, updater);

@@ -118,7 +118,5 @@ public interface FluentConst {
      */
     String RE_ListByNotNull = "listByNotNull";
 
-    String RE_byEntity = "byEntity";
-
-    String RE_byMapper = "byMapper";
+    String F_Entity_Class = "entityClass";
 }

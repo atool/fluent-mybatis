@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.F_Entity_Class;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -176,7 +177,7 @@ public class Form implements Serializable {
      * @return 实例列表
      */
     public <E extends IEntity> List<E> list() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         return mapper.listEntity(query);
@@ -188,7 +189,7 @@ public class Form implements Serializable {
      * @return 符合条件的记录数
      */
     public int count() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         return mapper.count(query);
@@ -201,7 +202,7 @@ public class Form implements Serializable {
      * @return 标准分页记录
      */
     public <E extends IEntity> StdPagedList<E> stdPage() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         return mapper.stdPagedEntity(query);
@@ -214,7 +215,7 @@ public class Form implements Serializable {
      * @return Tag分页记录
      */
     public <E extends IEntity> TagPagedList<E> tagPage() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         return mapper.tagPagedEntity(query);
@@ -227,7 +228,7 @@ public class Form implements Serializable {
      * @return 返回的实例
      */
     public <E extends IEntity> E findOne() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         query.limit(1);
@@ -240,7 +241,7 @@ public class Form implements Serializable {
      * @return 更新的记录数
      */
     public int update() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IUpdate update = FormKit.toUpdate(this.entityClass, this);
         return mapper.updateBy(update);
@@ -252,7 +253,7 @@ public class Form implements Serializable {
      * @return 新增的实体实例
      */
     public <E extends IEntity> E insert() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IEntity entity = RefKit.byEntity(this.entityClass).toEntity(this.getUpdate());
         mapper.insert(entity);
@@ -265,7 +266,7 @@ public class Form implements Serializable {
      * @return 物理删除记录数
      */
     public int delete() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         return mapper.delete(query);
@@ -277,7 +278,7 @@ public class Form implements Serializable {
      * @return 逻辑删除记录数
      */
     public int logicDelete() {
-        assertNotNull("entityClass", this.entityClass);
+        assertNotNull(F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormKit.toQuery(this.entityClass, this);
         return mapper.logicDelete(query);
