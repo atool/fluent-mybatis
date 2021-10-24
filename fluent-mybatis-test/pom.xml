@@ -42,7 +42,7 @@
             <groupId>com.github.atool</groupId>
             <artifactId>form-api</artifactId>
             <version>1.8.7.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -158,12 +158,6 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.atool</groupId>
-            <artifactId>form-api</artifactId>
-            <version>1.8.7.1</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
