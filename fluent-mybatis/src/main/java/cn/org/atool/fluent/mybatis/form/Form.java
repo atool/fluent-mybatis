@@ -1,12 +1,16 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.form.setter.FormApply;
+import cn.org.atool.fluent.mybatis.form.setter.FormItem;
+import cn.org.atool.fluent.mybatis.form.setter.FormItemAdder;
+import cn.org.atool.fluent.mybatis.form.setter.FormItemOrder;
+import cn.org.atool.fluent.mybatis.form.setter.*;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -113,7 +117,7 @@ public class Form implements Serializable {
      */
     private int pageSize = 1;
 
-    Form() {
+    public Form() {
     }
 
     public <E extends IEntity> Form(Class<E> eClass) {

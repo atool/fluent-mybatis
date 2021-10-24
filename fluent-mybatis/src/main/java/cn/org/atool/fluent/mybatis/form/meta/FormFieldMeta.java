@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.meta;
 
 import cn.org.atool.fluent.form.ItemType;
 import lombok.Getter;

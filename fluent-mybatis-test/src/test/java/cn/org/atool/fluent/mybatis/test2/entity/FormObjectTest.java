@@ -4,7 +4,7 @@ import cn.org.atool.fluent.form.FormItem;
 import cn.org.atool.fluent.form.IForm;
 import cn.org.atool.fluent.form.ItemType;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
-import cn.org.atool.fluent.mybatis.model.form.FormKit;
+import cn.org.atool.fluent.mybatis.form.FormKit;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

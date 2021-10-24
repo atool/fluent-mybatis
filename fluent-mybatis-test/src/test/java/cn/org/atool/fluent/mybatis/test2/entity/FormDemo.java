@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
-import cn.org.atool.fluent.mybatis.model.form.Form;
+import cn.org.atool.fluent.mybatis.form.Form;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.Test;
 

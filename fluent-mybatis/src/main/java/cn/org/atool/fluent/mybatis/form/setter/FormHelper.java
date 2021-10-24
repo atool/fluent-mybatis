@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.setter;
 
 import cn.org.atool.fluent.form.IForm;
 import cn.org.atool.fluent.form.IPaged;
@@ -11,6 +11,10 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
+import cn.org.atool.fluent.mybatis.form.Form;
+import cn.org.atool.fluent.mybatis.form.FormKit;
+import cn.org.atool.fluent.mybatis.form.meta.FormFieldMeta;
+import cn.org.atool.fluent.mybatis.form.meta.FormMetaList;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
@@ -24,7 +28,6 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.F_Entity_Class;
-import static cn.org.atool.fluent.mybatis.model.form.FormMetaList.FormMetas;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -33,7 +36,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  * @author wudarui
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-class FormHelper {
+public class FormHelper {
     /**
      * 将表单Form转换为entityClass对应的Query
      *
@@ -41,7 +44,7 @@ class FormHelper {
      * @param form        表单
      * @return IQuery
      */
-    static IQuery toQuery(Class entityClass, Form form) {
+    public static IQuery toQuery(Class entityClass, Form form) {
         assertNotNull(F_Entity_Class, entityClass);
         if (form.getId() != null && form.getCurrPage() != null) {
             throw new RuntimeException("nextId and currPage can only have one value");
@@ -53,7 +56,7 @@ class FormHelper {
         return query;
     }
 
-    static IUpdate toUpdate(Class entityClass, Form form) {
+    public static IUpdate toUpdate(Class entityClass, Form form) {
         assertNotNull(F_Entity_Class, entityClass);
         IUpdate updater = RefKit.byEntity(entityClass).updater();
 
@@ -77,7 +80,7 @@ class FormHelper {
      */
     private static void where(Class entityClass, Form form, IWrapper query) {
         WhereBase where = query.where();
-        for (cn.org.atool.fluent.mybatis.model.form.FormItem item : form.getWhere()) {
+        for (FormItem item : form.getWhere()) {
             if (item.getValue() == null) {
                 continue;
             }
@@ -135,7 +138,7 @@ class FormHelper {
      * @param form   IForm实例
      * @return Entity实例
      */
-    static <E extends IEntity> E newEntity(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> E newEntity(Class<E> eClass, IForm form) {
         assertNotNull("FormObject", form);
         FormMetaList metas = getFormMeta(form.getClass());
         AMapping mapping = RefKit.byEntity(eClass);
@@ -151,7 +154,7 @@ class FormHelper {
         return (E) entity;
     }
 
-    static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, IForm form) {
         assertNotNull("FormObject", form);
         FormMetaList metas = getFormMeta(form.getClass());
         AMapping mapping = RefKit.byEntity(eClass);
@@ -188,7 +191,7 @@ class FormHelper {
         }
     }
 
-    static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, IForm form) {
         assertNotNull("FormObject", form);
         FormMetaList metas = getFormMeta(form.getClass());
         AMapping mapping = RefKit.byEntity(eClass);
@@ -301,14 +304,14 @@ class FormHelper {
     }
 
     private static FormMetaList getFormMeta(Class<? extends IForm> aClass) {
-        if (FormMetas.containsKey(aClass)) {
-            return FormMetas.get(aClass);
+        if (FormMetaList.FormMetas.containsKey(aClass)) {
+            return FormMetaList.FormMetas.get(aClass);
         }
         synchronized (FormKit.class) {
-            if (FormMetas.containsKey(aClass)) {
-                return FormMetas.get(aClass);
+            if (FormMetaList.FormMetas.containsKey(aClass)) {
+                return FormMetaList.FormMetas.get(aClass);
             }
-            FormMetas.put(aClass, new FormMetaList());
+            FormMetaList.FormMetas.put(aClass, new FormMetaList());
             Class declared = aClass;
             while (declared != Object.class) {
                 for (Field field : declared.getDeclaredFields()) {
@@ -325,7 +328,7 @@ class FormHelper {
                 }
                 declared = declared.getSuperclass();
             }
-            return FormMetas.get(aClass);
+            return FormMetaList.FormMetas.get(aClass);
         }
     }
 }

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.meta;
 
 import cn.org.atool.fluent.form.FormItem;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Getter
 public class FormMetaList extends ArrayList<FormFieldMeta> {
 

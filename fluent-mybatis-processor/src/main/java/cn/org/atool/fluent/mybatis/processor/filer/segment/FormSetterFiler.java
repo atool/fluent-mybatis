@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
-import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
+import cn.org.atool.fluent.mybatis.form.setter.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.model.form.FormApply;
-import cn.org.atool.fluent.mybatis.model.form.Form;
-import cn.org.atool.fluent.mybatis.model.form.IFormApply;
+import cn.org.atool.fluent.mybatis.form.setter.FormApply;
+import cn.org.atool.fluent.mybatis.form.Form;
+import cn.org.atool.fluent.mybatis.form.setter.IFormApply;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
-import cn.org.atool.fluent.mybatis.model.form.Form;
+import cn.org.atool.fluent.mybatis.form.Form;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

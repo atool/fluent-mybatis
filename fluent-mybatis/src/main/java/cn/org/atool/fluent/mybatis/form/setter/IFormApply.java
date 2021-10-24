@@ -1,7 +1,6 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;

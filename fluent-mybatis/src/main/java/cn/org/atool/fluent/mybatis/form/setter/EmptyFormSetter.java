@@ -1,12 +1,17 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.setter;
 
-import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
-class EmptyFormSetter extends BaseFormSetter {
+/**
+ * EmptyFormSetter
+ *
+ * @author wudarui
+ */
+@SuppressWarnings("rawtypes")
+public class EmptyFormSetter extends BaseFormSetter {
     private final IMapping mapping;
 
-    EmptyFormSetter(IMapping mapping) {
+    public EmptyFormSetter(IMapping mapping) {
         this.mapping = mapping;
     }
 

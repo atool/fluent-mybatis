@@ -1,6 +1,7 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.form.Form;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotEmpty;
@@ -11,7 +12,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class FormItemAdder {
     private final Form form;
 
@@ -27,7 +28,7 @@ public class FormItemAdder {
      * @param value value
      * @return Form
      */
-    Form where(String field, String op, Object... value) {
+    public Form where(String field, String op, Object... value) {
         this.form.getWhere().add(new FormItem(field, op, value));
         return form;
     }

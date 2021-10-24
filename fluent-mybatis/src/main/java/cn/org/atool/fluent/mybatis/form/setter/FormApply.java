@@ -1,7 +1,7 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseFormSetter;
+import cn.org.atool.fluent.mybatis.form.Form;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;

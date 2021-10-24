@@ -1,9 +1,7 @@
-package cn.org.atool.fluent.mybatis.base.crud;
+package cn.org.atool.fluent.mybatis.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.model.form.FormApply;
-import cn.org.atool.fluent.mybatis.model.form.IFormApply;
 
 import java.util.function.Consumer;
 

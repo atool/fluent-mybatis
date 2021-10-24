@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model.form;
+package cn.org.atool.fluent.mybatis.form.setter;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
