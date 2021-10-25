@@ -64,6 +64,7 @@ public class FormApiScanner extends ClassPathBeanDefinitionScanner {
 
     private void processBeanDefinition(AbstractBeanDefinition definition) {
         String beanClassName = definition.getBeanClassName();
+        assert beanClassName != null;
         definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName);
         definition.setBeanClass(FormApiFactoryBean.class);
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
