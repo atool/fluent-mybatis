@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test2.entity;
 
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.mybatis.form.FormKit;
+import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import lombok.Data;

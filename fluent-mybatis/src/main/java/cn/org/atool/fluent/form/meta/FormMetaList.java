@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.mybatis.form.meta;
+package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.form.FormKit;
+import cn.org.atool.fluent.form.FormKit;
 import lombok.Getter;
 
 import java.lang.reflect.Field;

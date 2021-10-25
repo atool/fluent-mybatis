@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form.meta;
+package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form.setter;
+package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.functions.IGetter;

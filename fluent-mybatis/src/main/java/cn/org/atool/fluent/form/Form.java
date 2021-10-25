@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form;
+package cn.org.atool.fluent.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -6,11 +6,11 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.form.setter.FormApply;
-import cn.org.atool.fluent.mybatis.form.setter.FormItem;
-import cn.org.atool.fluent.mybatis.form.setter.FormItemAdder;
-import cn.org.atool.fluent.mybatis.form.setter.FormItemOrder;
-import cn.org.atool.fluent.mybatis.form.setter.*;
+import cn.org.atool.fluent.form.setter.FormApply;
+import cn.org.atool.fluent.form.setter.FormItem;
+import cn.org.atool.fluent.form.setter.FormItemAdder;
+import cn.org.atool.fluent.form.setter.FormItemOrder;
+import cn.org.atool.fluent.form.setter.*;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;

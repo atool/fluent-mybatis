@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form.setter;
+package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;

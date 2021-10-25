@@ -17,10 +17,10 @@ public interface StudentCreatorApi {
     @Data
     @Accessors(chain = true)
     class Student implements Serializable {
-        private long id;
+        private Long id;
 
         private String userName;
 
-        private int age;
+        private Integer age;
     }
 }

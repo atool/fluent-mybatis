@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form.annotation;
 
-import cn.org.atool.fluent.mybatis.form.registrar.FormApiRegistrar;
+import cn.org.atool.fluent.form.registrar.FormApiRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

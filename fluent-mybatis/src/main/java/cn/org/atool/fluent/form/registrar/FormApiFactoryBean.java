@@ -1,12 +1,13 @@
-package cn.org.atool.fluent.mybatis.form.registrar;
+package cn.org.atool.fluent.form.registrar;
 
+import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.IPaged;
 import cn.org.atool.fluent.form.annotation.ApiMethod;
 import cn.org.atool.fluent.form.annotation.FormApi;
+import cn.org.atool.fluent.form.meta.FormFieldMeta;
+import cn.org.atool.fluent.form.meta.FormMetaList;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.form.FormKit;
-import cn.org.atool.fluent.mybatis.form.meta.FormFieldMeta;
-import cn.org.atool.fluent.mybatis.form.meta.FormMetaList;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.Proxy;
 
@@ -64,6 +65,7 @@ public class FormApiFactoryBean implements FactoryBean {
 
     private Object save(Class eClass, Class rType, Object form) {
         IEntity entity = FormKit.newEntity(eClass, form);
+        RefKit.mapper(eClass).save(entity);
         if (rType == void.class || rType == Void.class) {
             return null;
         } else if (rType.isAssignableFrom(eClass)) {
@@ -73,7 +75,8 @@ public class FormApiFactoryBean implements FactoryBean {
             Object target = rType.getDeclaredConstructor().newInstance();
             FormMetaList metas = FormMetaList.getFormMeta(rType);
             for (FormFieldMeta meta : metas) {
-                meta.set(target, entity.valueByField(meta.getName()));
+                Object value = entity.valueByField(meta.getName());
+                meta.set(target, value);
             }
             return target;
         } catch (Exception e) {

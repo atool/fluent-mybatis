@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.mybatis.form;
+package cn.org.atool.fluent.form;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.form.setter.FormHelper;
+import cn.org.atool.fluent.form.setter.FormHelper;
 
 /**
  * Form操作辅助类

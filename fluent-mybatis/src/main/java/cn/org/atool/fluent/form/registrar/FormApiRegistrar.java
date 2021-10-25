@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form.registrar;
+package cn.org.atool.fluent.form.registrar;
 
 import cn.org.atool.fluent.form.annotation.ApiScan;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;

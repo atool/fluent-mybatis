@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form.registrar;
+package cn.org.atool.fluent.form.registrar;
 
 import org.springframework.cglib.proxy.InvocationHandler;
 

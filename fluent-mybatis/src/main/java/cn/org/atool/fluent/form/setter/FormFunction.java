@@ -1,7 +1,7 @@
-package cn.org.atool.fluent.mybatis.form.setter;
+package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.form.Form;
+import cn.org.atool.fluent.form.Form;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;

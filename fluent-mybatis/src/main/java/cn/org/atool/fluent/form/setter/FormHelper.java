@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.form.setter;
+package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.IPaged;
@@ -10,9 +10,9 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
-import cn.org.atool.fluent.mybatis.form.Form;
-import cn.org.atool.fluent.mybatis.form.meta.FormFieldMeta;
-import cn.org.atool.fluent.mybatis.form.meta.FormMetaList;
+import cn.org.atool.fluent.form.Form;
+import cn.org.atool.fluent.form.meta.FormFieldMeta;
+import cn.org.atool.fluent.form.meta.FormMetaList;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
