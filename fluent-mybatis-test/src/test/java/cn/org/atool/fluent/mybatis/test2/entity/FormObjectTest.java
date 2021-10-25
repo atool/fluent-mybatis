@@ -1,10 +1,9 @@
 package cn.org.atool.fluent.mybatis.test2.entity;
 
-import cn.org.atool.fluent.form.FormItem;
-import cn.org.atool.fluent.form.IForm;
-import cn.org.atool.fluent.form.ItemType;
-import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
+import cn.org.atool.fluent.form.annotation.Entry;
+import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.form.FormKit;
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -89,11 +88,11 @@ public class FormObjectTest extends BaseTest {
 
     @Data
     @Accessors(chain = true)
-    public static class Form1 implements IForm {
-        @FormItem(type = ItemType.UPDATE)
+    public static class Form1 {
+        @Entry(type = EntryType.UPDATE)
         private String userName;
 
-        @FormItem(type = ItemType.UPDATE)
+        @Entry(type = EntryType.UPDATE)
         private int age;
     }
 
@@ -101,19 +100,19 @@ public class FormObjectTest extends BaseTest {
     @Data
     @Accessors(chain = true)
     public static class Form2 extends Form1 {
-        @FormItem
+        @Entry
         private long tenant;
 
-        @FormItem(type = ItemType.NE)
+        @Entry(type = EntryType.NE)
         private String version;
 
-        @FormItem(field = "address", ignoreNull = false)
+        @Entry(value = "address", ignoreNull = false)
         private String add;
 
-        @FormItem(field = "age", type = ItemType.BETWEEN)
+        @Entry(value = "age", type = EntryType.BETWEEN)
         private Integer[] ages;
 
-        @FormItem(field = "address", type = ItemType.IN)
+        @Entry(value = "address", type = EntryType.IN)
         private List<String> addresses;
     }
 }

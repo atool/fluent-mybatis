@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form;
+package cn.org.atool.fluent.form.annotation;
 
 import java.lang.annotation.*;
 
@@ -10,16 +10,16 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface FormItem {
+public @interface Entry {
     /**
      * 关联字段
      */
-    String field() default "";
+    String value() default "";
 
     /**
      * 条件操作, 默认相等
      */
-    ItemType type() default ItemType.EQ;
+    EntryType type() default EntryType.EQ;
 
     /**
      * 忽略null值

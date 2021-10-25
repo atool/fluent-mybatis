@@ -1,8 +1,7 @@
 package cn.org.atool.fluent.mybatis.form.setter;
 
-import cn.org.atool.fluent.form.IForm;
+import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.IPaged;
-import cn.org.atool.fluent.form.ItemType;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -12,14 +11,11 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
 import cn.org.atool.fluent.mybatis.form.Form;
-import cn.org.atool.fluent.mybatis.form.FormKit;
 import cn.org.atool.fluent.mybatis.form.meta.FormFieldMeta;
 import cn.org.atool.fluent.mybatis.form.meta.FormMetaList;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -138,9 +134,9 @@ public class FormHelper {
      * @param form   IForm实例
      * @return Entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form) {
         assertNotNull("FormObject", form);
-        FormMetaList metas = getFormMeta(form.getClass());
+        FormMetaList metas = FormMetaList.getFormMeta(form.getClass());
         AMapping mapping = RefKit.byEntity(eClass);
         IEntity entity = mapping.newEntity();
         for (FormFieldMeta meta : metas) {
@@ -154,9 +150,9 @@ public class FormHelper {
         return (E) entity;
     }
 
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form) {
         assertNotNull("FormObject", form);
-        FormMetaList metas = getFormMeta(form.getClass());
+        FormMetaList metas = FormMetaList.getFormMeta(form.getClass());
         AMapping mapping = RefKit.byEntity(eClass);
         IQuery<E> query = mapping.query();
         for (FormFieldMeta meta : metas) {
@@ -191,9 +187,9 @@ public class FormHelper {
         }
     }
 
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form) {
         assertNotNull("FormObject", form);
-        FormMetaList metas = getFormMeta(form.getClass());
+        FormMetaList metas = FormMetaList.getFormMeta(form.getClass());
         AMapping mapping = RefKit.byEntity(eClass);
         IUpdate<E> updater = mapping.updater();
         for (FormFieldMeta meta : metas) {
@@ -202,7 +198,7 @@ public class FormHelper {
                 continue;
             }
             FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.getName());
-            if (meta.getType() == ItemType.UPDATE) {
+            if (meta.getType() == EntryType.UPDATE) {
                 updater.updateSet(fm.column, value);
             } else {
                 where((IWrapper) updater, fm.column, meta, value);
@@ -236,7 +232,7 @@ public class FormHelper {
                 wrapper.where().apply(column, SqlOp.NE, value);
                 break;
             case IN:
-                wrapper.where().apply(column, SqlOp.IN, toArray(meta.getMethod().getName(), value));
+                wrapper.where().apply(column, SqlOp.IN, toArray(meta.getGetter().getName(), value));
                 break;
             case LIKE:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value + "%");
@@ -248,7 +244,7 @@ public class FormHelper {
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value);
                 break;
             case BETWEEN:
-                wrapper.where().apply(column, SqlOp.BETWEEN, toArray(meta.getMethod().getName(), value));
+                wrapper.where().apply(column, SqlOp.BETWEEN, toArray(meta.getGetter().getName(), value));
                 break;
             default:
                 //throw new RuntimeException("there must be something wrong.");
@@ -301,34 +297,5 @@ public class FormHelper {
             throw new RuntimeException("The result of method[" + methodName + "] should be an array or a collection.");
         }
         return list.toArray();
-    }
-
-    private static FormMetaList getFormMeta(Class<? extends IForm> aClass) {
-        if (FormMetaList.FormMetas.containsKey(aClass)) {
-            return FormMetaList.FormMetas.get(aClass);
-        }
-        synchronized (FormKit.class) {
-            if (FormMetaList.FormMetas.containsKey(aClass)) {
-                return FormMetaList.FormMetas.get(aClass);
-            }
-            FormMetaList.FormMetas.put(aClass, new FormMetaList());
-            Class declared = aClass;
-            while (declared != Object.class) {
-                for (Field field : declared.getDeclaredFields()) {
-                    cn.org.atool.fluent.form.FormItem formItem = field.getAnnotation(cn.org.atool.fluent.form.FormItem.class);
-                    if (formItem == null) {
-                        continue;
-                    }
-                    String name = formItem.field();
-                    if (isBlank(name)) {
-                        name = field.getName();
-                    }
-                    Method method = FormMetaList.getMethod(aClass, field);
-                    FormMetaList.addMeta(aClass, name, method, formItem);
-                }
-                declared = declared.getSuperclass();
-            }
-            return FormMetaList.FormMetas.get(aClass);
-        }
     }
 }

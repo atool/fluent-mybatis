@@ -37,7 +37,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      */
     protected String schema;
 
-    @Getter(AccessLevel.NONE)
+    @Getter
     protected String tableName;
 
     @Getter(AccessLevel.NONE)

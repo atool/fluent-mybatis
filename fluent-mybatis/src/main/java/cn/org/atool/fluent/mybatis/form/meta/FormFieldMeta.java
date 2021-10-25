@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.mybatis.form.meta;
 
-import cn.org.atool.fluent.form.ItemType;
+import cn.org.atool.fluent.form.annotation.EntryType;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.lang.reflect.Method;
 
@@ -10,6 +11,7 @@ import java.lang.reflect.Method;
  *
  * @author darui.wu
  */
+@ToString(of = "name")
 @Getter
 public class FormFieldMeta {
     /**
@@ -19,20 +21,25 @@ public class FormFieldMeta {
     /**
      * 类型
      */
-    private final ItemType type;
+    private final EntryType type;
     /**
      * getter方法
      */
-    private final Method method;
+    private final Method getter;
+    /**
+     * setter方法
+     */
+    private final Method setter;
     /**
      * 忽略空值情况
      */
     private final boolean ignoreNull;
 
-    public FormFieldMeta(String name, ItemType type, Method getter, boolean ignoreNull) {
+    public FormFieldMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
         this.name = name;
         this.type = type;
-        this.method = getter;
+        this.getter = getter;
+        this.setter = setter;
         this.ignoreNull = ignoreNull;
     }
 
@@ -43,8 +50,22 @@ public class FormFieldMeta {
      * @return 字段值
      */
     public Object get(Object target) {
+        if (getter == null) {
+            return null;
+        }
         try {
-            return method.invoke(target);
+            return getter.invoke(target);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void set(Object target, Object value) {
+        if (setter == null) {
+            return;
+        }
+        try {
+            setter.invoke(target, value);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

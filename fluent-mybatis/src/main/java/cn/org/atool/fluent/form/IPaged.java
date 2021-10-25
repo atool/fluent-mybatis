@@ -5,7 +5,7 @@ package cn.org.atool.fluent.form;
  *
  * @author darui.wu
  */
-public interface IPaged extends IForm {
+public interface IPaged {
     /**
      * 每页limit数量
      *

@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.form;
 
-import cn.org.atool.fluent.form.IForm;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -22,7 +21,7 @@ public class FormKit {
      * @param form   entity类型
      * @return entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form) {
         return FormHelper.newEntity(eClass, form);
     }
 
@@ -33,7 +32,7 @@ public class FormKit {
      * @param form   entity类型
      * @return 查询实例
      */
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form) {
         return FormHelper.newQuery(eClass, form);
     }
 
@@ -44,7 +43,7 @@ public class FormKit {
      * @param form   entity类型
      * @return 更新实例
      */
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, IForm form) {
+    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form) {
         return FormHelper.newUpdate(eClass, form);
     }
 }

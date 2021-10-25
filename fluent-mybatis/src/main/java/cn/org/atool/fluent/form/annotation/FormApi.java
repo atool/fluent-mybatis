@@ -1,4 +1,6 @@
-package cn.org.atool.fluent.form;
+package cn.org.atool.fluent.form.annotation;
+
+import cn.org.atool.fluent.mybatis.base.IEntity;
 
 import java.lang.annotation.*;
 
@@ -12,9 +14,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface FormApi {
     /**
-     * FormProcessor bean name
-     *
-     * @return
+     * 操作的表Entity
      */
-    String processor() default "";
+    Class<? extends IEntity> entity() default IEntity.class;
 }

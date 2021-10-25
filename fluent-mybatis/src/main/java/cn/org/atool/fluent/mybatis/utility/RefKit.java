@@ -43,6 +43,10 @@ public final class RefKit {
      */
     public static final KeyMap<AMapping> ENTITY_MAPPING = new KeyMap<>();
     /**
+     * EntityClass 和 AMapping关联关系
+     */
+    public static final KeyMap<AMapping> TABLE_MAPPING = new KeyMap<>();
+    /**
      * EntityClass 和 Mapper实例关联关系
      */
     public static final KeyMap<IEntityMapper> ENTITY_MAPPER = new KeyMap<>();
@@ -62,6 +66,19 @@ public final class RefKit {
             return ENTITY_MAPPING.get(entityClass);
         }
         throw new RuntimeException("the class[" + entityClass + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
+    }
+
+    /**
+     * 返回对应表的映射关系
+     *
+     * @param table 数据库表
+     * @return AMapping
+     */
+    public static AMapping byTable(String table) {
+        if (TABLE_MAPPING.containsKey(table)) {
+            return TABLE_MAPPING.get(table);
+        }
+        throw new RuntimeException("the entity of table[" + table + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
     }
 
     /**

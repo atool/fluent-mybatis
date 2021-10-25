@@ -78,7 +78,7 @@ public class CommonSqlKit implements SqlKit {
         assertNotNull(Param_Entity, entity);
         withPk = validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault);
         MapperSql sql = new MapperSql();
-        sql.INSERT_INTO(dynamic(entity, mapping.getTableName()));
+        sql.INSERT_INTO(dynamic(entity, mapping.table().get(mapping)));
         InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
         sql.INSERT_COLUMNS(mapping, inserts.columns);
         sql.VALUES();
@@ -134,7 +134,7 @@ public class CommonSqlKit implements SqlKit {
         List<Map> maps = this.toMaps(mapping, entities, withPk);
         /* 所有非空字段 */
         List<FieldMapping> nonFields = this.nonFields(mapping, maps, withPk);
-        String tableName = dynamic(entities.get(0), mapping.getTableName());
+        String tableName = dynamic(entities.get(0), mapping.table().get(mapping));
         sql.INSERT_INTO(tableName);
 
         sql.INSERT_COLUMNS(mapping, nonFields.stream().map(f -> f.column).collect(toList()));

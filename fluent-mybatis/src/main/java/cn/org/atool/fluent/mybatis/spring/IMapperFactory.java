@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.spring;
 
-import cn.org.atool.fluent.mybatis.base.intf.IRelation;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.intf.IRelation;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.functions.IExecutor;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
@@ -57,10 +57,12 @@ public interface IMapperFactory {
         for (IEntityMapper mapper : mappers) {
             AMapping mapping = (AMapping) mapper.mapping();
             RefKit.ENTITY_MAPPING.put(mapping.entityClass(), mapping);
+            RefKit.TABLE_MAPPING.put(mapping.getTableName(), mapping);
             RefKit.ENTITY_MAPPER.put(mapping.entityClass(), mapper);
             RefKit.MAPPER_MAPPING.put(mapping.mapperClass(), mapping);
         }
         RefKit.ENTITY_MAPPING.unmodified();
+        RefKit.TABLE_MAPPING.unmodified();
         RefKit.ENTITY_MAPPER.unmodified();
         RefKit.MAPPER_MAPPING.unmodified();
         // 执行初始化环境方法

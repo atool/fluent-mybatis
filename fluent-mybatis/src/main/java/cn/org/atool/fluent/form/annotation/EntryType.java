@@ -1,11 +1,11 @@
-package cn.org.atool.fluent.form;
+package cn.org.atool.fluent.form.annotation;
 
 /**
  * 表单字段类型
  *
  * @author darui.wu
  */
-public enum ItemType {
+public enum EntryType {
     /**
      * 更新或插入的字段
      */

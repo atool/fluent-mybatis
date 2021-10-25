@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
-import cn.org.atool.fluent.mybatis.base.intf.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.base.intf.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -33,11 +33,9 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     Class mapperClass();
 
     /**
-     * 返回表名
+     * 返回不加反义符的表名
      */
-    default String getTableName() {
-        return this.table().get(this);
-    }
+    String getTableName();
 
     /**
      * 返回数据库字段映射关系

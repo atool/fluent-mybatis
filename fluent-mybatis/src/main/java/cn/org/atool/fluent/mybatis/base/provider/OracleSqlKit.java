@@ -69,7 +69,7 @@ public class OracleSqlKit extends CommonSqlKit {
     public <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk) {
         MapperSql sql = new MapperSql();
         List<Map> maps = this.toMaps(mapping, entities, withPk);
-        String tableName = dynamic(entities.get(0), mapping.getTableName());
+        String tableName = dynamic(entities.get(0), mapping.table().get(mapping));
         /* 所有非空字段 */
         List<FieldMapping> nonFields = this.nonFields(mapping, maps, withPk);
 

@@ -28,7 +28,6 @@
         <module>fluent-mybatis-processor</module>
         <module>fluent-mybatis-test</module>
         <module>fluent-mybatis-boot-starter</module>
-        <module>form-api</module>
     </modules>
     <dependencyManagement>
         <dependencies>

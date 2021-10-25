@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.test1;
 
+import cn.org.atool.fluent.form.annotation.ApiScan;
+import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
-import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LI
     "cn.org.atool.fluent.mybatis.customize.mapper",
     "cn.org.atool.fluent.mybatis.origin.mapper"
 })
+@ApiScan({"cn.org.atool.fluent.mybatis.formapi"})
 public abstract class BaseTest extends Test4J {
 }
 
