@@ -18,7 +18,7 @@ public interface IPagedList<E> {
     /**
      * @return next
      */
-    default E getNext() {
+    default <N> N getNext() {
         return null;
     }
 

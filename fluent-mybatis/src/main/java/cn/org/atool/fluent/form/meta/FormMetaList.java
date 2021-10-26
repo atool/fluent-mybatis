@@ -1,22 +1,79 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.form.FormKit;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+/**
+ * Form表单对象元数据定义列表
+ *
+ * @author darui.wu
+ */
+@SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
 public class FormMetaList extends ArrayList<FormFieldMeta> {
+    private FormFieldMeta pageSize;
 
+    private FormFieldMeta currPage;
+
+    private FormFieldMeta pagedTag;
+
+    private boolean isUpdate = false;
+
+    public Integer getPageSize(Object form) {
+        return pageSize == null ? null : (Integer) pageSize.get(form);
+    }
+
+    public Integer getCurrPage(Object form) {
+        return currPage == null ? null : (Integer) currPage.get(form);
+    }
+
+    public Object getPagedTag(Object form) {
+        return pagedTag == null ? null : pagedTag.get(form);
+    }
+
+    private FormFieldMeta addMeta(String name, Method getter, Method setter, Entry entry) {
+        FormFieldMeta meta;
+        if (entry == null) {
+            meta = new FormFieldMeta(name, EntryType.EQ, getter, setter, true);
+        } else if (entry.type() == EntryType.Ignore) {
+            /* 忽略掉的字段 */
+            return null;
+        } else {
+            meta = new FormFieldMeta(name, entry.type(), getter, setter, entry.ignoreNull());
+        }
+
+        switch (meta.getType()) {
+            case PageSize:
+                this.pageSize = meta;
+                break;
+            case CurrPage:
+                this.currPage = meta;
+                break;
+            case PagedTag:
+                this.pagedTag = meta;
+                break;
+            case Update:
+                this.isUpdate = true;
+                this.add(meta);
+                break;
+            default:
+                this.add(meta);
+        }
+        return meta;
+    }
+
+    /*** ============================ ***/
     public static final KeyMap<FormMetaList> FormMetas = new KeyMap<>();
 
     public static FormMetaList getFormMeta(Class aClass) {
@@ -31,6 +88,10 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
             Class declared = aClass;
             while (declared != Object.class) {
                 for (Field field : declared.getDeclaredFields()) {
+                    int mod = field.getModifiers();
+                    if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
+                        continue;
+                    }
                     addFieldMeta(aClass, field);
                 }
                 declared = declared.getSuperclass();
@@ -52,13 +113,7 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
         if (!FormMetas.containsKey(klass)) {
             FormMetas.put(klass, new FormMetaList());
         }
-        FormFieldMeta meta;
-        if (entry == null) {
-            meta = new FormFieldMeta(name, EntryType.EQ, getter, setter, true);
-        } else {
-            meta = new FormFieldMeta(name, entry.type(), getter, setter, entry.ignoreNull());
-        }
-        FormMetas.get(klass).add(meta);
+        FormMetas.get(klass).addMeta(name, getter, setter, entry);
     }
 
     public static Method findGetter(Class klass, Field field) {

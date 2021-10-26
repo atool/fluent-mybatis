@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form.registrar;
 
-import cn.org.atool.fluent.form.annotation.FormApi;
+import cn.org.atool.fluent.form.annotation.FormService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -21,18 +21,18 @@ import java.util.Set;
  */
 @Slf4j
 @Setter
-public class FormApiScanner extends ClassPathBeanDefinitionScanner {
+public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
 
-    public FormApiScanner(BeanDefinitionRegistry registry) {
+    public FormServiceScanner(BeanDefinitionRegistry registry) {
         super(registry, false);
     }
 
     /**
-     * 注册条件过滤器，将 @FormApi 注解加入允许扫描的过滤器中，
+     * 注册条件过滤器，将 {@link FormService} 注解加入允许扫描的过滤器中，
      * 如果加入排除扫描的过滤器集合excludeFilter中，则不会扫描
      */
     protected void registerFilters() {
-        super.addIncludeFilter(new AnnotationTypeFilter(FormApi.class));
+        super.addIncludeFilter(new AnnotationTypeFilter(FormService.class));
         //super.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
     }
 
@@ -66,7 +66,7 @@ public class FormApiScanner extends ClassPathBeanDefinitionScanner {
         String beanClassName = definition.getBeanClassName();
         assert beanClassName != null;
         definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName);
-        definition.setBeanClass(FormApiFactoryBean.class);
+        definition.setBeanClass(FormServiceFactoryBean.class);
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         definition.setScope(ConfigurableBeanFactory.SCOPE_SINGLETON);
     }

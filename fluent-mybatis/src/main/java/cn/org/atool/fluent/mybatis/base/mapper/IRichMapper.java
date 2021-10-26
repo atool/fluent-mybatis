@@ -466,7 +466,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     default <POJO> TagPagedList<POJO> tagPagedPoJo(IQuery query, MapFunction<POJO> mapFunction) {
         TagPagedList<Map<String, Object>> paged = this.tagPagedMap(query);
         List<POJO> list = PoJoHelper.toPoJoList(paged.getData(), mapFunction);
-        POJO next = PoJoHelper.toPoJo(paged.getNext(), mapFunction);
+        POJO next = PoJoHelper.toPoJo((Map<String, Object>) paged.getNext(), mapFunction);
         return new TagPagedList<>(list, next);
     }
 
@@ -481,7 +481,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     default <POJO> TagPagedList<POJO> tagPagedPoJo(Class<POJO> clazz, IQuery query) {
         TagPagedList<Map<String, Object>> paged = this.tagPagedMap(query);
         List<POJO> list = PoJoHelper.toPoJoList(clazz, paged.getData());
-        POJO next = PoJoHelper.toPoJo(clazz, paged.getNext());
+        POJO next = PoJoHelper.toPoJo(clazz, (Map<String, Object>) paged.getNext());
         return new TagPagedList<>(list, next);
     }
 

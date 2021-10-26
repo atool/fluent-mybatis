@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.test1;
 
-import cn.org.atool.fluent.form.annotation.ApiScan;
+import cn.org.atool.fluent.form.FormKit;
+import cn.org.atool.fluent.form.annotation.FormServiceScan;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -35,7 +36,7 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LI
     "cn.org.atool.fluent.mybatis.customize.mapper",
     "cn.org.atool.fluent.mybatis.origin.mapper"
 })
-@ApiScan({"cn.org.atool.fluent.mybatis.formapi"})
+@FormServiceScan({"cn.org.atool.fluent.mybatis.formapi"})
 public abstract class BaseTest extends Test4J {
 }
 
@@ -76,6 +77,8 @@ class TestSpringConfig {
             .initializer(() -> {
                 DbType.ORACLE.setEscapeExpress("[?]"); // 只是示例, ORACLE的转义方式不是[?], SQL Server才是
                 DbType.ORACLE.setPagedFormat(ORACLE_LIMIT.getFormat() + "/**测试而已**/");
+                /* student有多个Entity映射 */
+                FormKit.add("student", StudentEntity.class);
             });
     }
 }

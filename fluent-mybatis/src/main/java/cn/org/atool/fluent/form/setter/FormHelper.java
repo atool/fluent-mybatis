@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.form.setter;
 
+import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.IPaged;
+import cn.org.atool.fluent.form.meta.FormFieldMeta;
+import cn.org.atool.fluent.form.meta.FormMetaList;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -10,9 +12,6 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
-import cn.org.atool.fluent.form.Form;
-import cn.org.atool.fluent.form.meta.FormFieldMeta;
-import cn.org.atool.fluent.form.meta.FormMetaList;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
@@ -134,9 +133,11 @@ public class FormHelper {
      * @param form   IForm实例
      * @return Entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form) {
+    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetaList metas) {
         assertNotNull("FormObject", form);
-        FormMetaList metas = FormMetaList.getFormMeta(form.getClass());
+        if (metas == null) {
+            metas = FormMetaList.getFormMeta(form.getClass());
+        }
         AMapping mapping = RefKit.byEntity(eClass);
         IEntity entity = mapping.newEntity();
         for (FormFieldMeta meta : metas) {
@@ -150,9 +151,11 @@ public class FormHelper {
         return (E) entity;
     }
 
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form) {
+    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetaList metas) {
         assertNotNull("FormObject", form);
-        FormMetaList metas = FormMetaList.getFormMeta(form.getClass());
+        if (metas == null) {
+            metas = FormMetaList.getFormMeta(form.getClass());
+        }
         AMapping mapping = RefKit.byEntity(eClass);
         IQuery<E> query = mapping.query();
         for (FormFieldMeta meta : metas) {
@@ -161,35 +164,38 @@ public class FormHelper {
                 continue;
             }
             FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.getName());
-            where((IWrapper) query, fm.column, meta, value);
+            if (fm == null) {
+                throw new RuntimeException("The field[" + meta.getName() + "] of entity[" + eClass.getName() + "] not found.");
+            } else {
+                where((IWrapper) query, fm.column, meta, value);
+            }
         }
-        if (form instanceof IPaged) {
-            setPaged(mapping, query, (IPaged) form);
+        if (metas.getPageSize() != null) {
+            setPaged(mapping, query, form, metas);
         }
         return query;
     }
 
-    private static void setPaged(AMapping mapping, IQuery query, IPaged paged) {
-        int pageSize = paged.getPageSize();
+    private static void setPaged(AMapping mapping, IQuery query, Object form, FormMetaList metas) {
+        int pageSize = metas.getPageSize(form);
         if (pageSize < 1) {
             throw new RuntimeException("PageSize must be greater than 0.");
         }
-        Integer currPage = paged.getCurrPage();
-        String startTag = paged.getStartPk();
-        if (currPage == null && startTag == null || currPage != null && startTag != null) {
-            throw new RuntimeException("Paging operation, getCurrPage and getStartPk must be assigned one and only one");
-        } else if (currPage == null) {
-            String pk = mapping.primaryId(true);
-            query.where().apply(pk, SqlOp.GE, paged.getStartPk());
-            query.limit(pageSize);
-        } else {
-            query.limit(currPage * pageSize, pageSize);
+        Integer currPage = metas.getCurrPage(form);
+        query.limit(currPage == null ? 0 : currPage * pageSize, pageSize);
+        Object pagedTag = metas.getPagedTag(form);
+        if (pagedTag == null) {
+            return;
         }
+        String pk = mapping.primaryId(true);
+        query.where().apply(pk, SqlOp.GE, pagedTag);
     }
 
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form) {
+    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetaList metas) {
         assertNotNull("FormObject", form);
-        FormMetaList metas = FormMetaList.getFormMeta(form.getClass());
+        if (metas == null) {
+            metas = FormMetaList.getFormMeta(form.getClass());
+        }
         AMapping mapping = RefKit.byEntity(eClass);
         IUpdate<E> updater = mapping.updater();
         for (FormFieldMeta meta : metas) {
@@ -198,7 +204,7 @@ public class FormHelper {
                 continue;
             }
             FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.getName());
-            if (meta.getType() == EntryType.UPDATE) {
+            if (meta.getType() == EntryType.Update) {
                 updater.updateSet(fm.column, value);
             } else {
                 where((IWrapper) updater, fm.column, meta, value);
@@ -208,14 +214,18 @@ public class FormHelper {
     }
 
     private static void where(IWrapper wrapper, String column, FormFieldMeta meta, Object value) {
+        if (meta.getType() == EntryType.EQ) {
+            if (value != null) {
+                wrapper.where().apply(column, SqlOp.EQ, value);
+            } else if (!meta.isIgnoreNull()) {
+                wrapper.where().apply(column, SqlOp.IS_NULL);
+            }
+            return;
+        }
+        if (value == null) {
+            throw new RuntimeException("Condition field[" + meta.getName() + "] not assigned.");
+        }
         switch (meta.getType()) {
-            case EQ:
-                if (value == null) {
-                    wrapper.where().apply(column, SqlOp.IS_NULL);
-                } else {
-                    wrapper.where().apply(column, SqlOp.EQ, value);
-                }
-                break;
             case GT:
                 wrapper.where().apply(column, SqlOp.EQ, value);
                 break;
@@ -234,17 +244,21 @@ public class FormHelper {
             case IN:
                 wrapper.where().apply(column, SqlOp.IN, toArray(meta.getGetter().getName(), value));
                 break;
-            case LIKE:
+            case Like:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value + "%");
                 break;
-            case LIKE_LEFT:
+            case LikeLeft:
                 wrapper.where().apply(column, SqlOp.LIKE, value + "%");
                 break;
-            case LIKE_RIGHT:
+            case LikeRight:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value);
                 break;
-            case BETWEEN:
-                wrapper.where().apply(column, SqlOp.BETWEEN, toArray(meta.getGetter().getName(), value));
+            case Between:
+                Object[] args = toArray(meta.getGetter().getName(), value);
+                if (args.length != 2) {
+                    throw new RuntimeException("The size of value of the condition field[" + meta.getName() + "] must be 2.");
+                }
+                wrapper.where().apply(column, SqlOp.BETWEEN, args);
                 break;
             default:
                 //throw new RuntimeException("there must be something wrong.");
@@ -294,7 +308,7 @@ public class FormHelper {
         } else if (Collection.class.isAssignableFrom(aClass)) {
             list.addAll((Collection) object);
         } else {
-            throw new RuntimeException("The result of method[" + methodName + "] should be an array or a collection.");
+            list.add(object);
         }
         return list.toArray();
     }

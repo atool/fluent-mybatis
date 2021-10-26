@@ -12,12 +12,13 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 public @interface Entry {
     /**
-     * 关联字段
+     * 关联的Entity字段名称
+     * 未定义则取字段名称
      */
     String value() default "";
 
     /**
-     * 条件操作, 默认相等
+     * 条件操作, 默认相等(赋值)
      */
     EntryType type() default EntryType.EQ;
 

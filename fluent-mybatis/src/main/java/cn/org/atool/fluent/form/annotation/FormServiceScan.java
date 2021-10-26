@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form.annotation;
 
-import cn.org.atool.fluent.form.registrar.FormApiRegistrar;
+import cn.org.atool.fluent.form.registrar.FormServiceRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -13,7 +13,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@Import(FormApiRegistrar.class)
-public @interface ApiScan {
+@Import(FormServiceRegistrar.class)
+public @interface FormServiceScan {
+    /**
+     * api接口定义路径列表
+     */
     String[] value() default {};
 }

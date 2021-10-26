@@ -11,7 +11,7 @@ import java.util.function.Function;
  * @param <E> 实体对象类
  * @author darui.wu 2020/6/24 10:45 上午
  */
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "unchecked"})
 @Getter
 public class TagPagedList<E> implements IPagedList<E> {
     /**
@@ -23,7 +23,7 @@ public class TagPagedList<E> implements IPagedList<E> {
      * next == null: 表示没有更多记录
      * next != null: 可以用来构造具体的marker值传递到下一个查询
      */
-    private E next;
+    private Object next;
 
     public TagPagedList() {
     }
@@ -40,7 +40,7 @@ public class TagPagedList<E> implements IPagedList<E> {
      * @param <MK>   next tag类型, 通常是String或者Number值
      * @return next tag值
      */
-    public <MK> MK parseNext(Function<E, MK> parser) {
-        return next == null ? null : parser.apply(next);
+    public <MK, T> MK parseNext(Function<T, MK> parser) {
+        return next == null ? null : parser.apply((T) next);
     }
 }

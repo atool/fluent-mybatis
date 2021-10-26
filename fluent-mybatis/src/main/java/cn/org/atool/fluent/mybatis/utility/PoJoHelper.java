@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.intf.IToMap;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.intf.IToMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.metadata.SetterMeta;
@@ -42,7 +42,7 @@ public class PoJoHelper {
      * @return 转换后的对象列表
      */
     public static <POJO> List<POJO> toPoJoList(List<Map<String, Object>> list, MapFunction<POJO> converter) {
-        return list == null ? null : list.stream().map(map -> toPoJo(map, converter)).collect(toList());
+        return list == null ? null : (List) list.stream().map(map -> toPoJo(map, converter)).collect(toList());
     }
 
     /**
@@ -53,8 +53,8 @@ public class PoJoHelper {
      * @param <POJO>    PoJo类型
      * @return 转换后的对象
      */
-    public static <POJO> POJO toPoJo(Map<String, Object> map, @NonNull MapFunction<POJO> converter) {
-        return map == null ? null : converter.apply(map);
+    public static <POJO> POJO toPoJo(Map<String, Object> map, @NonNull MapFunction converter) {
+        return map == null ? null : (POJO) converter.apply(map);
     }
 
     /**
