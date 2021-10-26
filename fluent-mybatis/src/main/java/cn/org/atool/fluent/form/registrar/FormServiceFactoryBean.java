@@ -13,7 +13,7 @@ import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.cglib.proxy.Proxy;
+import org.springframework.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
 
 /**
  * FormApiFactoryBean: Form API bean封装工厂
@@ -32,7 +33,6 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
 public class FormServiceFactoryBean implements FactoryBean {
-
     private final Class apiInterface;
 
     private final Class entityClass;
@@ -44,16 +44,30 @@ public class FormServiceFactoryBean implements FactoryBean {
     }
 
     @Override
-    public Object getObject() {
-        return Proxy.newProxyInstance(this.apiInterface.getClassLoader(), new Class[]{this.apiInterface}, this::invoke);
+    public Class<?> getObjectType() {
+        return this.apiInterface;
     }
 
-    public Object invoke(Object target, Method method, Object[] args) throws Throwable {
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
+
+    @Override
+    public Object getObject() {
+        ClassLoader classLoader = this.apiInterface.getClassLoader();
+        return newProxyInstance(classLoader, new Class[]{this.apiInterface}, this::invoke);
+    }
+
+    /**
+     * FactoryBean的 {@link InvocationHandler#invoke(Object, Method, Object[])} 实现
+     */
+    private Object invoke(Object target, Method method, Object[] args) throws Throwable {
         if (Object.class.equals(method.getDeclaringClass())) {
             return method.invoke(this, args);
         }
         ServiceMethod aMethod = this.getApiMethod(method, args);
-        Class eClass = this.getMapping(method.getName(), aMethod);
+        Class eClass = this.getEntityClass(method.getName(), aMethod);
 
         FormMetaList metas = FormKit.metas(method.getParameterTypes()[0]);
         MethodType mType = aMethod == null ? MethodType.Auto : aMethod.type();
@@ -74,9 +88,11 @@ public class FormServiceFactoryBean implements FactoryBean {
      */
     private Object save(Class eClass, Class rClass, Object form, FormMetaList metas) {
         IEntity entity = FormKit.newEntity(eClass, form, metas);
-        RefKit.mapper(eClass).save(entity);
+        Object pk = RefKit.mapper(eClass).save(entity);
         if (rClass == void.class || rClass == Void.class) {
             return null;
+        } else if (rClass == Boolean.class || rClass == boolean.class) {
+            return pk != null;
         } else if (rClass.isAssignableFrom(eClass)) {
             return entity;
         } else {
@@ -94,23 +110,28 @@ public class FormServiceFactoryBean implements FactoryBean {
         Class pType = this.getParameterTypeOfReturn(method);
         IQuery query = FormKit.newQuery(eClass, form, metas);
         if (rType == Integer.class || rType == int.class) {
+            /* count, 返回int */
             return query.to().count();
         } else if (rType == Long.class || rType == long.class) {
+            /* count, 返回long */
             return (long) query.to().count();
         } else if (StdPagedList.class.isAssignableFrom(rType)) {
+            /* 标准分页 */
             StdPagedList paged = query.to().stdPagedEntity();
             List data = this.entities2result(paged.getData(), pType);
             return paged.setData(data);
         } else if (TagPagedList.class.isAssignableFrom(rType)) {
+            /* Tag分页 */
             TagPagedList paged = query.to().tagPagedEntity();
             List data = this.entities2result(paged.getData(), pType);
             IEntity next = (IEntity) paged.getNext();
             return new TagPagedList(data, next == null ? null : next.findPk());
         } else if (Collection.class.isAssignableFrom(method.getReturnType())) {
+            /* 返回List */
             List<IEntity> list = query.to().listEntity();
             return this.entities2result(list, pType);
         } else {
-            /*  查找单条数据 */
+            /* 查找单条数据 */
             query.limit(1);
             IEntity entity = (IEntity) query.to().findOne().orElse(null);
             return this.entity2result(entity, rType);
@@ -192,7 +213,7 @@ public class FormServiceFactoryBean implements FactoryBean {
      * @param aMethod 方法上的ApiMethod注解
      * @return EntityClass
      */
-    private Class<? extends IEntity> getMapping(String mName, ServiceMethod aMethod) {
+    private Class<? extends IEntity> getEntityClass(String mName, ServiceMethod aMethod) {
         if (aMethod == null) {
             return this.entityClass;
         }
@@ -201,32 +222,28 @@ public class FormServiceFactoryBean implements FactoryBean {
             entity = this.entityClass;
         }
         if (entity == null || entity == IEntity.class) {
-            throw new RuntimeException("illegal method: " + mName + " of interface:" + this.apiInterface.getName());
+            throw new RuntimeException("The entityClass value of @MethodService of Method[" + mName + "] must be a subclass of IEntity.");
         }
         return entity;
     }
 
-    private Class getEntityClass(Class klass, String table) {
-        if (klass != Object.class) {
-            if (IEntity.class.isAssignableFrom(klass)) {
-                return klass;
-            } else {
-                throw new RuntimeException("The value of entityClass() must be a subclass of IEntity.");
-            }
-        } else if (notBlank(table)) {
-            return FormKit.getEntityClass(table);
-        } else {
+    /**
+     * 根据{@link ServiceMethod}或{@link FormService}注解上声明的entityClass和entityTable
+     * 值解析实际的EntityClass值
+     *
+     * @param entityClass Entity类
+     * @param entityTable 表名称
+     * @return 有效的Entity Class
+     */
+    private Class getEntityClass(Class entityClass, String entityTable) {
+        if (notBlank(entityTable)) {
+            return FormKit.getEntityClass(entityTable);
+        } else if (IEntity.class.isAssignableFrom(entityClass)) {
+            return entityClass;
+        } else if (Object.class.equals(entityClass)) {
             return null;
+        } else {
+            throw new RuntimeException("The value of entityClass() of @ServiceMethod(@FormService) must be a subclass of IEntity.");
         }
-    }
-
-    @Override
-    public Class<?> getObjectType() {
-        return this.apiInterface;
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return true;
     }
 }

@@ -241,7 +241,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param <PK>   主键
      * @return 主键
      */
-    default <PK extends Serializable> PK save(E entity) {
+    default <PK> PK save(E entity) {
         /* 如果有主键生成器, 先设置主键 **/
         PkGeneratorKits.setPkByGenerator(entity);
         if (entity.findPk() == null) {
