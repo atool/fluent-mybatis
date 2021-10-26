@@ -79,7 +79,7 @@ public interface IQuery<E extends IEntity> {
     /**
      * 返回order排序
      *
-     * @return
+     * @return ignore
      */
     OrderByBase orderBy();
 
@@ -131,4 +131,24 @@ public interface IQuery<E extends IEntity> {
     default <R> R execute(Function<IQuery<E>, R> executor) {
         return executor.apply(this);
     }
+
+    /**
+     * select * from a where...
+     * UNION
+     * select * from b where...
+     *
+     * @param queries 查询条件列表
+     * @return ignore
+     */
+    IQuery union(IQuery... queries);
+
+    /**
+     * select * from a where...
+     * UNION ALL
+     * select * from b where...
+     *
+     * @param queries 查询条件列表
+     * @return ignore
+     */
+    IQuery unionAll(IQuery... queries);
 }

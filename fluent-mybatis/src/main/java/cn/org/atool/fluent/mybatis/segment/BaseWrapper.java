@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
@@ -142,6 +143,25 @@ public abstract class BaseWrapper<
      */
     public FieldMapping column(String column) {
         return this.column2mapping().get(column);
+    }
+
+    /**
+     * IQuery的union操作
+     *
+     * @return union后的IQuery
+     */
+    protected IQuery union(String key, IQuery... queries) {
+        if (this.data.paged() != null) {
+            throw new RuntimeException("Limit syntax is not supported for union queries.");
+        }
+        if (queries == null || queries.length == 0) {
+            throw new IllegalArgumentException("The size of parameter[queries] should be greater than zero.");
+        }
+        for (IQuery query : queries) {
+            this.data.union(key, query);
+            query.data().sharedParameter(this.data);
+        }
+        return (IQuery) this;
     }
 
     /**

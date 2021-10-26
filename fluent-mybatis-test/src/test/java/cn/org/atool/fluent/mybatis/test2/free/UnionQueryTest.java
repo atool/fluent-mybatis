@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.test2.free;
 
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;
@@ -11,13 +12,14 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.GE;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.LIKE;
 
+@SuppressWarnings("rawtypes")
 public class UnionQueryTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
 
     @Test
     void union() {
-        FreeQuery query = new FreeQuery("student")
+        IQuery query = new FreeQuery("student")
             .select.apply("id", "user_name").end()
             .where.and(q -> q
                 .where.apply("user_name", LIKE, "1%")
@@ -37,7 +39,7 @@ public class UnionQueryTest extends BaseTest {
 
     @Test
     void unionAll() {
-        FreeQuery query = new FreeQuery("student")
+        IQuery query = new FreeQuery("student")
             .select.apply("id", "user_name").end()
             .where.and(q -> q
                 .where.apply("user_name", LIKE, "1%")

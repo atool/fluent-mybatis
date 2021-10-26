@@ -100,42 +100,14 @@ public abstract class BaseQuery<
         return (Q) this;
     }
 
-    /**
-     * select * from a where...
-     * UNION
-     * select * from b where...
-     *
-     * @param queries 查询条件列表
-     * @return ignore
-     */
-    public Q union(IQuery... queries) {
+    @Override
+    public IQuery union(IQuery... queries) {
         return this.union(UNION, queries);
     }
 
-    /**
-     * select * from a where...
-     * UNION ALL
-     * select * from b where...
-     *
-     * @param queries 查询条件列表
-     * @return ignore
-     */
-    public Q unionAll(IQuery... queries) {
+    @Override
+    public IQuery unionAll(IQuery... queries) {
         return this.union(UNION_ALL, queries);
-    }
-
-    private Q union(String key, IQuery... queries) {
-        if (this.data.paged() != null) {
-            throw new RuntimeException("Limit syntax is not supported for union queries.");
-        }
-        if (queries == null || queries.length == 0) {
-            throw new IllegalArgumentException("The size of parameter[queries] should be greater than zero.");
-        }
-        for (IQuery query : queries) {
-            this.data.union(key, query);
-            query.data().sharedParameter(this.data);
-        }
-        return (Q) this;
     }
 
     /**

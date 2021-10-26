@@ -1,10 +1,7 @@
 package cn.org.atool.fluent.mybatis.segment;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
-import cn.org.atool.fluent.mybatis.base.crud.JoinBuilder;
-import cn.org.atool.fluent.mybatis.base.crud.JoinToBuilder;
+import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -14,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION_ALL;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -173,5 +172,15 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
             all.addAll(query.allFields());
         }
         return all;
+    }
+
+    @Override
+    public IQuery union(IQuery... queries) {
+        return this.union(UNION, queries);
+    }
+
+    @Override
+    public IQuery unionAll(IQuery... queries) {
+        return this.union(UNION_ALL, queries);
     }
 }
