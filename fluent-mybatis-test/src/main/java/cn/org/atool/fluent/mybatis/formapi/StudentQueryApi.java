@@ -16,6 +16,8 @@ import java.util.List;
 public interface StudentQueryApi {
     Student findStudentBy(StudentQuery student);
 
+    long countStudentBy(StudentQuery student);
+
     List<Student> listStudentBy(StudentQuery student);
 
     StdPagedList<Student> stdPagedStudent(StdPagedQuery student);

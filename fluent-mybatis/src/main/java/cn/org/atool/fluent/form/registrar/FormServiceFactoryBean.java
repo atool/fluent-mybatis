@@ -93,7 +93,11 @@ public class FormServiceFactoryBean implements FactoryBean {
         Class rType = method.getReturnType();
         Class pType = this.getParameterTypeOfReturn(method);
         IQuery query = FormKit.newQuery(eClass, form, metas);
-        if (StdPagedList.class.isAssignableFrom(rType)) {
+        if (rType == Integer.class || rType == int.class) {
+            return query.to().count();
+        } else if (rType == Long.class || rType == long.class) {
+            return (long) query.to().count();
+        } else if (StdPagedList.class.isAssignableFrom(rType)) {
             StdPagedList paged = query.to().stdPagedEntity();
             List data = this.entities2result(paged.getData(), pType);
             return paged.setData(data);

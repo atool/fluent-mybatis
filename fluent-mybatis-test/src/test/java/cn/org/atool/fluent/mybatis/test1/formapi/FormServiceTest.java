@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test1.formapi;
 
-import cn.org.atool.fluent.mybatis.formapi.StudentCreatorApi;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.StdPagedQuery;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.TagPagedQuery;
@@ -16,9 +15,6 @@ import org.test4j.hamcrest.matcher.modes.EqMode;
 import java.util.List;
 
 public class FormServiceTest extends BaseTest {
-    @Autowired
-    StudentCreatorApi creatorApi;
-
     @Autowired
     StudentUpdateApi updateApi;
 
@@ -147,10 +143,31 @@ public class FormServiceTest extends BaseTest {
     }
 
     @Test
+    void count() {
+        ATM.dataMap.student.table(2)
+            .env.values("test_env")
+            .userName.values("ming.li")
+            .age.values(23, 34)
+            .address.values("hangzhou binjiang")
+            .cleanAndInsert();
+        long count = queryApi.countStudentBy(new StudentQueryApi.StudentQuery()
+            .setUserName("ming.li")
+            .setAddress("hangzhou")
+            .setAge(new int[]{20, 40}));
+        want.number(count).isEqualTo(2);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(*) " +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "AND `address` LIKE ? " +
+            "AND `age` BETWEEN ? AND ?");
+    }
+
+    @Test
     void createStudent() {
         ATM.dataMap.student.table().clean();
-        StudentCreatorApi.Student student = creatorApi.saveStudent(new StudentCreatorApi.Student().setUserName("test").setAge(34));
-        want.object(student).eqReflect(new StudentCreatorApi.Student().setUserName("test").setAge(34), EqMode.IGNORE_DEFAULTS);
+        StudentUpdateApi.Student student = updateApi.saveStudent(new StudentUpdateApi.Student().setUserName("test").setAge(34));
+        want.object(student).eqReflect(new StudentUpdateApi.Student().setUserName("test").setAge(34), EqMode.IGNORE_DEFAULTS);
         want.number(student.getId()).isGt(0L);
         ATM.dataMap.student.table(1).eqTable();
     }
@@ -162,7 +179,7 @@ public class FormServiceTest extends BaseTest {
             .id.values(2L)
             .env.values("test_env")
             .cleanAndInsert();
-        int count = updateApi.updateStudent(new StudentUpdateApi.Student().setUserName("test").setAge(34).setId(2L));
+        int count = updateApi.updateStudent(new StudentUpdateApi.StudentUpdater().setUserName("test").setAge(34).setId(2L));
         want.number(count).eq(1);
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
