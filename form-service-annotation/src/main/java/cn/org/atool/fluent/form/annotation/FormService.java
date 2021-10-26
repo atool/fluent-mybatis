@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface FormService {
     /**
-     * 操作的表Entity
+     * 操作的表Entity类
      */
     Class entityClass() default Object.class;
 

@@ -23,7 +23,7 @@ public @interface ServiceMethod {
     String entityTable() default "";
 
     /**
-     * 操作方法, Insert时需要显式指定
+     * 操作方法, Save操作时需要显式指定
      */
     MethodType type() default MethodType.Auto;
 }

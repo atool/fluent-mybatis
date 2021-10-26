@@ -9,7 +9,7 @@
         <version>1.0.4</version>
     </parent>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.8.7.1</version>
+    <version>1.9.0</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -24,11 +24,11 @@
         <test4j-junit5.version>2.7.11</test4j-junit5.version>
     </properties>
     <modules>
+        <module>form-service-annotation</module>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
         <module>fluent-mybatis-test</module>
         <module>fluent-mybatis-boot-starter</module>
-        <module>form-service-annotation</module>
     </modules>
     <dependencyManagement>
         <dependencies>

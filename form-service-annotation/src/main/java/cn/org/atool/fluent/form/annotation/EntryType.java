@@ -11,7 +11,7 @@ public enum EntryType {
      */
     Ignore,
     /**
-     * 更新或插入的字段
+     * 更新字段
      */
     Update,
     /**

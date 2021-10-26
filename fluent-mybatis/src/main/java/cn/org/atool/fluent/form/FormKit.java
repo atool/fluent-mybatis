@@ -16,7 +16,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author wudarui
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class FormKit {
     private static final KeyMap<Class> TableEntityClass = new KeyMap();
 

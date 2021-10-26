@@ -5,15 +5,9 @@
     <parent>
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
-        <version>1.8.7.1</version>
+        <version>1.9.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>form-service-annotation</artifactId>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
 </project>
