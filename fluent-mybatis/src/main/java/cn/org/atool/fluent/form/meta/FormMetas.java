@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
@@ -75,17 +76,17 @@ public class FormMetas extends ArrayList<EntryMeta> {
     }
 
     /*** ============================ ***/
-    public static final KeyMap<cn.org.atool.fluent.form.meta.FormMetas> FormMetas = new KeyMap<>();
+    public static final KeyMap<FormMetas> FormMetas = new KeyMap<>();
 
-    public static cn.org.atool.fluent.form.meta.FormMetas getFormMeta(Class aClass) {
-        if (cn.org.atool.fluent.form.meta.FormMetas.FormMetas.containsKey(aClass)) {
-            return cn.org.atool.fluent.form.meta.FormMetas.FormMetas.get(aClass);
+    public static FormMetas getFormMeta(Class aClass) {
+        if (FormMetas.containsKey(aClass)) {
+            return FormMetas.get(aClass);
         }
         synchronized (FormKit.class) {
-            if (cn.org.atool.fluent.form.meta.FormMetas.FormMetas.containsKey(aClass)) {
-                return cn.org.atool.fluent.form.meta.FormMetas.FormMetas.get(aClass);
+            if (FormMetas.containsKey(aClass)) {
+                return FormMetas.get(aClass);
             }
-            cn.org.atool.fluent.form.meta.FormMetas.FormMetas.put(aClass, new FormMetas());
+            FormMetas.put(aClass, new FormMetas());
             Class declared = aClass;
             while (declared != Object.class) {
                 try {
@@ -95,7 +96,7 @@ public class FormMetas extends ArrayList<EntryMeta> {
                 }
                 declared = declared.getSuperclass();
             }
-            return cn.org.atool.fluent.form.meta.FormMetas.FormMetas.get(aClass);
+            return FormMetas.get(aClass);
         }
     }
 
@@ -136,9 +137,9 @@ public class FormMetas extends ArrayList<EntryMeta> {
         Entry entry = field.getAnnotation(Entry.class);
         String name = entry == null || isBlank(entry.value()) ? field.getName() : entry.value();
 
-        Method getter = cn.org.atool.fluent.form.meta.FormMetas.findGetter(aClass, field);
-        Method setter = cn.org.atool.fluent.form.meta.FormMetas.findSetter(aClass, field);
-        cn.org.atool.fluent.form.meta.FormMetas.addMeta(aClass, name, getter, setter, entry);
+        Method getter = findGetter(aClass, field);
+        Method setter = findSetter(aClass, field);
+        addMeta(aClass, name, getter, setter, entry);
     }
 
     private static void addMeta(Class klass, String name, Method getter, Method setter, Entry entry) {

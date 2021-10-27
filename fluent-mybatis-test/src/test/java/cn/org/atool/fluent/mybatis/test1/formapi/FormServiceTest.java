@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test1.formapi;
 
+import cn.org.atool.fluent.mybatis.formapi.StdPagedQuery;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi;
-import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.StdPagedQuery;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.TagPagedQuery;
 import cn.org.atool.fluent.mybatis.formapi.StudentUpdateApi;
 import cn.org.atool.fluent.mybatis.formapi.StudentUpdater;

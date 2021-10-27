@@ -40,16 +40,6 @@ public interface StudentQueryApi {
 
     @Data
     @Accessors(chain = true)
-    class StdPagedQuery extends StudentQuery {
-        @Entry(type = EntryType.PageSize)
-        private int pageSize = 10;
-
-        @Entry(type = EntryType.CurrPage)
-        private int currPage = 0;
-    }
-
-    @Data
-    @Accessors(chain = true)
     class TagPagedQuery extends StudentQuery {
         @Entry(type = EntryType.PagedTag)
         private int nextId;

@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test2.entity;
 
-import cn.org.atool.fluent.form.meta.FormKit;
+import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;

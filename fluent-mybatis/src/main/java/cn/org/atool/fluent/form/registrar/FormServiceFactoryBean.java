@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form.registrar;
 
-import cn.org.atool.fluent.form.meta.FormKit;
+import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Behavior;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.annotation.BehaviorType;

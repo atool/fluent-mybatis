@@ -1,5 +1,6 @@
-package cn.org.atool.fluent.form.meta;
+package cn.org.atool.fluent.form;
 
+import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
