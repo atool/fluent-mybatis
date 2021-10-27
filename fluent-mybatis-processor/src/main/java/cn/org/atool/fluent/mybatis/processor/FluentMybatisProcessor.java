@@ -11,6 +11,10 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.tools.JavaCompiler;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+import java.io.IOException;
 import java.util.Set;
 
 import static javax.tools.Diagnostic.Kind.ERROR;
@@ -63,7 +67,28 @@ public class FluentMybatisProcessor extends AbstractProcessor implements IProces
         FluentList.generate(filer, err -> messager.printMessage(NOTE, err));
         messager.printMessage(NOTE, "FluentMybatis process end !!!");
         this.generated = true;
+        // compile(sourceFile.toUri().getPath());
         return true;
+    }
+
+    /**
+     * 编译文件
+     *
+     * @param path
+     * @throws IOException
+     */
+    private void compile(String path) throws IOException {
+        //拿到编译器
+        JavaCompiler complier = ToolProvider.getSystemJavaCompiler();
+        //文件管理者
+        StandardJavaFileManager fileMgr = complier.getStandardFileManager(null, null, null);
+        //获取文件
+        Iterable units = fileMgr.getJavaFileObjects(path);
+        //编译任务
+        JavaCompiler.CompilationTask t = complier.getTask(null, fileMgr, null, null, null, units);
+        //进行编译
+        t.call();
+        fileMgr.close();
     }
 
     public static void error(String message) {

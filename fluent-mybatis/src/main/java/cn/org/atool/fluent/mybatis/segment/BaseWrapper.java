@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.metadata.TableMeta;
 import cn.org.atool.fluent.mybatis.metadata.TableMetaHelper;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
@@ -45,8 +46,20 @@ public abstract class BaseWrapper<
     /**
      * 表别名
      */
-    @Getter
-    protected String tableAlias;
+    private StringSupplier tableAlias;
+
+    @Override
+    public String getTableAlias() {
+        return tableAlias == null ? null : tableAlias.get();
+    }
+
+    protected void setTableAlias(StringSupplier tableAlias) {
+        this.tableAlias = tableAlias;
+    }
+
+    protected void setTableAlias(String tableAlias) {
+        this.tableAlias = () -> isBlank(tableAlias) ? EMPTY : tableAlias.trim();
+    }
 
     @Getter(AccessLevel.NONE)
     protected WrapperData data;
@@ -55,17 +68,21 @@ public abstract class BaseWrapper<
     protected Class entityClass;
 
     protected BaseWrapper(String tableAlias) {
-        this.tableAlias = tableAlias;
+        this.setTableAlias(tableAlias);
     }
 
-    protected BaseWrapper(IFragment table, String tableAlias, Class<E> entityClass) {
+    protected BaseWrapper(StringSupplier tableAlias) {
+        this.setTableAlias(tableAlias);
+    }
+
+    protected BaseWrapper(IFragment table, StringSupplier tableAlias, Class<E> entityClass) {
         this(table, tableAlias, new Parameters(), entityClass);
     }
 
-    protected BaseWrapper(IFragment table, String tableAlias, Parameters parameters, Class<E> entityClass) {
+    protected BaseWrapper(IFragment table, StringSupplier tableAlias, Parameters parameters, Class<E> entityClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
         this.table = table;
-        this.tableAlias = isBlank(tableAlias) ? EMPTY : tableAlias.trim();
+        this.setTableAlias(tableAlias);
         this.data = new WrapperData(this, parameters);
         this.entityClass = entityClass;
     }

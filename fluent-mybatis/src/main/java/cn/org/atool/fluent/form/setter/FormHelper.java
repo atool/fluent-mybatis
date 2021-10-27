@@ -242,7 +242,7 @@ public class FormHelper {
                 wrapper.where().apply(column, SqlOp.NE, value);
                 break;
             case IN:
-                wrapper.where().apply(column, SqlOp.IN, toArray(meta.getGetter().getName(), value));
+                wrapper.where().apply(column, SqlOp.IN, toArray(meta.getGetterName(), value));
                 break;
             case Like:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value + "%");
@@ -254,7 +254,7 @@ public class FormHelper {
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value);
                 break;
             case Between:
-                Object[] args = toArray(meta.getGetter().getName(), value);
+                Object[] args = toArray(meta.getGetterName(), value);
                 if (args.length != 2) {
                     throw new RuntimeException("The size of value of the condition field[" + meta.getName() + "] must be 2.");
                 }

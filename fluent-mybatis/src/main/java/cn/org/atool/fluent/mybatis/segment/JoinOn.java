@@ -8,13 +8,13 @@ import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.where.BaseWhere;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.function.Function;
 
@@ -57,7 +57,7 @@ public class JoinOn<QL extends BaseQuery<?, QL>, QR extends BaseQuery<?, QR>, JB
         } else {
             onQuery = (BaseQuery) RefKit.byEntity(origQuery.entityClass).emptyQuery();
         }
-        onQuery.tableAlias = origQuery.tableAlias;
+        onQuery.setTableAlias(origQuery::getTableAlias);
         onQuery.sharedParameter(this.joinQuery);
         return (Q) onQuery;
     }

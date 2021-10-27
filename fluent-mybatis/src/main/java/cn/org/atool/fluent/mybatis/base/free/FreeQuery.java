@@ -6,13 +6,13 @@ import cn.org.atool.fluent.mybatis.base.free.FreeSegment.GroupBy;
 import cn.org.atool.fluent.mybatis.base.free.FreeSegment.Having;
 import cn.org.atool.fluent.mybatis.base.free.FreeSegment.QueryOrderBy;
 import cn.org.atool.fluent.mybatis.base.free.FreeSegment.Selector;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.segment.OrderByBase;
 import cn.org.atool.fluent.mybatis.segment.fragment.BracketFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.free.FreeSegment.QueryWhere;
 
@@ -55,15 +55,15 @@ public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
     }
 
     public FreeQuery(String table, String alias) {
-        super(table == null ? null : () -> table, alias, FreeEntity.class);
+        super(table == null ? null : () -> table, () -> alias, FreeEntity.class);
     }
 
-    public FreeQuery(Supplier<String> table, String alias) {
-        super(table, alias, FreeEntity.class);
+    public FreeQuery(StringSupplier table, String alias) {
+        super(table, () -> alias, FreeEntity.class);
     }
 
     FreeQuery(IFragment table, String alias) {
-        super(table, alias, FreeEntity.class);
+        super(table, () -> alias, FreeEntity.class);
     }
 
     /**
@@ -73,7 +73,7 @@ public class FreeQuery extends BaseQuery<FreeEntity, FreeQuery> {
      * @param alias 别名
      */
     public FreeQuery(IQuery child, String alias) {
-        super(BracketFrag.set(child), alias, FreeEntity.class);
+        super(BracketFrag.set(child), () -> alias, FreeEntity.class);
         child.data().sharedParameter(this.data);
     }
 

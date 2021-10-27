@@ -50,13 +50,13 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      * @param query 左查询
      */
     public JoinQuery(QL query) {
-        super(null);
+        super((String) null);
         this.assertQueryAlias(query);
         this.query = query;
         Parameters parameters = new Parameters();
         this.query.sharedParameter(parameters);
         super.data = new JoinWrapperData(this.query, this.queries, parameters);
-        this.alias.add(this.query.tableAlias);
+        this.alias.add(this.query.getTableAlias());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
         query.sharedParameter(this.query);
 
         this.queries.add(query);
-        this.alias.add(query.tableAlias);
+        this.alias.add(query.getTableAlias());
         return new JoinOn<>(this, this.query, joinType, query);
     }
 
@@ -91,8 +91,8 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
      */
     private void assertQueryAlias(BaseQuery query) {
         assertNotNull("query", query);
-        if (isBlank(query.tableAlias)) {
-            query.tableAlias = Parameters.alias();
+        if (isBlank(query.getTableAlias())) {
+            query.setTableAlias(Parameters.alias());
         }
     }
 

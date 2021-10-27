@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test2.partition;
 
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentUpdate;
@@ -10,7 +11,6 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.sql.SQLSyntaxErrorException;
-import java.util.function.Supplier;
 
 public class PartitionTest extends BaseTest {
     @Autowired
@@ -20,7 +20,7 @@ public class PartitionTest extends BaseTest {
     void test_query_partition() {
         String userName = "my_test_name";
         // 编码实现分表逻辑
-        Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
+        StringSupplier table = () -> "student_" + userName.hashCode() % 2;
         StudentQuery query = StudentQuery.emptyQuery(table)
             .where.defaults()
             .and.userName().eq(userName).end();
@@ -35,7 +35,7 @@ public class PartitionTest extends BaseTest {
     void test_update_partition() {
         String userName = "my_test_name";
         // 编码实现分表逻辑
-        Supplier<String> table = () -> "student_" + userName.hashCode() % 2;
+        StringSupplier table = () -> "student_" + userName.hashCode() % 2;
         StudentUpdate updater = StudentUpdate.emptyUpdater(table)
             .set.userName().is("test").end()
             .where.defaults()

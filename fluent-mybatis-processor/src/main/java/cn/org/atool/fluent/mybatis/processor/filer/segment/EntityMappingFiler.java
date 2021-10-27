@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
@@ -213,8 +214,8 @@ public class EntityMappingFiler extends AbstractFiler {
         return FilerKit.protectMethod("query", fluent.query())
             .addModifiers(Modifier.FINAL)
             .addParameter(boolean.class, "defaults")
-            .addParameter(CN_Supplier_Str, "table")
-            .addParameter(String.class, "alias")
+            .addParameter(StringSupplier.class, "table")
+            .addParameter(StringSupplier.class, "alias")
             .addParameter(Parameters.class, "shared")
             .addStatement("return new $T(defaults, fragment(table), alias, shared)", fluent.query())
             .build();
@@ -224,8 +225,8 @@ public class EntityMappingFiler extends AbstractFiler {
         return FilerKit.protectMethod("updater", fluent.updater())
             .addModifiers(Modifier.FINAL)
             .addParameter(boolean.class, "defaults")
-            .addParameter(CN_Supplier_Str, "table")
-            .addParameter(String.class, "alias")
+            .addParameter(StringSupplier.class, "table")
+            .addParameter(StringSupplier.class, "alias")
             .addParameter(Parameters.class, "shared")
             .addStatement("return new $T(defaults, fragment(table), alias, shared)", fluent.updater())
             .build();

@@ -31,7 +31,7 @@ public class NestedQueryFactory {
             throw new FluentMybatisException("create nested Query[" + wrapper.getClass().getName() + "] error.");
         }
         if (sameAlias) {
-            return mapping.emptyQuery(wrapper.getTableAlias());
+            return mapping.emptyQuery(wrapper::getTableAlias);
         } else {
             return mapping.emptyQuery();
         }

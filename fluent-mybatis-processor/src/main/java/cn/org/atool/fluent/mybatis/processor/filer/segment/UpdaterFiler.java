@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -16,7 +17,6 @@ import javax.lang.model.element.Modifier;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
  * updater代码生成
@@ -113,7 +113,7 @@ public class UpdaterFiler extends AbstractFiler {
             .addModifiers(Modifier.PUBLIC)
             .addParameter(boolean.class, "defaults")
             .addParameter(IFragment.class, "table")
-            .addParameter(String.class, "alias")
+            .addParameter(StringSupplier.class, "alias")
             .addParameter(Parameters.class, "shared")
             .addStatement("super(table == null ? $L.table() : table, alias, $T.class)", Suffix_MAPPING, fluent.entity())
             .beginControlFlow("if(shared != null)")
@@ -152,7 +152,7 @@ public class UpdaterFiler extends AbstractFiler {
 
     private MethodSpec m_emptyUpdater_table() {
         return FilerKit.staticMethod(M_EMPTY_UPDATER, fluent.updater())
-            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(StringSupplier.class, "table")
             .addStatement("return new $T(false, fragment(table), null, null)", fluent.updater())
             .build();
     }
@@ -171,7 +171,7 @@ public class UpdaterFiler extends AbstractFiler {
 
     private MethodSpec m_updater_table() {
         return FilerKit.staticMethod(M_DEFAULT_UPDATER, fluent.updater())
-            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(StringSupplier.class, "table")
             .addStatement("return new $T(true, fragment(table), null, null)", fluent.updater())
             .build();
     }

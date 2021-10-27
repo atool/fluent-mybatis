@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.JoinOn;
@@ -10,8 +11,6 @@ import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION;
@@ -32,11 +31,11 @@ public abstract class BaseQuery<
     extends BaseWrapper<E, Q, Q>
     implements IBaseQuery<E, Q> {
 
-    protected BaseQuery(Supplier<String> table, String alias, Class entityClass) {
+    protected BaseQuery(StringSupplier table, StringSupplier alias, Class entityClass) {
         super(Fragments.fragment(table), alias, entityClass);
     }
 
-    protected BaseQuery(IFragment table, String alias, Class entityClass) {
+    protected BaseQuery(IFragment table, StringSupplier alias, Class entityClass) {
         super(table, alias, entityClass);
     }
 
@@ -53,7 +52,7 @@ public abstract class BaseQuery<
      */
     @Override
     public Q selectAll() {
-        this.allFields().stream().map(c -> alias(this.tableAlias, c)).forEach(this::select);
+        this.allFields().stream().map(c -> alias(this.getTableAlias(), c)).forEach(this::select);
         return (Q) this;
     }
 

@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
@@ -42,18 +43,11 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
         return pagedTag == null ? null : pagedTag.get(form);
     }
 
-    private FormFieldMeta addMeta(String name, Method getter, Method setter, Entry entry) {
-        FormFieldMeta meta;
-        if (entry == null) {
-            meta = new FormFieldMeta(name, EntryType.EQ, getter, setter, true);
-        } else if (entry.type() == EntryType.Ignore) {
-            /* 忽略掉的字段 */
-            return null;
-        } else {
-            meta = new FormFieldMeta(name, entry.type(), getter, setter, entry.ignoreNull());
-        }
-
+    private FormFieldMeta addMeta(FormFieldMeta meta) {
         switch (meta.getType()) {
+            case Ignore:
+                /* 忽略掉的字段 */
+                return meta;
             case PageSize:
                 this.pageSize = meta;
                 break;
@@ -73,6 +67,14 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
         return meta;
     }
 
+    private FormFieldMeta addMeta(String name, Method getter, Method setter, Entry entry) {
+        if (entry == null) {
+            return addMeta(new FormFieldMeta(name, EntryType.EQ, getter, setter, true));
+        } else {
+            return addMeta(new FormFieldMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+        }
+    }
+
     /*** ============================ ***/
     public static final KeyMap<FormMetaList> FormMetas = new KeyMap<>();
 
@@ -87,16 +89,47 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
             FormMetaList.FormMetas.put(aClass, new FormMetaList());
             Class declared = aClass;
             while (declared != Object.class) {
-                for (Field field : declared.getDeclaredFields()) {
-                    int mod = field.getModifiers();
-                    if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
-                        continue;
-                    }
-                    addFieldMeta(aClass, field);
+                try {
+                    buildMetasByFormKits(aClass, declared);
+                } catch (Exception ignored) {
+                    buildMetasByReflector(aClass, declared);
                 }
                 declared = declared.getSuperclass();
             }
             return FormMetaList.FormMetas.get(aClass);
+        }
+    }
+
+    /**
+     * 通过{@link cn.org.atool.fluent.form.annotation.Form}注解生成的工具类构造元数据
+     *
+     * @param aClass 表单类
+     */
+    private static void buildMetasByFormKits(Class aClass, Class declared) throws Exception {
+        if (Objects.equals(declared, Object.class)) {
+            return;
+        }
+        IFormMeta kit = (IFormMeta) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
+        for (FormFieldMeta meta : kit.findFormMetas()) {
+            addMeta(aClass, meta);
+        }
+    }
+
+    /**
+     * 通过反射方式获取form表单元数据
+     *
+     * @param aClass 表单类
+     */
+    private static void buildMetasByReflector(Class aClass, Class declared) {
+        if (Objects.equals(declared, Object.class)) {
+            return;
+        }
+        for (Field field : declared.getDeclaredFields()) {
+            int mod = field.getModifiers();
+            if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
+                continue;
+            }
+            addFieldMeta(aClass, field);
         }
     }
 
@@ -114,6 +147,13 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
             FormMetas.put(klass, new FormMetaList());
         }
         FormMetas.get(klass).addMeta(name, getter, setter, entry);
+    }
+
+    private static void addMeta(Class klass, FormFieldMeta meta) {
+        if (!FormMetas.containsKey(klass)) {
+            FormMetas.put(klass, new FormMetaList());
+        }
+        FormMetas.get(klass).addMeta(meta);
     }
 
     public static Method findGetter(Class klass, Field field) {

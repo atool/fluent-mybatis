@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
@@ -25,10 +26,10 @@ public abstract class BaseUpdate<
     implements IBaseUpdate<E, U, NQ> {
 
     protected BaseUpdate(String table, Class entityClass) {
-        super(fragment(table), EMPTY, entityClass);
+        super(fragment(table), () -> EMPTY, entityClass);
     }
 
-    protected BaseUpdate(IFragment table, String alias, Class entityClass) {
+    protected BaseUpdate(IFragment table, StringSupplier alias, Class entityClass) {
         super(table, alias, entityClass);
     }
 

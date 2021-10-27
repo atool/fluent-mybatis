@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
+
 /**
  * 进行默认设置
  *
@@ -23,6 +25,8 @@ public interface IDefaultGetter {
     <Q extends IQuery> Q emptyQuery();
 
     <Q extends IQuery> Q emptyQuery(String alias);
+
+    <Q extends IQuery> Q emptyQuery(StringSupplier alias);
 
     /**
      * 实例化查询构造器
@@ -50,6 +54,8 @@ public interface IDefaultGetter {
      * @return 查询构造器
      */
     <Q extends IQuery> Q query(String alias);
+
+    <Q extends IQuery> Q query(StringSupplier alias);
 
     /**
      * 创建一个更新器(不包括{@link IDefaultSetter#setUpdateDefault(IUpdate)} 设置的默认条件)

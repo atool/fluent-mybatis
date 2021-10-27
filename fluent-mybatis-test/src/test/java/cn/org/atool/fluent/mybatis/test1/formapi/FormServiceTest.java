@@ -4,6 +4,7 @@ import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.StdPagedQuery;
 import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.TagPagedQuery;
 import cn.org.atool.fluent.mybatis.formapi.StudentUpdateApi;
+import cn.org.atool.fluent.mybatis.formapi.StudentUpdater;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -179,7 +180,7 @@ public class FormServiceTest extends BaseTest {
             .id.values(2L)
             .env.values("test_env")
             .cleanAndInsert();
-        int count = updateApi.updateStudent(new StudentUpdateApi.StudentUpdater().setUserName("test").setAge(34).setId(2L));
+        int count = updateApi.updateStudent(new StudentUpdater().setUserName("test").setAge(34).setId(2L));
         want.number(count).eq(1);
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.mapper.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -22,7 +23,6 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Supplier_Str;
 
 /**
  * QueryGenerator: *Query文件生成
@@ -66,6 +66,7 @@ public class QueryFiler extends AbstractFiler {
         spec.addMethod(this.constructor0())
             .addMethod(this.constructor1_Alias())
             .addMethod(this.constructor4_Default_Table_Alias_Parameter())
+            .addMethod(this.constructor4_Default_Table_Alias2_Parameter())
             .addMethod(this.m_where())
             .addMethod(this.m_orderBy())
             .addMethod(this.m_mapping());
@@ -153,7 +154,7 @@ public class QueryFiler extends AbstractFiler {
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
-            .addStatement("this(true, null, null, null)")
+            .addStatement("this(true, null, () -> null, null)")
             .build();
     }
 
@@ -166,7 +167,7 @@ public class QueryFiler extends AbstractFiler {
         return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(String.class, "alias")
-            .addStatement("this(true, null, alias, null)")
+            .addStatement("this(true, null, () -> alias, null)")
             .build();
     }
 
@@ -176,6 +177,17 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(boolean.class, "defaults")
             .addParameter(IFragment.class, "table")
             .addParameter(String.class, "alias")
+            .addParameter(Parameters.class, "shared")
+            .addStatement("this(defaults, table, () -> alias, shared)")
+            .build();
+    }
+
+    private MethodSpec constructor4_Default_Table_Alias2_Parameter() {
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(boolean.class, "defaults")
+            .addParameter(IFragment.class, "table")
+            .addParameter(StringSupplier.class, "alias")
             .addParameter(Parameters.class, "shared")
             .addStatement("super(table == null ? $L.table() : table, alias, $T.class)", Suffix_MAPPING, fluent.entity())
             .beginControlFlow("if(shared != null)")
@@ -208,21 +220,21 @@ public class QueryFiler extends AbstractFiler {
 
     private MethodSpec m_emptyQuery() {
         return FilerKit.staticMethod(M_EMPTY_QUERY, fluent.query())
-            .addStatement("return new $T(false, null, null, null)", fluent.query())
+            .addStatement("return new $T(false, null, () -> null, null)", fluent.query())
             .build();
     }
 
     private MethodSpec m_emptyQuery_alias() {
         return FilerKit.staticMethod(M_EMPTY_QUERY, fluent.query())
             .addParameter(String.class, "alias")
-            .addStatement("return new $T(false, null, alias, null)", fluent.query())
+            .addStatement("return new $T(false, null, () -> alias, null)", fluent.query())
             .build();
     }
 
     private MethodSpec m_emptyQuery_Table() {
         return FilerKit.staticMethod(M_EMPTY_QUERY, fluent.query())
-            .addParameter(CN_Supplier_Str, "table")
-            .addStatement("return new $T(false, fragment(table), null, null)", fluent.query())
+            .addParameter(StringSupplier.class, "table")
+            .addStatement("return new $T(false, fragment(table), () -> null, null)", fluent.query())
             .build();
     }
 
@@ -248,18 +260,18 @@ public class QueryFiler extends AbstractFiler {
 
     private MethodSpec m_query_table() {
         return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
-            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(StringSupplier.class, "table")
             .addStatement("assertNotNull($S, table)", "table")
-            .addStatement("return new $T(true, fragment(table), null, null)", fluent.query())
+            .addStatement("return new $T(true, fragment(table), () -> null, null)", fluent.query())
             .build();
     }
 
     private MethodSpec m_query_table_Alias() {
         return FilerKit.staticMethod(M_DEFAULT_QUERY, fluent.query())
-            .addParameter(CN_Supplier_Str, "table")
+            .addParameter(StringSupplier.class, "table")
             .addParameter(String.class, "alias")
             .addStatement("assertNotNull($S, table)", "table")
-            .addStatement("return new $T(true, fragment(table), alias, null)", fluent.query())
+            .addStatement("return new $T(true, fragment(table), () -> alias, null)", fluent.query())
             .build();
     }
 
@@ -271,7 +283,7 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(IQuery.class, "query")
             .addParameter(String.class, "alias")
             .addStatement("assertNotNull($S, query)", "query")
-            .addStatement("return new $T(true, $T.set(query), alias, null)", fluent.query(), BracketFrag.class)
+            .addStatement("return new $T(true, $T.set(query), () -> alias, null)", fluent.query(), BracketFrag.class)
             .build();
     }
 

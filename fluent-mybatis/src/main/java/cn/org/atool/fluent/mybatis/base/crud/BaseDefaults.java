@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-
-import java.util.function.Supplier;
 
 /**
  * 默认行为接口
@@ -14,9 +13,9 @@ import java.util.function.Supplier;
 public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     implements IDefaultGetter {
 
-    protected abstract Q query(boolean defaults, Supplier<String> table, String alias, Parameters parameters);
+    protected abstract Q query(boolean defaults, StringSupplier table, StringSupplier alias, Parameters parameters);
 
-    protected abstract U updater(boolean defaults, Supplier<String> table, String alias, Parameters parameters);
+    protected abstract U updater(boolean defaults, StringSupplier table, StringSupplier alias, Parameters parameters);
 
     /* =======query method======= */
 
@@ -27,6 +26,11 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
 
     @Override
     public Q emptyQuery(String alias) {
+        return this.query(false, null, () -> alias, null);
+    }
+
+    @Override
+    public Q emptyQuery(StringSupplier alias) {
         return this.query(false, null, alias, null);
     }
 
@@ -40,6 +44,11 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q query(String alias) {
+        return this.query(true, null, () -> alias, null);
+    }
+
+    @Override
+    public Q query(StringSupplier alias) {
         return this.query(true, null, alias, null);
     }
 
@@ -49,7 +58,8 @@ public abstract class BaseDefaults<E extends IEntity, Q extends IQuery<E>, U ext
      */
     @Override
     public Q alias() {
-        return this.query(true, null, Parameters.alias(), null);
+        String alias = Parameters.alias();
+        return this.query(true, null, () -> alias, null);
     }
 
     /* ========updater method======= */
