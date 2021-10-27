@@ -1,10 +1,9 @@
-package cn.org.atool.fluent.mybatis.processor.form;
+package cn.org.atool.fluent.form.filer;
 
+import cn.org.atool.fluent.form.MetaKitProcessor;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
-import cn.org.atool.fluent.form.filer.FormFieldInfo;
-import cn.org.atool.fluent.mybatis.processor.FormObjectProcessor;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
@@ -17,7 +16,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementScanner8;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * FormScanner 对注解 {@link Form} 的Object进行解析
@@ -25,24 +23,18 @@ import java.util.function.Consumer;
  * @author darui.wu
  */
 public class FormScanner extends ElementScanner8<Void, Void> {
-    final Consumer<String> logger;
-
     @Getter
     private ClassName className;
 
     @Getter
     private final List<FormFieldInfo> metas = new ArrayList<>();
 
-    public FormScanner(Consumer<String> logger) {
-        super();
-        this.logger = logger;
-    }
 
     @Override
     public Void visitType(TypeElement entity, Void aVoid) {
         Form form = entity.getAnnotation(Form.class);
         if (form == null) {
-            FormObjectProcessor.error("Error in: " + entity.getQualifiedName().toString());
+            MetaKitProcessor.error("Error in: " + entity.getQualifiedName().toString());
         } else {
             String fullName = entity.getQualifiedName().toString();
             String simpleName = entity.getSimpleName().toString();

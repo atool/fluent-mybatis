@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test1;
 
-import cn.org.atool.fluent.form.FormKit;
+import cn.org.atool.fluent.form.meta.FormKit;
 import cn.org.atool.fluent.form.annotation.FormServiceScan;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;

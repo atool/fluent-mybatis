@@ -13,10 +13,10 @@ import java.util.function.Function;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "rawtypes"})
 @ToString(of = "name")
 @Getter
-public class FormFieldMeta {
+public class EntryMeta {
     /**
      * 字段名称
      */
@@ -46,7 +46,7 @@ public class FormFieldMeta {
      */
     private final boolean ignoreNull;
 
-    public FormFieldMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
+    public EntryMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
         this.name = name;
         this.type = type;
         this.getter = getter == null ? null : target -> getValue(getter, target);
@@ -56,7 +56,7 @@ public class FormFieldMeta {
         this.ignoreNull = ignoreNull;
     }
 
-    public <F, V> FormFieldMeta(String name, EntryType type, String getterName, Function<F, V> getter, String setterName, BiConsumer<F, V> setter, boolean ignoreNull) {
+    public <F, V> EntryMeta(String name, EntryType type, String getterName, Function<F, V> getter, String setterName, BiConsumer<F, V> setter, boolean ignoreNull) {
         this.name = name;
         this.type = type;
         this.getterName = getterName;

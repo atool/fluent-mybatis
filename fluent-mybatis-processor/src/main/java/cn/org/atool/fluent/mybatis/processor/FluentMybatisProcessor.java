@@ -25,6 +25,7 @@ import static javax.tools.Diagnostic.Kind.NOTE;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes("cn.org.atool.fluent.mybatis.annotation.FluentMybatis")
@@ -73,9 +74,6 @@ public class FluentMybatisProcessor extends AbstractProcessor implements IProces
 
     /**
      * 编译文件
-     *
-     * @param path
-     * @throws IOException
      */
     private void compile(String path) throws IOException {
         //拿到编译器

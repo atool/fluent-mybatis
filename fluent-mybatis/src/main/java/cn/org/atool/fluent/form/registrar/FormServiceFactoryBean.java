@@ -1,11 +1,11 @@
 package cn.org.atool.fluent.form.registrar;
 
-import cn.org.atool.fluent.form.FormKit;
+import cn.org.atool.fluent.form.meta.FormKit;
 import cn.org.atool.fluent.form.annotation.Behavior;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.annotation.BehaviorType;
-import cn.org.atool.fluent.form.meta.FormFieldMeta;
-import cn.org.atool.fluent.form.meta.FormMetaList;
+import cn.org.atool.fluent.form.meta.EntryMeta;
+import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
@@ -69,7 +69,7 @@ public class FormServiceFactoryBean implements FactoryBean {
         Behavior aMethod = this.getApiMethod(method, args);
         Class eClass = this.getEntityClass(method.getName(), aMethod);
 
-        FormMetaList metas = FormKit.metas(method.getParameterTypes()[0]);
+        FormMetas metas = FormKit.metas(method.getParameterTypes()[0]);
         BehaviorType mType = aMethod == null ? BehaviorType.Auto : aMethod.type();
         Class rClass = method.getReturnType();
         if (mType == BehaviorType.Save) {
@@ -86,7 +86,7 @@ public class FormServiceFactoryBean implements FactoryBean {
      *
      * @return 持久化后的数据
      */
-    private Object save(Class eClass, Class rClass, Object form, FormMetaList metas) {
+    private Object save(Class eClass, Class rClass, Object form, FormMetas metas) {
         IEntity entity = FormKit.newEntity(eClass, form, metas);
         Object pk = RefKit.mapper(eClass).save(entity);
         if (rClass == void.class || rClass == Void.class) {
@@ -105,7 +105,7 @@ public class FormServiceFactoryBean implements FactoryBean {
      *
      * @return 列表数据
      */
-    private Object query(Class eClass, Method method, Object form, FormMetaList metas) {
+    private Object query(Class eClass, Method method, Object form, FormMetas metas) {
         Class rType = method.getReturnType();
         Class pType = this.getParameterTypeOfReturn(method);
         IQuery query = FormKit.newQuery(eClass, form, metas);
@@ -190,8 +190,8 @@ public class FormServiceFactoryBean implements FactoryBean {
             Object target = rClass.getDeclaredConstructor().newInstance();
 
             Map<String, FieldMapping> mapping = RefKit.byEntity(entity.entityClass()).getFieldsMap();
-            FormMetaList metas = FormMetaList.getFormMeta(rClass);
-            for (FormFieldMeta meta : metas) {
+            FormMetas metas = FormMetas.getFormMeta(rClass);
+            for (EntryMeta meta : metas) {
                 FieldMapping fm = mapping.get(meta.getName());
                 if (fm == null) {
                     throw new RuntimeException("The field[" + meta.getName() + "] of entity[" + entity.entityClass().getName() + "] not found.");

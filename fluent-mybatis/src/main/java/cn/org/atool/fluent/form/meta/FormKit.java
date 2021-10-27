@@ -1,6 +1,5 @@
-package cn.org.atool.fluent.form;
+package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.meta.FormMetaList;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -30,7 +29,7 @@ public class FormKit {
      * @param form   entity类型
      * @return entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetaList metas) {
+    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetas metas) {
         return FormHelper.newEntity(eClass, form, metas);
     }
 
@@ -41,7 +40,7 @@ public class FormKit {
      * @param form   entity类型
      * @return 查询实例
      */
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetaList metas) {
+    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetas metas) {
         return FormHelper.newQuery(eClass, form, metas);
     }
 
@@ -52,7 +51,7 @@ public class FormKit {
      * @param form   entity类型
      * @return 更新实例
      */
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetaList metas) {
+    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetas metas) {
         return FormHelper.newUpdate(eClass, form, metas);
     }
 
@@ -62,8 +61,8 @@ public class FormKit {
      * @param aClass 表单类型
      * @return 元数据列表
      */
-    public static FormMetaList metas(Class<?> aClass) {
-        return FormMetaList.getFormMeta(aClass);
+    public static FormMetas metas(Class<?> aClass) {
+        return FormMetas.getFormMeta(aClass);
     }
 
     /**

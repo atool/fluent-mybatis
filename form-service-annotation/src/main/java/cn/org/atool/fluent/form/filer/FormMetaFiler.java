@@ -1,8 +1,7 @@
-package cn.org.atool.fluent.mybatis.processor.form;
+package cn.org.atool.fluent.form.filer;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.filer.FormFieldInfo;
-import cn.org.atool.fluent.form.meta.FormFieldMeta;
+import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.IFormMeta;
 import com.squareup.javapoet.*;
 
@@ -46,9 +45,9 @@ public class FormMetaFiler {
     private MethodSpec m_findFormMetas() {
         MethodSpec.Builder spec = MethodSpec.methodBuilder("findFormMetas")
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .returns(ParameterizedTypeName.get(List.class, FormFieldMeta.class))
+            .returns(ParameterizedTypeName.get(List.class, EntryMeta.class))
             .addAnnotation(Override.class)
-            .addStatement("List<FormFieldMeta> metas = new $T<>()", ArrayList.class);
+            .addStatement("List<$T> metas = new $T<>()", EntryMeta.class, ArrayList.class);
         for (FormFieldInfo f : this.fields) {
             spec.addStatement("this.add(metas, $S, $L, $S, $T::$L, $S, $T::$L, $L)",
                 f.getEntryName(), f.getEntryType(),

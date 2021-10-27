@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
@@ -22,12 +21,12 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
-public class FormMetaList extends ArrayList<FormFieldMeta> {
-    private FormFieldMeta pageSize;
+public class FormMetas extends ArrayList<EntryMeta> {
+    private EntryMeta pageSize;
 
-    private FormFieldMeta currPage;
+    private EntryMeta currPage;
 
-    private FormFieldMeta pagedTag;
+    private EntryMeta pagedTag;
 
     private boolean isUpdate = false;
 
@@ -43,7 +42,7 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
         return pagedTag == null ? null : pagedTag.get(form);
     }
 
-    private FormFieldMeta addMeta(FormFieldMeta meta) {
+    private EntryMeta addMeta(EntryMeta meta) {
         switch (meta.getType()) {
             case Ignore:
                 /* 忽略掉的字段 */
@@ -67,26 +66,26 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
         return meta;
     }
 
-    private FormFieldMeta addMeta(String name, Method getter, Method setter, Entry entry) {
+    private EntryMeta addMeta(String name, Method getter, Method setter, Entry entry) {
         if (entry == null) {
-            return addMeta(new FormFieldMeta(name, EntryType.EQ, getter, setter, true));
+            return addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
         } else {
-            return addMeta(new FormFieldMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+            return addMeta(new EntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
         }
     }
 
     /*** ============================ ***/
-    public static final KeyMap<FormMetaList> FormMetas = new KeyMap<>();
+    public static final KeyMap<cn.org.atool.fluent.form.meta.FormMetas> FormMetas = new KeyMap<>();
 
-    public static FormMetaList getFormMeta(Class aClass) {
-        if (FormMetaList.FormMetas.containsKey(aClass)) {
-            return FormMetaList.FormMetas.get(aClass);
+    public static cn.org.atool.fluent.form.meta.FormMetas getFormMeta(Class aClass) {
+        if (cn.org.atool.fluent.form.meta.FormMetas.FormMetas.containsKey(aClass)) {
+            return cn.org.atool.fluent.form.meta.FormMetas.FormMetas.get(aClass);
         }
         synchronized (FormKit.class) {
-            if (FormMetaList.FormMetas.containsKey(aClass)) {
-                return FormMetaList.FormMetas.get(aClass);
+            if (cn.org.atool.fluent.form.meta.FormMetas.FormMetas.containsKey(aClass)) {
+                return cn.org.atool.fluent.form.meta.FormMetas.FormMetas.get(aClass);
             }
-            FormMetaList.FormMetas.put(aClass, new FormMetaList());
+            cn.org.atool.fluent.form.meta.FormMetas.FormMetas.put(aClass, new FormMetas());
             Class declared = aClass;
             while (declared != Object.class) {
                 try {
@@ -96,7 +95,7 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
                 }
                 declared = declared.getSuperclass();
             }
-            return FormMetaList.FormMetas.get(aClass);
+            return cn.org.atool.fluent.form.meta.FormMetas.FormMetas.get(aClass);
         }
     }
 
@@ -110,7 +109,7 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
             return;
         }
         IFormMeta kit = (IFormMeta) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
-        for (FormFieldMeta meta : kit.findFormMetas()) {
+        for (EntryMeta meta : kit.findFormMetas()) {
             addMeta(aClass, meta);
         }
     }
@@ -137,21 +136,21 @@ public class FormMetaList extends ArrayList<FormFieldMeta> {
         Entry entry = field.getAnnotation(Entry.class);
         String name = entry == null || isBlank(entry.value()) ? field.getName() : entry.value();
 
-        Method getter = FormMetaList.findGetter(aClass, field);
-        Method setter = FormMetaList.findSetter(aClass, field);
-        FormMetaList.addMeta(aClass, name, getter, setter, entry);
+        Method getter = cn.org.atool.fluent.form.meta.FormMetas.findGetter(aClass, field);
+        Method setter = cn.org.atool.fluent.form.meta.FormMetas.findSetter(aClass, field);
+        cn.org.atool.fluent.form.meta.FormMetas.addMeta(aClass, name, getter, setter, entry);
     }
 
     private static void addMeta(Class klass, String name, Method getter, Method setter, Entry entry) {
         if (!FormMetas.containsKey(klass)) {
-            FormMetas.put(klass, new FormMetaList());
+            FormMetas.put(klass, new FormMetas());
         }
         FormMetas.get(klass).addMeta(name, getter, setter, entry);
     }
 
-    private static void addMeta(Class klass, FormFieldMeta meta) {
+    private static void addMeta(Class klass, EntryMeta meta) {
         if (!FormMetas.containsKey(klass)) {
-            FormMetas.put(klass, new FormMetaList());
+            FormMetas.put(klass, new FormMetas());
         }
         FormMetas.get(klass).addMeta(meta);
     }

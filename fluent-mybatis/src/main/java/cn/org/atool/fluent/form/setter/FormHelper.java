@@ -2,8 +2,8 @@ package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.meta.FormFieldMeta;
-import cn.org.atool.fluent.form.meta.FormMetaList;
+import cn.org.atool.fluent.form.meta.EntryMeta;
+import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -133,14 +133,14 @@ public class FormHelper {
      * @param form   IForm实例
      * @return Entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetaList metas) {
+    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetas metas) {
         assertNotNull("FormObject", form);
         if (metas == null) {
-            metas = FormMetaList.getFormMeta(form.getClass());
+            metas = FormMetas.getFormMeta(form.getClass());
         }
         AMapping mapping = RefKit.byEntity(eClass);
         IEntity entity = mapping.newEntity();
-        for (FormFieldMeta meta : metas) {
+        for (EntryMeta meta : metas) {
             Object value = meta.get(form);
             if (meta.isIgnoreNull() && value == null) {
                 continue;
@@ -151,14 +151,14 @@ public class FormHelper {
         return (E) entity;
     }
 
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetaList metas) {
+    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetas metas) {
         assertNotNull("FormObject", form);
         if (metas == null) {
-            metas = FormMetaList.getFormMeta(form.getClass());
+            metas = FormMetas.getFormMeta(form.getClass());
         }
         AMapping mapping = RefKit.byEntity(eClass);
         IQuery<E> query = mapping.query();
-        for (FormFieldMeta meta : metas) {
+        for (EntryMeta meta : metas) {
             Object value = meta.get(form);
             if (meta.isIgnoreNull() && value == null) {
                 continue;
@@ -176,7 +176,7 @@ public class FormHelper {
         return query;
     }
 
-    private static void setPaged(AMapping mapping, IQuery query, Object form, FormMetaList metas) {
+    private static void setPaged(AMapping mapping, IQuery query, Object form, FormMetas metas) {
         int pageSize = metas.getPageSize(form);
         if (pageSize < 1) {
             throw new RuntimeException("PageSize must be greater than 0.");
@@ -191,14 +191,14 @@ public class FormHelper {
         query.where().apply(pk, SqlOp.GE, pagedTag);
     }
 
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetaList metas) {
+    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetas metas) {
         assertNotNull("FormObject", form);
         if (metas == null) {
-            metas = FormMetaList.getFormMeta(form.getClass());
+            metas = FormMetas.getFormMeta(form.getClass());
         }
         AMapping mapping = RefKit.byEntity(eClass);
         IUpdate<E> updater = mapping.updater();
-        for (FormFieldMeta meta : metas) {
+        for (EntryMeta meta : metas) {
             Object value = meta.get(form);
             if (meta.isIgnoreNull() && value == null) {
                 continue;
@@ -213,7 +213,7 @@ public class FormHelper {
         return updater;
     }
 
-    private static void where(IWrapper wrapper, String column, FormFieldMeta meta, Object value) {
+    private static void where(IWrapper wrapper, String column, EntryMeta meta, Object value) {
         if (meta.getType() == EntryType.EQ) {
             if (value != null) {
                 wrapper.where().apply(column, SqlOp.EQ, value);

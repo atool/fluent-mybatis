@@ -17,15 +17,15 @@ public interface IFormMeta {
      *
      * @return ignore
      */
-    List<FormFieldMeta> findFormMetas();
+    List<EntryMeta> findFormMetas();
 
     /**
      * 添加表单元数据
      */
-    default <F, V> void add(List<FormFieldMeta> metas, String name, EntryType type,
+    default <F, V> void add(List<EntryMeta> metas, String name, EntryType type,
                             String getterName, Function<F, V> getter,
                             String setterName, BiConsumer<F, V> setter,
                             boolean ignoreNull) {
-        metas.add(new FormFieldMeta(name, type, getterName, getter, setterName, setter, ignoreNull));
+        metas.add(new EntryMeta(name, type, getterName, getter, setterName, setter, ignoreNull));
     }
 }
