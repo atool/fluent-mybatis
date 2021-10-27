@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.processor;
 import cn.org.atool.fluent.form.annotation.Form;
 import cn.org.atool.fluent.mybatis.processor.base.IProcessor;
 import cn.org.atool.fluent.mybatis.processor.form.FormMetaFiler;
-import cn.org.atool.fluent.mybatis.processor.scanner.FormScanner;
+import cn.org.atool.fluent.mybatis.processor.form.FormScanner;
 import cn.org.atool.generator.util.GeneratorHelper;
 import com.google.auto.service.AutoService;
 

@@ -1,12 +1,13 @@
-package cn.org.atool.fluent.mybatis.processor.scanner;
+package cn.org.atool.fluent.mybatis.processor.form;
 
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
+import cn.org.atool.fluent.form.filer.FormFieldInfo;
 import cn.org.atool.fluent.mybatis.processor.FormObjectProcessor;
-import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
-import cn.org.atool.fluent.mybatis.processor.form.FormFieldInfo;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 
 import javax.lang.model.element.ElementKind;
@@ -43,8 +44,10 @@ public class FormScanner extends ElementScanner8<Void, Void> {
         if (form == null) {
             FormObjectProcessor.error("Error in: " + entity.getQualifiedName().toString());
         } else {
-            ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
-            this.className = ClassName.get(className.packageName(), className.simpleName() + "MetaKit");
+            String fullName = entity.getQualifiedName().toString();
+            String simpleName = entity.getSimpleName().toString();
+            String packName = fullName.substring(0, fullName.length() - simpleName.length() - 1);
+            this.className = ClassName.get(packName, simpleName);
         }
         return super.visitType(entity, aVoid);
     }
@@ -62,8 +65,8 @@ public class FormScanner extends ElementScanner8<Void, Void> {
         if (entryName.isEmpty()) {
             entryName = fieldName;
         }
-
-        FormFieldInfo meta = new FormFieldInfo(entryName, fieldName);
+        String fieldType = getJavaType(element).toString();
+        FormFieldInfo meta = new FormFieldInfo(entryName, fieldName, fieldType);
         if (entry == null) {
             meta.setEntryType(EntryType.EQ, true);
         } else {
@@ -73,7 +76,8 @@ public class FormScanner extends ElementScanner8<Void, Void> {
         return super.visitVariable(element, aVoid);
     }
 
-    private String getFieldName(String methodName, int index) {
-        return methodName.substring(index, index + 1).toLowerCase() + methodName.substring(index + 1);
+    private TypeName getJavaType(VariableElement var) {
+        TypeName type = ClassName.get(var.asType());
+        return type instanceof ParameterizedTypeName ? ((ParameterizedTypeName) type).rawType : type;
     }
 }

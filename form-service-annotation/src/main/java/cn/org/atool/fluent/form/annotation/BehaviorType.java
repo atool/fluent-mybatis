@@ -5,7 +5,7 @@ package cn.org.atool.fluent.form.annotation;
  *
  * @author darui.wu
  */
-public enum MethodType {
+public enum BehaviorType {
     /**
      * 根据入参和返回值自动判断
      * update, findOne, listEntity, stdPaged, tagPaged

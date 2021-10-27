@@ -6,10 +6,26 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+/**
+ * IFormMeta
+ *
+ * @author wudarui
+ */
 public interface IFormMeta {
+    /**
+     * 返回表单对象元数据
+     *
+     * @return ignore
+     */
     List<FormFieldMeta> findFormMetas();
 
-    default <F, V> void add(List<FormFieldMeta> metas, String name, EntryType type, String getterName, String setterName, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
+    /**
+     * 添加表单元数据
+     */
+    default <F, V> void add(List<FormFieldMeta> metas, String name, EntryType type,
+                            String getterName, Function<F, V> getter,
+                            String setterName, BiConsumer<F, V> setter,
+                            boolean ignoreNull) {
         metas.add(new FormFieldMeta(name, type, getterName, getter, setterName, setter, ignoreNull));
     }
 }

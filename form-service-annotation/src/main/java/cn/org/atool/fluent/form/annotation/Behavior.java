@@ -3,15 +3,15 @@ package cn.org.atool.fluent.form.annotation;
 import java.lang.annotation.*;
 
 /**
- * Form Api接口方法声明
+ * Form Api接口方法操作类型声明
  *
  * @author wudarui
  */
 @SuppressWarnings({"unused", "rawtypes"})
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ServiceMethod {
+@Target({ElementType.METHOD, ElementType.PARAMETER})
+public @interface Behavior {
     /**
      * 操作的表Entity
      */
@@ -25,5 +25,5 @@ public @interface ServiceMethod {
     /**
      * 操作方法, Save操作时需要显式指定
      */
-    MethodType type() default MethodType.Auto;
+    BehaviorType type() default BehaviorType.Auto;
 }
