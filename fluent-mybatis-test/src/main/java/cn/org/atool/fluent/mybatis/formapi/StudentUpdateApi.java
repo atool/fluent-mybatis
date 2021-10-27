@@ -1,17 +1,17 @@
 package cn.org.atool.fluent.mybatis.formapi;
 
 import cn.org.atool.fluent.form.annotation.FormService;
-import cn.org.atool.fluent.form.annotation.BehaviorType;
-import cn.org.atool.fluent.form.annotation.Behavior;
+import cn.org.atool.fluent.form.annotation.ActionType;
+import cn.org.atool.fluent.form.annotation.Action;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
-@FormService(entityClass = StudentEntity.class)
+@FormService(entity = StudentEntity.class)
 public interface StudentUpdateApi {
-    @Behavior(entityClass = StudentEntity.class, type = BehaviorType.Save)
+    @Action(entityClass = StudentEntity.class, type = ActionType.Save)
     Student saveStudent(Student student);
 
     int updateStudent(StudentUpdater student);

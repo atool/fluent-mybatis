@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @SuppressWarnings("all")
-@FormService(entityTable = "student")
+@FormService(table = "student")
 public interface StudentQueryApi {
     Student findStudentBy(StudentQuery student);
 

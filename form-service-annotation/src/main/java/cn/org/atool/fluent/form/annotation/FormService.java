@@ -15,10 +15,10 @@ public @interface FormService {
     /**
      * 操作的表Entity类
      */
-    Class entityClass() default Object.class;
+    Class entity() default Object.class;
 
     /**
      * 操作表Entity表名称
      */
-    String entityTable() default "";
+    String table() default "";
 }

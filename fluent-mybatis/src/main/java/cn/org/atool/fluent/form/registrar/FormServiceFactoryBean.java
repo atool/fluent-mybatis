@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.form.registrar;
 
 import cn.org.atool.fluent.form.FormKit;
-import cn.org.atool.fluent.form.annotation.Behavior;
+import cn.org.atool.fluent.form.annotation.Action;
 import cn.org.atool.fluent.form.annotation.FormService;
-import cn.org.atool.fluent.form.annotation.BehaviorType;
+import cn.org.atool.fluent.form.annotation.ActionType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -40,7 +40,7 @@ public class FormServiceFactoryBean implements FactoryBean {
     public FormServiceFactoryBean(Class apiInterface) {
         this.apiInterface = apiInterface;
         FormService api = (FormService) apiInterface.getDeclaredAnnotation(FormService.class);
-        this.entityClass = this.getEntityClass(api.entityClass(), api.entityTable());
+        this.entityClass = this.getEntityClass(api.entity(), api.table());
     }
 
     @Override
@@ -66,13 +66,13 @@ public class FormServiceFactoryBean implements FactoryBean {
         if (Object.class.equals(method.getDeclaringClass()) || method.isDefault()) {
             return method.invoke(this, args);
         }
-        Behavior aMethod = this.getApiMethod(method, args);
+        Action aMethod = this.getApiMethod(method, args);
         Class eClass = this.getEntityClass(method.getName(), aMethod);
 
         FormMetas metas = FormKit.metas(method.getParameterTypes()[0]);
-        BehaviorType mType = aMethod == null ? BehaviorType.Auto : aMethod.type();
+        ActionType mType = aMethod == null ? ActionType.Auto : aMethod.type();
         Class rClass = method.getReturnType();
-        if (mType == BehaviorType.Save) {
+        if (mType == ActionType.Save) {
             return this.save(eClass, rClass, args[0], metas);
         } else if (metas.isUpdate()) {
             return FormKit.newUpdate(eClass, args[0], metas).to().updateBy();
@@ -160,15 +160,15 @@ public class FormServiceFactoryBean implements FactoryBean {
      * @param args   api方法入参
      * @return @ApiMethod注解实例
      */
-    private Behavior getApiMethod(Method method, Object[] args) {
+    private Action getApiMethod(Method method, Object[] args) {
         if (args.length != 1 || args[0] == null) {
             throw new RuntimeException("Method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "] has one and only one parameter.");
         }
-        Behavior behavior = method.getDeclaredAnnotation(Behavior.class);
-        if (behavior == null && this.entityClass == null) {
+        Action action = method.getDeclaredAnnotation(Action.class);
+        if (action == null && this.entityClass == null) {
             throw new RuntimeException("Annotation[@ApiMethod] must be declared on method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "].");
         }
-        return behavior;
+        return action;
     }
 
     private List entities2result(List<IEntity> entities, Class rClass) {
@@ -213,7 +213,7 @@ public class FormServiceFactoryBean implements FactoryBean {
      * @param aMethod 方法上的ApiMethod注解
      * @return EntityClass
      */
-    private Class<? extends IEntity> getEntityClass(String mName, Behavior aMethod) {
+    private Class<? extends IEntity> getEntityClass(String mName, Action aMethod) {
         if (aMethod == null) {
             return this.entityClass;
         }
@@ -228,7 +228,7 @@ public class FormServiceFactoryBean implements FactoryBean {
     }
 
     /**
-     * 根据{@link Behavior}或{@link FormService}注解上声明的entityClass和entityTable
+     * 根据{@link Action}或{@link FormService}注解上声明的entityClass和entityTable
      * 值解析实际的EntityClass值
      *
      * @param entityClass Entity类

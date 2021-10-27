@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER})
-public @interface Behavior {
+public @interface Action {
     /**
      * 操作的表Entity
      */
@@ -25,5 +25,5 @@ public @interface Behavior {
     /**
      * 操作方法, Save操作时需要显式指定
      */
-    BehaviorType type() default BehaviorType.Auto;
+    ActionType type() default ActionType.Auto;
 }
