@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.test1;
 
 import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.FormServiceScan;
+import cn.org.atool.fluent.form.annotation.FormServiceScans;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -36,7 +37,9 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LI
     "cn.org.atool.fluent.mybatis.customize.mapper",
     "cn.org.atool.fluent.mybatis.origin.mapper"
 })
-@FormServiceScan({"cn.org.atool.fluent.mybatis.formapi"})
+@FormServiceScans({
+    @FormServiceScan({"cn.org.atool.fluent.mybatis.formapi"})
+})
 public abstract class BaseTest extends Test4J {
 }
 

@@ -28,7 +28,7 @@ import java.util.*;
 import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
 
 /**
- * FormApiFactoryBean: Form API bean封装工厂
+ * FormServiceFactoryBean: FormService bean封装工厂
  *
  * @author darui.wu
  */

@@ -14,9 +14,15 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 @Import(FormServiceRegistrar.class)
+@Repeatable(FormServiceScans.class)
 public @interface FormServiceScan {
     /**
      * api接口定义路径列表
      */
     String[] value() default {};
+
+    /**
+     * 切面处理
+     */
+    Class<? extends IFormAop> aop() default IFormAop.class;
 }
