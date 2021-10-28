@@ -118,6 +118,55 @@ public class FormServiceTest extends BaseTest {
     }
 
     @Test
+    void findOneByUserName() {
+        ATM.dataMap.student.table(2)
+            .env.values("test_env")
+            .userName.values("ming.li")
+            .age.values(23, 34)
+            .address.values("hangzhou binjiang")
+            .cleanAndInsert();
+        StudentQueryApi.Student student = queryApi.findByUserName("ming.li", new int[]{20, 40});
+        want.object(student).eqDataMap(
+            ATM.dataMap.student.entity(1)
+                .userName.values("ming.li")
+                .age.values(23)
+                .address.values("hangzhou binjiang")
+        );
+        db.sqlList().wantFirstSql().end("" +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ? " +
+            "LIMIT ?, ?");
+    }
+
+
+    @Test
+    void findOneByUserName2() {
+        ATM.dataMap.student.table(2)
+            .env.values("test_env")
+            .userName.values("ming.li")
+            .age.values(23, 34)
+            .address.values("hangzhou binjiang")
+            .cleanAndInsert();
+        StudentQueryApi.Student student = queryApi.findByUserName("ming.li", new StudentQueryApi.StudentQuery().setAge(new int[]{20, 40}));
+        want.object(student).eqDataMap(
+            ATM.dataMap.student.entity(1)
+                .userName.values("ming.li")
+                .age.values(23)
+                .address.values("hangzhou binjiang")
+        );
+        db.sqlList().wantFirstSql().end("" +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `user_name` = ? " +
+            "AND `age` BETWEEN ? AND ? " +
+            "LIMIT ?, ?");
+    }
+
+    @Test
     void findOne() {
         ATM.dataMap.student.table(2)
             .env.values("test_env")

@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @SuppressWarnings({"unused", "rawtypes"})
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.PARAMETER})
+@Target({ElementType.METHOD})
 public @interface Action {
     /**
      * 操作的表Entity

@@ -56,6 +56,16 @@ public class EntryMeta {
         this.ignoreNull = ignoreNull;
     }
 
+    public <F, V> EntryMeta(String name, EntryType type, String getterName, Function<F, V> getter, boolean ignoreNull) {
+        this.name = name;
+        this.type = type;
+        this.getterName = getterName;
+        this.getter = getter;
+        this.setterName = null;
+        this.setter = null;
+        this.ignoreNull = ignoreNull;
+    }
+
     public <F, V> EntryMeta(String name, EntryType type, String getterName, Function<F, V> getter, String setterName, BiConsumer<F, V> setter, boolean ignoreNull) {
         this.name = name;
         this.type = type;

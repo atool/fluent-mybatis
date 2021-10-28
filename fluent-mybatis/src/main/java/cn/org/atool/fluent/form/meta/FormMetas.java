@@ -9,8 +9,11 @@ import lombok.Getter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
@@ -78,6 +81,27 @@ public class FormMetas extends ArrayList<EntryMeta> {
     /*** ============================ ***/
     public static final KeyMap<FormMetas> FormMetas = new KeyMap<>();
 
+    public static FormMetas getFormMeta(String method, Parameter[] parameters) {
+        if (FormMetas.containsKey(method)) {
+            return FormMetas.get(method);
+        }
+        synchronized (FormKit.class) {
+            if (FormMetas.containsKey(method)) {
+                return FormMetas.get(method);
+            }
+            FormMetas.put(method, new FormMetas());
+            for (Parameter p : parameters) {
+                Entry entry = p.getDeclaredAnnotation(Entry.class);
+                if (entry == null) {
+                    throw new IllegalArgumentException("the parameter of method[" + method + "] should be declared by @Entry(value='property').");
+                } else {
+                    buildMetasByParameter(method, entry, p);
+                }
+            }
+            return FormMetas.get(method);
+        }
+    }
+
     public static FormMetas getFormMeta(Class aClass) {
         if (FormMetas.containsKey(aClass)) {
             return FormMetas.get(aClass);
@@ -97,6 +121,30 @@ public class FormMetas extends ArrayList<EntryMeta> {
                 declared = declared.getSuperclass();
             }
             return FormMetas.get(aClass);
+        }
+    }
+
+    /**
+     * 根据参数声明构造元数据
+     *
+     * @param metas 元数据列表
+     * @param entry 表单项声明
+     * @param p     表单项参数
+     */
+    private static void buildMetasByParameter(String method, Entry entry, Parameter p) {
+        if (entry.type() == EntryType.Form) {
+            FormMetas pMetas = getFormMeta(p.getType());
+            for (EntryMeta m : pMetas) {
+                Function<Map, Object> getter = map -> m.getGetter().apply(map.get(p.getName()));
+                EntryMeta meta = new EntryMeta(m.getName(), m.getType(), p.getName() + "." + m.getGetterName(), getter, m.isIgnoreNull());
+                FormMetas.get(method).add(meta);
+            }
+        } else if (isBlank(entry.value())) {
+            throw new IllegalArgumentException("the parameter of method[" + method + "] should be declared by @Entry(value='property').");
+        } else {
+            Function<Map, Object> getter = m -> m.get(p.getName());
+            EntryMeta meta = new EntryMeta(entry.value(), entry.type(), p.getName(), getter, entry.ignoreNull());
+            FormMetas.get(method).add(meta);
         }
     }
 

@@ -10,17 +10,41 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>form-service-annotation</artifactId>
+    <properties>
+        <jakarta-el.version>4.0.0</jakarta-el.version>
+        <jakarta-validation-api.version>3.0.0</jakarta-validation-api.version>
+        <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+    </properties>
     <dependencies>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+        </dependency>
+        <!-- provided -->
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
             <version>1.13.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- test -->
+        <dependency>
+            <groupId>org.test4j</groupId>
+            <artifactId>test4j-junit5</artifactId>
         </dependency>
     </dependencies>
 </project>

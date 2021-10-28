@@ -9,6 +9,9 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -64,6 +67,17 @@ public class FormKit {
      */
     public static FormMetas metas(Class<?> aClass) {
         return FormMetas.getFormMeta(aClass);
+    }
+
+    /**
+     * 返回参数列表的表单元数据定义
+     *
+     * @param method     方法
+     * @param parameters 参数定义
+     * @return 元数据
+     */
+    public static FormMetas metas(Method method, Parameter[] parameters) {
+        return FormMetas.getFormMeta(method.toString(), parameters);
     }
 
     /**

@@ -2,10 +2,12 @@ package cn.org.atool.fluent.form.registrar;
 
 import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Action;
-import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.annotation.ActionType;
+import cn.org.atool.fluent.form.annotation.Entry;
+import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
+import cn.org.atool.fluent.form.validation.ValidKit;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
@@ -16,14 +18,13 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
 
 /**
@@ -66,18 +67,65 @@ public class FormServiceFactoryBean implements FactoryBean {
         if (Object.class.equals(method.getDeclaringClass()) || method.isDefault()) {
             return method.invoke(this, args);
         }
-        Action aMethod = this.getApiMethod(method, args);
-        Class eClass = this.getEntityClass(method.getName(), aMethod);
-
-        FormMetas metas = FormKit.metas(method.getParameterTypes()[0]);
-        ActionType mType = aMethod == null ? ActionType.Auto : aMethod.type();
-        Class rClass = method.getReturnType();
-        if (mType == ActionType.Save) {
-            return this.save(eClass, rClass, args[0], metas);
-        } else if (metas.isUpdate()) {
-            return FormKit.newUpdate(eClass, args[0], metas).to().updateBy();
+        if (args.length == 0) {
+            throw new RuntimeException("Method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "] must be have one parameter.");
+        }
+        Parameter[] parameters = method.getParameters();
+        Action action = method.getDeclaredAnnotation(Action.class);
+        Entry entry = parameters[0].getDeclaredAnnotation(Entry.class);
+        if (args.length == 1 && entry == null) {
+            /* 单个入参, 且非 @Entry 参数场景 */
+            assertNotNull("method[" + method.getName() + "] parameter[" + parameters[0].getName() + "]", args[0]);
+            ValidKit.validate(args[0]);
+            FormMetas metas = FormKit.metas(parameters[0].getType());
+            return this.doInvoke(method, action, metas, args[0]);
         } else {
-            return this.query(eClass, method, args[0], metas);
+            /* 多个入参, 参数必须设置 @Entry 注解 */
+            FormMetas metas = FormKit.metas(method, parameters);
+            Map<String, Object> form = this.toMap(parameters, args);
+            return this.doInvoke(method, action, metas, form);
+        }
+    }
+
+    /**
+     * 参数转换为map结构
+     *
+     * @param parameters 参数声明列表
+     * @param args       参数值列表
+     * @return ignore
+     */
+    private Map<String, Object> toMap(Parameter[] parameters, Object[] args) {
+        Map<String, Object> map = new HashMap<>();
+        for (int index = 0; index < parameters.length; index++) {
+            Parameter p = parameters[index];
+            map.put(p.getName(), args[index]);
+        }
+        return map;
+    }
+
+    /**
+     * 执行Form操作
+     *
+     * @param method api方法
+     * @param action 方法执行行为
+     * @param metas  入参元数据
+     * @param form   入参值
+     * @return 执行结果
+     */
+    private Object doInvoke(Method method, Action action, FormMetas metas, Object form) {
+        ActionType mType = action == null ? ActionType.Auto : action.type();
+        Class eClass = this.getEntityClass(method.getName(), action);
+        if (eClass == null) {
+            throw new RuntimeException("Annotation[@ApiMethod] must be declared on method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "].");
+        }
+        Class rClass = method.getReturnType();
+
+        if (mType == ActionType.Save) {
+            return this.save(eClass, rClass, form, metas);
+        } else if (metas.isUpdate()) {
+            return FormKit.newUpdate(eClass, form, metas).to().updateBy();
+        } else {
+            return this.query(eClass, method, form, metas);
         }
     }
 
@@ -151,24 +199,6 @@ public class FormServiceFactoryBean implements FactoryBean {
             pType = (Class) ((ParameterizedType) rType).getActualTypeArguments()[0];
         }
         return pType;
-    }
-
-    /**
-     * 获取方法上声明的注解 @ApiMethod
-     *
-     * @param method api方法
-     * @param args   api方法入参
-     * @return @ApiMethod注解实例
-     */
-    private Action getApiMethod(Method method, Object[] args) {
-        if (args.length != 1 || args[0] == null) {
-            throw new RuntimeException("Method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "] has one and only one parameter.");
-        }
-        Action action = method.getDeclaredAnnotation(Action.class);
-        if (action == null && this.entityClass == null) {
-            throw new RuntimeException("Annotation[@ApiMethod] must be declared on method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "].");
-        }
-        return action;
     }
 
     private List entities2result(List<IEntity> entities, Class rClass) {

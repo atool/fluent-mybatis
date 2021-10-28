@@ -11,9 +11,16 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.List;
 
+import static cn.org.atool.fluent.form.annotation.EntryType.Between;
+import static cn.org.atool.fluent.form.annotation.EntryType.Form;
+
 @SuppressWarnings("all")
 @FormService(table = "student")
 public interface StudentQueryApi {
+    Student findByUserName(@Entry("userName") String userName, @Entry(value = "age", type = Between) int[] ages);
+
+    Student findByUserName(@Entry("userName") String userName, @Entry(type = Form) StudentQuery student);
+
     Student findStudentBy(StudentQuery student);
 
     long countStudentBy(StudentQuery student);
@@ -32,7 +39,7 @@ public interface StudentQueryApi {
         @Entry(type = EntryType.LikeLeft)
         private String address;
 
-        @Entry(type = EntryType.Between)
+        @Entry(type = Between)
         private int[] age;
 
         private Integer gender;

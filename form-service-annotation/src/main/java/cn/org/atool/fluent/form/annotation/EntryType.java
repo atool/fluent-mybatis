@@ -69,5 +69,9 @@ public enum EntryType {
     /**
      * Tag分页, 主键值 >= tag
      */
-    PagedTag
+    PagedTag,
+    /**
+     * 子表单项
+     */
+    Form
 }
