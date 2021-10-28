@@ -70,20 +70,47 @@ public class FormServiceFactoryBean implements FactoryBean {
         if (args.length == 0) {
             throw new RuntimeException("Method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "] must be have one parameter.");
         }
+
         Parameter[] parameters = method.getParameters();
         Action action = method.getDeclaredAnnotation(Action.class);
+        Class eClass = this.getEntityClass(method.getName(), action);
+        if (eClass == null) {
+            throw new RuntimeException("Annotation[@Action] must be declared on method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "].");
+        }
         Entry entry = parameters[0].getDeclaredAnnotation(Entry.class);
         if (args.length == 1 && entry == null) {
             /* 单个入参, 且非 @Entry 参数场景 */
             MybatisUtil.assertNotNull("method[" + method.getName() + "] parameter[" + parameters[0].getName() + "]", args[0]);
             Validation.validate(args[0]);
             FormMetas metas = FormKit.metas(parameters[0].getType());
-            return this.doInvoke(method, action, metas, args[0]);
+            return this.doInvoke(eClass, method, action, metas, args[0]);
         } else {
             /* 多个入参, 参数必须设置 @Entry 注解 */
             FormMetas metas = FormKit.metas(method, parameters);
             Map<String, Object> form = this.toMap(parameters, args);
-            return this.doInvoke(method, action, metas, form);
+            return this.doInvoke(eClass, method, action, metas, form);
+        }
+    }
+    
+    /**
+     * 执行Form操作
+     *
+     * @param method api方法
+     * @param action 方法执行行为
+     * @param metas  入参元数据
+     * @param form   入参值
+     * @return 执行结果
+     */
+    private Object doInvoke(Class eClass, Method method, Action action, FormMetas metas, Object form) {
+        ActionType mType = action == null ? ActionType.Auto : action.type();
+        Class rType = method.getReturnType();
+        Class pType = this.getParameterTypeOfReturn(method);
+        if (mType == ActionType.Save) {
+            return this.save(eClass, rType, form, metas);
+        } else if (metas.isUpdate()) {
+            return FormKit.newUpdate(eClass, form, metas).to().updateBy();
+        } else {
+            return this.query(eClass, rType, pType, form, metas);
         }
     }
 
@@ -101,32 +128,6 @@ public class FormServiceFactoryBean implements FactoryBean {
             map.put(p.getName(), args[index]);
         }
         return map;
-    }
-
-    /**
-     * 执行Form操作
-     *
-     * @param method api方法
-     * @param action 方法执行行为
-     * @param metas  入参元数据
-     * @param form   入参值
-     * @return 执行结果
-     */
-    private Object doInvoke(Method method, Action action, FormMetas metas, Object form) {
-        ActionType mType = action == null ? ActionType.Auto : action.type();
-        Class eClass = this.getEntityClass(method.getName(), action);
-        if (eClass == null) {
-            throw new RuntimeException("Annotation[@ApiMethod] must be declared on method[" + method.getName() + "] of interface[" + this.apiInterface.getName() + "].");
-        }
-        Class rClass = method.getReturnType();
-
-        if (mType == ActionType.Save) {
-            return this.save(eClass, rClass, form, metas);
-        } else if (metas.isUpdate()) {
-            return FormKit.newUpdate(eClass, form, metas).to().updateBy();
-        } else {
-            return this.query(eClass, method, form, metas);
-        }
     }
 
     /**
@@ -151,11 +152,12 @@ public class FormServiceFactoryBean implements FactoryBean {
     /**
      * 查找数据(findOne, listEntity, stdPaged, tagPaged)
      *
+     * @param eClass Entity表
+     * @param rType  返回值类型
+     * @param prType rType< prType >泛型类型
      * @return 列表数据
      */
-    private Object query(Class eClass, Method method, Object form, FormMetas metas) {
-        Class rType = method.getReturnType();
-        Class pType = this.getParameterTypeOfReturn(method);
+    private Object query(Class eClass, Class rType, Class prType, Object form, FormMetas metas) {
         IQuery query = FormKit.newQuery(eClass, form, metas);
         if (rType == Integer.class || rType == int.class) {
             /* count, 返回int */
@@ -166,18 +168,18 @@ public class FormServiceFactoryBean implements FactoryBean {
         } else if (StdPagedList.class.isAssignableFrom(rType)) {
             /* 标准分页 */
             StdPagedList paged = query.to().stdPagedEntity();
-            List data = this.entities2result(paged.getData(), pType);
+            List data = this.entities2result(paged.getData(), prType);
             return paged.setData(data);
         } else if (TagPagedList.class.isAssignableFrom(rType)) {
             /* Tag分页 */
             TagPagedList paged = query.to().tagPagedEntity();
-            List data = this.entities2result(paged.getData(), pType);
+            List data = this.entities2result(paged.getData(), prType);
             IEntity next = (IEntity) paged.getNext();
             return new TagPagedList(data, next == null ? null : next.findPk());
-        } else if (Collection.class.isAssignableFrom(method.getReturnType())) {
+        } else if (Collection.class.isAssignableFrom(rType)) {
             /* 返回List */
             List<IEntity> list = query.to().listEntity();
-            return this.entities2result(list, pType);
+            return this.entities2result(list, prType);
         } else {
             /* 查找单条数据 */
             query.limit(1);
@@ -239,15 +241,15 @@ public class FormServiceFactoryBean implements FactoryBean {
     /**
      * 返回要操作的表EntityClass
      *
-     * @param mName   方法名称
-     * @param aMethod 方法上的ApiMethod注解
+     * @param mName  方法名称
+     * @param action 方法上的 {@link Action} 注解
      * @return EntityClass
      */
-    private Class<? extends IEntity> getEntityClass(String mName, Action aMethod) {
-        if (aMethod == null) {
+    private Class<? extends IEntity> getEntityClass(String mName, Action action) {
+        if (action == null) {
             return this.entityClass;
         }
-        Class entity = this.getEntityClass(aMethod.entityClass(), aMethod.entityTable());
+        Class entity = this.getEntityClass(action.entityClass(), action.entityTable());
         if (entity == Object.class) {
             entity = this.entityClass;
         }
