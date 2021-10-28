@@ -1,9 +1,10 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
-import cn.org.atool.fluent.form.setter.FormFunction;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.generator.javafile.AbstractFile;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
 
@@ -37,8 +38,7 @@ public class RefFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addType(this.type_field())
-            .addType(this.type_query())
-            .addType(this.type_form());
+            .addType(this.type_query());
     }
 
     private TypeSpec type_field() {
@@ -70,25 +70,6 @@ public class RefFiler extends AbstractFile {
     private FieldSpec f_mapping(FluentEntity fluent) {
         return FieldSpec.builder(fluent.entityMapping(), fluent.lowerNoSuffix(), PUBLIC_STATIC_FINAL)
             .initializer("$T.MAPPING", fluent.entityMapping())
-            .build();
-    }
-
-    private TypeSpec type_form() {
-        TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Forms")
-            .addModifiers(PUBLIC_STATIC)
-            .addJavadoc("所有Entity Form Setter引用");
-        for (FluentEntity fluent : this.fluents) {
-            spec.addField(this.f_formSetter(fluent));
-        }
-        return spec.build();
-    }
-
-    private FieldSpec f_formSetter(FluentEntity fluent) {
-        TypeName cn = fluent.formSetter();
-        return FieldSpec.builder(parameterizedType(ClassName.get(FormFunction.class), fluent.entity(), cn)
-                , fluent.lowerNoSuffix(), PUBLIC_STATIC_FINAL)
-            .addJavadoc("$T", fluent.wrapperHelper())
-            .initializer("(obj, form) -> $T.by(obj, form)", cn)
             .build();
     }
 

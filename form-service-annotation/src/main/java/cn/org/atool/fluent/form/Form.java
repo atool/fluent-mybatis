@@ -1,21 +1,18 @@
 package cn.org.atool.fluent.form;
 
+import cn.org.atool.fluent.form.setter.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.form.setter.FormApply;
-import cn.org.atool.fluent.form.setter.FormItem;
-import cn.org.atool.fluent.form.setter.FormItemAdder;
-import cn.org.atool.fluent.form.setter.FormItemOrder;
-import cn.org.atool.fluent.form.setter.*;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
+import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
-import cn.org.atool.fluent.mybatis.utility.GsonKit;
 import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.AccessLevel;
@@ -30,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.F_Entity_Class;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -142,9 +138,11 @@ public class Form implements Serializable {
      * @return IFormApply
      */
     public <E extends IEntity, S extends BaseFormSetter>
-    Form with(Object value, FormFunction<E, S> apply, Consumer<IFormApply<E, S>> consumer) {
-        IFormApply formApply = apply.apply(value, this);
-        consumer.accept(formApply);
+    Form apply(Object value, Consumer<IFormApply<E, S>> apply) {
+        assertNotNull("object", value);
+        Map map = PoJoHelper.toMap(value);
+        IFormApply formApply = new FormApply(new EmptyFormSetter(RefKit.byEntity(entityClass)), map, this);
+        apply.accept(formApply);
         return this;
     }
 
@@ -179,7 +177,7 @@ public class Form implements Serializable {
      * @return 实例列表
      */
     public <E extends IEntity> List<E> list() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.listEntity(query);
@@ -191,7 +189,7 @@ public class Form implements Serializable {
      * @return 符合条件的记录数
      */
     public int count() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.count(query);
@@ -204,7 +202,7 @@ public class Form implements Serializable {
      * @return 标准分页记录
      */
     public <E extends IEntity> StdPagedList<E> stdPage() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.stdPagedEntity(query);
@@ -217,7 +215,7 @@ public class Form implements Serializable {
      * @return Tag分页记录
      */
     public <E extends IEntity> TagPagedList<E> tagPage() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.tagPagedEntity(query);
@@ -230,7 +228,7 @@ public class Form implements Serializable {
      * @return 返回的实例
      */
     public <E extends IEntity> E findOne() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         query.limit(1);
@@ -243,7 +241,7 @@ public class Form implements Serializable {
      * @return 更新的记录数
      */
     public int update() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IUpdate update = FormHelper.toUpdate(this.entityClass, this);
         return mapper.updateBy(update);
@@ -255,7 +253,7 @@ public class Form implements Serializable {
      * @return 新增的实体实例
      */
     public <E extends IEntity> E insert() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IEntity entity = RefKit.byEntity(this.entityClass).toEntity(this.getUpdate());
         mapper.insert(entity);
@@ -268,7 +266,7 @@ public class Form implements Serializable {
      * @return 物理删除记录数
      */
     public int delete() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.delete(query);
@@ -280,7 +278,7 @@ public class Form implements Serializable {
      * @return 逻辑删除记录数
      */
     public int logicDelete() {
-        assertNotNull(F_Entity_Class, this.entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, this.entityClass);
         IRichMapper mapper = RefKit.mapper(this.entityClass);
         IQuery query = FormHelper.toQuery(this.entityClass, this);
         return mapper.logicDelete(query);

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.utility;
+package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.form.Form;
 import com.google.gson.Gson;
@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unchecked"})
 public class GsonKit {
     public static final Gson gson = new GsonBuilder()
         .disableHtmlEscaping()

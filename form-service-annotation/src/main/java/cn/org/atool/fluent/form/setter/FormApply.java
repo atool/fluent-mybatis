@@ -1,18 +1,16 @@
 package cn.org.atool.fluent.form.setter;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.form.Form;
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.SqlOpStr;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 import lombok.Getter;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Function;
-
-import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
 
 /**
  * FormApply
@@ -36,11 +34,6 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
      */
     @Getter
     private Form form;
-
-    public FormApply(Function<FormApply, BaseFormSetter> setterApply, Map map, Form form) {
-        this.setter = (S) setterApply.apply(this);
-        this.init(form, map);
-    }
 
     public FormApply(S setter, Map map, Form form) {
         this.setter = setter;
@@ -67,8 +60,7 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
         return this;
     }
 
-    @Override
-    public S op(String op) {
+    private S op(String op) {
         this.op = op;
         return setter;
     }
@@ -91,92 +83,92 @@ public final class FormApply<E extends IEntity, S extends BaseFormSetter> implem
 
     @Override
     public IFormApply<E, S> eq(IGetter<E> getter) {
-        return this.setFieldMapping(OP_EQ, getter);
+        return this.setFieldMapping(SqlOpStr.OP_EQ, getter);
     }
 
     @Override
     public IFormApply<E, S> eq(String field) {
-        return this.setFieldMapping(OP_EQ, field);
+        return this.setFieldMapping(SqlOpStr.OP_EQ, field);
     }
 
     @Override
     public IFormApply<E, S> ne(IGetter<E> getter) {
-        return this.setFieldMapping(OP_NE, getter);
+        return this.setFieldMapping(SqlOpStr.OP_NE, getter);
     }
 
     @Override
     public IFormApply<E, S> ne(String field) {
-        return this.setFieldMapping(OP_NE, field);
+        return this.setFieldMapping(SqlOpStr.OP_NE, field);
     }
 
     @Override
     public IFormApply<E, S> gt(IGetter<E> getter) {
-        return this.setFieldMapping(OP_GT, getter);
+        return this.setFieldMapping(SqlOpStr.OP_GT, getter);
     }
 
     @Override
     public IFormApply<E, S> gt(String field) {
-        return this.setFieldMapping(OP_GT, field);
+        return this.setFieldMapping(SqlOpStr.OP_GT, field);
     }
 
     @Override
     public IFormApply<E, S> ge(IGetter<E> getter) {
-        return this.setFieldMapping(OP_GE, getter);
+        return this.setFieldMapping(SqlOpStr.OP_GE, getter);
     }
 
     @Override
     public IFormApply<E, S> ge(String field) {
-        return this.setFieldMapping(OP_GE, field);
+        return this.setFieldMapping(SqlOpStr.OP_GE, field);
     }
 
     @Override
     public IFormApply<E, S> lt(IGetter<E> getter) {
-        return this.setFieldMapping(OP_LT, getter);
+        return this.setFieldMapping(SqlOpStr.OP_LT, getter);
     }
 
     @Override
     public IFormApply<E, S> lt(String field) {
-        return this.setFieldMapping(OP_LT, field);
+        return this.setFieldMapping(SqlOpStr.OP_LT, field);
     }
 
     @Override
     public IFormApply<E, S> le(IGetter<E> getter) {
-        return this.setFieldMapping(OP_LE, getter);
+        return this.setFieldMapping(SqlOpStr.OP_LE, getter);
     }
 
     @Override
     public IFormApply<E, S> le(String field) {
-        return this.setFieldMapping(OP_LE, field);
+        return this.setFieldMapping(SqlOpStr.OP_LE, field);
     }
 
     @Override
     public IFormApply<E, S> like(IGetter<E> getter) {
-        return this.setFieldMapping(OP_LIKE, getter);
+        return this.setFieldMapping(SqlOpStr.OP_LIKE, getter);
     }
 
     @Override
     public IFormApply<E, S> like(String field) {
-        return this.setFieldMapping(OP_LIKE, field);
+        return this.setFieldMapping(SqlOpStr.OP_LIKE, field);
     }
 
     @Override
     public IFormApply<E, S> likeLeft(IGetter<E> getter) {
-        return this.setFieldMapping(OP_LIKE_LEFT, getter);
+        return this.setFieldMapping(SqlOpStr.OP_LIKE_LEFT, getter);
     }
 
     @Override
     public IFormApply<E, S> likeLeft(String field) {
-        return this.setFieldMapping(OP_LIKE_LEFT, field);
+        return this.setFieldMapping(SqlOpStr.OP_LIKE_LEFT, field);
     }
 
     @Override
     public IFormApply<E, S> likeRight(IGetter<E> getter) {
-        return this.setFieldMapping(OP_LIKE_RIGHT, getter);
+        return this.setFieldMapping(SqlOpStr.OP_LIKE_RIGHT, getter);
     }
 
     @Override
     public IFormApply<E, S> likeRight(String field) {
-        return this.setFieldMapping(OP_LIKE_RIGHT, field);
+        return this.setFieldMapping(SqlOpStr.OP_LIKE_RIGHT, field);
     }
 
     public void addWhere(FieldMapping field) {

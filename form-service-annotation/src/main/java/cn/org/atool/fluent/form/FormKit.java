@@ -2,6 +2,7 @@ package cn.org.atool.fluent.form;
 
 import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.form.setter.FormHelper;
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -11,8 +12,6 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
  * Form操作辅助类
@@ -87,7 +86,7 @@ public class FormKit {
      * @return 实例类型
      */
     public static Class<? extends IEntity> getEntityClass(String table) {
-        if (isBlank(table)) {
+        if (If.isBlank(table)) {
             return null;
         }
         if (TableEntityClass.containsKey(table)) {

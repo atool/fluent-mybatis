@@ -8,11 +8,13 @@ import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.form.validation.ValidKit;
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
@@ -23,8 +25,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
-import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
 
 /**
@@ -75,7 +75,7 @@ public class FormServiceFactoryBean implements FactoryBean {
         Entry entry = parameters[0].getDeclaredAnnotation(Entry.class);
         if (args.length == 1 && entry == null) {
             /* 单个入参, 且非 @Entry 参数场景 */
-            assertNotNull("method[" + method.getName() + "] parameter[" + parameters[0].getName() + "]", args[0]);
+            MybatisUtil.assertNotNull("method[" + method.getName() + "] parameter[" + parameters[0].getName() + "]", args[0]);
             ValidKit.validate(args[0]);
             FormMetas metas = FormKit.metas(parameters[0].getType());
             return this.doInvoke(method, action, metas, args[0]);
@@ -266,7 +266,7 @@ public class FormServiceFactoryBean implements FactoryBean {
      * @return 有效的Entity Class
      */
     private Class getEntityClass(Class entityClass, String entityTable) {
-        if (notBlank(entityTable)) {
+        if (If.notBlank(entityTable)) {
             return FormKit.getEntityClass(entityTable);
         } else if (IEntity.class.isAssignableFrom(entityClass)) {
             return entityClass;

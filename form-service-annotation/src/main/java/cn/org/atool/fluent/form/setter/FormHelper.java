@@ -4,6 +4,7 @@ import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -11,19 +12,17 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
+import cn.org.atool.fluent.mybatis.base.model.SqlOpStr;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
+import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.base.model.SqlOpStr.*;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.F_Entity_Class;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
  * FormHelper辅助工具类
@@ -40,7 +39,7 @@ public class FormHelper {
      * @return IQuery
      */
     public static IQuery toQuery(Class entityClass, Form form) {
-        assertNotNull(F_Entity_Class, entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, entityClass);
         if (form.getId() != null && form.getCurrPage() != null) {
             throw new RuntimeException("nextId and currPage can only have one value");
         }
@@ -52,7 +51,7 @@ public class FormHelper {
     }
 
     public static IUpdate toUpdate(Class entityClass, Form form) {
-        assertNotNull(F_Entity_Class, entityClass);
+        MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, entityClass);
         IUpdate updater = RefKit.byEntity(entityClass).updater();
 
         updateBy(entityClass, form, updater);
@@ -63,7 +62,7 @@ public class FormHelper {
     private static void updateBy(Class entityClass, Form form, IUpdate updater) {
         for (Map.Entry<String, Object> entry : form.getUpdate().entrySet()) {
             String column = RefKit.columnOfField(entityClass, entry.getKey());
-            if (isBlank(column)) {
+            if (If.isBlank(column)) {
                 throw new RuntimeException("the field[" + entry.getKey() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
             }
             updater.updateSet(column, entry.getValue());
@@ -80,20 +79,20 @@ public class FormHelper {
                 continue;
             }
             String column = RefKit.columnOfField(entityClass, item.getField());
-            if (isBlank(column)) {
+            if (If.isBlank(column)) {
                 throw new RuntimeException("the field[" + item.getField() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
             }
             switch (item.getOp()) {
-                case OP_LIKE_LEFT:
+                case SqlOpStr.OP_LIKE_LEFT:
                     where.and.apply(column, SqlOp.LIKE, item.getValue()[0] + "%");
                     break;
-                case OP_LIKE:
+                case SqlOpStr.OP_LIKE:
                     where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0] + "%");
                     break;
-                case OP_LIKE_RIGHT:
+                case SqlOpStr.OP_LIKE_RIGHT:
                     where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0]);
                     break;
-                case OP_NOT_LIKE:
+                case SqlOpStr.OP_NOT_LIKE:
                     where.and.apply(column, SqlOp.NOT_LIKE, "%" + item.getValue()[0] + "%");
                     break;
                 default:
@@ -134,7 +133,7 @@ public class FormHelper {
      * @return Entity实例
      */
     public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetas metas) {
-        assertNotNull("FormObject", form);
+        MybatisUtil.assertNotNull("FormObject", form);
         if (metas == null) {
             metas = FormMetas.getFormMeta(form.getClass());
         }
@@ -152,7 +151,7 @@ public class FormHelper {
     }
 
     public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetas metas) {
-        assertNotNull("FormObject", form);
+        MybatisUtil.assertNotNull("FormObject", form);
         if (metas == null) {
             metas = FormMetas.getFormMeta(form.getClass());
         }
@@ -192,7 +191,7 @@ public class FormHelper {
     }
 
     public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetas metas) {
-        assertNotNull("FormObject", form);
+        MybatisUtil.assertNotNull("FormObject", form);
         if (metas == null) {
             metas = FormMetas.getFormMeta(form.getClass());
         }
@@ -266,7 +265,7 @@ public class FormHelper {
     }
 
     private static Object[] toArray(String methodName, Object object) {
-        assertNotNull("result of method[" + methodName + "]", object);
+        MybatisUtil.assertNotNull("result of method[" + methodName + "]", object);
         Class aClass = object.getClass();
         List list = new ArrayList();
         if (aClass.isArray()) {

@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static cn.org.atool.fluent.mybatis.generator.shared2.Ref.Forms.student;
 import static cn.org.atool.fluent.mybatis.generator.shared2.helper.StudentMapping.age;
 import static cn.org.atool.fluent.mybatis.generator.shared2.helper.StudentMapping.userName;
 
@@ -54,8 +53,8 @@ public class FormQueryTest extends BaseTest {
             .and.eq(userName, "xx")
             .and.between(age, 12, 40)
             .setId(0)
-            .with(new StudentEntity().setAddress("kkk"), student, apply -> apply
-                .likeLeft().address()
+            .apply(new StudentEntity().setAddress("kkk"), apply -> apply
+                .likeLeft("address")
             )
             .orderBy(userName, false)
             .tagPage();

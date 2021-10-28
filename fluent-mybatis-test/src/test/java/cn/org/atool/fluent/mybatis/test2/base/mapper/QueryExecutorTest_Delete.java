@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test2.base.mapper;
 
+import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
@@ -34,8 +35,8 @@ class QueryExecutorTest_Delete extends BaseTest {
             .env.values("test_env")
             .isDeleted.values(0)
             .cleanAndInsert();
-        Ref.Forms.student.with(new StudentEntity().setUserName("test1"), wrap -> wrap
-            .eq().userName()
+        Form.with(new StudentEntity().setUserName("test1"), wrap -> wrap
+            .eq("userName")
         ).delete();
 
         db.sqlList().wantFirstSql().eq("" +

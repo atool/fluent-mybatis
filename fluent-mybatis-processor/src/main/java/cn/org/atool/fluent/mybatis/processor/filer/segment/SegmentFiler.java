@@ -63,23 +63,7 @@ public class SegmentFiler extends AbstractFiler {
             .addType(this.nestedQueryOrderBy())
             .addType(this.nestedUpdateOrderBy())
             .addType(this.nestedUpdateSetter())
-            .addType(this.nestedFormSetter())
         ;
-    }
-
-    /**
-     * <pre>
-     * BlobValueFormSetter extends FormSetter
-     *  implements ISegment<IFormApply<BlobValuePoJo, BlobValueFormSetter>>
-     * </pre>
-     *
-     * @return TypeSpec
-     */
-    private TypeSpec nestedFormSetter() {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(Suffix_EntityFormSetter)
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
-        new FormSetterFiler(fluent).build(builder);
-        return builder.build();
     }
 
     /**

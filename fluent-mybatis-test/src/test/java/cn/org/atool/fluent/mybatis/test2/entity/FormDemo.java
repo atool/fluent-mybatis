@@ -1,10 +1,9 @@
 package cn.org.atool.fluent.mybatis.test2.entity;
 
+import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.mybatis.generator.ATM;
-import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
-import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +17,9 @@ public class FormDemo extends BaseTest {
         ATM.dataMap.student.table().clean();
         StudentEntity student = this.newStudent();
 
-        Form form = Ref.Forms.student.with(student, apply -> apply
-            .eq().userName()
-            .eq().age()
+        Form form = Form.with(student, apply -> apply
+            .eq("userName")
+            .eq("age")
         );
         if (form.count() > 0) {
             throw new RuntimeException("出BUG了!");
@@ -60,9 +59,9 @@ public class FormDemo extends BaseTest {
         ).list();
         want.list(students).sizeEq(0);
 
-        Form form = Ref.Forms.student.with(student, apply -> apply
-            .eq().userName()
-            .eq().age()
+        Form form = Form.with(student, apply -> apply
+            .eq("userName")
+            .eq("age")
         );
         if (form.count() > 0) {
             throw new RuntimeException("出BUG了!");
@@ -84,10 +83,10 @@ public class FormDemo extends BaseTest {
         ATM.dataMap.student.table().clean();
         // 新增表单
         StudentEntity student = this.newStudent().setId(12L);
-        Ref.Forms.student.with(student, apply -> apply
+        Form.with(student, apply -> apply
             .and(StudentEntity::getUserName)
             .and("address")
-            .eq().id()
+            .eq("id")
         ).update();
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +

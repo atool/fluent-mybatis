@@ -3,7 +3,9 @@ package cn.org.atool.fluent.form.meta;
 import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
@@ -14,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**
  * Form表单对象元数据定义列表
@@ -127,9 +126,9 @@ public class FormMetas extends ArrayList<EntryMeta> {
     /**
      * 根据参数声明构造元数据
      *
-     * @param metas 元数据列表
-     * @param entry 表单项声明
-     * @param p     表单项参数
+     * @param method 方法签名
+     * @param entry  表单项声明
+     * @param p      表单项参数
      */
     private static void buildMetasByParameter(String method, Entry entry, Parameter p) {
         if (entry.type() == EntryType.Form) {
@@ -139,7 +138,7 @@ public class FormMetas extends ArrayList<EntryMeta> {
                 EntryMeta meta = new EntryMeta(m.getName(), m.getType(), p.getName() + "." + m.getGetterName(), getter, m.isIgnoreNull());
                 FormMetas.get(method).add(meta);
             }
-        } else if (isBlank(entry.value())) {
+        } else if (If.isBlank(entry.value())) {
             throw new IllegalArgumentException("the parameter of method[" + method + "] should be declared by @Entry(value='property').");
         } else {
             Function<Map, Object> getter = m -> m.get(p.getName());
@@ -183,7 +182,7 @@ public class FormMetas extends ArrayList<EntryMeta> {
 
     private static void addFieldMeta(Class aClass, Field field) {
         Entry entry = field.getAnnotation(Entry.class);
-        String name = entry == null || isBlank(entry.value()) ? field.getName() : entry.value();
+        String name = entry == null || If.isBlank(entry.value()) ? field.getName() : entry.value();
 
         Method getter = findGetter(aClass, field);
         Method setter = findSetter(aClass, field);
@@ -207,9 +206,9 @@ public class FormMetas extends ArrayList<EntryMeta> {
     public static Method findGetter(Class klass, Field field) {
         String getter;
         if (field.getType() == boolean.class) {
-            getter = "is" + capitalFirst(field.getName(), null);
+            getter = "is" + MybatisUtil.capitalFirst(field.getName(), null);
         } else {
-            getter = "get" + capitalFirst(field.getName(), null);
+            getter = "get" + MybatisUtil.capitalFirst(field.getName(), null);
         }
         try {
             return klass.getMethod(getter);
@@ -221,9 +220,9 @@ public class FormMetas extends ArrayList<EntryMeta> {
     public static Method findSetter(Class klass, Field field) {
         String setter;
         if (field.getType() == boolean.class && field.getName().startsWith("is")) {
-            setter = "set" + capitalFirst(field.getName().substring(2), null);
+            setter = "set" + MybatisUtil.capitalFirst(field.getName().substring(2), null);
         } else {
-            setter = "set" + capitalFirst(field.getName(), null);
+            setter = "set" + MybatisUtil.capitalFirst(field.getName(), null);
         }
         try {
             return klass.getMethod(setter, field.getType());
