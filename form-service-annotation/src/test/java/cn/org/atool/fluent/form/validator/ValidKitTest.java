@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.validation;
+package cn.org.atool.fluent.form.validator;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -15,7 +15,7 @@ class ValidKitTest extends Test4J {
 
     @Test
     void validate() {
-        want.exception(() -> ValidKit.validate(new Car()), IllegalArgumentException.class)
+        want.exception(() -> Validation.validate(new Car()), IllegalArgumentException.class)
             .contains(arr("driver.age: 不能为null",
                 "licensePlate: 不能为null",
                 "manufacturer: 不能为空",

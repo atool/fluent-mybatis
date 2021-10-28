@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.validation;
+package cn.org.atool.fluent.form.validator;
 
 public enum CaseMode {
     UPPER,

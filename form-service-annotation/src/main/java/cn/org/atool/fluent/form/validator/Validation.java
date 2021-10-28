@@ -1,7 +1,6 @@
-package cn.org.atool.fluent.form.validation;
+package cn.org.atool.fluent.form.validator;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
@@ -14,8 +13,8 @@ import java.util.Set;
  *
  * @author darui.wu
  */
-public class ValidKit {
-    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+public class Validation {
+    private static final ValidatorFactory factory = jakarta.validation.Validation.buildDefaultValidatorFactory();
 
     /**
      * 对Form Object进行校验
@@ -38,8 +37,8 @@ public class ValidKit {
         if (!message.isEmpty()) {
             throw new IllegalArgumentException(message);
         }
-        if (object instanceof IValidation) {
-            ((IValidation) object).validate();
+        if (object instanceof IValidator) {
+            ((IValidator) object).validate();
         }
     }
 }

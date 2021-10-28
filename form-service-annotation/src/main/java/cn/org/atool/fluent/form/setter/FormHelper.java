@@ -12,7 +12,6 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
-import cn.org.atool.fluent.mybatis.base.model.SqlOpStr;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
@@ -74,7 +73,7 @@ public class FormHelper {
      */
     private static void where(Class entityClass, Form form, IWrapper query) {
         WhereBase where = query.where();
-        for (FormItem item : form.getWhere()) {
+        for (FormEntry item : form.getWhere()) {
             if (item.getValue() == null) {
                 continue;
             }
@@ -83,16 +82,16 @@ public class FormHelper {
                 throw new RuntimeException("the field[" + item.getField() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
             }
             switch (item.getOp()) {
-                case SqlOpStr.OP_LIKE_LEFT:
+                case FormSqlOp.OP_LIKE_LEFT:
                     where.and.apply(column, SqlOp.LIKE, item.getValue()[0] + "%");
                     break;
-                case SqlOpStr.OP_LIKE:
+                case FormSqlOp.OP_LIKE:
                     where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0] + "%");
                     break;
-                case SqlOpStr.OP_LIKE_RIGHT:
+                case FormSqlOp.OP_LIKE_RIGHT:
                     where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0]);
                     break;
-                case SqlOpStr.OP_NOT_LIKE:
+                case FormSqlOp.OP_NOT_LIKE:
                     where.and.apply(column, SqlOp.NOT_LIKE, "%" + item.getValue()[0] + "%");
                     break;
                 default:

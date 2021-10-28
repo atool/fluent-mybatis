@@ -65,9 +65,9 @@ public class Form implements Serializable {
      * 条件项列表
      */
     @Getter(AccessLevel.NONE)
-    private List<FormItem> where = new ArrayList<>();
+    private List<FormEntry> where = new ArrayList<>();
 
-    public List<FormItem> getWhere() {
+    public List<FormEntry> getWhere() {
         if (this.where == null) {
             this.where = new ArrayList<>();
         }
@@ -137,11 +137,10 @@ public class Form implements Serializable {
      * @param value IEntity实例
      * @return IFormApply
      */
-    public <E extends IEntity, S extends BaseFormSetter>
-    Form apply(Object value, Consumer<IFormApply<E, S>> apply) {
+    public Form apply(Object value, Consumer<IFormApply> apply) {
         assertNotNull("object", value);
         Map map = PoJoHelper.toMap(value);
-        IFormApply formApply = new FormApply(new EmptyFormSetter(RefKit.byEntity(entityClass)), map, this);
+        IFormApply formApply = new FormApply(new FormSetter(RefKit.byEntity(entityClass)), map, this);
         apply.accept(formApply);
         return this;
     }
@@ -292,10 +291,10 @@ public class Form implements Serializable {
         return form;
     }
 
-    public static <E extends IEntity> Form with(E o, Consumer<IFormApply<E, ?>> apply) {
+    public static <E extends IEntity> Form with(E o, Consumer<IFormApply> apply) {
         Map map = PoJoHelper.toMap(o);
         IMapping mapping = RefKit.byEntity(o.entityClass());
-        FormApply formApply = new FormApply(new EmptyFormSetter(mapping), map, new Form(o.entityClass()));
+        FormApply formApply = new FormApply(new FormSetter(mapping), map, new Form(o.entityClass()));
         apply.accept(formApply);
         return formApply.getForm();
     }
@@ -303,7 +302,7 @@ public class Form implements Serializable {
     public static <E extends IEntity> Form with(Class<E> eClass, Object o, Consumer<IFormApply> apply) {
         Map map = PoJoHelper.toMap(o);
         IMapping mapping = RefKit.byEntity(eClass);
-        FormApply formApply = new FormApply(new EmptyFormSetter(mapping), map, new Form(eClass));
+        FormApply formApply = new FormApply(new FormSetter(mapping), map, new Form(eClass));
         apply.accept(formApply);
         return formApply.getForm();
     }

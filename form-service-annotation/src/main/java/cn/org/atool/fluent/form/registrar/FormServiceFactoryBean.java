@@ -7,7 +7,7 @@ import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
-import cn.org.atool.fluent.form.validation.ValidKit;
+import cn.org.atool.fluent.form.validator.Validation;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -76,7 +76,7 @@ public class FormServiceFactoryBean implements FactoryBean {
         if (args.length == 1 && entry == null) {
             /* 单个入参, 且非 @Entry 参数场景 */
             MybatisUtil.assertNotNull("method[" + method.getName() + "] parameter[" + parameters[0].getName() + "]", args[0]);
-            ValidKit.validate(args[0]);
+            Validation.validate(args[0]);
             FormMetas metas = FormKit.metas(parameters[0].getType());
             return this.doInvoke(method, action, metas, args[0]);
         } else {

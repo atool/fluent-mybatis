@@ -1,11 +1,11 @@
-package cn.org.atool.fluent.form.validation;
+package cn.org.atool.fluent.form.validator;
 
 /**
  * 参数校验, 除注解验证外的方法验证
  *
  * @author darui.wu
  */
-public interface IValidation {
+public interface IValidator {
     /**
      * 校验方法
      *

@@ -11,13 +11,15 @@ import java.util.function.Consumer;
  * @author darui.wu
  */
 @SuppressWarnings({"rawtypes"})
-public abstract class BaseFormSetter {
+public class FormSetter {
+    private final IMapping mapping;
 
     protected FormApply formApply;
 
     protected Consumer<FieldMapping> apply;
 
-    protected BaseFormSetter() {
+    public FormSetter(IMapping mapping) {
+        this.mapping = mapping;
     }
 
     public void set(Consumer<FieldMapping> apply) {
@@ -35,7 +37,11 @@ public abstract class BaseFormSetter {
         return this.formApply;
     }
 
-    public abstract Class entityClass();
+    public Class entityClass() {
+        return mapping.entityClass();
+    }
 
-    public abstract IMapping _mapping();
+    public IMapping _mapping() {
+        return mapping;
+    }
 }

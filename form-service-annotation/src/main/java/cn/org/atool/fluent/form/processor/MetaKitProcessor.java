@@ -1,7 +1,6 @@
-package cn.org.atool.fluent.form;
+package cn.org.atool.fluent.form.processor;
 
 import cn.org.atool.fluent.form.annotation.Form;
-import cn.org.atool.fluent.form.filer.MetaProcessorKit;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.*;

@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.validation;
+package cn.org.atool.fluent.form.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
