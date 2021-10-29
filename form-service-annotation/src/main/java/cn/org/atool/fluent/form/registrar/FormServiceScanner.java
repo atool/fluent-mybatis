@@ -20,6 +20,7 @@ import java.util.Set;
  *
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 @Slf4j
 @Setter
 public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
@@ -47,7 +48,6 @@ public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
      * @param basePackages 扫描路径
      * @return ignore
      */
-    @SuppressWarnings("all")
     public Set<BeanDefinitionHolder> doScan(Class aopClass, String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
         if (beanDefinitions.isEmpty()) {

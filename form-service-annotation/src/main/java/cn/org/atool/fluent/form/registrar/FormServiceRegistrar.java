@@ -12,6 +12,7 @@ import org.springframework.core.type.AnnotationMetadata;
  *
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public class FormServiceRegistrar implements ImportBeanDefinitionRegistrar {
 
     /**

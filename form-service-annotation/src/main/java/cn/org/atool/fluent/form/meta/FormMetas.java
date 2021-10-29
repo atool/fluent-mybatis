@@ -115,7 +115,7 @@ public class FormMetas {
     /**
      * 通过{@link cn.org.atool.fluent.form.annotation.Form}注解生成的工具类构造元数据
      *
-     * @param aClass 表单类
+     * @param declared 表单类
      */
     private void addMetasByFormKits(Class declared) throws Exception {
         if (Objects.equals(declared, Object.class)) {

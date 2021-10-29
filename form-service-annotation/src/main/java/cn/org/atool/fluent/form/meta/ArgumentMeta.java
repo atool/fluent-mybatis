@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class ArgumentMeta {
     /**
      * 表单项名称

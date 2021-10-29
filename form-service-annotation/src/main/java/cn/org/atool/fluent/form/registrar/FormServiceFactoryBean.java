@@ -71,10 +71,7 @@ public class FormServiceFactoryBean implements FactoryBean {
     /**
      * 执行Form操作
      *
-     * @param method api方法
      * @param action 方法执行行为
-     * @param metas  入参元数据
-     * @param form   入参值
      * @return 执行结果
      */
     private Object doInvoke(ActionMeta action) {

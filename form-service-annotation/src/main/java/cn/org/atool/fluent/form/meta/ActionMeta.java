@@ -23,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 @Accessors(chain = true)
 public class ActionMeta {
     /**
