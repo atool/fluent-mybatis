@@ -2,6 +2,7 @@ package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.form.meta.ActionMeta;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.mybatis.If;
@@ -131,78 +132,26 @@ public class FormHelper {
      * @param form   IForm实例
      * @return Entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetas metas) {
-        MybatisUtil.assertNotNull("FormObject", form);
-        if (metas == null) {
-            metas = FormMetas.getFormMeta(form.getClass());
-        }
-        AMapping mapping = RefKit.byEntity(eClass);
+    public static <E extends IEntity> E newEntity(ActionMeta action, FormMetas metas) {
+        AMapping mapping = RefKit.byEntity(action.entityClass);
         IEntity entity = mapping.newEntity();
-        for (EntryMeta meta : metas) {
-            Object value = meta.get(form);
-            if (meta.isIgnoreNull() && value == null) {
-                continue;
-            }
-            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.getName());
-            fm.setter.set(entity, value);
+        for (EntryMeta meta : metas.getMetas()) {
+            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+            fm.setter.set(entity, meta.get(action));
         }
         return (E) entity;
     }
 
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetas metas) {
-        MybatisUtil.assertNotNull("FormObject", form);
-        if (metas == null) {
-            metas = FormMetas.getFormMeta(form.getClass());
-        }
-        AMapping mapping = RefKit.byEntity(eClass);
-        IQuery<E> query = mapping.query();
-        for (EntryMeta meta : metas) {
-            Object value = meta.get(form);
-            if (meta.isIgnoreNull() && value == null) {
-                continue;
-            }
-            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.getName());
-            if (fm == null) {
-                throw new RuntimeException("The field[" + meta.getName() + "] of entity[" + eClass.getName() + "] not found.");
-            } else {
-                where((IWrapper) query, fm.column, meta, value);
-            }
-        }
-        if (metas.getPageSize() != null) {
-            setPaged(mapping, query, form, metas);
-        }
-        return query;
-    }
-
-    private static void setPaged(AMapping mapping, IQuery query, Object form, FormMetas metas) {
-        int pageSize = metas.getPageSize(form);
-        if (pageSize < 1) {
-            throw new RuntimeException("PageSize must be greater than 0.");
-        }
-        Integer currPage = metas.getCurrPage(form);
-        query.limit(currPage == null ? 0 : currPage * pageSize, pageSize);
-        Object pagedTag = metas.getPagedTag(form);
-        if (pagedTag == null) {
-            return;
-        }
-        String pk = mapping.primaryId(true);
-        query.where().apply(pk, SqlOp.GE, pagedTag);
-    }
-
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetas metas) {
-        MybatisUtil.assertNotNull("FormObject", form);
-        if (metas == null) {
-            metas = FormMetas.getFormMeta(form.getClass());
-        }
-        AMapping mapping = RefKit.byEntity(eClass);
+    public static <E extends IEntity> IUpdate<E> newUpdate(ActionMeta action, FormMetas metas) {
+        AMapping mapping = RefKit.byEntity(action.entityClass);
         IUpdate<E> updater = mapping.updater();
-        for (EntryMeta meta : metas) {
-            Object value = meta.get(form);
-            if (meta.isIgnoreNull() && value == null) {
+        for (EntryMeta meta : metas.getMetas()) {
+            Object value = meta.get(action);
+            if (meta.ignoreNull && value == null) {
                 continue;
             }
-            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.getName());
-            if (meta.getType() == EntryType.Update) {
+            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+            if (meta.type == EntryType.Update) {
                 updater.updateSet(fm.column, value);
             } else {
                 where((IWrapper) updater, fm.column, meta, value);
@@ -211,19 +160,54 @@ public class FormHelper {
         return updater;
     }
 
+    public static <E extends IEntity> IQuery<E> newQuery(ActionMeta action, FormMetas metas) {
+        AMapping mapping = RefKit.byEntity(action.entityClass);
+        IQuery<E> query = mapping.query();
+        for (EntryMeta meta : metas.getMetas()) {
+            Object value = meta.get(action);
+            if (meta.ignoreNull && value == null) {
+                continue;
+            }
+            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+            if (fm == null) {
+                throw new RuntimeException("The field[" + meta.name + "] of entity[" + action.entityClass.getName() + "] not found.");
+            } else {
+                where((IWrapper) query, fm.column, meta, value);
+            }
+        }
+        if (metas.getPageSize() != null) {
+            setPaged(action, metas, mapping, query);
+        }
+        return query;
+    }
+
+    private static <E extends IEntity> void setPaged(ActionMeta action, FormMetas metas, AMapping mapping, IQuery<E> query) {
+        int pageSize = metas.getPageSize(action);
+        if (pageSize < 1) {
+            throw new RuntimeException("PageSize must be greater than 0.");
+        }
+        Integer currPage = metas.getCurrPage(action);
+        query.limit(currPage == null ? 0 : currPage * pageSize, pageSize);
+        Object pagedTag = metas.getPagedTag(action);
+        if (pagedTag != null) {
+            String pk = mapping.primaryId(true);
+            query.where().apply(pk, SqlOp.GE, pagedTag);
+        }
+    }
+
     private static void where(IWrapper wrapper, String column, EntryMeta meta, Object value) {
-        if (meta.getType() == EntryType.EQ) {
+        if (meta.type == EntryType.EQ) {
             if (value != null) {
                 wrapper.where().apply(column, SqlOp.EQ, value);
-            } else if (!meta.isIgnoreNull()) {
+            } else if (!meta.ignoreNull) {
                 wrapper.where().apply(column, SqlOp.IS_NULL);
             }
             return;
         }
         if (value == null) {
-            throw new RuntimeException("Condition field[" + meta.getName() + "] not assigned.");
+            throw new RuntimeException("Condition field[" + meta.name + "] not assigned.");
         }
-        switch (meta.getType()) {
+        switch (meta.type) {
             case GT:
                 wrapper.where().apply(column, SqlOp.EQ, value);
                 break;
@@ -240,7 +224,7 @@ public class FormHelper {
                 wrapper.where().apply(column, SqlOp.NE, value);
                 break;
             case IN:
-                wrapper.where().apply(column, SqlOp.IN, toArray(meta.getGetterName(), value));
+                wrapper.where().apply(column, SqlOp.IN, toArray(meta.name, value));
                 break;
             case Like:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value + "%");
@@ -252,9 +236,9 @@ public class FormHelper {
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value);
                 break;
             case Between:
-                Object[] args = toArray(meta.getGetterName(), value);
+                Object[] args = toArray(meta.name, value);
                 if (args.length != 2) {
-                    throw new RuntimeException("The size of value of the condition field[" + meta.getName() + "] must be 2.");
+                    throw new RuntimeException("The size of value of the condition field[" + meta.name + "] must be 2.");
                 }
                 wrapper.where().apply(column, SqlOp.BETWEEN, args);
                 break;
@@ -309,5 +293,40 @@ public class FormHelper {
             list.add(object);
         }
         return list.toArray();
+    }
+
+    public static List entities2result(List<IEntity> entities, Class rClass) {
+        if (rClass == null) {
+            return entities;
+        }
+        List list = new ArrayList();
+        for (IEntity entity : entities) {
+            list.add(entity2result(entity, rClass));
+        }
+        return list;
+    }
+
+    public static Object entity2result(IEntity entity, Class rClass) {
+        if (entity == null) {
+            return null;
+        }
+        try {
+            Object target = rClass.getDeclaredConstructor().newInstance();
+
+            Map<String, FieldMapping> mapping = RefKit.byEntity(entity.entityClass()).getFieldsMap();
+            FormMetas metas = FormMetas.getFormMeta(rClass);
+            for (EntryMeta meta : metas.getMetas()) {
+                FieldMapping fm = mapping.get(meta.name);
+                if (fm == null) {
+                    throw new RuntimeException("The field[" + meta.name + "] of entity[" + entity.entityClass().getName() + "] not found.");
+                } else {
+                    Object value = fm.getter.get(entity);
+                    meta.set(target, value);
+                }
+            }
+            return target;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
@@ -33,7 +34,6 @@ public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
      */
     protected void registerFilters() {
         super.addIncludeFilter(new AnnotationTypeFilter(FormService.class));
-        //super.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
     }
 
     @Override
@@ -48,25 +48,27 @@ public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
      * @return ignore
      */
     @SuppressWarnings("all")
-    @Override
-    protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
+    public Set<BeanDefinitionHolder> doScan(Class aopClass, String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
         if (beanDefinitions.isEmpty()) {
-            log.warn("No FormApi was found in '" + Arrays.toString(basePackages)
+            log.warn("No FormService was found in '" + Arrays.toString(basePackages)
                 + "' package. Please check your configuration.");
-        } else {
-            for (BeanDefinitionHolder holder : beanDefinitions) {
-                this.processBeanDefinition((AbstractBeanDefinition) holder.getBeanDefinition());
-            }
+            return beanDefinitions;
+        }
+        for (BeanDefinitionHolder holder : beanDefinitions) {
+            this.processBeanDefinition(aopClass, (AbstractBeanDefinition) holder.getBeanDefinition());
         }
         return beanDefinitions;
     }
 
-    private void processBeanDefinition(AbstractBeanDefinition definition) {
-        String beanClassName = definition.getBeanClassName();
-        assert beanClassName != null;
-        definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName);
+    private void processBeanDefinition(Class aopClass, AbstractBeanDefinition definition) {
+        String apiInterface = definition.getBeanClassName();
+        assert apiInterface != null;
         definition.setBeanClass(FormServiceFactoryBean.class);
+        ConstructorArgumentValues constructor = definition.getConstructorArgumentValues();
+        constructor.addIndexedArgumentValue(0, apiInterface);
+        constructor.addIndexedArgumentValue(1, aopClass);
+
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         definition.setScope(ConfigurableBeanFactory.SCOPE_SINGLETON);
     }

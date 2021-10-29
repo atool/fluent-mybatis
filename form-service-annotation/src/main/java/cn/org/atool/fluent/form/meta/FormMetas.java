@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.mybatis.If;
@@ -11,11 +10,9 @@ import lombok.Getter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Form表单对象元数据定义列表
@@ -24,7 +21,9 @@ import java.util.function.Function;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
-public class FormMetas extends ArrayList<EntryMeta> {
+public class FormMetas {
+    private final List<EntryMeta> metas = new ArrayList<>();
+
     private EntryMeta pageSize;
 
     private EntryMeta currPage;
@@ -45,11 +44,14 @@ public class FormMetas extends ArrayList<EntryMeta> {
         return pagedTag == null ? null : pagedTag.get(form);
     }
 
-    private EntryMeta addMeta(EntryMeta meta) {
-        switch (meta.getType()) {
+    public void addMeta(EntryMeta meta) {
+        if (meta == null) {
+            return;
+        }
+        switch (meta.type) {
             case Ignore:
                 /* 忽略掉的字段 */
-                return meta;
+                return;
             case PageSize:
                 this.pageSize = meta;
                 break;
@@ -59,91 +61,54 @@ public class FormMetas extends ArrayList<EntryMeta> {
             case PagedTag:
                 this.pagedTag = meta;
                 break;
+            case Form:
+                throw new RuntimeException("can't add EntryType.Form directly.");
             case Update:
                 this.isUpdate = true;
-                this.add(meta);
+                this.metas.add(meta);
                 break;
             default:
-                this.add(meta);
+                this.metas.add(meta);
         }
-        return meta;
     }
 
-    private EntryMeta addMeta(String name, Method getter, Method setter, Entry entry) {
+    private void addMeta(String name, Method getter, Method setter, Entry entry) {
         if (entry == null) {
-            return addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
+            this.addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
         } else {
-            return addMeta(new EntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+            this.addMeta(new EntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
         }
     }
 
     /*** ============================ ***/
-    public static final KeyMap<FormMetas> FormMetas = new KeyMap<>();
+    private static final KeyMap<FormMetas> ClassFormMetas = new KeyMap<>();
 
-    public static FormMetas getFormMeta(String method, Parameter[] parameters) {
-        if (FormMetas.containsKey(method)) {
-            return FormMetas.get(method);
-        }
-        synchronized (FormKit.class) {
-            if (FormMetas.containsKey(method)) {
-                return FormMetas.get(method);
-            }
-            FormMetas.put(method, new FormMetas());
-            for (Parameter p : parameters) {
-                Entry entry = p.getDeclaredAnnotation(Entry.class);
-                if (entry == null) {
-                    throw new IllegalArgumentException("the parameter of method[" + method + "] should be declared by @Entry(value='property').");
-                } else {
-                    buildMetasByParameter(method, entry, p);
-                }
-            }
-            return FormMetas.get(method);
-        }
-    }
-
+    /**
+     * 获取class的表单元数据
+     *
+     * @param aClass 表单class
+     * @return FormMetas
+     */
     public static FormMetas getFormMeta(Class aClass) {
-        if (FormMetas.containsKey(aClass)) {
-            return FormMetas.get(aClass);
+        if (ClassFormMetas.containsKey(aClass)) {
+            return ClassFormMetas.get(aClass);
         }
-        synchronized (FormKit.class) {
-            if (FormMetas.containsKey(aClass)) {
-                return FormMetas.get(aClass);
+        synchronized (FormMetas.class) {
+            if (ClassFormMetas.containsKey(aClass)) {
+                return ClassFormMetas.get(aClass);
             }
-            FormMetas.put(aClass, new FormMetas());
+            FormMetas metas = new FormMetas();
             Class declared = aClass;
             while (declared != Object.class) {
                 try {
-                    buildMetasByFormKits(aClass, declared);
+                    metas.addMetasByFormKits(declared);
                 } catch (Exception ignored) {
-                    buildMetasByReflector(aClass, declared);
+                    metas.addMetasByReflector(aClass, declared);
                 }
                 declared = declared.getSuperclass();
             }
-            return FormMetas.get(aClass);
-        }
-    }
-
-    /**
-     * 根据参数声明构造元数据
-     *
-     * @param method 方法签名
-     * @param entry  表单项声明
-     * @param p      表单项参数
-     */
-    private static void buildMetasByParameter(String method, Entry entry, Parameter p) {
-        if (entry.type() == EntryType.Form) {
-            FormMetas pMetas = getFormMeta(p.getType());
-            for (EntryMeta m : pMetas) {
-                Function<Map, Object> getter = map -> m.getGetter().apply(map.get(p.getName()));
-                EntryMeta meta = new EntryMeta(m.getName(), m.getType(), p.getName() + "." + m.getGetterName(), getter, m.isIgnoreNull());
-                FormMetas.get(method).add(meta);
-            }
-        } else if (If.isBlank(entry.value())) {
-            throw new IllegalArgumentException("the parameter of method[" + method + "] should be declared by @Entry(value='property').");
-        } else {
-            Function<Map, Object> getter = m -> m.get(p.getName());
-            EntryMeta meta = new EntryMeta(entry.value(), entry.type(), p.getName(), getter, entry.ignoreNull());
-            FormMetas.get(method).add(meta);
+            ClassFormMetas.put(aClass, metas);
+            return metas;
         }
     }
 
@@ -152,14 +117,12 @@ public class FormMetas extends ArrayList<EntryMeta> {
      *
      * @param aClass 表单类
      */
-    private static void buildMetasByFormKits(Class aClass, Class declared) throws Exception {
+    private void addMetasByFormKits(Class declared) throws Exception {
         if (Objects.equals(declared, Object.class)) {
             return;
         }
-        IFormMeta kit = (IFormMeta) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
-        for (EntryMeta meta : kit.findFormMetas()) {
-            addMeta(aClass, meta);
-        }
+        FormMetaKit kit = (FormMetaKit) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
+        kit.entryMetas().forEach(this::addMeta);
     }
 
     /**
@@ -167,7 +130,7 @@ public class FormMetas extends ArrayList<EntryMeta> {
      *
      * @param aClass 表单类
      */
-    private static void buildMetasByReflector(Class aClass, Class declared) {
+    private void addMetasByReflector(Class aClass, Class declared) {
         if (Objects.equals(declared, Object.class)) {
             return;
         }
@@ -176,31 +139,13 @@ public class FormMetas extends ArrayList<EntryMeta> {
             if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
                 continue;
             }
-            addFieldMeta(aClass, field);
+            Entry entry = field.getAnnotation(Entry.class);
+            String name = entry == null || If.isBlank(entry.value()) ? field.getName() : entry.value();
+
+            Method getter = findGetter(aClass, field);
+            Method setter = findSetter(aClass, field);
+            this.addMeta(name, getter, setter, entry);
         }
-    }
-
-    private static void addFieldMeta(Class aClass, Field field) {
-        Entry entry = field.getAnnotation(Entry.class);
-        String name = entry == null || If.isBlank(entry.value()) ? field.getName() : entry.value();
-
-        Method getter = findGetter(aClass, field);
-        Method setter = findSetter(aClass, field);
-        addMeta(aClass, name, getter, setter, entry);
-    }
-
-    private static void addMeta(Class klass, String name, Method getter, Method setter, Entry entry) {
-        if (!FormMetas.containsKey(klass)) {
-            FormMetas.put(klass, new FormMetas());
-        }
-        FormMetas.get(klass).addMeta(name, getter, setter, entry);
-    }
-
-    private static void addMeta(Class klass, EntryMeta meta) {
-        if (!FormMetas.containsKey(klass)) {
-            FormMetas.put(klass, new FormMetas());
-        }
-        FormMetas.get(klass).addMeta(meta);
     }
 
     public static Method findGetter(Class klass, Field field) {

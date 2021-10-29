@@ -26,7 +26,7 @@ public class FormScanner extends ElementScanner8<Void, Void> {
     private ClassName className;
 
     @Getter
-    private final List<FormFieldInfo> metas = new ArrayList<>();
+    private final List<FormField> metas = new ArrayList<>();
 
 
     @Override
@@ -57,7 +57,7 @@ public class FormScanner extends ElementScanner8<Void, Void> {
             entryName = fieldName;
         }
         String fieldType = getJavaType(element).toString();
-        FormFieldInfo meta = new FormFieldInfo(entryName, fieldName, fieldType);
+        FormField meta = new FormField(entryName, fieldName, fieldType);
         if (entry == null) {
             meta.setEntryType(EntryType.EQ, true);
         } else {

@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import lombok.Getter;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
@@ -15,63 +14,48 @@ import java.util.function.Function;
  */
 @SuppressWarnings({"unchecked", "unused", "rawtypes"})
 @ToString(of = "name")
-@Getter
 public class EntryMeta {
     /**
      * 字段名称
      */
-    private final String name;
+    public final String name;
     /**
      * 类型
      */
-    private final EntryType type;
-    /**
-     * getter方法名称
-     */
-    private final String getterName;
+    public EntryType type;
     /**
      * getter方法
      */
-    private final Function getter;
-    /**
-     * setter方法名称
-     */
-    private final String setterName;
+    public final Function getter;
     /**
      * setter方法
      */
-    private final BiConsumer setter;
+    public final BiConsumer setter;
     /**
      * 忽略空值情况
      */
-    private final boolean ignoreNull;
+    public final boolean ignoreNull;
 
     public EntryMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
         this.name = name;
         this.type = type;
         this.getter = getter == null ? null : target -> getValue(getter, target);
-        this.getterName = getter == null ? name : getter.getName();
         this.setter = setter == null ? null : (target, value) -> setValue(setter, target, value);
-        this.setterName = setter == null ? name : setter.getName();
         this.ignoreNull = ignoreNull;
     }
 
-    public <F, V> EntryMeta(String name, EntryType type, String getterName, Function<F, V> getter, boolean ignoreNull) {
+    public <F, V> EntryMeta(String name, EntryType type, Function<F, V> getter, boolean ignoreNull) {
         this.name = name;
         this.type = type;
-        this.getterName = getterName;
         this.getter = getter;
-        this.setterName = null;
         this.setter = null;
         this.ignoreNull = ignoreNull;
     }
 
-    public <F, V> EntryMeta(String name, EntryType type, String getterName, Function<F, V> getter, String setterName, BiConsumer<F, V> setter, boolean ignoreNull) {
+    public <F, V> EntryMeta(String name, EntryType type, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
         this.name = name;
         this.type = type;
-        this.getterName = getterName;
         this.getter = getter;
-        this.setterName = setterName;
         this.setter = setter;
         this.ignoreNull = ignoreNull;
     }

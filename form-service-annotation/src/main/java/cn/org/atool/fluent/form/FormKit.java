@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form;
 
+import cn.org.atool.fluent.form.meta.ActionMeta;
 import cn.org.atool.fluent.form.meta.FormMetas;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.If;
@@ -8,10 +9,11 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.StdPagedList;
+import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.util.List;
 
 /**
  * Form操作辅助类
@@ -28,55 +30,69 @@ public class FormKit {
     /**
      * 构造eClass实体实例
      *
-     * @param eClass entity类型
-     * @param form   entity类型
+     * @param action 操作定义
+     * @param metas  入参元数据
      * @return entity实例
      */
-    public static <E extends IEntity> E newEntity(Class<E> eClass, Object form, FormMetas metas) {
-        return FormHelper.newEntity(eClass, form, metas);
+    public static <R> R save(ActionMeta action, FormMetas metas) {
+        IEntity entity = FormHelper.newEntity(action, metas);
+        Object pk = RefKit.mapper(action.entityClass).save(entity);
+        if (action.returnType == void.class || action.returnType == Void.class) {
+            return null;
+        } else if (action.returnType == Boolean.class || action.returnType == boolean.class) {
+            return (R) (Boolean) (pk != null);
+        } else if (action.returnType.isAssignableFrom(action.entityClass)) {
+            return (R) entity;
+        } else {
+            return (R) FormHelper.entity2result(entity, action.returnType);
+        }
+    }
+
+    /**
+     * 更新操作
+     *
+     * @param action 操作定义
+     * @param metas  入参元数据
+     * @return ignore
+     */
+    public static int update(ActionMeta action, FormMetas metas) {
+        IUpdate update = FormHelper.newUpdate(action, metas);
+        return RefKit.mapper(action.entityClass).updateBy(update);
     }
 
     /**
      * 构造查询条件实例
      *
-     * @param eClass entity类型
-     * @param form   entity类型
+     * @param action 操作定义
+     * @param metas  入参元数据
      * @return 查询实例
      */
-    public static <E extends IEntity> IQuery<E> newQuery(Class<E> eClass, Object form, FormMetas metas) {
-        return FormHelper.newQuery(eClass, form, metas);
-    }
-
-    /**
-     * 构造更新条件实例
-     *
-     * @param eClass entity类型
-     * @param form   entity类型
-     * @return 更新实例
-     */
-    public static <E extends IEntity> IUpdate<E> newUpdate(Class<E> eClass, Object form, FormMetas metas) {
-        return FormHelper.newUpdate(eClass, form, metas);
-    }
-
-    /**
-     * 返回form表单元数据定义
-     *
-     * @param aClass 表单类型
-     * @return 元数据列表
-     */
-    public static FormMetas metas(Class<?> aClass) {
-        return FormMetas.getFormMeta(aClass);
-    }
-
-    /**
-     * 返回参数列表的表单元数据定义
-     *
-     * @param method     方法
-     * @param parameters 参数定义
-     * @return 元数据
-     */
-    public static FormMetas metas(Method method, Parameter[] parameters) {
-        return FormMetas.getFormMeta(method.toString(), parameters);
+    public static Object query(ActionMeta action, FormMetas metas) {
+        IQuery query = FormHelper.newQuery(action, metas);
+        if (action.isCount()) {
+            int count = query.to().count();
+            return action.resultIsLong() ? (long) count : count;
+        } else if (action.isStdPage()) {
+            /* 标准分页 */
+            StdPagedList paged = query.to().stdPagedEntity();
+            List data = FormHelper.entities2result(paged.getData(), action.returnParameterType);
+            return paged.setData(data);
+        } else if (action.isTagPage()) {
+            /* Tag分页 */
+            TagPagedList paged = query.to().tagPagedEntity();
+            List data = FormHelper.entities2result(paged.getData(), action.returnParameterType);
+            IEntity next = (IEntity) paged.getNext();
+            return new TagPagedList(data, next == null ? null : next.findPk());
+        } else if (action.isList()) {
+            /* 返回List */
+            List<IEntity> list = query.to().listEntity();
+            return FormHelper.entities2result(list, action.returnParameterType);
+        } else {
+            /* 查找单条数据 */
+            query.limit(1);
+            IEntity entity = (IEntity) query.to().findOne().orElse(null);
+            return FormHelper.entity2result(entity, action.returnType);
+        }
     }
 
     /**

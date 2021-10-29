@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.form.annotation;
 
+import cn.org.atool.fluent.form.IActionAround;
+import cn.org.atool.fluent.form.meta.NoActionAround;
 import cn.org.atool.fluent.form.registrar.FormServiceRegistrar;
 import org.springframework.context.annotation.Import;
 
@@ -24,5 +26,5 @@ public @interface FormServiceScan {
     /**
      * 切面处理
      */
-    Class<? extends IFormAop> aop() default IFormAop.class;
+    Class<? extends IActionAround> aop() default NoActionAround.class;
 }

@@ -12,6 +12,10 @@ public enum ActionType {
      */
     Auto,
     /**
+     * 更新数据
+     */
+    Update,
+    /**
      * 保存数据
      */
     Save
