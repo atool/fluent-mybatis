@@ -18,7 +18,7 @@ import java.util.List;
 public class FormObjectTest extends BaseTest {
     @Test
     public void testInsert() {
-        ArgumentMeta arg = FormKit.formArg(Form1.class, new Form1()
+        ArgumentMeta arg = FormKit.argForm(Form1.class, new Form1()
             .setUserName("form test")
             .setAge(23));
         MethodMeta method = FormKit.save(StudentEntity.class, StudentEntity.class, arg);
@@ -34,7 +34,7 @@ public class FormObjectTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        ArgumentMeta arg = FormKit.formArg(Form2.class, this.newForm2()
+        ArgumentMeta arg = FormKit.argForm(Form2.class, this.newForm2()
             .setAges(new Integer[]{12, 56})
             .setAddresses(list("a1", "a2")));
         MethodMeta method = FormKit.update(StudentEntity.class, arg);
@@ -57,7 +57,7 @@ public class FormObjectTest extends BaseTest {
 
     @Test
     public void testUpdate2() {
-        ArgumentMeta arg = FormKit.formArg(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
+        ArgumentMeta arg = FormKit.argForm(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
         MethodMeta method = FormKit.update(StudentEntity.class, arg);
         FormServiceFactoryBean.update(method, method.metas());
         db.sqlList().wantFirstSql().eq("" +
@@ -74,7 +74,7 @@ public class FormObjectTest extends BaseTest {
 
     @Test
     public void testQuery() {
-        ArgumentMeta arg = FormKit.formArg(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
+        ArgumentMeta arg = FormKit.argForm(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
         MethodMeta method = FormKit.list(StudentEntity.class, StudentEntity.class, arg);
         FormServiceFactoryBean.query(method, method.metas());
         db.sqlList().wantFirstSql()

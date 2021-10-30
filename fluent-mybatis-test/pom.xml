@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>form-service-meta</artifactId>
-            <version>${project.version}</version>
+            <version>1.9.0.1</version>
             <scope>provided</scope>
         </dependency>
 

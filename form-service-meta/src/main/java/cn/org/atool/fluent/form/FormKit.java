@@ -34,17 +34,6 @@ public class FormKit {
     }
 
     /**
-     * 参数为表单项
-     *
-     * @param type 参数类型
-     * @param arg  参数值
-     * @return ArgumentMeta
-     */
-    public static ArgumentMeta formArg(Class type, Object arg) {
-        return new ArgumentMeta(null, EntryType.Form, type, arg);
-    }
-
-    /**
      * 构造新增记录Action
      *
      * @param entityClass 操作表Entity类型
@@ -116,15 +105,27 @@ public class FormKit {
     }
 
     /**
+     * 参数为表单项
+     *
+     * @param type 参数类型
+     * @param arg  参数值
+     * @return ArgumentMeta
+     */
+    public static ArgumentMeta argForm(Class type, Object arg) {
+        return new ArgumentMeta(null, EntryType.Form, type, arg);
+    }
+
+    /**
      * 构建tag分页表单
      *
      * @param pageSize 每页记录数
      * @param pagedTag tag分页其实标识
      * @return PagedEntry
      */
-    public static PagedEntry tagPaged(int pageSize, Object pagedTag) {
-        return new PagedEntry().setPageSize(pageSize)
+    public static ArgumentMeta argTagPaged(int pageSize, Object pagedTag) {
+        PagedEntry paged = new PagedEntry().setPageSize(pageSize)
             .setPagedTag(pagedTag == null ? null : String.valueOf(pagedTag));
+        return argForm(PagedEntry.class, paged);
     }
 
     /**
@@ -134,8 +135,9 @@ public class FormKit {
      * @param currPage tag分页其实标识
      * @return PagedEntry
      */
-    public static PagedEntry stdPaged(int pageSize, Integer currPage) {
-        return new PagedEntry().setPageSize(pageSize)
+    public static ArgumentMeta argStdPaged(int pageSize, Integer currPage) {
+        PagedEntry paged = new PagedEntry().setPageSize(pageSize)
             .setCurrPage(currPage == null || currPage < 0 ? 0 : currPage);
+        return argForm(PagedEntry.class, paged);
     }
 }
