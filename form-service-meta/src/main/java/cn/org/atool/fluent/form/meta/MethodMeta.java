@@ -12,10 +12,8 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
-import java.util.function.Function;
 
-import static cn.org.atool.fluent.form.annotation.MethodType.*;
+import static cn.org.atool.fluent.form.annotation.MethodType.Query;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -111,7 +109,7 @@ public class MethodMeta {
     private void addArgMeta(EntryMetas argsMetas, int index) {
         ArgumentMeta arg = this.args[index];
         if (arg.notFormObject()) {
-            Function<MethodMeta, Object> getter = method -> method.args[index].value;
+            MethodMetaFunc getter = method -> method.args[index].value;
             EntryMeta meta = new EntryMeta(arg.entryName, arg.entryType, getter, arg.ignoreNull);
             argsMetas.addMeta(meta);
         } else {
@@ -130,9 +128,13 @@ public class MethodMeta {
         if (meta == null) {
             return null;
         }
-        Function<MethodMeta, Object> getter = method -> {
+        MethodMetaFunc getter = method -> {
             Object object = method.args[index].value;
-            return meta.getter.apply(object);
+            if (meta.getter == null) {
+                throw new IllegalStateException("getter of EntryName[" + meta.name + "] not found.");
+            } else {
+                return meta.getter.apply(object);
+            }
         };
         return new EntryMeta(meta.name, meta.type, getter, meta.ignoreNull);
     }
@@ -218,85 +220,7 @@ public class MethodMeta {
         return methodType == Query && Collection.class.isAssignableFrom(returnType);
     }
 
-    /**
-     * 构造新增记录Action
-     *
-     * @param entityClass 操作表Entity类型
-     * @param returnType  返回值类型
-     * @param args        入参
-     * @return ActionMeta
-     */
-    public static MethodMeta save(Class entityClass, Class returnType, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Save, args, returnType, null);
-    }
-
-    /**
-     * 构造更新Action
-     *
-     * @param entityClass 操作表Entity类型
-     * @param args        入参
-     * @return ActionMeta
-     */
-    public static MethodMeta update(Class entityClass, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Update, args, int.class, null);
-    }
-
-    /**
-     * 构造count查询Action
-     *
-     * @param entityClass 操作表Entity类型
-     * @param args        入参
-     * @return ActionMeta
-     */
-    public static MethodMeta count(Class entityClass, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Query, args, int.class, null);
-    }
-
-    /**
-     * 构造单个对象查询Action
-     *
-     * @param entityClass 操作表Entity类型
-     * @param returnType  返回的单个对象类型
-     * @param args        入参
-     * @return ActionMeta
-     */
-    public static MethodMeta findOne(Class entityClass, Class returnType, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Query, args, returnType, null);
-    }
-
-    /**
-     * 构造列表查询Action
-     *
-     * @param entityClass         操作表Entity类型
-     * @param returnParameterType 列表元素类型
-     * @param args                入参
-     * @return ActionMeta
-     */
-    public static MethodMeta list(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Query, args, List.class, returnParameterType);
-    }
-
-    /**
-     * 构造标准分页Action
-     *
-     * @param entityClass         操作表Entity类型
-     * @param returnParameterType 分页元素类型
-     * @param args                入参
-     * @return ActionMeta
-     */
-    public static MethodMeta stdPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Query, args, StdPagedList.class, returnParameterType);
-    }
-
-    /**
-     * 构造tag分页Action
-     *
-     * @param entityClass         操作表Entity类型
-     * @param returnParameterType 分页元素类型
-     * @param args                入参
-     * @return ActionMeta
-     */
-    public static MethodMeta tagPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return new MethodMeta(entityClass, Query, args, TagPagedList.class, returnParameterType);
+    public static MethodMeta meta(Class entityClass, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
+        return new MethodMeta(entityClass, methodType, args, returnType, returnParameterType);
     }
 }

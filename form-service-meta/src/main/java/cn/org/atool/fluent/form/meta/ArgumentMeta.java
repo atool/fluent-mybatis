@@ -76,15 +76,4 @@ public class ArgumentMeta {
             return Date.class.isAssignableFrom(type) || Temporal.class.isAssignableFrom(type);
         }
     }
-
-    /**
-     * 参数为表单项
-     *
-     * @param type 参数类型
-     * @param arg  参数值
-     * @return ArgumentMeta
-     */
-    public static ArgumentMeta formArg(Class type, Object arg) {
-        return new ArgumentMeta(null, EntryType.Form, type, arg);
-    }
 }

@@ -81,7 +81,7 @@ class TestSpringConfig {
                 DbType.ORACLE.setEscapeExpress("[?]"); // 只是示例, ORACLE的转义方式不是[?], SQL Server才是
                 DbType.ORACLE.setPagedFormat(ORACLE_LIMIT.getFormat() + "/**测试而已**/");
                 /* student有多个Entity映射 */
-                FormKit.add("student", StudentEntity.class);
+                FormKit.mapping("student", StudentEntity.class);
             });
     }
 }

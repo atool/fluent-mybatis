@@ -10,6 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>form-service-meta</artifactId>
+<!--    <version>1.9.0.1</version>-->
     <properties>
         <jakarta-el.version>4.0.0</jakarta-el.version>
         <jakarta-validation-api.version>3.0.0</jakarta-validation-api.version>

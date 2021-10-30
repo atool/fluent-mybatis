@@ -1,119 +1,26 @@
 package cn.org.atool.fluent.form;
 
-import cn.org.atool.fluent.form.meta.EntryMetas;
+import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.form.meta.ArgumentMeta;
 import cn.org.atool.fluent.form.meta.MethodMeta;
-import cn.org.atool.fluent.form.setter.FormHelper;
-import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.form.meta.PagedEntry;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.crud.IQuery;
-import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.List;
+
+import static cn.org.atool.fluent.form.annotation.MethodType.*;
+import static cn.org.atool.fluent.form.registrar.FormServiceFactoryBean.TableEntityClass;
 
 /**
  * Form操作辅助类
  *
  * @author wudarui
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"rawtypes", "unused"})
 public class FormKit {
-    private static final KeyMap<Class> TableEntityClass = new KeyMap();
-
     private FormKit() {
-    }
-
-    /**
-     * 构造eClass实体实例
-     *
-     * @param method 操作定义
-     * @param metas  入参元数据
-     * @return entity实例
-     */
-    public static <R> R save(MethodMeta method, EntryMetas metas) {
-        IEntity entity = FormHelper.newEntity(method, metas);
-        Object pk = RefKit.mapper(method.entityClass).save(entity);
-        if (method.returnType == void.class || method.returnType == Void.class) {
-            return null;
-        } else if (method.returnType == Boolean.class || method.returnType == boolean.class) {
-            return (R) (Boolean) (pk != null);
-        } else if (method.returnType.isAssignableFrom(method.entityClass)) {
-            return (R) entity;
-        } else {
-            return (R) FormHelper.entity2result(entity, method.returnType);
-        }
-    }
-
-    /**
-     * 更新操作
-     *
-     * @param method 操作定义
-     * @param metas  入参元数据
-     * @return ignore
-     */
-    public static int update(MethodMeta method, EntryMetas metas) {
-        IUpdate update = FormHelper.newUpdate(method, metas);
-        return RefKit.mapper(method.entityClass).updateBy(update);
-    }
-
-    /**
-     * 构造查询条件实例
-     *
-     * @param method 操作定义
-     * @param metas  入参元数据
-     * @return 查询实例
-     */
-    public static Object query(MethodMeta method, EntryMetas metas) {
-        IQuery query = FormHelper.newQuery(method, metas);
-        if (method.isCount()) {
-            int count = query.to().count();
-            return method.isReturnLong() ? (long) count : count;
-        } else if (method.isStdPage()) {
-            /* 标准分页 */
-            StdPagedList paged = query.to().stdPagedEntity();
-            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
-            return paged.setData(data);
-        } else if (method.isTagPage()) {
-            /* Tag分页 */
-            TagPagedList paged = query.to().tagPagedEntity();
-            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
-            IEntity next = (IEntity) paged.getNext();
-            return new TagPagedList(data, next == null ? null : next.findPk());
-        } else if (method.isList()) {
-            /* 返回List */
-            List<IEntity> list = query.to().listEntity();
-            return FormHelper.entities2result(list, method.returnParameterType);
-        } else {
-            /* 查找单条数据 */
-            query.limit(1);
-            IEntity entity = (IEntity) query.to().findOne().orElse(null);
-            return FormHelper.entity2result(entity, method.returnType);
-        }
-    }
-
-    /**
-     * 根据表名称获取实例类型
-     *
-     * @param table 表名称
-     * @return 实例类型
-     */
-    public static Class<? extends IEntity> getEntityClass(String table) {
-        if (If.isBlank(table)) {
-            return null;
-        }
-        if (TableEntityClass.containsKey(table)) {
-            return TableEntityClass.get(table);
-        }
-        AMapping mapping = RefKit.byTable(table);
-        if (mapping == null) {
-            throw new RuntimeException("The table[" + table + "] not found.");
-        } else {
-            return mapping.entityClass();
-        }
     }
 
     /**
@@ -122,7 +29,113 @@ public class FormKit {
      * @param table       表名称
      * @param entityClass 实例类型
      */
-    public static void add(String table, Class<? extends IEntity> entityClass) {
+    public static void mapping(String table, Class<? extends IEntity> entityClass) {
         TableEntityClass.put(table, entityClass);
+    }
+
+    /**
+     * 参数为表单项
+     *
+     * @param type 参数类型
+     * @param arg  参数值
+     * @return ArgumentMeta
+     */
+    public static ArgumentMeta formArg(Class type, Object arg) {
+        return new ArgumentMeta(null, EntryType.Form, type, arg);
+    }
+
+    /**
+     * 构造新增记录Action
+     *
+     * @param entityClass 操作表Entity类型
+     * @param returnType  返回值类型
+     * @param args        入参
+     * @return ActionMeta
+     */
+    public static MethodMeta save(Class entityClass, Class returnType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, Save, args, returnType, null);
+    }
+
+    /**
+     * 构造更新Action
+     *
+     * @param entityClass 操作表Entity类型
+     * @param args        入参
+     * @return ActionMeta
+     */
+    public static MethodMeta update(Class entityClass, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, Update, args, int.class, null);
+    }
+
+    /**
+     * 构造单个对象查询(count 或 findOne) Action
+     *
+     * @param entityClass 操作表Entity类型
+     * @param returnType  返回的单个对象类型
+     * @param args        入参
+     * @return ActionMeta
+     */
+    public static MethodMeta query(Class entityClass, Class returnType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, Query, args, returnType, null);
+    }
+
+    /**
+     * 构造列表查询Action
+     *
+     * @param entityClass         操作表Entity类型
+     * @param returnParameterType 列表元素类型
+     * @param args                入参
+     * @return ActionMeta
+     */
+    public static MethodMeta list(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, Query, args, List.class, returnParameterType);
+    }
+
+    /**
+     * 构造标准分页Action
+     *
+     * @param entityClass         操作表Entity类型
+     * @param returnParameterType 分页元素类型
+     * @param args                入参
+     * @return ActionMeta
+     */
+    public static MethodMeta stdPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, Query, args, StdPagedList.class, returnParameterType);
+    }
+
+    /**
+     * 构造tag分页Action
+     *
+     * @param entityClass         操作表Entity类型
+     * @param returnParameterType 分页元素类型
+     * @param args                入参
+     * @return ActionMeta
+     */
+    public static MethodMeta tagPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, Query, args, TagPagedList.class, returnParameterType);
+    }
+
+    /**
+     * 构建tag分页表单
+     *
+     * @param pageSize 每页记录数
+     * @param pagedTag tag分页其实标识
+     * @return PagedEntry
+     */
+    public static PagedEntry tagPaged(int pageSize, Object pagedTag) {
+        return new PagedEntry().setPageSize(pageSize)
+            .setPagedTag(pagedTag == null ? null : String.valueOf(pagedTag));
+    }
+
+    /**
+     * 构建tag分页表单
+     *
+     * @param pageSize 每页记录数
+     * @param currPage tag分页其实标识
+     * @return PagedEntry
+     */
+    public static PagedEntry stdPaged(int pageSize, Integer currPage) {
+        return new PagedEntry().setPageSize(pageSize)
+            .setCurrPage(currPage == null || currPage < 0 ? 0 : currPage);
     }
 }

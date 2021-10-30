@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
  *
  * @author wudarui
  */
+@SuppressWarnings("unused")
 public interface IMethodAround {
     /**
      * 入参处理
@@ -30,4 +31,16 @@ public interface IMethodAround {
      * @return 原始方法的返回值
      */
     Object after(Class<? extends IEntity> entityClass, Method method, Object result);
+
+    /**
+     * 异常值处理
+     *
+     * @param entityClass 执行的表Entity类
+     * @param method      执行方法
+     * @param result      FormService执行结果
+     * @return 原始方法的返回值
+     */
+    default Object after(Class<? extends IEntity> entityClass, Method method, RuntimeException exception) {
+        throw exception;
+    }
 }

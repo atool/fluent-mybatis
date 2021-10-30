@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.form.registrar;
 
-import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
@@ -8,13 +7,21 @@ import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.meta.EntryMetas;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.meta.NoMethodAround;
+import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.StdPagedList;
+import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
 
@@ -25,6 +32,8 @@ import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
 public class FormServiceFactoryBean implements FactoryBean {
+    public static final KeyMap<Class> TableEntityClass = new KeyMap();
+
     private final Class serviceClass;
 
     private final IMethodAround methodAround;
@@ -60,11 +69,14 @@ public class FormServiceFactoryBean implements FactoryBean {
     private Object invoke(Object target, Method method, Object[] args) throws Throwable {
         if (Object.class.equals(method.getDeclaringClass()) || method.isDefault()) {
             return method.invoke(this, args);
-        } else {
-            Class eClass = this.getEntityClass(method);
-            MethodMeta aMeta = this.methodAround.before(eClass, method, args);
+        }
+        Class eClass = this.getEntityClass(method);
+        MethodMeta aMeta = this.methodAround.before(eClass, method, args);
+        try {
             Object result = this.doInvoke(aMeta);
             return this.methodAround.after(eClass, method, result);
+        } catch (RuntimeException e) {
+            return this.methodAround.after(eClass, method, e);
         }
     }
 
@@ -77,11 +89,11 @@ public class FormServiceFactoryBean implements FactoryBean {
     private Object doInvoke(MethodMeta method) {
         EntryMetas metas = method.metas();
         if (method.methodType == MethodType.Save) {
-            return FormKit.save(method, metas);
+            return save(method, metas);
         } else if (method.methodType == MethodType.Update) {
-            return FormKit.update(method, metas);
+            return update(method, metas);
         } else {
-            return FormKit.query(method, metas);
+            return query(method, metas);
         }
     }
 
@@ -116,13 +128,34 @@ public class FormServiceFactoryBean implements FactoryBean {
      */
     private Class getEntityClass(Class entityClass, String entityTable) {
         if (If.notBlank(entityTable)) {
-            return FormKit.getEntityClass(entityTable);
+            return this.getEntityClass(entityTable);
         } else if (Object.class.equals(entityClass)) {
             return null;
         } else if (IEntity.class.isAssignableFrom(entityClass)) {
             return entityClass;
         } else {
             throw new RuntimeException("The value of entity() of @Action(@FormService) must be a subclass of IEntity.");
+        }
+    }
+
+    /**
+     * 根据表名称获取实例类型
+     *
+     * @param table 表名称
+     * @return 实例类型
+     */
+    public Class<? extends IEntity> getEntityClass(String table) {
+        if (If.isBlank(table)) {
+            return null;
+        }
+        if (TableEntityClass.containsKey(table)) {
+            return TableEntityClass.get(table);
+        }
+        AMapping mapping = RefKit.byTable(table);
+        if (mapping == null) {
+            throw new RuntimeException("The table[" + table + "] not found.");
+        } else {
+            return mapping.entityClass();
         }
     }
 
@@ -143,6 +176,74 @@ public class FormServiceFactoryBean implements FactoryBean {
             }
             instances.put(aClass, aop);
             return aop;
+        }
+    }
+
+    /**
+     * 构造eClass实体实例
+     *
+     * @param method 操作定义
+     * @param metas  入参元数据
+     * @return entity实例
+     */
+    public static <R> R save(MethodMeta method, EntryMetas metas) {
+        IEntity entity = FormHelper.newEntity(method, metas);
+        Object pk = RefKit.mapper(method.entityClass).save(entity);
+        if (method.returnType == void.class || method.returnType == Void.class) {
+            return null;
+        } else if (method.returnType == Boolean.class || method.returnType == boolean.class) {
+            return (R) (Boolean) (pk != null);
+        } else if (method.returnType.isAssignableFrom(method.entityClass)) {
+            return (R) entity;
+        } else {
+            return (R) FormHelper.entity2result(entity, method.returnType);
+        }
+    }
+
+    /**
+     * 更新操作
+     *
+     * @param method 操作定义
+     * @param metas  入参元数据
+     * @return ignore
+     */
+    public static int update(MethodMeta method, EntryMetas metas) {
+        IUpdate update = FormHelper.newUpdate(method, metas);
+        return RefKit.mapper(method.entityClass).updateBy(update);
+    }
+
+    /**
+     * 构造查询条件实例
+     *
+     * @param method 操作定义
+     * @param metas  入参元数据
+     * @return 查询实例
+     */
+    public static Object query(MethodMeta method, EntryMetas metas) {
+        IQuery query = FormHelper.newQuery(method, metas);
+        if (method.isCount()) {
+            int count = query.to().count();
+            return method.isReturnLong() ? (long) count : count;
+        } else if (method.isStdPage()) {
+            /* 标准分页 */
+            StdPagedList paged = query.to().stdPagedEntity();
+            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
+            return paged.setData(data);
+        } else if (method.isTagPage()) {
+            /* Tag分页 */
+            TagPagedList paged = query.to().tagPagedEntity();
+            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
+            IEntity next = (IEntity) paged.getNext();
+            return new TagPagedList(data, next == null ? null : next.findPk());
+        } else if (method.isList()) {
+            /* 返回List */
+            List<IEntity> list = query.to().listEntity();
+            return FormHelper.entities2result(list, method.returnParameterType);
+        } else {
+            /* 查找单条数据 */
+            query.limit(1);
+            IEntity entity = (IEntity) query.to().findOne().orElse(null);
+            return FormHelper.entity2result(entity, method.returnType);
         }
     }
 }

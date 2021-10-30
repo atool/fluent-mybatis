@@ -5,6 +5,7 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.FormEntry;
 import cn.org.atool.fluent.form.meta.ArgumentMeta;
 import cn.org.atool.fluent.form.meta.MethodMeta;
+import cn.org.atool.fluent.form.registrar.FormServiceFactoryBean;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import lombok.Data;
@@ -14,16 +15,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.form.meta.ArgumentMeta.formArg;
-
 public class FormObjectTest extends BaseTest {
     @Test
     public void testInsert() {
-        ArgumentMeta arg = formArg(Form1.class, new Form1()
+        ArgumentMeta arg = FormKit.formArg(Form1.class, new Form1()
             .setUserName("form test")
             .setAge(23));
-        MethodMeta method = MethodMeta.save(StudentEntity.class, StudentEntity.class, arg);
-        StudentEntity entity = FormKit.save(method, method.metas());
+        MethodMeta method = FormKit.save(StudentEntity.class, StudentEntity.class, arg);
+        StudentEntity entity = FormServiceFactoryBean.save(method, method.metas());
         assert entity != null;
         want.number(entity.getId()).isGt(0L);
         db.sqlList().wantFirstSql().eq("" +
@@ -35,11 +34,11 @@ public class FormObjectTest extends BaseTest {
 
     @Test
     public void testUpdate() {
-        ArgumentMeta arg = formArg(Form2.class, this.newForm2()
+        ArgumentMeta arg = FormKit.formArg(Form2.class, this.newForm2()
             .setAges(new Integer[]{12, 56})
             .setAddresses(list("a1", "a2")));
-        MethodMeta method = MethodMeta.update(StudentEntity.class, arg);
-        FormKit.update(method, method.metas());
+        MethodMeta method = FormKit.update(StudentEntity.class, arg);
+        FormServiceFactoryBean.update(method, method.metas());
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
@@ -58,9 +57,9 @@ public class FormObjectTest extends BaseTest {
 
     @Test
     public void testUpdate2() {
-        ArgumentMeta arg = formArg(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
-        MethodMeta method = MethodMeta.update(StudentEntity.class, arg);
-        FormKit.update(method, method.metas());
+        ArgumentMeta arg = FormKit.formArg(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
+        MethodMeta method = FormKit.update(StudentEntity.class, arg);
+        FormServiceFactoryBean.update(method, method.metas());
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
@@ -75,9 +74,9 @@ public class FormObjectTest extends BaseTest {
 
     @Test
     public void testQuery() {
-        ArgumentMeta arg = formArg(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
-        MethodMeta method = MethodMeta.list(StudentEntity.class, StudentEntity.class, arg);
-        FormKit.query(method, method.metas());
+        ArgumentMeta arg = FormKit.formArg(Form2.class, this.newForm2().setVersion(null).setAdd("address"));
+        MethodMeta method = FormKit.list(StudentEntity.class, StudentEntity.class, arg);
+        FormServiceFactoryBean.query(method, method.metas());
         db.sqlList().wantFirstSql()
             .start("SELECT")
             .end("WHERE `is_deleted` = ? " +
