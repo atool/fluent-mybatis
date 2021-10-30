@@ -51,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.atool</groupId>
-            <artifactId>form-service-annotation</artifactId>
+            <artifactId>form-service-meta</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

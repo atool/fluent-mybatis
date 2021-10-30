@@ -27,7 +27,7 @@
         <test4j-junit5.version>2.7.11</test4j-junit5.version>
     </properties>
     <modules>
-        <module>form-service-annotation</module>
+        <module>form-service-meta</module>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
         <module>fluent-mybatis-test</module>
