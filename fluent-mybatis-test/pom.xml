@@ -15,6 +15,7 @@
     <properties>
         <spring.verison>5.3.3</spring.verison>
         <spring-boot.version>2.4.2</spring-boot.version>
+        <form-service.version>1.9.0.2</form-service.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -52,8 +53,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>form-service-meta</artifactId>
-            <version>1.9.0.1</version>
-            <scope>provided</scope>
+            <version>${form-service.version}</version>
         </dependency>
 
         <dependency>
