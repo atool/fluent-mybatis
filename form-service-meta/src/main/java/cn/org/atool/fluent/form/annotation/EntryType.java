@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.form.annotation;
 
+import lombok.Getter;
+
 /**
  * 表单字段类型
  *
@@ -9,11 +11,11 @@ public enum EntryType {
     /**
      * 忽略字段
      */
-    Ignore,
+    Ignore(false),
     /**
      * 更新字段
      */
-    Update,
+    Update(false),
     /**
      * 相等, 或save时赋值
      */
@@ -61,17 +63,31 @@ public enum EntryType {
     /**
      * 分页, 每页记录数
      */
-    PageSize,
+    PageSize(false),
     /**
      * 标准分页, 当前页码
      */
-    CurrPage,
+    CurrPage(false),
     /**
      * Tag分页, 主键值 >= tag
      */
-    PagedTag,
+    PagedTag(false),
     /**
-     * 子表单项
+     * 表单项
      */
-    Form
+    Form(false);
+
+    /**
+     * 是否where条件项
+     */
+    @Getter
+    private boolean isWhere;
+
+    EntryType() {
+        this.isWhere = true;
+    }
+
+    EntryType(boolean isWhere) {
+        this.isWhere = isWhere;
+    }
 }

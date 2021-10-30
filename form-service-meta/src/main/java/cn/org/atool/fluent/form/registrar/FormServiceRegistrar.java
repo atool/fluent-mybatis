@@ -32,7 +32,7 @@ public class FormServiceRegistrar implements ImportBeanDefinitionRegistrar {
         FormServiceScanner scanner = new FormServiceScanner(registry);
         scanner.registerFilters();
         String[] basePackages = aAttrs.getStringArray("value");
-        Class aClass = aAttrs.getClass("aop");
+        Class aClass = aAttrs.getClass("around");
         scanner.doScan(aClass, basePackages);
     }
 

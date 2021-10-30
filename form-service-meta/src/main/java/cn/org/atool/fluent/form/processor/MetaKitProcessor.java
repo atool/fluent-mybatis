@@ -55,7 +55,7 @@ public class MetaKitProcessor extends AbstractProcessor {
             if (form == null) {
                 continue;
             }
-            messager.printMessage(NOTE, "@FormObject file analysis...");
+            messager.printMessage(NOTE, "FormObject file analysis...");
             try {
                 MetaProcessorKit.generate(element, filer);
             } catch (Exception e) {

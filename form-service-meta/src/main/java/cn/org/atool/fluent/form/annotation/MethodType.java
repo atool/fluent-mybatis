@@ -5,12 +5,12 @@ package cn.org.atool.fluent.form.annotation;
  *
  * @author darui.wu
  */
-public enum ActionType {
+public enum MethodType {
     /**
      * 根据入参和返回值自动判断
-     * update, findOne, listEntity, stdPaged, tagPaged
+     * findOne, listEntity, stdPaged, tagPaged
      */
-    Auto,
+    Query,
     /**
      * 更新数据
      */

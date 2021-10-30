@@ -2,7 +2,7 @@ package cn.org.atool.fluent.form.processor;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
-import cn.org.atool.fluent.form.meta.FormMetaKit;
+import cn.org.atool.fluent.form.meta.EntryMetaKit;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -32,7 +32,7 @@ public class FormMetaFiler {
         ClassName metaKit = ClassName.get(this.className.packageName(), this.className.simpleName() + "MetaKit");
         TypeSpec.Builder type = TypeSpec.classBuilder(metaKit).addModifiers(Modifier.PUBLIC)
             .addJavadoc("$T\n@author powered by FluentMybatis", metaKit)
-            .addSuperinterface(FormMetaKit.class)
+            .addSuperinterface(EntryMetaKit.class)
             .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{$S}", "unused").build())
             .addField(this.f_entryMetas())
             .addStaticBlock(this.initMetas())

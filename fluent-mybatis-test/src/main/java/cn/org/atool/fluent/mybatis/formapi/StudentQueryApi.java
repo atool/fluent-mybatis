@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.formapi;
 
-import cn.org.atool.fluent.form.annotation.Entry;
+import cn.org.atool.fluent.form.annotation.FormEntry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
@@ -17,9 +17,9 @@ import static cn.org.atool.fluent.form.annotation.EntryType.Form;
 @SuppressWarnings("all")
 @FormService(table = "student")
 public interface StudentQueryApi {
-    Student findByUserName(@Entry("userName") String userName, @Entry(value = "age", type = Between) int[] ages);
+    Student findByUserName(@FormEntry(name = "userName") String userName, @FormEntry(name = "age", type = Between) int[] ages);
 
-    Student findByUserName(@Entry("userName") String userName, @Entry(type = Form) StudentQuery student);
+    Student findByUserName(@FormEntry(name = "userName") String userName, @FormEntry(type = Form) StudentQuery student);
 
     Student findStudentBy(StudentQuery student);
 
@@ -36,10 +36,10 @@ public interface StudentQueryApi {
     class StudentQuery implements Serializable {
         private String userName;
 
-        @Entry(type = EntryType.LikeLeft)
+        @FormEntry(type = EntryType.LikeLeft)
         private String address;
 
-        @Entry(type = Between)
+        @FormEntry(type = Between)
         private int[] age;
 
         private Integer gender;
@@ -48,10 +48,10 @@ public interface StudentQueryApi {
     @Data
     @Accessors(chain = true)
     class TagPagedQuery extends StudentQuery {
-        @Entry(type = EntryType.PagedTag)
+        @FormEntry(type = EntryType.PagedTag)
         private int nextId;
 
-        @Entry(type = EntryType.PageSize)
+        @FormEntry(type = EntryType.PageSize)
         private int pageSize = 10;
     }
 
@@ -65,7 +65,7 @@ public interface StudentQueryApi {
 
         private String phone;
 
-        @Entry("email")
+        @FormEntry(name = "email")
         private String hisEmail;
 
         private Integer age;

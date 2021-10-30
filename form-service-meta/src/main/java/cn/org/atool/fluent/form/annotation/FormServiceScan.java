@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.annotation;
 
-import cn.org.atool.fluent.form.IActionAround;
-import cn.org.atool.fluent.form.meta.NoActionAround;
+import cn.org.atool.fluent.form.IMethodAround;
+import cn.org.atool.fluent.form.meta.NoMethodAround;
 import cn.org.atool.fluent.form.registrar.FormServiceRegistrar;
 import org.springframework.context.annotation.Import;
 
@@ -12,6 +12,7 @@ import java.lang.annotation.*;
  *
  * @author wudarui
  */
+@SuppressWarnings("unused")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
@@ -26,5 +27,5 @@ public @interface FormServiceScan {
     /**
      * 切面处理
      */
-    Class<? extends IActionAround> aop() default NoActionAround.class;
+    Class<? extends IMethodAround> around() default NoMethodAround.class;
 }

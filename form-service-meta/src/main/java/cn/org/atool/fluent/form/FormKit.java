@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form;
 
-import cn.org.atool.fluent.form.meta.ActionMeta;
-import cn.org.atool.fluent.form.meta.FormMetas;
+import cn.org.atool.fluent.form.meta.EntryMetas;
+import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -30,68 +30,68 @@ public class FormKit {
     /**
      * 构造eClass实体实例
      *
-     * @param action 操作定义
+     * @param method 操作定义
      * @param metas  入参元数据
      * @return entity实例
      */
-    public static <R> R save(ActionMeta action, FormMetas metas) {
-        IEntity entity = FormHelper.newEntity(action, metas);
-        Object pk = RefKit.mapper(action.entityClass).save(entity);
-        if (action.returnType == void.class || action.returnType == Void.class) {
+    public static <R> R save(MethodMeta method, EntryMetas metas) {
+        IEntity entity = FormHelper.newEntity(method, metas);
+        Object pk = RefKit.mapper(method.entityClass).save(entity);
+        if (method.returnType == void.class || method.returnType == Void.class) {
             return null;
-        } else if (action.returnType == Boolean.class || action.returnType == boolean.class) {
+        } else if (method.returnType == Boolean.class || method.returnType == boolean.class) {
             return (R) (Boolean) (pk != null);
-        } else if (action.returnType.isAssignableFrom(action.entityClass)) {
+        } else if (method.returnType.isAssignableFrom(method.entityClass)) {
             return (R) entity;
         } else {
-            return (R) FormHelper.entity2result(entity, action.returnType);
+            return (R) FormHelper.entity2result(entity, method.returnType);
         }
     }
 
     /**
      * 更新操作
      *
-     * @param action 操作定义
+     * @param method 操作定义
      * @param metas  入参元数据
      * @return ignore
      */
-    public static int update(ActionMeta action, FormMetas metas) {
-        IUpdate update = FormHelper.newUpdate(action, metas);
-        return RefKit.mapper(action.entityClass).updateBy(update);
+    public static int update(MethodMeta method, EntryMetas metas) {
+        IUpdate update = FormHelper.newUpdate(method, metas);
+        return RefKit.mapper(method.entityClass).updateBy(update);
     }
 
     /**
      * 构造查询条件实例
      *
-     * @param action 操作定义
+     * @param method 操作定义
      * @param metas  入参元数据
      * @return 查询实例
      */
-    public static Object query(ActionMeta action, FormMetas metas) {
-        IQuery query = FormHelper.newQuery(action, metas);
-        if (action.isCount()) {
+    public static Object query(MethodMeta method, EntryMetas metas) {
+        IQuery query = FormHelper.newQuery(method, metas);
+        if (method.isCount()) {
             int count = query.to().count();
-            return action.resultIsLong() ? (long) count : count;
-        } else if (action.isStdPage()) {
+            return method.isReturnLong() ? (long) count : count;
+        } else if (method.isStdPage()) {
             /* 标准分页 */
             StdPagedList paged = query.to().stdPagedEntity();
-            List data = FormHelper.entities2result(paged.getData(), action.returnParameterType);
+            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
             return paged.setData(data);
-        } else if (action.isTagPage()) {
+        } else if (method.isTagPage()) {
             /* Tag分页 */
             TagPagedList paged = query.to().tagPagedEntity();
-            List data = FormHelper.entities2result(paged.getData(), action.returnParameterType);
+            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
             IEntity next = (IEntity) paged.getNext();
             return new TagPagedList(data, next == null ? null : next.findPk());
-        } else if (action.isList()) {
+        } else if (method.isList()) {
             /* 返回List */
             List<IEntity> list = query.to().listEntity();
-            return FormHelper.entities2result(list, action.returnParameterType);
+            return FormHelper.entities2result(list, method.returnParameterType);
         } else {
             /* 查找单条数据 */
             query.limit(1);
             IEntity entity = (IEntity) query.to().findOne().orElse(null);
-            return FormHelper.entity2result(entity, action.returnType);
+            return FormHelper.entity2result(entity, method.returnType);
         }
     }
 

@@ -3,7 +3,7 @@ package cn.org.atool.fluent.form.annotation;
 import java.lang.annotation.*;
 
 /**
- * Form Api接口方法操作类型声明
+ * Form Service接口方法操作声明
  *
  * @author wudarui
  */
@@ -11,19 +11,19 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface Action {
+public @interface FormMethod {
     /**
-     * 操作的表Entity
+     * 操作方法, Save操作时需要显式指定
      */
-    Class entityClass() default Object.class;
+    MethodType type() default MethodType.Query;
 
     /**
      * 操作表Entity表名称
      */
-    String entityTable() default "";
+    String table() default "";
 
     /**
-     * 操作方法, Save操作时需要显式指定
+     * 操作的表Entity
      */
-    ActionType type() default ActionType.Auto;
+    Class entity() default Object.class;
 }

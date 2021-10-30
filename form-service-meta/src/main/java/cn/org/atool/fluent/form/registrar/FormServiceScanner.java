@@ -48,7 +48,7 @@ public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
      * @param basePackages 扫描路径
      * @return ignore
      */
-    public Set<BeanDefinitionHolder> doScan(Class aopClass, String... basePackages) {
+    public Set<BeanDefinitionHolder> doScan(Class aroundClass, String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
         if (beanDefinitions.isEmpty()) {
             log.warn("No FormService was found in '" + Arrays.toString(basePackages)
@@ -56,18 +56,18 @@ public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
             return beanDefinitions;
         }
         for (BeanDefinitionHolder holder : beanDefinitions) {
-            this.processBeanDefinition(aopClass, (AbstractBeanDefinition) holder.getBeanDefinition());
+            this.processBeanDefinition(aroundClass, (AbstractBeanDefinition) holder.getBeanDefinition());
         }
         return beanDefinitions;
     }
 
-    private void processBeanDefinition(Class aopClass, AbstractBeanDefinition definition) {
-        String apiInterface = definition.getBeanClassName();
-        assert apiInterface != null;
+    private void processBeanDefinition(Class aroundClass, AbstractBeanDefinition definition) {
+        String serviceClass = definition.getBeanClassName();
+        assert serviceClass != null;
         definition.setBeanClass(FormServiceFactoryBean.class);
         ConstructorArgumentValues constructor = definition.getConstructorArgumentValues();
-        constructor.addIndexedArgumentValue(0, apiInterface);
-        constructor.addIndexedArgumentValue(1, aopClass);
+        constructor.addIndexedArgumentValue(0, serviceClass);
+        constructor.addIndexedArgumentValue(1, aroundClass);
 
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         definition.setScope(ConfigurableBeanFactory.SCOPE_SINGLETON);

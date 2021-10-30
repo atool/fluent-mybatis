@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form;
 
-import cn.org.atool.fluent.form.meta.ActionMeta;
+import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  *
  * @author wudarui
  */
-public interface IActionAround {
+public interface IMethodAround {
     /**
      * 入参处理
      *
@@ -19,7 +19,7 @@ public interface IActionAround {
      * @param args        原始入参
      * @return 处理过的入参
      */
-    ActionMeta before(Class<? extends IEntity> entityClass, Method method, Object[] args);
+    MethodMeta before(Class<? extends IEntity> entityClass, Method method, Object[] args);
 
     /**
      * 结果值处理

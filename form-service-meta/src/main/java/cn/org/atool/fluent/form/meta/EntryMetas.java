@@ -1,7 +1,8 @@
 package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.form.annotation.Form;
+import cn.org.atool.fluent.form.annotation.FormEntry;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -21,7 +22,7 @@ import java.util.Objects;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
-public class FormMetas {
+public class EntryMetas {
     private final List<EntryMeta> metas = new ArrayList<>();
 
     private EntryMeta pageSize;
@@ -72,7 +73,7 @@ public class FormMetas {
         }
     }
 
-    private void addMeta(String name, Method getter, Method setter, Entry entry) {
+    private void addMeta(String name, Method getter, Method setter, FormEntry entry) {
         if (entry == null) {
             this.addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
         } else {
@@ -81,7 +82,7 @@ public class FormMetas {
     }
 
     /*** ============================ ***/
-    private static final KeyMap<FormMetas> ClassFormMetas = new KeyMap<>();
+    private static final KeyMap<EntryMetas> ClassFormMetas = new KeyMap<>();
 
     /**
      * 获取class的表单元数据
@@ -89,15 +90,15 @@ public class FormMetas {
      * @param aClass 表单class
      * @return FormMetas
      */
-    public static FormMetas getFormMeta(Class aClass) {
+    public static EntryMetas getFormMeta(Class aClass) {
         if (ClassFormMetas.containsKey(aClass)) {
             return ClassFormMetas.get(aClass);
         }
-        synchronized (FormMetas.class) {
+        synchronized (EntryMetas.class) {
             if (ClassFormMetas.containsKey(aClass)) {
                 return ClassFormMetas.get(aClass);
             }
-            FormMetas metas = new FormMetas();
+            EntryMetas metas = new EntryMetas();
             Class declared = aClass;
             while (declared != Object.class) {
                 try {
@@ -113,7 +114,7 @@ public class FormMetas {
     }
 
     /**
-     * 通过{@link cn.org.atool.fluent.form.annotation.Form}注解生成的工具类构造元数据
+     * 通过{@link Form}注解生成的工具类构造元数据
      *
      * @param declared 表单类
      */
@@ -121,7 +122,7 @@ public class FormMetas {
         if (Objects.equals(declared, Object.class)) {
             return;
         }
-        FormMetaKit kit = (FormMetaKit) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
+        EntryMetaKit kit = (EntryMetaKit) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
         kit.entryMetas().forEach(this::addMeta);
     }
 
@@ -139,8 +140,8 @@ public class FormMetas {
             if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
                 continue;
             }
-            Entry entry = field.getAnnotation(Entry.class);
-            String name = entry == null || If.isBlank(entry.value()) ? field.getName() : entry.value();
+            FormEntry entry = field.getAnnotation(FormEntry.class);
+            String name = entry == null || If.isBlank(entry.name()) ? field.getName() : entry.name();
 
             Method getter = findGetter(aClass, field);
             Method setter = findSetter(aClass, field);

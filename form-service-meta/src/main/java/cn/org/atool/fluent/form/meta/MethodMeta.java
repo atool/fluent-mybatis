@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.annotation.Action;
-import cn.org.atool.fluent.form.annotation.ActionType;
+import cn.org.atool.fluent.form.annotation.FormMethod;
+import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.form.annotation.ActionType.*;
+import static cn.org.atool.fluent.form.annotation.MethodType.*;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -25,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  */
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 @Accessors(chain = true)
-public class ActionMeta {
+public class MethodMeta {
     /**
      * 操作表对象
      */
@@ -37,7 +37,7 @@ public class ActionMeta {
     /**
      * 操作类型
      */
-    public final ActionType actionType;
+    public final MethodType methodType;
     /**
      * 入参类型
      */
@@ -51,20 +51,20 @@ public class ActionMeta {
      */
     public final Class returnParameterType;
 
-    private ActionMeta(Class entityClass, ActionType actionType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
+    private MethodMeta(Class entityClass, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
         this.entityClass = entityClass;
         this.method = null;
-        this.actionType = actionType;
+        this.methodType = methodType;
         this.args = args;
         this.returnType = returnType;
         this.returnParameterType = returnParameterType;
     }
 
-    ActionMeta(Class entityClass, Method method, Object[] args) {
+    MethodMeta(Class entityClass, Method method, Object[] args) {
         this.entityClass = entityClass;
         this.method = method.toString();
-        Action action = method.getDeclaredAnnotation(Action.class);
-        this.actionType = action == null ? Auto : action.type();
+        FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
+        this.methodType = aMethod == null ? Query : aMethod.type();
         this.args = new ArgumentMeta[args.length];
         Parameter[] parameters = method.getParameters();
         for (int i = 0; i < args.length; i++) {
@@ -75,48 +75,48 @@ public class ActionMeta {
     }
 
     /*** ============================ ***/
-    public static final KeyMap<FormMetas> MethodArgsMeta = new KeyMap<>();
+    public static final KeyMap<EntryMetas> MethodArgsMeta = new KeyMap<>();
 
     /**
      * 构造入参的元数据列表
      *
      * @return FormMetas
      */
-    public FormMetas metas() {
+    public EntryMetas metas() {
         if (isBlank(method)) {
             return this.buildMetasFromArgs();
         }
         if (MethodArgsMeta.containsKey(method)) {
             return MethodArgsMeta.get(method);
         }
-        synchronized (ActionMeta.class) {
+        synchronized (MethodMeta.class) {
             if (MethodArgsMeta.containsKey(method)) {
                 return MethodArgsMeta.get(method);
             }
-            FormMetas argsMetas = this.buildMetasFromArgs();
+            EntryMetas argsMetas = this.buildMetasFromArgs();
             MethodArgsMeta.put(method, argsMetas);
             return argsMetas;
         }
     }
 
-    private FormMetas buildMetasFromArgs() {
+    private EntryMetas buildMetasFromArgs() {
         this.validate();
-        FormMetas argsMetas = new FormMetas();
+        EntryMetas argsMetas = new EntryMetas();
         for (int index = 0; index < this.args.length; index++) {
             this.addArgMeta(argsMetas, index);
         }
         return argsMetas;
     }
 
-    private void addArgMeta(FormMetas argsMetas, int index) {
+    private void addArgMeta(EntryMetas argsMetas, int index) {
         ArgumentMeta arg = this.args[index];
         if (arg.notFormObject()) {
-            Function<ActionMeta, Object> getter = action -> action.args[index].value;
+            Function<MethodMeta, Object> getter = method -> method.args[index].value;
             EntryMeta meta = new EntryMeta(arg.entryName, arg.entryType, getter, arg.ignoreNull);
             argsMetas.addMeta(meta);
         } else {
             Class aClass = arg.type;
-            FormMetas metas = FormMetas.getFormMeta(aClass);
+            EntryMetas metas = EntryMetas.getFormMeta(aClass);
             for (EntryMeta meta : metas.getMetas()) {
                 argsMetas.addMeta(this.argMeta(index, meta));
             }
@@ -130,8 +130,8 @@ public class ActionMeta {
         if (meta == null) {
             return null;
         }
-        Function<ActionMeta, Object> getter = action -> {
-            Object object = action.args[index].value;
+        Function<MethodMeta, Object> getter = method -> {
+            Object object = method.args[index].value;
             return meta.getter.apply(object);
         };
         return new EntryMeta(meta.name, meta.type, getter, meta.ignoreNull);
@@ -170,11 +170,7 @@ public class ActionMeta {
      * @return true/false
      */
     public boolean isCount() {
-        if (this.actionType != Auto) {
-            return false;
-        } else {
-            return returnType == Integer.class || returnType == int.class || this.resultIsLong();
-        }
+        return this.methodType == Query && (this.isReturnInt() || this.isReturnLong());
     }
 
     /**
@@ -182,8 +178,17 @@ public class ActionMeta {
      *
      * @return true/false
      */
-    public boolean resultIsLong() {
+    public boolean isReturnLong() {
         return returnType == Long.class || returnType == long.class;
+    }
+
+    /**
+     * 结果值是int型
+     *
+     * @return true/false
+     */
+    public boolean isReturnInt() {
+        return returnType == Integer.class || returnType == int.class;
     }
 
     /**
@@ -192,7 +197,7 @@ public class ActionMeta {
      * @return true/false
      */
     public boolean isStdPage() {
-        return actionType == Auto && StdPagedList.class.isAssignableFrom(returnType);
+        return methodType == Query && StdPagedList.class.isAssignableFrom(returnType);
     }
 
     /**
@@ -201,7 +206,7 @@ public class ActionMeta {
      * @return true/false
      */
     public boolean isTagPage() {
-        return actionType == Auto && TagPagedList.class.isAssignableFrom(returnType);
+        return methodType == Query && TagPagedList.class.isAssignableFrom(returnType);
     }
 
     /**
@@ -210,7 +215,7 @@ public class ActionMeta {
      * @return true/false
      */
     public boolean isList() {
-        return actionType == Auto && Collection.class.isAssignableFrom(returnType);
+        return methodType == Query && Collection.class.isAssignableFrom(returnType);
     }
 
     /**
@@ -221,8 +226,8 @@ public class ActionMeta {
      * @param args        入参
      * @return ActionMeta
      */
-    public static ActionMeta save(Class entityClass, Class returnType, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Save, args, returnType, null);
+    public static MethodMeta save(Class entityClass, Class returnType, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Save, args, returnType, null);
     }
 
     /**
@@ -232,8 +237,8 @@ public class ActionMeta {
      * @param args        入参
      * @return ActionMeta
      */
-    public static ActionMeta update(Class entityClass, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Update, args, int.class, null);
+    public static MethodMeta update(Class entityClass, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Update, args, int.class, null);
     }
 
     /**
@@ -243,8 +248,8 @@ public class ActionMeta {
      * @param args        入参
      * @return ActionMeta
      */
-    public static ActionMeta count(Class entityClass, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Auto, args, int.class, null);
+    public static MethodMeta count(Class entityClass, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Query, args, int.class, null);
     }
 
     /**
@@ -255,8 +260,8 @@ public class ActionMeta {
      * @param args        入参
      * @return ActionMeta
      */
-    public static ActionMeta findOne(Class entityClass, Class returnType, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Auto, args, returnType, null);
+    public static MethodMeta findOne(Class entityClass, Class returnType, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Query, args, returnType, null);
     }
 
     /**
@@ -267,8 +272,8 @@ public class ActionMeta {
      * @param args                入参
      * @return ActionMeta
      */
-    public static ActionMeta list(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Auto, args, List.class, returnParameterType);
+    public static MethodMeta list(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Query, args, List.class, returnParameterType);
     }
 
     /**
@@ -279,8 +284,8 @@ public class ActionMeta {
      * @param args                入参
      * @return ActionMeta
      */
-    public static ActionMeta stdPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Auto, args, StdPagedList.class, returnParameterType);
+    public static MethodMeta stdPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Query, args, StdPagedList.class, returnParameterType);
     }
 
     /**
@@ -291,7 +296,7 @@ public class ActionMeta {
      * @param args                入参
      * @return ActionMeta
      */
-    public static ActionMeta tagPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return new ActionMeta(entityClass, Auto, args, TagPagedList.class, returnParameterType);
+    public static MethodMeta tagPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
+        return new MethodMeta(entityClass, Query, args, TagPagedList.class, returnParameterType);
     }
 }

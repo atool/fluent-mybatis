@@ -65,6 +65,7 @@
         <dependency>
             <groupId>org.test4j</groupId>
             <artifactId>test4j-junit5</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

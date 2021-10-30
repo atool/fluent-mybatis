@@ -3,19 +3,19 @@ package cn.org.atool.fluent.form.annotation;
 import java.lang.annotation.*;
 
 /**
- * 表单字段
+ * 表单项声明
  *
  * @author darui.wu
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
-public @interface Entry {
+public @interface FormEntry {
     /**
      * 关联的Entity字段名称
      * 未定义则取字段名称
      */
-    String value() default "";
+    String name() default "";
 
     /**
      * 条件操作, 默认相等(赋值)

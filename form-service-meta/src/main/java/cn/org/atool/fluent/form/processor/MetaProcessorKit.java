@@ -10,7 +10,7 @@ import javax.tools.ToolProvider;
 import java.io.IOException;
 
 @SuppressWarnings({"unchecked", "unused", "rawtypes"})
-public class MetaProcessorKit {
+class MetaProcessorKit {
     public static void generate(Element element, Filer filer) throws IOException {
         FormScanner scanner = new FormScanner();
         scanner.scan(element);
