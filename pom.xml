@@ -16,7 +16,8 @@
     <url>https://github.com/atool/fluent-mybatis</url>
     <properties>
         <spring.version>5.3.7</spring.version>
-        <mybatis.version>3.5.7</mybatis.version><jakarta-el.version>4.0.0</jakarta-el.version>
+        <mybatis.version>3.5.7</mybatis.version>
+        <jakarta-el.version>4.0.0</jakarta-el.version>
         <jakarta-validation-api.version>3.0.0</jakarta-validation-api.version>
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
