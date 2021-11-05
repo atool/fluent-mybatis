@@ -38,12 +38,13 @@ public class FormServiceFactoryBean implements FactoryBean {
 
     private final IMethodAround methodAround;
 
-    private final Class entityClass;
+    private final FormService api;
+
+    private Class entityClass;
 
     public FormServiceFactoryBean(Class serviceClass, Class aroundClass) {
         this.serviceClass = serviceClass;
-        FormService api = (FormService) serviceClass.getDeclaredAnnotation(FormService.class);
-        this.entityClass = this.getEntityClass(api.entity(), api.table());
+        this.api = (FormService) serviceClass.getDeclaredAnnotation(FormService.class);
         this.methodAround = this.aroundInstance(aroundClass);
     }
 
@@ -106,16 +107,23 @@ public class FormServiceFactoryBean implements FactoryBean {
     private Class<? extends IEntity> getEntityClass(Method method) {
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
         if (aMethod == null) {
-            return this.entityClass;
+            return this.getEntityClass();
         }
         Class entity = this.getEntityClass(aMethod.entity(), aMethod.table());
-        if (entity == null) {
-            entity = this.entityClass;
+        if (entity == null || entity == Object.class) {
+            entity = this.getEntityClass();
         }
-        if (entity == null) {
+        if (entity == null || entity == Object.class) {
             throw new RuntimeException("The entityClass value of @MethodService of Method[" + method.getName() + "] must be a subclass of IEntity.");
         }
         return entity;
+    }
+
+    private Class<? extends IEntity> getEntityClass() {
+        if (this.entityClass == null) {
+            this.entityClass = this.getEntityClass(api.entity(), api.table());
+        }
+        return this.entityClass;
     }
 
     /**
@@ -130,7 +138,7 @@ public class FormServiceFactoryBean implements FactoryBean {
         if (If.notBlank(entityTable)) {
             return this.getEntityClass(entityTable);
         } else if (Object.class.equals(entityClass)) {
-            return null;
+            return Object.class;
         } else if (IEntity.class.isAssignableFrom(entityClass)) {
             return entityClass;
         } else {

@@ -1,9 +1,8 @@
 package cn.org.atool.fluent.form.validator;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +13,7 @@ import java.util.Set;
  * @author darui.wu
  */
 public class Validation {
-    private static final ValidatorFactory factory = jakarta.validation.Validation.buildDefaultValidatorFactory();
+    private static final ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory();
 
     /**
      * 对Form Object进行校验

@@ -4,6 +4,8 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
 import cn.org.atool.fluent.form.annotation.FormEntry;
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.BaseEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Getter;
@@ -12,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,15 +77,19 @@ public class EntryMetas {
     }
 
     private void addMeta(String name, Method getter, Method setter, FormEntry entry) {
-        if (entry == null) {
-            this.addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
-        } else {
-            this.addMeta(new EntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+        if (getter != null || setter != null) {
+            if (entry == null) {
+                this.addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
+            } else {
+                this.addMeta(new EntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+            }
         }
     }
 
     /*** ============================ ***/
     private static final KeyMap<EntryMetas> ClassFormMetas = new KeyMap<>();
+
+    static List<Class> root_classes = Arrays.asList(Object.class, RichEntity.class, BaseEntity.class);
 
     /**
      * 获取class的表单元数据
@@ -100,7 +107,7 @@ public class EntryMetas {
             }
             EntryMetas metas = new EntryMetas();
             Class declared = aClass;
-            while (declared != Object.class) {
+            while (!root_classes.contains(declared) && !declared.getName().startsWith("java.")) {
                 try {
                     metas.addMetasByFormKits(declared);
                 } catch (Exception ignored) {

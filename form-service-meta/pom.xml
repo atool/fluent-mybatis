@@ -10,26 +10,29 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>form-service-meta</artifactId>
-    <version>1.9.0.2</version>
+    <version>1.9.0.3-SNAPSHOT</version>
     <properties>
         <fluent-mybatis.version>1.9.0</fluent-mybatis.version>
-        <jakarta-el.version>4.0.0</jakarta-el.version>
-        <jakarta-validation-api.version>3.0.0</jakarta-validation-api.version>
-        <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+        <javax-el.version>3.0.0</javax-el.version>
+        <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
+        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax-validation-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>${javax-el.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-        </dependency>
+
         <!-- provided -->
         <dependency>
             <groupId>com.github.atool</groupId>
@@ -70,4 +73,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>QXWZ Nexus snapshot repository</name>
+            <url>http://maven.wz-inc.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

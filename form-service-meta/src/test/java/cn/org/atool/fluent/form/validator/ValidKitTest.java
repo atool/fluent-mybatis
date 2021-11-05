@@ -1,7 +1,12 @@
 package cn.org.atool.fluent.form.validator;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+import javax.validation.constraints.*;
 import org.hibernate.validator.constraints.Range;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;

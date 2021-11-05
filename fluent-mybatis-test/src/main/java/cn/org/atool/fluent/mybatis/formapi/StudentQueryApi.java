@@ -1,12 +1,13 @@
 package cn.org.atool.fluent.mybatis.formapi;
 
-import cn.org.atool.fluent.form.annotation.FormEntry;
 import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.form.annotation.FormEntry;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,13 +16,18 @@ import static cn.org.atool.fluent.form.annotation.EntryType.Between;
 import static cn.org.atool.fluent.form.annotation.EntryType.Form;
 
 @SuppressWarnings("all")
+@RestController
 @FormService(table = "student")
 public interface StudentQueryApi {
+    @PostMapping("/byQuery")
+    Student findStudentBy(@RequestBody StudentQuery student);
+
+    @GetMapping("/byName")
+    Student findByUserName(@RequestParam("userName") @FormEntry(name = "userName") String userName);
+
     Student findByUserName(@FormEntry(name = "userName") String userName, @FormEntry(name = "age", type = Between) int[] ages);
 
     Student findByUserName(@FormEntry(name = "userName") String userName, @FormEntry(type = Form) StudentQuery student);
-
-    Student findStudentBy(StudentQuery student);
 
     long countStudentBy(StudentQuery student);
 
