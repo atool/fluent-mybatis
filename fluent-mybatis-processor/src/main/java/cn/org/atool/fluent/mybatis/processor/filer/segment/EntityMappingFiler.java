@@ -3,12 +3,14 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.entity.TableId;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
 import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
@@ -26,7 +28,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOUBLE_QUOTATION;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.*;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.FN_FieldMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static java.util.stream.Collectors.joining;
@@ -163,6 +166,11 @@ public class EntityMappingFiler extends AbstractFiler {
             .addModifiers(Modifier.PROTECTED)
             .addStatement("super($T.$L)", DbType.class, fluent.getDbType().name())
             .addStatement("super.tableName = Table_Name");
+        PrimaryField p = fluent.getPrimary();
+        if (p != null) {
+            spec.addStatement("super.tableId = new $T($S, $S, $L, $S, $L)",
+                TableId.class, p.getName(), p.getColumn(), p.isAutoIncrease(), p.getSeqName(), p.isSeqIsBeforeOrder());
+        }
         this.putUniqueField(spec);
         return spec.build();
     }

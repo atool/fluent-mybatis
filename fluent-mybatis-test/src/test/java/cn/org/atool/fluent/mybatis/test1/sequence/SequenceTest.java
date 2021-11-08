@@ -1,0 +1,38 @@
+package cn.org.atool.fluent.mybatis.test1.sequence;
+
+import cn.org.atool.fluent.mybatis.generator.ATM;
+import cn.org.atool.fluent.mybatis.generator.shared5.entity.IdcardEntity;
+import cn.org.atool.fluent.mybatis.generator.shared5.mapper.IdcardMapper;
+import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.test4j.hamcrest.matcher.string.StringMode;
+
+public class SequenceTest extends BaseTest {
+    @Autowired
+    IdcardMapper mapper;
+
+    @Test
+    void testInsert() {
+        IdcardEntity entity = new IdcardEntity().setCode("code1").setVersion(1L);
+        mapper.insert(entity);
+        long id = entity.getId();
+        mapper.insert(entity);
+        want.number(entity.getId()).eq(id + 1);
+    }
+
+    @Test
+    void testBatchInsert() {
+        ATM.dataMap.idcard.table(1).clean();
+        IdcardEntity entity1 = new IdcardEntity().setCode("code1").setVersion(1L);
+        IdcardEntity entity2 = new IdcardEntity().setCode("code1").setVersion(1L);
+        mapper.insertBatch(list(entity1, entity2));
+        db.sqlList().wantFirstSql().eq("" +
+            "INSERT INTO `idcard` (`id`, `is_deleted`, `code`, `version`) " +
+            "SELECT NEXTVAL('testSeq'), TMP.* FROM (" +
+            " (SELECT 0 , ? , ? FROM DUAL)" +
+            " UNION ALL" +
+            " (SELECT 0 , ? , ? FROM DUAL) " +
+            ") TMP", StringMode.SameAsSpace);
+    }
+}

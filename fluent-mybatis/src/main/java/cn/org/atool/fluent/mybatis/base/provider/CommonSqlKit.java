@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -10,6 +9,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IRichEntity;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
+import cn.org.atool.fluent.mybatis.base.entity.TableId;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.InsertList;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
@@ -23,6 +23,7 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderKit;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -53,7 +54,9 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public KeyGenerator insert(StatementBuilder builder, FieldMapping primary, TableId tableId) {
-        if (this.isAutoKeyGenerator(tableId)) {
+        if (tableId == null) {
+            return NoKeyGenerator.INSTANCE;
+        } else if (this.isAutoKeyGenerator(tableId)) {
             return Jdbc3KeyGenerator.INSTANCE;
         } else {
             return builder.handleSelectKey(primary, tableId);
@@ -62,21 +65,27 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public KeyGenerator insertBatch(StatementBuilder builder, FieldMapping primary, TableId tableId) {
-        if (this.isAutoKeyGenerator(tableId)) {
+        if (tableId == null) {
+            return NoKeyGenerator.INSTANCE;
+        } else if (this.isAutoKeyGenerator(tableId)) {
             return Jdbc3KeyGenerator.INSTANCE;
+        } else if (tableId.isSeqBefore()) {
+            /* 使用 select insert 方式 */
+            return NoKeyGenerator.INSTANCE;
         } else {
             return builder.handleSelectKey(primary, tableId);
         }
     }
 
     protected boolean isAutoKeyGenerator(TableId tableId) {
-        return tableId.auto() && isBlank(tableId.seqName());
+        return tableId.auto && isBlank(tableId.seqName);
     }
 
     @Override
     public <E extends IEntity> String insertEntity(IMapping mapping, String prefix, E entity, boolean withPk) {
         assertNotNull(Param_Entity, entity);
-        withPk = validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault);
+
+        withPk = validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
         MapperSql sql = new MapperSql();
         sql.INSERT_INTO(dynamic(entity, mapping.table().get(mapping)));
         InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
@@ -129,7 +138,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk) {
+    public <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk, TableId tableId) {
         MapperSql sql = new MapperSql();
         List<Map> maps = this.toMaps(mapping, entities, withPk);
         /* 所有非空字段 */
@@ -137,7 +146,75 @@ public class CommonSqlKit implements SqlKit {
         String tableName = dynamic(entities.get(0), mapping.table().get(mapping));
         sql.INSERT_INTO(tableName);
 
-        sql.INSERT_COLUMNS(mapping, nonFields.stream().map(f -> f.column).collect(toList()));
+        if (this.isSelectInsert(withPk, tableId)) {
+            this.insertSelect(mapping, tableId, withPk, sql, maps, nonFields);
+        } else {
+            this.insertValues(mapping, sql, maps, nonFields);
+        }
+        return sql.toString();
+    }
+
+    /**
+     * 是否用 insert select 方式批量插入
+     */
+    protected boolean isSelectInsert(boolean withPk, TableId tableId) {
+        return !withPk && tableId != null && tableId.isSeqBefore();
+    }
+
+    /**
+     * https://blog.csdn.net/w_y_t_/article/details/51416201
+     * <p>
+     * https://www.cnblogs.com/xunux/p/4882761.html
+     * <p>
+     * https://blog.csdn.net/weixin_41175479/article/details/80608512
+     */
+    protected void insertSelect(IMapping mapping, TableId tableId, boolean withPk, MapperSql sql, List<Map> maps, List<FieldMapping> nonFields) {
+        List<String> columns = new ArrayList<>();
+        if (!withPk && tableId != null) {
+            columns.add(tableId.column);
+        }
+        nonFields.stream().map(f -> f.column).forEach(columns::add);
+        sql.INSERT_COLUMNS(mapping, columns);
+
+        sql.APPEND("SELECT");
+        if (!withPk && tableId != null) {
+            String seq = isBlank(tableId.seqName) ? mapping.db().feature.getSeq() : tableId.seqName;
+            sql.APPEND(getSeq(seq) + ",");
+        }
+        sql.APPEND("TMP.* FROM (");
+        for (int index = 0; index < maps.size(); index++) {
+            if (index > 0) {
+                sql.APPEND(" UNION ALL ");
+            }
+            sql.APPEND("(SELECT");
+            boolean first = true;
+            for (FieldMapping f : nonFields) {
+                if (f.isPrimary() && !withPk) {
+                    continue;
+                }
+                if (!first) {
+                    sql.APPEND(COMMA_SPACE);
+                } else {
+                    first = false;
+                }
+                Object value = maps.get(index).get(f.column);
+                if (value == null && notBlank(f.insert)) {
+                    sql.APPEND(f.insert);
+                } else {
+                    String el = el("list[" + index + "].", f, value, EMPTY);
+                    sql.APPEND(isBlank(el) ? f.column : el);
+                }
+            }
+            sql.APPEND(" FROM DUAL)");
+        }
+        sql.APPEND(") TMP");
+    }
+
+    protected void insertValues(IMapping mapping, MapperSql sql, List<Map> maps, List<FieldMapping> nonFields) {
+        List<String> columns = new ArrayList<>();
+        nonFields.stream().map(f -> f.column).forEach(columns::add);
+        sql.INSERT_COLUMNS(mapping, columns);
+
         sql.VALUES();
         List<String> values = new ArrayList<>();
         for (int index = 0; index < maps.size(); index++) {
@@ -148,7 +225,6 @@ public class CommonSqlKit implements SqlKit {
             values.add(brackets(COMMA_SPACE, lines));
         }
         sql.APPEND(String.join(COMMA_SPACE, values));
-        return sql.toString();
     }
 
     @Override
@@ -388,7 +464,7 @@ public class CommonSqlKit implements SqlKit {
     protected <E extends IEntity> List<Map> toMaps(IMapping mapping, List<E> entities, boolean withPk) {
         List<Map> maps = new ArrayList<>(entities.size());
         for (IEntity entity : entities) {
-            validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault);
+            validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
             maps.add(entity.toColumnMap());
         }
         return maps;
@@ -418,16 +494,21 @@ public class CommonSqlKit implements SqlKit {
      * @param entity 实体实例
      * @param withPk true: 带id值插入; false: 不带id值插入
      */
-    private boolean validateInsertEntity(IEntity entity, boolean withPk, Consumer<IEntity> setByDefault) {
+    @SuppressWarnings("all")
+    private boolean validateInsertEntity(IEntity entity, boolean withPk, Consumer<IEntity> setByDefault, TableId tableId) {
+        Object oldId = entity.findPk();
         PkGeneratorKits.setPkByGenerator(entity);
-        if (withPk) {
-            isTrue(entity.findPk() != null, "The pk of insert entity can't be null, you should use method insert without pk.");
+        Object newId = entity.findPk();
+        if (tableId != null && tableId.isSeqBefore()) {
+            /* do nothing */
+        } else if (withPk || (oldId == null && newId != null)) {
+            isTrue(newId != null, "The pk of insert entity can't be null, you should use method insert without pk.");
         } else {
-            isTrue(entity.findPk() == null, "The pk of insert entity must be null, you should use method insert with pk.");
+            isTrue(newId == null, "The pk of insert entity must be null, you should use method insert with pk.");
         }
         setByDefault.accept(entity);
         /* 主键有可能被 IdGenerator 赋值 **/
-        return entity.findPk() != null;
+        return newId != null;
     }
 
     /**
@@ -445,7 +526,6 @@ public class CommonSqlKit implements SqlKit {
         }
     }
 
-
     /**
      * 构造updates中没有显式设置的默认值构造
      *
@@ -462,5 +542,35 @@ public class CommonSqlKit implements SqlKit {
             defaults.add(wrapper, f, f.update);
         }
         return defaults.getUpdateDefaults();
+    }
+
+    static final Map<String, String> SEQs = new HashMap<>();
+
+    /**
+     * 返回seq的值
+     */
+    protected static String getSeq(String seq) {
+        if (SEQs.containsKey(seq)) {
+            return SEQs.get(seq);
+        }
+        synchronized (SEQs) {
+            if (SEQs.containsKey(seq)) {
+                return SEQs.get(seq);
+            }
+            String upper = seq.toUpperCase().trim();
+            String value = seq;
+            /* 去掉 SELECT 部分 */
+            if (upper.startsWith(SELECT.name())) {
+                value = value.substring(6);
+                upper = upper.substring(6);
+            }
+            /* 去掉 FROM DUAL 部分 */
+            int index = upper.indexOf(FROM.name());
+            if (index > 0 && upper.endsWith("DUAL")) {
+                value = value.substring(0, index);
+            }
+            SEQs.put(seq, value.trim());
+            return SEQs.get(seq);
+        }
     }
 }

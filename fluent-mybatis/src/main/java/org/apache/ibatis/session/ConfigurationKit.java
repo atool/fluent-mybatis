@@ -40,22 +40,22 @@ public class ConfigurationKit {
      *
      * @return ignore
      */
-    public ConfigurationKit inserts() {
+    public ConfigurationKit insert() {
         for (Map.Entry<String, IMapping> entry : inserts.entrySet()) {
             IMapping m = entry.getValue();
             if (m.primaryMapping() != null) {
-                this.replaced(entry.getKey(), m, StatementBuilder::insertStatement);
+                this.replaced(entry.getKey(), m, StatementBuilder::selectKeyStatementOfInsert);
             }
         }
         this.inserts.clear();
         return this;
     }
 
-    public ConfigurationKit batchInserts() {
+    public ConfigurationKit batchInsert() {
         for (Map.Entry<String, IMapping> entry : batchInserts.entrySet()) {
             IMapping m = entry.getValue();
             if (m.primaryMapping() != null) {
-                this.replaced(entry.getKey(), m, StatementBuilder::insertBatchStatement);
+                this.replaced(entry.getKey(), m, StatementBuilder::selectKeyStatementOfBatchInsert);
             }
         }
         this.batchInserts.clear();

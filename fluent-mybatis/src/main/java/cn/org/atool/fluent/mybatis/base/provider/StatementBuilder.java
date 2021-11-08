@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
-import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.entity.TableId;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -12,7 +12,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,9 @@ import java.util.Map;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_EW;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOT;
 
 /**
  * MappedStatement重建构造
@@ -65,22 +66,23 @@ public class StatementBuilder extends MappedStatement.Builder {
     /**
      * 补充方法 {@link SqlProvider#insert(Map, ProviderContext)} 声明
      */
-    public MappedStatement insertStatement() {
+    public MappedStatement selectKeyStatementOfInsert() {
         FieldMapping primary = mapping.primaryMapping();
-        TableId tableId = this.tableId(primary.name);
+        TableId tableId = mapping.tableId();
         KeyGenerator keyGenerator = factory(mapping).insert(this, primary, tableId);
         this.keyProperty(primary.name);
         this.keyColumn(primary.column);
         this.keyGenerator(keyGenerator);
+
         return this.build();
     }
 
     /**
      * 补充方法 {@link SqlProvider#insertBatch(Map, ProviderContext)} 声明
      */
-    public MappedStatement insertBatchStatement() {
+    public MappedStatement selectKeyStatementOfBatchInsert() {
         FieldMapping primary = mapping.primaryMapping();
-        TableId tableId = this.tableId(primary.name);
+        TableId tableId = mapping.tableId();
         KeyGenerator keyGenerator = factory(mapping).insertBatch(this, primary, tableId);
         this.keyProperty(primary.name);
         this.keyColumn(primary.column);
@@ -109,9 +111,9 @@ public class StatementBuilder extends MappedStatement.Builder {
 
         boolean executeBefore = mapping.db().feature.isBefore();
         String seqName = mapping.db().feature.getSeq();
-        if (notBlank(tableId.seqName())) {
-            seqName = tableId.seqName();
-            executeBefore = tableId.before();
+        if (notBlank(tableId.seqName)) {
+            seqName = tableId.seqName;
+            executeBefore = tableId.before;
         }
         if (isBlank(seqName)) {
             return NoKeyGenerator.INSTANCE;
@@ -126,7 +128,7 @@ public class StatementBuilder extends MappedStatement.Builder {
             .timeout(null)
             .statementType(StatementType.PREPARED)
             .keyGenerator(NoKeyGenerator.INSTANCE)
-            .keyProperty(primary.name)
+            .keyProperty(Param_EW + DOT + primary.name)
             .keyColumn(primary.column)
             .databaseId(statement.getDatabaseId())
             .lang(statement.getLang())
@@ -140,7 +142,9 @@ public class StatementBuilder extends MappedStatement.Builder {
         configuration.addMappedStatement(statementBuilder.build());
 
         MappedStatement keyStatement = configuration.getMappedStatement(selectId, false);
+
         SelectKeyGenerator keyGenerator = new SelectKeyGenerator(keyStatement, executeBefore);
+
         configuration.addKeyGenerator(selectId, keyGenerator);
         return keyGenerator;
     }
@@ -182,15 +186,6 @@ public class StatementBuilder extends MappedStatement.Builder {
             .build();
         resultMaps.add(resultMap);
         return resultMaps;
-    }
-
-    private TableId tableId(String fieldName) {
-        try {
-            Field field = mapping.entityClass().getDeclaredField(fieldName);
-            return field.getAnnotation(TableId.class);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException("get primary field error:" + e.getMessage(), e);
-        }
     }
 
     private String joining(String[] arr) {

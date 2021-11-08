@@ -147,4 +147,11 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
             .map(m -> m.javaType == Long.class)
             .orElse(false);
     }
+
+    /**
+     * 返回主键信息
+     *
+     * @return 主键信息
+     */
+    TableId tableId();
 }

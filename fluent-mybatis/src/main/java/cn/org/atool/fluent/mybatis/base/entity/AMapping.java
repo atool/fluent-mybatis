@@ -219,4 +219,10 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         IFragment table = wrapper.table(false);
         return table != null && table.notEmpty() ? table : this.table();
     }
+
+    protected TableId tableId = null;
+
+    public TableId tableId() {
+        return tableId;
+    }
 }

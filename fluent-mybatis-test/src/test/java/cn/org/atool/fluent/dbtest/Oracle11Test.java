@@ -35,7 +35,7 @@ class Oracle11Test extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("SELECT TEST_USER_SEQ.nextval AS ID FROM DUAL");
         db.sqlList().wantSql(1).eq("" +
-                "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
+                "INSERT INTO TEST_USER (ID, IS_DELETED, CODE, VERSION2) " +
                 "VALUES (?, ?, ?, ?)"
             , StringMode.SameAsSpace);
         want.number(e1.getId()).isGt(0L);
@@ -46,7 +46,7 @@ class Oracle11Test extends BaseTest {
         OracleUserEntity e1 = newEntity(34L, "code1");
         userMapper.insertWithPk(e1);
         db.sqlList().wantSql(0).eq("" +
-                "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
+                "INSERT INTO TEST_USER (ID, IS_DELETED, CODE, VERSION2) " +
                 "VALUES (?, ?, ?, ?)"
             , StringMode.SameAsSpace);
         want.number(e1.getId()).eq(34L);
@@ -58,11 +58,12 @@ class Oracle11Test extends BaseTest {
         OracleUserEntity e2 = newEntity(null, "code2");
         userMapper.insertBatch(list(e1, e2));
         db.sqlList().wantSql(0).eq("" +
-                "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
-                "SELECT TEST_USER_SEQ.nextval AS ID, TMP.* FROM ( " +
-                "SELECT ?, ?, ? FROM dual " +
-                "UNION ALL " +
-                "SELECT ?, ?, ? FROM dual ) TMP"
+                "INSERT INTO TEST_USER (ID, IS_DELETED, CODE, VERSION2) " +
+                "SELECT TEST_USER_SEQ.nextval AS ID, TMP.* FROM (" +
+                " (SELECT ? , ? , ? FROM DUAL)" +
+                " UNION ALL" +
+                " (SELECT ? , ? , ? FROM DUAL) " +
+                ") TMP"
             , StringMode.SameAsSpace);
     }
 
@@ -73,9 +74,9 @@ class Oracle11Test extends BaseTest {
 
         userMapper.insertBatchWithPk(list(e1, e2));
         db.sqlList().wantFirstSql().eq("" +
-                "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
+                "INSERT INTO TEST_USER (ID, IS_DELETED, CODE, VERSION2) " +
                 "SELECT TMP.* " +
-                "FROM ( SELECT ?, ?, ?, ? FROM dual UNION ALL SELECT ?, ?, ?, ? FROM dual ) TMP"
+                "FROM ( (SELECT ? , ? , ? , ? FROM DUAL) UNION ALL (SELECT ? , ? , ? , ? FROM DUAL) ) TMP"
             , StringMode.SameAsSpace);
     }
 
@@ -89,7 +90,7 @@ class Oracle11Test extends BaseTest {
         );
         db.sqlList().wantFirstSql().eq("" +
             "BEGIN " +
-            "INSERT INTO TEST_USER(ID, CODE, IS_DELETED, VERSION2) " +
+            "INSERT INTO TEST_USER (ID, IS_DELETED, CODE, VERSION2) " +
             "VALUES (?, ?, ?, ?); " +
             "UPDATE TEST_USER SET CODE = ? WHERE ID = ?; " +
             "END;");

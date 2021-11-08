@@ -78,8 +78,8 @@ public interface IMapperFactory {
         Collection<SqlSessionFactory> factories = this.getSessionFactories();
         for (SqlSessionFactory factory : factories) {
             new ConfigurationKit(factory.getConfiguration(), RefKit.MAPPER_MAPPING)
-                .inserts()
-                .batchInserts()
+                .insert()
+                .batchInsert()
                 .listEntity();
         }
     }

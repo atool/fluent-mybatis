@@ -26,7 +26,6 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
       value = "id",
       type = "BIGINT UNSIGNED",
       primary = true,
-      autoIncrease = true,
       notNull = true
   )
   public final transient KeyValue<IdcardDataMap> id = new KeyValue<>(this, "id", "id", supplier);

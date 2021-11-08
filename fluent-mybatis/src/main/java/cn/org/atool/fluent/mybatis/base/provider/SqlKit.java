@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.base.provider;
 
-import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BatchCrudImpl;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.entity.TableId;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -160,9 +160,10 @@ public interface SqlKit {
      * @param mapping  IMapping
      * @param entities Entity list
      * @param withPk   是否带主键
+     * @param tableId  主键信息
      * @return sql
      */
-    <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk);
+    <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk, TableId tableId);
 
     /**
      * 根据WrapperData设置构建物理删除语句

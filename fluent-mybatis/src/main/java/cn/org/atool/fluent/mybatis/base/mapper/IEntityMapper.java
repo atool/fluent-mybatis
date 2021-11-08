@@ -31,7 +31,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param entity 实例
      * @return 1: 插入成功
      * @see SqlProvider#insert(Map, ProviderContext)
-     * @see StatementBuilder#insertStatement()
+     * @see StatementBuilder#selectKeyStatementOfInsert()
      */
     @InsertProvider(type = SqlProvider.class, method = M_Insert)
     int insert(@Param(Param_EW) E entity);
@@ -42,7 +42,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @param entities 实例列表
      * @return ignore
      * @see SqlProvider#insertBatch(Map, ProviderContext)
-     * @see StatementBuilder#insertBatchStatement()
+     * @see StatementBuilder#selectKeyStatementOfBatchInsert()
      */
     @InsertProvider(type = SqlProvider.class, method = M_InsertBatch)
     int insertBatch(@Param(Param_List) Collection<E> entities);

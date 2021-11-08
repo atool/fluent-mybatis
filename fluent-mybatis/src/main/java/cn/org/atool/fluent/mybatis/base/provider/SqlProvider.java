@@ -59,7 +59,20 @@ public class SqlProvider {
         List entities = getParas(map, Param_List);
         assertNotEmpty(Param_List, entities);
         AMapping mapping = mapping(context);
-        return sqlKit(mapping).insertBatch(mapping, entities, false);
+        return sqlKit(mapping).insertBatch(mapping, entities, false, mapping.tableId());
+    }
+
+    /**
+     * 批量插入实例
+     * {@link IEntityMapper#insertBatchWithPk(Collection)}
+     *
+     * @return sql
+     */
+    public static String insertBatchWithPk(Map map, ProviderContext context) {
+        assertNotEmpty(Param_List, map);
+        List entities = getParas(map, Param_List);
+        AMapping mapping = mapping(context);
+        return sqlKit(mapping).insertBatch(mapping, entities, true, mapping.tableId());
     }
 
     /**
@@ -119,19 +132,6 @@ public class SqlProvider {
         assertNotNull(Param_Entity, entity);
         AMapping mapping = mapping(context);
         return sqlKit(mapping).insertEntity(mapping, Param_EW, entity, true);
-    }
-
-    /**
-     * 批量插入实例
-     * {@link IEntityMapper#insertBatchWithPk(Collection)}
-     *
-     * @return sql
-     */
-    public static String insertBatchWithPk(Map map, ProviderContext context) {
-        assertNotEmpty(Param_List, map);
-        List entities = getParas(map, Param_List);
-        AMapping mapping = mapping(context);
-        return sqlKit(mapping).insertBatch(mapping, entities, true);
     }
 
     /**

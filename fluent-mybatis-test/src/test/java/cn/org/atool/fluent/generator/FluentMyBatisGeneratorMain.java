@@ -111,7 +111,8 @@ public class FluentMyBatisGeneratorMain {
         srcDir = SrcDir, testDir = TestDir, basePack = BasePack + 5,
         tables = {
             @Table(value = "idcard",
-                columns = {@Column(value = "is_deleted", javaType = Long.class)})
+                columns = {@Column(value = "is_deleted", javaType = Long.class)},
+                seqName = "SELECT NEXTVAL('testSeq')")
         }, logicDeleted = "is_deleted", version = "version",
         useCached = true, isRichEntity = false)
     static class UpdateDefault {
