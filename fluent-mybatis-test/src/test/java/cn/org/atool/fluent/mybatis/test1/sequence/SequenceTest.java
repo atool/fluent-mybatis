@@ -22,6 +22,18 @@ public class SequenceTest extends BaseTest {
     }
 
     @Test
+    void testInsertWithPk() {
+        ATM.dataMap.idcard.table(1).clean();
+        IdcardEntity entity = new IdcardEntity().setId(3L).setCode("code1").setVersion(1L);
+        mapper.insertWithPk(entity);
+        want.number(entity.getId()).eq(3L);
+        ATM.dataMap.idcard.table(1)
+            .id.values(3L)
+            .code.values("code1")
+            .eqTable();
+    }
+
+    @Test
     void testBatchInsert() {
         ATM.dataMap.idcard.table(1).clean();
         IdcardEntity entity1 = new IdcardEntity().setCode("code1").setVersion(1L);
@@ -34,5 +46,20 @@ public class SequenceTest extends BaseTest {
             " UNION ALL" +
             " (SELECT 0 , ? , ? FROM DUAL) " +
             ") TMP", StringMode.SameAsSpace);
+    }
+
+    @Test
+    void testBatchInsertWithPk() {
+        ATM.dataMap.idcard.table(1).clean();
+        IdcardEntity entity1 = new IdcardEntity().setId(3L).setCode("code1").setVersion(1L);
+        IdcardEntity entity2 = new IdcardEntity().setId(6L).setCode("code1").setVersion(1L);
+        mapper.insertBatchWithPk(list(entity1, entity2));
+        db.sqlList().wantFirstSql().eq("" +
+            "INSERT INTO `idcard` (`id`, `is_deleted`, `code`, `version`) " +
+            "VALUES (?, 0, ?, ?), (?, 0, ?, ?)", StringMode.SameAsSpace);
+        ATM.dataMap.idcard.table(2)
+            .id.values(3L, 6L)
+            .code.values("code1")
+            .eqTable();
     }
 }

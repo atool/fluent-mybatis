@@ -64,12 +64,12 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public KeyGenerator insertBatch(StatementBuilder builder, FieldMapping primary, TableId tableId) {
+    public KeyGenerator insertBatch(IMapping mapping, StatementBuilder builder, FieldMapping primary, TableId tableId) {
         if (tableId == null) {
             return NoKeyGenerator.INSTANCE;
         } else if (this.isAutoKeyGenerator(tableId)) {
             return Jdbc3KeyGenerator.INSTANCE;
-        } else if (tableId.isSeqBefore()) {
+        } else if (tableId.isSeqBefore(mapping.db())) {
             /* 使用 select insert 方式 */
             return NoKeyGenerator.INSTANCE;
         } else {
@@ -85,7 +85,7 @@ public class CommonSqlKit implements SqlKit {
     public <E extends IEntity> String insertEntity(IMapping mapping, String prefix, E entity, boolean withPk) {
         assertNotNull(Param_Entity, entity);
 
-        withPk = validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
+        withPk = validateInsertEntity(mapping, entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
         MapperSql sql = new MapperSql();
         sql.INSERT_INTO(dynamic(entity, mapping.table().get(mapping)));
         InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
@@ -146,7 +146,7 @@ public class CommonSqlKit implements SqlKit {
         String tableName = dynamic(entities.get(0), mapping.table().get(mapping));
         sql.INSERT_INTO(tableName);
 
-        if (this.isSelectInsert(withPk, tableId)) {
+        if (this.isSelectInsert(mapping, withPk, tableId)) {
             this.insertSelect(mapping, tableId, withPk, sql, maps, nonFields);
         } else {
             this.insertValues(mapping, sql, maps, nonFields);
@@ -157,8 +157,8 @@ public class CommonSqlKit implements SqlKit {
     /**
      * 是否用 insert select 方式批量插入
      */
-    protected boolean isSelectInsert(boolean withPk, TableId tableId) {
-        return !withPk && tableId != null && tableId.isSeqBefore();
+    protected boolean isSelectInsert(IMapping mapping, boolean withPk, TableId tableId) {
+        return !withPk && tableId != null && tableId.isSeqBefore(mapping.db());
     }
 
     /**
@@ -464,7 +464,7 @@ public class CommonSqlKit implements SqlKit {
     protected <E extends IEntity> List<Map> toMaps(IMapping mapping, List<E> entities, boolean withPk) {
         List<Map> maps = new ArrayList<>(entities.size());
         for (IEntity entity : entities) {
-            validateInsertEntity(entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
+            validateInsertEntity(mapping, entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
             maps.add(entity.toColumnMap());
         }
         return maps;
@@ -495,11 +495,11 @@ public class CommonSqlKit implements SqlKit {
      * @param withPk true: 带id值插入; false: 不带id值插入
      */
     @SuppressWarnings("all")
-    private boolean validateInsertEntity(IEntity entity, boolean withPk, Consumer<IEntity> setByDefault, TableId tableId) {
+    private boolean validateInsertEntity(IMapping mapping, IEntity entity, boolean withPk, Consumer<IEntity> setByDefault, TableId tableId) {
         Object oldId = entity.findPk();
         PkGeneratorKits.setPkByGenerator(entity);
         Object newId = entity.findPk();
-        if (tableId != null && tableId.isSeqBefore()) {
+        if (tableId != null && tableId.isSeqBefore(mapping.db())) {
             /* do nothing */
         } else if (withPk || (oldId == null && newId != null)) {
             isTrue(newId != null, "The pk of insert entity can't be null, you should use method insert without pk.");

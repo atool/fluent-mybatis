@@ -29,7 +29,7 @@ public class OracleSqlKit extends CommonSqlKit {
     }
 
     @Override
-    protected boolean isSelectInsert(boolean withPk, TableId tableId) {
+    protected boolean isSelectInsert(IMapping mapping, boolean withPk, TableId tableId) {
         return true;
     }
 

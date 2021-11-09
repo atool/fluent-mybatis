@@ -83,7 +83,7 @@ public class StatementBuilder extends MappedStatement.Builder {
     public MappedStatement selectKeyStatementOfBatchInsert() {
         FieldMapping primary = mapping.primaryMapping();
         TableId tableId = mapping.tableId();
-        KeyGenerator keyGenerator = factory(mapping).insertBatch(this, primary, tableId);
+        KeyGenerator keyGenerator = factory(mapping).insertBatch(mapping, this, primary, tableId);
         this.keyProperty(primary.name);
         this.keyColumn(primary.column);
         this.keyGenerator(keyGenerator);
@@ -113,7 +113,7 @@ public class StatementBuilder extends MappedStatement.Builder {
         String seqName = mapping.db().feature.getSeq();
         if (notBlank(tableId.seqName)) {
             seqName = tableId.seqName;
-            executeBefore = tableId.before;
+            executeBefore = tableId.isSeqBefore(mapping.db());
         }
         if (isBlank(seqName)) {
             return NoKeyGenerator.INSTANCE;

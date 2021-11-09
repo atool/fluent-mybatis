@@ -45,7 +45,7 @@ public interface SqlKit {
      * @see org.apache.ibatis.annotations.Options
      * @see org.apache.ibatis.annotations.SelectKey
      */
-    KeyGenerator insertBatch(StatementBuilder builder, FieldMapping primary, TableId tableId);
+    KeyGenerator insertBatch(IMapping mapping, StatementBuilder builder, FieldMapping primary, TableId tableId);
 
     /* ======== IQuery/IUpdate ====== */
 

@@ -33,8 +33,7 @@ public class IdcardEntity extends BaseEntity {
     @TableId(
         value = "id",
         auto = false,
-        seqName = "SELECT NEXTVAL('testSeq')",
-        before = true
+        seqName = "SELECT NEXTVAL('testSeq')"
     )
     private Long id;
 
