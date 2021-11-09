@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test2.entity;
 
 import cn.org.atool.fluent.form.FormKit;
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.annotation.FormEntry;
+import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.meta.ArgumentMeta;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.registrar.FormServiceFactoryBean;
@@ -97,10 +97,10 @@ public class FormObjectTest extends BaseTest {
     @Data
     @Accessors(chain = true)
     public static class Form1 {
-        @FormEntry(type = EntryType.Update)
+        @Entry(type = EntryType.Update)
         private String userName;
 
-        @FormEntry(type = EntryType.Update)
+        @Entry(type = EntryType.Update)
         private int age;
     }
 
@@ -108,19 +108,19 @@ public class FormObjectTest extends BaseTest {
     @Data
     @Accessors(chain = true)
     public static class Form2 extends Form1 {
-        @FormEntry
+        @Entry
         private long tenant;
 
-        @FormEntry(type = EntryType.NE)
+        @Entry(type = EntryType.NE)
         private String version;
 
-        @FormEntry(name = "address", ignoreNull = false)
+        @Entry(name = "address", ignoreNull = false)
         private String add;
 
-        @FormEntry(name = "age", type = EntryType.Between)
+        @Entry(name = "age", type = EntryType.Between)
         private Integer[] ages;
 
-        @FormEntry(name = "address", type = EntryType.IN)
+        @Entry(name = "address", type = EntryType.IN)
         private List<String> addresses;
     }
 }

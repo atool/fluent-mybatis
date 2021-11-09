@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.annotation.FormEntry;
+import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 
 import java.lang.reflect.Parameter;
@@ -48,7 +48,7 @@ public class ArgumentMeta {
     public ArgumentMeta(Parameter parameter, Object value) {
         this.value = value;
         this.type = parameter.getType();
-        FormEntry entry = parameter.getDeclaredAnnotation(FormEntry.class);
+        Entry entry = parameter.getDeclaredAnnotation(Entry.class);
         if (entry == null) {
             this.entryName = null;
             this.entryType = EntryType.Form;

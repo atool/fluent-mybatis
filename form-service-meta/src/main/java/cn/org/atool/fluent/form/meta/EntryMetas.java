@@ -2,7 +2,7 @@ package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
-import cn.org.atool.fluent.form.annotation.FormEntry;
+import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
@@ -76,7 +76,7 @@ public class EntryMetas {
         }
     }
 
-    private void addMeta(String name, Method getter, Method setter, FormEntry entry) {
+    private void addMeta(String name, Method getter, Method setter, Entry entry) {
         if (getter != null || setter != null) {
             if (entry == null) {
                 this.addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
@@ -147,7 +147,7 @@ public class EntryMetas {
             if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
                 continue;
             }
-            FormEntry entry = field.getAnnotation(FormEntry.class);
+            Entry entry = field.getAnnotation(Entry.class);
             String name = entry == null || If.isBlank(entry.name()) ? field.getName() : entry.name();
 
             Method getter = findGetter(aClass, field);

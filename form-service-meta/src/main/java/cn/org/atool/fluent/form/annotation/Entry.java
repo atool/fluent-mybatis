@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
-public @interface FormEntry {
+public @interface Entry {
     /**
      * 关联的Entity字段名称
      * 未定义则取字段名称

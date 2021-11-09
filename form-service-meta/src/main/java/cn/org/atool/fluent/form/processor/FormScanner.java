@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.form.processor;
 
-import cn.org.atool.fluent.form.annotation.FormEntry;
+import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
 import com.squareup.javapoet.ClassName;
@@ -50,7 +50,7 @@ public class FormScanner extends ElementScanner8<Void, Void> {
             element.getModifiers().contains(Modifier.TRANSIENT)) {
             return super.visitVariable(element, aVoid);
         }
-        FormEntry entry = element.getAnnotation(FormEntry.class);
+        Entry entry = element.getAnnotation(Entry.class);
         String fieldName = element.getSimpleName().toString();
         String entryName = entry == null ? "" : entry.name().trim();
         if (entryName.isEmpty()) {

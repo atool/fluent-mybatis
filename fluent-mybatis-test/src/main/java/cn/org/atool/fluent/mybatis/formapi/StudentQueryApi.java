@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.formapi;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.annotation.FormEntry;
+import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -23,11 +23,11 @@ public interface StudentQueryApi {
     Student findStudentBy(@RequestBody StudentQuery student);
 
     @GetMapping("/byName")
-    Student findByUserName(@RequestParam("userName") @FormEntry(name = "userName") String userName);
+    Student findByUserName(@RequestParam("userName") @Entry(name = "userName") String userName);
 
-    Student findByUserName(@FormEntry(name = "userName") String userName, @FormEntry(name = "age", type = Between) int[] ages);
+    Student findByUserName(@Entry(name = "userName") String userName, @Entry(name = "age", type = Between) int[] ages);
 
-    Student findByUserName(@FormEntry(name = "userName") String userName, @FormEntry(type = Form) StudentQuery student);
+    Student findByUserName(@Entry(name = "userName") String userName, @Entry(type = Form) StudentQuery student);
 
     long countStudentBy(StudentQuery student);
 
@@ -42,10 +42,10 @@ public interface StudentQueryApi {
     class StudentQuery implements Serializable {
         private String userName;
 
-        @FormEntry(type = EntryType.LikeLeft)
+        @Entry(type = EntryType.LikeLeft)
         private String address;
 
-        @FormEntry(type = Between)
+        @Entry(type = Between)
         private int[] age;
 
         private Integer gender;
@@ -54,10 +54,10 @@ public interface StudentQueryApi {
     @Data
     @Accessors(chain = true)
     class TagPagedQuery extends StudentQuery {
-        @FormEntry(type = EntryType.PagedTag)
+        @Entry(type = EntryType.PagedTag)
         private int nextId;
 
-        @FormEntry(type = EntryType.PageSize)
+        @Entry(type = EntryType.PageSize)
         private int pageSize = 10;
     }
 
@@ -71,7 +71,7 @@ public interface StudentQueryApi {
 
         private String phone;
 
-        @FormEntry(name = "email")
+        @Entry(name = "email")
         private String hisEmail;
 
         private Integer age;

@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.annotation.FormEntry;
+import cn.org.atool.fluent.form.annotation.Entry;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,12 +14,12 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class PagedEntry {
-    @FormEntry(type = EntryType.PageSize)
+    @Entry(type = EntryType.PageSize)
     private int pageSize;
 
-    @FormEntry(type = EntryType.CurrPage)
+    @Entry(type = EntryType.CurrPage)
     private Integer currPage;
 
-    @FormEntry(type = EntryType.PagedTag)
+    @Entry(type = EntryType.PagedTag)
     private String pagedTag;
 }
