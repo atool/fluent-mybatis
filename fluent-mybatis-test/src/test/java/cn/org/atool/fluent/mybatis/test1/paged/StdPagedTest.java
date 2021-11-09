@@ -33,6 +33,15 @@ public class StdPagedTest extends BaseTest {
             .kv("address", "addr_0", "addr_1", "addr_2", "addr_3")
             .kv("sum", 20, 40, 40, 20)
         );
+        String sql = db.sqlList().firstSql().replaceAll("TMP_\\d+", "TMP_");
+        want.string(sql).eq("" +
+            "SELECT COUNT(*) " +
+            "FROM (SELECT COUNT(*)" +
+            " FROM fluent_mybatis.student" +
+            " GROUP BY `address`) TMP_");
+        db.sqlList().wantSql(1).eq("" +
+            "SELECT `address`, SUM(`age`) AS sum " +
+            "FROM fluent_mybatis.student GROUP BY `address` LIMIT ?, ?");
     }
 
     @DisplayName("单字段, 且设置了别名")

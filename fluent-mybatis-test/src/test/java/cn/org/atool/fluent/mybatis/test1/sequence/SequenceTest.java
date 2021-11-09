@@ -14,6 +14,7 @@ public class SequenceTest extends BaseTest {
 
     @Test
     void testInsert() {
+        ATM.dataMap.idcard.table().clean();
         IdcardEntity entity = new IdcardEntity().setCode("code1").setVersion(1L);
         mapper.insert(entity);
         long id = entity.getId();
