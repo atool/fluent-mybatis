@@ -73,11 +73,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>QXWZ Nexus snapshot repository</name>
-            <url>http://maven.wz-inc.com/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
