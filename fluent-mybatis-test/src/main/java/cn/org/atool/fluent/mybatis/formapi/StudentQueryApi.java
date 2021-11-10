@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.formapi;
 
-import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Entry;
+import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -46,9 +46,19 @@ public interface StudentQueryApi {
         private String address;
 
         @Entry(type = Between)
-        private int[] age;
+        private Integer[] age;
 
         private Integer gender;
+        /**
+         * 默认正序
+         */
+        @Entry(type = EntryType.OrderBy, name = "userName")
+        private boolean byUserName = true;
+        /**
+         * 默认倒序
+         */
+        @Entry(type = EntryType.OrderBy, name = "age")
+        private boolean byAge;
     }
 
     @Data

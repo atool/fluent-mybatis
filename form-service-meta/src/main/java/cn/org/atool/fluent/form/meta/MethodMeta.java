@@ -118,6 +118,9 @@ public class MethodMeta {
             for (EntryMeta meta : metas.getMetas()) {
                 argsMetas.addMeta(this.argMeta(index, meta));
             }
+            for (EntryMeta meta : metas.getOrderBy()) {
+                argsMetas.addMeta(this.argMeta(index, meta));
+            }
             argsMetas.addMeta(this.argMeta(index, metas.getPageSize()));
             argsMetas.addMeta(this.argMeta(index, metas.getCurrPage()));
             argsMetas.addMeta(this.argMeta(index, metas.getPagedTag()));

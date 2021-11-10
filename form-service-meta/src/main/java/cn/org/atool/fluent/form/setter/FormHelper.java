@@ -42,7 +42,7 @@ public class FormHelper {
     public static IQuery toQuery(Class entityClass, Form form) {
         MybatisUtil.assertNotNull(FluentConst.F_Entity_Class, entityClass);
         if (form.getId() != null && form.getCurrPage() != null) {
-            throw new RuntimeException("nextId and currPage can only have one value");
+            throw new IllegalArgumentException("nextId and currPage can only have one value");
         }
         IQuery query = RefKit.byEntity(entityClass).query();
         where(entityClass, form, (IWrapper) query);
@@ -64,7 +64,7 @@ public class FormHelper {
         for (Map.Entry<String, Object> entry : form.getUpdate().entrySet()) {
             String column = RefKit.columnOfField(entityClass, entry.getKey());
             if (If.isBlank(column)) {
-                throw new RuntimeException("the field[" + entry.getKey() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
+                throw fieldNotFoundException(entry.getKey(), entityClass);
             }
             updater.updateSet(column, entry.getValue());
         }
@@ -81,7 +81,7 @@ public class FormHelper {
             }
             String column = RefKit.columnOfField(entityClass, item.getField());
             if (If.isBlank(column)) {
-                throw new RuntimeException("the field[" + item.getField() + "] of Entity[" + entityClass.getSimpleName() + "] not found.");
+                throw fieldNotFoundException(item.getField(), entityClass);
             }
             switch (item.getOp()) {
                 case FormSqlOp.OP_LIKE_LEFT:
@@ -172,10 +172,36 @@ public class FormHelper {
         for (EntryMeta meta : metas.getMetas()) {
             initWrapper(method, mapping, (IWrapper) query, meta);
         }
+        for (EntryMeta meta : metas.getOrderBy()) {
+            addOrderBy(method, mapping, query, meta);
+        }
         if (metas.getPageSize() != null) {
             setPaged(method, metas, mapping, query);
         }
         return query;
+    }
+
+    private static <E extends IEntity> void addOrderBy(MethodMeta method, AMapping mapping, IQuery<E> query, EntryMeta meta) {
+        Boolean asc = meta.get(method);
+        if (asc == null) {
+            return;
+        }
+        FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+        if (fm == null) {
+            throw fieldNotFoundException(meta.name, method.entityClass);
+        }
+        query.orderBy().apply(true, asc, fm.column);
+    }
+
+    /**
+     * 实体类找不到Entry定义的字段
+     *
+     * @param name        元数据
+     * @param entityClass 实体类
+     * @return 异常
+     */
+    private static RuntimeException fieldNotFoundException(String name, Class entityClass) {
+        return new IllegalArgumentException("The field[" + name + "] of entity[" + entityClass.getName() + "] not found.");
     }
 
     private static void initWrapper(MethodMeta method, AMapping mapping, IWrapper wrapper, EntryMeta meta) {
@@ -185,7 +211,7 @@ public class FormHelper {
         }
         FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
         if (fm == null) {
-            throw new RuntimeException("The field[" + meta.name + "] of entity[" + method.entityClass.getName() + "] not found.");
+            throw fieldNotFoundException(meta.name, method.entityClass);
         } else if (meta.type == EntryType.Update && method.methodType == MethodType.Update) {
             ((IUpdate) wrapper).updateSet(fm.column, value);
         } else {
@@ -196,7 +222,7 @@ public class FormHelper {
     private static <E extends IEntity> void setPaged(MethodMeta method, EntryMetas metas, AMapping mapping, IQuery<E> query) {
         int pageSize = metas.getPageSize(method);
         if (pageSize < 1) {
-            throw new RuntimeException("PageSize must be greater than 0.");
+            throw new IllegalArgumentException("PageSize must be greater than 0.");
         }
         Integer currPage = metas.getCurrPage(method);
         query.limit(currPage == null ? 0 : currPage * pageSize, pageSize);
@@ -217,7 +243,7 @@ public class FormHelper {
             return;
         }
         if (value == null) {
-            throw new RuntimeException("Condition field[" + meta.name + "] not assigned.");
+            throw new IllegalArgumentException("Condition field[" + meta.name + "] not assigned.");
         }
         switch (meta.type) {
             case GT:
@@ -249,13 +275,27 @@ public class FormHelper {
                 break;
             case Between:
                 Object[] args = toArray(meta.name, value);
-                if (args.length != 2) {
-                    throw new RuntimeException("The size of value of the condition field[" + meta.name + "] must be 2.");
-                }
-                wrapper.where().apply(column, SqlOp.BETWEEN, args);
+                between(wrapper, meta, column, args);
                 break;
             default:
                 //throw new RuntimeException("there must be something wrong.");
+        }
+    }
+
+    private static void between(IWrapper wrapper, EntryMeta meta, String column, Object[] args) {
+        if (args.length == 0 && meta.ignoreNull) {
+            return;
+        }
+        if (args.length != 2) {
+            throw new IllegalArgumentException("The value size of the between condition[" + meta.name + "] must be 2.");
+        } else if (args[0] == null && args[1] != null) {
+            wrapper.where().apply(column, SqlOp.LE, args[1]);
+        } else if (args[0] != null && args[1] == null) {
+            wrapper.where().apply(column, SqlOp.GE, args[0]);
+        } else if (args[0] != null) {
+            wrapper.where().apply(column, SqlOp.BETWEEN, args);
+        } else if (!meta.ignoreNull) {
+            throw new IllegalArgumentException("The value of the between condition[" + meta.name + "] can't be null.");
         }
     }
 
@@ -330,7 +370,7 @@ public class FormHelper {
             for (EntryMeta meta : metas.getMetas()) {
                 FieldMapping fm = mapping.get(meta.name);
                 if (fm == null) {
-                    throw new RuntimeException("The field[" + meta.name + "] of entity[" + entity.entityClass().getName() + "] not found.");
+                    throw fieldNotFoundException(meta.name, entity.entityClass());
                 } else {
                     Object value = fm.getter.get(entity);
                     meta.set(target, value);

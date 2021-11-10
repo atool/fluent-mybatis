@@ -64,10 +64,11 @@ public class EntryMeta {
      * 返回字段值
      *
      * @param target Form对象
+     * @param <R>    字段值类型
      * @return 字段值
      */
-    public Object get(Object target) {
-        return getter == null ? null : getter.apply(target);
+    public <R> R get(Object target) {
+        return getter == null ? null : (R) getter.apply(target);
     }
 
     /**

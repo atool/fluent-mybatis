@@ -73,6 +73,13 @@ public enum EntryType {
      */
     PagedTag(false),
     /**
+     * order by 字段, 必须是布尔值(boolean, Boolean)
+     * null:  表示忽略
+     * true:  正序排序
+     * false: 逆序排序
+     */
+    OrderBy(false),
+    /**
      * 表单项
      */
     Form(false);
@@ -81,7 +88,7 @@ public enum EntryType {
      * 是否where条件项
      */
     @Getter
-    private boolean isWhere;
+    private final boolean isWhere;
 
     EntryType() {
         this.isWhere = true;

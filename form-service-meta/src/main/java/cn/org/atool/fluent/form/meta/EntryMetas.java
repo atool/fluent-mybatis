@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
-import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
@@ -33,6 +33,8 @@ public class EntryMetas {
     private EntryMeta currPage;
 
     private EntryMeta pagedTag;
+
+    private final List<EntryMeta> orderBy = new ArrayList<>();
 
     private boolean isUpdate = false;
 
@@ -70,6 +72,9 @@ public class EntryMetas {
             case Update:
                 this.isUpdate = true;
                 this.metas.add(meta);
+                break;
+            case OrderBy:
+                this.orderBy.add(meta);
                 break;
             default:
                 this.metas.add(meta);

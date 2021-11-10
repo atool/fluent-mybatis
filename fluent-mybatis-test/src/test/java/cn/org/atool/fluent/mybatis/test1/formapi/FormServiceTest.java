@@ -34,11 +34,11 @@ public class FormServiceTest extends BaseTest {
         List<StudentQueryApi.Student> students = queryApi.listStudentBy(new StudentQueryApi.StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
-            .setAge(new int[]{20, 40}));
+            .setAge(new Integer[]{20, 40}));
         want.object(students).eqDataMap(
             ATM.dataMap.student.entity(2)
                 .userName.values("ming.li")
-                .age.values(23, 34)
+                .age.values(34, 23)
                 .address.values("hangzhou binjiang")
                 .kv("hisEmail", "xxx@test")
         );
@@ -46,7 +46,8 @@ public class FormServiceTest extends BaseTest {
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ?");
+            "AND `age` BETWEEN ? AND ? " +
+            "ORDER BY `user_name` ASC, `age` DESC");
     }
 
     @Test
@@ -61,11 +62,11 @@ public class FormServiceTest extends BaseTest {
         StdPagedList<StudentQueryApi.Student> students = queryApi.stdPagedStudent((StdPagedQuery) new StdPagedQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
-            .setAge(new int[]{20, 40}));
+            .setAge(new Integer[]{20, 40}));
         want.object(students.getData()).eqDataMap(
             ATM.dataMap.student.entity(2)
                 .userName.values("ming.li")
-                .age.values(23, 34)
+                .age.values(34, 23)
                 .address.values("hangzhou binjiang")
                 .kv("hisEmail", "xxx@test")
         );
@@ -81,6 +82,7 @@ public class FormServiceTest extends BaseTest {
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
             "AND `address` LIKE ? " +
             "AND `age` BETWEEN ? AND ? " +
+            "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
 
@@ -99,7 +101,7 @@ public class FormServiceTest extends BaseTest {
             .setPageSize(2)
             .setUserName("ming.li")
             .setAddress("hangzhou")
-            .setAge(new int[]{20, 40}));
+            .setAge(new Integer[]{20, 40}));
         want.object(students.getData()).eqDataMap(
             ATM.dataMap.student.entity(2)
                 .userName.values("ming.li")
@@ -114,6 +116,7 @@ public class FormServiceTest extends BaseTest {
             "AND `address` LIKE ? " +
             "AND `age` BETWEEN ? AND ? " +
             "AND `id` >= ? " +
+            "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
 
@@ -150,11 +153,11 @@ public class FormServiceTest extends BaseTest {
             .age.values(23, 34)
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        StudentQueryApi.Student student = queryApi.findByUserName("ming.li", new StudentQueryApi.StudentQuery().setAge(new int[]{20, 40}));
+        StudentQueryApi.Student student = queryApi.findByUserName("ming.li", new StudentQueryApi.StudentQuery().setAge(new Integer[]{20, 40}));
         want.object(student).eqDataMap(
             ATM.dataMap.student.entity(1)
                 .userName.values("ming.li")
-                .age.values(23)
+                .age.values(34)
                 .address.values("hangzhou binjiang")
         );
         db.sqlList().wantFirstSql().end("" +
@@ -163,6 +166,7 @@ public class FormServiceTest extends BaseTest {
             "AND `env` = ? " +
             "AND `user_name` = ? " +
             "AND `age` BETWEEN ? AND ? " +
+            "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
 
@@ -177,18 +181,19 @@ public class FormServiceTest extends BaseTest {
         StudentQueryApi.Student student = queryApi.findStudentBy(new StudentQueryApi.StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
-            .setAge(new int[]{20, 40}));
+            .setAge(new Integer[]{20, null}));
         want.object(student).eqDataMap(
             ATM.dataMap.student.entity(1)
                 .userName.values("ming.li")
-                .age.values(23)
+                .age.values(34)
                 .address.values("hangzhou binjiang")
         );
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ? " +
+            "AND `age` >= ? " +
+            "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
 
@@ -203,7 +208,7 @@ public class FormServiceTest extends BaseTest {
         long count = queryApi.countStudentBy(new StudentQueryApi.StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
-            .setAge(new int[]{20, 40}));
+            .setAge(new Integer[]{20, 40}));
         want.number(count).isEqualTo(2);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) " +
