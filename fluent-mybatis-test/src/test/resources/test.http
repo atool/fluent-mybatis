@@ -1,0 +1,4 @@
+POST http://localhost:80/student
+Content-Type: application/json
+
+{}

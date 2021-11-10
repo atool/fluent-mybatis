@@ -182,6 +182,11 @@
     </build>
     <repositories>
         <repository>
+            <id>repo1</id>
+            <name>Central Repository</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>clojars</id>
             <name>clojars</name>
             <url>https://repo.clojars.org/</url>
