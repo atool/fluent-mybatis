@@ -2,7 +2,7 @@
 [入门必看章节](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90(%E7%AE%80%E5%8D%95)?sort_id=4098246)
 
 QQ交流群: 群一 312885450 ，群二 933791730
-![-w230](image/qq2.jpeg)
+![-w230](image/qq1.jpeg)
 
 - [gitee](https://gitee.com/fluent-mybatis)
 - [github](https://github.com/atool/fluent-mybatis)
