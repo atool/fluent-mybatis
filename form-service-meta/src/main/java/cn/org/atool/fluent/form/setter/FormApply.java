@@ -45,7 +45,7 @@ public final class FormApply implements IFormApply {
 
     @Override
     public <E> FormApply and(IGetter<E> getter) {
-        String field = LambdaUtil.resolve(getter);
+        String field = LambdaUtil.resolveGetter(getter);
         return this.and(field);
     }
 
@@ -56,7 +56,7 @@ public final class FormApply implements IFormApply {
     }
 
     private <E> FormApply setFieldMapping(String op, IGetter<E> getter) {
-        String field = LambdaUtil.resolve(getter);
+        String field = LambdaUtil.resolveGetter(getter);
         return this.setFieldMapping(op, field);
     }
 

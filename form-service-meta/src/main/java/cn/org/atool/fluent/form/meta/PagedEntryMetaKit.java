@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.form.meta.entry.PagedEntry;
+
 import java.util.ArrayList;
 import java.util.List;
 

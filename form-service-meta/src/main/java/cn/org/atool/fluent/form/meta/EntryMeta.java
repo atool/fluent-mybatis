@@ -36,20 +36,12 @@ public class EntryMeta {
      */
     public final boolean ignoreNull;
 
-    public EntryMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
+    protected EntryMeta(String name, EntryType type, boolean ignoreNull) {
         this.name = name;
         this.type = type;
-        this.getter = getter == null ? null : target -> getValue(getter, target);
-        this.setter = setter == null ? null : (target, value) -> setValue(setter, target, value);
         this.ignoreNull = ignoreNull;
-    }
-
-    public <F, V> EntryMeta(String name, EntryType type, Function<F, V> getter, boolean ignoreNull) {
-        this.name = name;
-        this.type = type;
-        this.getter = getter;
-        this.setter = null;
-        this.ignoreNull = ignoreNull;
+        this.getter = this.getter();
+        this.setter = this.setter();
     }
 
     public <F, V> EntryMeta(String name, EntryType type, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
@@ -59,6 +51,15 @@ public class EntryMeta {
         this.setter = setter;
         this.ignoreNull = ignoreNull;
     }
+
+    protected Function getter() {
+        return null;
+    }
+
+    protected BiConsumer setter() {
+        return null;
+    }
+
 
     /**
      * 返回字段值

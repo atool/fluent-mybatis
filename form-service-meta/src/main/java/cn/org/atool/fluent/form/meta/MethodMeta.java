@@ -2,6 +2,7 @@ package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.MethodType;
+import cn.org.atool.fluent.form.meta.entry.ArgEntryMeta;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -12,8 +13,9 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.UUID;
 
-import static cn.org.atool.fluent.form.annotation.MethodType.Query;
+import static cn.org.atool.fluent.form.annotation.MethodType.*;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -21,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes", "unchecked", "unused"})
+@SuppressWarnings({"rawtypes", "unused"})
 @Accessors(chain = true)
 public class MethodMeta {
     /**
@@ -49,27 +51,31 @@ public class MethodMeta {
      */
     public final Class returnParameterType;
 
-    private MethodMeta(Class entityClass, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
+    private MethodMeta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] metas, Class returnType, Class returnParameterType) {
         this.entityClass = entityClass;
-        this.method = null;
+        this.method = method == null ? UUID.randomUUID() + "()" : method.toString();
         this.methodType = methodType;
-        this.args = args;
+        this.args = metas;
         this.returnType = returnType;
         this.returnParameterType = returnParameterType;
     }
 
-    MethodMeta(Class entityClass, Method method, Object[] args) {
+    MethodMeta(Class entityClass, Method method) {
         this.entityClass = entityClass;
         this.method = method.toString();
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
         this.methodType = aMethod == null ? Query : aMethod.type();
-        this.args = new ArgumentMeta[args.length];
-        Parameter[] parameters = method.getParameters();
-        for (int i = 0; i < args.length; i++) {
-            this.args[i] = new ArgumentMeta(parameters[i], args[i]);
-        }
+        this.args = this.buildArgumentMeta(method.getParameters());
         this.returnType = method.getReturnType();
         this.returnParameterType = this.getParameterTypeOfReturn(method);
+    }
+
+    private ArgumentMeta[] buildArgumentMeta(Parameter[] parameters) {
+        ArgumentMeta[] args = new ArgumentMeta[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            args[i] = new ArgumentMeta(methodType, parameters[i], i, null);
+        }
+        return args;
     }
 
     /*** ============================ ***/
@@ -87,7 +93,7 @@ public class MethodMeta {
         if (MethodArgsMeta.containsKey(method)) {
             return MethodArgsMeta.get(method);
         }
-        synchronized (MethodMeta.class) {
+        synchronized (this) {
             if (MethodArgsMeta.containsKey(method)) {
                 return MethodArgsMeta.get(method);
             }
@@ -100,46 +106,19 @@ public class MethodMeta {
     private EntryMetas buildMetasFromArgs() {
         this.validate();
         EntryMetas argsMetas = new EntryMetas();
-        for (int index = 0; index < this.args.length; index++) {
-            this.addArgMeta(argsMetas, index);
+        for (ArgumentMeta arg : this.args) {
+            if (arg.notFormObject()) {
+                argsMetas.addMeta(new ArgEntryMeta(arg));
+            } else {
+                EntryMetas entryMetas = EntryMetas.getFormMeta(arg.type);
+                for (EntryMeta meta : entryMetas.allMetas()) {
+                    if (meta.getter != null) {
+                        argsMetas.addMeta(new ArgEntryMeta(arg, meta));
+                    }
+                }
+            }
         }
         return argsMetas;
-    }
-
-    private void addArgMeta(EntryMetas argsMetas, int index) {
-        ArgumentMeta arg = this.args[index];
-        if (arg.notFormObject()) {
-            MethodMetaFunc getter = method -> method.args[index].value;
-            EntryMeta meta = new EntryMeta(arg.entryName, arg.entryType, getter, arg.ignoreNull);
-            argsMetas.addMeta(meta);
-        } else {
-            Class aClass = arg.type;
-            EntryMetas metas = EntryMetas.getFormMeta(aClass);
-            for (EntryMeta meta : metas.getMetas()) {
-                argsMetas.addMeta(this.argMeta(index, meta));
-            }
-            for (EntryMeta meta : metas.getOrderBy()) {
-                argsMetas.addMeta(this.argMeta(index, meta));
-            }
-            argsMetas.addMeta(this.argMeta(index, metas.getPageSize()));
-            argsMetas.addMeta(this.argMeta(index, metas.getCurrPage()));
-            argsMetas.addMeta(this.argMeta(index, metas.getPagedTag()));
-        }
-    }
-
-    private EntryMeta argMeta(int index, EntryMeta meta) {
-        if (meta == null) {
-            return null;
-        }
-        MethodMetaFunc getter = method -> {
-            Object object = method.args[index].value;
-            if (meta.getter == null) {
-                throw new IllegalStateException("getter of EntryName[" + meta.name + "] not found.");
-            } else {
-                return meta.getter.apply(object);
-            }
-        };
-        return new EntryMeta(meta.name, meta.type, getter, meta.ignoreNull);
     }
 
     private void validate() {
@@ -178,6 +157,10 @@ public class MethodMeta {
         return this.methodType == Query && (this.isReturnInt() || this.isReturnLong());
     }
 
+    public boolean isReturnNumber() {
+        return isReturnInt() || isReturnLong();
+    }
+
     /**
      * 结果值是long型
      *
@@ -194,6 +177,24 @@ public class MethodMeta {
      */
     public boolean isReturnInt() {
         return returnType == Integer.class || returnType == int.class;
+    }
+
+    /**
+     * 结果值是布尔型
+     *
+     * @return true/false
+     */
+    public boolean isReturnBool() {
+        return returnType == Boolean.class || returnType == boolean.class;
+    }
+
+    /**
+     * 无返回值
+     *
+     * @return true/false
+     */
+    public boolean isReturnVoid() {
+        return returnType == void.class || returnType == Void.class;
     }
 
     /**
@@ -223,7 +224,40 @@ public class MethodMeta {
         return methodType == Query && Collection.class.isAssignableFrom(returnType);
     }
 
-    public static MethodMeta meta(Class entityClass, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
-        return new MethodMeta(entityClass, methodType, args, returnType, returnParameterType);
+    /**
+     * 是否是单参，并且参数是Collection类型
+     *
+     * @return true/false
+     */
+    public boolean isOneArgList() {
+        return this.args.length == 1 && this.args[0].isList;
+    }
+
+    /**
+     * 查询数据接口
+     */
+    public boolean isQuery() {
+        return methodType == null || methodType == Query;
+    }
+
+    /**
+     * 更新数据接口
+     */
+    public boolean isUpdate() {
+        return methodType == Update;
+    }
+
+    /**
+     * 创建实例接口
+     */
+    public boolean isSave() {
+        return methodType == Save;
+    }
+
+    /**
+     * 显式构造MethodMeta
+     */
+    public static MethodMeta meta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
+        return new MethodMeta(entityClass, method, methodType, args, returnType, returnParameterType);
     }
 }

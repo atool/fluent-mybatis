@@ -1,14 +1,18 @@
 package cn.org.atool.fluent.form;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.meta.ArgumentMeta;
 import cn.org.atool.fluent.form.meta.MethodMeta;
-import cn.org.atool.fluent.form.meta.PagedEntry;
+import cn.org.atool.fluent.form.meta.entry.PagedEntry;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
 import static cn.org.atool.fluent.form.registrar.FormServiceFactoryBean.TableEntityClass;
@@ -41,8 +45,8 @@ public class FormKit {
      * @param args        入参
      * @return ActionMeta
      */
-    public static MethodMeta buildSave(Class entityClass, Class returnType, ArgumentMeta... args) {
-        return MethodMeta.meta(entityClass, Save, args, returnType, null);
+    public static MethodMeta buildSave(Class entityClass, Method method, Class returnType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, method, Save, args, returnType, null);
     }
 
     /**
@@ -52,8 +56,8 @@ public class FormKit {
      * @param args        入参
      * @return ActionMeta
      */
-    public static MethodMeta buildUpdate(Class entityClass, ArgumentMeta... args) {
-        return MethodMeta.meta(entityClass, Update, args, int.class, null);
+    public static MethodMeta buildUpdate(Class entityClass, Method method, Class returnType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, method, Update, args, returnType, null);
     }
 
     /**
@@ -64,8 +68,8 @@ public class FormKit {
      * @param args        入参
      * @return ActionMeta
      */
-    public static MethodMeta buildQuery(Class entityClass, Class returnType, ArgumentMeta... args) {
-        return MethodMeta.meta(entityClass, Query, args, returnType, null);
+    public static MethodMeta buildQuery(Class entityClass, Method method, Class returnType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, method, Query, args, returnType, null);
     }
 
     /**
@@ -76,8 +80,8 @@ public class FormKit {
      * @param args                入参
      * @return ActionMeta
      */
-    public static MethodMeta buildList(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return MethodMeta.meta(entityClass, Query, args, List.class, returnParameterType);
+    public static MethodMeta buildList(Class entityClass, Method method, Class returnParameterType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, method, Query, args, List.class, returnParameterType);
     }
 
     /**
@@ -88,8 +92,8 @@ public class FormKit {
      * @param args                入参
      * @return ActionMeta
      */
-    public static MethodMeta buildStdPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return MethodMeta.meta(entityClass, Query, args, StdPagedList.class, returnParameterType);
+    public static MethodMeta buildStdPage(Class entityClass, Method method, Class returnParameterType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, method, Query, args, StdPagedList.class, returnParameterType);
     }
 
     /**
@@ -100,57 +104,29 @@ public class FormKit {
      * @param args                入参
      * @return ActionMeta
      */
-    public static MethodMeta buildTagPage(Class entityClass, Class returnParameterType, ArgumentMeta... args) {
-        return MethodMeta.meta(entityClass, Query, args, TagPagedList.class, returnParameterType);
+    public static MethodMeta buildTagPage(Class entityClass, Method method, Class returnParameterType, ArgumentMeta... args) {
+        return MethodMeta.meta(entityClass, method, Query, args, TagPagedList.class, returnParameterType);
     }
 
     /**
      * 参数为表单项
      *
-     * @param type 参数类型
-     * @param arg  参数值
+     * @param methodType 方法类型
+     * @param type       参数类型
+     * @param index      参数次序
      * @return ArgumentMeta
      */
-    public static ArgumentMeta argFormItem(Class type, Object arg) {
-        return new ArgumentMeta(null, EntryType.Form, type, arg);
+    public static <T, R> ArgumentMeta argForm(MethodType methodType, Type type, int index, Map types) {
+        return new ArgumentMeta(methodType, null, EntryType.Form, type, index, types);
     }
 
     /**
      * 构建tag分页表单
      *
-     * @param pageSize 每页记录数
-     * @param pagedTag tag分页其实标识
+     * @param index 参数次序
      * @return PagedEntry
      */
-    public static ArgumentMeta argTagPaged(int pageSize, Object pagedTag) {
-        PagedEntry paged = new PagedEntry().setPageSize(pageSize)
-            .setPagedTag(pagedTag == null ? null : String.valueOf(pagedTag));
-        return argFormItem(PagedEntry.class, paged);
-    }
-
-    /**
-     * 构建tag分页表单
-     *
-     * @param pageSize 每页记录数
-     * @param currPage tag分页其实标识
-     * @return PagedEntry
-     */
-    public static ArgumentMeta argStdPaged(int pageSize, Integer currPage) {
-        PagedEntry paged = new PagedEntry().setPageSize(pageSize)
-            .setCurrPage(currPage == null || currPage < 0 ? 0 : currPage);
-        return argFormItem(PagedEntry.class, paged);
-    }
-
-    /**
-     * 表单项为单一简单值
-     *
-     * @param entryName 表单项名称
-     * @param argClass  参数类型
-     * @param entryType 表单项类型
-     * @param arg       参数值
-     * @return ArgumentMeta
-     */
-    public static ArgumentMeta argSimple(String entryName, Class argClass, EntryType entryType, Object arg) {
-        return new ArgumentMeta(entryName, entryType, argClass, arg);
+    public static <T> ArgumentMeta argPaged(int index, Map types) {
+        return argForm(MethodType.Query, PagedEntry.class, index, types);
     }
 }

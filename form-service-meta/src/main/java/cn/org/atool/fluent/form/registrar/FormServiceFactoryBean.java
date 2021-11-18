@@ -3,8 +3,7 @@ package cn.org.atool.fluent.form.registrar;
 import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
-import cn.org.atool.fluent.form.annotation.MethodType;
-import cn.org.atool.fluent.form.meta.EntryMetas;
+import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.meta.NoMethodAround;
 import cn.org.atool.fluent.form.setter.FormHelper;
@@ -21,6 +20,8 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
@@ -72,29 +73,37 @@ public class FormServiceFactoryBean implements FactoryBean {
             return method.invoke(this, args);
         }
         Class eClass = this.getEntityClass(method);
-        MethodMeta aMeta = this.methodAround.before(eClass, method, args);
         try {
-            Object result = this.doInvoke(aMeta);
-            return this.methodAround.after(eClass, method, result);
+            MethodMeta methodMeta = this.methodAround.cache(eClass, method);
+            Object[] _args = this.methodAround.before(methodMeta, args);
+            Object result = this.doInvoke(methodMeta, _args);
+            return this.methodAround.after(eClass, method, args, result);
         } catch (RuntimeException e) {
-            return this.methodAround.after(eClass, method, e);
+            return this.methodAround.after(eClass, method, args, e);
         }
     }
 
     /**
      * 执行Form操作
      *
-     * @param method 方法执行行为
+     * @param args 方法执行行为
      * @return 执行结果
      */
-    private Object doInvoke(MethodMeta method) {
-        EntryMetas metas = method.metas();
-        if (method.methodType == MethodType.Save) {
-            return save(method, metas);
-        } else if (method.methodType == MethodType.Update) {
-            return update(method, metas);
+    private Object doInvoke(MethodMeta meta, Object[] args) {
+        if (meta.isOneArgList() && !meta.isQuery()) {
+            if (meta.isSave()) {
+                return save(meta, (Collection) args[0]);
+            } else {
+                return update(meta, (Collection) args[0]);
+            }
         } else {
-            return query(method, metas);
+            if (meta.isSave()) {
+                return save(meta, args);
+            } else if (meta.isUpdate()) {
+                return update(meta, args);
+            } else {
+                return query(meta, args);
+            }
         }
     }
 
@@ -190,68 +199,123 @@ public class FormServiceFactoryBean implements FactoryBean {
     /**
      * 构造eClass实体实例
      *
-     * @param method 操作定义
-     * @param metas  入参元数据
+     * @param meta 操作定义
+     * @param args 入参
      * @return entity实例
      */
-    public static <R> R save(MethodMeta method, EntryMetas metas) {
-        IEntity entity = FormHelper.newEntity(method, metas);
-        Object pk = RefKit.mapper(method.entityClass).save(entity);
-        if (method.returnType == void.class || method.returnType == Void.class) {
+    public static Object save(MethodMeta meta, Object... args) {
+        IEntity entity = FormHelper.newEntity(meta, args);
+        Object pk = RefKit.mapper(meta.entityClass).save(entity);
+        if (meta.isReturnVoid()) {
             return null;
-        } else if (method.returnType == Boolean.class || method.returnType == boolean.class) {
-            return (R) (Boolean) (pk != null);
-        } else if (method.returnType.isAssignableFrom(method.entityClass)) {
-            return (R) entity;
+        } else if (meta.isReturnBool()) {
+            return pk != null;
+        } else if (meta.returnType.isAssignableFrom(meta.entityClass)) {
+            return entity;
         } else {
-            return (R) FormHelper.entity2result(entity, method.returnType);
+            return FormHelper.entity2result(entity, meta.returnType);
         }
+    }
+
+    /**
+     * 批量插入
+     *
+     * @param meta 入参元数据
+     * @param list 入参列表
+     * @return entity实例
+     */
+    public static Object save(MethodMeta meta, Collection list) {
+        if (list.size() == 0) {
+            throw new IllegalArgumentException("the save list can't be empty.");
+        }
+        List<IEntity> entities = new ArrayList<>();
+        for (Object obj : list) {
+            IEntity entity = FormHelper.newEntity(meta, new Object[]{obj});
+            entities.add(entity);
+        }
+        int count = RefKit.mapper(meta.entityClass).save(entities);
+        return returnBatchResult(meta, count);
     }
 
     /**
      * 更新操作
      *
-     * @param method 操作定义
-     * @param metas  入参元数据
+     * @param meta 操作定义
+     * @param args 入参
      * @return ignore
      */
-    public static int update(MethodMeta method, EntryMetas metas) {
-        IUpdate update = FormHelper.newUpdate(method, metas);
-        return RefKit.mapper(method.entityClass).updateBy(update);
+    public static Object update(MethodMeta meta, Object... args) {
+        IUpdate update = FormHelper.newUpdate(new MethodArgs(meta, args));
+        int count = RefKit.mapper(meta.entityClass).updateBy(update);
+        return returnBatchResult(meta, count);
+    }
+
+    /**
+     * 更新操作
+     *
+     * @param args 入参
+     * @return ignore
+     */
+    public static Object update(MethodMeta meta, Collection list) {
+        if (list.size() == 0) {
+            throw new IllegalArgumentException("the update list can't be empty.");
+        }
+        IUpdate[] updates = new IUpdate[list.size()];
+        int index = 0;
+        for (Object obj : list) {
+            IUpdate update = FormHelper.newUpdate(new MethodArgs(meta, new Object[]{obj}));
+            updates[index++] = update;
+        }
+        int count = RefKit.mapper(meta.entityClass).updateBy(updates);
+        return returnBatchResult(meta, count);
     }
 
     /**
      * 构造查询条件实例
      *
-     * @param method 操作定义
-     * @param metas  入参元数据
+     * @param meta 操作定义
+     * @param args 入参
      * @return 查询实例
      */
-    public static Object query(MethodMeta method, EntryMetas metas) {
-        IQuery query = FormHelper.newQuery(method, metas);
-        if (method.isCount()) {
+    public static Object query(MethodMeta meta, Object... args) {
+        IQuery query = FormHelper.newQuery(new MethodArgs(meta, args));
+        if (meta.isCount()) {
             int count = query.to().count();
-            return method.isReturnLong() ? (long) count : count;
-        } else if (method.isStdPage()) {
+            return meta.isReturnLong() ? (long) count : count;
+        } else if (meta.isStdPage()) {
             /* 标准分页 */
             StdPagedList paged = query.to().stdPagedEntity();
-            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
+            List data = FormHelper.entities2result(paged.getData(), meta.returnParameterType);
             return paged.setData(data);
-        } else if (method.isTagPage()) {
+        } else if (meta.isTagPage()) {
             /* Tag分页 */
             TagPagedList paged = query.to().tagPagedEntity();
-            List data = FormHelper.entities2result(paged.getData(), method.returnParameterType);
+            List data = FormHelper.entities2result(paged.getData(), meta.returnParameterType);
             IEntity next = (IEntity) paged.getNext();
             return new TagPagedList(data, next == null ? null : next.findPk());
-        } else if (method.isList()) {
+        } else if (meta.isList()) {
             /* 返回List */
             List<IEntity> list = query.to().listEntity();
-            return FormHelper.entities2result(list, method.returnParameterType);
+            return FormHelper.entities2result(list, meta.returnParameterType);
         } else {
             /* 查找单条数据 */
             query.limit(1);
             IEntity entity = (IEntity) query.to().findOne().orElse(null);
-            return FormHelper.entity2result(entity, method.returnType);
+            return FormHelper.entity2result(entity, meta.returnType);
+        }
+    }
+
+    private static Object returnBatchResult(MethodMeta meta, int count) {
+        if (meta.isReturnVoid()) {
+            return null;
+        } else if (meta.isReturnBool()) {
+            return count > 0;
+        } else if (meta.isReturnInt()) {
+            return count;
+        } else if (meta.isReturnLong()) {
+            return (long) count;
+        } else {
+            throw new IllegalStateException("The type of batch result can only be: void, int, long, or boolean.");
         }
     }
 }

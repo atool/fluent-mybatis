@@ -2,9 +2,9 @@ package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.EntryMetas;
+import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -133,12 +133,14 @@ public class FormHelper {
      * @param metas  表单对象元数据
      * @return Entity实例
      */
-    public static <E extends IEntity> E newEntity(MethodMeta method, EntryMetas metas) {
+    public static <E extends IEntity> E newEntity(MethodMeta method, Object[] args) {
         AMapping mapping = RefKit.byEntity(method.entityClass);
         IEntity entity = mapping.newEntity();
-        for (EntryMeta meta : metas.getMetas()) {
-            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
-            fm.setter.set(entity, meta.get(method));
+        for (EntryMeta meta : method.metas().getMetas()) {
+            if (meta.getter != null) {
+                FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+                fm.setter.set(entity, meta.get(args));
+            }
         }
         return (E) entity;
     }
@@ -150,11 +152,13 @@ public class FormHelper {
      * @param metas  表单对象元数据
      * @return 更新条件
      */
-    public static <E extends IEntity> IUpdate<E> newUpdate(MethodMeta method, EntryMetas metas) {
-        AMapping mapping = RefKit.byEntity(method.entityClass);
+    public static <E extends IEntity> IUpdate<E> newUpdate(MethodArgs args) {
+        AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IUpdate<E> updater = mapping.updater();
-        for (EntryMeta meta : metas.getMetas()) {
-            initWrapper(method, mapping, (IWrapper) updater, meta);
+        for (EntryMeta meta : args.meta.metas().getMetas()) {
+            if (meta.getter != null) {
+                initWrapper(mapping, (IWrapper) updater, meta, args);
+            }
         }
         return updater;
     }
@@ -166,67 +170,58 @@ public class FormHelper {
      * @param metas  表单对象元数据
      * @return 查询条件
      */
-    public static <E extends IEntity> IQuery<E> newQuery(MethodMeta method, EntryMetas metas) {
-        AMapping mapping = RefKit.byEntity(method.entityClass);
+    public static <E extends IEntity> IQuery<E> newQuery(MethodArgs args) {
+        AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IQuery<E> query = mapping.query();
-        for (EntryMeta meta : metas.getMetas()) {
-            initWrapper(method, mapping, (IWrapper) query, meta);
+        for (EntryMeta meta : args.metas()) {
+            if (meta.getter != null) {
+                initWrapper(mapping, (IWrapper) query, meta, args);
+            }
         }
-        for (EntryMeta meta : metas.getOrderBy()) {
-            addOrderBy(method, mapping, query, meta);
+        for (EntryMeta meta : args.meta.metas().getOrderBy()) {
+            addOrderBy(mapping, query, meta, args);
         }
-        if (metas.getPageSize() != null) {
-            setPaged(method, metas, mapping, query);
+        if (args.meta.metas().getPageSize() != null) {
+            setPaged(mapping, query, args);
         }
         return query;
     }
 
-    private static <E extends IEntity> void addOrderBy(MethodMeta method, AMapping mapping, IQuery<E> query, EntryMeta meta) {
-        Boolean asc = meta.get(method);
+    private static <E extends IEntity> void addOrderBy(AMapping mapping, IQuery<E> query, EntryMeta meta, MethodArgs args) {
+        Boolean asc = meta.get(args.args);
         if (asc == null) {
             return;
         }
         FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
         if (fm == null) {
-            throw fieldNotFoundException(meta.name, method.entityClass);
+            throw fieldNotFoundException(meta.name, args.meta.entityClass);
         }
         query.orderBy().apply(true, asc, fm.column);
     }
 
-    /**
-     * 实体类找不到Entry定义的字段
-     *
-     * @param name        元数据
-     * @param entityClass 实体类
-     * @return 异常
-     */
-    private static RuntimeException fieldNotFoundException(String name, Class entityClass) {
-        return new IllegalArgumentException("The field[" + name + "] of entity[" + entityClass.getName() + "] not found.");
-    }
-
-    private static void initWrapper(MethodMeta method, AMapping mapping, IWrapper wrapper, EntryMeta meta) {
-        Object value = meta.get(method);
+    private static void initWrapper(AMapping mapping, IWrapper wrapper, EntryMeta meta, MethodArgs args) {
+        Object value = meta.get(args.args);
         if (meta.ignoreNull && value == null) {
             return;
         }
         FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
         if (fm == null) {
-            throw fieldNotFoundException(meta.name, method.entityClass);
-        } else if (meta.type == EntryType.Update && method.methodType == MethodType.Update) {
+            throw fieldNotFoundException(meta.name, args.meta.entityClass);
+        } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
             ((IUpdate) wrapper).updateSet(fm.column, value);
         } else {
             where(wrapper, fm.column, meta, value);
         }
     }
 
-    private static <E extends IEntity> void setPaged(MethodMeta method, EntryMetas metas, AMapping mapping, IQuery<E> query) {
-        int pageSize = metas.getPageSize(method);
+    private static <E extends IEntity> void setPaged(AMapping mapping, IQuery<E> query, MethodArgs args) {
+        int pageSize = args.getPageSize();
         if (pageSize < 1) {
             throw new IllegalArgumentException("PageSize must be greater than 0.");
         }
-        Integer currPage = metas.getCurrPage(method);
+        Integer currPage = args.getCurrPage();
         query.limit(currPage == null ? 0 : currPage * pageSize, pageSize);
-        Object pagedTag = metas.getPagedTag(method);
+        Object pagedTag = args.getPagedTag();
         if (pagedTag != null) {
             String pk = mapping.primaryId(true);
             query.where().apply(pk, SqlOp.GE, pagedTag);
@@ -368,6 +363,9 @@ public class FormHelper {
             Map<String, FieldMapping> mapping = RefKit.byEntity(entity.entityClass()).getFieldsMap();
             EntryMetas metas = EntryMetas.getFormMeta(rClass);
             for (EntryMeta meta : metas.getMetas()) {
+                if (meta.setter == null) {
+                    continue;
+                }
                 FieldMapping fm = mapping.get(meta.name);
                 if (fm == null) {
                     throw fieldNotFoundException(meta.name, entity.entityClass());
@@ -380,5 +378,16 @@ public class FormHelper {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 实体类找不到Entry定义的字段
+     *
+     * @param name        元数据
+     * @param entityClass 实体类
+     * @return 异常
+     */
+    private static RuntimeException fieldNotFoundException(String name, Class entityClass) {
+        return new IllegalArgumentException("The field[" + name + "] of entity[" + entityClass.getName() + "] not found.");
     }
 }

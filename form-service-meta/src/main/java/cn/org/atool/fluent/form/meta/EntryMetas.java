@@ -3,6 +3,7 @@ package cn.org.atool.fluent.form.meta;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
+import cn.org.atool.fluent.form.meta.entry.MethodEntryMeta;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
@@ -26,6 +27,9 @@ import java.util.Objects;
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
 public class EntryMetas {
+    /**
+     * 增删改查表单项列表
+     */
     private final List<EntryMeta> metas = new ArrayList<>();
 
     private EntryMeta pageSize;
@@ -33,7 +37,9 @@ public class EntryMetas {
     private EntryMeta currPage;
 
     private EntryMeta pagedTag;
-
+    /**
+     * 排序列表表单项
+     */
     private final List<EntryMeta> orderBy = new ArrayList<>();
 
     private boolean isUpdate = false;
@@ -81,12 +87,28 @@ public class EntryMetas {
         }
     }
 
+    public List<EntryMeta> allMetas() {
+        List<EntryMeta> all = new ArrayList<>();
+        all.addAll(this.metas);
+        all.addAll(this.orderBy);
+        if (this.pageSize != null) {
+            all.add(this.pageSize);
+        }
+        if (this.currPage != null) {
+            all.add(this.currPage);
+        }
+        if (this.pagedTag != null) {
+            all.add(this.pagedTag);
+        }
+        return all;
+    }
+
     private void addMeta(String name, Method getter, Method setter, Entry entry) {
         if (getter != null || setter != null) {
             if (entry == null) {
-                this.addMeta(new EntryMeta(name, EntryType.EQ, getter, setter, true));
+                this.addMeta(new MethodEntryMeta(name, EntryType.EQ, getter, setter, true));
             } else {
-                this.addMeta(new EntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+                this.addMeta(new MethodEntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
             }
         }
     }
@@ -157,7 +179,9 @@ public class EntryMetas {
 
             Method getter = findGetter(aClass, field);
             Method setter = findSetter(aClass, field);
-            this.addMeta(name, getter, setter, entry);
+            if (getter != null || setter != null) {
+                this.addMeta(name, getter, setter, entry);
+            }
         }
     }
 

@@ -121,7 +121,7 @@ public class Form implements Serializable {
     }
 
     public <E extends IEntity> Form set(IGetter<E> getter, Object value) {
-        String field = LambdaUtil.resolve(getter);
+        String field = LambdaUtil.resolveGetter(getter);
         return this.set(field, value);
     }
 
