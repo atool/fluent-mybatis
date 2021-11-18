@@ -4,6 +4,9 @@ import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.time.temporal.Temporal;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +15,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ParameterizedTypeKit {
     /**
      * 返回type有关declared通配符genericName的实际类型
@@ -110,6 +113,23 @@ public class ParameterizedTypeKit {
             return type.getTypeName() + ":" + g.toString();
         } else {
             return type;
+        }
+    }
+
+    /**
+     * 非Form Object对象
+     *
+     * @return true/false
+     */
+    public static boolean notFormObject(Class type) {
+        if (type.isPrimitive() || type.getName().startsWith("java.")) {
+            /* java自带的类型 */
+            return true;
+        } else if (Collection.class.isAssignableFrom(type) || type.isArray() || Map.class.isAssignableFrom(type)) {
+            /* 数组, 集合, 字典 */
+            return true;
+        } else { /* 时间 */
+            return Date.class.isAssignableFrom(type) || Temporal.class.isAssignableFrom(type);
         }
     }
 }

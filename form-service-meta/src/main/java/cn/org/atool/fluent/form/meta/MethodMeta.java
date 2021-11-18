@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
+import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
@@ -107,7 +108,7 @@ public class MethodMeta {
         this.validate();
         EntryMetas argsMetas = new EntryMetas();
         for (ArgumentMeta arg : this.args) {
-            if (arg.notFormObject()) {
+            if (notFormObject(arg.type)) {
                 argsMetas.addMeta(new ArgEntryMeta(arg));
             } else {
                 EntryMetas entryMetas = EntryMetas.getFormMeta(arg.type);

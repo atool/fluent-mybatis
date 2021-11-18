@@ -80,7 +80,7 @@ public enum EntryType {
      */
     OrderBy(false),
     /**
-     * 表单项
+     * 表单项 或 关联数据
      */
     Form(false);
 

@@ -8,9 +8,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.time.temporal.Temporal;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -104,23 +102,6 @@ public class ArgumentMeta {
             return (Class) ((ParameterizedType) pType).getRawType();
         } else {
             throw new IllegalArgumentException("The type of method parameter should be Class or ParameterizedType.");
-        }
-    }
-
-    /**
-     * 非Form Object对象
-     *
-     * @return true/false
-     */
-    public boolean notFormObject() {
-        if (type.isPrimitive() || type.getName().startsWith("java.")) {
-            /* java自带的类型 */
-            return true;
-        } else if (Collection.class.isAssignableFrom(type) || type.isArray() || Map.class.isAssignableFrom(type)) {
-            /* 数组, 集合, 字典 */
-            return true;
-        } else { /* 时间 */
-            return Date.class.isAssignableFrom(type) || Temporal.class.isAssignableFrom(type);
         }
     }
 }

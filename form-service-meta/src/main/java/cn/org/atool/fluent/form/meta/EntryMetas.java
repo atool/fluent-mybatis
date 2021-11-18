@@ -4,6 +4,7 @@ import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
 import cn.org.atool.fluent.form.kits.EntryMetaKit;
+import cn.org.atool.fluent.form.kits.ParameterizedTypeKit;
 import cn.org.atool.fluent.form.meta.entry.MethodEntryMeta;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
@@ -15,10 +16,7 @@ import lombok.Getter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Form表单对象元数据定义列表
@@ -28,10 +26,15 @@ import java.util.Objects;
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
 public class EntryMetas {
+    private boolean isList = false;
     /**
      * 增删改查表单项列表
      */
     private final List<EntryMeta> metas = new ArrayList<>();
+    /**
+     * 嵌套表单项 或 关联数据项
+     */
+    private final Map<String, EntryMetas> forms = new HashMap<>();
 
     private EntryMeta pageSize;
 
@@ -176,14 +179,44 @@ public class EntryMetas {
                 continue;
             }
             Entry entry = field.getAnnotation(Entry.class);
-            String name = entry == null || If.isBlank(entry.name()) ? field.getName() : entry.name();
-
-            Method getter = findGetter(aClass, field);
-            Method setter = findSetter(aClass, field);
-            if (getter != null || setter != null) {
-                this.addMeta(name, getter, setter, entry);
+            String name = this.noEntryName(entry) ? field.getName() : entry.name();
+            Class fClass = this.getFieldType(field);
+            if (ParameterizedTypeKit.notFormObject(fClass)) {
+                Method getter = findGetter(aClass, field);
+                Method setter = findSetter(aClass, field);
+                if (getter != null || setter != null) {
+                    this.addMeta(name, getter, setter, entry);
+                }
+            } else {
+                EntryMetas form = getFormMeta(fClass);
+                form.isList = List.class.isAssignableFrom(field.getType());
+                this.forms.put(name, form);
             }
         }
+    }
+
+    /**
+     * 返回字段类型 或 List的泛型类型
+     *
+     * @param field 字段定义
+     * @return ignore
+     */
+    private Class getFieldType(Field field) {
+        Class fClass = field.getType();
+        if (List.class.isAssignableFrom(fClass)) {
+            fClass = ParameterizedTypeKit.getType(field.getGenericType(), List.class, "E");
+        }
+        return fClass == null ? field.getType() : fClass;
+    }
+
+    /**
+     * 未显式定义表单项名称
+     *
+     * @param entry 表单项
+     * @return true/false
+     */
+    private boolean noEntryName(Entry entry) {
+        return entry == null || If.isBlank(entry.name());
     }
 
     public static Method findGetter(Class klass, Field field) {
