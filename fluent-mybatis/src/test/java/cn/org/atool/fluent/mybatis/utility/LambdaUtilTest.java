@@ -12,15 +12,15 @@ public class LambdaUtilTest extends Test4J {
     @Test
     public void test() {
         //DemoEntity entity = new DemoEntity();
-        String column = LambdaUtil.resolve(DemoEntity::getUserName);
+        String column = LambdaUtil.resolveGetter(DemoEntity::getUserName);
         want.string(column).eq("userName");
-        LambdaUtil.resolve(DemoEntity::getUserName);
-        LambdaUtil.resolve(DemoEntity::getUserName);
-        LambdaUtil.resolve(DemoEntity::getUserName);
-        LambdaUtil.resolve(DemoEntity::getUserName);
+        LambdaUtil.resolveGetter(DemoEntity::getUserName);
+        LambdaUtil.resolveGetter(DemoEntity::getUserName);
+        LambdaUtil.resolveGetter(DemoEntity::getUserName);
+        LambdaUtil.resolveGetter(DemoEntity::getUserName);
         DemoEntity entity2 = new DemoEntity() {
         };
-        column = LambdaUtil.resolve(DemoEntity::getAge);
+        column = LambdaUtil.resolveGetter(DemoEntity::getAge);
         want.string(column).eq("age");
     }
 }

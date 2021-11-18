@@ -9,6 +9,7 @@ import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
+import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
@@ -21,8 +22,8 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -32,6 +33,7 @@ import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FM
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.FN_FieldMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -57,10 +59,9 @@ public class EntityMappingFiler extends AbstractFiler {
 
     @Override
     protected void staticImport(JavaFile.Builder spec) {
-        spec.addStaticImport(Optional.class, "ofNullable");
         spec.addStaticImport(UniqueType.class, "*");
-        spec.skipJavaLangImports(true);
         spec.addStaticImport(Fragments.class, "fragment");
+        spec.skipJavaLangImports(true);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class EntityMappingFiler extends AbstractFiler {
         spec.superclass(paraType(ClassName.get(AMapping.class), fluent.entity(), fluent.query(), fluent.updater()))
             .addField(this.f_Table_Name())
             .addField(this.f_Entity_Name());
+
         for (CommonField f : fluent.getFields()) {
             spec.addField(this.f_Field(f));
         }
@@ -172,7 +174,26 @@ public class EntityMappingFiler extends AbstractFiler {
                 TableId.class, p.getName(), p.getColumn(), p.isAutoIncrease(), p.getSeqName(), p.isSeqIsBeforeOrder());
         }
         this.putUniqueField(spec);
+        this.addRef(spec);
         return spec.build();
+    }
+
+    private void addRef(MethodSpec.Builder spec) {
+        String del = "\";\"";
+        for (EntityRefMethod m : fluent.getRefMethods()) {
+            if (m.getMapping().isEmpty()) {
+                continue;
+            }
+            StringBuilder src = new StringBuilder(del);
+            StringBuilder ref = new StringBuilder(del);
+            for (Map.Entry<String, String> entry : m.getMapping().entrySet()) {
+                src.append(" + e.get").append(capitalFirst(entry.getValue(), "")).append("() + ").append(del);
+                ref.append(" + e.get").append(capitalFirst(entry.getKey(), "")).append("() + ").append(del);
+            }
+            spec.addStatement("super.ref($S, e -> $L, $L, ($T e) -> $L)",
+                m.getName(), src, m.returnList(), m.getReturnType(), ref);
+        }
+        spec.addStatement("super.Ref_Keys.unmodified()");
     }
 
     /**

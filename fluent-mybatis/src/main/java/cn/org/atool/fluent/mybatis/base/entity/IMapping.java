@@ -1,10 +1,13 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.intf.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 
@@ -18,7 +21,7 @@ import java.util.function.Function;
  *
  * @author darui.wu
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库表名
@@ -154,4 +157,21 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * @return 主键信息
      */
     TableId tableId();
+
+    /**
+     * 返回指定关联关系设置
+     *
+     * @param refKey 指定关联关系
+     * @return 关联设置
+     */
+    default <S extends IEntity, R extends IEntity> RefKey<S, R> findRefKey(String refKey) {
+        return (RefKey) this.refKeys().get(refKey);
+    }
+
+    /**
+     * 返回关联方法定义列表
+     *
+     * @return ignore
+     */
+    KeyMap<RefKey> refKeys();
 }

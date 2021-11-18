@@ -10,7 +10,8 @@ import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.functions.RelateFunction;
+import cn.org.atool.fluent.mybatis.functions.RefFunction;
+import cn.org.atool.fluent.mybatis.functions.RefFunction2;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -35,9 +36,9 @@ import static java.util.stream.Collectors.toSet;
 @SuppressWarnings({"unchecked", "unused", "rawtypes"})
 public final class RefKit {
     /**
-     * 关联方法实现引用
+     * 多对多关联方法实现引用
      */
-    public static final KeyMap<RelateFunction<IEntity>> relations = new KeyMap<>();
+    public static final KeyMap<RefFunction<IEntity>> relations = new KeyMap<>();
     /**
      * EntityClass 和 AMapping关联关系
      */
@@ -227,36 +228,76 @@ public final class RefKit {
      */
     public static <T> T invoke(Class eClass, String methodName, Object[] args) {
         IEntity entity = (IEntity) args[0];
-        String methodOfEntity = methodNameOfEntity(methodName, eClass);
         switch (methodName) {
             case RE_Save:
-                mapper(eClass).save(entity);
-                return (T) entity;
+                return save(eClass, entity);
             case RE_UpdateById:
-                mapper(eClass).updateById(entity);
-                return (T) entity;
+                return updateById(eClass, entity);
             case RE_FindById:
-                IEntity result = mapper(eClass).findById(entity.findPk());
-                return (T) result;
+                return findById(eClass, entity);
             case RE_DeleteById:
-                mapper(eClass).deleteById(entity.findPk());
-                return null;
+                return deleteById(eClass, entity);
             case RE_LogicDeleteById:
-                mapper(eClass).logicDeleteById(entity.findPk());
-                return null;
+                return logicDeleteById(eClass, entity);
             case RE_ListByNotNull:
-                Map<String, Object> where = entity.toColumnMap();
-                assertNotEmpty("the property of entity can't be all empty.", where);
-                List list = mapper(eClass).listByMap(true, where);
-                return (T) list;
+                return listByNotNull(eClass, entity);
             default:
-                RelateFunction func = relations.get(methodOfEntity);
-                if (func == null) {
-                    String err = "the method[" + methodOfEntity + "] not found or IEntityRelation's implement not defined as spring bean.";
-                    throw new RuntimeException(err);
-                }
-                return (T) func.apply(entity);
+                return invokeRefMethod(eClass, methodName, entity);
         }
+    }
+
+    /**
+     * 调用RefMethod填充关联数据
+     *
+     * @param eClass     Entity类
+     * @param methodName 关联方法
+     * @param eList      实例或列表
+     * @return ignore
+     */
+    public static <T> T invokeRefMethod(Class eClass, String methodName, Object eOrList) {
+        String methodOfEntity = methodNameOfEntity(methodName, eClass);
+        RefFunction func = relations.get(methodOfEntity);
+        if (func == null) {
+            String err = "the method[" + methodOfEntity + "] not found or IEntityRelation's implement not defined as spring bean.";
+            throw new RuntimeException(err);
+        } else if (func instanceof RefFunction2) {
+            ((RefFunction2) func).relation(eOrList);
+            return null;
+        } else {
+            return (T) func.apply(eOrList);
+        }
+    }
+
+    private static <T> T listByNotNull(Class eClass, IEntity entity) {
+        Map<String, Object> where = entity.toColumnMap();
+        assertNotEmpty("the property of entity can't be all empty.", where);
+        List list = mapper(eClass).listByMap(true, where);
+        return (T) list;
+    }
+
+    private static <T> T logicDeleteById(Class eClass, IEntity entity) {
+        mapper(eClass).logicDeleteById(entity.findPk());
+        return null;
+    }
+
+    private static <T> T deleteById(Class eClass, IEntity entity) {
+        mapper(eClass).deleteById(entity.findPk());
+        return null;
+    }
+
+    private static <T> T findById(Class eClass, IEntity entity) {
+        IEntity result = mapper(eClass).findById(entity.findPk());
+        return (T) result;
+    }
+
+    private static <T> T updateById(Class eClass, IEntity entity) {
+        mapper(eClass).updateById(entity);
+        return (T) entity;
+    }
+
+    private static <T> T save(Class eClass, IEntity entity) {
+        mapper(eClass).save(entity);
+        return (T) entity;
     }
 
     /**
@@ -286,9 +327,20 @@ public final class RefKit {
      * @param method 方法引用
      * @param <E>    实体类型
      */
-    public static <E extends IEntity> void put(RelateFunction<E> method) {
+    public static <E> void put(Class<E> eClass, String refName, RefFunction<List<E>> method) {
         String name = LambdaUtil.resolve(method);
-        relations.put(name, (RelateFunction) method);
+        relations.put(name, new RefFunction2(eClass, refName, method));
+    }
+
+    /**
+     * 设置实体类的关联自定义实现
+     *
+     * @param method 方法引用
+     * @param <E>    实体类型
+     */
+    public static <E extends IEntity> void put(RefFunction<E> method) {
+        String name = LambdaUtil.resolve(method);
+        relations.put(name, (RefFunction) method);
     }
 
     /**

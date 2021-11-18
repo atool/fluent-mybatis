@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
@@ -123,6 +124,14 @@ public interface BaseWhere<
     default <T> WHERE ne(Ifs<T> ifs) {
         return this.apply(NE, ifs);
     }
+
+    /**
+     * in (values)
+     *
+     * @param values 条件值
+     * @return 查询器或更新器
+     */
+    WHERE in(Collection values);
 
     <T> WHERE apply(ISqlOp op, T... args);
 

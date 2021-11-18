@@ -20,6 +20,7 @@ public interface NumericWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
     > extends ObjectWhere<WHERE, NQ> {
+
     /**
      * in (values)
      *
@@ -92,7 +93,6 @@ public interface NumericWhere<
     default WHERE notIn(long[] values) {
         return this.apply(NOT_IN, toArray(values));
     }
-
 
     /**
      * not in (values)

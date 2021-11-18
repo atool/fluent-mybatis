@@ -74,6 +74,18 @@ public class EntityRefMethod extends FieldOrMethod {
         throw new RuntimeException("not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
     }
 
+    public TypeName getReturnType() {
+        if (this.javaType instanceof ClassName) {
+            return this.javaType;
+        } else if (this.javaType instanceof ParameterizedTypeName) {
+            List<TypeName> args = ((ParameterizedTypeName) javaType).typeArguments;
+            if (args.size() == 1 && args.get(0) instanceof ClassName) {
+                return args.get(0);
+            }
+        }
+        throw new RuntimeException("not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
+    }
+
     public boolean returnList() {
         if (this.javaType instanceof ParameterizedTypeName) {
             ClassName type = ((ParameterizedTypeName) this.javaType).rawType;

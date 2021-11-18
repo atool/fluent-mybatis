@@ -228,6 +228,16 @@ public class FormServiceTest extends BaseTest {
     }
 
     @Test
+    void createStudents() {
+        ATM.dataMap.student.table().clean();
+        updateApi.saveStudent(list(
+            new StudentUpdateApi.Student().setUserName("test1").setAge(34),
+            new StudentUpdateApi.Student().setUserName("test2").setAge(44)
+        ));
+        ATM.dataMap.student.table(2).eqTable();
+    }
+
+    @Test
     void updateStudent() {
         ATM.dataMap.student.table(1)
             .userName.values("---")
@@ -241,5 +251,28 @@ public class FormServiceTest extends BaseTest {
             "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
         db.sqlList().wantFirstPara().eqList("test", 34, false, "test_env", 2L);
+    }
+
+    @Test
+    void updateStudent2() {
+        ATM.dataMap.student.table(2)
+            .userName.values("---")
+            .id.values(2L, 4L)
+            .env.values("test_env")
+            .cleanAndInsert();
+        updateApi.updateStudent(list(
+            new StudentUpdater().setUserName("test1").setAge(34).setId(2L),
+            new StudentUpdater().setUserName("test2").setAge(34).setId(4L)
+        ));
+        db.sqlList().wantFirstSql().eq("" +
+            "UPDATE fluent_mybatis.student " +
+            "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?; " +
+            "UPDATE fluent_mybatis.student " +
+            "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
+        db.sqlList().wantFirstPara().eqList(
+            "test1", 34, false, "test_env", 2L,
+            "test2", 34, false, "test_env", 4L);
     }
 }

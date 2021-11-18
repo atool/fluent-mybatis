@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.base.crud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.StringSupplier;
 import cn.org.atool.fluent.mybatis.metadata.JoinType;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -11,6 +12,11 @@ import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
+import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
+import lombok.Getter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION;
@@ -141,5 +147,33 @@ public abstract class BaseQuery<
             default:
                 return JoinBuilder.from((Q) this).join(query);
         }
+    }
+
+    @Getter
+    private Set<String> withRelations = new HashSet<>();
+
+    /**
+     * listEntity和findOne查询时, 同时执行 refMethod 方法
+     *
+     * @param refMethod 关联查询方法
+     * @return ignore
+     */
+    public Q with(IGetter<E> refMethod) {
+        return this.with(LambdaUtil.resolve(refMethod));
+    }
+
+    /**
+     * listEntity和findOne查询时, 同时执行 refMethod 方法
+     *
+     * @param refMethod 关联查询方法
+     * @return ignore
+     */
+    public Q with(String refMethod) {
+        this.mapping().ifPresent(m -> {
+            if (m.refKeys().containsKey(refMethod)) {
+                this.withRelations.add(refMethod);
+            }
+        });
+        return (Q) this;
     }
 }

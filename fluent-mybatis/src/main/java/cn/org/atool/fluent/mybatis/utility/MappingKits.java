@@ -40,7 +40,7 @@ public class MappingKits {
      * @return 数据库字段名称
      */
     public static <E extends IEntity> String toColumn(Class<E> klass, IGetter<E> func) {
-        String field = LambdaUtil.resolve(func);
+        String field = LambdaUtil.resolveGetter(func);
         return RefKit.columnOfField(klass, field);
     }
 }

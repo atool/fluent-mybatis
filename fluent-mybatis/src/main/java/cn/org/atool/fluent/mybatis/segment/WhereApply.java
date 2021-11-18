@@ -146,6 +146,11 @@ public class WhereApply<
         }
     }
 
+    @Override
+    public WHERE in(Collection values) {
+        return this.apply(IN, values == null ? new Object[0] : values.toArray());
+    }
+
     /**
      * where column IN (select ... )
      *

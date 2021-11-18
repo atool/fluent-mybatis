@@ -40,12 +40,19 @@ public abstract class RichEntity extends BaseEntity implements IRichEntity {
                     return (T) this.cached.get(methodName).orElse(null);
                 }
                 T result = RefKit.invoke(this.entityClass(), methodName, reArgs(args));
-                this.cached.put(methodName, Optional.ofNullable(result));
-                return result;
+                if (result != null || !this.cached.containsKey(methodName)) {
+                    /* 非多对多关联关系在RelateFunction2中设置 */
+                    this.cached.put(methodName, Optional.ofNullable(result));
+                }
+                return (T) this.cached.get(methodName).orElse(null);
             }
         } else {
             return RefKit.invoke(this.entityClass(), methodName, this.reArgs(args));
         }
+    }
+
+    void cached(String methodName, Object cached) {
+        this.cached.put(methodName, Optional.ofNullable(cached));
     }
 
     /**

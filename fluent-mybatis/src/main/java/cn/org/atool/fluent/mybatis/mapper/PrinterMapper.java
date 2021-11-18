@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
@@ -92,7 +92,7 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
     @Override
-    public List listEntity(IQuery query) {
+    public List internalListEntity(IQuery query) {
         this.simulate(M_listEntity, map(Param_EW, query), SqlProvider::listEntity);
         return Collections.emptyList();
     }

@@ -178,16 +178,6 @@ public interface ObjectWhere<
      * in (values)
      *
      * @param values 条件值
-     * @return 查询器或更新器
-     */
-    default WHERE in(Collection values) {
-        return this.apply(IN, values == null ? new Object[0] : values.toArray());
-    }
-
-    /**
-     * in (values)
-     *
-     * @param values 条件值
      * @param when   为真时成立
      * @return 查询器或更新器
      */

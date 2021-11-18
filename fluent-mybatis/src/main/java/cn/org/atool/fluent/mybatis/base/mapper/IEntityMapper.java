@@ -1,12 +1,14 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
-import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.intf.IHasMapping;
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
+import cn.org.atool.fluent.mybatis.base.intf.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.mapping.StatementType;
@@ -14,6 +16,7 @@ import org.apache.ibatis.mapping.StatementType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
@@ -22,7 +25,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author wudarui 2019-06-25 14:00
  */
-@SuppressWarnings({"rawtypes", "UnusedReturnValue"})
+@SuppressWarnings({"rawtypes", "UnusedReturnValue", "unchecked"})
 public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMapping {
 
     /**
@@ -52,11 +55,29 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
+     */
+    default List<E> listEntity(@Param(Param_EW) IQuery query) {
+        List<E> list = this.internalListEntity(query);
+        if (!(query instanceof BaseQuery)) {
+            return list;
+        }
+        Set<String> methods = ((BaseQuery) query).getWithRelations();
+        for (String method : methods) {
+            RefKit.invokeRefMethod(this.mapping().entityClass(), method, list);
+        }
+        return list;
+    }
+
+    /**
+     * 根据 query 条件，查询全部记录
+     *
+     * @param query 实体对象封装操作类（可以为 null）
+     * @return ignore
      * @see SqlProvider#listEntity(Map, ProviderContext)
      * @see StatementBuilder#listEntityStatement()
      */
     @SelectProvider(type = SqlProvider.class, method = M_listEntity)
-    List<E> listEntity(@Param(Param_EW) IQuery query);
+    List<E> internalListEntity(@Param(Param_EW) IQuery query);
 
     /**
      * 插入一条记录, 主键字段不为空

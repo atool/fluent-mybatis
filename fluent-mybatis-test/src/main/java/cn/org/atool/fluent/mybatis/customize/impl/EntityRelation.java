@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.customize.impl;
 
+import cn.org.atool.fluent.mybatis.base.EntityRefKit;
+import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentScoreEntity;
@@ -9,9 +11,13 @@ import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentTeacherRelationQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.TeacherQuery;
 import cn.org.atool.fluent.mybatis.generator.shared3.entity.MemberEntity;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static cn.org.atool.fluent.mybatis.base.EntityRefKit.groupRelation;
+import static cn.org.atool.fluent.mybatis.base.EntityRefKit.values;
 
 @SuppressWarnings("unused")
 @Service
@@ -37,6 +43,17 @@ public class EntityRelation implements
             .and.env().eq(entity.getEnv()).end()
             .limit(1)
             .to().findOne().orElse(null);
+    }
+
+    public void findEnglishScoreOfStudentEntity(List<StudentEntity> entities) {
+        RefKey refKey = RefKit.byEntity(StudentEntity.class).findRefKey("findStudentScoreList");
+        List<StudentScoreEntity> scores = new StudentScoreQuery()
+            .where.studentId().in(values(entities, StudentEntity::getId))
+            .and.subject().eq("EN")
+            .and.isDeleted().eq(false)
+            .and.env().in(values(entities, StudentEntity::getEnv)).end()
+            .to().listEntity();
+        EntityRefKit.groupRelation(refKey, entities, scores);
     }
 
     @Override

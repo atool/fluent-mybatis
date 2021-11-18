@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.functions.IGetter;
-import cn.org.atool.fluent.mybatis.functions.RelateFunction;
+import cn.org.atool.fluent.mybatis.functions.RefFunction;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
@@ -19,12 +19,16 @@ public class LambdaUtil {
      * @param getter getter method lambda
      * @return name of getter method
      */
-    public static <E> String resolve(IGetter<E> getter) {
+    public static <E> String resolveGetter(IGetter<E> getter) {
         String method = lambdaName(getter);
         return validateMethod(method);
     }
 
-    public static String resolve(RelateFunction method) {
+    public static <E> String resolve(IGetter<E> getter) {
+        return lambdaName(getter);
+    }
+
+    public static String resolve(RefFunction method) {
         return lambdaName(method);
     }
 

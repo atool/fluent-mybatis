@@ -87,8 +87,8 @@ public abstract class SelectorBase<
      */
     public <E> S apply(IGetter<E> getter, IGetter<E>... getters) {
         this.assertColumns(getters);
-        this.applyColumn(this.aggregate, this.column(LambdaUtil.resolve(getter)), null);
-        Stream.of(getters).forEach(c -> this.applyColumn(this.aggregate, this.column(LambdaUtil.resolve(c)), null));
+        this.applyColumn(this.aggregate, this.column(LambdaUtil.resolveGetter(getter)), null);
+        Stream.of(getters).forEach(c -> this.applyColumn(this.aggregate, this.column(LambdaUtil.resolveGetter(c)), null));
         return super.getOrigin();
     }
 
@@ -111,7 +111,7 @@ public abstract class SelectorBase<
      * @return 查询字段选择器
      */
     public <E> S applyAs(final IGetter<E> getter, final String alias) {
-        return this.applyColumn(this.aggregate, this.column(LambdaUtil.resolve(getter)), alias);
+        return this.applyColumn(this.aggregate, this.column(LambdaUtil.resolveGetter(getter)), alias);
     }
 
     /**
@@ -172,7 +172,7 @@ public abstract class SelectorBase<
      */
     public <E> Q exclude(IGetter<E>... columns) {
         this.assertColumns(columns);
-        List<String> excludes = Stream.of(columns).map(LambdaUtil::resolve).collect(toList());
+        List<String> excludes = Stream.of(columns).map(LambdaUtil::resolveGetter).collect(toList());
         IFragment seg = this.excludeSelect(excludes, false);
         this.data().select(seg);
         return (Q) super.wrapper;
@@ -201,7 +201,7 @@ public abstract class SelectorBase<
     }
 
     public <E> S applyFunc(final IAggregate func, final IGetter<E> getter, final String alias) {
-        return this.applyColumn(func, this.column(LambdaUtil.resolve(getter)), alias);
+        return this.applyColumn(func, this.column(LambdaUtil.resolveGetter(getter)), alias);
     }
 
     public S applyFunc(final IAggregate func, final FieldMapping column, final String alias) {

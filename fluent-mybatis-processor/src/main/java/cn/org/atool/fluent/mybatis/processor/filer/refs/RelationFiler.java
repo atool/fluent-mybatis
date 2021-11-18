@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.processor.filer.refs;
 
+import cn.org.atool.fluent.mybatis.base.EntityRefKit;
 import cn.org.atool.fluent.mybatis.base.intf.IRelation;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.publicMethod;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
@@ -36,6 +38,7 @@ public class RelationFiler extends AbstractFile {
     @Override
     protected void staticImport(JavaFile.Builder builder) {
         builder.addStaticImport(RefKit.class, "put");
+        builder.addStaticImport(EntityRefKit.class, "values");
         builder.skipJavaLangImports(true);
     }
 
@@ -71,20 +74,20 @@ public class RelationFiler extends AbstractFile {
         FluentEntity ref = FluentList.getFluentEntity(refMethod.getReturnEntity());
 
         MethodSpec.Builder spec = MethodSpec.methodBuilder(refMethod.getRefMethod(fluent))
-            .addParameter(fluent.entity(), "entity")
+            .returns(ParameterizedTypeName.get(CN_List, refMethod.getReturnType()))
+            .addParameter(ParameterizedTypeName.get(CN_List, fluent.entity()), "entities")
             .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .returns(refMethod.getJavaType())
             .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refMethod.getName());
-        String method = refMethod.returnList() ? ".to().listEntity()" : ".to().findOne().orElse(null)";
+
         spec.addCode("return new $T()\n", ref.query());
         int index = 0;
-        for (Map.Entry<String, String> pair : refMethod.getMapping().entrySet()) {
+        for (Map.Entry<String, String> entry : refMethod.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")
-                .addCode(".$L().eq(entity.get$L())\n", pair.getKey(), capitalFirst(pair.getValue(), ""));
+                .addCode(".$L().in(values(entities, $T::get$L))\n",
+                    entry.getKey(), fluent.entity(), capitalFirst(entry.getValue(), ""));
             index++;
         }
-        spec.addCode("\t.end()\n", method);
-        spec.addStatement("\t" + method);
+        spec.addStatement("\t.end().to().listEntity()");
         return spec.build();
     }
 
@@ -94,7 +97,11 @@ public class RelationFiler extends AbstractFile {
         List<CodeBlock> codes = new ArrayList<>();
         for (FluentEntity fluent : this.fluents) {
             for (EntityRefMethod method : fluent.getRefMethods()) {
-                codes.add(CodeBlock.of("put(this::$L);", method.getRefMethod(fluent)));
+                if (method.isAbstractMethod()) {
+                    codes.add(CodeBlock.of("put(this::$L);", method.getRefMethod(fluent)));
+                } else {
+                    codes.add(CodeBlock.of("put($T.class, $S, this::$L);", fluent.entity(), method.getName(), method.getRefMethod(fluent)));
+                }
             }
         }
         spec.addCode(CodeBlock.join(codes, "\n"));
