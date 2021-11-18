@@ -60,7 +60,7 @@ public class MethodMeta {
         this.returnParameterType = returnParameterType;
     }
 
-    MethodMeta(Class entityClass, Method method) {
+    public MethodMeta(Class entityClass, Method method) {
         this.entityClass = entityClass;
         this.method = method.toString();
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);

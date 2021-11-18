@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.setter;
+package cn.org.atool.fluent.form.kits;
 
 import cn.org.atool.fluent.form.Form;
 import com.google.gson.Gson;

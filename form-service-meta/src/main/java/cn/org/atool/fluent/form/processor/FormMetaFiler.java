@@ -2,7 +2,7 @@ package cn.org.atool.fluent.form.processor;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
-import cn.org.atool.fluent.form.meta.EntryMetaKit;
+import cn.org.atool.fluent.form.kits.EntryMetaKit;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;

@@ -6,8 +6,8 @@ import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 
 import java.lang.reflect.Method;
 
-import static cn.org.atool.fluent.form.meta.NoMethodAround.LOCKS;
-import static cn.org.atool.fluent.form.meta.NoMethodAround.lock_size;
+import static cn.org.atool.fluent.form.kits.NoMethodAround.LOCKS;
+import static cn.org.atool.fluent.form.kits.NoMethodAround.lock_size;
 
 /**
  * 对form service接口进行切面处理

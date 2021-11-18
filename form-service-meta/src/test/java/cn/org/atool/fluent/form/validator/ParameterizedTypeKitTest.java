@@ -1,5 +1,6 @@
-package cn.org.atool.fluent.mybatis.utility;
+package cn.org.atool.fluent.form.validator;
 
+import cn.org.atool.fluent.form.kits.ParameterizedTypeKit;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
@@ -7,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-class ParameterizedTypeKitTest extends Test4J {
+public class ParameterizedTypeKitTest extends Test4J {
 
     @Test
     void test() {

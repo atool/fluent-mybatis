@@ -1,6 +1,7 @@
-package cn.org.atool.fluent.form.meta;
+package cn.org.atool.fluent.form.kits;
 
 import cn.org.atool.fluent.form.annotation.Form;
+import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.processor.MetaKitProcessor;
 
 import java.util.List;

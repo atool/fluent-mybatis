@@ -130,7 +130,7 @@ public class FormHelper {
      * 构造Entity对象
      *
      * @param method 方法定义元数据
-     * @param metas  表单对象元数据
+     * @param args   表单对象元数据
      * @return Entity实例
      */
     public static <E extends IEntity> E newEntity(MethodMeta method, Object[] args) {
@@ -148,8 +148,7 @@ public class FormHelper {
     /**
      * 构造更新条件
      *
-     * @param method 方法定义元数据
-     * @param metas  表单对象元数据
+     * @param args 方法定义元数据
      * @return 更新条件
      */
     public static <E extends IEntity> IUpdate<E> newUpdate(MethodArgs args) {
@@ -166,8 +165,7 @@ public class FormHelper {
     /**
      * 构造查询条件
      *
-     * @param method 方法定义元数据
-     * @param metas  表单对象元数据
+     * @param args 方法定义元数据
      * @return 查询条件
      */
     public static <E extends IEntity> IQuery<E> newQuery(MethodArgs args) {

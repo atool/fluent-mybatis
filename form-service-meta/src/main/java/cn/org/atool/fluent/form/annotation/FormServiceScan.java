@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.annotation;
 
 import cn.org.atool.fluent.form.IMethodAround;
-import cn.org.atool.fluent.form.meta.NoMethodAround;
+import cn.org.atool.fluent.form.kits.NoMethodAround;
 import cn.org.atool.fluent.form.registrar.FormServiceRegistrar;
 import org.springframework.context.annotation.Import;
 

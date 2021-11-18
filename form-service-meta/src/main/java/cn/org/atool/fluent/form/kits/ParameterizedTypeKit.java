@@ -1,5 +1,4 @@
-package cn.org.atool.fluent.mybatis.utility;
-
+package cn.org.atool.fluent.form.kits;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
@@ -26,7 +25,11 @@ public class ParameterizedTypeKit {
      */
     public static <T> T getType(Type type, Class declared, String genericName) {
         Map<String, Object> map = getTypeMap(type, declared);
-        String name = genericName + ":" + declared.getName();
+        return getDeclaredType(map, declared, genericName);
+    }
+
+    public static <T> T getDeclaredType(Map<String, Object> map, Type declared, String genericName) {
+        String name = genericName + ":" + declared.toString();
         while (map.containsKey(name)) {
             Object value = map.get(name);
             if (value instanceof String) {
@@ -82,7 +85,7 @@ public class ParameterizedTypeKit {
      * @param declared 定义通配符的类
      * @return key: 通配符+declaredClass -> value: 通配符+declaredClass 或 实际类型
      */
-    private static Map getTypeMap(Type type, Class declared) {
+    public static Map getTypeMap(Type type, Class declared) {
         final Map<String, Object> typeMap = new HashMap<>();
         while (null != type) {
             final ParameterizedType parameterizedType = toParameterizedType(type, declared);
@@ -104,7 +107,7 @@ public class ParameterizedTypeKit {
     private static Object typeName(Type type) {
         if (type instanceof TypeVariable) {
             GenericDeclaration g = ((TypeVariable) type).getGenericDeclaration();
-            return type.getTypeName() + ":" + (g instanceof Type ? ((Type) g).getTypeName() : g.toString());
+            return type.getTypeName() + ":" + g.toString();
         } else {
             return type;
         }

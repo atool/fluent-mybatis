@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.meta.entry;
 
 import cn.org.atool.fluent.form.meta.EntryMeta;
-import cn.org.atool.fluent.form.meta.EntryMetaKit;
+import cn.org.atool.fluent.form.kits.EntryMetaKit;
 
 import java.util.ArrayList;
 import java.util.List;

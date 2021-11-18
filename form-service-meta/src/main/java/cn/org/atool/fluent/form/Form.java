@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form;
 
+import cn.org.atool.fluent.form.kits.GsonKit;
 import cn.org.atool.fluent.form.setter.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;

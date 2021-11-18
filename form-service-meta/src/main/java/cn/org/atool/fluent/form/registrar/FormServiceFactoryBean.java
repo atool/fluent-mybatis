@@ -5,7 +5,7 @@ import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
-import cn.org.atool.fluent.form.meta.NoMethodAround;
+import cn.org.atool.fluent.form.kits.NoMethodAround;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
