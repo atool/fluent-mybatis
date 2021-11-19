@@ -6,6 +6,9 @@ import cn.org.atool.fluent.mybatis.functions.RefFunction;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_GET;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_IS;
+
 /**
  * lambda表达式处理
  *
@@ -49,9 +52,9 @@ public class LambdaUtil {
     }
 
     private static String validateMethod(String method) {
-        if (method.startsWith("get")) {
+        if (method.startsWith(PRE_GET)) {
             return method.substring(3, 4).toLowerCase() + method.substring(4);
-        } else if (method.startsWith("is")) {
+        } else if (method.startsWith(PRE_IS)) {
             return method.substring(2, 3).toLowerCase() + method.substring(3);
         } else {
             throw new RuntimeException("not a getter method, please use lambda as 'entity::getXyz'");

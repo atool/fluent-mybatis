@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import java.util.Objects;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+
 /**
  * FormFieldInfo: 表单字段定义
  *
@@ -43,7 +45,7 @@ public class FormField {
         this.fieldType = fieldType;
         if (!Objects.equals(fieldType, boolean.class.getName())) {
             this.capital = this.capital(fieldName, 0);
-        } else if (fieldName.startsWith("is")) {
+        } else if (fieldName.startsWith(PRE_IS)) {
             this.capital = this.capital(fieldName, 2);
         } else {
             this.capital = this.capital(fieldName, 0);
@@ -61,13 +63,13 @@ public class FormField {
 
     public String getterName() {
         if (Objects.equals(fieldType, boolean.class.getName())) {
-            return "is" + this.capital;
+            return PRE_IS + this.capital;
         } else {
-            return "get" + this.capital;
+            return PRE_GET + this.capital;
         }
     }
 
     public String setterName() {
-        return "set" + this.capital;
+        return PRE_SET + this.capital;
     }
 }

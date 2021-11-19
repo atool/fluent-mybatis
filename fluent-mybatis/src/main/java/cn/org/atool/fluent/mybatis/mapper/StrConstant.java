@@ -14,6 +14,14 @@ public interface StrConstant {
      * 空串
      */
     String EMPTY = "";
+
+    String PRE_GET = "get";
+
+    String PRE_IS = "is";
+
+    String PRE_FIND = "find";
+
+    String PRE_SET = "set";
     /**
      * asc
      */

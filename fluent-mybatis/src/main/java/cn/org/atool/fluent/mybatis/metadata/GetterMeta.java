@@ -1,10 +1,14 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.utility.LockKit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_GET;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_IS;
 
 /**
  * getter方法元数据
@@ -22,7 +26,7 @@ public class GetterMeta {
     private GetterMeta(Method method) {
         this.method = method;
         String name = method.getName();
-        if (name.startsWith("is")) {
+        if (name.startsWith(PRE_IS)) {
             this.fieldName = name.substring(2, 3).toLowerCase() + name.substring(3);
         } else {
             this.fieldName = name.substring(3, 4).toLowerCase() + name.substring(4);
@@ -57,21 +61,25 @@ public class GetterMeta {
         return methodMetas.get(klass);
     }
 
-    private synchronized static void buildMetas(Class klass) {
-        if (methodMetas.containsKey(klass)) {
-            return;
-        }
-        Method[] methods = klass.getDeclaredMethods();
-        KeyMap<GetterMeta> classMethods = new KeyMap<>();
-        for (Method m : methods) {
-            String name = m.getName();
-            if (!name.startsWith("get") && !name.startsWith("is") || m.getParameterCount() != 0) {
-                continue;
+    /**
+     * 按class类进行加锁
+     */
+    private final static LockKit<Class> ClassLock = new LockKit<>(16);
+
+    private static void buildMetas(Class klass) {
+        ClassLock.lockDoing(methodMetas::containsKey, klass, () -> {
+            Method[] methods = klass.getDeclaredMethods();
+            KeyMap<GetterMeta> classMethods = new KeyMap<>();
+            for (Method m : methods) {
+                String name = m.getName();
+                if (!name.startsWith(PRE_GET) && !name.startsWith(PRE_IS) || m.getParameterCount() != 0) {
+                    continue;
+                }
+                m.setAccessible(true);
+                GetterMeta meta = new GetterMeta(m);
+                classMethods.put(meta.fieldName, meta);
             }
-            m.setAccessible(true);
-            GetterMeta meta = new GetterMeta(m);
-            classMethods.put(meta.fieldName, meta);
-        }
-        methodMetas.put(klass, classMethods);
+            methodMetas.put(klass, classMethods);
+        });
     }
 }

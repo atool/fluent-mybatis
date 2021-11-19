@@ -10,13 +10,17 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.LockKit;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**
  * Form表单对象元数据定义列表
@@ -25,8 +29,10 @@ import java.util.*;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
+@ToString(of = "objType")
 public class EntryMetas {
-    private boolean isList = false;
+    public final Class objType;
+
     /**
      * 增删改查表单项列表
      */
@@ -34,7 +40,7 @@ public class EntryMetas {
     /**
      * 嵌套表单项 或 关联数据项
      */
-    private final Map<String, EntryMetas> forms = new HashMap<>();
+    private final List<FormMetas> forms = new ArrayList<>();
 
     private EntryMeta pageSize;
 
@@ -47,6 +53,10 @@ public class EntryMetas {
     private final List<EntryMeta> orderBy = new ArrayList<>();
 
     private boolean isUpdate = false;
+
+    public EntryMetas(Class objType) {
+        this.objType = objType;
+    }
 
     public Integer getPageSize(Object form) {
         return pageSize == null ? null : (Integer) pageSize.get(form);
@@ -120,7 +130,13 @@ public class EntryMetas {
     /*** ============================ ***/
     private static final KeyMap<EntryMetas> ClassFormMetas = new KeyMap<>();
 
+
     static List<Class> root_classes = Arrays.asList(Object.class, RichEntity.class, BaseEntity.class);
+
+    /**
+     * 按class类进行加锁
+     */
+    private final static LockKit<Class> ClassLock = new LockKit<>(16);
 
     /**
      * 获取class的表单元数据
@@ -129,14 +145,10 @@ public class EntryMetas {
      * @return FormMetas
      */
     public static EntryMetas getFormMeta(Class aClass) {
-        if (ClassFormMetas.containsKey(aClass)) {
-            return ClassFormMetas.get(aClass);
-        }
-        synchronized (EntryMetas.class) {
-            if (ClassFormMetas.containsKey(aClass)) {
-                return ClassFormMetas.get(aClass);
-            }
-            EntryMetas metas = new EntryMetas();
+        ClassLock.lockDoing(ClassFormMetas::containsKey, aClass, () -> {
+            EntryMetas metas = new EntryMetas(aClass);
+            /* 放在构造元数据前面, 避免子对象循环构造 */
+            ClassFormMetas.put(aClass, metas);
             Class declared = aClass;
             while (!root_classes.contains(declared) && !declared.getName().startsWith("java.")) {
                 try {
@@ -146,9 +158,8 @@ public class EntryMetas {
                 }
                 declared = declared.getSuperclass();
             }
-            ClassFormMetas.put(aClass, metas);
-            return metas;
-        }
+        });
+        return ClassFormMetas.get(aClass);
     }
 
     /**
@@ -181,16 +192,17 @@ public class EntryMetas {
             Entry entry = field.getAnnotation(Entry.class);
             String name = this.noEntryName(entry) ? field.getName() : entry.name();
             Class fClass = this.getFieldType(field);
+
+            Method setter = findSetter(aClass, field);
             if (ParameterizedTypeKit.notFormObject(fClass)) {
                 Method getter = findGetter(aClass, field);
-                Method setter = findSetter(aClass, field);
                 if (getter != null || setter != null) {
                     this.addMeta(name, getter, setter, entry);
                 }
-            } else {
+            } else if (setter != null) {
                 EntryMetas form = getFormMeta(fClass);
-                form.isList = List.class.isAssignableFrom(field.getType());
-                this.forms.put(name, form);
+                boolean isList = List.class.isAssignableFrom(field.getType());
+                this.forms.add(new FormMetas(name, fClass, setter, isList, form));
             }
         }
     }
@@ -222,9 +234,9 @@ public class EntryMetas {
     public static Method findGetter(Class klass, Field field) {
         String getter;
         if (field.getType() == boolean.class) {
-            getter = "is" + MybatisUtil.capitalFirst(field.getName(), null);
+            getter = PRE_IS + capitalFirst(field.getName());
         } else {
-            getter = "get" + MybatisUtil.capitalFirst(field.getName(), null);
+            getter = PRE_GET + capitalFirst(field.getName());
         }
         try {
             return klass.getMethod(getter);
@@ -235,10 +247,10 @@ public class EntryMetas {
 
     public static Method findSetter(Class klass, Field field) {
         String setter;
-        if (field.getType() == boolean.class && field.getName().startsWith("is")) {
-            setter = "set" + MybatisUtil.capitalFirst(field.getName().substring(2), null);
+        if (field.getType() == boolean.class && field.getName().startsWith(PRE_IS)) {
+            setter = PRE_SET + capitalFirst(field.getName().substring(2));
         } else {
-            setter = "set" + MybatisUtil.capitalFirst(field.getName(), null);
+            setter = PRE_SET + capitalFirst(field.getName());
         }
         try {
             return klass.getMethod(setter, field.getType());

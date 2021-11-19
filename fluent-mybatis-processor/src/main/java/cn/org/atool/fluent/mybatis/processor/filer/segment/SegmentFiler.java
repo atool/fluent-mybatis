@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_SET;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.suppressWarnings;
 
@@ -396,7 +397,7 @@ public class SegmentFiler extends AbstractFiler {
      * @return MethodSpec
      */
     private MethodSpec m_set_ISegment() {
-        return MethodSpec.methodBuilder("set")
+        return MethodSpec.methodBuilder(PRE_SET)
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .addParameter(ClassName.get(FieldMapping.class), "fieldMapping")
             .returns(TypeVariableName.get("R"))

@@ -2,10 +2,13 @@ package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.spring.IConvertor;
+import cn.org.atool.fluent.mybatis.utility.LockKit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_SET;
 
 /**
  * SetterMeta: setter方法元数据定义
@@ -56,21 +59,25 @@ public class SetterMeta {
         return methodMetas.get(klass);
     }
 
-    private synchronized static void buildMetas(Class klass) {
-        if (methodMetas.containsKey(klass)) {
-            return;
-        }
-        Method[] methods = klass.getDeclaredMethods();
-        KeyMap<SetterMeta> classMethods = new KeyMap<>();
-        for (Method m : methods) {
-            if (!m.getName().startsWith("set") || m.getParameterCount() != 1) {
-                continue;
+    /**
+     * 按class类进行加锁
+     */
+    private final static LockKit<Class> ClassLock = new LockKit<>(16);
+
+    private static void buildMetas(Class klass) {
+        ClassLock.lockDoing(methodMetas::containsKey, klass, () -> {
+            Method[] methods = klass.getDeclaredMethods();
+            KeyMap<SetterMeta> classMethods = new KeyMap<>();
+            for (Method m : methods) {
+                if (!m.getName().startsWith(PRE_SET) || m.getParameterCount() != 1) {
+                    continue;
+                }
+                m.setAccessible(true);
+                SetterMeta meta = new SetterMeta(m);
+                classMethods.put(meta.fieldName, meta);
             }
-            m.setAccessible(true);
-            SetterMeta meta = new SetterMeta(m);
-            classMethods.put(meta.fieldName, meta);
-        }
-        methodMetas.put(klass, classMethods);
+            methodMetas.put(klass, classMethods);
+        });
     }
 
     public static IConvertor findConvertor(Type type) {

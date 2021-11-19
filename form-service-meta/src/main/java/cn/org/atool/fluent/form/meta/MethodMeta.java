@@ -6,6 +6,7 @@ import cn.org.atool.fluent.form.meta.entry.ArgEntryMeta;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.utility.LockKit;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
@@ -81,6 +82,10 @@ public class MethodMeta {
 
     /*** ============================ ***/
     public static final KeyMap<EntryMetas> MethodArgsMeta = new KeyMap<>();
+    /**
+     * 按 Method.toString() 签名进行加锁
+     */
+    private final static LockKit<String> MethodLock = new LockKit<>(16);
 
     /**
      * 构造入参的元数据列表
@@ -90,23 +95,15 @@ public class MethodMeta {
     public EntryMetas metas() {
         if (isBlank(method)) {
             return this.buildMetasFromArgs();
-        }
-        if (MethodArgsMeta.containsKey(method)) {
+        } else {
+            MethodLock.lockDoing(MethodArgsMeta::containsKey, method, () -> MethodArgsMeta.put(method, this.buildMetasFromArgs()));
             return MethodArgsMeta.get(method);
-        }
-        synchronized (this) {
-            if (MethodArgsMeta.containsKey(method)) {
-                return MethodArgsMeta.get(method);
-            }
-            EntryMetas argsMetas = this.buildMetasFromArgs();
-            MethodArgsMeta.put(method, argsMetas);
-            return argsMetas;
         }
     }
 
     private EntryMetas buildMetasFromArgs() {
         this.validate();
-        EntryMetas argsMetas = new EntryMetas();
+        EntryMetas argsMetas = new EntryMetas(null);
         for (ArgumentMeta arg : this.args) {
             if (notFormObject(arg.type)) {
                 argsMetas.addMeta(new ArgEntryMeta(arg));

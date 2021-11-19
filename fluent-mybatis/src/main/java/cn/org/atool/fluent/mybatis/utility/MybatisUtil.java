@@ -308,6 +308,10 @@ public class MybatisUtil {
         return true;
     }
 
+    public static String capitalFirst(String name) {
+        return capitalFirst(name, EMPTY);
+    }
+
     /**
      * 实体首字母大写
      *

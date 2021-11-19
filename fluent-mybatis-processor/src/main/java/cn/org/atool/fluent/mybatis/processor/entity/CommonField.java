@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Objects;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.camelToUnderline;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
@@ -66,9 +67,9 @@ public class CommonField extends FieldOrMethod {
      */
     public String getMethodName() {
         if (isPrimitive() && Objects.equals(javaType, ClassName.BOOLEAN)) {
-            return "is" + capitalFirst(this.name, "is");
+            return PRE_IS + capitalFirst(this.name, PRE_IS);
         } else {
-            return "get" + capitalFirst(this.name, null);
+            return PRE_GET + capitalFirst(this.name);
         }
     }
 
@@ -79,9 +80,9 @@ public class CommonField extends FieldOrMethod {
      */
     public String setMethodName() {
         if (isPrimitive() && Objects.equals(javaType, ClassName.BOOLEAN)) {
-            return "set" + capitalFirst(this.name, "is");
+            return PRE_SET + capitalFirst(this.name, PRE_IS);
         } else {
-            return "set" + capitalFirst(this.name, null);
+            return PRE_SET + capitalFirst(this.name);
         }
     }
 

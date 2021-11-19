@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.base.EntityRefKit.groupRelation;
 import static cn.org.atool.fluent.mybatis.base.EntityRefKit.values;
 
 @SuppressWarnings("unused")
@@ -38,9 +37,8 @@ public class EntityRelation implements
     public StudentScoreEntity findEnglishScoreOfStudentEntity(StudentEntity entity) {
         return new StudentScoreQuery()
             .where.studentId().eq(entity.getId())
-            .and.subject().eq("EN")
-            .and.isDeleted().eq(false)
-            .and.env().eq(entity.getEnv()).end()
+            .and.subject().eq("english")
+            .end()
             .limit(1)
             .to().findOne().orElse(null);
     }

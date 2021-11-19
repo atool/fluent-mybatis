@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.publicMethod;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
@@ -84,7 +85,7 @@ public class RelationFiler extends AbstractFile {
         for (Map.Entry<String, String> entry : refMethod.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")
                 .addCode(".$L().in(values(entities, $T::get$L))\n",
-                    entry.getKey(), fluent.entity(), capitalFirst(entry.getValue(), ""));
+                    entry.getKey(), fluent.entity(), capitalFirst(entry.getValue()));
             index++;
         }
         spec.addStatement("\t.end().to().listEntity()");

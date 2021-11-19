@@ -15,6 +15,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_SET;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
 
@@ -67,7 +68,7 @@ public class UpdaterFiler extends AbstractFiler {
 
     private FieldSpec f_setter() {
         return FieldSpec.builder(fluent.updateSetter(),
-                "set", Modifier.PUBLIC, Modifier.FINAL)
+                PRE_SET, Modifier.PUBLIC, Modifier.FINAL)
             .initializer("new $T(this)", fluent.updateSetter())
             .build();
     }

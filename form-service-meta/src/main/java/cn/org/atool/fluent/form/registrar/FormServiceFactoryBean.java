@@ -3,9 +3,9 @@ package cn.org.atool.fluent.form.registrar;
 import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
+import cn.org.atool.fluent.form.kits.NoMethodAround;
 import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
-import cn.org.atool.fluent.form.kits.NoMethodAround;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -15,6 +15,7 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import cn.org.atool.fluent.mybatis.utility.LockKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
@@ -178,22 +179,18 @@ public class FormServiceFactoryBean implements FactoryBean {
 
     private static final KeyMap<IMethodAround> instances = new KeyMap<IMethodAround>().put(NoMethodAround.class, NoMethodAround.instance);
 
+    private static final LockKit<Class> locks = new LockKit<>(16);
+
     private IMethodAround aroundInstance(Class<? extends IMethodAround> aClass) {
-        if (instances.containsKey(aClass)) {
-            return instances.get(aClass);
-        }
-        synchronized (instances) {
-            if (instances.containsKey(aClass)) {
-                return instances.get(aClass);
-            }
-            IMethodAround aop = NoMethodAround.instance;
+        locks.lockDoing(instances::containsKey, aClass, () -> {
             try {
-                aop = aClass.getDeclaredConstructor().newInstance();
+                IMethodAround aop = aClass.getDeclaredConstructor().newInstance();
+                instances.put(aClass, aop);
             } catch (Exception ignored) {
+                instances.put(aClass, NoMethodAround.instance);
             }
-            instances.put(aClass, aop);
-            return aop;
-        }
+        });
+        return instances.get(aClass);
     }
 
     /**

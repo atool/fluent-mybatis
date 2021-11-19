@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
+import cn.org.atool.fluent.mybatis.functions.RefFunction;
 import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.functions.RefKeyFunc;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
@@ -245,8 +246,20 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * @param ref     关联Entity关联键构造
      * @return ignore
      */
-    protected <R extends IEntity> AMapping ref(String refName, RefKeyFunc<E> src, boolean isList, RefKeyFunc<R> ref) {
-        Ref_Keys.put(refName, RefKey.refKey(refName, isList, src, ref));
+    protected <R> AMapping ref(String refName, RefKeyFunc<E> src, boolean isList, RefKeyFunc<R> ref, RefFunction<E> refMethod) {
+        Ref_Keys.put(refName, RefKey.refKey(refName, isList, src, ref, refMethod));
+        return this;
+    }
+
+    /**
+     * 增加关联关系
+     *
+     * @param refName 关联名称
+     * @param isList  是否1:N
+     * @return ignore
+     */
+    protected AMapping ref(String refName, boolean isList, RefFunction<E> refMethod) {
+        Ref_Keys.put(refName, RefKey.refKey(refName, isList, null, null, refMethod));
         return this;
     }
 }

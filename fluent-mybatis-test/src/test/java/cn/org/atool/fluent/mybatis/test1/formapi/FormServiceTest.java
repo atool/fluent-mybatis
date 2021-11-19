@@ -12,6 +12,7 @@ import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.modes.EqMode;
+import org.test4j.tools.datagen.DataMap;
 
 import java.util.List;
 
@@ -30,6 +31,13 @@ public class FormServiceTest extends BaseTest {
             .age.values(23, 34)
             .email.values("xxx@test")
             .address.values("hangzhou binjiang")
+            .deskMateId.values(2, 1)
+            .cleanAndInsert();
+        ATM.dataMap.studentScore.table(3)
+            .env.values("test_env")
+            .studentId.values(1, 1, 2)
+            .subject.values("yuwen", "english")
+            .score.values(79, 67, 98)
             .cleanAndInsert();
         List<StudentQueryApi.Student> students = queryApi.listStudentBy(new StudentQueryApi.StudentQuery()
             .setUserName("ming.li")
@@ -42,12 +50,36 @@ public class FormServiceTest extends BaseTest {
                 .address.values("hangzhou binjiang")
                 .kv("hisEmail", "xxx@test")
         );
+        /* 同桌的同桌 = 自己 */
+        want.object(students.get(0)).eqReflect(students.get(1).getDeskMate(), EqMode.IGNORE_DEFAULTS);
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
             "AND `address` LIKE ? " +
             "AND `age` BETWEEN ? AND ? " +
             "ORDER BY `user_name` ASC, `age` DESC");
+        db.sqlList().wantSql(1).end("" +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `desk_mate_id` IN (?, ?)");
+
+        /* 验证成绩列表 */
+        want.object(students.get(0).getScores()).eqDataMap(new DataMap(1)
+            .kv("score", 98)
+            .kv("subject", "english"));
+        want.object(students.get(1).getScores()).eqDataMap(new DataMap(2)
+            .kv("score", 79, 67)
+            .kv("subject", "yuwen", "english"));
+        db.sqlList().wantSql(2).end("" +
+            "FROM `student_score` " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND `student_id` IN (?, ?) " +
+            "AND `is_deleted` = ? AND `env` = ?");
+
+        want.object(students.get(0).getEnglishScore()).notNull();
+        want.object(students.get(1).getEnglishScore()).notNull();
+        /* 第4条sql 和 第5条sql一样 */
+        db.sqlList().wantSql(3).eq(db.sqlList().sql(4));
+        want.exception(() -> db.sqlList().sql(5), IndexOutOfBoundsException.class);
     }
 
     @Test

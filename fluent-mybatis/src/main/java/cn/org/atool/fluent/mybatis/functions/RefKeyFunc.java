@@ -1,7 +1,5 @@
 package cn.org.atool.fluent.mybatis.functions;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
-
 import java.util.function.Function;
 
 /**
@@ -11,5 +9,5 @@ import java.util.function.Function;
  * @author darui.wu
  */
 @FunctionalInterface
-public interface RefKeyFunc<E extends IEntity> extends Function<E, String> {
+public interface RefKeyFunc<E> extends Function<E, String> {
 }

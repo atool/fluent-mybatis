@@ -182,16 +182,17 @@ public class EntityMappingFiler extends AbstractFiler {
         String del = "\";\"";
         for (EntityRefMethod m : fluent.getRefMethods()) {
             if (m.getMapping().isEmpty()) {
-                continue;
+                spec.addStatement("super.ref($S, $L, $T::$L)", m.getName(), m.returnList(), fluent.entity(), m.getName());
+            } else {
+                StringBuilder src = new StringBuilder(del);
+                StringBuilder ref = new StringBuilder(del);
+                for (Map.Entry<String, String> entry : m.getMapping().entrySet()) {
+                    src.append(" + e.get").append(capitalFirst(entry.getValue())).append("() + ").append(del);
+                    ref.append(" + e.get").append(capitalFirst(entry.getKey())).append("() + ").append(del);
+                }
+                spec.addStatement("super.ref($S, e -> $L, $L, ($T e) -> $L, $T::$L)",
+                    m.getName(), src, m.returnList(), m.getReturnType(), ref, fluent.entity(), m.getName());
             }
-            StringBuilder src = new StringBuilder(del);
-            StringBuilder ref = new StringBuilder(del);
-            for (Map.Entry<String, String> entry : m.getMapping().entrySet()) {
-                src.append(" + e.get").append(capitalFirst(entry.getValue(), "")).append("() + ").append(del);
-                ref.append(" + e.get").append(capitalFirst(entry.getKey(), "")).append("() + ").append(del);
-            }
-            spec.addStatement("super.ref($S, e -> $L, $L, ($T e) -> $L)",
-                m.getName(), src, m.returnList(), m.getReturnType(), ref);
         }
         spec.addStatement("super.Ref_Keys.unmodified()");
     }

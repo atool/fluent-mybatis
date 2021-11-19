@@ -3,9 +3,10 @@ package cn.org.atool.fluent.form.kits;
 import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.utility.LockKit;
 
 import java.lang.reflect.Method;
-import java.util.stream.IntStream;
 
 /**
  * 无切面处理
@@ -15,12 +16,11 @@ import java.util.stream.IntStream;
 public class NoMethodAround implements IMethodAround {
     public static IMethodAround instance = new NoMethodAround();
 
-    public static final int lock_size = 20;
+    public static KeyMap<MethodMeta> METHOD_METAS_CACHED = new KeyMap<>();
     /**
-     * 分段锁对象
+     * 按 Method.toString() 签名进行加锁
      */
-    public static final Object[] LOCKS = IntStream.range(0, lock_size)
-        .mapToObj(i -> new Object()).toArray();
+    public final static LockKit<String> MethodLock = new LockKit<>(16);
 
     private NoMethodAround() {
     }

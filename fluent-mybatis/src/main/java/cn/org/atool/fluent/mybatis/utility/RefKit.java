@@ -258,7 +258,7 @@ public final class RefKit {
         String methodOfEntity = methodNameOfEntity(methodName, eClass);
         RefFunction func = relations.get(methodOfEntity);
         if (func == null) {
-            String err = "the method[" + methodOfEntity + "] not found or IEntityRelation's implement not defined as spring bean.";
+            String err = "the method[" + methodName + "] of IEntityRelation not found or IEntityRelation's implement not defined as spring bean.";
             throw new RuntimeException(err);
         } else if (func instanceof RefFunction2) {
             ((RefFunction2) func).relation(eOrList);

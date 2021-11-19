@@ -2,12 +2,11 @@ package cn.org.atool.fluent.form;
 
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 
 import java.lang.reflect.Method;
 
-import static cn.org.atool.fluent.form.kits.NoMethodAround.LOCKS;
-import static cn.org.atool.fluent.form.kits.NoMethodAround.lock_size;
+import static cn.org.atool.fluent.form.kits.NoMethodAround.METHOD_METAS_CACHED;
+import static cn.org.atool.fluent.form.kits.NoMethodAround.MethodLock;
 
 /**
  * 对form service接口进行切面处理
@@ -16,8 +15,6 @@ import static cn.org.atool.fluent.form.kits.NoMethodAround.lock_size;
  */
 @SuppressWarnings("unused")
 public interface IMethodAround {
-    KeyMap<MethodMeta> METHOD_METAS = new KeyMap<>();
-
     /**
      * 根据方法定义构造方法元数据(从缓存获取)
      *
@@ -27,16 +24,8 @@ public interface IMethodAround {
      */
     default MethodMeta cache(Class<? extends IEntity> entityClass, Method method) {
         String mName = method.toString();
-        if (!METHOD_METAS.containsKey(mName)) {
-            /* 分段锁 */
-            int hash = Math.abs(mName.hashCode()) % lock_size;
-            synchronized (LOCKS[hash]) {
-                if (!METHOD_METAS.containsKey(mName)) {
-                    METHOD_METAS.put(mName, this.before(entityClass, method));
-                }
-            }
-        }
-        return METHOD_METAS.get(mName);
+        MethodLock.lockDoing(METHOD_METAS_CACHED::containsKey, mName, () -> METHOD_METAS_CACHED.put(mName, this.before(entityClass, method)));
+        return METHOD_METAS_CACHED.get(mName);
     }
 
     /**

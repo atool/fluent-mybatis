@@ -87,5 +87,21 @@ public interface StudentQueryApi {
         private Integer age;
 
         private String address;
+        /**
+         * 同桌
+         */
+        private Student deskMate;
+
+        @Entry(name = "findStudentScoreList")
+        private List<Score> scores;
+
+        private StudentScoreEntity englishScore;
+    }
+
+    @Data
+    public static class Score {
+        private Integer score;
+
+        private String subject;
     }
 }

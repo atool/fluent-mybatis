@@ -2,11 +2,9 @@ package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.meta.EntryMeta;
-import cn.org.atool.fluent.form.meta.EntryMetas;
-import cn.org.atool.fluent.form.meta.MethodArgs;
-import cn.org.atool.fluent.form.meta.MethodMeta;
+import cn.org.atool.fluent.form.meta.*;
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.EntityRefKit;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -15,15 +13,15 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
+import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.mapper.FluentConst;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static cn.org.atool.fluent.mybatis.base.EntityRefKit.getRefKeyOfRefMethod;
 
 /**
  * FormHelper辅助工具类
@@ -340,41 +338,113 @@ public class FormHelper {
         return list.toArray();
     }
 
-    public static List entities2result(List<IEntity> entities, Class rClass) {
+    /**
+     * 将Entity列表转换为指定类的实例列表
+     *
+     * @param entities Entity列表
+     * @param rClass   指定类类型
+     * @return 转换后的列表
+     */
+    public static <R> List<R> entities2result(List<IEntity> entities, Class<R> rClass) {
         if (rClass == null) {
-            return entities;
+            return (List) entities;
+        } else {
+            EntryMetas metas = EntryMetas.getFormMeta(rClass);
+            return entities2result(entities, metas);
+        }
+    }
+
+    /**
+     * 将Entity列表转换为指定类的实例列表
+     *
+     * @param entities Entity列表
+     * @param rClass   指定类元数据
+     * @return 转换后的列表
+     */
+    private static List entities2result(List<IEntity> entities, EntryMetas metas) {
+        if (entities == null || entities.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Class entityClass = entities.stream().filter(Objects::nonNull)
+            .findFirst().map(IEntity::entityClass).orElse(null);
+        if (entityClass == null) {
+            return Collections.emptyList();
+        }
+        for (FormMetas form : metas.getForms()) {
+            RefKey refKey = getRefKeyOfRefMethod(entityClass, form.entryName);
+            if (refKey == null) {
+                throw new RuntimeException("The @RefMethod[" + form.entryName + "] of Entity[" + entityClass.getName() + "] not found.");
+            } else if (refKey.src != null && refKey.ref != null) {
+                RefKit.invokeRefMethod(entityClass, refKey.refMethodName, entities);
+            }
         }
         List list = new ArrayList();
         for (IEntity entity : entities) {
-            list.add(entity2result(entity, rClass));
+            list.add(entity2result(entity, metas));
         }
         return list;
     }
 
-    public static Object entity2result(IEntity entity, Class rClass) {
+    /**
+     * 将Entity实例转换为指定类的实例
+     *
+     * @param entities Entity实例
+     * @param rClass   指定类类型
+     * @return 转换后的实例
+     */
+    public static <R> R entity2result(IEntity entity, Class<R> rClass) {
         if (entity == null) {
+            return null;
+        } else {
+            EntryMetas metas = EntryMetas.getFormMeta(rClass);
+            return (R) entity2result(entity, metas);
+        }
+    }
+
+    /**
+     * 将Entity实例转换为指定类的实例
+     *
+     * @param entities Entity实例
+     * @param rClass   指定类元数据
+     * @return 转换后的实例
+     */
+    private static Object entity2result(IEntity entity, EntryMetas metas) {
+        if (entity == null || metas.objType == null) {
             return null;
         }
         try {
-            Object target = rClass.getDeclaredConstructor().newInstance();
-
-            Map<String, FieldMapping> mapping = RefKit.byEntity(entity.entityClass()).getFieldsMap();
-            EntryMetas metas = EntryMetas.getFormMeta(rClass);
+            Object target = metas.objType.getDeclaredConstructor().newInstance();
+            Class entityClass = entity.entityClass();
+            Map<String, FieldMapping> mapping = RefKit.byEntity(entityClass).getFieldsMap();
             for (EntryMeta meta : metas.getMetas()) {
-                if (meta.setter == null) {
-                    continue;
-                }
-                FieldMapping fm = mapping.get(meta.name);
-                if (fm == null) {
-                    throw fieldNotFoundException(meta.name, entity.entityClass());
+                setFieldValue(mapping, meta, entity, target);
+            }
+            for (FormMetas form : metas.getForms()) {
+                Object data = EntityRefKit.findRefData(entityClass, entity, form.entryName);
+                if (data instanceof Collection) {
+                    List list = entities2result((List) data, form);
+                    form.setValue(target, list);
                 } else {
-                    Object value = fm.getter.get(entity);
-                    meta.set(target, value);
+                    Object value = entity2result((IEntity) data, form);
+                    form.setValue(target, value);
                 }
             }
             return target;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void setFieldValue(Map<String, FieldMapping> mapping, EntryMeta meta, IEntity source, Object target) {
+        if (meta.setter == null) {
+            return;
+        }
+        FieldMapping fm = mapping.get(meta.name);
+        if (fm == null) {
+            throw fieldNotFoundException(meta.name, source.entityClass());
+        } else {
+            Object value = fm.getter.get(source);
+            meta.set(target, value);
         }
     }
 

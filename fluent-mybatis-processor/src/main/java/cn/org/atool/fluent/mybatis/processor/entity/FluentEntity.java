@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * fluent mybatis生成代码Entity信息
@@ -122,7 +123,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     public FluentEntity setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults, String superMapper) {
         this.prefix = fluentMyBatis.prefix();
         this.suffix = fluentMyBatis.suffix();
-        this.noSuffix = this.className.replace(this.suffix, "");
+        this.noSuffix = this.className.replace(this.suffix, EMPTY);
         this.defaults = isBlank(defaults) ? IDefaultSetter.class.getName() : defaults;
         this.superMapper = isBlank(superMapper) ? IMapper.class.getName() : superMapper;
         this.tableName = fluentMyBatis.table();

@@ -1,19 +1,24 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.functions.RefKeyFunc;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_FIND;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**
  * 设置实例关联关系和数据工具类
  *
  * @author darui.wu
  */
+@SuppressWarnings({"unchecked"})
 public class EntityRefKit {
     /**
      * Entity指定
@@ -103,5 +108,22 @@ public class EntityRefKit {
             map.get(key).add(e);
         }
         return map;
+    }
+
+    public static Object findRefData(Class<IEntity> entityClass, IEntity entity, String method) {
+        RefKey refKey = getRefKeyOfRefMethod(entityClass, method);
+        return refKey == null ? null : refKey.refMethod.apply(entity);
+    }
+
+    public static RefKey getRefKeyOfRefMethod(Class eClass, String methodName) {
+        KeyMap<RefKey> keys = RefKit.byEntity(eClass).refKeys();
+        if (keys.containsKey(methodName)) {
+            return keys.get(methodName);
+        } else if (!methodName.startsWith(PRE_FIND)) {
+            String method = PRE_FIND + capitalFirst(methodName);
+            return keys.get(method);
+        } else {
+            return null;
+        }
     }
 }

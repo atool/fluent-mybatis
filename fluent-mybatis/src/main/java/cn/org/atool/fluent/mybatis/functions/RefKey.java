@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.functions;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import lombok.AllArgsConstructor;
 
 /**
@@ -12,7 +11,7 @@ import lombok.AllArgsConstructor;
  */
 @SuppressWarnings({"unchecked"})
 @AllArgsConstructor
-public class RefKey<S extends IEntity, D extends IEntity> {
+public class RefKey<S, D> {
     /**
      * 关联方法名称
      */
@@ -29,12 +28,17 @@ public class RefKey<S extends IEntity, D extends IEntity> {
      * 是否 1:N关系
      */
     public final boolean isList;
+    /**
+     * 提供 Ref 数据方法
+     */
+    public final RefFunction refMethod;
 
     /**
      * 构造关联关系
      */
-    public static <S extends IEntity, D extends IEntity>
-    RefKey<S, D> refKey(String refName, boolean isList, RefKeyFunc<S> src, RefKeyFunc<D> ref) {
-        return new RefKey(refName, src, ref, isList);
+    public static <S, D> RefKey<S, D> refKey(String refName, boolean isList,
+                                             RefKeyFunc<S> src, RefKeyFunc<D> ref,
+                                             RefFunction refMethod) {
+        return new RefKey(refName, src, ref, isList, refMethod);
     }
 }
