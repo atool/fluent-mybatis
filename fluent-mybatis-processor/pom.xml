@@ -12,7 +12,7 @@
 
     <artifactId>fluent-mybatis-processor</artifactId>
     <properties>
-        <fluent-generator.version>1.3.11</fluent-generator.version>
+        <fluent-generator.version>1.3.12</fluent-generator.version>
         <mysql.version>8.0.20</mysql.version>
         <skipTests>true</skipTests>
     </properties>
@@ -22,6 +22,12 @@
                 <groupId>com.github.atool</groupId>
                 <artifactId>generator</artifactId>
                 <version>${fluent-generator.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>*</artifactId>
+                        <groupId>*</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.squareup</groupId>
@@ -44,12 +50,6 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>generator</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>*</artifactId>
-                    <groupId>*</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

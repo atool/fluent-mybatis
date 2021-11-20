@@ -182,7 +182,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation#findDeskMateOfStudentEntity(StudentEntity)}
+   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation#findDeskMateOfStudentEntity(List)}
    */
   @RefMethod("deskMateId = id")
   public StudentEntity findDeskMate() {
@@ -190,7 +190,7 @@ public class StudentEntity extends RichEntity implements MyEntity<StudentEntity>
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation#findStudentScoreListOfStudentEntity(StudentEntity)}
+   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation#findStudentScoreListOfStudentEntity(List)}
    */
   @RefMethod("studentId = id && isDeleted = isDeleted && env = env")
   public List<StudentScoreEntity> findStudentScoreList() {

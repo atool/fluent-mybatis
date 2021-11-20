@@ -31,7 +31,7 @@ public class ConfigurationKit {
         for (Map.Entry<String, AMapping> entry : mappers.entrySet()) {
             inserts.put(entry.getKey() + "." + M_Insert, entry.getValue());
             batchInserts.put(entry.getKey() + "." + M_InsertBatch, entry.getValue());
-            listEntities.put(entry.getKey() + "." + M_listEntity, entry.getValue());
+            listEntities.put(entry.getKey() + "." + M_internalListEntity, entry.getValue());
         }
     }
 

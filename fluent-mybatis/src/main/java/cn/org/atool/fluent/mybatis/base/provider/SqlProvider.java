@@ -77,7 +77,7 @@ public class SqlProvider {
 
     /**
      * 根据动态条件查询Entity SQL构造
-     * {@link IEntityMapper#listEntity(IQuery)}
+     * {@link IEntityMapper#internalListEntity(IQuery)}
      *
      * @param map k-v条件
      * @return ignore

@@ -77,6 +77,8 @@ public interface FluentConst {
 
     String M_listEntity = "listEntity";
 
+    String M_internalListEntity = "internalListEntity";
+
     String M_insertSelect = "insertSelect";
 
     String M_updateBy = "updateBy";

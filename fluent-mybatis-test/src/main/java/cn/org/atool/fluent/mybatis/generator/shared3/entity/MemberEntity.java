@@ -100,7 +100,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findMyFavoriteOfMemberEntity(MemberEntity)}
+   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findMyFavoriteOfMemberEntity(List)}
    */
   @RefMethod("isDeleted = isDeleted && memberId = id")
   public List<MemberFavoriteEntity> findMyFavorite() {

@@ -6,12 +6,15 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.intf.IHasMapping;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ConfigurationKit;
 
 import java.util.Collection;
 import java.util.List;
@@ -75,6 +78,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * @return ignore
      * @see SqlProvider#listEntity(Map, ProviderContext)
      * @see StatementBuilder#listEntityStatement()
+     * @see ConfigurationKit#ConfigurationKit(Configuration, KeyMap)
      */
     @SelectProvider(type = SqlProvider.class, method = M_listEntity)
     List<E> internalListEntity(@Param(Param_EW) IQuery query);
