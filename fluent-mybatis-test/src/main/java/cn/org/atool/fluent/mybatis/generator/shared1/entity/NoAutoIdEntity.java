@@ -5,8 +5,11 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.Version;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -22,6 +25,9 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(
     callSuper = false
 )
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @FluentMybatis(
     table = "no_auto_id",
     schema = "fluent_mybatis",

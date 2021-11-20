@@ -1,9 +1,16 @@
 package cn.org.atool.fluent.mybatis.generator.shared5.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.Version;
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -19,53 +26,55 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(
     callSuper = false
 )
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @FluentMybatis(
     table = "idcard",
     schema = "fluent_mybatis",
     useCached = true
 )
 public class IdcardEntity extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键id
-     */
-    @TableId(
-        value = "id",
-        auto = false,
-        seqName = "SELECT NEXTVAL('testSeq')"
-    )
-    private Long id;
+  /**
+   * 主键id
+   */
+  @TableId(
+      value = "id",
+      auto = false,
+      seqName = "SELECT NEXTVAL('testSeq')"
+  )
+  private Long id;
 
-    /**
-     * 是否逻辑删除
-     */
-    @TableField(
-        value = "is_deleted",
-        insert = "0"
-    )
-    @LogicDelete
-    private Long isDeleted;
+  /**
+   * 是否逻辑删除
+   */
+  @TableField(
+      value = "is_deleted",
+      insert = "0"
+  )
+  @LogicDelete
+  private Long isDeleted;
 
-    /**
-     *
-     */
-    @TableField("code")
-    private String code;
+  /**
+   */
+  @TableField("code")
+  private String code;
 
-    /**
-     * 版本锁
-     */
-    @TableField(
-        value = "version",
-        insert = "0",
-        update = "`version` + 1"
-    )
-    @Version
-    private Long version;
+  /**
+   * 版本锁
+   */
+  @TableField(
+      value = "version",
+      insert = "0",
+      update = "`version` + 1"
+  )
+  @Version
+  private Long version;
 
-    @Override
-    public final Class entityClass() {
-        return IdcardEntity.class;
-    }
+  @Override
+  public final Class entityClass() {
+    return IdcardEntity.class;
+  }
 }

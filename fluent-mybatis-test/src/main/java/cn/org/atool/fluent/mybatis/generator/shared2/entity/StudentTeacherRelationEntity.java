@@ -6,8 +6,11 @@ import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -23,6 +26,9 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(
     callSuper = false
 )
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @FluentMybatis(
     table = "student_teacher_relation",
     schema = "fluent_mybatis"

@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.formapi;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.FormService;
+import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentScoreEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import lombok.Data;

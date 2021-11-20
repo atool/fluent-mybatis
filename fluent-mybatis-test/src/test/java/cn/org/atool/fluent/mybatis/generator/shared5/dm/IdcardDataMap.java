@@ -66,7 +66,6 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
   public IdcardDataMap init() {
-    this.id.autoIncrease();
     return this;
   }
 
