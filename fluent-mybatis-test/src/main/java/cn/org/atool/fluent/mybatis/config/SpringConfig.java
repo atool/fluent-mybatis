@@ -19,6 +19,7 @@ import java.util.Arrays;
 
 import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LIMIT;
 
+@SuppressWarnings({"unchecked"})
 @Configuration
 @MapperScan(basePackages = {
     "cn.org.atool.fluent.mybatis.generator.*.mapper",

@@ -29,7 +29,7 @@ import javax.sql.DataSource;
     "cn.org.atool.fluent.mybatis.origin.mapper"
 })
 @FormServiceScans({
-    @FormServiceScan({"cn.org.atool.fluent.mybatis.formapi"})
+    @FormServiceScan({"cn.org.atool.fluent.mybatis.formservice"})
 })
 public abstract class BaseTest extends Test4J {
 }

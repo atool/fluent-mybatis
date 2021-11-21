@@ -190,7 +190,7 @@ public class EntryMetas {
                 continue;
             }
             Entry entry = field.getAnnotation(Entry.class);
-            String name = this.noEntryName(entry) ? field.getName() : entry.name();
+            String name = this.noEntryName(entry) ? field.getName() : entry.value();
             Class fClass = this.getFieldType(field);
 
             Method setter = findSetter(aClass, field);
@@ -228,7 +228,7 @@ public class EntryMetas {
      * @return true/false
      */
     private boolean noEntryName(Entry entry) {
-        return entry == null || If.isBlank(entry.name());
+        return entry == null || If.isBlank(entry.value());
     }
 
     public static Method findGetter(Class klass, Field field) {

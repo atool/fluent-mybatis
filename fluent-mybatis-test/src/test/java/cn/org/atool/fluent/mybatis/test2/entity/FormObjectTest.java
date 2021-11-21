@@ -115,13 +115,13 @@ public class FormObjectTest extends BaseTest {
         @Entry(type = EntryType.NE)
         private String version;
 
-        @Entry(name = "address", ignoreNull = false)
+        @Entry(value = "address", ignoreNull = false)
         private String add;
 
-        @Entry(name = "age", type = EntryType.Between)
+        @Entry(value = "age", type = EntryType.Between)
         private Integer[] ages;
 
-        @Entry(name = "address", type = EntryType.IN)
+        @Entry(value = "address", type = EntryType.IN)
         private List<String> addresses;
     }
 }

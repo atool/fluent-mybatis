@@ -62,7 +62,7 @@ public class ArgumentMeta {
             this.ignoreNull = true;
             this.entryType = EntryType.Form;
         } else {
-            this.entryName = entry.name();
+            this.entryName = entry.value();
             this.ignoreNull = entry.ignoreNull();
             this.entryType = entry.type();
         }

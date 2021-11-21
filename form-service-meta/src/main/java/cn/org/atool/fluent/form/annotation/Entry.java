@@ -15,7 +15,7 @@ public @interface Entry {
      * 关联的Entity字段名称
      * 未定义则取字段名称
      */
-    String name() default "";
+    String value() default "";
 
     /**
      * 条件操作, 默认相等(赋值)

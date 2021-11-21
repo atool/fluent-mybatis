@@ -227,7 +227,11 @@ public class FormHelper {
     private static void where(IWrapper wrapper, String column, EntryMeta meta, Object value) {
         if (meta.type == EntryType.EQ) {
             if (value != null) {
-                wrapper.where().apply(column, SqlOp.EQ, value);
+                if (value instanceof Collection || value.getClass().isArray()) {
+                    wrapper.where().apply(column, SqlOp.IN, toArray(meta.name, value));
+                } else {
+                    wrapper.where().apply(column, SqlOp.EQ, value);
+                }
             } else if (!meta.ignoreNull) {
                 wrapper.where().apply(column, SqlOp.IS_NULL);
             }

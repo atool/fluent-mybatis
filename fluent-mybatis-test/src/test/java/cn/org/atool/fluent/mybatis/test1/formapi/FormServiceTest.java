@@ -1,10 +1,7 @@
 package cn.org.atool.fluent.mybatis.test1.formapi;
 
-import cn.org.atool.fluent.mybatis.formapi.StdPagedQuery;
-import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi;
-import cn.org.atool.fluent.mybatis.formapi.StudentQueryApi.TagPagedQuery;
-import cn.org.atool.fluent.mybatis.formapi.StudentUpdateApi;
-import cn.org.atool.fluent.mybatis.formapi.StudentUpdater;
+import cn.org.atool.fluent.mybatis.formservice.model.*;
+import cn.org.atool.fluent.mybatis.formservice.service.StudentService;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
@@ -16,12 +13,10 @@ import org.test4j.tools.datagen.DataMap;
 
 import java.util.List;
 
+@SuppressWarnings({"rawtypes"})
 public class FormServiceTest extends BaseTest {
     @Autowired
-    StudentUpdateApi updateApi;
-
-    @Autowired
-    StudentQueryApi queryApi;
+    StudentService service;
 
     @Test
     void listEntity() {
@@ -39,7 +34,7 @@ public class FormServiceTest extends BaseTest {
             .subject.values("yuwen", "english")
             .score.values(79, 67, 98)
             .cleanAndInsert();
-        List<StudentQueryApi.Student> students = queryApi.listStudentBy(new StudentQueryApi.StudentQuery()
+        List<Student> students = service.listStudentBy(new StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
             .setAge(new Integer[]{20, 40}));
@@ -91,7 +86,7 @@ public class FormServiceTest extends BaseTest {
             .email.values("xxx@test")
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        StdPagedList<StudentQueryApi.Student> students = queryApi.stdPagedStudent((StdPagedQuery) new StdPagedQuery()
+        StdPagedList<Student> students = service.stdPagedStudent((StdPagedQuery) new StdPagedQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
             .setAge(new Integer[]{20, 40}));
@@ -128,7 +123,7 @@ public class FormServiceTest extends BaseTest {
             .email.values("xxx@test")
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        TagPagedList<StudentQueryApi.Student> students = queryApi.tagPagedStudent((TagPagedQuery) new TagPagedQuery()
+        TagPagedList<Student> students = service.tagPagedStudent((TagPagedQuery) new TagPagedQuery()
             .setNextId(23)
             .setPageSize(2)
             .setUserName("ming.li")
@@ -160,7 +155,7 @@ public class FormServiceTest extends BaseTest {
             .age.values(23, 34)
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        StudentQueryApi.Student student = queryApi.findByUserName("ming.li", new int[]{20, 40});
+        Student student = service.findByUserName("ming.li", new int[]{23, 40});
         want.object(student).eqDataMap(
             ATM.dataMap.student.entity(1)
                 .userName.values("ming.li")
@@ -172,7 +167,7 @@ public class FormServiceTest extends BaseTest {
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
             "AND `user_name` = ? " +
-            "AND `age` BETWEEN ? AND ? " +
+            "AND `age` IN (?, ?) " +
             "LIMIT ?, ?");
     }
 
@@ -185,7 +180,7 @@ public class FormServiceTest extends BaseTest {
             .age.values(23, 34)
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        StudentQueryApi.Student student = queryApi.findByUserName("ming.li", new StudentQueryApi.StudentQuery().setAge(new Integer[]{20, 40}));
+        Student student = service.findByUserName("ming.li", new StudentQuery().setAge(new Integer[]{20, 40}));
         want.object(student).eqDataMap(
             ATM.dataMap.student.entity(1)
                 .userName.values("ming.li")
@@ -210,7 +205,7 @@ public class FormServiceTest extends BaseTest {
             .age.values(23, 34)
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        StudentQueryApi.Student student = queryApi.findStudentBy(new StudentQueryApi.StudentQuery()
+        Student student = service.findStudent(new StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
             .setAge(new Integer[]{20, null}));
@@ -237,7 +232,7 @@ public class FormServiceTest extends BaseTest {
             .age.values(23, 34)
             .address.values("hangzhou binjiang")
             .cleanAndInsert();
-        long count = queryApi.countStudentBy(new StudentQueryApi.StudentQuery()
+        long count = service.countStudentBy(new StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
             .setAge(new Integer[]{20, 40}));
@@ -253,8 +248,8 @@ public class FormServiceTest extends BaseTest {
     @Test
     void createStudent() {
         ATM.dataMap.student.table().clean();
-        StudentUpdateApi.Student student = updateApi.saveStudent(new StudentUpdateApi.Student().setUserName("test").setAge(34));
-        want.object(student).eqReflect(new StudentUpdateApi.Student().setUserName("test").setAge(34), EqMode.IGNORE_DEFAULTS);
+        Student student = service.saveStudent(new Student().setUserName("test").setAge(34));
+        want.object(student).eqReflect(new Student().setUserName("test").setAge(34), EqMode.IGNORE_DEFAULTS);
         want.number(student.getId()).isGt(0L);
         ATM.dataMap.student.table(1).eqTable();
     }
@@ -262,9 +257,9 @@ public class FormServiceTest extends BaseTest {
     @Test
     void createStudents() {
         ATM.dataMap.student.table().clean();
-        updateApi.saveStudent(list(
-            new StudentUpdateApi.Student().setUserName("test1").setAge(34),
-            new StudentUpdateApi.Student().setUserName("test2").setAge(44)
+        service.saveStudent(list(
+            new Student().setUserName("test1").setAge(34),
+            new Student().setUserName("test2").setAge(44)
         ));
         ATM.dataMap.student.table(2).eqTable();
     }
@@ -276,7 +271,7 @@ public class FormServiceTest extends BaseTest {
             .id.values(2L)
             .env.values("test_env")
             .cleanAndInsert();
-        int count = updateApi.updateStudent(new StudentUpdater().setUserName("test").setAge(34).setId(2L));
+        int count = service.updateStudent(new StudentUpdater().setUserName("test").setAge(34).setId(2L));
         want.number(count).eq(1);
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
@@ -292,7 +287,7 @@ public class FormServiceTest extends BaseTest {
             .id.values(2L, 4L)
             .env.values("test_env")
             .cleanAndInsert();
-        updateApi.updateStudent(list(
+        service.updateStudent(list(
             new StudentUpdater().setUserName("test1").setAge(34).setId(2L),
             new StudentUpdater().setUserName("test2").setAge(34).setId(4L)
         ));

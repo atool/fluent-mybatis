@@ -52,7 +52,7 @@ public class FormScanner extends ElementScanner8<Void, Void> {
         }
         Entry entry = element.getAnnotation(Entry.class);
         String fieldName = element.getSimpleName().toString();
-        String entryName = entry == null ? "" : entry.name().trim();
+        String entryName = entry == null ? "" : entry.value().trim();
         if (entryName.isEmpty()) {
             entryName = fieldName;
         }
