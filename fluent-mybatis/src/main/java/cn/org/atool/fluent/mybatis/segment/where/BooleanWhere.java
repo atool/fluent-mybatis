@@ -3,8 +3,6 @@ package cn.org.atool.fluent.mybatis.segment.where;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseQuery;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 
-import java.util.Collection;
-
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
 
 /**

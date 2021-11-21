@@ -229,8 +229,8 @@ public class PrinterMapper implements IWrapperMapper {
     /**
      * 主动设置PrinterMapper
      *
-     * @param mode   打印SQL模式
-     * @param mapper 原生mapper实例
+     * @param mode    打印SQL模式
+     * @param mapping 原生mapper实例
      * @return PrinterMapper
      */
     public static IWrapperMapper set(int mode, IMapping mapping) {

@@ -20,7 +20,6 @@ public interface NumericWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
     > extends ObjectWhere<WHERE, NQ> {
-
     /**
      * in (values)
      *
