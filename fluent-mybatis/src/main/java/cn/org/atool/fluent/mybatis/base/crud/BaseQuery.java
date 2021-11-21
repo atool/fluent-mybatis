@@ -150,7 +150,7 @@ public abstract class BaseQuery<
     }
 
     @Getter
-    private Set<String> withRelations = new HashSet<>();
+    private final Set<String> withRelations = new HashSet<>();
 
     /**
      * listEntity和findOne查询时, 同时执行 refMethod 方法
@@ -158,7 +158,7 @@ public abstract class BaseQuery<
      * @param refMethod 关联查询方法
      * @return ignore
      */
-    public Q with(IGetter<E> refMethod) {
+    public <ET> Q with(IGetter<ET> refMethod) {
         return this.with(LambdaUtil.resolve(refMethod));
     }
 

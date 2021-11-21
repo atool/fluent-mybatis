@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.mybatis.functions;
 
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.base.intf.IRelation;
 import lombok.AllArgsConstructor;
 
 /**
@@ -9,7 +11,7 @@ import lombok.AllArgsConstructor;
  * @param <D>
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @AllArgsConstructor
 public class RefKey<S, D> {
     /**
@@ -29,16 +31,16 @@ public class RefKey<S, D> {
      */
     public final boolean isList;
     /**
-     * 提供 Ref 数据方法
+     * Entity Ref {@link RefMethod}在 {@link IRelation}中的实现方法
      */
-    public final RefFunction refMethod;
+    public final IGetter finder;
 
     /**
      * 构造关联关系
      */
     public static <S, D> RefKey<S, D> refKey(String refName, boolean isList,
                                              RefKeyFunc<S> src, RefKeyFunc<D> ref,
-                                             RefFunction refMethod) {
-        return new RefKey(refName, src, ref, isList, refMethod);
+                                             IGetter finder) {
+        return new RefKey(refName, src, ref, isList, finder);
     }
 }

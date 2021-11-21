@@ -10,8 +10,8 @@ import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
-import cn.org.atool.fluent.mybatis.functions.RefFunction;
-import cn.org.atool.fluent.mybatis.functions.RefFunction2;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
+import cn.org.atool.fluent.mybatis.functions.RefFinder;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
@@ -38,7 +38,7 @@ public final class RefKit {
     /**
      * 多对多关联方法实现引用
      */
-    public static final KeyMap<RefFunction<IEntity>> relations = new KeyMap<>();
+    public static final KeyMap<IGetter> relations = new KeyMap<>();
     /**
      * EntityClass 和 AMapping关联关系
      */
@@ -251,20 +251,20 @@ public final class RefKit {
      *
      * @param eClass     Entity类
      * @param methodName 关联方法
-     * @param eList      实例或列表
+     * @param eOrList    Entity或Entity列表
      * @return ignore
      */
     public static <T> T invokeRefMethod(Class eClass, String methodName, Object eOrList) {
         String methodOfEntity = methodNameOfEntity(methodName, eClass);
-        RefFunction func = relations.get(methodOfEntity);
-        if (func == null) {
+        IGetter finder = relations.get(methodOfEntity);
+        if (finder == null) {
             String err = "the method[" + methodName + "] of IEntityRelation not found or IEntityRelation's implement not defined as spring bean.";
             throw new RuntimeException(err);
-        } else if (func instanceof RefFunction2) {
-            ((RefFunction2) func).relation(eOrList);
+        } else if (finder instanceof RefFinder) {
+            ((RefFinder) finder).relation(eOrList);
             return null;
         } else {
-            return (T) func.apply(eOrList);
+            return (T) finder.get(eOrList);
         }
     }
 
@@ -324,23 +324,23 @@ public final class RefKit {
     /**
      * 设置实体类的关联自定义实现
      *
-     * @param method 方法引用
+     * @param finder 方法引用
      * @param <E>    实体类型
      */
-    public static <E> void put(Class<E> eClass, String refName, RefFunction<List<E>> method) {
-        String name = LambdaUtil.resolve(method);
-        relations.put(name, new RefFunction2(eClass, refName, method));
+    public static <E> void put(Class<E> eClass, String refName, IGetter<List<E>> finder) {
+        String name = LambdaUtil.resolve(finder);
+        relations.put(name, new RefFinder(eClass, refName, finder));
     }
 
     /**
      * 设置实体类的关联自定义实现
      *
-     * @param method 方法引用
+     * @param finder 方法引用
      * @param <E>    实体类型
      */
-    public static <E extends IEntity> void put(RefFunction<E> method) {
-        String name = LambdaUtil.resolve(method);
-        relations.put(name, (RefFunction) method);
+    public static <E extends IEntity> void put(IGetter<E> finder) {
+        String name = LambdaUtil.resolve(finder);
+        relations.put(name, finder);
     }
 
     /**

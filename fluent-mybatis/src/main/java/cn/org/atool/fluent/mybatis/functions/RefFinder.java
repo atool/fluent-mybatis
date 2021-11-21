@@ -13,18 +13,18 @@ import java.util.List;
  * @param <E>
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @AllArgsConstructor
-public class RefFunction2<E> implements RefFunction<List<E>> {
+public class RefFinder<E> implements IGetter<List<E>> {
     private final Class entityClass;
 
     private final String refMethodName;
 
-    public final RefFunction<List<E>> function;
+    public final IGetter<List<E>> finder;
 
     @Override
-    public Object apply(List<E> entities) {
-        return function.apply(entities);
+    public Object get(List<E> entities) {
+        return finder.get(entities);
     }
 
     public void relation(Object source) {
@@ -36,7 +36,7 @@ public class RefFunction2<E> implements RefFunction<List<E>> {
             entities.add(source);
         }
         if (!entities.isEmpty()) {
-            List refs = (List) function.apply(entities);
+            List refs = (List) finder.get(entities);
             EntityRefKit.groupRelation(refKey, entities, refs);
         }
     }

@@ -61,12 +61,11 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      */
     default List<E> listEntity(@Param(Param_EW) IQuery query) {
         List<E> list = this.internalListEntity(query);
-        if (!(query instanceof BaseQuery)) {
-            return list;
-        }
-        Set<String> methods = ((BaseQuery) query).getWithRelations();
-        for (String method : methods) {
-            RefKit.invokeRefMethod(this.mapping().entityClass(), method, list);
+        if (query instanceof BaseQuery) {
+            Set<String> methods = ((BaseQuery) query).getWithRelations();
+            for (String method : methods) {
+                RefKit.invokeRefMethod(this.mapping().entityClass(), method, list);
+            }
         }
         return list;
     }

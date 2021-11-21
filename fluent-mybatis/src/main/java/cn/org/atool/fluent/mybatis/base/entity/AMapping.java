@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
-import cn.org.atool.fluent.mybatis.functions.RefFunction;
+import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.functions.RefKeyFunc;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
@@ -244,10 +244,11 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * @param src     原Entity关联键构造
      * @param isList  是否1:N
      * @param ref     关联Entity关联键构造
+     * @param finder  find Ref 方法
      * @return ignore
      */
-    protected <R> AMapping ref(String refName, RefKeyFunc<E> src, boolean isList, RefKeyFunc<R> ref, RefFunction<E> refMethod) {
-        Ref_Keys.put(refName, RefKey.refKey(refName, isList, src, ref, refMethod));
+    protected <R> AMapping ref(String refName, RefKeyFunc<E> src, boolean isList, RefKeyFunc<R> ref, IGetter<E> finder) {
+        Ref_Keys.put(refName, RefKey.refKey(refName, isList, src, ref, finder));
         return this;
     }
 
@@ -256,10 +257,11 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      *
      * @param refName 关联名称
      * @param isList  是否1:N
+     * @param finder  find Ref 方法
      * @return ignore
      */
-    protected AMapping ref(String refName, boolean isList, RefFunction<E> refMethod) {
-        Ref_Keys.put(refName, RefKey.refKey(refName, isList, null, null, refMethod));
+    protected AMapping ref(String refName, boolean isList, IGetter<E> finder) {
+        Ref_Keys.put(refName, RefKey.refKey(refName, isList, null, null, finder));
         return this;
     }
 }

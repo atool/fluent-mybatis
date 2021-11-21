@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.functions.IGetter;
-import cn.org.atool.fluent.mybatis.functions.RefFunction;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
@@ -29,10 +28,6 @@ public class LambdaUtil {
 
     public static <E> String resolve(IGetter<E> getter) {
         return lambdaName(getter);
-    }
-
-    public static String resolve(RefFunction method) {
-        return lambdaName(method);
     }
 
     @SuppressWarnings("all")
