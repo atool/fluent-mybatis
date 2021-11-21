@@ -1,4 +1,4 @@
-POST http://localhost:8080/byQuery
+POST http://localhost:8080/findStudentBy
 Content-Type: application/json
 
 {

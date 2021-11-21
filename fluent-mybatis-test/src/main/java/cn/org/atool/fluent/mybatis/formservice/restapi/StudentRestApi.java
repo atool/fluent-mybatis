@@ -34,7 +34,7 @@ public interface StudentRestApi {
     @FormMethod(type = MethodType.Save)
     Student save(Student student);
 
-    @PostMapping("/byQuery")
+    @PostMapping("/findStudentBy")
     Student findStudentBy(@RequestBody StudentQuery student);
 
     @GetMapping("/byName")
