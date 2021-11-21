@@ -1,4 +1,7 @@
-POST http://localhost:80/student
+POST http://localhost:8080/byQuery
 Content-Type: application/json
 
-{}
+{
+    "userName": "ming.li"
+}
+

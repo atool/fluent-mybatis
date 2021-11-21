@@ -30,7 +30,7 @@ import static cn.org.atool.fluent.mybatis.metadata.feature.PagedFormat.ORACLE_LI
     "cn.org.atool.fluent.mybatis.origin.mapper"
 })
 @FormServiceScans({
-    @FormServiceScan({"cn.org.atool.fluent.mybatis.formapi"})
+    @FormServiceScan({"cn.org.atool.fluent.mybatis.formservice"})
 })
 public class SpringConfig {
     @Bean

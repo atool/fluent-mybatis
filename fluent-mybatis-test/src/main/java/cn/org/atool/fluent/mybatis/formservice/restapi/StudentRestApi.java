@@ -12,7 +12,9 @@ import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static cn.org.atool.fluent.form.annotation.EntryType.Between;
 import static cn.org.atool.fluent.form.annotation.EntryType.Form;
@@ -21,6 +23,13 @@ import static cn.org.atool.fluent.form.annotation.EntryType.Form;
 @RestController
 @FormService(table = "student")
 public interface StudentRestApi {
+    @GetMapping("/hello")
+    default Map testGet() {
+        return new HashMap<String, String>() {{
+            put("name", "springboot");
+        }};
+    }
+
     @PostMapping("/save")
     @FormMethod(type = MethodType.Save)
     Student save(Student student);
