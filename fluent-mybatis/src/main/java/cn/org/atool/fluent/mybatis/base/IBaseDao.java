@@ -2,7 +2,6 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +22,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param <PK>   主键类型
      * @return 返回记录主键
      */
-    default <PK extends Serializable> PK save(E entity) {
+    default <PK> PK save(E entity) {
         return (PK) this.mapper().save(entity);
     }
 
@@ -58,7 +57,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param id 主键值
      * @return 结果对象
      */
-    default E selectById(Serializable id) {
+    default E selectById(Object id) {
         Object obj = this.mapper().findById(id);
         return (E) obj;
     }
@@ -69,7 +68,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键列表
      * @return 对象列表
      */
-    default List<E> selectByIds(Serializable... ids) {
+    default List<E> selectByIds(Object... ids) {
         return (List<E>) this.mapper().listByIds(Arrays.asList(ids));
     }
 
@@ -79,7 +78,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键列表
      * @return 结果列表
      */
-    default List<E> selectByIds(Collection<? extends Serializable> ids) {
+    default List<E> selectByIds(Collection ids) {
         return (List<E>) this.mapper().listByIds(ids);
     }
 
@@ -99,7 +98,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param id 主键值
      * @return true: 记录存在; false: 记录不存在
      */
-    default boolean existPk(Serializable id) {
+    default boolean existPk(Object id) {
         return this.mapper().existPk(id);
     }
 
@@ -186,7 +185,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键列表
      * @return 被执行的记录数
      */
-    default int deleteByIds(Collection<? extends Serializable> ids) {
+    default int deleteByIds(Collection ids) {
         return this.mapper().deleteByIds(ids);
     }
 
@@ -196,7 +195,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键列表
      * @return 被执行的记录数
      */
-    default int logicDeleteByIds(Collection<? extends Serializable> ids) {
+    default int logicDeleteByIds(Collection ids) {
         return this.mapper().logicDeleteByIds(ids);
     }
 
@@ -206,7 +205,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键值
      * @return 是否删除成功
      */
-    default boolean deleteById(Serializable... ids) {
+    default boolean deleteById(Object... ids) {
         int count = this.mapper().deleteById(ids);
         return count > 0;
     }
@@ -217,7 +216,7 @@ public interface IBaseDao<E extends IEntity> {
      * @param ids 主键值
      * @return 是否删除成功
      */
-    default boolean logicDeleteById(Serializable... ids) {
+    default boolean logicDeleteById(Object... ids) {
         int count = this.mapper().logicDeleteById(ids);
         return count > 0;
     }

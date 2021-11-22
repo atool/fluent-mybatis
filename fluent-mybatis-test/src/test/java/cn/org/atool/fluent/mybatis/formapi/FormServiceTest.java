@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.formapi;
+package cn.org.atool.fluent.mybatis.formapi;
 
 import cn.org.atool.fluent.mybatis.formservice.model.*;
 import cn.org.atool.fluent.mybatis.formservice.service.StudentService;

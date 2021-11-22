@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.base;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -20,9 +20,9 @@ public interface IEntity extends Serializable {
      *
      * @return 主键
      */
-    default Serializable findPk() {
+    default Object findPk() {
         FieldMapping f = RefKit.byEntity(this.entityClass()).primaryMapping();
-        return f == null ? null : (Serializable) f.getter.get(this);
+        return f == null ? null : f.getter.get(this);
     }
 
     /**

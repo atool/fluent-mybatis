@@ -28,8 +28,9 @@ import javax.sql.DataSource;
     "cn.org.atool.fluent.mybatis.customize.mapper",
     "cn.org.atool.fluent.mybatis.origin.mapper"
 })
-@FormServiceScans({
-    @FormServiceScan({"cn.org.atool.fluent.mybatis.formservice"})
+@FormServiceScans({@FormServiceScan({
+    "cn.org.atool.fluent.mybatis.formservice",
+    "cn.org.atool.fluent.mybatis.generator.shared2.dao.intf"})
 })
 public abstract class BaseTest extends Test4J {
 }

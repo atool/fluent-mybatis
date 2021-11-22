@@ -4,10 +4,12 @@ import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.kits.NoMethodAround;
+import cn.org.atool.fluent.form.kits.ParameterizedTypeKit;
 import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -20,10 +22,13 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.cglib.proxy.Proxy.newProxyInstance;
 
@@ -66,12 +71,34 @@ public class FormServiceFactoryBean implements FactoryBean {
         return newProxyInstance(classLoader, new Class[]{this.serviceClass}, this::invoke);
     }
 
+    private static final Constructor<MethodHandles.Lookup> constructor;
+
+    static {
+        try {
+            constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class);
+            constructor.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     /**
      * FactoryBean的 {@link InvocationHandler#invoke(Object, Method, Object[])} 实现
      */
     private Object invoke(Object target, Method method, Object[] args) throws Throwable {
-        if (Object.class.equals(method.getDeclaringClass()) || method.isDefault()) {
+        Class declaringClass = method.getDeclaringClass();
+        if (Object.class.equals(declaringClass)) {
             return method.invoke(this, args);
+        } else if (method.isDefault()) {
+            return constructor.newInstance(declaringClass)
+                .in(declaringClass)
+                .unreflectSpecial(method, declaringClass)
+                .bindTo(target)
+                .invokeWithArguments(args);
+        } else if (IBaseDao.class.equals(declaringClass) && Objects.equals(method.getName(), "mapper")) {
+            Class eClass = this.getEntityClass(method);
+            return RefKit.mapper(eClass);
         }
         Class eClass = this.getEntityClass(method);
         try {
@@ -132,6 +159,9 @@ public class FormServiceFactoryBean implements FactoryBean {
     private Class<? extends IEntity> getEntityClass() {
         if (this.entityClass == null) {
             this.entityClass = this.getEntityClass(api.entity(), api.table());
+        }
+        if (entityClass == Object.class && IBaseDao.class.isAssignableFrom(this.serviceClass)) {
+            this.entityClass = ParameterizedTypeKit.getType(this.serviceClass, IBaseDao.class, "E");
         }
         return this.entityClass;
     }

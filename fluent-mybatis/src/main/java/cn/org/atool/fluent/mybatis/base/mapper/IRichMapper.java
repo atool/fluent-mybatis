@@ -12,7 +12,6 @@ import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import lombok.NonNull;
 
-import java.io.Serializable;
 import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
@@ -46,7 +45,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param id 主键ID
      * @return ignore
      */
-    default E findById(Serializable id) {
+    default E findById(Object id) {
         IQuery query = factory(this).queryByIds(this.mapping(), new Object[]{id});
         return this.findOne(query);
     }
@@ -110,7 +109,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param ids 主键列表
      * @return ignore
      */
-    default int deleteById(Serializable... ids) {
+    default int deleteById(Object... ids) {
         assertNotEmpty("ids", ids);
         IQuery query = factory(this).queryByIds(this.mapping(), ids);
         return this.delete(query);
@@ -205,7 +204,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param id 主键值
      * @return true: 记录存在; false: 记录不存在
      */
-    default boolean existPk(Serializable id) {
+    default boolean existPk(Object id) {
         IBaseQuery<E, ?> query = (IBaseQuery) ((IWrapperMapper) this).emptyQuery();
         FieldMapping pk = ((IWrapperMapper) this).primaryField();
         query.where().apply(pk.column, EQ, id).end().limit(1);
@@ -514,9 +513,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 被执行的记录数
      */
     default int deleteByEntityIds(Collection<E> entities) {
-        List<Serializable> ids = entities.stream()
-            .map(IEntity::findPk)
-            .collect(toList());
+        List ids = entities.stream().map(IEntity::findPk).collect(toList());
         return this.deleteByIds(ids);
     }
 
@@ -527,9 +524,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 被执行的记录数
      */
     default int logicDeleteByEntityIds(Collection<E> entities) {
-        List<Serializable> ids = entities.stream()
-            .map(IEntity::findPk)
-            .collect(toList());
+        List ids = entities.stream().map(IEntity::findPk).collect(toList());
         return this.logicDeleteByIds(ids);
     }
 
