@@ -15,6 +15,9 @@ public class StudentQuery {
     @Entry
     private String userName;
 
+    @Entry("userName")
+    private String userName2;
+
     @Entry(type = EntryType.LikeLeft)
     private String address;
 

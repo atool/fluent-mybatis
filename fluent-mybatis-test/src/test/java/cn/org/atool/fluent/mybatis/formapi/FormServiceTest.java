@@ -36,6 +36,7 @@ public class FormServiceTest extends BaseTest {
             .cleanAndInsert();
         List<Student> students = service.listStudentBy(new StudentQuery()
             .setUserName("ming.li")
+            .setUserName2("")/* 验证string为blank的场景 */
             .setAddress("hangzhou")
             .setAge(new Integer[]{20, 40}));
         want.object(students).eqDataMap(

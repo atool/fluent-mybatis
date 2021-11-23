@@ -1,9 +1,6 @@
 package cn.org.atool.fluent.mybatis.formservice.service;
 
-import cn.org.atool.fluent.form.annotation.Entry;
-import cn.org.atool.fluent.form.annotation.FormMethod;
-import cn.org.atool.fluent.form.annotation.FormService;
-import cn.org.atool.fluent.form.annotation.MethodType;
+import cn.org.atool.fluent.form.annotation.*;
 import cn.org.atool.fluent.mybatis.formservice.model.*;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;

@@ -1,20 +1,13 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
-import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * StudentScoreEntity: 数据映射实体定义
@@ -118,7 +111,7 @@ public class StudentScoreEntity extends RichEntity implements MyEntity<StudentSc
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation#findStudentOfStudentScoreEntity(List)}
+   * @see cn.org.atool.fluent.mybatis.generator.shared2.IEntityRelation#findStudentOfStudentScoreEntity(java.util.List)
    */
   @RefMethod("isDeleted = isDeleted && id = studentId && env = env")
   public StudentEntity findStudent() {

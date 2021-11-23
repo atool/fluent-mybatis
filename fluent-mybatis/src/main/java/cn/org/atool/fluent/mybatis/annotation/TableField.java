@@ -55,5 +55,5 @@ public @interface TableField {
     /**
      * 字段描述
      */
-    String desc();
+    String desc() default "";
 }

@@ -21,6 +21,7 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.*;
 
+import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.base.EntityRefKit.getRefKeyOfRefMethod;
 
 /**
@@ -74,7 +75,8 @@ public class FormHelper {
     private static void where(Class entityClass, Form form, IWrapper query) {
         WhereBase where = query.where();
         for (FormEntry item : form.getWhere()) {
-            if (item.getValue() == null) {
+            Object[] value = item.getValue();
+            if (value == null) {
                 continue;
             }
             String column = RefKit.columnOfField(entityClass, item.getField());
@@ -83,19 +85,19 @@ public class FormHelper {
             }
             switch (item.getOp()) {
                 case FormSqlOp.OP_LIKE_LEFT:
-                    where.and.apply(column, SqlOp.LIKE, item.getValue()[0] + "%");
+                    where.and.apply(column, SqlOp.LIKE, value[0] + "%");
                     break;
                 case FormSqlOp.OP_LIKE:
-                    where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0] + "%");
+                    where.and.apply(column, SqlOp.LIKE, "%" + value[0] + "%");
                     break;
                 case FormSqlOp.OP_LIKE_RIGHT:
-                    where.and.apply(column, SqlOp.LIKE, "%" + item.getValue()[0]);
+                    where.and.apply(column, SqlOp.LIKE, "%" + value[0]);
                     break;
                 case FormSqlOp.OP_NOT_LIKE:
-                    where.and.apply(column, SqlOp.NOT_LIKE, "%" + item.getValue()[0] + "%");
+                    where.and.apply(column, SqlOp.NOT_LIKE, "%" + value[0] + "%");
                     break;
                 default:
-                    where.and.apply(column, SqlOps.get(item.getOp()), item.getValue());
+                    where.and.apply(column, SqlOps.get(item.getOp()), value);
             }
         }
     }
@@ -225,22 +227,25 @@ public class FormHelper {
     }
 
     private static void where(IWrapper wrapper, String column, EntryMeta meta, Object value) {
-        if (meta.type == EntryType.EQ) {
-            if (value != null) {
+        if (value == null || value instanceof String && isBlank((String) value)) {
+            if (!meta.ignoreNull) {
+                if (meta.type == EntryType.EQ) {
+                    wrapper.where().apply(column, SqlOp.IS_NULL);
+                } else {
+                    throw new IllegalArgumentException("Condition field[" + meta.name + "] not assigned.");
+                }
+            }
+            return;
+        }
+
+        switch (meta.type) {
+            case EQ:
                 if (value instanceof Collection || value.getClass().isArray()) {
                     wrapper.where().apply(column, SqlOp.IN, toArray(meta.name, value));
                 } else {
                     wrapper.where().apply(column, SqlOp.EQ, value);
                 }
-            } else if (!meta.ignoreNull) {
-                wrapper.where().apply(column, SqlOp.IS_NULL);
-            }
-            return;
-        }
-        if (value == null) {
-            throw new IllegalArgumentException("Condition field[" + meta.name + "] not assigned.");
-        }
-        switch (meta.type) {
+                break;
             case GT:
                 wrapper.where().apply(column, SqlOp.EQ, value);
                 break;

@@ -96,7 +96,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findMyFavoriteOfMemberEntity(List)}
+   * @see cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findMyFavoriteOfMemberEntity(List)
    */
   @RefMethod("isDeleted = isDeleted && memberId = id")
   public List<MemberFavoriteEntity> findMyFavorite() {
@@ -104,7 +104,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findExFriendsOfMemberEntity(MemberEntity)}
+   * @see cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findExFriendsOfMemberEntity(MemberEntity)
    */
   @RefMethod
   public List<MemberEntity> findExFriends() {
@@ -112,7 +112,7 @@ public class MemberEntity extends RichEntity {
   }
 
   /**
-   * 实现 {@link cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findCurrFriendOfMemberEntity(MemberEntity)}
+   * @see cn.org.atool.fluent.mybatis.generator.shared3.IEntityRelation#findCurrFriendOfMemberEntity(MemberEntity)
    */
   @RefMethod
   public MemberEntity findCurrFriend() {
