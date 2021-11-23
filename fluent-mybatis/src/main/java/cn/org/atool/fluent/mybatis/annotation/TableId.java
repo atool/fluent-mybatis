@@ -46,4 +46,8 @@ public @interface TableId {
      * 只在seqName有值时才有效
      */
     boolean before() default false;
+    /**
+     * 字段描述
+     */
+    String desc() default "";
 }

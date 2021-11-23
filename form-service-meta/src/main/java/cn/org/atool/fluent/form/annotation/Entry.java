@@ -26,4 +26,9 @@ public @interface Entry {
      * 忽略null值
      */
     boolean ignoreNull() default true;
+
+    /**
+     * 字段描述
+     */
+    String desc() default "";
 }
