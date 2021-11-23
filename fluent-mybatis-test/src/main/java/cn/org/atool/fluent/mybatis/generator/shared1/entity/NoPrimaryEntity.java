@@ -34,18 +34,12 @@ import lombok.experimental.Accessors;
 public class NoPrimaryEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   */
   @TableField("column_1")
   private Integer column1;
 
-  /**
-   */
   @TableField("column_2")
   private String column2;
 
-  /**
-   */
   @TableField("alias")
   private String alias;
 

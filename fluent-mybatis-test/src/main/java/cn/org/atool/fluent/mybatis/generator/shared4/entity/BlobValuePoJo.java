@@ -38,32 +38,24 @@ import org.apache.ibatis.type.BlobTypeHandler;
 public class BlobValuePoJo extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      desc = "主键id"
+  )
   private Long id;
 
-  /**
-   */
   @TableField(
       value = "blob_value",
       typeHandler = BlobTypeHandler.class
   )
   private byte[] blobValue;
 
-  /**
-   */
   @TableField("max")
   private Long max;
 
-  /**
-   */
   @TableField("min")
   private Long min;
 
-  /**
-   */
   @TableField("origin")
   private String origin;
 

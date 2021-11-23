@@ -40,81 +40,75 @@ import lombok.experimental.Accessors;
 public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddressEntity> {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      desc = "主键id"
+  )
   private Long id;
 
-  /**
-   * 创建时间
-   */
   @TableField(
       value = "gmt_created",
-      insert = "now()"
+      insert = "now()",
+      desc = "创建时间"
   )
   private Date gmtCreated;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
-      update = "now()"
+      update = "now()",
+      desc = "更新时间"
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "是否逻辑删除"
   )
   @LogicDelete
   private Boolean isDeleted;
 
-  /**
-   * 详细住址
-   */
-  @TableField("address")
+  @TableField(
+      value = "address",
+      desc = "详细住址"
+  )
   private String address;
 
-  /**
-   * 城市
-   */
-  @TableField("city")
+  @TableField(
+      value = "city",
+      desc = "城市"
+  )
   private String city;
 
-  /**
-   * 区
-   */
-  @TableField("district")
+  @TableField(
+      value = "district",
+      desc = "区"
+  )
   private String district;
 
-  /**
-   * 数据隔离环境
-   */
-  @TableField("env")
+  @TableField(
+      value = "env",
+      desc = "数据隔离环境"
+  )
   private String env;
 
-  /**
-   * 省份
-   */
-  @TableField("province")
+  @TableField(
+      value = "province",
+      desc = "省份"
+  )
   private String province;
 
-  /**
-   * 用户id
-   */
-  @TableField("student_id")
+  @TableField(
+      value = "student_id",
+      desc = "用户id"
+  )
   private Long studentId;
 
-  /**
-   * 租户标识
-   */
-  @TableField("tenant")
+  @TableField(
+      value = "tenant",
+      desc = "租户标识"
+  )
   private Long tenant;
 
   @Override

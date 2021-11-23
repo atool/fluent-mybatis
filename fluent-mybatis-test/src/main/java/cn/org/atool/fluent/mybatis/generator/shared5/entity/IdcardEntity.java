@@ -37,38 +37,30 @@ import lombok.experimental.Accessors;
 public class IdcardEntity extends BaseEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
   @TableId(
       value = "id",
       auto = false,
-      seqName = "SELECT NEXTVAL('testSeq')"
+      seqName = "SELECT NEXTVAL('testSeq')",
+      desc = "主键id"
   )
   private Long id;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "是否逻辑删除"
   )
   @LogicDelete
   private Long isDeleted;
 
-  /**
-   */
   @TableField("code")
   private String code;
 
-  /**
-   * 版本锁
-   */
   @TableField(
       value = "version",
       insert = "0",
-      update = "`version` + 1"
+      update = "`version` + 1",
+      desc = "版本锁"
   )
   @Version
   private Long version;

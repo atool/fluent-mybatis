@@ -38,51 +38,45 @@ import lombok.experimental.Accessors;
 public class TeacherEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      desc = "主键id"
+  )
   private Long id;
 
-  /**
-   * 创建时间
-   */
   @TableField(
       value = "gmt_created",
-      insert = "now()"
+      insert = "now()",
+      desc = "创建时间"
   )
   private Date gmtCreated;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
-      update = "now()"
+      update = "now()",
+      desc = "更新时间"
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "是否逻辑删除"
   )
   @LogicDelete
   private Boolean isDeleted;
 
-  /**
-   * 数据隔离环境
-   */
-  @TableField("env")
+  @TableField(
+      value = "env",
+      desc = "数据隔离环境"
+  )
   private String env;
 
-  /**
-   * 名字
-   */
-  @TableField("user_name")
+  @TableField(
+      value = "user_name",
+      desc = "名字"
+  )
   private String userName;
 
   @Override

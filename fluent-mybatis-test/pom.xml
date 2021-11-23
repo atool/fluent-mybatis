@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-mybatis-parent</artifactId>
-        <version>1.9.1</version>
+        <version>1.9.1.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -15,7 +15,7 @@
     <properties>
         <spring.verison>5.3.3</spring.verison>
         <spring-boot.version>2.4.2</spring-boot.version>
-        <form-service.version>1.9.1</form-service.version>
+        <form-service.version>1.9.1.1</form-service.version>
     </properties>
     <dependencyManagement>
         <dependencies>

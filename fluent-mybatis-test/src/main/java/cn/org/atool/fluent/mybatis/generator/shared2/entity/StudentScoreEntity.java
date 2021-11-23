@@ -41,81 +41,75 @@ import lombok.experimental.Accessors;
 public class StudentScoreEntity extends RichEntity implements MyEntity<StudentScoreEntity> {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键ID
-   */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      desc = "主键ID"
+  )
   private Long id;
 
-  /**
-   * 记录创建时间
-   */
   @TableField(
       value = "gmt_created",
-      insert = "now()"
+      insert = "now()",
+      desc = "记录创建时间"
   )
   private Date gmtCreated;
 
-  /**
-   * 记录最后修改时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
-      update = "now()"
+      update = "now()",
+      desc = "记录最后修改时间"
   )
   private Date gmtModified;
 
-  /**
-   * 逻辑删除标识
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "逻辑删除标识"
   )
   @LogicDelete
   private Boolean isDeleted;
 
-  /**
-   * 数据隔离环境
-   */
-  @TableField("env")
+  @TableField(
+      value = "env",
+      desc = "数据隔离环境"
+  )
   private String env;
 
-  /**
-   * 性别, 0:女; 1:男
-   */
-  @TableField("gender")
+  @TableField(
+      value = "gender",
+      desc = "性别, 0:女; 1:男"
+  )
   private Integer gender;
 
-  /**
-   * 学期
-   */
-  @TableField("school_term")
+  @TableField(
+      value = "school_term",
+      desc = "学期"
+  )
   private Integer schoolTerm;
 
-  /**
-   * 成绩
-   */
-  @TableField("score")
+  @TableField(
+      value = "score",
+      desc = "成绩"
+  )
   private Integer score;
 
-  /**
-   * 学号
-   */
-  @TableField("student_id")
+  @TableField(
+      value = "student_id",
+      desc = "学号"
+  )
   private Long studentId;
 
-  /**
-   * 学科
-   */
-  @TableField("subject")
+  @TableField(
+      value = "subject",
+      desc = "学科"
+  )
   private String subject;
 
-  /**
-   * 租户标识
-   */
-  @TableField("tenant")
+  @TableField(
+      value = "tenant",
+      desc = "租户标识"
+  )
   private Long tenant;
 
   @Override

@@ -40,40 +40,32 @@ import org.apache.ibatis.type.LongTypeHandler;
 public class MyEnumTypePoJo extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
   @TableId(
       value = "id",
-      typeHandler = LongTypeHandler.class
+      typeHandler = LongTypeHandler.class,
+      desc = "主键id"
   )
   private Long id;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "是否逻辑删除"
   )
   @LogicDelete
   private Boolean isDeleted;
 
-  /**
-   * 枚举类型, 序号
-   */
   @TableField(
       value = "enum-num",
-      typeHandler = EnumOrdinalTypeHandler.class
+      typeHandler = EnumOrdinalTypeHandler.class,
+      desc = "枚举类型, 序号"
   )
   private MyEnum enumNum;
 
-  /**
-   * 枚举类型, 字符
-   */
   @TableField(
       value = "enum_string",
-      typeHandler = EnumTypeHandler.class
+      typeHandler = EnumTypeHandler.class,
+      desc = "枚举类型, 字符"
   )
   private MyEnum enumString;
 

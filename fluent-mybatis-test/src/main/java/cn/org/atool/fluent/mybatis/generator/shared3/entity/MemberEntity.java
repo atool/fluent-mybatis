@@ -38,60 +38,56 @@ import lombok.experimental.Accessors;
 public class MemberEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      desc = "主键id"
+  )
   private Long id;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
-      update = "now()"
+      update = "now()",
+      desc = "更新时间"
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "是否逻辑删除"
   )
   @LogicDelete
   private Boolean isDeleted;
 
-  /**
-   * 年龄
-   */
-  @TableField("age")
+  @TableField(
+      value = "age",
+      desc = "年龄"
+  )
   private Integer age;
 
-  /**
-   * 创建时间
-   */
-  @TableField("gmt_created")
+  @TableField(
+      value = "gmt_created",
+      desc = "创建时间"
+  )
   private Date gmtCreated;
 
-  /**
-   * 0:男孩; 1:女孩
-   */
-  @TableField("is_girl")
+  @TableField(
+      value = "is_girl",
+      desc = "0:男孩; 1:女孩"
+  )
   private Boolean isGirl;
 
-  /**
-   * 学校
-   */
-  @TableField("school")
+  @TableField(
+      value = "school",
+      desc = "学校"
+  )
   private String school;
 
-  /**
-   * 名字
-   */
-  @TableField("user_name")
+  @TableField(
+      value = "user_name",
+      desc = "名字"
+  )
   private String userName;
 
   @Override

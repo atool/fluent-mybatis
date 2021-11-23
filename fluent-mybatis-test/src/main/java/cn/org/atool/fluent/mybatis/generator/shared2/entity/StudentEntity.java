@@ -42,137 +42,129 @@ import lombok.experimental.Accessors;
 public class StudentEntity extends RichEntity implements MyEntity<StudentEntity> {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 主键id
-   */
-  @TableId("id")
+  @TableId(
+      value = "id",
+      desc = "主键id"
+  )
   private Long id;
 
-  /**
-   * 创建时间
-   */
   @TableField(
       value = "gmt_created",
-      insert = "now()"
+      insert = "now()",
+      desc = "创建时间"
   )
   private Date gmtCreated;
 
-  /**
-   * 更新时间
-   */
   @TableField(
       value = "gmt_modified",
       insert = "now()",
-      update = "now()"
+      update = "now()",
+      desc = "更新时间"
   )
   private Date gmtModified;
 
-  /**
-   * 是否逻辑删除
-   */
   @TableField(
       value = "is_deleted",
-      insert = "0"
+      insert = "0",
+      desc = "是否逻辑删除"
   )
   @LogicDelete
   private Boolean isDeleted;
 
-  /**
-   * 家庭详细住址
-   */
-  @TableField("address")
+  @TableField(
+      value = "address",
+      desc = "家庭详细住址"
+  )
   private String address;
 
-  /**
-   * 年龄
-   */
-  @TableField("age")
+  @TableField(
+      value = "age",
+      desc = "年龄"
+  )
   private Integer age;
 
-  /**
-   * 生日
-   */
-  @TableField("birthday")
+  @TableField(
+      value = "birthday",
+      desc = "生日"
+  )
   private Date birthday;
 
-  /**
-   * 积分
-   */
-  @TableField("bonus_points")
+  @TableField(
+      value = "bonus_points",
+      desc = "积分"
+  )
   private Long bonusPoints;
 
-  /**
-   * 同桌
-   */
-  @TableField("desk_mate_id")
+  @TableField(
+      value = "desk_mate_id",
+      desc = "同桌"
+  )
   private Long deskMateId;
 
-  /**
-   * 邮箱
-   */
-  @TableField("email")
+  @TableField(
+      value = "email",
+      desc = "邮箱"
+  )
   private String email;
 
-  /**
-   * 数据隔离环境
-   */
-  @TableField("env")
+  @TableField(
+      value = "env",
+      desc = "数据隔离环境"
+  )
   private String env;
 
-  /**
-   * 性别, 0:女; 1:男
-   */
-  @TableField("gender")
+  @TableField(
+      value = "gender",
+      desc = "性别, 0:女; 1:男"
+  )
   private Integer gender;
 
-  /**
-   * 年级
-   */
-  @TableField("grade")
+  @TableField(
+      value = "grade",
+      desc = "年级"
+  )
   private Integer grade;
 
-  /**
-   * home_address外键
-   */
-  @TableField("home_address_id")
+  @TableField(
+      value = "home_address_id",
+      desc = "home_address外键"
+  )
   private Long homeAddressId;
 
-  /**
-   * 家庭所在区县
-   */
-  @TableField("home_county_id")
+  @TableField(
+      value = "home_county_id",
+      desc = "家庭所在区县"
+  )
   private Long homeCountyId;
 
-  /**
-   * 电话
-   */
-  @TableField("phone")
+  @TableField(
+      value = "phone",
+      desc = "电话"
+  )
   private String phone;
 
-  /**
-   * 状态(字典)
-   */
-  @TableField("status")
+  @TableField(
+      value = "status",
+      desc = "状态(字典)"
+  )
   private String status;
 
-  /**
-   * 租户标识
-   */
-  @TableField("tenant")
+  @TableField(
+      value = "tenant",
+      desc = "租户标识"
+  )
   private Long tenant;
 
-  /**
-   * 名字
-   */
-  @TableField("user_name")
+  @TableField(
+      value = "user_name",
+      desc = "名字"
+  )
   private String userName;
 
-  /**
-   * 版本号
-   */
   @TableField(
       value = "version",
-      notLarge = false
+      notLarge = false,
+      desc = "版本号"
   )
   private String version;
 

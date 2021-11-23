@@ -51,4 +51,9 @@ public @interface TableField {
      * 指定小数点后保留的位数
      */
     String numericScale() default "";
+
+    /**
+     * 字段描述
+     */
+    String desc();
 }
