@@ -280,7 +280,8 @@ public class FormServiceFactoryBean implements FactoryBean {
     /**
      * 更新操作
      *
-     * @param args 入参
+     * @param meta 方法元数据
+     * @param list 入参是List
      * @return ignore
      */
     public static Object update(MethodMeta meta, Collection list) {

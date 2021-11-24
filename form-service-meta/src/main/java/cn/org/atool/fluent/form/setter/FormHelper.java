@@ -367,7 +367,7 @@ public class FormHelper {
      * 将Entity列表转换为指定类的实例列表
      *
      * @param entities Entity列表
-     * @param rClass   指定类元数据
+     * @param metas    指定类元数据
      * @return 转换后的列表
      */
     private static List entities2result(List<IEntity> entities, EntryMetas metas) {
@@ -397,8 +397,8 @@ public class FormHelper {
     /**
      * 将Entity实例转换为指定类的实例
      *
-     * @param entities Entity实例
-     * @param rClass   指定类类型
+     * @param entity Entity实例
+     * @param rClass 指定类类型
      * @return 转换后的实例
      */
     public static <R> R entity2result(IEntity entity, Class<R> rClass) {
@@ -413,8 +413,8 @@ public class FormHelper {
     /**
      * 将Entity实例转换为指定类的实例
      *
-     * @param entities Entity实例
-     * @param rClass   指定类元数据
+     * @param entity Entity实例
+     * @param metas  指定类元数据
      * @return 转换后的实例
      */
     private static Object entity2result(IEntity entity, EntryMetas metas) {
