@@ -1,14 +1,16 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.UpdaterExecutor;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -21,6 +23,13 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 public interface IUpdate<E extends IEntity> {
+    /**
+     * 数据库映射定义
+     *
+     * @return Optional<IMapping>
+     */
+    Optional<IMapping> mapping();
+
     /**
      * 设置更新值
      *

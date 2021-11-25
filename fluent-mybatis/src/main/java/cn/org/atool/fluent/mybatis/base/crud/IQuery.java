@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
@@ -9,9 +10,11 @@ import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertTrue;
 
 /**
  * 查询构造器基类
@@ -21,6 +24,13 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public interface IQuery<E extends IEntity> {
+    /**
+     * 数据库映射定义
+     *
+     * @return Optional<IMapping>
+     */
+    Optional<IMapping> mapping();
+
     /**
      * distinct 查询
      *
@@ -58,6 +68,19 @@ public interface IQuery<E extends IEntity> {
      * @return self
      */
     <Q extends IQuery<E>> Q limit(int start, int limit);
+
+    /**
+     * 设置分页参数(会转换为limit入参)
+     *
+     * @param currPage 当前页码, 从1开始计数
+     * @param pageSize 每页记录数
+     * @return self
+     */
+    default <Q extends IQuery<E>> Q paged(int currPage, int pageSize) {
+        assertTrue("The currPage must be greater than one.", currPage >= 1);
+        assertTrue("The pageSize must be greater than one.", pageSize >= 1);
+        return this.limit((currPage - 1) * pageSize, pageSize);
+    }
 
     /**
      * 追加在sql语句的末尾

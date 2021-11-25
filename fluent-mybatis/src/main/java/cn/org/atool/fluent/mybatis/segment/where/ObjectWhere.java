@@ -38,6 +38,17 @@ public interface ObjectWhere<
     /**
      * 大于
      *
+     * @param value     条件值
+     * @param condition 条件
+     * @return 查询器或更新器
+     */
+    default WHERE gt(Object value, boolean condition) {
+        return this.apply(condition, GT, value);
+    }
+
+    /**
+     * 大于
+     *
      * @param value 条件值
      * @param when  为真时成立
      * @return 查询器或更新器
@@ -79,6 +90,17 @@ public interface ObjectWhere<
     }
 
     /**
+     * 大于等于
+     *
+     * @param value     条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE ge(T value, boolean condition) {
+        return this.apply(condition, GE, value);
+    }
+
+    /**
      * 按Ifs条件设置where值
      *
      * @param ifs if conditions
@@ -111,6 +133,17 @@ public interface ObjectWhere<
     }
 
     /**
+     * 小于
+     *
+     * @param value     条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE lt(T value, boolean condition) {
+        return this.apply(condition, LT, value);
+    }
+
+    /**
      * 按Ifs条件设置where值
      *
      * @param ifs if conditions
@@ -140,6 +173,17 @@ public interface ObjectWhere<
      */
     default <T> WHERE le(T value, Predicate<T> when) {
         return this.apply(args -> when.test(value), LE, value);
+    }
+
+    /**
+     * 小于等于
+     *
+     * @param value     条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE le(T value, boolean condition) {
+        return this.apply(condition, LE, value);
     }
 
     /**
@@ -177,12 +221,34 @@ public interface ObjectWhere<
     /**
      * in (values)
      *
+     * @param values    条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE in(T[] values, boolean condition) {
+        return this.apply(condition, IN, values);
+    }
+
+    /**
+     * in (values)
+     *
      * @param values 条件值
      * @param when   为真时成立
      * @return 查询器或更新器
      */
     default WHERE in(Collection values, Predicate<Collection> when) {
         return this.apply(args -> when.test(values), IN, values == null ? new Object[0] : values.toArray());
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values    条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default WHERE in(Collection values, boolean condition) {
+        return this.apply(condition, IN, values == null ? new Object[0] : values.toArray());
     }
 
     /**
@@ -273,6 +339,17 @@ public interface ObjectWhere<
     /**
      * not in (values)
      *
+     * @param values    条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE notIn(T[] values, boolean condition) {
+        return this.apply(condition, NOT_IN, values);
+    }
+
+    /**
+     * not in (values)
+     *
      * @param values 条件值
      * @return 查询器或更新器
      */
@@ -289,6 +366,17 @@ public interface ObjectWhere<
      */
     default WHERE notIn(Collection values, Predicate<Collection> when) {
         return this.apply(args -> when.test(values), NOT_IN, values == null ? new Object[0] : values.toArray());
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values    条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(Collection values, boolean condition) {
+        return this.apply(condition, NOT_IN, values == null ? new Object[0] : values.toArray());
     }
 
     /**
@@ -345,6 +433,16 @@ public interface ObjectWhere<
     }
 
     /**
+     * @param value1    条件值
+     * @param value2    条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE between(T value1, T value2, boolean condition) {
+        return this.apply(condition, BETWEEN, value1, value2);
+    }
+
+    /**
      * @param value1 条件值
      * @param value2 条件值
      * @return 查询器或更新器
@@ -361,5 +459,15 @@ public interface ObjectWhere<
      */
     default <T> WHERE notBetween(T value1, T value2, BiPredicate<T, T> when) {
         return this.apply(args -> when.test(value1, value2), NOT_BETWEEN, value1, value2);
+    }
+
+    /**
+     * @param value1    条件值
+     * @param value2    条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE notBetween(T value1, T value2, boolean condition) {
+        return this.apply(condition, NOT_BETWEEN, value1, value2);
     }
 }

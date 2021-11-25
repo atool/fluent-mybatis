@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.test1.segment2;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -74,7 +74,7 @@ class WhereApplyTest extends BaseTest {
     @Test
     void eq_IfNotNull() {
         mapper.listEntity(StudentQuery.emptyQuery()
-            .where.age().eq(34, o -> o != null)
+            .where.age().eq(34, Objects::nonNull)
             .and.userName().eq(null, Objects::nonNull).end()
         );
         db.sqlList().wantFirstSql()
@@ -350,7 +350,7 @@ class WhereApplyTest extends BaseTest {
     void likeLeft() {
         mapper.listEntity(StudentQuery.emptyQuery()
             .where
-            .userName().likeLeft("abc")
+            .userName().startWith("abc")
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -362,19 +362,19 @@ class WhereApplyTest extends BaseTest {
     void likeLeft_IfNotBlank() {
         mapper.listEntity(StudentQuery.emptyQuery()
             .where
-            .userName().likeLeft("abc", If::notBlank)
-            .userName().likeLeft(" ", If::notBlank)
+            .userName().startWith("abc", true)
+            .userName().startWith(" ", If::notBlank)
             .end()
         );
-        db.sqlList().wantFirstSql()
-            .end("WHERE `user_name` LIKE ?");
+        db.sqlList().wantFirstSql().end("WHERE `user_name` LIKE ?");
+        db.sqlList().wantFirstPara().eqList("abc%");
     }
 
     @Test
     void likeRight() {
         mapper.listEntity(StudentQuery.emptyQuery()
             .where
-            .userName().likeRight("abc")
+            .userName().endWith("abc")
             .end()
         );
         db.sqlList().wantFirstSql()
@@ -385,12 +385,14 @@ class WhereApplyTest extends BaseTest {
     void likeRight_IfNotBlank() {
         mapper.listEntity(StudentQuery.emptyQuery()
             .where
-            .userName().likeRight("abc", If::notBlank)
-            .userName().likeRight(" ", If::notBlank)
+            .userName().endWith("abc", If::notBlank)
+            .userName().endWith(" ", If::notBlank)
+            .userName().endWith("xyz", false)
             .end()
         );
         db.sqlList().wantFirstSql()
             .end("WHERE `user_name` LIKE ?");
+        db.sqlList().wantFirstPara().eqList("%abc");
     }
 
     @Test

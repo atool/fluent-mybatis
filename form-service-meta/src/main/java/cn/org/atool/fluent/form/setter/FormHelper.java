@@ -218,7 +218,10 @@ public class FormHelper {
             throw new IllegalArgumentException("PageSize must be greater than 0.");
         }
         Integer currPage = args.getCurrPage();
-        query.limit(currPage == null ? 0 : currPage * pageSize, pageSize);
+        if (currPage == null || currPage < 1) {
+            currPage = 1;
+        }
+        query.paged(currPage, pageSize);
         Object pagedTag = args.getPagedTag();
         if (pagedTag != null) {
             String pk = mapping.primaryId(true);

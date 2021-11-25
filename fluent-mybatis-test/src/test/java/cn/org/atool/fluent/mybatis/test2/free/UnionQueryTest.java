@@ -27,7 +27,7 @@ public class UnionQueryTest extends BaseTest {
             ).end()
             .union(
                 StudentQuery.emptyQuery().select.id().userName().end()
-                    .where.userName().likeRight("2").end()
+                    .where.userName().endWith("2").end()
             );
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +
@@ -47,7 +47,7 @@ public class UnionQueryTest extends BaseTest {
             ).end()
             .unionAll(
                 StudentQuery.emptyQuery().select.id().userName().end()
-                    .where.userName().likeRight("2").end()
+                    .where.userName().endWith("2").end()
             );
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +

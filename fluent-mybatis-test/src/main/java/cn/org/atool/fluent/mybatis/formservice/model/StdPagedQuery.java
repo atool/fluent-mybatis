@@ -16,5 +16,5 @@ public class StdPagedQuery extends StudentQuery {
     private int pageSize = 10;
 
     @Entry(type = EntryType.CurrPage)
-    private int currPage = 0;
+    private int currPage = 1;
 }

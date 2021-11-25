@@ -41,6 +41,18 @@ public interface NumericWhere<
         return this.apply(args -> when.test(values), IN, toArray(values));
     }
 
+
+    /**
+     * in (values)
+     *
+     * @param values    条件值
+     * @param condition 条件成立时
+     * @return 查询器或更新器
+     */
+    default WHERE in(int[] values, boolean condition) {
+        return this.apply(condition, IN, toArray(values));
+    }
+
     /**
      * in (values)
      *
@@ -60,6 +72,17 @@ public interface NumericWhere<
      */
     default WHERE in(long[] values, Predicate<long[]> when) {
         return this.apply(args -> when.test(values), IN, toArray(values));
+    }
+
+    /**
+     * in (values)
+     *
+     * @param values    条件值
+     * @param condition 条件成立时
+     * @return 查询器或更新器
+     */
+    default WHERE in(long[] values, boolean condition) {
+        return this.apply(condition, IN, toArray(values));
     }
 
     /**
@@ -83,6 +106,18 @@ public interface NumericWhere<
         return this.apply(args -> when.test(values), NOT_IN, toArray(values));
     }
 
+
+    /**
+     * not in (values)
+     *
+     * @param values    条件值
+     * @param condition 条件成立时
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(int[] values, boolean condition) {
+        return this.apply(condition, NOT_IN, toArray(values));
+    }
+
     /**
      * not in (values)
      *
@@ -102,5 +137,16 @@ public interface NumericWhere<
      */
     default WHERE notIn(long[] values, Predicate<long[]> when) {
         return this.apply(args -> when.test(values), NOT_IN, toArray(values));
+    }
+
+    /**
+     * not in (values)
+     *
+     * @param values    条件值
+     * @param condition 条件成立时
+     * @return 查询器或更新器
+     */
+    default WHERE notIn(long[] values, boolean condition) {
+        return this.apply(condition, NOT_IN, toArray(values));
     }
 }

@@ -148,7 +148,6 @@ public interface BaseWhere<
     /**
      * {@link #apply(Predicate, ISqlOp, Object[])}
      */
-    @Deprecated
     default <O> WHERE apply(boolean condition, ISqlOp op, O... args) {
         return this.apply(a -> condition, op, args);
     }

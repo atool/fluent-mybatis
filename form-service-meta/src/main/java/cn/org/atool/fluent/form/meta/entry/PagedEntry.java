@@ -18,7 +18,9 @@ import lombok.experimental.Accessors;
 public class PagedEntry {
     @Entry(type = EntryType.PageSize)
     private int pageSize;
-
+    /**
+     * 当前页码, 从1开始计数
+     */
     @Entry(type = EntryType.CurrPage)
     private Integer currPage;
 
@@ -26,12 +28,12 @@ public class PagedEntry {
     private String pagedTag;
 
     public PagedEntry(int currPage, int pageSize) {
-        this.pageSize = pageSize;
-        this.currPage = currPage;
+        this.pageSize = Math.max(pageSize, 1);
+        this.currPage = Math.max(currPage, 1);
     }
 
     public PagedEntry(String pagedTag, int pageSize) {
-        this.pageSize = pageSize;
+        this.pageSize = Math.max(pageSize, 1);
         this.pagedTag = pagedTag;
     }
 }

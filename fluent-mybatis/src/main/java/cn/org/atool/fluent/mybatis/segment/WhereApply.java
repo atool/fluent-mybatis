@@ -119,6 +119,16 @@ public class WhereApply<
         }
     }
 
+
+    @Override
+    public WHERE like(final String value, final boolean condition) {
+        if (condition) {
+            return this.apply(LIKE, SqlLike.like(value));
+        } else {
+            return this.segment;
+        }
+    }
+
     @Override
     public WHERE notLike(String value, Predicate<String> when) {
         if (when.test(value)) {
@@ -129,7 +139,16 @@ public class WhereApply<
     }
 
     @Override
-    public WHERE likeLeft(String value, Predicate<String> when) {
+    public WHERE notLike(String value, boolean condition) {
+        if (condition) {
+            return this.apply(NOT_LIKE, SqlLike.like(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Override
+    public WHERE startWith(String value, Predicate<String> when) {
         if (when.test(value)) {
             return this.apply(LIKE, SqlLike.left(value));
         } else {
@@ -138,8 +157,46 @@ public class WhereApply<
     }
 
     @Override
+    public WHERE startWith(String value, boolean condition) {
+        if (condition) {
+            return this.apply(LIKE, SqlLike.left(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Deprecated
+    @Override
+    public WHERE likeLeft(String value, Predicate<String> when) {
+        if (when.test(value)) {
+            return this.apply(LIKE, SqlLike.left(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Deprecated
+    @Override
     public WHERE likeRight(String value, Predicate<String> when) {
         if (when.test(value)) {
+            return this.apply(LIKE, SqlLike.right(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Override
+    public WHERE endWith(String value, Predicate<String> when) {
+        if (when.test(value)) {
+            return this.apply(LIKE, SqlLike.right(value));
+        } else {
+            return this.segment;
+        }
+    }
+
+    @Override
+    public WHERE endWith(String value, boolean condition) {
+        if (condition) {
             return this.apply(LIKE, SqlLike.right(value));
         } else {
             return this.segment;

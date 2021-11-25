@@ -99,6 +99,18 @@ public class MybatisUtil {
     /**
      * 断言对象不能为null
      *
+     * @param message message
+     * @param value   true/false
+     */
+    public static void assertTrue(String message, boolean value) {
+        if (!value) {
+            throw new FluentMybatisException(message);
+        }
+    }
+
+    /**
+     * 断言对象不能为null
+     *
      * @param property name of property
      * @param value1   object
      * @param value2   object

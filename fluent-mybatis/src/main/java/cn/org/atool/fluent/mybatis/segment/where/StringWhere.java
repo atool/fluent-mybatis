@@ -42,6 +42,15 @@ public interface StringWhere<
     WHERE like(final String value, final Predicate<String> when);
 
     /**
+     * like '%value%'
+     *
+     * @param value     条件值
+     * @param condition 成立条件
+     * @return self
+     */
+    WHERE like(final String value, boolean condition);
+
+    /**
      * 按Ifs条件设置where值
      *
      * @param ifs if conditions
@@ -72,6 +81,15 @@ public interface StringWhere<
     WHERE notLike(String value, Predicate<String> when);
 
     /**
+     * not like '%value%'
+     *
+     * @param value     条件值
+     * @param condition 成立条件
+     * @return self
+     */
+    WHERE notLike(String value, boolean condition);
+
+    /**
      * 按Ifs条件设置where值
      *
      * @param ifs if conditions
@@ -83,40 +101,103 @@ public interface StringWhere<
     }
 
     /**
-     * like '%value'
+     * like 'value%'
      *
      * @param value left like value
      * @return where
+     * @deprecated replaced by startWith
      */
+    @Deprecated
     default WHERE likeLeft(String value) {
         return this.apply(LIKE, SqlLike.left(value));
     }
 
     /**
+     * like 'value%'
+     *
+     * @param value left like value
+     * @param when  执行条件
+     * @return where
+     * @deprecated replaced by startWith
+     */
+    @Deprecated
+    WHERE likeLeft(String value, Predicate<String> when);
+
+    /**
+     * like 'value%'
+     *
+     * @param value the string start with value
+     * @return where
+     */
+    default WHERE startWith(String value) {
+        return this.apply(LIKE, SqlLike.left(value));
+    }
+
+    /**
+     * like 'value%'
+     *
+     * @param value left like value
+     * @param when  执行条件
+     * @return where
+     */
+    WHERE startWith(String value, Predicate<String> when);
+
+    /**
+     * like 'value%'
+     *
+     * @param value the string start with value
+     * @return where
+     */
+    WHERE startWith(String value, boolean condition);
+
+    /**
+     * like '%value'
+     *
+     * @param value right like value
+     * @return where
+     * @deprecated replaced by endWith
+     */
+    @Deprecated
+    default WHERE likeRight(String value) {
+        return this.apply(LIKE, SqlLike.right(value));
+    }
+
+    /**
+     * like '%value'
+     *
+     * @param value right like value
+     * @param when  执行条件
+     * @return where
+     * @deprecated replaced by endWith
+     */
+    @Deprecated
+    WHERE likeRight(String value, Predicate<String> when);
+
+    /**
+     * like '%value'
+     *
+     * @param value right like value
+     * @return where
+     */
+    default WHERE endWith(String value) {
+        return this.apply(LIKE, SqlLike.right(value));
+    }
+
+    /**
      * like '%value'
      *
      * @param value left like value
      * @param when  执行条件
      * @return where
      */
-    WHERE likeLeft(String value, Predicate<String> when);
+    WHERE endWith(String value, Predicate<String> when);
 
     /**
-     * like 'value%'
+     * like '%value'
      *
-     * @param value right like value
+     * @param value     right like value
+     * @param condition 执行条件
      * @return where
      */
-    default WHERE likeRight(String value) {
-        return this.apply(LIKE, SqlLike.right(value));
-    }
-
-    /**
-     * like 'value%'
-     *
-     * @param value right like value
-     * @param when  执行条件
-     * @return where
-     */
-    WHERE likeRight(String value, Predicate<String> when);
+    WHERE endWith(String value, boolean condition);
 }
