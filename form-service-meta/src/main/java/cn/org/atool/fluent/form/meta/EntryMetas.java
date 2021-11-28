@@ -17,7 +17,10 @@ import lombok.ToString;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
@@ -120,9 +123,9 @@ public class EntryMetas {
     private void addMeta(String name, Method getter, Method setter, Entry entry) {
         if (getter != null || setter != null) {
             if (entry == null) {
-                this.addMeta(new MethodEntryMeta(name, EntryType.EQ, getter, setter, true));
+                this.addMeta(new MethodEntryMeta(name, true, EntryType.EQ, getter, setter, true));
             } else {
-                this.addMeta(new MethodEntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
+                this.addMeta(new MethodEntryMeta(name, entry.and(), entry.type(), getter, setter, entry.ignoreNull()));
             }
         }
     }

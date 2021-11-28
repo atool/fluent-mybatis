@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 @ToString(of = {"entryName", "from"})
 public final class FormMetas extends EntryMetas {
     public final boolean isList;

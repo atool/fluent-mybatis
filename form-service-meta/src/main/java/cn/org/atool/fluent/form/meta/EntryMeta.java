@@ -20,6 +20,10 @@ public class EntryMeta {
      */
     public final String name;
     /**
+     * 关联方式
+     */
+    public final boolean isAnd;
+    /**
      * 类型
      */
     public EntryType type;
@@ -36,8 +40,9 @@ public class EntryMeta {
      */
     public final boolean ignoreNull;
 
-    protected EntryMeta(String name, EntryType type, boolean ignoreNull) {
+    protected EntryMeta(String name, boolean isAnd, EntryType type, boolean ignoreNull) {
         this.name = name;
+        this.isAnd = isAnd;
         this.type = type;
         this.ignoreNull = ignoreNull;
         this.getter = this.getter();
@@ -45,7 +50,12 @@ public class EntryMeta {
     }
 
     public <F, V> EntryMeta(String name, EntryType type, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
+        this(name, true, type, getter, setter, ignoreNull);
+    }
+
+    public <F, V> EntryMeta(String name, boolean isAnd, EntryType type, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
         this.name = name;
+        this.isAnd = isAnd;
         this.type = type;
         this.getter = getter;
         this.setter = setter;

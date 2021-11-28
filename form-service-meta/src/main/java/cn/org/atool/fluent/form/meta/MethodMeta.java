@@ -81,7 +81,7 @@ public class MethodMeta {
         int index = 0;
         for (int i = 0; i < parameters.length; i++) {
             String defaultName = names != null && index < names.length ? names[index] : EMPTY;
-            args[i] = new ArgumentMeta(methodType, parameters[i], defaultName, i, null);
+            args[i] = new ArgumentMeta(methodType, parameters[i], defaultName, true, i, null);
             if (Objects.equals(defaultName, args[i].entryName)) {
                 index++;
             }
@@ -118,6 +118,7 @@ public class MethodMeta {
                 argsMetas.addMeta(new ArgEntryMeta(arg));
             } else {
                 EntryMetas entryMetas = EntryMetas.getFormMeta(arg.type);
+
                 for (EntryMeta meta : entryMetas.allMetas()) {
                     if (meta.getter != null) {
                         argsMetas.addMeta(new ArgEntryMeta(arg, meta));

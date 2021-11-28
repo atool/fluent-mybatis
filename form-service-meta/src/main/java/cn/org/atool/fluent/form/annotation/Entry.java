@@ -18,6 +18,11 @@ public @interface Entry {
     String value() default "";
 
     /**
+     * 和前置条件关联方式, true: 以and方式; false: 以or方式
+     */
+    boolean and() default true;
+
+    /**
      * 条件操作, 默认相等(赋值)
      */
     EntryType type() default EntryType.EQ;

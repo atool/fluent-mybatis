@@ -230,10 +230,11 @@ public class FormHelper {
     }
 
     private static void where(IWrapper wrapper, String column, EntryMeta meta, Object value) {
+        WhereBase where = meta.isAnd ? wrapper.where().and : wrapper.where().or;
         if (value == null || value instanceof String && isBlank((String) value)) {
             if (!meta.ignoreNull) {
                 if (meta.type == EntryType.EQ) {
-                    wrapper.where().apply(column, SqlOp.IS_NULL);
+                    where.apply(column, SqlOp.IS_NULL);
                 } else {
                     throw new IllegalArgumentException("Condition field[" + meta.name + "] not assigned.");
                 }
@@ -244,59 +245,59 @@ public class FormHelper {
         switch (meta.type) {
             case EQ:
                 if (value instanceof Collection || value.getClass().isArray()) {
-                    wrapper.where().apply(column, SqlOp.IN, toArray(meta.name, value));
+                    where.apply(column, SqlOp.IN, toArray(meta.name, value));
                 } else {
-                    wrapper.where().apply(column, SqlOp.EQ, value);
+                    where.apply(column, SqlOp.EQ, value);
                 }
                 break;
             case GT:
-                wrapper.where().apply(column, SqlOp.EQ, value);
+                where.apply(column, SqlOp.EQ, value);
                 break;
             case GE:
-                wrapper.where().apply(column, SqlOp.GE, value);
+                where.apply(column, SqlOp.GE, value);
                 break;
             case LT:
-                wrapper.where().apply(column, SqlOp.LT, value);
+                where.apply(column, SqlOp.LT, value);
                 break;
             case LE:
-                wrapper.where().apply(column, SqlOp.LE, value);
+                where.apply(column, SqlOp.LE, value);
                 break;
             case NE:
-                wrapper.where().apply(column, SqlOp.NE, value);
+                where.apply(column, SqlOp.NE, value);
                 break;
             case IN:
-                wrapper.where().apply(column, SqlOp.IN, toArray(meta.name, value));
+                where.apply(column, SqlOp.IN, toArray(meta.name, value));
                 break;
             case Like:
-                wrapper.where().apply(column, SqlOp.LIKE, "%" + value + "%");
+                where.apply(column, SqlOp.LIKE, "%" + value + "%");
                 break;
             case StartWith:
-                wrapper.where().apply(column, SqlOp.LIKE, value + "%");
+                where.apply(column, SqlOp.LIKE, value + "%");
                 break;
             case EndWith:
-                wrapper.where().apply(column, SqlOp.LIKE, "%" + value);
+                where.apply(column, SqlOp.LIKE, "%" + value);
                 break;
             case Between:
                 Object[] args = toArray(meta.name, value);
-                between(wrapper, meta, column, args);
+                between(where, meta, column, args);
                 break;
             default:
                 //throw new RuntimeException("there must be something wrong.");
         }
     }
 
-    private static void between(IWrapper wrapper, EntryMeta meta, String column, Object[] args) {
+    private static void between(WhereBase where, EntryMeta meta, String column, Object[] args) {
         if (args.length == 0 && meta.ignoreNull) {
             return;
         }
         if (args.length != 2) {
             throw new IllegalArgumentException("The value size of the between condition[" + meta.name + "] must be 2.");
         } else if (args[0] == null && args[1] != null) {
-            wrapper.where().apply(column, SqlOp.LE, args[1]);
+            where.apply(column, SqlOp.LE, args[1]);
         } else if (args[0] != null && args[1] == null) {
-            wrapper.where().apply(column, SqlOp.GE, args[0]);
+            where.apply(column, SqlOp.GE, args[0]);
         } else if (args[0] != null) {
-            wrapper.where().apply(column, SqlOp.BETWEEN, args);
+            where.apply(column, SqlOp.BETWEEN, args);
         } else if (!meta.ignoreNull) {
             throw new IllegalArgumentException("The value of the between condition[" + meta.name + "] can't be null.");
         }
