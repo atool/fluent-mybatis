@@ -18,6 +18,6 @@ public class StudentUpdater {
 
     private Long id;
 
-    @Entry(value = "userName", type = EntryType.LikeLeft)
+    @Entry(value = "userName", type = EntryType.StartWith)
     private String userName22; // like 'test%'
 }

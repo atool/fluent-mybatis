@@ -2,6 +2,7 @@ package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.MethodType;
+import cn.org.atool.fluent.form.kits.FinderNameKit;
 import cn.org.atool.fluent.form.meta.entry.ArgEntryMeta;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
@@ -14,11 +15,13 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
 import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * FormService方法元数据
@@ -67,15 +70,21 @@ public class MethodMeta {
         this.method = method.toString();
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
         this.methodType = aMethod == null ? Query : aMethod.type();
-        this.args = this.buildArgumentMeta(method.getParameters());
+        this.args = this.buildArgumentMeta(method.getName(), method.getParameters());
         this.returnType = method.getReturnType();
         this.returnParameterType = this.getParameterTypeOfReturn(method);
     }
 
-    private ArgumentMeta[] buildArgumentMeta(Parameter[] parameters) {
+    private ArgumentMeta[] buildArgumentMeta(String methodName, Parameter[] parameters) {
         ArgumentMeta[] args = new ArgumentMeta[parameters.length];
+        String[] names = FinderNameKit.parseFindFields(methodName);
+        int index = 0;
         for (int i = 0; i < parameters.length; i++) {
-            args[i] = new ArgumentMeta(methodType, parameters[i], i, null);
+            String defaultName = names != null && index < names.length ? names[index] : EMPTY;
+            args[i] = new ArgumentMeta(methodType, parameters[i], defaultName, i, null);
+            if (Objects.equals(defaultName, args[i].entryName)) {
+                index++;
+            }
         }
         return args;
     }

@@ -51,11 +51,11 @@ public enum EntryType {
     /**
      * like value%
      */
-    LikeLeft,
+    StartWith,
     /**
      * like %value
      */
-    LikeRight,
+    EndWith,
     /**
      * between ? and ?
      */

@@ -37,4 +37,16 @@ public class HomeAddressTest extends BaseTest {
         String result2 = dao.sayInterface();
         want.string(result2).eq("HomeAddressDao");
     }
+
+    @Test
+    void findByCityAndDistrict() {
+        dao.findByCityAndDistrict("hangzhou", "binjiang");
+        db.sqlList().wantFirstSql().end("" +
+            "FROM `home_address` " +
+            "WHERE `is_deleted` = ? " +
+            "AND `env` = ? " +
+            "AND `city` = ? " +
+            "AND `district` LIKE ?");
+        db.sqlList().wantFirstPara().eqList(false, "test_env", "hangzhou", "binjiang%");
+    }
 }

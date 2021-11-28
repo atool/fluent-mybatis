@@ -3,6 +3,7 @@ package cn.org.atool.fluent.form.meta;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.MethodType;
+import org.apache.ibatis.annotations.Param;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
@@ -11,6 +12,9 @@ import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
+
+import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
+import static cn.org.atool.fluent.mybatis.If.notBlank;
 
 /**
  * 参数信息
@@ -53,20 +57,32 @@ public class ArgumentMeta {
         this.ignoreNull = true;
     }
 
-    public ArgumentMeta(MethodType methodType, Parameter parameter, int index, Map types) {
+    public ArgumentMeta(MethodType methodType, Parameter parameter, String defaultName, int index, Map types) {
         this.isList = Collection.class.isAssignableFrom(parameter.getType());
         this.type = this.getArgType(methodType, parameter.getParameterizedType(), types);
         Entry entry = parameter.getDeclaredAnnotation(Entry.class);
         if (entry == null) {
-            this.entryName = null;
+            this.entryName = this.findEntryName(parameter, null, defaultName);
             this.ignoreNull = true;
-            this.entryType = EntryType.Form;
+            this.entryType = notFormObject(this.type) ? EntryType.EQ : EntryType.Form;
         } else {
-            this.entryName = entry.value();
+            this.entryName = this.findEntryName(parameter, entry.value(), defaultName);
             this.ignoreNull = entry.ignoreNull();
             this.entryType = entry.type();
         }
         this.index = index;
+    }
+
+    private String findEntryName(Parameter parameter, String entryName, String defaultName) {
+        if (notBlank(entryName)) {
+            return entryName;
+        }
+        Param param = parameter.getDeclaredAnnotation(Param.class);
+        if (param != null && notBlank(param.value())) {
+            return param.value();
+        } else {
+            return defaultName;
+        }
     }
 
     private static final Function nonConvert = obj -> obj;

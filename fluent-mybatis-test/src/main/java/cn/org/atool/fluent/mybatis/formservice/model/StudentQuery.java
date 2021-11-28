@@ -18,7 +18,7 @@ public class StudentQuery {
     @Entry("userName")
     private String userName2;
 
-    @Entry(type = EntryType.LikeLeft)
+    @Entry(type = EntryType.StartWith)
     private String address;
 
     @Size(min = 2, max = 2)

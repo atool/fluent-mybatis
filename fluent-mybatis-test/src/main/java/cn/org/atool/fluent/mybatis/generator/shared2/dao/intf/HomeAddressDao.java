@@ -5,7 +5,9 @@ import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.formservice.model.HomeAddress;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
 
-import static cn.org.atool.fluent.form.annotation.EntryType.LikeLeft;
+import java.util.List;
+
+import static cn.org.atool.fluent.form.annotation.EntryType.StartWith;
 
 /**
  * HomeAddressDao: 数据操作接口
@@ -21,5 +23,12 @@ public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
         return "HomeAddressDao";
     }
 
-    HomeAddress findHomeAddress(@Entry(value = "address", type = LikeLeft) String address);
+    HomeAddress findHomeAddress(@Entry(value = "address", type = StartWith) String address);
+
+    /**
+     * 根据city and district查询列表
+     *
+     * @return ignore
+     */
+    List<HomeAddress> findByCityAndDistrict(String city, @Entry(type = StartWith) String district);
 }

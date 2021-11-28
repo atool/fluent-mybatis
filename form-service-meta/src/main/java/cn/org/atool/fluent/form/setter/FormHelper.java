@@ -270,10 +270,10 @@ public class FormHelper {
             case Like:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value + "%");
                 break;
-            case LikeLeft:
+            case StartWith:
                 wrapper.where().apply(column, SqlOp.LIKE, value + "%");
                 break;
-            case LikeRight:
+            case EndWith:
                 wrapper.where().apply(column, SqlOp.LIKE, "%" + value);
                 break;
             case Between:
