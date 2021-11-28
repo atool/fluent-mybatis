@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.form.registrar;
 
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.cglib.proxy.InvocationHandler;
 
@@ -11,9 +10,8 @@ import java.lang.reflect.Method;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unused", "unchecked", "rawtypes"})
+@SuppressWarnings({"unused", "rawtypes"})
 public class FormServiceFactoryBean implements FactoryBean {
-    public static final KeyMap<Class> TableEntityClass = new KeyMap();
 
     private final Class serviceClass;
 

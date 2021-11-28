@@ -6,6 +6,7 @@ import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
@@ -19,7 +20,13 @@ import java.util.List;
  *
  * @author wudarui
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface FormServiceKit {
+    /**
+     * table name 和 Entity class映射定义
+     */
+    KeyMap<Class> TableEntityClass = new KeyMap();
+
     /**
      * 构造eClass实体实例
      *

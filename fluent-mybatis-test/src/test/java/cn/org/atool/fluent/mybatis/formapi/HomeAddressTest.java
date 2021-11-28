@@ -15,6 +15,7 @@ public class HomeAddressTest extends BaseTest {
     @Test
     void test() {
         ATM.dataMap.homeAddress.table().clean();
+
         dao.save(HomeAddressEntity.builder()
             .address("oooyyyyxxx")
             .city("123")
@@ -23,5 +24,17 @@ public class HomeAddressTest extends BaseTest {
             .build());
         HomeAddress address = dao.findHomeAddress("ooo");
         want.object(address).eqReflect(new HomeAddress("oooyyyyxxx", "123", "-=0-9"));
+    }
+
+    @Test
+    void test2() {
+        String toString = dao.toString();
+        want.string(toString).start("cn.org.atool.fluent.mybatis.generator.shared2.dao.impl.HomeAddressDaoImpl$$EnhancerByCGLIB$$");
+
+        String result1 = dao.sayImplement();
+        want.string(result1).eq("HomeAddressDaoImpl");
+
+        String result2 = dao.sayInterface();
+        want.string(result2).eq("HomeAddressDao");
     }
 }

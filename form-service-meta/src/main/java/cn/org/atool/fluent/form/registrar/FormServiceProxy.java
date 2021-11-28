@@ -16,8 +16,6 @@ import cn.org.atool.fluent.mybatis.utility.LockKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.cglib.proxy.*;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -72,28 +70,13 @@ public class FormServiceProxy implements MethodInterceptor {
         this.entityClass = this.getEntityClass();
     }
 
-    private static final Constructor<MethodHandles.Lookup> constructor;
-
-    static {
-        try {
-            constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class);
-            constructor.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * FactoryBean的 {@link InvocationHandler#invoke(Object, Method, Object[])} 实现
      */
     @Override
-    public Object intercept(Object target, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+    public Object intercept(Object target, Method method, Object[] args, MethodProxy methodProxy) {
         Class declaringClass = method.getDeclaringClass();
-        if (Object.class.equals(declaringClass)) {
-            return method.invoke(this, args);
-        } else if (method.isDefault()) {
-            return this.returnDefault(target, method, args);
-        } else if (IBaseDao.class.equals(declaringClass) && Objects.equals(method.getName(), "mapper")) {
+        if (IBaseDao.class.equals(declaringClass) && Objects.equals(method.getName(), "mapper")) {
             Class eClass = this.getEntityClass(method);
             return RefKit.mapper(eClass);
         }
@@ -106,15 +89,6 @@ public class FormServiceProxy implements MethodInterceptor {
         } catch (RuntimeException e) {
             return this.methodAround.after(eClass, method, args, e);
         }
-    }
-
-    private Object returnDefault(Object target, Method method, Object[] args) throws Throwable {
-        Class declaringClass = method.getDeclaringClass();
-        return constructor.newInstance(declaringClass)
-            .in(declaringClass)
-            .unreflectSpecial(method, declaringClass)
-            .bindTo(target)
-            .invokeWithArguments(args);
     }
 
     /**

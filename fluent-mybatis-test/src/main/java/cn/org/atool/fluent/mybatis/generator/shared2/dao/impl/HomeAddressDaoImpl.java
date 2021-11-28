@@ -9,4 +9,8 @@ import cn.org.atool.fluent.mybatis.generator.shared2.dao.intf.HomeAddressDao;
  */
 @FormService
 public abstract class HomeAddressDaoImpl extends HomeAddressBaseDao implements HomeAddressDao {
+    @Override
+    public String sayImplement() {
+        return "HomeAddressDaoImpl";
+    }
 }

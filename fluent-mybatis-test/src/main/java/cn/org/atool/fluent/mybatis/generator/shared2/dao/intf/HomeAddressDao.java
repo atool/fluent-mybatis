@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.dao.intf;
 
 import cn.org.atool.fluent.form.annotation.Entry;
-import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.formservice.model.HomeAddress;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
@@ -16,6 +15,11 @@ import static cn.org.atool.fluent.form.annotation.EntryType.LikeLeft;
  * <p/>@author Powered By Fluent Mybatis
  */
 public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
+    String sayImplement();
+
+    default String sayInterface() {
+        return "HomeAddressDao";
+    }
 
     HomeAddress findHomeAddress(@Entry(value = "address", type = LikeLeft) String address);
 }

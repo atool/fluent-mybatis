@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
-import static cn.org.atool.fluent.form.registrar.FormServiceFactoryBean.TableEntityClass;
+import static cn.org.atool.fluent.form.registrar.FormServiceKit.TableEntityClass;
 
 /**
  * Form操作辅助类
