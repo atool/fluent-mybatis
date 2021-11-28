@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,4 +94,6 @@ public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends 
         IUpdate updater = DaoHelper.buildUpdateByEntityNoN(this::updater, updateNoN, whereNoN);
         return this.updateBy(updater);
     }
+
+    public abstract void setMapper(IMapper<E> mapper);
 }

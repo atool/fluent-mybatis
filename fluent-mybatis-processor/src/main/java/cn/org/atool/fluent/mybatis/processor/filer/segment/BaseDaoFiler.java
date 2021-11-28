@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.processor.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
+import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
@@ -38,7 +39,8 @@ public class BaseDaoFiler extends AbstractFiler {
 
         builder.addField(this.f_mapper())
             .addMethod(this.m_mapper())
-            .addMethod(this.m_defaults());
+            .addMethod(this.m_defaults())
+            .addMethod(this.m_setMapper());
     }
 
     /**
@@ -53,9 +55,16 @@ public class BaseDaoFiler extends AbstractFiler {
     private FieldSpec f_mapper() {
         return FieldSpec.builder(fluent.mapper(), "mapper")
             .addModifiers(Modifier.PROTECTED)
+            .build();
+    }
+
+    private MethodSpec m_setMapper() {
+        return FilerKit.publicMethod("setMapper", (Class) null)
             .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Resource)
                 .addMember("name", "$S", getMapperName(fluent)).build()
             )
+            .addParameter(ParameterizedTypeName.get(ClassName.get(IMapper.class), fluent.entity()), "mapper")
+            .addStatement("this.mapper = ($T)mapper", fluent.mapper())
             .build();
     }
 

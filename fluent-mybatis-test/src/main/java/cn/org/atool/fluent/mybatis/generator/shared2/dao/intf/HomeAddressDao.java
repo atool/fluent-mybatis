@@ -15,7 +15,6 @@ import static cn.org.atool.fluent.form.annotation.EntryType.LikeLeft;
  * 可以任意添加方法和实现, 更改作者和重定义类名
  * <p/>@author Powered By Fluent Mybatis
  */
-@FormService
 public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
 
     HomeAddress findHomeAddress(@Entry(value = "address", type = LikeLeft) String address);

@@ -13,6 +13,11 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface FormService {
     /**
+     * spring bean name
+     */
+    String bean() default "";
+
+    /**
      * 操作表Entity表名称
      */
     String table() default "";

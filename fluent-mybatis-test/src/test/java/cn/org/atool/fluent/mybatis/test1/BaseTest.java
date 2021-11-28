@@ -30,7 +30,7 @@ import javax.sql.DataSource;
 })
 @FormServiceScans({@FormServiceScan({
     "cn.org.atool.fluent.mybatis.formservice",
-    "cn.org.atool.fluent.mybatis.generator.shared2.dao.intf"})
+    "cn.org.atool.fluent.mybatis.generator.shared2.dao.impl"})
 })
 public abstract class BaseTest extends Test4J {
 }
