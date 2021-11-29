@@ -15,13 +15,13 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
 import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 
 /**
  * FormService方法元数据
@@ -77,13 +77,17 @@ public class MethodMeta {
 
     private ArgumentMeta[] buildArgumentMeta(String methodName, Parameter[] parameters) {
         ArgumentMeta[] args = new ArgumentMeta[parameters.length];
-        String[] names = FinderNameKit.parseFindFields(methodName);
+        List<NameAndPair> names = FinderNameKit.parseFindFields(methodName);
         int index = 0;
         for (int i = 0; i < parameters.length; i++) {
-            String defaultName = names != null && index < names.length ? names[index] : EMPTY;
-            args[i] = new ArgumentMeta(methodType, parameters[i], defaultName, true, i, null);
-            if (Objects.equals(defaultName, args[i].entryName)) {
-                index++;
+            NameAndPair pair = names != null && index < names.size() ? names.get(index) : null;
+            if (pair == null) {
+                args[i] = new ArgumentMeta(methodType, parameters[i], null, true, i, null);
+            } else {
+                args[i] = new ArgumentMeta(methodType, parameters[i], pair.name, pair.isAnd, i, null);
+                if (Objects.equals(pair.name, args[i].entryName)) {
+                    index++;
+                }
             }
         }
         return args;

@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.wrap;
+
 /**
  * FormFieldMeta: Form字段元数据
  *
@@ -101,7 +103,7 @@ public class EntryMeta {
         try {
             return getter.invoke(target);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw wrap(e);
         }
     }
 
@@ -112,7 +114,7 @@ public class EntryMeta {
         try {
             setter.invoke(target, value);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw wrap(e);
         }
     }
 }

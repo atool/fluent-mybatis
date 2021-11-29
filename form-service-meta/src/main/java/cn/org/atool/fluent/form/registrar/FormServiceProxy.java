@@ -34,7 +34,7 @@ public class FormServiceProxy implements MethodInterceptor {
 
     private final IMethodAround methodAround;
 
-    private final Class entityClass;
+    private Class entityClass;
 
     public static Object create(Class serviceClass, Class aroundClass) {
         Enhancer enhancer = new Enhancer();
@@ -48,7 +48,7 @@ public class FormServiceProxy implements MethodInterceptor {
         enhancer.setCallbacks(new Callback[]{formServiceProxy, NoOp.INSTANCE});
         Object proxy = enhancer.create();
         if (proxy instanceof BaseDao) {
-            ((BaseDao) proxy).setMapper(RefKit.mapper(formServiceProxy.entityClass));
+            ((BaseDao) proxy).setMapper(RefKit.mapper(formServiceProxy.getEntityClass()));
         }
         return proxy;
     }
@@ -67,7 +67,6 @@ public class FormServiceProxy implements MethodInterceptor {
         this.serviceClass = serviceClass;
 
         this.methodAround = this.aroundInstance(aroundClass);
-        this.entityClass = this.getEntityClass();
     }
 
     /**
@@ -124,11 +123,11 @@ public class FormServiceProxy implements MethodInterceptor {
     private Class<? extends IEntity> getEntityClass(Method method) {
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
         if (aMethod == null) {
-            return this.entityClass;
+            return this.getEntityClass();
         }
         Class entity = this.getEntityClass(aMethod.entity(), aMethod.table());
         if (entity == null || entity == Object.class) {
-            entity = this.entityClass;
+            entity = this.getEntityClass();
         }
         if (entity == null || entity == Object.class) {
             throw new RuntimeException("The entityClass value of @MethodService of Method[" + method.getName() + "] must be a subclass of IEntity.");
@@ -142,15 +141,18 @@ public class FormServiceProxy implements MethodInterceptor {
      * @return IEntity class
      */
     private Class<? extends IEntity> getEntityClass() {
-        FormService api = (FormService) serviceClass.getDeclaredAnnotation(FormService.class);
-        Class entityClass = this.getEntityClass(api.entity(), api.table());
-        if (entityClass != Object.class) {
-            return entityClass;
-        } else if (IBaseDao.class.isAssignableFrom(this.serviceClass)) {
-            return ParameterizedTypeKit.getType(this.serviceClass, IBaseDao.class, "E");
-        } else {
-            return null;
+        if (this.entityClass == null) {
+            FormService api = (FormService) serviceClass.getDeclaredAnnotation(FormService.class);
+            Class klass = this.getEntityClass(api.entity(), api.table());
+            if (klass != Object.class) {
+                this.entityClass = klass;
+            } else if (IBaseDao.class.isAssignableFrom(this.serviceClass)) {
+                this.entityClass = ParameterizedTypeKit.getType(this.serviceClass, IBaseDao.class, "E");
+            } else {
+                this.entityClass = Object.class;
+            }
         }
+        return this.entityClass;
     }
 
     /**

@@ -533,8 +533,16 @@ public class MybatisUtil {
                 value = f.get(value);
             }
             return (T) value;
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw wrap(e);
+        }
+    }
+
+    public static RuntimeException wrap(Exception e) {
+        if (e instanceof RuntimeException) {
+            return (RuntimeException) e;
+        } else {
+            return new RuntimeException(e);
         }
     }
 
@@ -543,8 +551,8 @@ public class MybatisUtil {
             Field field = declared.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field;
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw wrap(e);
         }
     }
 

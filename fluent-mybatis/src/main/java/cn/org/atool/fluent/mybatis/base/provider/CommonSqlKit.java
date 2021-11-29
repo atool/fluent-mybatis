@@ -20,6 +20,7 @@ import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.JoiningFrag;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.utility.SqlProviderKit;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -27,6 +28,7 @@ import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -87,7 +89,7 @@ public class CommonSqlKit implements SqlKit {
 
         withPk = validateInsertEntity(mapping, entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
         MapperSql sql = new MapperSql();
-        sql.INSERT_INTO(dynamic(entity, mapping.table().get(mapping)));
+        sql.INSERT_INTO(dynamic(entity, mapping));
         InsertList inserts = this.insertColumns(mapping, prefix, entity, withPk);
         sql.INSERT_COLUMNS(mapping, inserts.columns);
         sql.VALUES();
@@ -143,7 +145,7 @@ public class CommonSqlKit implements SqlKit {
         List<Map> maps = this.toMaps(mapping, entities, withPk);
         /* 所有非空字段 */
         List<FieldMapping> nonFields = this.nonFields(mapping, maps, withPk);
-        String tableName = dynamic(entities.get(0), mapping.table().get(mapping));
+        String tableName = dynamic(entities, mapping);
         sql.INSERT_INTO(tableName);
 
         if (this.isSelectInsert(mapping, withPk, tableId)) {
@@ -517,12 +519,29 @@ public class CommonSqlKit implements SqlKit {
      * @param entity 要插入的实例
      * @return 操作表名称
      */
-    static String dynamic(IEntity entity, String tableName) {
+    static String dynamic(IEntity entity, IMapping mapping) {
+        IFragment fragment = RefKit.byEntity(entity.entityClass()).table(entity);
+        String tableName = fragment.get(mapping);
         if (entity instanceof IRichEntity) {
             String dynamic = entity.tableSupplier();
             return isBlank(dynamic) ? tableName : dynamic;
         } else {
             return tableName;
+        }
+    }
+
+    /**
+     * 获取指定的动态表名称
+     *
+     * @param entity 要插入的实例
+     * @return 操作表名称
+     */
+    static <E extends IEntity> String dynamic(List<E> entities, IMapping mapping) {
+        Set<String> tables = entities.stream().map(e -> dynamic(e, mapping)).collect(Collectors.toSet());
+        if (tables.size() != 1) {
+            throw new RuntimeException("Cannot batch insert data into multiple target tables:" + tables);
+        } else {
+            return tables.iterator().next();
         }
     }
 

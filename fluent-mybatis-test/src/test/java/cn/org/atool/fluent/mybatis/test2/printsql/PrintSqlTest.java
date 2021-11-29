@@ -19,7 +19,7 @@ public class PrintSqlTest extends Test4J {
 
     @BeforeAll
     static void setup() {
-        Ref.Query.student.setTableSupplier(t -> "fluent_mybatis." + t);
+        Ref.Query.student.setTableSupplier((t, v) -> "fluent_mybatis." + t);
     }
 
     @Test

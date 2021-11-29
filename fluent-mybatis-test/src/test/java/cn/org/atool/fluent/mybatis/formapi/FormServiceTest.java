@@ -50,9 +50,10 @@ public class FormServiceTest extends BaseTest {
         want.object(students.get(0)).eqReflect(students.get(1).getDeskMate(), EqMode.IGNORE_DEFAULTS);
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ? " +
+            "AND `age` BETWEEN ? AND ?) " +
             "ORDER BY `user_name` ASC, `age` DESC");
         db.sqlList().wantSql(1).end("" +
             "FROM fluent_mybatis.student " +
@@ -101,15 +102,17 @@ public class FormServiceTest extends BaseTest {
         want.number(students.getTotal()).isEqualTo(2);
         db.sqlList().wantFirstSql().eq("SELECT COUNT(*) " +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ?");
+            "AND `age` BETWEEN ? AND ?)");
 
         db.sqlList().wantSql(1).end("" +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ? " +
+            "AND `age` BETWEEN ? AND ?) " +
             "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
@@ -140,9 +143,10 @@ public class FormServiceTest extends BaseTest {
         want.number((Long) students.getNext()).eq(32L);
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ? " +
+            "AND `age` BETWEEN ? AND ?) " +
             "AND `id` >= ? " +
             "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
@@ -167,8 +171,8 @@ public class FormServiceTest extends BaseTest {
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
-            "AND `user_name` = ? " +
-            "AND `age` IN (?, ?) " +
+            "AND (`user_name` = ? " +
+            "AND `age` IN (?, ?)) " +
             "LIMIT ?, ?");
     }
 
@@ -192,8 +196,8 @@ public class FormServiceTest extends BaseTest {
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
-            "AND `user_name` = ? " +
-            "AND `age` BETWEEN ? AND ? " +
+            "AND (`user_name` = ? " +
+            "AND `age` BETWEEN ? AND ?) " +
             "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
@@ -218,9 +222,10 @@ public class FormServiceTest extends BaseTest {
         );
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` >= ? " +
+            "AND `age` >= ?) " +
             "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
@@ -241,9 +246,10 @@ public class FormServiceTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) " +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ? " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ?");
+            "AND `age` BETWEEN ? AND ?)");
     }
 
     @Test
@@ -277,7 +283,7 @@ public class FormServiceTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
+            "WHERE `is_deleted` = ? AND `env` = ? AND (`id` = ?)");
         db.sqlList().wantFirstPara().eqList("test", 34, false, "test_env", 2L);
     }
 
@@ -295,10 +301,10 @@ public class FormServiceTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?; " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND (`id` = ?); " +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
-            "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
+            "WHERE `is_deleted` = ? AND `env` = ? AND (`id` = ?)");
         db.sqlList().wantFirstPara().eqList(
             "test1", 34, false, "test_env", 2L,
             "test2", 34, false, "test_env", 4L);

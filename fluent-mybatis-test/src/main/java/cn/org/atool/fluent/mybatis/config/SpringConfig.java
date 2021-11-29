@@ -57,7 +57,7 @@ public class SpringConfig {
     public MapperFactory mapperFactory() {
         return new MapperFactory()
             .dbType(DbType.MYSQL)
-            .tableSupplier(t -> "fluent_mybatis." + t, StudentEntity.class)
+            .tableSupplier((t, v) -> "fluent_mybatis." + t, StudentEntity.class)
             .register("java.util.List<java.lang.String>", obj -> Arrays.asList(String.valueOf(obj).split(";")))
             .initializer(() -> {
                 DbType.ORACLE.setEscapeExpress("[?]"); // 只是示例, ORACLE的转义方式不是[?], SQL Server才是

@@ -81,10 +81,17 @@ public abstract class BaseWrapper<
 
     protected BaseWrapper(IFragment table, StringSupplier tableAlias, Parameters parameters, Class<E> entityClass) {
         notNull(entityClass, "entityClass must not null,please set entity before use this method!");
-        this.table = table;
-        this.setTableAlias(tableAlias);
         this.data = new WrapperData(this, parameters);
+        this.table = table == null ? this.table() : table;
+        this.setTableAlias(tableAlias);
         this.entityClass = entityClass;
+    }
+
+    private IFragment table() {
+        return m -> {
+            IMapping mapping = this.mapping().orElse(m);
+            return mapping.table(this.data).get(m);
+        };
     }
 
     /**
@@ -101,9 +108,9 @@ public abstract class BaseWrapper<
         if (this.table != null && this.table.notEmpty()) {
             return this.table;
         } else if (notFoundError) {
-            return this.mapping().map(IMapping::table).orElseThrow(() -> new RuntimeException("table name not found."));
+            return this.mapping().map(m -> m.table(this.data)).orElseThrow(() -> new RuntimeException("table name not found."));
         } else {
-            return this.mapping().map(IMapping::table).orElse(null);
+            return this.mapping().map(m -> m.table(this.data)).orElse(null);
         }
     }
 

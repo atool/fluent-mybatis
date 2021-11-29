@@ -189,7 +189,7 @@ public class QueryFiler extends AbstractFiler {
             .addParameter(IFragment.class, "table")
             .addParameter(StringSupplier.class, "alias")
             .addParameter(Parameters.class, "shared")
-            .addStatement("super(table == null ? $L.table() : table, alias, $T.class)", Suffix_MAPPING, fluent.entity())
+            .addStatement("super(table, alias, $T.class)", fluent.entity())
             .beginControlFlow("if(shared != null)")
             .addStatement("this.sharedParameter(shared)")
             .endControlFlow()

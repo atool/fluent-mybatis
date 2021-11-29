@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
+import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
 import cn.org.atool.fluent.mybatis.base.intf.IHasDbType;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
@@ -26,7 +27,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库表名
      */
-    IFragment table();
+    IFragment table(IDataByColumn data);
 
     /**
      * Mapper class

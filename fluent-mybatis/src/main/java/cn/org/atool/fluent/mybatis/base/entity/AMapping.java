@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
+import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
@@ -187,8 +188,8 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * 获取表名
      */
     @Override
-    public IFragment table() {
-        return tableSupplier == null ? this.tableSegment : m -> tableSupplier.get(this.tableName);
+    public IFragment table(IDataByColumn data) {
+        return tableSupplier == null ? this.tableSegment : m -> tableSupplier.get(this.tableName, data);
     }
 
     @Override
@@ -221,7 +222,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      */
     public IFragment dynamic(IWrapper wrapper) {
         IFragment table = wrapper.table(false);
-        return table != null && table.notEmpty() ? table : this.table();
+        return table != null && table.notEmpty() ? table : this.table(wrapper.data());
     }
 
     protected TableId tableId = null;

@@ -47,11 +47,11 @@ public class FormObjectTest extends BaseTest {
             "`age` = ? " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
-            "AND `tenant` = ? " +
+            "AND (`tenant` = ? " +
             "AND `version` <> ? " +
             "AND `address` IS NULL " +
             "AND `age` BETWEEN ? AND ? " +
-            "AND `address` IN (?, ?)");
+            "AND `address` IN (?, ?))");
         db.sqlList().wantFirstPara().eqList(
             "form test", 23, false, "test_env", 45L, "abc", 12, 56, "a1", "a2");
     }
@@ -68,8 +68,8 @@ public class FormObjectTest extends BaseTest {
             "`age` = ? " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
-            "AND `tenant` = ? " +
-            "AND `address` = ?");
+            "AND (`tenant` = ? " +
+            "AND `address` = ?)");
         db.sqlList().wantFirstPara().eqList("form test", 23, false, "test_env", 45, "address");
     }
 
@@ -82,8 +82,8 @@ public class FormObjectTest extends BaseTest {
             .start("SELECT")
             .end("WHERE `is_deleted` = ? " +
                 "AND `env` = ? " +
-                "AND `tenant` = ? " +
-                "AND `address` = ?");
+                "AND (`tenant` = ? " +
+                "AND `address` = ?)");
         db.sqlList().wantFirstPara().eqList(false, "test_env", 45, "address");
     }
 

@@ -154,11 +154,22 @@ public class FormHelper {
     public static <E extends IEntity> IUpdate<E> newUpdate(MethodArgs args) {
         AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IUpdate<E> updater = mapping.updater();
+        IQuery nested = mapping.emptyQuery();
         for (EntryMeta meta : args.meta.metas().getMetas()) {
-            if (meta.getter != null) {
-                initWrapper(mapping, (IWrapper) updater, meta, args);
+            Object value = meta.get(args.args);
+            if (meta.getter == null || meta.ignoreNull && value == null) {
+                continue;
+            }
+            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+            if (fm == null) {
+                throw fieldNotFoundException(meta.name, args.meta.entityClass);
+            } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
+                updater.updateSet(fm.column, value);
+            } else {
+                where(nested, fm.column, meta, value);
             }
         }
+        updater.where().and(nested);
         return updater;
     }
 
@@ -171,11 +182,22 @@ public class FormHelper {
     public static <E extends IEntity> IQuery<E> newQuery(MethodArgs args) {
         AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IQuery<E> query = mapping.query();
+        IQuery<E> nested = mapping.emptyQuery();
         for (EntryMeta meta : args.metas()) {
-            if (meta.getter != null) {
-                initWrapper(mapping, (IWrapper) query, meta, args);
+            Object value = meta.get(args.args);
+            if (meta.getter == null || meta.ignoreNull && value == null) {
+                continue;
+            }
+            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+            if (fm == null) {
+                throw fieldNotFoundException(meta.name, args.meta.entityClass);
+            } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
+                throw new IllegalStateException("Not allowed update Entry[" + meta.name + "].");
+            } else {
+                where(nested, fm.column, meta, value);
             }
         }
+        query.where().and(nested);
         for (EntryMeta meta : args.meta.metas().getOrderBy()) {
             addOrderBy(mapping, query, meta, args);
         }
@@ -197,21 +219,6 @@ public class FormHelper {
         query.orderBy().apply(true, asc, fm.column);
     }
 
-    private static void initWrapper(AMapping mapping, IWrapper wrapper, EntryMeta meta, MethodArgs args) {
-        Object value = meta.get(args.args);
-        if (meta.ignoreNull && value == null) {
-            return;
-        }
-        FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
-        if (fm == null) {
-            throw fieldNotFoundException(meta.name, args.meta.entityClass);
-        } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
-            ((IUpdate) wrapper).updateSet(fm.column, value);
-        } else {
-            where(wrapper, fm.column, meta, value);
-        }
-    }
-
     private static <E extends IEntity> void setPaged(AMapping mapping, IQuery<E> query, MethodArgs args) {
         int pageSize = args.getPageSize();
         if (pageSize < 1) {
@@ -229,7 +236,7 @@ public class FormHelper {
         }
     }
 
-    private static void where(IWrapper wrapper, String column, EntryMeta meta, Object value) {
+    private static void where(IQuery wrapper, String column, EntryMeta meta, Object value) {
         WhereBase where = meta.isAnd ? wrapper.where().and : wrapper.where().or;
         if (value == null || value instanceof String && isBlank((String) value)) {
             if (!meta.ignoreNull) {
@@ -444,7 +451,7 @@ public class FormHelper {
             }
             return target;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw MybatisUtil.wrap(e);
         }
     }
 

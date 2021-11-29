@@ -4,10 +4,13 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.mapper.MapperSql;
+import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.fragment.*;
 import cn.org.atool.fluent.mybatis.utility.CustomizedSql;
 import lombok.AccessLevel;
@@ -15,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
@@ -32,7 +36,7 @@ import static java.util.stream.Collectors.joining;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Getter
-public class WrapperData implements IWrapperData {
+public class WrapperData implements IWrapperData, IDataByColumn {
     protected final IWrapper wrapper;
     /**
      * 自定义参数列表
@@ -238,6 +242,32 @@ public class WrapperData implements IWrapperData {
      *                          以下是数据操作部分
      * ============================================================
      */
+    /**
+     * 相等的条件
+     * key: 字段, value: 所有可能的值
+     */
+    private final Map<String, List<Object>> eqWhere = new HashMap<>();
+
+    @Override
+    public <T> T valueByColumn(String column) {
+        return (T) this.eqWhere.get(column);
+    }
+
+    @Override
+    public Class entityClass() {
+        if (this.wrapper instanceof BaseWrapper) {
+            return ((BaseWrapper) this.wrapper).getEntityClass();
+        } else {
+            return null;
+        }
+    }
+
+    private synchronized List<Object> getEqValues(String key) {
+        if (!eqWhere.containsKey(key)) {
+            eqWhere.put(key, new ArrayList<>());
+        }
+        return eqWhere.get(key);
+    }
 
     /**
      * 增加条件设置
@@ -249,6 +279,13 @@ public class WrapperData implements IWrapperData {
      */
     public void apply(KeyFrag keyWord, IFragment column, ISqlOp operator, Object... paras) {
         this.apply(keyWord, column, operator, (String) null, paras);
+        if (!(column instanceof Column)) {
+            return;
+        }
+        /* 采集相等的字段值, 供分表使用 */
+        if (operator == SqlOp.EQ || operator == SqlOp.IN) {
+            Stream.of(paras).forEach(c -> getEqValues(((Column) column).column).add(c));
+        }
     }
 
     /**

@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.form.kits;
 
-import cn.org.atool.fluent.mybatis.mapper.StrConstant;
-import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.form.meta.NameAndPair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * FinderNameKit
@@ -15,52 +17,47 @@ public interface FinderNameKit {
      * @param findMethod 方法名称
      * @return 条件字段列表
      */
-    static String[] parseFindFields(String findMethod) {
-        if (!findMethod.startsWith("findBy")) {
+    static List<NameAndPair> parseFindFields(String method) {
+        if (!method.startsWith("findBy")) {
             return null;
         }
-        String sub = findMethod.substring(6);
-        for (int index = 0; index < sub.length(); ) {
-            char ch = sub.charAt(index);
-            if (ch == 'A' && isAnd(sub, index)) {
-
-            } else if (ch == 'O' && isOr(sub, index)) {
-
+        List<NameAndPair> pairs = new ArrayList<>();
+        StringBuilder name = new StringBuilder();
+        boolean isAnd = true;
+        for (int index = 6; index < method.length(); ) {
+            char ch = method.charAt(index);
+            if (matchWord(method, index, "And") && isCapital(method.charAt(index + 3))) {
+                pairs.add(new NameAndPair(name.toString(), isAnd));
+                name = new StringBuilder();
+                index += 3;
+                isAnd = true;
+            } else if (matchWord(method, index, "Or") && isCapital(method.charAt(index + 2))) {
+                pairs.add(new NameAndPair(name.toString(), isAnd));
+                name = new StringBuilder();
+                index += 2;
+                isAnd = false;
             } else {
-                index++;
+                name.append(ch);
+                index += 1;
             }
         }
-        String[] fields = sub.split("And");
-        for (int index = 0; index < fields.length; index++) {
-            fields[index] = MybatisUtil.lowerFirst(fields[index], StrConstant.EMPTY);
-        }
-        return fields;
+        pairs.add(new NameAndPair(name.toString(), isAnd));
+        return pairs;
     }
 
-    static boolean isOr(String str, int index) {
-        if (str.length() < index + 3) {
-            return false;
-        } else if (str.charAt(index) == 'O' &&
-            str.charAt(index + 1) == 'r' &&
-            str.charAt(index + 2) >= 'A' && str.charAt(index + 2) <= 'Z'
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+    static boolean isCapital(char ch) {
+        return ch >= 'A' && ch <= 'Z';
     }
 
-    static boolean isAnd(String str, int index) {
-        if (str.length() < index + 4) {
-            return false;
-        } else if (str.charAt(index) == 'A' &&
-            str.charAt(index + 1) == 'n' &&
-            str.charAt(index + 2) == 'd' &&
-            str.charAt(index + 3) >= 'A' && str.charAt(index + 3) <= 'Z'
-        ) {
-            return true;
-        } else {
+    static boolean matchWord(String text, int start, String word) {
+        if (text.length() < start + word.length()) {
             return false;
         }
+        for (int index = 0; index < word.length(); index++) {
+            if (text.charAt(start + index) != word.charAt(index)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

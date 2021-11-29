@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.wrap;
+
 /**
  * 反射方法构造的EntryMeta
  *
@@ -46,7 +48,7 @@ public class MethodEntryMeta extends EntryMeta {
             try {
                 setter.invoke(target, value);
             } catch (Exception e) {
-                throw new IllegalStateException(e);
+                throw wrap(e);
             }
         };
     }

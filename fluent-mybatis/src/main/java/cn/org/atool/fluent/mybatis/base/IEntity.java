@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
@@ -14,7 +15,7 @@ import java.util.Map;
  * @author darui.wu
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
-public interface IEntity extends Serializable {
+public interface IEntity extends IDataByColumn, Serializable {
     /**
      * 返回实体主键
      *

@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Set;
 
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.wrap;
 import static javax.tools.Diagnostic.Kind.ERROR;
 import static javax.tools.Diagnostic.Kind.NOTE;
 
@@ -60,7 +61,7 @@ public class MetaKitProcessor extends AbstractProcessor {
                 MetaProcessorKit.generate(element, filer);
             } catch (Exception e) {
                 messager.printMessage(ERROR, element.asType().toString() + ":\n" + toString(e));
-                throw new RuntimeException(e);
+                throw wrap(e);
             }
         }
         messager.printMessage(NOTE, "FormObject process end !!!");
