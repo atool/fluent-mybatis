@@ -1,8 +1,11 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.List;
+import java.util.Optional;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
@@ -80,5 +83,27 @@ public interface IRichEntity extends IRich, IEntity {
      */
     default <E extends IEntity> List<E> listByNotNull() {
         return this.<List>invoke(RE_ListByNotNull, false);
+    }
+
+    /**
+     * entity非空字段作为条件查询列表, 返回符合条件的第一条数据
+     *
+     * @param <E> IEntity类型
+     * @return ignore
+     */
+    default <E extends IEntity> Optional<E> firstByNotNull() {
+        E entity = this.invoke(RE_FirstByNotNull, false);
+        return Optional.ofNullable(entity);
+    }
+
+    /**
+     * 将entity非空字段作为相同条件
+     *
+     * @return IQuery
+     */
+    default <Q extends IQuery> Q asQuery() {
+        IQuery query = RefKit.byEntity(entityClass()).query();
+        query.where().eqByEntity(this);
+        return (Q) query;
     }
 }

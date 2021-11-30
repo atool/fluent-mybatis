@@ -6,13 +6,13 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.QFunction;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 import cn.org.atool.fluent.mybatis.utility.NestedQueryFactory;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.experimental.Accessors;
 
 import java.util.Arrays;
@@ -140,8 +140,8 @@ public abstract class WhereBase<
      * 根据entity设置where条件
      *
      * <pre>
-     * o 指定字段列表, 可以是 null 值
-     * o 无指定字段时, 所有非空entity字段
+     * o 指定字段列表, 允许指定字段为 null 值
+     * o 无指定字段时, entity所有非空字段
      * </pre>
      *
      * @param entity  实例

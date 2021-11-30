@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IEntityKit;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
@@ -241,6 +242,8 @@ public final class RefKit {
                 return logicDeleteById(eClass, entity);
             case RE_ListByNotNull:
                 return listByNotNull(eClass, entity);
+            case RE_FirstByNotNull:
+                return firstByNotNull(eClass, entity);
             default:
                 return invokeRefMethod(eClass, methodName, entity);
         }
@@ -273,6 +276,12 @@ public final class RefKit {
         assertNotEmpty("the property of entity can't be all empty.", where);
         List list = mapper(eClass).listByMap(true, where);
         return (T) list;
+    }
+
+    private static <T> T firstByNotNull(Class eClass, IEntity entity) {
+        IQuery query = RefKit.byEntity(eClass).query();
+        query.where().eqByEntity(entity).end();
+        return (T) query.limit(1).to().findOne().orElse(null);
     }
 
     private static <T> T logicDeleteById(Class eClass, IEntity entity) {

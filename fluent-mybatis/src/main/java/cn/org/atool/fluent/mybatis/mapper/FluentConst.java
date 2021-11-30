@@ -120,5 +120,10 @@ public interface FluentConst {
      */
     String RE_ListByNotNull = "listByNotNull";
 
+    /**
+     * RichEntity firstByNotNull 方法
+     */
+    String RE_FirstByNotNull = "firstByNotNull";
+
     String F_Entity_Class = "entityClass";
 }
