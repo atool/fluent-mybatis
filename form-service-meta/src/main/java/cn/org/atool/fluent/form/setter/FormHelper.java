@@ -157,43 +157,11 @@ public class FormHelper {
         AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IUpdate<E> updater = mapping.updater();
         IQuery where = mapping.emptyQuery();
-        EntryMetas metas = args.meta.metas();
-        whereEntryMeta(mapping, metas, args, updater, where);
-        if (metas.isAnd()) {
-            updater.where().and(where);
-        } else {
-            updater.where().or(where);
-        }
-        return updater;
-    }
 
-    private static void whereEntryMeta(IMapping mapping, EntryMetas metas, MethodArgs args, IUpdate update, IQuery where) {
-        for (IEntryMeta entryMeta : metas.getMetas()) {
-            if (entryMeta instanceof EntryMeta) {
-                EntryMeta meta = (EntryMeta) entryMeta;
-                Object value = meta.get(args.args);
-                if (meta.getter == null || meta.ignoreNull && value == null) {
-                    continue;
-                }
-                FieldMapping fm = mapping.getFieldsMap().get(meta.name);
-                if (fm == null) {
-                    throw fieldNotFoundException(meta.name, args.meta.entityClass);
-                } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
-                    update.updateSet(fm.column, value);
-                } else {
-                    where(metas.isAnd() ? where.where().and : where.where().or, fm.column, meta, value);
-                }
-            } else if (entryMeta instanceof EntryMetas) {
-                EntryMetas meta = (EntryMetas) entryMeta;
-                IQuery nested = mapping.emptyQuery();
-                whereEntryMeta(mapping, meta, args, update, nested);
-                if (metas.isAnd()) {
-                    where.where().and(nested);
-                } else {
-                    where.where().or(nested);
-                }
-            }
-        }
+        wrapperByMetas(mapping, args.meta.metas(), args, (IWrapper) updater, where);
+        // 和默认条件以 and 关联
+        updater.where().and(where);
+        return updater;
     }
 
     /**
@@ -206,34 +174,66 @@ public class FormHelper {
         AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IQuery<E> query = mapping.query();
         IQuery<E> where = mapping.emptyQuery();
-        EntryMetas metas = args.meta.metas();
 
-        whereEntryMeta(mapping, metas, args, null, where);
+        wrapperByMetas(mapping, args.meta.metas(), args, (IWrapper) query, where);
         // 和默认条件以 and 关联
         query.where().and(where);
-
-        for (EntryMeta meta : args.meta.metas().getOrderBy()) {
-            addOrderBy(mapping, query, meta, args);
-        }
-        if (args.meta.metas().getPageSize() != null) {
-            setPaged(mapping, query, args);
-        }
         return query;
     }
 
-    private static <E extends IEntity> void addOrderBy(AMapping mapping, IQuery<E> query, EntryMeta meta, MethodArgs args) {
+    private static void wrapperByMetas(IMapping mapping, EntryMetas metas, MethodArgs args, IWrapper wrapper, IQuery where) {
+        for (IEntryMeta entryMeta : metas.getMetas()) {
+            if (entryMeta instanceof EntryMeta) {
+                wrapperByMeta(mapping, metas.isAnd(), (EntryMeta) entryMeta, args, wrapper, where);
+            } else if (entryMeta instanceof EntryMetas) {
+                EntryMetas meta = (EntryMetas) entryMeta;
+                IQuery nested = mapping.emptyQuery();
+                wrapperByMetas(mapping, meta, args, wrapper, nested);
+                if (metas.isAnd()) {
+                    where.where().and(nested);
+                } else {
+                    where.where().or(nested);
+                }
+            }
+        }
+        if (wrapper instanceof IQuery) {
+            for (EntryMeta meta : metas.getOrderBy()) {
+                addOrderBy(mapping, (IQuery) wrapper, meta, args);
+            }
+            if (metas.getPageSize() != null) {
+                setPaged(mapping, (IQuery) wrapper, args);
+            }
+        }
+    }
+
+    private static void wrapperByMeta(IMapping mapping, boolean isAnd, EntryMeta meta, MethodArgs args, IWrapper wrapper, IQuery where) {
+        Object value = meta.get(args.args);
+        if (meta.getter == null || meta.ignoreNull && value == null) {
+            return;
+        }
+        FieldMapping fm = mapping.getFieldsMap().get(meta.name);
+        if (fm == null) {
+            throw fieldNotFoundException(meta.name, args.meta.entityClass);
+        } else if (meta.type == EntryType.Update && args.meta.isUpdate() && wrapper instanceof IUpdate) {
+            ((IUpdate) wrapper).updateSet(fm.column, value);
+        } else {
+            where(isAnd ? where.where().and : where.where().or, fm.column, meta, value);
+        }
+    }
+
+    private static <E extends IEntity> void addOrderBy(IMapping mapping, IQuery<E> query, EntryMeta meta, MethodArgs args) {
         Boolean asc = meta.get(args.args);
         if (asc == null) {
             return;
         }
-        FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
+        FieldMapping fm = mapping.getFieldsMap().get(meta.name);
         if (fm == null) {
             throw fieldNotFoundException(meta.name, args.meta.entityClass);
         }
         query.orderBy().apply(true, asc, fm.column);
     }
 
-    private static <E extends IEntity> void setPaged(AMapping mapping, IQuery<E> query, MethodArgs args) {
+    private static void setPaged(IMapping mapping, IQuery query, MethodArgs args) {
         int pageSize = args.getPageSize();
         if (pageSize < 1) {
             throw new IllegalArgumentException("PageSize must be greater than 0.");

@@ -144,10 +144,10 @@ public class FormServiceTest extends BaseTest {
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND `id` >= ? " +
             "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
             "AND `age` BETWEEN ? AND ?) " +
-            "AND `id` >= ? " +
             "ORDER BY `user_name` ASC, `age` DESC " +
             "LIMIT ?, ?");
     }
