@@ -8,6 +8,7 @@ import cn.org.atool.fluent.form.meta.entry.PagedEntry;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -23,6 +24,7 @@ import static cn.org.atool.fluent.form.registrar.FormServiceKit.TableEntityClass
  * @author wudarui
  */
 @SuppressWarnings({"rawtypes", "unused"})
+@Slf4j
 public class FormKit {
     private FormKit() {
     }
@@ -34,7 +36,12 @@ public class FormKit {
      * @param entityClass 实例类型
      */
     public static void mapping(String table, Class<? extends IEntity> entityClass) {
-        TableEntityClass.put(table, entityClass);
+        if (TableEntityClass.containsKey(table)) {
+            log.warn("Table[{}] and entity {} have been associated, and entity {} can no longer be associated.",
+                table, TableEntityClass.get(table), entityClass);
+        } else {
+            TableEntityClass.put(table, entityClass);
+        }
     }
 
     /**

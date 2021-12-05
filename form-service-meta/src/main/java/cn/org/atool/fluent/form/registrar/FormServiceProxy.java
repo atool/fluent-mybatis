@@ -21,6 +21,8 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Objects;
 
+import static cn.org.atool.fluent.form.registrar.FormServiceKit.TableEntityClass;
+
 /**
  * FormServiceFactoryBean: FormService bean封装工厂
  *
@@ -28,7 +30,6 @@ import java.util.Objects;
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
 public class FormServiceProxy implements MethodInterceptor {
-    public static final KeyMap<Class> TableEntityClass = new KeyMap();
 
     private final Class serviceClass;
 

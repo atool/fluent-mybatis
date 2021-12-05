@@ -47,6 +47,9 @@ public class MethodEntryMeta extends EntryMeta {
             }
             try {
                 setter.invoke(target, value);
+            } catch (IllegalArgumentException e) {
+                String err = "method:" + setter + ", value " + (value == null ? "<null>" : value.getClass()) + ":" + value;
+                throw new IllegalArgumentException(err, e);
             } catch (Exception e) {
                 throw wrap(e);
             }

@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.form.registrar;
 
+import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
@@ -20,6 +22,15 @@ public class FormServiceFactoryBean implements FactoryBean {
     public FormServiceFactoryBean(Class serviceClass, Class aroundClass) {
         this.serviceClass = serviceClass;
         this.aroundClass = aroundClass;
+    }
+
+    /**
+     * 确保 FormServiceFactoryBean 依赖于 {@link MapperFactory}
+     */
+    @SuppressWarnings("all")
+    @Autowired
+    public void setMapperFactory(MapperFactory factory) {
+        // do nothing
     }
 
     @Override
