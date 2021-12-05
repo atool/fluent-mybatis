@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
 
 import java.util.List;
 
-import static cn.org.atool.fluent.form.annotation.EntryType.EndWith;
+import static cn.org.atool.fluent.form.annotation.EntryType.IN;
 import static cn.org.atool.fluent.form.annotation.EntryType.StartWith;
 
 /**
@@ -38,5 +38,7 @@ public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
      *
      * @return ignore
      */
-    List<HomeAddress> findByCityOrDistrict(String city, @Entry(type = EndWith) String district);
+    List<HomeAddress> findByCityOrDistrictOrAddress(String city,
+                                                    @Entry(type = IN) String district,
+                                                    @Entry(type = StartWith) String address);
 }

@@ -50,13 +50,13 @@ public class HomeAddressTest extends BaseTest {
     }
 
     @Test
-    void findByCityOrDistrict() {
-        dao.findByCityOrDistrict("hangzhou", "binjiang");
+    void findByCityOrDistrictOrAddress() {
+        dao.findByCityOrDistrictOrAddress("hangzhou", "binjiang", "hang");
         db.sqlList().wantFirstSql().end("" +
             "FROM `home_address` " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
-            "AND (`city` = ? OR `district` LIKE ?)");
-        db.sqlList().wantFirstPara().eqList(false, "test_env", "hangzhou", "%binjiang");
+            "AND (`city` = ? OR `district` IN (?) OR `address` LIKE ?)");
+        db.sqlList().wantFirstPara().eqList(false, "test_env", "hangzhou", "binjiang", "hang%");
     }
 }
