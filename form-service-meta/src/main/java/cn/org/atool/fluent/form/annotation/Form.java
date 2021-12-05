@@ -11,4 +11,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface Form {
+    /**
+     * 和前置条件关联方式, true: 以and方式; false: 以or方式
+     */
+    boolean and() default true;
 }

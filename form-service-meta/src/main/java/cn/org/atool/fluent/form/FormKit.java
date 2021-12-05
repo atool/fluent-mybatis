@@ -124,7 +124,7 @@ public class FormKit {
      * @return ArgumentMeta
      */
     public static <T, R> ArgumentMeta argForm(MethodType methodType, Type type, int index, Map types) {
-        return new ArgumentMeta(methodType, null, true, EntryType.Form, type, index, types);
+        return new ArgumentMeta(methodType, null, EntryType.Form, type, index, types);
     }
 
     /**

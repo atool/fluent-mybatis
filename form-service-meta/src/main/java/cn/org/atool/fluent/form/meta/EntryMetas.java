@@ -33,13 +33,13 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @Getter
 @ToString(of = "objType")
-public class EntryMetas {
+public class EntryMetas implements IEntryMeta {
     public final Class objType;
 
     /**
      * 增删改查表单项列表
      */
-    private final List<EntryMeta> metas = new ArrayList<>();
+    private final List<IEntryMeta> metas = new ArrayList<>();
     /**
      * 嵌套表单项 或 关联数据项
      */
@@ -56,9 +56,14 @@ public class EntryMetas {
     private final List<EntryMeta> orderBy = new ArrayList<>();
 
     private boolean isUpdate = false;
+    /**
+     * 关联方式
+     */
+    private final boolean isAnd;
 
-    public EntryMetas(Class objType) {
+    public EntryMetas(Class objType, boolean isAnd) {
         this.objType = objType;
+        this.isAnd = isAnd;
     }
 
     public Integer getPageSize(Object form) {
@@ -104,8 +109,8 @@ public class EntryMetas {
         }
     }
 
-    public List<EntryMeta> allMetas() {
-        List<EntryMeta> all = new ArrayList<>();
+    public List<IEntryMeta> allMetas() {
+        List<IEntryMeta> all = new ArrayList<>();
         all.addAll(this.metas);
         all.addAll(this.orderBy);
         if (this.pageSize != null) {
@@ -123,9 +128,9 @@ public class EntryMetas {
     private void addMeta(String name, Method getter, Method setter, Entry entry) {
         if (getter != null || setter != null) {
             if (entry == null) {
-                this.addMeta(new MethodEntryMeta(name, true, EntryType.EQ, getter, setter, true));
+                this.addMeta(new MethodEntryMeta(name, EntryType.EQ, getter, setter, true));
             } else {
-                this.addMeta(new MethodEntryMeta(name, entry.and(), entry.type(), getter, setter, entry.ignoreNull()));
+                this.addMeta(new MethodEntryMeta(name, entry.type(), getter, setter, entry.ignoreNull()));
             }
         }
     }
@@ -149,7 +154,8 @@ public class EntryMetas {
      */
     public static EntryMetas getFormMeta(Class aClass) {
         ClassLock.lockDoing(ClassFormMetas::containsKey, aClass, () -> {
-            EntryMetas metas = new EntryMetas(aClass);
+            Form form = (Form) aClass.getDeclaredAnnotation(Form.class);
+            EntryMetas metas = new EntryMetas(aClass, form == null || form.and());
             /* 放在构造元数据前面, 避免子对象循环构造 */
             ClassFormMetas.put(aClass, metas);
             Class declared = aClass;

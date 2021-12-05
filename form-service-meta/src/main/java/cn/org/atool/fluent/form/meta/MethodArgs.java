@@ -2,8 +2,6 @@ package cn.org.atool.fluent.form.meta;
 
 import lombok.AllArgsConstructor;
 
-import java.util.List;
-
 /**
  * 方法元数据+入参实际值
  *
@@ -34,10 +32,6 @@ public class MethodArgs {
      */
     public boolean isSave() {
         return meta.isSave();
-    }
-
-    public List<EntryMeta> metas() {
-        return this.meta.metas().getMetas();
     }
 
     /**

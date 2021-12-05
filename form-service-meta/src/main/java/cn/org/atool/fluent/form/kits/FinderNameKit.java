@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.form.kits;
 
-import cn.org.atool.fluent.form.meta.NameAndPair;
+import cn.org.atool.fluent.form.meta.MethodArgNames;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * FinderNameKit
@@ -14,35 +16,41 @@ public interface FinderNameKit {
     /**
      * 从 findBy...() 方法中解析字段名称
      *
-     * @param findMethod 方法名称
+     * @param method 方法名称
      * @return 条件字段列表
      */
-    static List<NameAndPair> parseFindFields(String method) {
+    static MethodArgNames parseFindFields(String method) {
         if (!method.startsWith("findBy")) {
-            return null;
+            return new MethodArgNames(true, Collections.emptyList());
         }
-        List<NameAndPair> pairs = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         StringBuilder name = new StringBuilder();
-        boolean isAnd = true;
+        Boolean isAnd = null;
         for (int index = 6; index < method.length(); ) {
             char ch = method.charAt(index);
             if (matchWord(method, index, "And") && isCapital(method.charAt(index + 3))) {
-                pairs.add(new NameAndPair(name.toString(), isAnd));
+                names.add(name.toString());
                 name = new StringBuilder();
                 index += 3;
+                if (Objects.equals(isAnd, false)) {
+                    throw new IllegalStateException("The method name[" + method + "] cannot contain both and or logic.");
+                }
                 isAnd = true;
             } else if (matchWord(method, index, "Or") && isCapital(method.charAt(index + 2))) {
-                pairs.add(new NameAndPair(name.toString(), isAnd));
+                names.add(name.toString());
                 name = new StringBuilder();
                 index += 2;
+                if (Objects.equals(isAnd, true)) {
+                    throw new IllegalStateException("The method name[" + method + "] cannot contain both and or logic.");
+                }
                 isAnd = false;
             } else {
                 name.append(ch);
                 index += 1;
             }
         }
-        pairs.add(new NameAndPair(name.toString(), isAnd));
-        return pairs;
+        names.add(name.toString());
+        return new MethodArgNames(isAnd == null || isAnd, names);
     }
 
     static boolean isCapital(char ch) {

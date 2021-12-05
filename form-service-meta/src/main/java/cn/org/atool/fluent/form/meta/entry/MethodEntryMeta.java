@@ -19,8 +19,8 @@ public class MethodEntryMeta extends EntryMeta {
 
     private final Method setter;
 
-    public MethodEntryMeta(String name, boolean isAnd, EntryType type, Method getter, Method setter, boolean ignoreNull) {
-        super(name, isAnd, type, ignoreNull);
+    public MethodEntryMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
+        super(name, type, ignoreNull);
         this.getter = getter;
         this.setter = setter;
     }

@@ -15,7 +15,6 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -47,6 +46,8 @@ public class MethodMeta {
      * 入参类型
      */
     public final ArgumentMeta[] args;
+
+    private final boolean isAnd;
     /**
      * 返回值类型
      */
@@ -60,6 +61,7 @@ public class MethodMeta {
         this.entityClass = entityClass;
         this.method = method == null ? UUID.randomUUID() + "()" : method.toString();
         this.methodType = methodType;
+        this.isAnd = true;
         this.args = metas;
         this.returnType = returnType;
         this.returnParameterType = returnParameterType;
@@ -70,22 +72,23 @@ public class MethodMeta {
         this.method = method.toString();
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
         this.methodType = aMethod == null ? Query : aMethod.type();
-        this.args = this.buildArgumentMeta(method.getName(), method.getParameters());
+        MethodArgNames names = FinderNameKit.parseFindFields(method.getName());
+        this.args = this.buildArgumentMeta(names, method.getParameters());
+        this.isAnd = names.isAnd;
         this.returnType = method.getReturnType();
         this.returnParameterType = this.getParameterTypeOfReturn(method);
     }
 
-    private ArgumentMeta[] buildArgumentMeta(String methodName, Parameter[] parameters) {
+    private ArgumentMeta[] buildArgumentMeta(MethodArgNames names, Parameter[] parameters) {
         ArgumentMeta[] args = new ArgumentMeta[parameters.length];
-        List<NameAndPair> names = FinderNameKit.parseFindFields(methodName);
         int index = 0;
         for (int i = 0; i < parameters.length; i++) {
-            NameAndPair pair = names != null && index < names.size() ? names.get(index) : null;
-            if (pair == null) {
-                args[i] = new ArgumentMeta(methodType, parameters[i], null, true, i, null);
+            String name = names.get(index);
+            if (name == null) {
+                args[i] = new ArgumentMeta(methodType, parameters[i], null, i, null);
             } else {
-                args[i] = new ArgumentMeta(methodType, parameters[i], pair.name, pair.isAnd, i, null);
-                if (Objects.equals(pair.name, args[i].entryName)) {
+                args[i] = new ArgumentMeta(methodType, parameters[i], name, i, null);
+                if (Objects.equals(name, args[i].entryName)) {
                     index++;
                 }
             }
@@ -116,14 +119,14 @@ public class MethodMeta {
 
     private EntryMetas buildMetasFromArgs() {
         this.validate();
-        EntryMetas argsMetas = new EntryMetas(null);
+        EntryMetas argsMetas = new EntryMetas(null, this.isAnd);
         for (ArgumentMeta arg : this.args) {
             if (notFormObject(arg.type)) {
                 argsMetas.addMeta(new ArgEntryMeta(arg));
             } else {
                 EntryMetas entryMetas = EntryMetas.getFormMeta(arg.type);
-
-                for (EntryMeta meta : entryMetas.allMetas()) {
+                for (IEntryMeta entryMeta : entryMetas.allMetas()) {
+                    EntryMeta meta = (EntryMeta) entryMeta;
                     if (meta.getter != null) {
                         argsMetas.addMeta(new ArgEntryMeta(arg, meta));
                     }

@@ -150,4 +150,8 @@ public interface FormServiceKit {
             throw new IllegalStateException("The type of batch result can only be: void, int, long, or boolean.");
         }
     }
+//
+//    static boolean isAnd(String methodName){
+//
+//    }
 }

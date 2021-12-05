@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
@@ -136,7 +137,8 @@ public class FormHelper {
     public static <E extends IEntity> E newEntity(MethodMeta method, Object[] args) {
         AMapping mapping = RefKit.byEntity(method.entityClass);
         IEntity entity = mapping.newEntity();
-        for (EntryMeta meta : method.metas().getMetas()) {
+        for (IEntryMeta entryMeta : method.metas().getMetas()) {
+            EntryMeta meta = (EntryMeta) entryMeta;
             if (meta.getter != null) {
                 FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
                 fm.setter.set(entity, meta.get(args));
@@ -154,23 +156,44 @@ public class FormHelper {
     public static <E extends IEntity> IUpdate<E> newUpdate(MethodArgs args) {
         AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IUpdate<E> updater = mapping.updater();
-        IQuery nested = mapping.emptyQuery();
-        for (EntryMeta meta : args.meta.metas().getMetas()) {
-            Object value = meta.get(args.args);
-            if (meta.getter == null || meta.ignoreNull && value == null) {
-                continue;
-            }
-            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
-            if (fm == null) {
-                throw fieldNotFoundException(meta.name, args.meta.entityClass);
-            } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
-                updater.updateSet(fm.column, value);
-            } else {
-                where(nested, fm.column, meta, value);
+        IQuery where = mapping.emptyQuery();
+        EntryMetas metas = args.meta.metas();
+        whereEntryMeta(mapping, metas, args, updater, where);
+        if (metas.isAnd()) {
+            updater.where().and(where);
+        } else {
+            updater.where().or(where);
+        }
+        return updater;
+    }
+
+    private static void whereEntryMeta(IMapping mapping, EntryMetas metas, MethodArgs args, IUpdate update, IQuery where) {
+        for (IEntryMeta entryMeta : metas.getMetas()) {
+            if (entryMeta instanceof EntryMeta) {
+                EntryMeta meta = (EntryMeta) entryMeta;
+                Object value = meta.get(args.args);
+                if (meta.getter == null || meta.ignoreNull && value == null) {
+                    continue;
+                }
+                FieldMapping fm = mapping.getFieldsMap().get(meta.name);
+                if (fm == null) {
+                    throw fieldNotFoundException(meta.name, args.meta.entityClass);
+                } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
+                    update.updateSet(fm.column, value);
+                } else {
+                    where(metas.isAnd() ? where.where().and : where.where().or, fm.column, meta, value);
+                }
+            } else if (entryMeta instanceof EntryMetas) {
+                EntryMetas meta = (EntryMetas) entryMeta;
+                IQuery nested = mapping.emptyQuery();
+                whereEntryMeta(mapping, meta, args, update, nested);
+                if (metas.isAnd()) {
+                    where.where().and(nested);
+                } else {
+                    where.where().or(nested);
+                }
             }
         }
-        updater.where().and(nested);
-        return updater;
     }
 
     /**
@@ -182,22 +205,13 @@ public class FormHelper {
     public static <E extends IEntity> IQuery<E> newQuery(MethodArgs args) {
         AMapping mapping = RefKit.byEntity(args.meta.entityClass);
         IQuery<E> query = mapping.query();
-        IQuery<E> nested = mapping.emptyQuery();
-        for (EntryMeta meta : args.metas()) {
-            Object value = meta.get(args.args);
-            if (meta.getter == null || meta.ignoreNull && value == null) {
-                continue;
-            }
-            FieldMapping fm = (FieldMapping) mapping.getFieldsMap().get(meta.name);
-            if (fm == null) {
-                throw fieldNotFoundException(meta.name, args.meta.entityClass);
-            } else if (meta.type == EntryType.Update && args.meta.isUpdate()) {
-                throw new IllegalStateException("Not allowed update Entry[" + meta.name + "].");
-            } else {
-                where(nested, fm.column, meta, value);
-            }
-        }
-        query.where().and(nested);
+        IQuery<E> where = mapping.emptyQuery();
+        EntryMetas metas = args.meta.metas();
+
+        whereEntryMeta(mapping, metas, args, null, where);
+        // 和默认条件以 and 关联
+        query.where().and(where);
+
         for (EntryMeta meta : args.meta.metas().getOrderBy()) {
             addOrderBy(mapping, query, meta, args);
         }
@@ -236,8 +250,7 @@ public class FormHelper {
         }
     }
 
-    private static void where(IQuery wrapper, String column, EntryMeta meta, Object value) {
-        WhereBase where = meta.isAnd ? wrapper.where().and : wrapper.where().or;
+    private static void where(WhereBase where, String column, EntryMeta meta, Object value) {
         if (value == null || value instanceof String && isBlank((String) value)) {
             if (!meta.ignoreNull) {
                 if (meta.type == EntryType.EQ) {
@@ -436,8 +449,8 @@ public class FormHelper {
             Object target = metas.objType.getDeclaredConstructor().newInstance();
             Class entityClass = entity.entityClass();
             Map<String, FieldMapping> mapping = RefKit.byEntity(entityClass).getFieldsMap();
-            for (EntryMeta meta : metas.getMetas()) {
-                setFieldValue(mapping, meta, entity, target);
+            for (IEntryMeta meta : metas.getMetas()) {
+                setFieldValue(mapping, (EntryMeta) meta, entity, target);
             }
             for (FormMetas form : metas.getForms()) {
                 Object data = EntityRefKit.findRefData(entityClass, entity, form.entryName);

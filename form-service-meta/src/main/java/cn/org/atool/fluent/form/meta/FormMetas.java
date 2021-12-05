@@ -23,7 +23,7 @@ public final class FormMetas extends EntryMetas {
     private final EntryMetas from;
 
     FormMetas(String entryName, Class objType, Method setter, boolean isList, EntryMetas metas) {
-        super(objType);
+        super(objType, metas.isAnd());
         this.entryName = entryName;
         this.setter = setter;
         this.isList = isList;
@@ -64,7 +64,7 @@ public final class FormMetas extends EntryMetas {
     }
 
     @Override
-    public List<EntryMeta> allMetas() {
+    public List<IEntryMeta> allMetas() {
         return this.from.allMetas();
     }
 
@@ -77,7 +77,7 @@ public final class FormMetas extends EntryMetas {
     }
 
     @Override
-    public List<EntryMeta> getMetas() {
+    public List<IEntryMeta> getMetas() {
         return this.from.getMetas();
     }
 

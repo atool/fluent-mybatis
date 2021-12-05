@@ -28,7 +28,6 @@ public class ArgumentMeta {
      */
     public final String entryName;
 
-    public final boolean isAnd;
     /**
      * 第index个参数
      */
@@ -50,9 +49,8 @@ public class ArgumentMeta {
      */
     public final boolean ignoreNull;
 
-    public ArgumentMeta(MethodType methodType, String entryName, boolean isAnd, EntryType type, Type argType, int index, Map types) {
+    public ArgumentMeta(MethodType methodType, String entryName, EntryType type, Type argType, int index, Map types) {
         this.entryName = entryName;
-        this.isAnd = isAnd;
         this.entryType = type == null ? EntryType.EQ : type;
         this.isList = Collection.class.isAssignableFrom(this.getRawType(argType));
         this.type = this.getArgType(methodType, argType, types);
@@ -60,9 +58,8 @@ public class ArgumentMeta {
         this.ignoreNull = true;
     }
 
-    public ArgumentMeta(MethodType methodType, Parameter parameter, String defaultName, boolean isAnd, int index, Map types) {
+    public ArgumentMeta(MethodType methodType, Parameter parameter, String defaultName, int index, Map types) {
         this.isList = Collection.class.isAssignableFrom(parameter.getType());
-        this.isAnd = isAnd;
         this.type = this.getArgType(methodType, parameter.getParameterizedType(), types);
         Entry entry = parameter.getDeclaredAnnotation(Entry.class);
         if (entry == null) {
