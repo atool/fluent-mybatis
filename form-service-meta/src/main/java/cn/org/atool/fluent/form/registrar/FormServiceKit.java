@@ -4,6 +4,7 @@ import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.setter.FormHelper;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
@@ -14,6 +15,7 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 静态方法
@@ -129,6 +131,11 @@ public interface FormServiceKit {
             /* 返回List */
             List<IEntity> list = query.to().listEntity();
             return FormHelper.entities2result(list, meta.returnParameterType);
+        } else if (meta.returnType == boolean.class || meta.returnType == Boolean.class) {
+            /* exists操作 */
+            ((BaseQuery) query).select("1").limit(1);
+            Optional ret = query.to().findOneMap();
+            return ret.isPresent();
         } else {
             /* 查找单条数据 */
             query.limit(1);

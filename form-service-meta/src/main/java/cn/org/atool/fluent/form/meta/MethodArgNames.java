@@ -1,7 +1,12 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.form.kits.MethodStyle;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,12 +19,22 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.lowerFirst;
  * @author darui.wu
  */
 @ToString
+@Accessors(chain = true)
 public class MethodArgNames {
+    public final MethodStyle type;
+
     public final boolean isAnd;
 
     public final List<String> names;
 
-    public MethodArgNames(boolean isAnd, List<String> names) {
+    public final List<OrderBy> orderBy = new ArrayList<>();
+
+    @Setter
+    @Getter
+    private int topN = 0;
+
+    public MethodArgNames(MethodStyle type, boolean isAnd, List<String> names) {
+        this.type = type;
         this.names = names.stream().map(name -> lowerFirst(name, EMPTY)).collect(Collectors.toList());
         this.isAnd = isAnd;
     }
@@ -28,15 +43,31 @@ public class MethodArgNames {
         return this.names.size();
     }
 
-    public static MethodArgNames build(boolean isAnd, List<String> names) {
-        return new MethodArgNames(isAnd, names);
-    }
-
     public String get(int index) {
         if (index < this.names.size()) {
             return this.names.get(index);
         } else {
             return null;
+        }
+    }
+
+    public void addOrderBy(String name, boolean isAsc) {
+        this.orderBy.add(new OrderBy(name, isAsc));
+    }
+
+    public static MethodArgNames build(MethodStyle type, boolean isAnd, List<String> names) {
+        return new MethodArgNames(type, isAnd, names);
+    }
+
+    @ToString
+    public static class OrderBy {
+        public String name;
+
+        public boolean isAsc;
+
+        public OrderBy(String name, boolean isAsc) {
+            this.name = name;
+            this.isAsc = isAsc;
         }
     }
 }

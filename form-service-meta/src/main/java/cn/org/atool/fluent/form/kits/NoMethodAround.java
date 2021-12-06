@@ -27,7 +27,7 @@ public class NoMethodAround implements IMethodAround {
 
     @Override
     public MethodMeta before(Class<? extends IEntity> entityClass, Method method) {
-        return new MethodMeta(entityClass, method);
+        return MethodMeta.meta(entityClass, method);
     }
 
     @Override

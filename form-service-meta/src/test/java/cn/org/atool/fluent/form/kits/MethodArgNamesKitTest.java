@@ -9,22 +9,21 @@ import org.test4j.tools.Kits;
 
 import static cn.org.atool.fluent.form.meta.MethodArgNames.build;
 
-class FinderNameKitTest extends Test4J {
+class MethodArgNamesKitTest extends Test4J {
 
     @ParameterizedTest
     @MethodSource("data4parseFindFields")
     void parseFindFields(String method, MethodArgNames expected) {
-        MethodArgNames items = FinderNameKit.parseFindFields(method);
-        assert items != null;
+        MethodArgNames items = MethodArgNamesKit.parseMethodStyle(method);
         want.bool(items.isAnd).is(expected.isAnd);
         want.list(items.names).eqReflect(expected.names);
     }
 
     static DataProvider data4parseFindFields() {
         return new DataProvider()
-            .data("findByNameAndAge", build(true, Kits.list("name", "age")))
-            .data("findByNameOrAge", build(false, Kits.list("name", "age")))
-            .data("findByFirstNameAndLastName", build(true, Kits.list("firstName", "lastName")))
+            .data("findByNameAndAge", build(MethodStyle.FindBy, true, Kits.list("name", "age")))
+            .data("findByNameOrAge", build(MethodStyle.FindBy, false, Kits.list("name", "age")))
+            .data("findByFirstNameAndLastName", build(MethodStyle.FindBy, true, Kits.list("firstName", "lastName")))
             ;
     }
 }

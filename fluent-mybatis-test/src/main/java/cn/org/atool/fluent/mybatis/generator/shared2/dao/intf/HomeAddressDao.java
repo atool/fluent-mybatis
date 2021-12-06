@@ -17,6 +17,7 @@ import static cn.org.atool.fluent.form.annotation.EntryType.StartWith;
  * 可以任意添加方法和实现, 更改作者和重定义类名
  * <p/>@author Powered By Fluent Mybatis
  */
+@SuppressWarnings("UnusedReturnValue")
 public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
     String sayImplement();
 
@@ -41,4 +42,13 @@ public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
     List<HomeAddress> findByCityOrDistrictOrAddress(String city,
                                                     @Entry(type = IN) String district,
                                                     @Entry(type = StartWith) String address);
+
+
+    List<HomeAddress> top3ByCityOrDistrictOrAddressOrderByCityAscDistrictDesc(String city,
+                                                                              @Entry(type = IN) String district,
+                                                                              @Entry(type = StartWith) String address);
+
+    List<HomeAddress> distinctByCityOrderByCityAscDistrict(String city);
+
+    boolean existsByCity(String city);
 }

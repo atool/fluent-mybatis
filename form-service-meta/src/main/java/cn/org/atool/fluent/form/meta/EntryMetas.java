@@ -153,22 +153,25 @@ public class EntryMetas implements IEntryMeta {
      * @return FormMetas
      */
     public static EntryMetas getFormMeta(Class aClass) {
-        ClassLock.lockDoing(ClassFormMetas::containsKey, aClass, () -> {
-            Form form = (Form) aClass.getDeclaredAnnotation(Form.class);
-            EntryMetas metas = new EntryMetas(aClass, form == null || form.and());
-            /* 放在构造元数据前面, 避免子对象循环构造 */
-            ClassFormMetas.put(aClass, metas);
-            Class declared = aClass;
-            while (!root_classes.contains(declared) && !declared.getName().startsWith("java.")) {
-                try {
-                    metas.addMetasByFormKits(declared);
-                } catch (Exception ignored) {
-                    metas.addMetasByReflector(aClass, declared);
-                }
-                declared = declared.getSuperclass();
-            }
-        });
+        ClassLock.lockDoing(ClassFormMetas::containsKey, aClass, () -> ClassFormMetas.put(aClass, buildFormMeta(aClass)));
         return ClassFormMetas.get(aClass);
+    }
+
+    private static EntryMetas buildFormMeta(Class aClass) {
+        Form form = (Form) aClass.getDeclaredAnnotation(Form.class);
+        EntryMetas metas = new EntryMetas(aClass, form == null || form.and());
+        /* 放在构造元数据前面, 避免子对象循环构造 */
+        ClassFormMetas.put(aClass, metas);
+        Class declared = aClass;
+        while (!root_classes.contains(declared) && !declared.isPrimitive() && !declared.getName().startsWith("java.")) {
+            try {
+                metas.addMetasByFormKits(declared);
+            } catch (Exception ignored) {
+                metas.addMetasByReflector(aClass, declared);
+            }
+            declared = declared.getSuperclass();
+        }
+        return metas;
     }
 
     /**

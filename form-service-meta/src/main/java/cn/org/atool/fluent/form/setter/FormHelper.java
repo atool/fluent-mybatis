@@ -178,7 +178,23 @@ public class FormHelper {
         wrapperByMetas(mapping, args.meta.metas(), args, (IWrapper) query, where);
         // 和默认条件以 and 关联
         query.where().and(where);
+        limitAndOrderBy(query, args.meta.argNames);
         return query;
+    }
+
+    /**
+     * 根据方法名称中的limit和order by设置query
+     */
+    private static <E extends IEntity> void limitAndOrderBy(IQuery<E> query, MethodArgNames argNames) {
+        if (argNames == null) {
+            return;
+        }
+        if (argNames.getTopN() > 0) {
+            query.limit(argNames.getTopN());
+        }
+        for (MethodArgNames.OrderBy orderBy : argNames.orderBy) {
+            query.orderBy().apply(true, orderBy.isAsc, orderBy.name);
+        }
     }
 
     private static void wrapperByMetas(IMapping mapping, EntryMetas metas, MethodArgs args, IWrapper wrapper, IQuery where) {

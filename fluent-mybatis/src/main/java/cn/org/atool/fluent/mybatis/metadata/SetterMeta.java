@@ -39,6 +39,11 @@ public class SetterMeta {
     private static final KeyMap<KeyMap<SetterMeta>> methodMetas = new KeyMap<>();
 
     /**
+     * 按class类进行加锁
+     */
+    private final static LockKit<Class> ClassLock = new LockKit<>(16);
+
+    /**
      * 返回类klass属性setter方法
      *
      * @param klass     指定类
@@ -46,38 +51,27 @@ public class SetterMeta {
      * @return SetterMethodMeta
      */
     public static SetterMeta get(Class klass, String fieldName) {
-        if (!methodMetas.containsKey(klass)) {
-            buildMetas(klass);
-        }
+        ClassLock.lockDoing(methodMetas::containsKey, klass, () -> methodMetas.put(klass, buildMetas(klass)));
         return methodMetas.get(klass).get(fieldName);
     }
 
     public static KeyMap<SetterMeta> get(Class klass) {
-        if (!methodMetas.containsKey(klass)) {
-            buildMetas(klass);
-        }
+        ClassLock.lockDoing(methodMetas::containsKey, klass, () -> methodMetas.put(klass, buildMetas(klass)));
         return methodMetas.get(klass);
     }
 
-    /**
-     * 按class类进行加锁
-     */
-    private final static LockKit<Class> ClassLock = new LockKit<>(16);
-
-    private static void buildMetas(Class klass) {
-        ClassLock.lockDoing(methodMetas::containsKey, klass, () -> {
-            Method[] methods = klass.getDeclaredMethods();
-            KeyMap<SetterMeta> classMethods = new KeyMap<>();
-            for (Method m : methods) {
-                if (!m.getName().startsWith(PRE_SET) || m.getParameterCount() != 1) {
-                    continue;
-                }
-                m.setAccessible(true);
-                SetterMeta meta = new SetterMeta(m);
-                classMethods.put(meta.fieldName, meta);
+    private static KeyMap<SetterMeta> buildMetas(Class klass) {
+        Method[] methods = klass.getDeclaredMethods();
+        KeyMap<SetterMeta> classMethods = new KeyMap<>();
+        for (Method m : methods) {
+            if (!m.getName().startsWith(PRE_SET) || m.getParameterCount() != 1) {
+                continue;
             }
-            methodMetas.put(klass, classMethods);
-        });
+            m.setAccessible(true);
+            SetterMeta meta = new SetterMeta(m);
+            classMethods.put(meta.fieldName, meta);
+        }
+        return classMethods;
     }
 
     public static IConvertor findConvertor(Type type) {

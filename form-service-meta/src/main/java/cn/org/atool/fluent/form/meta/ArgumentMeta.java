@@ -66,6 +66,10 @@ public class ArgumentMeta {
             this.entryName = this.findEntryName(parameter, null, defaultName);
             this.ignoreNull = true;
             this.entryType = notFormObject(this.type) ? EntryType.EQ : EntryType.Form;
+            /* 未声明@Entry注解 && 没有从方法中解析出变量名称 && 非Form复杂类型 */
+            if (this.entryType == EntryType.EQ && defaultName == null) {
+                throw new IllegalStateException("Unable to resolve parameter[index=" + index + "] name of method[" + parameter.getDeclaringExecutable().toString() + "].");
+            }
         } else {
             this.entryName = this.findEntryName(parameter, entry.value(), defaultName);
             this.ignoreNull = entry.ignoreNull();

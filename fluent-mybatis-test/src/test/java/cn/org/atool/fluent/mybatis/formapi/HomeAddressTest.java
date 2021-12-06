@@ -59,4 +59,37 @@ public class HomeAddressTest extends BaseTest {
             "AND (`city` = ? OR `district` IN (?) OR `address` LIKE ?)");
         db.sqlList().wantFirstPara().eqList(false, "test_env", "hangzhou", "binjiang", "hang%");
     }
+
+    @Test
+    void top3ByCityOrDistrictOrAddressOrderByCityAscDistrictDesc() {
+        dao.top3ByCityOrDistrictOrAddressOrderByCityAscDistrictDesc("hangzhou", "binjiang", "hang");
+        db.sqlList().wantFirstSql().end("" +
+            "FROM `home_address` " +
+            "WHERE `is_deleted` = ? AND `env` = ? " +
+            "AND (`city` = ? OR `district` IN (?) OR `address` LIKE ?) " +
+            "ORDER BY `City` ASC, `District` DESC LIMIT ?, ?");
+        db.sqlList().wantFirstPara().eqList(false, "test_env", "hangzhou", "binjiang", "hang%", 0, 3);
+    }
+
+    @Test
+    void distinctByCityOrderByCityAscDistrict() {
+        want.exception(() -> dao.distinctByCityOrderByCityAscDistrict("hangzhou"), IllegalStateException.class
+        ).contains("Unable to resolve parameter[index=0] name");
+    }
+
+    @Test
+    void existsByCity() {
+        ATM.dataMap.homeAddress.table()
+            .city.values("hz")
+            .env.values("test_env")
+            .isDeleted.values(false)
+            .cleanAndInsert();
+        boolean ret = dao.existsByCity("hz");
+        want.bool(ret).is(true);
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT 1 FROM `home_address` " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND (`city` = ?) LIMIT ?, ?");
+        ret = dao.existsByCity("nd");
+        want.bool(ret).is(false);
+    }
 }

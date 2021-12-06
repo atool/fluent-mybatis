@@ -2,7 +2,7 @@ package cn.org.atool.fluent.form.meta;
 
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.MethodType;
-import cn.org.atool.fluent.form.kits.FinderNameKit;
+import cn.org.atool.fluent.form.kits.MethodArgNamesKit;
 import cn.org.atool.fluent.form.meta.entry.ArgEntryMeta;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
@@ -42,12 +42,13 @@ public class MethodMeta {
      * 操作类型
      */
     public final MethodType methodType;
+
+    public final MethodArgNames argNames;
     /**
      * 入参类型
      */
-    public final ArgumentMeta[] args;
+    public final ArgumentMeta[] argMetas;
 
-    private final boolean isAnd;
     /**
      * 返回值类型
      */
@@ -61,22 +62,45 @@ public class MethodMeta {
         this.entityClass = entityClass;
         this.method = method == null ? UUID.randomUUID() + "()" : method.toString();
         this.methodType = methodType;
-        this.isAnd = true;
-        this.args = metas;
+        this.argMetas = metas;
         this.returnType = returnType;
         this.returnParameterType = returnParameterType;
+        this.argNames = null;
     }
 
-    public MethodMeta(Class entityClass, Method method) {
+    private MethodMeta(Class entityClass, Method method) {
         this.entityClass = entityClass;
         this.method = method.toString();
         FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
         this.methodType = aMethod == null ? Query : aMethod.type();
-        MethodArgNames names = FinderNameKit.parseFindFields(method.getName());
-        this.args = this.buildArgumentMeta(names, method.getParameters());
-        this.isAnd = names.isAnd;
         this.returnType = method.getReturnType();
         this.returnParameterType = this.getParameterTypeOfReturn(method);
+
+        this.argNames = MethodArgNamesKit.parseMethodStyle(method.getName());
+        this.argMetas = this.buildArgumentMeta(argNames, method.getParameters());
+    }
+
+    /**
+     * 按 Method.toString() 签名进行加锁
+     */
+    private final static LockKit<String> MethodLock = new LockKit<>(16);
+
+    public static final KeyMap<EntryMetas> MethodArgsMeta = new KeyMap<>();
+
+    /**
+     * 构造MethodMeta
+     * 缓存在 {@link cn.org.atool.fluent.form.IMethodAround#cache(Class, Method)} 中处理
+     */
+    public static MethodMeta meta(Class entityClass, Method method) {
+        return new MethodMeta(entityClass, method);
+    }
+
+    /**
+     * 显式构造MethodMeta
+     * 缓存在 {@link cn.org.atool.fluent.form.IMethodAround#cache(Class, Method)} 中处理
+     */
+    public static MethodMeta meta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
+        return new MethodMeta(entityClass, method, methodType, args, returnType, returnParameterType);
     }
 
     private ArgumentMeta[] buildArgumentMeta(MethodArgNames names, Parameter[] parameters) {
@@ -96,12 +120,7 @@ public class MethodMeta {
         return args;
     }
 
-    /*** ============================ ***/
-    public static final KeyMap<EntryMetas> MethodArgsMeta = new KeyMap<>();
-    /**
-     * 按 Method.toString() 签名进行加锁
-     */
-    private final static LockKit<String> MethodLock = new LockKit<>(16);
+    /* ============================ ***/
 
     /**
      * 构造入参的元数据列表
@@ -119,8 +138,8 @@ public class MethodMeta {
 
     private EntryMetas buildMetasFromArgs() {
         this.validate();
-        EntryMetas argsMetas = new EntryMetas(null, this.isAnd);
-        for (ArgumentMeta arg : this.args) {
+        EntryMetas argsMetas = new EntryMetas(null, this.isAnd());
+        for (ArgumentMeta arg : this.argMetas) {
             if (notFormObject(arg.type)) {
                 argsMetas.addMeta(new ArgEntryMeta(arg));
             } else {
@@ -136,11 +155,15 @@ public class MethodMeta {
         return argsMetas;
     }
 
+    public boolean isAnd() {
+        return this.argNames == null || this.argNames.isAnd;
+    }
+
     private void validate() {
         if (this.entityClass == null) {
             throw new IllegalArgumentException("Annotation[@Action] must be declared on method[" + method + "].");
         }
-        if (this.args == null || this.args.length == 0) {
+        if (this.argMetas == null || this.argMetas.length == 0) {
             throw new IllegalArgumentException("Method[" + method + "] must be have one parameter.");
         }
         if (this.returnType == null) {
@@ -245,7 +268,7 @@ public class MethodMeta {
      * @return true/false
      */
     public boolean isOneArgList() {
-        return this.args.length == 1 && this.args[0].isList;
+        return this.argMetas.length == 1 && this.argMetas[0].isList;
     }
 
     /**
@@ -267,12 +290,5 @@ public class MethodMeta {
      */
     public boolean isSave() {
         return methodType == Save;
-    }
-
-    /**
-     * 显式构造MethodMeta
-     */
-    public static MethodMeta meta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
-        return new MethodMeta(entityClass, method, methodType, args, returnType, returnParameterType);
     }
 }
