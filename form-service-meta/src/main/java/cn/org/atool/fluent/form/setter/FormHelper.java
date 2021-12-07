@@ -230,7 +230,7 @@ public class FormHelper {
         FieldMapping fm = mapping.getFieldsMap().get(meta.name);
         if (fm == null) {
             throw fieldNotFoundException(meta.name, args.meta.entityClass);
-        } else if (meta.type == EntryType.Update && args.meta.isUpdate() && wrapper instanceof IUpdate) {
+        } else if (meta.entryType == EntryType.Update && args.meta.isUpdate() && wrapper instanceof IUpdate) {
             ((IUpdate) wrapper).updateSet(fm.column, value);
         } else {
             where(isAnd ? where.where().and : where.where().or, fm.column, meta, value);
@@ -269,7 +269,7 @@ public class FormHelper {
     private static void where(WhereBase where, String column, EntryMeta meta, Object value) {
         if (value == null || value instanceof String && isBlank((String) value)) {
             if (!meta.ignoreNull) {
-                if (meta.type == EntryType.EQ) {
+                if (meta.entryType == EntryType.EQ) {
                     where.apply(column, SqlOp.IS_NULL);
                 } else {
                     throw new IllegalArgumentException("Condition field[" + meta.name + "] not assigned.");
@@ -278,7 +278,7 @@ public class FormHelper {
             return;
         }
 
-        switch (meta.type) {
+        switch (meta.entryType) {
             case EQ:
                 if (value instanceof Collection || value.getClass().isArray()) {
                     where.apply(column, SqlOp.IN, toArray(meta.name, value));

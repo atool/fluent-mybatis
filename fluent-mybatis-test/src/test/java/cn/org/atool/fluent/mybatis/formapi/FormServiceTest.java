@@ -38,7 +38,8 @@ public class FormServiceTest extends BaseTest {
             .setUserName("ming.li")
             .setUserName2("")/* 验证string为blank的场景 */
             .setAddress("hangzhou")
-            .setAge(new Integer[]{20, 40}));
+            .setAge(new Integer[]{20, 40})
+        );
         want.object(students).eqDataMap(
             ATM.dataMap.student.entity(2)
                 .userName.values("ming.li")
@@ -237,11 +238,14 @@ public class FormServiceTest extends BaseTest {
             .userName.values("ming.li")
             .age.values(23, 34)
             .address.values("hangzhou binjiang")
+            .status.values("Enabled")
             .cleanAndInsert();
         long count = service.countStudentBy(new StudentQuery()
             .setUserName("ming.li")
             .setAddress("hangzhou")
-            .setAge(new Integer[]{20, 40}));
+            .setAge(new Integer[]{20, 40})
+            .setStatus(StatusEnum.Enabled)
+        );
         want.number(count).isEqualTo(2);
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) " +
@@ -249,7 +253,8 @@ public class FormServiceTest extends BaseTest {
             "WHERE `is_deleted` = ? AND `env` = ? " +
             "AND (`user_name` = ? " +
             "AND `address` LIKE ? " +
-            "AND `age` BETWEEN ? AND ?)");
+            "AND `age` BETWEEN ? AND ? " +
+            "AND `status` = ?)");
     }
 
     @Test

@@ -56,7 +56,7 @@ public class FormScanner extends ElementScanner8<Void, Void> {
         if (entryName.isEmpty()) {
             entryName = fieldName;
         }
-        String fieldType = getJavaType(element).toString();
+        TypeName fieldType = getJavaType(element);
         FormField meta = new FormField(entryName, fieldName, fieldType);
         if (entry == null) {
             meta.setEntryType(EntryType.EQ, true);

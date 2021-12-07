@@ -82,7 +82,7 @@ public class EntryMetas implements IEntryMeta {
         if (meta == null) {
             return;
         }
-        switch (meta.type) {
+        switch (meta.entryType) {
             case Ignore:
                 /* 忽略掉的字段 */
                 return;

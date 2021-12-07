@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.form.processor;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.kits.EntryMetaKit;
+import cn.org.atool.fluent.form.meta.EntryMeta;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -54,8 +54,8 @@ public class FormMetaFiler {
     private CodeBlock initMetas() {
         CodeBlock.Builder spec = CodeBlock.builder();
         for (FormField f : this.fields) {
-            spec.addStatement("metas.add(new EntryMeta($S, $L, $T::$L, $T::$L, $L))",
-                f.getEntryName(), f.getEntryType(),
+            spec.addStatement("metas.add(new EntryMeta($S, $T.class, $L, $T::$L, $T::$L, $L))",
+                f.getEntryName(), f.getFieldType(), f.getEntryType(),
                 className, f.getterName(),
                 className, f.setterName(),
                 f.isIgnoreNull()

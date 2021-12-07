@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.meta.entry;
 
-import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.kits.EntryMetaKit;
+import cn.org.atool.fluent.form.meta.EntryMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ public class PagedEntryMetaKit implements EntryMetaKit {
     private static final List<EntryMeta> metas = new ArrayList<>(3);
 
     static {
-        metas.add(new EntryMeta("pageSize", PageSize, PagedEntry::getPageSize, null, true));
-        metas.add(new EntryMeta("currPage", CurrPage, PagedEntry::getCurrPage, null, true));
-        metas.add(new EntryMeta("pagedTag", PagedTag, PagedEntry::getPagedTag, null, true));
+        metas.add(new EntryMeta("pageSize", int.class, PageSize, PagedEntry::getPageSize, null, true));
+        metas.add(new EntryMeta("currPage", int.class, CurrPage, PagedEntry::getCurrPage, null, true));
+        metas.add(new EntryMeta("pagedTag", String.class, PagedTag, PagedEntry::getPagedTag, null, true));
     }
 
     @Override

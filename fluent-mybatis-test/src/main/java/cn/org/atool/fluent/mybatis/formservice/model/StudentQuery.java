@@ -27,6 +27,8 @@ public class StudentQuery {
 
     private Integer gender;
 
+    private StatusEnum status;
+
     /**
      * 默认正序
      */

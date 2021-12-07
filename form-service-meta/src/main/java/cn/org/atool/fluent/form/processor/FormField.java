@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.form.processor;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -26,7 +28,7 @@ public class FormField {
     /**
      * 字段类型
      */
-    private final String fieldType;
+    private final TypeName fieldType;
 
     @Getter(AccessLevel.NONE)
     private final String capital;
@@ -39,11 +41,11 @@ public class FormField {
      */
     private boolean ignoreNull;
 
-    public FormField(String entryName, String fieldName, String fieldType) {
+    public FormField(String entryName, String fieldName, TypeName fieldType) {
         this.entryName = entryName;
         this.fieldName = fieldName;
         this.fieldType = fieldType;
-        if (!Objects.equals(fieldType, boolean.class.getName())) {
+        if (!Objects.equals(fieldType, ClassName.BOOLEAN)) {
             this.capital = this.capital(fieldName, 0);
         } else if (fieldName.startsWith(PRE_IS)) {
             this.capital = this.capital(fieldName, 2);

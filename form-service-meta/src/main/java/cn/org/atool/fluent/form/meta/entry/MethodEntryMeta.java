@@ -4,6 +4,8 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -20,9 +22,25 @@ public class MethodEntryMeta extends EntryMeta {
     private final Method setter;
 
     public MethodEntryMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
-        super(name, type, ignoreNull);
+        super(name, getJavaType(getter, setter), type, ignoreNull);
         this.getter = getter;
         this.setter = setter;
+    }
+
+    /**
+     * 解析entry属性类型
+     *
+     * @return java class
+     */
+    private static Type getJavaType(Method getter, Method setter) {
+        if (getter != null) {
+            return getter.getGenericReturnType();
+        } else if (setter != null) {
+            Parameter p = setter.getParameters()[0];
+            return p.getParameterizedType();
+        } else {
+            return null;
+        }
     }
 
     @Override

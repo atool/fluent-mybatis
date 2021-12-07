@@ -15,13 +15,13 @@ public class ArgEntryMeta extends EntryMeta {
     private final EntryMeta meta;
 
     public ArgEntryMeta(ArgumentMeta arg) {
-        super(arg.entryName, arg.entryType, arg.ignoreNull);
+        super(arg.entryName, arg.type, arg.entryType, arg.ignoreNull);
         this.arg = arg;
         this.meta = null;
     }
 
     public ArgEntryMeta(ArgumentMeta arg, EntryMeta meta) {
-        super(meta.name, meta.type, meta.ignoreNull);
+        super(meta.name, arg.type, meta.entryType, meta.ignoreNull);
         this.arg = arg;
         this.meta = meta;
     }

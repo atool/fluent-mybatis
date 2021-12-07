@@ -122,7 +122,7 @@ public class ParameterizedTypeKit {
      * @return true/false
      */
     public static boolean notFormObject(Class type) {
-        if (type.isPrimitive() || type.getName().startsWith("java.")) {
+        if (type.isPrimitive() || type.isEnum() || type.getName().startsWith("java.")) {
             /* java自带的类型 */
             return true;
         } else if (Collection.class.isAssignableFrom(type) || type.isArray() || Map.class.isAssignableFrom(type)) {

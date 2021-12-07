@@ -4,6 +4,7 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -22,9 +23,13 @@ public class EntryMeta implements IEntryMeta {
      */
     public final String name;
     /**
+     * 字段java类型
+     */
+    public final Type javaType;
+    /**
      * 类型
      */
-    public EntryType type;
+    public EntryType entryType;
     /**
      * getter方法
      */
@@ -38,17 +43,19 @@ public class EntryMeta implements IEntryMeta {
      */
     public final boolean ignoreNull;
 
-    protected EntryMeta(String name, EntryType type, boolean ignoreNull) {
+    protected EntryMeta(String name, Type javaType, EntryType entryType, boolean ignoreNull) {
         this.name = name;
-        this.type = type;
+        this.javaType = javaType;
+        this.entryType = entryType;
         this.ignoreNull = ignoreNull;
         this.getter = this.getter();
         this.setter = this.setter();
     }
 
-    public <F, V> EntryMeta(String name, EntryType type, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
+    public <F, V> EntryMeta(String name, Type javaType, EntryType entryType, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
         this.name = name;
-        this.type = type;
+        this.javaType = javaType;
+        this.entryType = entryType;
         this.getter = getter;
         this.setter = setter;
         this.ignoreNull = ignoreNull;

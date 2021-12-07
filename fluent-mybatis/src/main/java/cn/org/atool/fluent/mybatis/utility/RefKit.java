@@ -16,8 +16,8 @@ import cn.org.atool.fluent.mybatis.functions.RefFinder;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.metadata.SetterMeta;
-import cn.org.atool.fluent.mybatis.spring.IConvertor;
+import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
+import cn.org.atool.fluent.mybatis.typehandler.IConvertor;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -205,7 +205,7 @@ public final class RefKit {
      * @param convertor 类型转换器
      */
     public static void register(Type type, IConvertor convertor) {
-        SetterMeta.register(type, convertor);
+        ConvertorKit.register(type, convertor);
     }
 
     /**
@@ -215,7 +215,7 @@ public final class RefKit {
      * @param convertor 类型转换器
      */
     public static void register(String typeName, IConvertor convertor) {
-        SetterMeta.register(typeName, convertor);
+        ConvertorKit.register(typeName, convertor);
     }
 
     /**

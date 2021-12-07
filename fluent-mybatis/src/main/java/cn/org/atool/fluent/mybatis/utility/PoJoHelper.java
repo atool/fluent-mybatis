@@ -7,22 +7,14 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.metadata.SetterMeta;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
-import cn.org.atool.fluent.mybatis.spring.IConvertor;
 import lombok.NonNull;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.typehandler.ConvertorKit.convertValueToType;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.util.stream.Collectors.toList;
 
@@ -118,21 +110,9 @@ public class PoJoHelper {
             }
             try {
                 Object value = entry.getValue();
-                if (value == null) {
-                    continue;
-                }
-                if (meta.fType instanceof Class) {
-                    if (((Class) meta.fType).isAssignableFrom(value.getClass())) {
-                        meta.setValue(target, value);
-                    } else {
-                        setDefaultType(meta, target, value);
-                    }
-                } else {
-                    IConvertor convertor = SetterMeta.findConvertor(meta.fType);
-                    if (convertor != null) {
-                        value = convertor.get(value);
-                    }
-                    meta.setValue(target, value);
+                if (value != null) {
+                    Object _value = convertValueToType(value, meta.fType);
+                    meta.setValue(target, _value);
                 }
             } catch (Exception e) {
                 String err = String.format("convert map to object[class=%s, property=%s, type=%s] error: %s",
@@ -167,41 +147,6 @@ public class PoJoHelper {
             return ((IToMap) object).toMap();
         } else {
             return IToMap.toMap(object);
-        }
-    }
-
-    /**
-     * 进行默认类型的转换
-     *
-     * @param meta   setter方法
-     * @param target 目标对象
-     * @param value  属性值
-     */
-    private static void setDefaultType(SetterMeta meta, Object target, Object value) throws InvocationTargetException, IllegalAccessException {
-        Class type = (Class) meta.fType;
-        if (type == Long.class) {
-            meta.setValue(target, Long.parseLong(value.toString()));
-        } else if (type == Integer.class) {
-            meta.setValue(target, Integer.parseInt(value.toString()));
-        } else if (type == Boolean.class) {
-            meta.setValue(target, ObjectArray.toBoolean(value));
-        } else if (type == BigDecimal.class) {
-            meta.setValue(target, new BigDecimal(value.toString()));
-        } else if (type == BigInteger.class) {
-            meta.setValue(target, new BigInteger(value.toString()));
-        } else if (value instanceof Timestamp) {
-            Timestamp t = (Timestamp) value;
-            if (type == LocalDateTime.class) {
-                meta.setValue(target, t.toLocalDateTime());
-            } else if (type == LocalDate.class) {
-                meta.setValue(target, LocalDate.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
-            } else if (type == LocalTime.class) {
-                meta.setValue(target, LocalTime.from(t.toInstant().atZone(ZoneOffset.systemDefault())));
-            } else {
-                meta.setValue(target, value);
-            }
-        } else {
-            meta.setValue(target, value);
         }
     }
 

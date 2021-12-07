@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.spring.IConvertor;
 import cn.org.atool.fluent.mybatis.utility.LockKit;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,8 +32,6 @@ public class SetterMeta {
     public void setValue(Object target, Object value) throws InvocationTargetException, IllegalAccessException {
         this.method.invoke(target, value);
     }
-
-    private static final KeyMap<IConvertor> convertors = new KeyMap<>();
 
     private static final KeyMap<KeyMap<SetterMeta>> methodMetas = new KeyMap<>();
 
@@ -72,17 +69,5 @@ public class SetterMeta {
             classMethods.put(meta.fieldName, meta);
         }
         return classMethods;
-    }
-
-    public static IConvertor findConvertor(Type type) {
-        return convertors.get(type.getTypeName());
-    }
-
-    public static void register(Type type, IConvertor convertor) {
-        convertors.put(type.getTypeName(), convertor);
-    }
-
-    public static void register(String typeName, IConvertor convertor) {
-        convertors.put(typeName, convertor);
     }
 }
