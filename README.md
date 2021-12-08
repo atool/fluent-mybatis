@@ -153,3 +153,10 @@ QQ交流群: 540950332
 # 其它
 - [release note](https://gitee.com/fluent-mybatis/fluent-mybatis/wikis/release%20note?sort_id=4216055)
 - [掘金系列文章](https://juejin.im/user/1811586730696142/posts)
+
+# 同类工具链接
+- [MyBatis-Plus](https://mp.baomidou.com/)
+- [bean-searcher](https://gitee.com/ejlchina-zhxu/bean-searcher)
+- [MyBatis Dynamic SQL](https://mybatis.org/mybatis-dynamic-sql/dependency-info.html)
+- [JPA](https://spring.io/projects/spring-data-jpa)
+- [Tk Mybatis](www.mybatis.tk)
