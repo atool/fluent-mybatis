@@ -15,7 +15,7 @@ public @interface FormMethod {
     /**
      * 操作方法, Save操作时需要显式指定
      */
-    MethodType type() default MethodType.Query;
+    MethodType type() default MethodType.Auto;
 
     /**
      * 操作表Entity表名称

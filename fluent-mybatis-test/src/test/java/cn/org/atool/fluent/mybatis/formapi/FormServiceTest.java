@@ -314,4 +314,28 @@ public class FormServiceTest extends BaseTest {
             "test1", 34, false, "test_env", 2L,
             "test2", 34, false, "test_env", 4L);
     }
+
+    @Test
+    void deleteStudent() {
+        ATM.dataMap.student.table(1)
+            .userName.values("---")
+            .id.values(2L)
+            .env.values("test_env")
+            .cleanAndInsert();
+        int count = service.deleteById(1, 2);
+        want.number(count).eq(1);
+        db.sqlList().wantFirstSql().eq("" +
+            "DELETE FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND (`id` IN (?, ?))");
+        db.sqlList().wantFirstPara().eqList(false, "test_env", 1, 2);
+    }
+
+    @Test
+    void logicDeleteStudent() {
+        service.logicDeleteStudent(new StudentQuery().setUserName("test"));
+        db.sqlList().wantFirstSql()
+            .start("UPDATE fluent_mybatis.student SET")
+            .contains("`is_deleted` = ?")
+            .end("WHERE `is_deleted` = ? AND `env` = ? AND (`user_name` = ?) ORDER BY `user_name` ASC, `age` DESC");
+    }
 }

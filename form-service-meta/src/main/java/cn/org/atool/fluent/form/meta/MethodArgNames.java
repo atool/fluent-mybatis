@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.form.meta;
 
-import cn.org.atool.fluent.form.kits.MethodStyle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,8 +20,6 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.lowerFirst;
 @ToString
 @Accessors(chain = true)
 public class MethodArgNames {
-    public final MethodStyle type;
-
     public final boolean isAnd;
 
     public final List<String> names;
@@ -33,8 +30,7 @@ public class MethodArgNames {
     @Getter
     private int topN = 0;
 
-    public MethodArgNames(MethodStyle type, boolean isAnd, List<String> names) {
-        this.type = type;
+    public MethodArgNames(boolean isAnd, List<String> names) {
         this.names = names.stream().map(name -> lowerFirst(name, EMPTY)).collect(Collectors.toList());
         this.isAnd = isAnd;
     }
@@ -55,8 +51,8 @@ public class MethodArgNames {
         this.orderBy.add(new OrderBy(name, isAsc));
     }
 
-    public static MethodArgNames build(MethodStyle type, boolean isAnd, List<String> names) {
-        return new MethodArgNames(type, isAnd, names);
+    public static MethodArgNames build(boolean isAnd, List<String> names) {
+        return new MethodArgNames(isAnd, names);
     }
 
     @ToString

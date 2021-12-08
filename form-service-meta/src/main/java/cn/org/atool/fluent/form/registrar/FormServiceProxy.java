@@ -18,6 +18,7 @@ import org.springframework.cglib.proxy.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -98,20 +99,37 @@ public class FormServiceProxy implements MethodInterceptor {
      * @return 执行结果
      */
     private Object doInvoke(MethodMeta meta, Object[] args) {
-        if (meta.isOneArgList() && !meta.isQuery()) {
+        if (meta.isOneArgListOrArray() && !meta.isQuery()) {
+            Collection list = asCollection(args[0]);
             if (meta.isSave()) {
-                return FormServiceKit.save(meta, (Collection) args[0]);
+                return FormServiceKit.save(meta, list);
+            } else if (meta.isDelete()) {
+                return FormServiceKit.delete(meta, list, false);
+            } else if (meta.isLogicDelete()) {
+                return FormServiceKit.delete(meta, list, true);
             } else {
-                return FormServiceKit.update(meta, (Collection) args[0]);
+                return FormServiceKit.update(meta, list);
             }
         } else {
             if (meta.isSave()) {
                 return FormServiceKit.save(meta, args);
             } else if (meta.isUpdate()) {
                 return FormServiceKit.update(meta, args);
+            } else if (meta.isDelete()) {
+                return FormServiceKit.delete(meta, false, args);
+            } else if (meta.isLogicDelete()) {
+                return FormServiceKit.delete(meta, true, args);
             } else {
                 return FormServiceKit.query(meta, args);
             }
+        }
+    }
+
+    private Collection asCollection(Object arg) {
+        if (arg instanceof Collection) {
+            return (Collection) arg;
+        } else {
+            return Arrays.asList((Object[]) arg);
         }
     }
 

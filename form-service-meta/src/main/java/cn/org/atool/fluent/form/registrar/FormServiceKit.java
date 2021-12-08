@@ -67,7 +67,32 @@ public interface FormServiceKit {
             entities.add(entity);
         }
         int count = RefKit.mapper(meta.entityClass).save(entities);
-        return returnBatchResult(meta, count);
+        return returnUpdateResult(meta, count);
+    }
+
+    /**
+     * 更新操作
+     *
+     * @param meta 方法元数据
+     * @param list 入参是List
+     * @return ignore
+     */
+    static Object delete(MethodMeta meta, Collection list, boolean isLogic) {
+        if (list.size() == 0) {
+            throw new IllegalArgumentException("the delete list can't be empty.");
+        }
+        List<Integer> counts = new ArrayList<>(list.size());
+        for (Object obj : list) {
+            IQuery query = FormHelper.newQuery(new MethodArgs(meta, new Object[]{obj}));
+            int count;
+            if (isLogic) {
+                count = RefKit.mapper(meta.entityClass).logicDelete(query);
+            } else {
+                count = RefKit.mapper(meta.entityClass).delete(query);
+            }
+            counts.add(count);
+        }
+        return returnUpdateResult(meta, counts);
     }
 
     /**
@@ -80,7 +105,26 @@ public interface FormServiceKit {
     static Object update(MethodMeta meta, Object... args) {
         IUpdate update = FormHelper.newUpdate(new MethodArgs(meta, args));
         int count = RefKit.mapper(meta.entityClass).updateBy(update);
-        return returnBatchResult(meta, count);
+        return returnUpdateResult(meta, count);
+    }
+
+    /**
+     * 更新操作
+     *
+     * @param meta    操作定义
+     * @param isLogic 是否逻辑删除
+     * @param args    入参
+     * @return ignore
+     */
+    static Object delete(MethodMeta meta, boolean isLogic, Object... args) {
+        IQuery query = FormHelper.newQuery(new MethodArgs(meta, args));
+        int count;
+        if (isLogic) {
+            count = RefKit.mapper(meta.entityClass).logicDelete(query);
+        } else {
+            count = RefKit.mapper(meta.entityClass).delete(query);
+        }
+        return returnUpdateResult(meta, count);
     }
 
     /**
@@ -101,7 +145,7 @@ public interface FormServiceKit {
             updates[index++] = update;
         }
         int count = RefKit.mapper(meta.entityClass).updateBy(updates);
-        return returnBatchResult(meta, count);
+        return returnUpdateResult(meta, count);
     }
 
     /**
@@ -144,7 +188,7 @@ public interface FormServiceKit {
         }
     }
 
-    static Object returnBatchResult(MethodMeta meta, int count) {
+    static Object returnUpdateResult(MethodMeta meta, int count) {
         if (meta.isReturnVoid()) {
             return null;
         } else if (meta.isReturnBool()) {
@@ -157,8 +201,16 @@ public interface FormServiceKit {
             throw new IllegalStateException("The type of batch result can only be: void, int, long, or boolean.");
         }
     }
-//
-//    static boolean isAnd(String methodName){
-//
-//    }
+
+    static Object returnUpdateResult(MethodMeta meta, List<Integer> counts) {
+        if (meta.isReturnList()) {
+            return counts;
+        } else {
+            int total = 0;
+            for (int c : counts) {
+                total += c;
+            }
+            return returnUpdateResult(meta, total);
+        }
+    }
 }

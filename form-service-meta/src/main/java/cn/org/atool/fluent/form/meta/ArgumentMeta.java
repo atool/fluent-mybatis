@@ -3,6 +3,7 @@ package cn.org.atool.fluent.form.meta;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.MethodType;
+import lombok.ToString;
 import org.apache.ibatis.annotations.Param;
 
 import java.lang.reflect.Parameter;
@@ -21,6 +22,7 @@ import static cn.org.atool.fluent.mybatis.If.notBlank;
  *
  * @author darui.wu
  */
+@ToString(of = {"index", "entryName", "entryType"})
 @SuppressWarnings({"unused", "rawtypes", "unchecked"})
 public class ArgumentMeta {
     /**
@@ -36,6 +38,10 @@ public class ArgumentMeta {
      * 入参是否是Collection类型
      */
     public final boolean isList;
+    /**
+     * 入参是否是Collection类型
+     */
+    public final boolean isArray;
     /**
      * 参数类型或Collection的泛型参数类
      */
@@ -53,6 +59,7 @@ public class ArgumentMeta {
         this.entryName = entryName;
         this.entryType = type == null ? EntryType.EQ : type;
         this.isList = Collection.class.isAssignableFrom(this.getRawType(argType));
+        this.isArray = this.getRawType(argType).isArray();
         this.type = this.getArgType(methodType, argType, types);
         this.index = index;
         this.ignoreNull = true;
@@ -60,6 +67,7 @@ public class ArgumentMeta {
 
     public ArgumentMeta(MethodType methodType, Parameter parameter, String defaultName, int index, Map types) {
         this.isList = Collection.class.isAssignableFrom(parameter.getType());
+        this.isArray = parameter.getType().isArray();
         this.type = this.getArgType(methodType, parameter.getParameterizedType(), types);
         Entry entry = parameter.getDeclaredAnnotation(Entry.class);
         if (entry == null) {

@@ -269,6 +269,12 @@ public class WrapperData implements IWrapperData, IDataByColumn {
         return eqWhere.get(key);
     }
 
+    public void addEqWhere(Map<String, List<Object>> values) {
+        for (Map.Entry<String, List<Object>> entry : values.entrySet()) {
+            getEqValues(entry.getKey()).addAll(entry.getValue());
+        }
+    }
+
     /**
      * 增加条件设置
      *

@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.kits.MethodArgNamesKit;
@@ -14,9 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
 import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
@@ -71,14 +70,28 @@ public class MethodMeta {
     private MethodMeta(Class entityClass, Method method) {
         this.entityClass = entityClass;
         this.method = method.toString();
-        FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
-        this.methodType = aMethod == null ? Query : aMethod.type();
         this.returnType = method.getReturnType();
         this.returnParameterType = this.getParameterTypeOfReturn(method);
-
         this.argNames = MethodArgNamesKit.parseMethodStyle(method.getName());
+        this.methodType = parseMethodType(method);
         this.argMetas = this.buildArgumentMeta(argNames, method.getParameters());
     }
+
+    private static MethodType parseMethodType(Method method) {
+        FormMethod aMethod = method.getDeclaredAnnotation(FormMethod.class);
+        if (aMethod != null && aMethod.type() != Auto) {
+            return aMethod.type();
+        }
+        String name = method.getName();
+        for (MethodType type : autos) {
+            if (type.match(name)) {
+                return type;
+            }
+        }
+        return Query;
+    }
+
+    private static final List<MethodType> autos = Arrays.asList(Delete, LogicDelete, Save, Update);
 
     /**
      * 按 Method.toString() 签名进行加锁
@@ -227,6 +240,15 @@ public class MethodMeta {
     }
 
     /**
+     * 结果值是列表
+     *
+     * @return true/false
+     */
+    public boolean isReturnList() {
+        return Collection.class.isAssignableFrom(returnType);
+    }
+
+    /**
      * 无返回值
      *
      * @return true/false
@@ -267,8 +289,18 @@ public class MethodMeta {
      *
      * @return true/false
      */
-    public boolean isOneArgList() {
-        return this.argMetas.length == 1 && this.argMetas[0].isList;
+    public boolean isOneArgArr() {
+        return this.argMetas.length == 1 && this.argMetas[0].isArray;
+    }
+
+    /**
+     * 是否是单参，并且参数是Collection类型
+     *
+     * @return true/false
+     */
+    public boolean isOneArgListOrArray() {
+        ArgumentMeta meta = this.argMetas[0];
+        return this.argMetas.length == 1 && meta.entryType == EntryType.Form && (meta.isList || meta.isArray);
     }
 
     /**
@@ -290,5 +322,19 @@ public class MethodMeta {
      */
     public boolean isSave() {
         return methodType == Save;
+    }
+
+    /**
+     * 物理删除接口
+     */
+    public boolean isDelete() {
+        return methodType == Delete;
+    }
+
+    /**
+     * 逻辑删除接口
+     */
+    public boolean isLogicDelete() {
+        return methodType == LogicDelete;
     }
 }

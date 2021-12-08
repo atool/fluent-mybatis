@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.kits;
 
+import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.meta.MethodArgNames;
 import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.LockKit;
@@ -8,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import static cn.org.atool.fluent.form.kits.MethodStyle.*;
 
 /**
  * FinderNameKit
@@ -33,24 +32,30 @@ public class MethodArgNamesKit {
     }
 
     private static MethodArgNames internalParse(String method) {
-        if (isFindBy(method)) {
-            return parseArgNames(FindBy, method, FindBy.offset);
-        } else if (isCountBy(method)) {
-            return parseArgNames(CountBy, method, CountBy.offset);
-        } else if (isExistsBy(method)) {
-            return parseArgNames(ExistsBy, method, ExistsBy.offset);
-        } else {
-            int[] ret = isTopNBy(method);
-            if (ret == null) {
-                /* Collections.emptyList() 表示从方法名称中未解析到参数名 */
-                return new MethodArgNames(null, true, Collections.emptyList());
-            } else {
-                return parseArgNames(TopNBy, method, ret[0]).setTopN(ret[1]);
+        int index = method.indexOf("By");
+        if (index <= 0) {
+            return MethodArgNameNotFound;
+        }
+        String prefix = method.substring(0, index);
+        if (MethodType.AUTO_PREFIX.contains(prefix)) {
+            MethodArgNames names = parseArgNames(method, index + 2);
+            if (Objects.equals("top", prefix)) {
+                names.setTopN(1);
             }
+            return names;
+        } else if (prefix.matches("top\\d+")) {
+            MethodArgNames names = parseArgNames(method, index + 2);
+            names.setTopN(Integer.parseInt(prefix.substring(3)));
+            return names;
+        } else {
+            return MethodArgNameNotFound;
         }
     }
 
-    private static MethodArgNames parseArgNames(MethodStyle type, String method, int offset) {
+    /* Collections.emptyList() 表示从方法名称中未解析到参数名 */
+    private static final MethodArgNames MethodArgNameNotFound = new MethodArgNames(true, Collections.emptyList());
+
+    private static MethodArgNames parseArgNames(String method, int offset) {
         List<String> names = new ArrayList<>();
         StringBuilder name = new StringBuilder();
         Boolean isAnd = null;
@@ -84,7 +89,7 @@ public class MethodArgNamesKit {
         if (!name.toString().isEmpty()) {
             names.add(name.toString());
         }
-        MethodArgNames methodArgNames = new MethodArgNames(type, isAnd == null || isAnd, names);
+        MethodArgNames methodArgNames = new MethodArgNames(isAnd == null || isAnd, names);
         if (orderOffset == 0) {
             return methodArgNames;
         }

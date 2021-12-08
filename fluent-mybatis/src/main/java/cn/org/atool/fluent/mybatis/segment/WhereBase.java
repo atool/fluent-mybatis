@@ -608,6 +608,8 @@ public abstract class WhereBase<
         IFragment seg = query.data().getMerged();
         ((BaseWrapper) query).sharedParameter(this.wrapper);
         wrapper.data().apply(andOr, EMPTY_COLUMN, BRACKET, seg);
+        /* 把and or子查询的相等条件加入到父查询中 */
+        this.data().addEqWhere(query.data().getEqWhere());
         return this.and;
     }
 

@@ -21,9 +21,9 @@ class MethodArgNamesKitTest extends Test4J {
 
     static DataProvider data4parseFindFields() {
         return new DataProvider()
-            .data("findByNameAndAge", build(MethodStyle.FindBy, true, Kits.list("name", "age")))
-            .data("findByNameOrAge", build(MethodStyle.FindBy, false, Kits.list("name", "age")))
-            .data("findByFirstNameAndLastName", build(MethodStyle.FindBy, true, Kits.list("firstName", "lastName")))
+            .data("findByNameAndAge", build(true, Kits.list("name", "age")))
+            .data("findByNameOrAge", build(false, Kits.list("name", "age")))
+            .data("findByFirstNameAndLastName", build(true, Kits.list("firstName", "lastName")))
             ;
     }
 }

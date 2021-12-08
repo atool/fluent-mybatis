@@ -369,7 +369,7 @@ public class CommonSqlKit implements SqlKit {
         if (notBlank(version)) {
             if (ew.ignoreVersion()) {
                 needDefaults.removeColumn(version);
-            } else if (!ew.segments().where.containColumn(version)) {
+            } else if (!ew.getEqWhere().containsKey(version)) {
                 throw new RuntimeException("@Version field of where condition not set.");
             }
         }
