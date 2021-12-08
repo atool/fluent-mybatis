@@ -7,17 +7,21 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.util.Date;
+
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DateStrFormat;
 
 /**
  * ConvertorKit: 参数转换工具类
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ConvertorKit {
     private static final KeyMap<IConvertor> convertors = new KeyMap<>();
 
@@ -72,9 +76,27 @@ public class ConvertorKit {
         } else if (type.isEnum() && value instanceof String) {
             return Enum.valueOf(type, (String) value);
         } else if (type == String.class) {
-            return (value instanceof String) ? value : String.valueOf(value);
+            return toString(value);
         } else {
             return value;
+        }
+    }
+
+    private static final SimpleDateFormat sdf = new SimpleDateFormat(DateStrFormat);
+
+    /**
+     * 转换为字符串
+     *
+     * @param value 输入值
+     * @return 输出字符串
+     */
+    public static String toString(Object value) {
+        if (value instanceof String) {
+            return (String) value;
+        } else if (value instanceof Date) {
+            return sdf.format((Date) value);
+        } else {
+            return String.valueOf(value);
         }
     }
 

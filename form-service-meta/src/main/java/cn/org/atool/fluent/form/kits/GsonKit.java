@@ -4,6 +4,8 @@ import cn.org.atool.fluent.form.Form;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DateStrFormat;
+
 /**
  * gson实现
  *
@@ -12,7 +14,7 @@ import com.google.gson.GsonBuilder;
 public class GsonKit {
     public static final Gson gson = new GsonBuilder()
         .disableHtmlEscaping()
-        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+        .setDateFormat(DateStrFormat)
         .create();
 
     public static Form form(String json) {

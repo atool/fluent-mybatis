@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
+import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
 import lombok.Setter;
@@ -195,7 +196,8 @@ public class PrinterMapper implements IWrapperMapper {
         } else if (value.getClass().isPrimitive() || value instanceof Number || value instanceof Boolean) {
             text = text.replace(expression, String.valueOf(value));
         } else {
-            text = text.replace(expression, "'" + value + "'");
+            String str = ConvertorKit.toString(value);
+            text = text.replace(expression, "'" + str + "'");
         }
         return text;
     }

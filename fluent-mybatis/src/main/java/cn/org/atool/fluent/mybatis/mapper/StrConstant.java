@@ -96,4 +96,8 @@ public interface StrConstant {
     char DOT = '.';
 
     String DOT_STR = ".";
+    /**
+     * 时间格式化
+     */
+    String DateStrFormat = "yyyy-MM-dd HH:mm:ss";
 }
