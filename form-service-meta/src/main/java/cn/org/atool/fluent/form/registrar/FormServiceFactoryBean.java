@@ -3,9 +3,6 @@ package cn.org.atool.fluent.form.registrar;
 import cn.org.atool.fluent.mybatis.spring.MapperFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.proxy.InvocationHandler;
-
-import java.lang.reflect.Method;
 
 /**
  * FormServiceFactoryBean: FormService bean封装工厂
@@ -57,12 +54,5 @@ public class FormServiceFactoryBean implements FactoryBean {
             }
         }
         return this.proxy;
-    }
-
-    /**
-     * FactoryBean的 {@link InvocationHandler#invoke(Object, Method, Object[])} 实现
-     */
-    private Object invoke(Object target, Method method, Object[] args) throws Throwable {
-        return method.invoke(this.getObject(), args);
     }
 }

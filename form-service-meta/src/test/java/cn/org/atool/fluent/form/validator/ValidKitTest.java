@@ -1,16 +1,11 @@
 package cn.org.atool.fluent.form.validator;
 
-import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-
-import javax.validation.constraints.*;
 import org.hibernate.validator.constraints.Range;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,12 +15,22 @@ class ValidKitTest extends Test4J {
 
     @Test
     void validate() {
-        want.exception(() -> Validation.validate(new Car()), IllegalArgumentException.class)
+        want.exception(() -> Validation.validate(null, new Car()), IllegalArgumentException.class)
             .contains(arr("driver.age: 不能为null",
                 "licensePlate: 不能为null",
                 "manufacturer: 不能为空",
                 "driver.hasDrivingLicense: 不能为null",
                 "driver.name: 不能为空"));
+    }
+
+    @Test
+    void validateList() {
+        want.exception(() -> Validation.validate(null, list(new Car())), IllegalArgumentException.class)
+            .contains(arr("[0].driver.age: 不能为null",
+                "[0].licensePlate: 不能为null",
+                "[0].manufacturer: 不能为空",
+                "[0].driver.hasDrivingLicense: 不能为null",
+                "[0].driver.name: 不能为空"));
     }
 
     static class Car {

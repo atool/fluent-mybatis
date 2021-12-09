@@ -6,6 +6,7 @@ import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.kits.NoMethodAround;
 import cn.org.atool.fluent.form.kits.ParameterizedTypeKit;
 import cn.org.atool.fluent.form.meta.MethodMeta;
+import cn.org.atool.fluent.form.validator.Validation;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
@@ -76,6 +77,8 @@ public class FormServiceProxy implements MethodInterceptor {
      */
     @Override
     public Object intercept(Object target, Method method, Object[] args, MethodProxy methodProxy) {
+        Validation.validate(target, method, args);
+
         Class declaringClass = method.getDeclaringClass();
         if (IBaseDao.class.equals(declaringClass) && Objects.equals(method.getName(), "mapper")) {
             Class eClass = this.getEntityClass(method);
