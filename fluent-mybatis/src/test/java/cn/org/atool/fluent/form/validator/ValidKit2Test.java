@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.form.validator;
 
-import com.sun.istack.internal.NotNull;
 import org.hibernate.validator.constraints.Range;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;

@@ -21,6 +21,7 @@ import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
  *
  * @author darui.wu
  */
+@SuppressWarnings({"rawtypes"})
 public class Validation {
     private static final ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory();
     private static final Validator objectValidator = factory.getValidator();
@@ -29,17 +30,14 @@ public class Validation {
     /**
      * 对Form Object进行校验
      *
-     * @param object Form对象
+     * @param objects Form对象
      */
     public static void validate(String prefix, Object... objects) throws IllegalArgumentException {
         if (objects == null) {
             throw new IllegalArgumentException("validate object can't be null.");
-        }
-        Object first = Arrays.stream(objects).filter(If::notNull).findFirst().orElse(null);
-        if (first == null || notFormObject(first.getClass())) {
+        } else if (objects.length == 0 || isFirstObjectNotForm(objects[0])) {
             return;
         }
-
         int index = -1;
         for (Object object : objects) {
             index++;
@@ -53,6 +51,17 @@ public class Validation {
                 validateArgsByIValidate(object);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static boolean isFirstObjectNotForm(Object object) {
+        Object first = object;
+        if (object instanceof Collection) {
+            first = ((Collection) object).stream().filter(If::notNull).findFirst().orElse(null);
+        } else if (object instanceof Object[]) {
+            first = Arrays.stream((Object[]) object).filter(If::notNull).findFirst().orElse(null);
+        }
+        return first == null || notFormObject(first.getClass());
     }
 
     /**
