@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_FIND;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_FIND;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**

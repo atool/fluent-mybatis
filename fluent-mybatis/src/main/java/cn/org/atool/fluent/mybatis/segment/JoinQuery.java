@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION_ALL;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.UNION;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.UNION_ALL;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**

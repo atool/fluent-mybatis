@@ -11,7 +11,7 @@ import javax.annotation.processing.Filer;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.NEWLINE;
 
 /**
  * 所有Entity的FluentEntity信息列表

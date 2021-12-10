@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_MAPPING;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.NEWLINE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.NEWLINE;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_IMapping;
 
 @SuppressWarnings({"rawtypes", "UnusedReturnValue"})

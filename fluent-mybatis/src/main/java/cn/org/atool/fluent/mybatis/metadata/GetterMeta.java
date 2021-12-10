@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_GET;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_IS;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_GET;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_IS;
 
 /**
  * getter方法元数据

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * 追加Fragment

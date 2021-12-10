@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.segment.list;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_SPACE;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.AND;

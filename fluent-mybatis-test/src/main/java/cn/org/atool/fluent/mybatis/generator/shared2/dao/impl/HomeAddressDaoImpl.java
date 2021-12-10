@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.generator.shared2.dao.impl;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.mybatis.generator.shared2.dao.base.HomeAddressBaseDao;
 import cn.org.atool.fluent.mybatis.generator.shared2.dao.intf.HomeAddressDao;
-import org.springframework.stereotype.Component;
 
 /**
  * 占位, 避免重新生成

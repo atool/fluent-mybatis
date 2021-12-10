@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA_SPACE;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COUNT_ASTERISK;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.COMMA_SPACE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.COUNT_ASTERISK;
 import static java.util.stream.Collectors.toList;
 
 /**

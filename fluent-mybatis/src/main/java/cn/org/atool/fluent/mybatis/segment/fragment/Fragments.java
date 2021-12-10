@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment.fragment;
 
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isTableName;
 
 /**

@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 
 import static cn.org.atool.fluent.mybatis.If.*;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.STR_FORMAT;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.STR_FORMAT;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
 
 /**

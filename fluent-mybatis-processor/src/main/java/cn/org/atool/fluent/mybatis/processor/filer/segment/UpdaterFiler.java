@@ -15,7 +15,7 @@ import com.squareup.javapoet.*;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_SET;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_SET;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
 import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
 

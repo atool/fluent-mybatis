@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.publicMethod;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;

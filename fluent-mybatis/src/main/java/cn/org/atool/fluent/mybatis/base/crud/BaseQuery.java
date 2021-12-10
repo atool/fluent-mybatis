@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.base.model.FieldMapping.alias;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.UNION_ALL;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.UNION;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.UNION_ALL;
 
 /**
  * AbstractQueryWrapper

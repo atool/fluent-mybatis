@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * fluent mybatis生成代码Entity信息

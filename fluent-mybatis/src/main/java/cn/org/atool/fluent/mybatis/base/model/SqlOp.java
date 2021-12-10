@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.QUESTION_MARK;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.QUESTION_MARK;
 import static java.util.stream.Collectors.joining;
 
 /**

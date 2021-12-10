@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.functions.StringSupplier;
-import cn.org.atool.fluent.mybatis.mapper.StrConstant;
+import cn.org.atool.fluent.mybatis.utility.StrConstant;
 import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SEMICOLON_NEWLINE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SEMICOLON_NEWLINE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;

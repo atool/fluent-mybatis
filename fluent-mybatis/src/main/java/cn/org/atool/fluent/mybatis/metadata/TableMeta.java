@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.mybatis.functions.FieldPredicate;
-import cn.org.atool.fluent.mybatis.mapper.StrConstant;
+import cn.org.atool.fluent.mybatis.utility.StrConstant;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;

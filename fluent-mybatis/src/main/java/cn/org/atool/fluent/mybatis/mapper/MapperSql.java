@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 import static cn.org.atool.fluent.mybatis.segment.model.HintType.*;
 

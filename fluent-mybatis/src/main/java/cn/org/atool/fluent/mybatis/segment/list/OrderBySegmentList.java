@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA_SPACE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.COMMA_SPACE;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.ORDER_BY;
 
 /**

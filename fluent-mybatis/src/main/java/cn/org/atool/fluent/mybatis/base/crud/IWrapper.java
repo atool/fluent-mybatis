@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * IWrapper: 查询和更新都用到的接口

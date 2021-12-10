@@ -37,7 +37,7 @@ import static cn.org.atool.fluent.mybatis.base.model.InsertList.el;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.brackets;
 import static cn.org.atool.fluent.mybatis.mapper.MapperSql.tmpTable;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.*;
 import static java.lang.String.format;

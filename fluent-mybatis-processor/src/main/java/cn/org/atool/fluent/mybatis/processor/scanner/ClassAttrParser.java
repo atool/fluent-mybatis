@@ -6,9 +6,9 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 解析@FluentMyBatis上定义的 daoInterface属性值
@@ -41,8 +41,8 @@ public class ClassAttrParser {
             if (!method.toString().contains(methodName)) {
                 continue;
             }
-            DeclaredType aClass = (DeclaredType) value.getValue();
-            return aClass.toString();
+            String aClass = value.getValue().toString();
+            return Objects.equals(aClass, Object.class.getName()) ? defaultValue.getName() : aClass;
         }
         return defaultValue.getName();
     }

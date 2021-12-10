@@ -9,7 +9,7 @@
         <version>1.0.4</version>
     </parent>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.9.2</version>
+    <version>1.9.3</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -17,19 +17,20 @@
     <properties>
         <spring.version>5.3.7</spring.version>
         <mybatis.version>3.5.7</mybatis.version>
+        <fluent-db-feature.version>1.3.5</fluent-db-feature.version>
         <!-- validation-->
         <javax-el.version>3.0.0</javax-el.version>
         <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
         <hibernate-validator.version>6.0.22.Final</hibernate-validator.version>
+
         <!-- test jar-->
-        <fluent-db-feature.version>1.3.5</fluent-db-feature.version>
         <fluent-assert.version>1.0.6</fluent-assert.version>
         <fluent-mock.version>1.1.6</fluent-mock.version>
         <fluent-dbtest.version>1.0.10</fluent-dbtest.version>
         <test4j-junit5.version>2.7.11</test4j-junit5.version>
     </properties>
     <modules>
-        <module>form-service-meta</module>
+        <module>fluent-mybatis-annotation</module>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
         <module>fluent-mybatis-test</module>
@@ -37,18 +38,6 @@
     </modules>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.30</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.2.3</version>
-                <scope>provided</scope>
-            </dependency>
             <dependency>
                 <groupId>com.github.atool</groupId>
                 <artifactId>db-feature</artifactId>
@@ -69,6 +58,29 @@
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
                 <version>${javax-el.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <!-- log provided -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.30</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+                <scope>provided</scope>
             </dependency>
             <!-- test jar -->
             <dependency>

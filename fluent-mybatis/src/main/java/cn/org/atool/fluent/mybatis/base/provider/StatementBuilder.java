@@ -20,8 +20,8 @@ import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_EW;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.COMMA;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.DOT;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.COMMA;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.DOT;
 
 /**
  * MappedStatement重建构造

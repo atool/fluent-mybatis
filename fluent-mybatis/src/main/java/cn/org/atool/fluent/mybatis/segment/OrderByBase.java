@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.RETAIN;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.EMPTY_COLUMN;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.ORDER_BY;
 

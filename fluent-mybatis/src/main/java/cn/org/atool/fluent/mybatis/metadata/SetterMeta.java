@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.PRE_SET;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_SET;
 
 /**
  * SetterMeta: setter方法元数据定义

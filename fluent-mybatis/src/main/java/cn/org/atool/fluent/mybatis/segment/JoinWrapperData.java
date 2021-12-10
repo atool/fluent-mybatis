@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 
 /**

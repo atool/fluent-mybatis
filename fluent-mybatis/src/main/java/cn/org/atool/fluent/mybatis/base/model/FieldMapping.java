@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 
 /**
  * FieldMeta: 实体字段和数据库字段映射信息

@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.utility;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 
 /**
  * 简单判断有没有sql注入风险

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Column.columnEquals;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_SPACE;

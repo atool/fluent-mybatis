@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.segment.fragment;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.SPACE;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SPACE;
 
 /**
  * KeyWordSegment

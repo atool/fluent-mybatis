@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
-import static cn.org.atool.fluent.mybatis.mapper.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.AND;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.OR;
 
