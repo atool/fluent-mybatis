@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.functions.RefKey;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.*;

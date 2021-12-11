@@ -1,12 +1,12 @@
 package cn.org.atool.fluent.mybatis.test2.typehandler;
 
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.customize.model.MyEnum;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared4.entity.MyEnumTypePoJo;
 import cn.org.atool.fluent.mybatis.generator.shared4.mapper.MyEnumTypeMapper;
 import cn.org.atool.fluent.mybatis.generator.shared4.wrapper.MyEnumTypeQuery;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.annotations.Mocks;

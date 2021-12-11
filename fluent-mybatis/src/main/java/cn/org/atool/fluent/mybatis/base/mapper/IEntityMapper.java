@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.mapper;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -8,7 +9,6 @@ import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.intf.IHasMapping;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderContext;

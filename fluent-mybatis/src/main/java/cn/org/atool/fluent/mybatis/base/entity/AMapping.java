@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -13,7 +14,6 @@ import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.functions.RefKeyFunc;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import lombok.AccessLevel;

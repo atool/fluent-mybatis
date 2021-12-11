@@ -7,7 +7,6 @@ import cn.org.atool.fluent.mybatis.generator.shared5.wrapper.IdcardUpdate;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

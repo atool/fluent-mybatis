@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.mybatis.test2.join;
 
+import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.generator.shared3.mapper.MemberMapper;
 import cn.org.atool.fluent.mybatis.generator.shared3.wrapper.MemberQuery;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

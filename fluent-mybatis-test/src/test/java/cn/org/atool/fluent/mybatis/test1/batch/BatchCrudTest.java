@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test1.batch;
 
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
@@ -8,7 +9,6 @@ import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressUpdate;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentUpdate;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.test1.segment1;
 
+import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

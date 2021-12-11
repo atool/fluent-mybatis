@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.form.annotation.MethodType;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 
 import java.util.ArrayList;
 import java.util.Collections;

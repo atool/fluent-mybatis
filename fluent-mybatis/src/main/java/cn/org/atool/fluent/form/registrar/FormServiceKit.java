@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.registrar;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.setter.FormHelper;
@@ -7,7 +8,6 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;

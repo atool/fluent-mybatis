@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.test2.method;
 
+import cn.org.atool.fluent.mybatis.base.provider.CommonSqlKit;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared5.mapper.IdcardMapper;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.provider.CommonSqlKit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.annotations.Mock;

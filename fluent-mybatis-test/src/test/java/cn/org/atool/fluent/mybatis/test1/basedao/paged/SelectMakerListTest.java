@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.test1.basedao.paged;
 
+import cn.org.atool.fluent.mybatis.base.dao.IProtectedDao;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
@@ -7,7 +8,6 @@ import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
-import cn.org.atool.fluent.mybatis.base.dao.IProtectedDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

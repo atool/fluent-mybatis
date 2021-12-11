@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.utility;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -15,7 +16,6 @@ import cn.org.atool.fluent.mybatis.functions.RefFinder;
 import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.typehandler.IConvertor;
 

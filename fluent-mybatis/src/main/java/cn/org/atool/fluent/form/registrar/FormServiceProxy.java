@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.registrar;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.ParameterizedTypes;
 import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.form.IMethodAround;
@@ -12,7 +13,6 @@ import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.cglib.proxy.*;
 

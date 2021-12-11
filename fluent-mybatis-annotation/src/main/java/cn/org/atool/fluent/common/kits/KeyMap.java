@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.model;
+package cn.org.atool.fluent.common.kits;
 
 import java.lang.reflect.Type;
 import java.util.*;

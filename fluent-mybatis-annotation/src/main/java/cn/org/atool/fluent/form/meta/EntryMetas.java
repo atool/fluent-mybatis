@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.ParameterizedTypes;
 import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.form.annotation.Entry;
@@ -7,7 +8,6 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
 import cn.org.atool.fluent.form.meta.entry.EntryMetaKit;
 import cn.org.atool.fluent.form.meta.entry.MethodEntryMeta;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import lombok.Getter;
 import lombok.ToString;
 

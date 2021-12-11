@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.SegmentLocks;
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

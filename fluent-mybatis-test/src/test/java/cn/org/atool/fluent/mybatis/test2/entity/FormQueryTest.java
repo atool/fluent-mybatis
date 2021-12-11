@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.mybatis.test2.entity;
 
+import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
-import cn.org.atool.fluent.form.Form;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
