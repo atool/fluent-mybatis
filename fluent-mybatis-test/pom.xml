@@ -50,12 +50,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.atool</groupId>
-            <artifactId>fluent-mybatis-annotation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

@@ -17,8 +17,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>fluent-mybatis-annotation</artifactId>
-            <version>1.9.3</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
