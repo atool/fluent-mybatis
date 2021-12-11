@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.form;
 
-import cn.org.atool.fluent.form.kits.NoMethodAround;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
+import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.form.meta.MethodMeta;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 
 import java.lang.reflect.Method;
 
@@ -11,8 +11,15 @@ import java.lang.reflect.Method;
  *
  * @author wudarui
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public interface IMethodAround {
+
+    KeyMap<MethodMeta> METHOD_METAS_CACHED = new KeyMap<>();
+    /**
+     * 按 Method.toString() 签名进行加锁
+     */
+    SegmentLocks<String> MethodLock = new SegmentLocks<>(16);
+
     /**
      * 根据方法定义构造方法元数据(从缓存获取)
      *
@@ -20,10 +27,10 @@ public interface IMethodAround {
      * @param method      执行方法
      * @return 方法元数据
      */
-    default MethodMeta cache(Class<? extends IEntity> entityClass, Method method) {
+    default MethodMeta cache(Class entityClass, Method method) {
         String mName = method.toString();
-        NoMethodAround.MethodLock.lockDoing(NoMethodAround.METHOD_METAS_CACHED::containsKey, mName, () -> NoMethodAround.METHOD_METAS_CACHED.put(mName, this.before(entityClass, method)));
-        return NoMethodAround.METHOD_METAS_CACHED.get(mName);
+        MethodLock.lockDoing(METHOD_METAS_CACHED::containsKey, mName, () -> METHOD_METAS_CACHED.put(mName, this.before(entityClass, method)));
+        return METHOD_METAS_CACHED.get(mName);
     }
 
     /**
@@ -33,7 +40,7 @@ public interface IMethodAround {
      * @param method      执行方法
      * @return 方法元数据
      */
-    MethodMeta before(Class<? extends IEntity> entityClass, Method method);
+    MethodMeta before(Class entityClass, Method method);
 
     /**
      * 对入参进行预处理
@@ -55,7 +62,7 @@ public interface IMethodAround {
      * @param result      FormService执行结果
      * @return 原始方法的返回值
      */
-    Object after(Class<? extends IEntity> entityClass, Method method, Object[] args, Object result);
+    Object after(Class entityClass, Method method, Object[] args, Object result);
 
     /**
      * 异常值处理
@@ -66,7 +73,7 @@ public interface IMethodAround {
      * @param exception   FormService执行过程中抛出的异常
      * @return 原始方法的返回值
      */
-    default Object after(Class<? extends IEntity> entityClass, Method method, Object[] args, RuntimeException exception) {
+    default Object after(Class entityClass, Method method, Object[] args, RuntimeException exception) {
         throw exception;
     }
 }

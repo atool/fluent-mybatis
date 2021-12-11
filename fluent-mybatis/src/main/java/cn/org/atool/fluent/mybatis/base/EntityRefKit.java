@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.functions.RefKey;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
@@ -9,8 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_FIND;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_FIND;
 
 /**
  * 设置实例关联关系和数据工具类

@@ -1,9 +1,8 @@
-package cn.org.atool.fluent.form.kits;
+package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.form.annotation.MethodType;
-import cn.org.atool.fluent.form.meta.MethodArgNames;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.utility.LockKit;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,14 +10,14 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * FinderNameKit
+ * ArgNamesKit: 方法参数解析工具
  *
  * @author wudarui
  */
-public class MethodArgNamesKit {
+public class ArgNamesKit {
     private static final KeyMap<MethodArgNames> cached = new KeyMap<>();
 
-    private static final LockKit<String> lock = new LockKit<>(32);
+    private static final SegmentLocks<String> lock = new SegmentLocks<>(32);
 
     /**
      * 从 method...() 方法中解析字段名称

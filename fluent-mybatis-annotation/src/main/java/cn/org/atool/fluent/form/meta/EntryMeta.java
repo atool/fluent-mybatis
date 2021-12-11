@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.wrap;
+import static cn.org.atool.fluent.common.kits.StringKit.wrap;
 
 /**
  * FormFieldMeta: Form字段元数据

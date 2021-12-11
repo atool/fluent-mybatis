@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.utility.LockKit;
+import cn.org.atool.fluent.common.kits.SegmentLocks;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ public class GetterMeta {
     /**
      * 按class类进行加锁
      */
-    private final static LockKit<Class> ClassLock = new LockKit<>(16);
+    private final static SegmentLocks<Class> ClassLock = new SegmentLocks<>(16);
 
     /**
      * 返回类klass属性setter方法

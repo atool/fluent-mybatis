@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.kits;
+package cn.org.atool.fluent.form.meta.entry;
 
 import cn.org.atool.fluent.form.annotation.Form;
 import cn.org.atool.fluent.form.meta.EntryMeta;

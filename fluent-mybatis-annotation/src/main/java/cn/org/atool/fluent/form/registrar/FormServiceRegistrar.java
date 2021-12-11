@@ -7,8 +7,6 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
-import static cn.org.atool.fluent.form.registrar.FormServiceScanner.NoMethodAround;
-
 /**
  * FormServiceRegistrar: 动态注入FormService Bean到Spring容器中
  *
@@ -35,7 +33,7 @@ public class FormServiceRegistrar implements ImportBeanDefinitionRegistrar {
         scanner.registerFilters();
         String[] basePackages = aAttrs.getStringArray("value");
         Class aClass = aAttrs.getClass("around");
-        scanner.doScan(aClass == Object.class ? NoMethodAround : aClass.getName(), basePackages);
+        scanner.doScan(aClass.getName(), basePackages);
     }
 
     public static class RepeatingRegistrar extends FormServiceRegistrar {

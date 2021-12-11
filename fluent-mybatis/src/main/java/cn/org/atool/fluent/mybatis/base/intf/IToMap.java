@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.intf;
 
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.metadata.GetterMeta;
 
 import java.util.HashMap;

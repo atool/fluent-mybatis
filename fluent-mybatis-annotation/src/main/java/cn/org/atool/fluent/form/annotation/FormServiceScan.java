@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.form.annotation;
 
+import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.registrar.FormServiceRegistrar;
+import cn.org.atool.fluent.form.registrar.NoMethodAround;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -25,5 +27,5 @@ public @interface FormServiceScan {
     /**
      * 切面处理, 继承 IMethodAround 接口类
      */
-    Class around() default Object.class;
+    Class<? extends IMethodAround> around() default NoMethodAround.class;
 }

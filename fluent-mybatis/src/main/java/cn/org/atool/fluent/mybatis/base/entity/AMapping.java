@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -7,7 +8,6 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.model.UniqueType;
 import cn.org.atool.fluent.mybatis.functions.IGetter;
 import cn.org.atool.fluent.mybatis.functions.RefKey;

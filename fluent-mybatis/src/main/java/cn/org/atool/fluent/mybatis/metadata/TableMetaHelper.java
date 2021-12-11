@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.metadata;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;

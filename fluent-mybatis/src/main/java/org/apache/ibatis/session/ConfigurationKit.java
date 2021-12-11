@@ -1,8 +1,8 @@
 package org.apache.ibatis.session;
 
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.base.provider.StatementBuilder;
 import org.apache.ibatis.mapping.MappedStatement;
 

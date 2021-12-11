@@ -1,16 +1,13 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.mybatis.model.KeyMap;
+import cn.org.atool.fluent.common.kits.SegmentLocks;
+import cn.org.atool.fluent.common.kits.ParameterizedTypes;
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
-import cn.org.atool.fluent.form.kits.EntryMetaKit;
-import cn.org.atool.fluent.form.kits.ParameterizedTypeKit;
+import cn.org.atool.fluent.form.meta.entry.EntryMetaKit;
 import cn.org.atool.fluent.form.meta.entry.MethodEntryMeta;
-import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.base.BaseEntity;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.utility.LockKit;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -22,8 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
+import static cn.org.atool.fluent.common.kits.StringKit.*;
 
 /**
  * Form表单对象元数据定义列表
@@ -139,12 +135,16 @@ public class EntryMetas implements IEntryMeta {
     private static final KeyMap<EntryMetas> ClassFormMetas = new KeyMap<>();
 
 
-    static List<Class> root_classes = Arrays.asList(Object.class, RichEntity.class, BaseEntity.class);
+    static List<String> root_classes = Arrays.asList(
+        Object.class.getName(),
+        "cn.org.atool.fluent.mybatis.base.RichEntity",
+        "cn.org.atool.fluent.mybatis.base.BaseEntity"
+    );
 
     /**
      * 按class类进行加锁
      */
-    private final static LockKit<Class> ClassLock = new LockKit<>(16);
+    private final static SegmentLocks<Class> ClassLock = new SegmentLocks<>(16);
 
     /**
      * 获取class的表单元数据
@@ -163,7 +163,7 @@ public class EntryMetas implements IEntryMeta {
         /* 放在构造元数据前面, 避免子对象循环构造 */
         ClassFormMetas.put(aClass, metas);
         Class declared = aClass;
-        while (!root_classes.contains(declared) && !declared.isPrimitive() && !declared.getName().startsWith("java.")) {
+        while (!root_classes.contains(declared.getName()) && !declared.isPrimitive() && !declared.getName().startsWith("java.")) {
             try {
                 metas.addMetasByFormKits(declared);
             } catch (Exception ignored) {
@@ -206,7 +206,7 @@ public class EntryMetas implements IEntryMeta {
             Class fClass = this.getFieldType(field);
 
             Method setter = findSetter(aClass, field);
-            if (ParameterizedTypeKit.notFormObject(fClass)) {
+            if (ParameterizedTypes.notFormObject(fClass)) {
                 Method getter = findGetter(aClass, field);
                 if (getter != null || setter != null) {
                     this.addMeta(name, getter, setter, entry);
@@ -228,7 +228,7 @@ public class EntryMetas implements IEntryMeta {
     private Class getFieldType(Field field) {
         Class fClass = field.getType();
         if (List.class.isAssignableFrom(fClass)) {
-            fClass = ParameterizedTypeKit.getType(field.getGenericType(), List.class, "E");
+            fClass = ParameterizedTypes.getType(field.getGenericType(), List.class, "E");
         }
         return fClass == null ? field.getType() : fClass;
     }
@@ -240,7 +240,7 @@ public class EntryMetas implements IEntryMeta {
      * @return true/false
      */
     private boolean noEntryName(Entry entry) {
-        return entry == null || If.isBlank(entry.value());
+        return entry == null || isBlank(entry.value());
     }
 
     public static Method findGetter(Class klass, Field field) {

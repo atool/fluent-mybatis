@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
-import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.common.kits.ParameterizedTypes.notFormObject;
+import static cn.org.atool.fluent.common.kits.StringKit.notBlank;
 
 /**
  * 参数信息

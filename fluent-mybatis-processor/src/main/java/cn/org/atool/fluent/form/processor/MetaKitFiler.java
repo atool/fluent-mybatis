@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.form.processor;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import cn.org.atool.fluent.form.kits.EntryMetaKit;
 import cn.org.atool.fluent.form.meta.EntryMeta;
+import cn.org.atool.fluent.form.meta.entry.EntryMetaKit;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -14,11 +14,11 @@ import java.util.List;
  *
  * @author wudarui
  */
-public class FormMetaFiler {
+public class MetaKitFiler {
     private final ClassName className;
     private final List<FormField> fields;
 
-    public FormMetaFiler(ClassName className, List<FormField> fields) {
+    public MetaKitFiler(ClassName className, List<FormField> fields) {
         this.className = className;
         this.fields = fields;
     }

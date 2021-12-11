@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.typehandler;
 
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.ObjectArray;
 
 import java.lang.reflect.Type;

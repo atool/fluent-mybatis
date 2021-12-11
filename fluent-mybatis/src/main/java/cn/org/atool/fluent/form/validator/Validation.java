@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
-import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
+import static cn.org.atool.fluent.common.kits.ParameterizedTypes.notFormObject;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 

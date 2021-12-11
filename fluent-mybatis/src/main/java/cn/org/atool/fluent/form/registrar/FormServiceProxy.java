@@ -1,10 +1,10 @@
 package cn.org.atool.fluent.form.registrar;
 
+import cn.org.atool.fluent.common.kits.SegmentLocks;
+import cn.org.atool.fluent.common.kits.ParameterizedTypes;
 import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
-import cn.org.atool.fluent.form.kits.NoMethodAround;
-import cn.org.atool.fluent.form.kits.ParameterizedTypeKit;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.validator.Validation;
 import cn.org.atool.fluent.mybatis.If;
@@ -12,8 +12,7 @@ import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
-import cn.org.atool.fluent.mybatis.utility.LockKit;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.cglib.proxy.*;
 
@@ -169,7 +168,7 @@ public class FormServiceProxy implements MethodInterceptor {
             if (klass != Object.class) {
                 this.entityClass = klass;
             } else if (IBaseDao.class.isAssignableFrom(this.serviceClass)) {
-                this.entityClass = ParameterizedTypeKit.getType(this.serviceClass, IBaseDao.class, "E");
+                this.entityClass = ParameterizedTypes.getType(this.serviceClass, IBaseDao.class, "E");
             } else {
                 this.entityClass = Object.class;
             }
@@ -220,7 +219,7 @@ public class FormServiceProxy implements MethodInterceptor {
 
     private static final KeyMap<IMethodAround> instances = new KeyMap<IMethodAround>().put(NoMethodAround.class, NoMethodAround.instance);
 
-    private static final LockKit<Class> locks = new LockKit<>(16);
+    private static final SegmentLocks<Class> locks = new SegmentLocks<>(16);
 
     private IMethodAround aroundInstance(Class<? extends IMethodAround> aClass) {
         locks.lockDoing(instances::containsKey, aClass, () -> {

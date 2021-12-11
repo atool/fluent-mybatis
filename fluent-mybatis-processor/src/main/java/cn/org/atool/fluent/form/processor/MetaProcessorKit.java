@@ -14,7 +14,7 @@ class MetaProcessorKit {
     public static void generate(Element element, Filer filer) throws IOException {
         FormScanner scanner = new FormScanner();
         scanner.scan(element);
-        JavaFile javaFile = new FormMetaFiler(scanner.getClassName(), scanner.getMetas()).javaFile();
+        JavaFile javaFile = new MetaKitFiler(scanner.getClassName(), scanner.getMetas()).javaFile();
         javaFile.writeTo(filer);
         // compile(javaFile.toJavaFileObject().toUri().getPath());
     }

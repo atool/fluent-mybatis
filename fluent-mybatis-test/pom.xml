@@ -15,7 +15,6 @@
     <properties>
         <spring.verison>5.3.3</spring.verison>
         <spring-boot.version>2.4.2</spring-boot.version>
-        <form-service.version>1.9.3</form-service.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -53,7 +52,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>fluent-mybatis-annotation</artifactId>
-            <version>${form-service.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -126,7 +125,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>

@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.mybatis.model.KeyMap;
+import cn.org.atool.fluent.common.kits.SegmentLocks;
+import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.MethodType;
-import cn.org.atool.fluent.form.kits.MethodArgNamesKit;
 import cn.org.atool.fluent.form.meta.entry.ArgEntryMeta;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
-import cn.org.atool.fluent.mybatis.utility.LockKit;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
@@ -17,9 +17,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import static cn.org.atool.fluent.common.kits.StringKit.isBlank;
+import static cn.org.atool.fluent.common.kits.ParameterizedTypes.notFormObject;
 import static cn.org.atool.fluent.form.annotation.MethodType.*;
-import static cn.org.atool.fluent.form.kits.ParameterizedTypeKit.notFormObject;
-import static cn.org.atool.fluent.mybatis.If.isBlank;
 
 /**
  * FormService方法元数据
@@ -72,7 +72,7 @@ public class MethodMeta {
         this.method = method.toString();
         this.returnType = method.getReturnType();
         this.returnParameterType = this.getParameterTypeOfReturn(method);
-        this.argNames = MethodArgNamesKit.parseMethodStyle(method.getName());
+        this.argNames = ArgNamesKit.parseMethodStyle(method.getName());
         this.methodType = parseMethodType(method);
         this.argMetas = this.buildArgumentMeta(argNames, method.getParameters());
     }
@@ -96,13 +96,13 @@ public class MethodMeta {
     /**
      * 按 Method.toString() 签名进行加锁
      */
-    private final static LockKit<String> MethodLock = new LockKit<>(16);
+    private final static SegmentLocks<String> MethodLock = new SegmentLocks<>(16);
 
     public static final KeyMap<EntryMetas> MethodArgsMeta = new KeyMap<>();
 
     /**
      * 构造MethodMeta
-     * 缓存在 {@link cn.org.atool.fluent.form.IMethodAround#cache(Class, Method)} 中处理
+     * 缓存在 {@link IMethodAround#cache(Class, Method)} 中处理
      */
     public static MethodMeta meta(Class entityClass, Method method) {
         return new MethodMeta(entityClass, method);
@@ -110,7 +110,7 @@ public class MethodMeta {
 
     /**
      * 显式构造MethodMeta
-     * 缓存在 {@link cn.org.atool.fluent.form.IMethodAround#cache(Class, Method)} 中处理
+     * 缓存在 {@link IMethodAround#cache(Class, Method)} 中处理
      */
     public static MethodMeta meta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
         return new MethodMeta(entityClass, method, methodType, args, returnType, returnParameterType);

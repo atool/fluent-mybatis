@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.kits;
+package cn.org.atool.fluent.common.kits;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 泛型工具
+ * ParameterizedTypes: 泛型工具
  *
  * @author darui.wu
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class ParameterizedTypeKit {
+public class ParameterizedTypes {
     /**
      * 返回type有关declared通配符genericName的实际类型
      *

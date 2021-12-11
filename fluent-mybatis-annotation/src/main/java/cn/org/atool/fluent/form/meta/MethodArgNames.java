@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.form.meta;
 
+import cn.org.atool.fluent.common.kits.StringKit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,9 +9,6 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.lowerFirst;
 
 /**
  * 方法名称中解析出来的字段及关联方式
@@ -31,7 +29,7 @@ public class MethodArgNames {
     private int topN = 0;
 
     public MethodArgNames(boolean isAnd, List<String> names) {
-        this.names = names.stream().map(name -> lowerFirst(name, EMPTY)).collect(Collectors.toList());
+        this.names = names.stream().map(StringKit::lowerFirst).collect(Collectors.toList());
         this.isAnd = isAnd;
     }
 

@@ -1,28 +1,26 @@
-package cn.org.atool.fluent.mybatis.utility;
-
-import cn.org.atool.fluent.mybatis.functions.IExecutor;
+package cn.org.atool.fluent.common.kits;
 
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 /**
- * 分段锁执行工具
+ * SegmentLocks: 分段锁执行工具
  *
  * @author darui.wu
  */
 @SuppressWarnings({"unused"})
-public class LockKit<T> {
+public class SegmentLocks<T> {
     private final int lock_size;
     /**
      * 分段锁对象
      */
     private final Object[] LOCKS;
 
-    public LockKit() {
+    public SegmentLocks() {
         this(8);
     }
 
-    public LockKit(int lockSize) {
+    public SegmentLocks(int lockSize) {
         this.lock_size = lockSize;
         this.LOCKS = IntStream.range(0, lock_size).mapToObj(i -> new Object()).toArray();
     }
@@ -44,5 +42,15 @@ public class LockKit<T> {
                 executor.execute();
             }
         }
+    }
+
+    /**
+     * IExecutor: 外部执行器
+     *
+     * @author wudarui
+     */
+    @FunctionalInterface
+    public interface IExecutor {
+        void execute();
     }
 }

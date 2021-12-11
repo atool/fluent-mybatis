@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.model.KeyMap;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
