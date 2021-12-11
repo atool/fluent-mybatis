@@ -5,8 +5,8 @@ import cn.org.atool.fluent.mybatis.functions.IGetter;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_GET;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_IS;
+import static cn.org.atool.fluent.common.kits.StringKit.PRE_GET;
+import static cn.org.atool.fluent.common.kits.StringKit.PRE_IS;
 
 /**
  * lambda表达式处理

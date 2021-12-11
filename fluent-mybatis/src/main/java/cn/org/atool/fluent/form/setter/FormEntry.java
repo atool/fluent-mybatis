@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.form.setter;
 
 import cn.org.atool.fluent.mybatis.If;
-import cn.org.atool.fluent.mybatis.utility.StrConstant;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.mybatis.utility.StrConstant;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

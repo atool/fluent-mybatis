@@ -3,8 +3,8 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 

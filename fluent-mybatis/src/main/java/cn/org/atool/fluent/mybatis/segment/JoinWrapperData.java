@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.SPACE;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SPACE;
 
 /**
  * 关联查询条件设置

@@ -1,14 +1,14 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
+import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
-import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.SEMICOLON_NEWLINE;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SEMICOLON_NEWLINE;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 

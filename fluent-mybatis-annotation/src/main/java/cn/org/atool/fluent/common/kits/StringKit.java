@@ -1,7 +1,17 @@
 package cn.org.atool.fluent.common.kits;
 
+/**
+ * StringKit: 字符串处理工具
+ *
+ * @author wudarui
+ */
 public class StringKit {
-
+    /**
+     * 将Exception转换为RuntimeException
+     *
+     * @param e Exception
+     * @return RuntimeException
+     */
     public static RuntimeException wrap(Exception e) {
         if (e instanceof RuntimeException) {
             return (RuntimeException) e;
@@ -44,4 +54,6 @@ public class StringKit {
     public static final String PRE_IS = "is";
 
     public static final String PRE_GET = "get";
+
+    public static final String PRE_FIND = "find";
 }

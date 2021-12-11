@@ -19,8 +19,8 @@ import javax.lang.model.element.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
+import static cn.org.atool.fluent.common.kits.StringKit.PRE_SET;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_SET;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.suppressWarnings;
 

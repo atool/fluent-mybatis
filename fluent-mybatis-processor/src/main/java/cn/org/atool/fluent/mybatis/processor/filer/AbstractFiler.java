@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_MAPPING;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.NEWLINE;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_IMapping;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.NEWLINE;
 
 @SuppressWarnings({"rawtypes", "UnusedReturnValue"})
 public abstract class AbstractFiler {

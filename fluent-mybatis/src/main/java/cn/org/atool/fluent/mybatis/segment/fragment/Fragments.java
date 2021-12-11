@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.segment.fragment;
 
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isTableName;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 
 /**
  * 常量代码片段

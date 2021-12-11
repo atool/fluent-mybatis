@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.registrar;
 
-import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.common.kits.ParameterizedTypes;
+import cn.org.atool.fluent.common.kits.SegmentLocks;
 import cn.org.atool.fluent.form.IMethodAround;
 import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;

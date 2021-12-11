@@ -1,13 +1,13 @@
 package cn.org.atool.fluent.mybatis.metadata;
 
-import cn.org.atool.fluent.mybatis.model.KeyMap;
 import cn.org.atool.fluent.common.kits.SegmentLocks;
+import cn.org.atool.fluent.mybatis.model.KeyMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.PRE_SET;
+import static cn.org.atool.fluent.common.kits.StringKit.PRE_SET;
 
 /**
  * SetterMeta: setter方法元数据定义

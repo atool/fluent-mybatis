@@ -11,9 +11,9 @@ import java.util.Objects;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Param_EW;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.DOT;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isColumnName;
 
 /**
  * sql操作字段信息

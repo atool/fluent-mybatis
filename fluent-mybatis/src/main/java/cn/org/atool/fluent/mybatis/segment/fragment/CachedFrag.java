@@ -2,8 +2,8 @@ package cn.org.atool.fluent.mybatis.segment.fragment;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * 对IFragment对象进行缓存

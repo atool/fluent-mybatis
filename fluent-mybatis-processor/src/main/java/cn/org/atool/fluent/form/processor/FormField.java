@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.util.Objects;
 
+import static cn.org.atool.fluent.common.kits.StringKit.*;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 
 /**

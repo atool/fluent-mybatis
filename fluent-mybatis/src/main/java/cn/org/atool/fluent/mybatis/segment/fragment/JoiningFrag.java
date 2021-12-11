@@ -13,10 +13,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.SEMICOLON;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Column.columnEquals;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.SEG_EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.SEMICOLON;
 import static java.util.stream.Collectors.joining;
 
 /**

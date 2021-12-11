@@ -6,8 +6,8 @@ import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.PagedOffset;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.segment.fragment.Fragments.fragment;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * AbstractUpdateWrapper

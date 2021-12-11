@@ -28,12 +28,12 @@ import java.util.Objects;
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.If.notBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.DOUBLE_QUOTATION;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_FMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.FN_FieldMapping;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_FINAL;
 import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.DOUBLE_QUOTATION;
 import static java.util.stream.Collectors.joining;
 
 /**

@@ -16,9 +16,9 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Consumer_Mapper;
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * 生成Entity对应的Mapper类

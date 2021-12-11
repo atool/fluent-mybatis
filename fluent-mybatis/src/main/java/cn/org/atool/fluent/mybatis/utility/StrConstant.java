@@ -11,13 +11,6 @@ public interface StrConstant {
      */
     String EMPTY = "";
 
-    String PRE_GET = "get";
-
-    String PRE_IS = "is";
-
-    String PRE_FIND = "find";
-
-    String PRE_SET = "set";
     /**
      * asc
      */

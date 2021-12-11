@@ -5,8 +5,8 @@ import cn.org.atool.fluent.mybatis.segment.model.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.isSpace;
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
 import static java.lang.Math.min;
 
 /**
