@@ -14,12 +14,14 @@ public class FindOneTest extends BaseTest {
     StudentDao dao;
 
     @Test
-    void findOne() {
+    void findOne2() {
         ATM.dataMap.student.table().clean();
+        // Save操作
         StudentEntity.builder()
             .id(2L).userName("my.name").env("test_env")
             .address("address").bonusPoints(34L)
             .build().save();
+
         StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(2).end();
         StudentEntity student = dao.findOne(query).orElse(null);
@@ -27,5 +29,32 @@ public class FindOneTest extends BaseTest {
             .id(2L).userName("my.name").env("test_env")
             .address("address").bonusPoints(34L)
             .build(), EqMode.IGNORE_DEFAULTS);
+    }
+
+    @Test
+    void saveAndFindByIdAndUpdateById() {
+        // 数据准备，清空数据库
+        ATM.dataMap.student.table().clean();
+        // Save操作
+        StudentEntity.builder()
+            .id(2L).userName("my.name").env("test_env")
+            .address("address").bonusPoints(34L)
+            .build().save();
+        // findById操作
+        StudentEntity student = new StudentEntity().setId(2L).findById();
+        // 数据验证
+        want.object(student).eqReflect(StudentEntity.builder()
+            .id(2L).userName("my.name").env("test_env")
+            .address("address").bonusPoints(34L)
+            .build(), EqMode.IGNORE_DEFAULTS);
+        // updateById操作
+        new StudentEntity().setId(2L).setUserName("test3").setAddress("address2")
+            .updateById();
+        // 数据验证
+        ATM.dataMap.student.table(1)
+            .id.values(2)
+            .userName.values("test3")
+            .address.values("address2")
+            .eqTable();
     }
 }

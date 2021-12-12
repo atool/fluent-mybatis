@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test1.nested;
 
-import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
@@ -86,7 +85,7 @@ public class NestedQueryTest extends BaseTest {
     void test_nested_query_address_like() {
         StudentQuery query = StudentQuery.emptyQuery()
             .where.id().in(HomeAddressQuery.emptyQuery()
-                .select.apply(Ref.Field.HomeAddress.studentId).end()
+                .select.studentId().end()
                 .where.address().like("杭州滨江").end())
             .end();
         mapper.listEntity(query);

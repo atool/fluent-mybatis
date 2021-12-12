@@ -94,6 +94,17 @@ public interface BaseWhere<
     }
 
     /**
+     * 等于 =, 值不为空时成立
+     *
+     * @param value     条件值
+     * @param condition 条件为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE eq(T value, boolean condition) {
+        return this.apply(condition, EQ, value);
+    }
+
+    /**
      * 不等于 !=
      *
      * @param value 条件值
@@ -112,6 +123,17 @@ public interface BaseWhere<
      */
     default <T> WHERE ne(T value, Predicate<T> when) {
         return this.apply(args -> when.test(value), NE, value);
+    }
+
+    /**
+     * 不等于 !=
+     *
+     * @param value     条件值
+     * @param condition 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE ne(T value, boolean condition) {
+        return this.apply(condition, NE, value);
     }
 
     /**

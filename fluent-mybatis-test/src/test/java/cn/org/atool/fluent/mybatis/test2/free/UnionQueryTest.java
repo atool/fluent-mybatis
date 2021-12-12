@@ -31,9 +31,10 @@ public class UnionQueryTest extends BaseTest {
             );
         mapper.listObjs(query);
         db.sqlList().wantFirstSql().eq("" +
-            "(SELECT `id`, `user_name` FROM `student` WHERE (`user_name` LIKE ? OR `age` >= ?)) " +
-            "UNION " +
-            "(SELECT `id`, `user_name` FROM fluent_mybatis.student WHERE `user_name` LIKE ?)", StringMode.SameAsSpace);
+                "(SELECT `id`, `user_name` FROM `student` WHERE (`user_name` LIKE ? OR `age` >= ?)) " +
+                "UNION " +
+                "(SELECT `id`, `user_name` FROM fluent_mybatis.student WHERE `user_name` LIKE ?)"
+            , StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eq(new Object[]{"1%", 20, "%2"});
     }
 

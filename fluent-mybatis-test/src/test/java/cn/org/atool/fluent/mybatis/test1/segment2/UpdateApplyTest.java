@@ -47,8 +47,9 @@ class UpdateApplyTest extends BaseTest {
 
     @Test
     void is_IfNotNull() {
+        int age = 34;
         mapper.updateBy(StudentUpdate.emptyUpdater()
-            .set.age().is(34, If::notNull)
+            .set.age().is(34, age > 20)
             .set.userName().is(null, If::notNull).end()
             .where.id().eq(2).end()
         );
@@ -61,7 +62,7 @@ class UpdateApplyTest extends BaseTest {
         int age = 43;
         String name = "my name is fluent mybatis";
         mapper.listEntity(StudentQuery.emptyQuery()
-            .where.age().eq(age, arg -> arg > 30)
+            .where.age().eq(age, age > 30)
             .and.userName().eq(name, arg -> arg.contains("fluent"))
             .and.address().like("", If::notBlank).end()
         );

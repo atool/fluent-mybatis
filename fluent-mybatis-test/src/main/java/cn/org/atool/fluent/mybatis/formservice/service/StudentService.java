@@ -12,12 +12,24 @@ import java.util.List;
 @SuppressWarnings("all")
 @FormService(entity = StudentEntity.class)
 public interface StudentService {
+    /**
+     * 保存单个学生信息
+     */
     Student saveStudent(Student student);
 
+    /**
+     * 批量保存单个学生信息
+     */
     boolean saveStudent(List<Student> students);
 
+    /**
+     * 更新学生信息
+     */
     int updateStudent(StudentUpdater student);
 
+    /**
+     * 按学号物理删除学生信息
+     */
     int deleteById(int... ids);
 
     int logicDeleteStudent(StudentQuery student);

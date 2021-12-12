@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.formservice.model.HomeAddress;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static cn.org.atool.fluent.form.annotation.EntryType.IN;
@@ -19,36 +20,40 @@ import static cn.org.atool.fluent.form.annotation.EntryType.StartWith;
  */
 @SuppressWarnings("UnusedReturnValue")
 public interface HomeAddressDao extends IBaseDao<HomeAddressEntity> {
+    /**
+     * 根据city and district查询列表
+     *
+     * @return ignore
+     */
+    List<HomeAddress> findByCityAndDistrict(
+        @NotNull String city, @Entry(type = StartWith) String district);
+
+    /**
+     * 根据city and district查询列表
+     *
+     * @return ignore
+     */
+    List<HomeAddress> findByCityOrDistrictOrAddress(
+        @NotNull String city,
+        @Entry(type = IN) String district,
+        @Entry(type = StartWith) String address);
+
+
+    List<HomeAddress> top3ByCityOrDistrictOrAddressOrderByCityAscDistrictDesc(
+        @NotNull String city,
+        @Entry(type = IN) String district,
+        @Entry(type = StartWith) String address);
+
+    List<HomeAddress> distinctByCityOrderByCityAscDistrict(@NotNull String city);
+
+    boolean existsByCity(@NotNull String city);
+
+    HomeAddress findHomeAddress(
+        @Entry(value = "address", type = StartWith) String address);
+
     String sayImplement();
 
     default String sayInterface() {
         return "HomeAddressDao";
     }
-
-    HomeAddress findHomeAddress(@Entry(value = "address", type = StartWith) String address);
-
-    /**
-     * 根据city and district查询列表
-     *
-     * @return ignore
-     */
-    List<HomeAddress> findByCityAndDistrict(String city, @Entry(type = StartWith) String district);
-
-    /**
-     * 根据city and district查询列表
-     *
-     * @return ignore
-     */
-    List<HomeAddress> findByCityOrDistrictOrAddress(String city,
-                                                    @Entry(type = IN) String district,
-                                                    @Entry(type = StartWith) String address);
-
-
-    List<HomeAddress> top3ByCityOrDistrictOrAddressOrderByCityAscDistrictDesc(String city,
-                                                                              @Entry(type = IN) String district,
-                                                                              @Entry(type = StartWith) String address);
-
-    List<HomeAddress> distinctByCityOrderByCityAscDistrict(String city);
-
-    boolean existsByCity(String city);
 }

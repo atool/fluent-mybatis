@@ -61,6 +61,17 @@ public class UpdateApply<
     }
 
     /**
+     * 条件when成立时, 更新为value值
+     *
+     * @param value     更新值
+     * @param condition 当条件为真时设置更新
+     * @return 更新器
+     */
+    public <O> S is(O value, boolean condition) {
+        return condition ? this.is(value) : this.segment;
+    }
+
+    /**
      * 按分支条件更新
      *
      * @param ifs if conditions

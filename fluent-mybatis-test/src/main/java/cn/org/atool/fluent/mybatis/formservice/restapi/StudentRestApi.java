@@ -23,28 +23,24 @@ import static cn.org.atool.fluent.form.annotation.EntryType.Form;
 @RestController
 @FormService(table = "student")
 public interface StudentRestApi {
-    @GetMapping("/hello")
-    default Map testGet() {
-        return new HashMap<String, String>() {{
-            put("name", "springboot");
-        }};
-    }
-
-    @PostMapping("/save")
+    @PostMapping(value = "/save", name = "保存学生信息")
     @FormMethod(type = MethodType.Save)
     Student save(Student student);
 
-    @PostMapping("/findStudentBy")
+    @PostMapping(value = "/findStudentBy", name = "根据条件查询学习信息")
     Student findStudentBy(@RequestBody StudentQuery student);
 
     @GetMapping("/byName")
-    Student findByUserName(@RequestParam("userName") @Entry(value = "userName") String userName);
+    Student findByUserName(@RequestParam("userName")
+                           @Entry(value = "userName") String userName);
 
     @PostMapping("/findByUserName")
-    Student findByUserName(@Entry(value = "userName") String userName, @Entry(value = "age", type = Between) int[] ages);
+    Student findByUserName(@Entry(value = "userName") String userName,
+                           @Entry(value = "age", type = Between) int[] ages);
 
     @PostMapping("/findByUserName2")
-    Student findByUserName(@Entry(value = "userName") String userName, @Entry(type = Form) StudentQuery student);
+    Student findByUserName(@Entry(value = "userName") String userName,
+                           @Entry(type = Form) StudentQuery student);
 
     @PostMapping("/countStudentBy")
     long countStudentBy(StudentQuery student);
@@ -57,4 +53,11 @@ public interface StudentRestApi {
 
     @PostMapping("/tagPagedStudent")
     TagPagedList<Student> tagPagedStudent(TagPagedQuery hangzhou);
+
+    @GetMapping("/hello")
+    default Map testGet() {
+        return new HashMap<String, String>() {{
+            put("name", "springboot");
+        }};
+    }
 }

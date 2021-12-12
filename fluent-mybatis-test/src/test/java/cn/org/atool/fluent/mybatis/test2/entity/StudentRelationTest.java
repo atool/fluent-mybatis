@@ -47,9 +47,14 @@ public class StudentRelationTest extends BaseTest {
         List<StudentEntity> students = new StudentQuery()
             .where.id().in(new int[]{1, 2, 3, 4}).end()
             .with(StudentEntity::findDeskMate).to().listEntity();
+
         // 验证执行的SQL语句
-        db.sqlList().wantFirstSql().end("FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?, ?)");
-        db.sqlList().wantSql(1).end("FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ? AND `desk_mate_id` IN (?, ?, ?, ?)");
+        db.sqlList().wantFirstSql().end("" +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?, ?, ?)");
+        db.sqlList().wantSql(1).end("" +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `desk_mate_id` IN (?, ?, ?, ?)");
         want.list(students).sizeEq(4);
         // 同桌的同桌是自己
         students.forEach(s -> want.object(s.getId()).eq(s.findDeskMate().getDeskMateId()));
@@ -71,31 +76,42 @@ public class StudentRelationTest extends BaseTest {
 
     @Test
     void findStudentScoreList2() {
-        ATM.dataMap.student.initTable(4)
+        /* 准备2个学生数据 */
+        ATM.dataMap.student.initTable(2)
             .userName.values("tom", "rose")
             .env.values("test_env")
             .cleanAndInsert();
+        /* 给2个学生各准备2门成绩，共4条记录 */
         ATM.dataMap.studentScore.initTable(4)
             .studentId.values(1, 2, 1, 2)
             .subject.values("yuwen", "yuwen", "english")
             .score.values(80, 81, 67, 87)
             .env.values("test_env")
             .cleanAndInsert();
-        List<StudentEntity> students = new StudentQuery().where.id().in(new int[]{1, 2}).end().with(StudentEntity::findStudentScoreList).to().listEntity();
+        // 查询学生列表，同时关联查询成绩单
+        List<StudentEntity> students = new StudentQuery()
+            .where.id().in(new int[]{1, 2}).end()
+            .with(StudentEntity::findStudentScoreList) // 同时查询学生成绩列表 1:N 操作
+            .to().listEntity();
 
         // 验证SQL语句
         db.sqlList().wantFirstSql().end("" +
-            "FROM fluent_mybatis.student WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)", StringMode.SameAsSpace);
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `id` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).end("" +
-            "FROM `student_score` WHERE `is_deleted` = ? AND `env` = ? AND `student_id` IN (?, ?) AND `is_deleted` = ? AND `env` = ?");
-        want.list(students.get(0).findStudentScoreList()).eqMap(ATM.dataMap.studentScore.entity(2)
-            .studentId.values(1)
-            .score.values(80, 67)
-        );
-        want.list(students.get(1).findStudentScoreList()).eqMap(ATM.dataMap.studentScore.entity(2)
-            .studentId.values(2)
-            .score.values(81, 87)
-        );
+            "FROM `student_score` " +
+            "WHERE `is_deleted` = ? AND `env` = ? AND `student_id` IN (?, ?) " +
+            "AND `is_deleted` = ? AND `env` = ?");
+        want.list(students.get(0).findStudentScoreList())
+            .eqMap(ATM.dataMap.studentScore.entity(2)
+                .studentId.values(1)
+                .score.values(80, 67)
+            );
+        want.list(students.get(1).findStudentScoreList())
+            .eqMap(ATM.dataMap.studentScore.entity(2)
+                .studentId.values(2)
+                .score.values(81, 87)
+            );
     }
 
     @Test
