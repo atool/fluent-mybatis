@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.annotation.NotField;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
 
 /**
@@ -9,12 +10,12 @@ import cn.org.atool.fluent.mybatis.functions.TableSupplier;
  */
 @SuppressWarnings({"unchecked"})
 public abstract class BaseEntity implements IEntity {
-
     /**
      * 归属表, 在需要动态判断entity归属表场景下使用
      * 默认无需设置
      */
-    private TableSupplier supplier;
+    @NotField
+    private transient TableSupplier supplier;
 
     @Override
     public <E extends IEntity> E tableSupplier(TableSupplier supplier) {

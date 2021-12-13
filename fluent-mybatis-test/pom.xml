@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.github.atool</groupId>
         <artifactId>fluent-mybatis-parent</artifactId>
-        <version>1.9.3</version>
+        <version>1.9.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -159,6 +159,12 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.78</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

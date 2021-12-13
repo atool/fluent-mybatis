@@ -3,13 +3,22 @@ package cn.org.atool.fluent.mybatis.test1;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.dao.intf.StudentDao;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
+import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.modes.EqMode;
+import org.test4j.hamcrest.matcher.string.StringMode;
 
 class IProtectedDaoTest extends BaseTest {
     @Autowired
     private StudentDao dao;
+
+    @Test
+    void toJson() {
+        StudentEntity entity = new StudentEntity().setUserName("user");
+        String text = JSON.toJSONString(entity);
+        want.string(text).eq("{'userName':'user'}", StringMode.SameAsQuato);
+    }
 
     @Test
     void updateBy() {
