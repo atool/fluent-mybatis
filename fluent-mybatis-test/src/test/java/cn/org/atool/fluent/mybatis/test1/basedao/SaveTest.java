@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.test1.BaseTest;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -47,14 +46,14 @@ public class SaveTest extends BaseTest {
     }
 
     @Test
-    public void test_batchSave_ErrorPk() throws Exception {
+    public void test_batchSave_ErrorPk() {
         db.table(ATM.table.student).clean();
         want.exception(() ->
             dao.save(Arrays.asList(
                 new StudentEntity().setUserName("test name1").setAge(43),
                 new StudentEntity().setUserName("test name2").setAge(43).setId(5L)
-            )), FluentMybatisException.class, MyBatisSystemException.class
-        ).contains("The pk of insert entity can't be null");
+            )), FluentMybatisException.class, IllegalStateException.class
+        ).contains("The instance primary keys in the list either have values or have no values");
     }
 
     @Test

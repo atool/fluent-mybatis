@@ -69,8 +69,8 @@ public class SqlProvider {
      * @return sql
      */
     public static String insertBatchWithPk(Map map, ProviderContext context) {
-        assertNotEmpty(Param_List, map);
         List entities = getParas(map, Param_List);
+        assertNotEmpty(Param_List, entities);
         AMapping mapping = mapping(context);
         return sqlKit(mapping).insertBatch(mapping, entities, true, mapping.tableId());
     }

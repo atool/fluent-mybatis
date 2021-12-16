@@ -259,14 +259,18 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @return 插入记录数
      */
     default int save(Collection<E> list) {
-        boolean hasPk = false;
-        for (E entity : list) {
-            if (entity.findPk() != null) {
-                hasPk = true;
-                break;
+        assertNotEmpty("list", list);
+        /* 如果有主键生成器, 先设置主键 **/
+        Boolean hasPk = null;
+        for (IEntity entity : list) {
+            PkGeneratorKits.setPkByGenerator(entity);
+            if (hasPk == null) {
+                hasPk = entity.findPk() != null;
+            } else if (hasPk == (entity.findPk() == null)) {
+                throw new IllegalStateException("The instance primary keys in the list either have values or have no values");
             }
         }
-        if (hasPk) {
+        if (hasPk == null || hasPk) {
             return this.insertBatchWithPk(list);
         } else {
             return this.insertBatch(list);
