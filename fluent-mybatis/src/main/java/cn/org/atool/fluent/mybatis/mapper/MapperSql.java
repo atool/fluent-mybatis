@@ -15,8 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static cn.org.atool.fluent.mybatis.If.isBlank;
-import static cn.org.atool.fluent.mybatis.If.notBlank;
+import static cn.org.atool.fluent.mybatis.If.*;
 import static cn.org.atool.fluent.mybatis.segment.fragment.KeyFrag.*;
 import static cn.org.atool.fluent.mybatis.segment.model.HintType.*;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.*;
@@ -46,13 +45,41 @@ public class MapperSql {
     }
 
     public MapperSql COUNT(IMapping mapping, IFragment table, WrapperData data) {
+        String count = this.selectCount(mapping, data);
         this.add(
             data.hint(Before_All), SELECT.key(), data.hint(After_CrudKey),
-            COUNT_ASTERISK,
-            FROM.key(),
+            count, FROM.key(),
             data.hint(Before_Table), table.get(mapping), data.hint(After_Table)
         );
         return this;
+    }
+
+    private String selectCount(IMapping mapping, WrapperData data) {
+        if (data.select == null || data.select.size() != 1) {
+            return COUNT_ASTERISK;
+        }
+        String select = data.select.get(mapping).trim();
+        String upper = select.toUpperCase();
+
+        if (upper.matches("COUNT\\s*\\(.*\\)")) {
+            return select;
+        } else if (select.contains(",")) {
+            return COUNT_ASTERISK;
+        }
+        /* 处理count distinct 逻辑 */
+        boolean isDistinct = false;
+        if (upper.startsWith("DISTINCT")) {
+            isDistinct = true;
+            select = select.substring(8).trim();
+        }
+        isDistinct = isDistinct || data.isDistinct();
+        if (hasSpace(select)) {
+            return COUNT_ASTERISK;
+        } else if (isDistinct) {
+            return "COUNT(DISTINCT " + select + ")";
+        } else {
+            return "COUNT(" + select + ")";
+        }
     }
 
     public MapperSql INSERT_INTO(String table) {

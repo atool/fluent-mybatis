@@ -41,7 +41,7 @@ public class SelectCountTest extends BaseTest {
             .userName.values("u1", "u2", "u3", "u2")
             .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
-            .selectId()
+            .select.id().userName().end()
             .where.userName().eq("u2").end();
         int count = mapper.count(query);
         db.sqlList().wantFirstSql()
@@ -62,7 +62,7 @@ public class SelectCountTest extends BaseTest {
             .limit(2);
         int count = mapper.count(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT COUNT(*)")
+            .start("SELECT COUNT(`id`)")
             .end("FROM fluent_mybatis.student WHERE `user_name` = ? LIMIT ?, ?");
         want.number(count).eq(2);
     }

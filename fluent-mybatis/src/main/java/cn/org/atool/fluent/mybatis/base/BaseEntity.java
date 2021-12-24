@@ -15,15 +15,18 @@ public abstract class BaseEntity implements IEntity {
      * 默认无需设置
      */
     @NotField
+    @Deprecated
     private transient TableSupplier supplier;
 
     @Override
+    @Deprecated
     public <E extends IEntity> E tableSupplier(TableSupplier supplier) {
         this.supplier = supplier;
         return (E) this;
     }
 
     @Override
+    @Deprecated
     public <E extends IEntity> E tableSupplier(String table) {
         this.supplier = e -> table;
         return (E) this;

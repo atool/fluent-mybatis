@@ -224,7 +224,12 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default boolean saveOrUpdate(E entity) {
         if (entity.findPk() == null) {
-            return this.insert(entity) > 0;
+            PkGeneratorKits.setPkByGenerator(entity);
+            if (entity.findPk() == null) {
+                return this.insert(entity) > 0;
+            } else {
+                return this.insertWithPk(entity) > 0;
+            }
         } else if (this.existPk(entity.findPk())) {
             return this.updateById(entity) > 0;
         } else {

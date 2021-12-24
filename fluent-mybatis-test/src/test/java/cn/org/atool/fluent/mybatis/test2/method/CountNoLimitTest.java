@@ -18,6 +18,34 @@ public class CountNoLimitTest extends BaseTest {
     private StudentMapper mapper;
 
     @Test
+    void count_distinct() {
+        StudentQuery.emptyQuery().select("count(distinct id)").to().count();
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT count(distinct id) FROM fluent_mybatis.student");
+    }
+
+    @Test
+    void count_distinct2() {
+        StudentQuery.emptyQuery().select("distinct id").to().count();
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(DISTINCT id) FROM fluent_mybatis.student");
+    }
+
+    @Test
+    void count_distinct3() {
+        StudentQuery.emptyQuery().distinct().select.id().end().to().count();
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(DISTINCT `id`) FROM fluent_mybatis.student");
+    }
+
+    @Test
+    void count_distinct4() {
+        StudentQuery.emptyQuery().select.id().end().to().count();
+        db.sqlList().wantFirstSql().eq("" +
+            "SELECT COUNT(`id`) FROM fluent_mybatis.student");
+    }
+
+    @Test
     public void test_count_no_limit() {
         StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end()

@@ -85,6 +85,24 @@ public interface If {
     }
 
     /**
+     * 有空格符
+     *
+     * @param text 输入字符串
+     * @return true/false
+     */
+    static boolean hasSpace(String text) {
+        if (text == null) {
+            return false;
+        }
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isWhitespace(text.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 判断字符串是否不为空
      *
      * @param cs 需要判断字符串
