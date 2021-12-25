@@ -4,8 +4,16 @@ import cn.org.atool.fluent.mybatis.generator.shared1.dm.NoAutoIdDataMap;
 import cn.org.atool.fluent.mybatis.generator.shared1.dm.NoPrimaryDataMap;
 import cn.org.atool.fluent.mybatis.generator.shared1.mix.NoAutoIdTableMix;
 import cn.org.atool.fluent.mybatis.generator.shared1.mix.NoPrimaryTableMix;
-import cn.org.atool.fluent.mybatis.generator.shared2.dm.*;
-import cn.org.atool.fluent.mybatis.generator.shared2.mix.*;
+import cn.org.atool.fluent.mybatis.generator.shared2.dm.HomeAddressDataMap;
+import cn.org.atool.fluent.mybatis.generator.shared2.dm.StudentDataMap;
+import cn.org.atool.fluent.mybatis.generator.shared2.dm.StudentScoreDataMap;
+import cn.org.atool.fluent.mybatis.generator.shared2.dm.StudentTeacherRelationDataMap;
+import cn.org.atool.fluent.mybatis.generator.shared2.dm.TeacherDataMap;
+import cn.org.atool.fluent.mybatis.generator.shared2.mix.HomeAddressTableMix;
+import cn.org.atool.fluent.mybatis.generator.shared2.mix.StudentScoreTableMix;
+import cn.org.atool.fluent.mybatis.generator.shared2.mix.StudentTableMix;
+import cn.org.atool.fluent.mybatis.generator.shared2.mix.StudentTeacherRelationTableMix;
+import cn.org.atool.fluent.mybatis.generator.shared2.mix.TeacherTableMix;
 import cn.org.atool.fluent.mybatis.generator.shared3.dm.MemberDataMap;
 import cn.org.atool.fluent.mybatis.generator.shared3.dm.MemberFavoriteDataMap;
 import cn.org.atool.fluent.mybatis.generator.shared3.dm.MemberLoveDataMap;
@@ -18,10 +26,9 @@ import cn.org.atool.fluent.mybatis.generator.shared4.mix.BlobValueTableMix;
 import cn.org.atool.fluent.mybatis.generator.shared4.mix.MyEnumTypeTableMix;
 import cn.org.atool.fluent.mybatis.generator.shared5.dm.IdcardDataMap;
 import cn.org.atool.fluent.mybatis.generator.shared5.mix.IdcardTableMix;
+import java.util.List;
 import org.test4j.module.database.IDataSourceScript;
 import org.test4j.module.spec.internal.MixProxy;
-
-import java.util.List;
 
 /**
  * ATM: Application Table Manager

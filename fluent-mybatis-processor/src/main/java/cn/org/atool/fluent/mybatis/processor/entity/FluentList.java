@@ -76,6 +76,9 @@ public class FluentList {
         try {
             List<AbstractFiler> javaFiles = generateJavaFile(fluent);
             for (AbstractFiler javaFile : javaFiles) {
+                if (javaFile instanceof BaseDaoFiler && !fluent.isUseDao()) {
+                    continue;
+                }
                 javaFile.javaFile().writeTo(filer);
             }
         } catch (Exception e) {

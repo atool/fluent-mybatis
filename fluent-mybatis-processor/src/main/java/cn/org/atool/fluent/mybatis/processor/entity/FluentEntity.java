@@ -102,6 +102,8 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
 
     private DbType dbType = DbType.MYSQL;
 
+    private boolean useDao = true;
+
     public FluentEntity setClassName(String entityPack, String className) {
         this.className = className;
         this.entityPack = entityPack;
@@ -134,6 +136,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         this.mapperBeanPrefix = fluentMyBatis.mapperBeanPrefix();
         this.dbType = fluentMyBatis.dbType();
         this.usedCached = fluentMyBatis.useCached();
+        this.useDao = fluentMyBatis.useDao();
         return this;
     }
 

@@ -74,4 +74,9 @@ public @interface FluentMybatis {
      * @return type of database
      */
     DbType dbType() default DbType.MYSQL;
+
+    /**
+     * 编译是, 是否生成BaseDao类
+     */
+    boolean useDao() default true;
 }

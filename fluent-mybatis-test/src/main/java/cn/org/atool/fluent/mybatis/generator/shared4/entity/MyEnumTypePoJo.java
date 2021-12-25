@@ -35,7 +35,8 @@ import org.apache.ibatis.type.LongTypeHandler;
 @FluentMybatis(
     table = "my_enum_type",
     schema = "fluent_mybatis",
-    suffix = "PoJo"
+    suffix = "PoJo",
+    useDao = false
 )
 public class MyEnumTypePoJo extends RichEntity {
   private static final long serialVersionUID = 1L;
