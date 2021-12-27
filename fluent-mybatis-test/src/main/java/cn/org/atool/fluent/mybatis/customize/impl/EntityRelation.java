@@ -18,7 +18,7 @@ import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.base.EntityRefKit.values;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes", "unchecked"})
 @Service
 public class EntityRelation implements
     IEntityRelation,

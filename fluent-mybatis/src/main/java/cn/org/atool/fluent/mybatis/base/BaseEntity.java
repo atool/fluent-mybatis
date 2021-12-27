@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.functions.TableSupplier;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "deprecation"})
 public abstract class BaseEntity implements IEntity {
     /**
      * 归属表, 在需要动态判断entity归属表场景下使用
@@ -19,14 +19,12 @@ public abstract class BaseEntity implements IEntity {
     private transient TableSupplier supplier;
 
     @Override
-    @Deprecated
     public <E extends IEntity> E tableSupplier(TableSupplier supplier) {
         this.supplier = supplier;
         return (E) this;
     }
 
     @Override
-    @Deprecated
     public <E extends IEntity> E tableSupplier(String table) {
         this.supplier = e -> table;
         return (E) this;
