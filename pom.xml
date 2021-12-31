@@ -25,9 +25,9 @@
 
         <!-- test jar-->
         <fluent-assert.version>1.0.6</fluent-assert.version>
-        <fluent-mock.version>1.1.6</fluent-mock.version>
+        <fluent-mock.version>1.2.2</fluent-mock.version>
         <fluent-dbtest.version>1.0.10</fluent-dbtest.version>
-        <test4j-junit5.version>2.7.11</test4j-junit5.version>
+        <test4j-junit5.version>2.7.12</test4j-junit5.version>
     </properties>
     <modules>
         <module>fluent-mybatis-annotation</module>

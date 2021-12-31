@@ -32,7 +32,7 @@ import javax.sql.DataSource;
     "cn.org.atool.fluent.mybatis.formservice",
     "cn.org.atool.fluent.mybatis.generator.shared2.dao.impl"})
 })
-public abstract class BaseTest extends Test4J {
+public class BaseTest extends Test4J {
 }
 
 @Configuration
