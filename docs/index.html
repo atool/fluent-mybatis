@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="description" content="Description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+</head>
+<body>
+<div id="app"></div>
+<script>
+    window.$docsify = {
+        loadSidebar: true,
+        maxLevel: 2,
+        subMaxLevel: 4,
+        alias: {
+            '/.*/_sidebar.md': '/_sidebar.md'//防止意外回退
+        },
+        name: 'fluent-mybatis',
+        repo: 'https://gitee.com/fluent-mybatis',
+        coverpage: true,
+        search: {
+            placeholder: 'Search',
+            noData: 'no data!',
+            depth: 3
+        }
+    }
+</script>
+<!-- Docsify v4 -->
+<script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
+<script src="//unpkg.com/prismjs/components/prism-bash.js"></script>
+<script src="//unpkg.com/prismjs/components/prism-java.js"></script>
+<script src="//unpkg.com/prismjs/components/prism-sql.js"></script>
+<script src="//unpkg.com/docsify-copy-code"></script>
+<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+</body>
+</html>
