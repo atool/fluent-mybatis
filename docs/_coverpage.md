@@ -7,5 +7,6 @@
 fluent-mybatis, mybatis语法增强框架, 综合了mybatis plus, danymic sql, jpa等框架特性和优点, 利用annotation processor生成代码。
 
 [GitHub](https://github.com/atool/fluent-mybatis)
-[gitee](https://gitee.com/fluent-mybatis)
+[Gitee](https://gitee.com/fluent-mybatis)
+[掘金专栏](https://juejin.cn/column/7033388011911921678)
 [Get Started](README.md)
