@@ -48,8 +48,16 @@ public class SetterMeta {
      * @return SetterMethodMeta
      */
     public static SetterMeta get(Class klass, String fieldName) {
-        ClassLock.lockDoing(methodMetas::containsKey, klass, () -> methodMetas.put(klass, buildMetas(klass)));
-        return methodMetas.get(klass).get(fieldName);
+        while (klass != Object.class && klass != null) {
+            Class finalKlass = klass;
+            ClassLock.lockDoing(methodMetas::containsKey, klass, () -> methodMetas.put(finalKlass, buildMetas(finalKlass)));
+            SetterMeta meta = methodMetas.get(klass).get(fieldName);
+            if (meta != null) {
+                return meta;
+            }
+            klass = klass.getSuperclass();
+        }
+        return null;
     }
 
     public static KeyMap<SetterMeta> get(Class klass) {

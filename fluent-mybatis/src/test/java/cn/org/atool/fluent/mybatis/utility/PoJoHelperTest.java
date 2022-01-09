@@ -17,10 +17,13 @@ class PoJoHelperTest implements IWant {
         TestBean bean = (TestBean) PoJoHelper.toPoJo(TestBean.class, DataMap.create(1)
             .kv("user_name", "myName")
             .kv("post_code", "310000")
+            .kv("parentName", "parent")
             .map());
         want.object(bean).eqReflect(new TestBean()
             .setUserName("myName")
-            .setPostCode("310000"));
+            .setPostCode("310000")
+            .setParentName("parent")
+        );
     }
 
     @Test
@@ -40,11 +43,17 @@ class PoJoHelperTest implements IWant {
 
     @Data
     @Accessors(chain = true)
-    static class TestBean {
+    static class TestBean extends ParentBean {
         private String userName;
 
         private String postCode;
 
         private List<String> list;
+    }
+
+    @Data
+    @Accessors(chain = true)
+    static class ParentBean {
+        private String parentName;
     }
 }
