@@ -37,7 +37,8 @@ import lombok.experimental.Accessors;
     table = "student",
     schema = "fluent_mybatis",
     mapperBeanPrefix = "my",
-    defaults = MyCustomerInterface.class
+    defaults = MyCustomerInterface.class,
+    desc = "学生信息表"
 )
 public class StudentEntity extends RichEntity implements MyEntity<StudentEntity> {
   private static final long serialVersionUID = 1L;

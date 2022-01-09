@@ -26,4 +26,9 @@ public @interface FormMethod {
      * 操作的表Entity
      */
     Class entity() default Object.class;
+
+    /**
+     * 方法描述
+     */
+    String desc() default "";
 }

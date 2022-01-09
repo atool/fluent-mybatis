@@ -13,7 +13,7 @@ import org.apache.ibatis.type.LongTypeHandler;
 import org.test4j.module.database.proxy.DataSourceCreator;
 
 public class FluentMyBatisGeneratorMain {
-    static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8";
+    static final String URL = "jdbc:mysql://localhost:3306/fluent_mybatis?useUnicode=true&characterEncoding=utf8&useInformationSchema=true";
 
     static final String SrcDir = "fluent-mybatis-test/src/main/java";
 
@@ -59,6 +59,7 @@ public class FluentMyBatisGeneratorMain {
                 columns = @Column(value = "version", isLarge = true)
             ),
             @Table(value = {"teacher", "student_teacher_relation"})},
+        lombokBuilder = true,
         relations = {
             @Relation(method = "findDeskMate", type = RelationType.OneWay_0_1,
                 source = "student", target = "student", where = "id=desk_mate_id"),

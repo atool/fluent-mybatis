@@ -21,4 +21,9 @@ public @interface FormService {
      * 操作的表Entity类
      */
     Class entity() default Object.class;
+
+    /**
+     * Service描述
+     */
+    String desc() default "";
 }

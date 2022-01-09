@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,11 +24,11 @@ import lombok.experimental.Accessors;
 )
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FluentMybatis(
     table = "no_primary",
     schema = "fluent_mybatis",
-    mapperBeanPrefix = "new"
+    mapperBeanPrefix = "new",
+    desc = "无主键表"
 )
 public class NoPrimaryEntity extends RichEntity {
   private static final long serialVersionUID = 1L;

@@ -36,7 +36,8 @@ import lombok.experimental.Accessors;
     table = "student_score",
     schema = "fluent_mybatis",
     mapperBeanPrefix = "my",
-    defaults = MyCustomerInterface.class
+    defaults = MyCustomerInterface.class,
+    desc = "学生成绩"
 )
 public class StudentScoreEntity extends RichEntity implements MyEntity<StudentScoreEntity> {
   private static final long serialVersionUID = 1L;

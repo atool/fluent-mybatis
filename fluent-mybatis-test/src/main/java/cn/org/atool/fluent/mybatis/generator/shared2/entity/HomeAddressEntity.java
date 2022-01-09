@@ -35,7 +35,8 @@ import lombok.experimental.Accessors;
     table = "home_address",
     schema = "fluent_mybatis",
     mapperBeanPrefix = "my",
-    defaults = MyCustomerInterface.class
+    defaults = MyCustomerInterface.class,
+    desc = "学生家庭住址"
 )
 public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddressEntity> {
   private static final long serialVersionUID = 1L;

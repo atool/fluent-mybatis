@@ -33,7 +33,8 @@ import lombok.experimental.Accessors;
 @Builder
 @FluentMybatis(
     table = "teacher",
-    schema = "fluent_mybatis"
+    schema = "fluent_mybatis",
+    desc = "教师信息表"
 )
 public class TeacherEntity extends RichEntity {
   private static final long serialVersionUID = 1L;
