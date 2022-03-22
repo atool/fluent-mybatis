@@ -140,7 +140,7 @@ public class CommonSqlKit implements SqlKit {
     }
 
     @Override
-    public <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk, TableId tableId) {
+    public <E extends IEntity> String insertBatch(IMapping mapping, Collection<E> entities, boolean withPk, TableId tableId) {
         MapperSql sql = new MapperSql();
         List<Map> maps = this.toMaps(mapping, entities, withPk);
         /* 所有非空字段 */
@@ -463,7 +463,7 @@ public class CommonSqlKit implements SqlKit {
      * @param withPk   with pk column
      * @return entity map list
      */
-    protected <E extends IEntity> List<Map> toMaps(IMapping mapping, List<E> entities, boolean withPk) {
+    protected <E extends IEntity> List<Map> toMaps(IMapping mapping, Collection<E> entities, boolean withPk) {
         List<Map> maps = new ArrayList<>(entities.size());
         for (IEntity entity : entities) {
             validateInsertEntity(mapping, entity, withPk, mapping.defaultSetter()::setInsertDefault, mapping.tableId());
@@ -533,10 +533,10 @@ public class CommonSqlKit implements SqlKit {
     /**
      * 获取指定的动态表名称
      *
-     * @param entity 要插入的实例
+     * @param entities 要插入的实例
      * @return 操作表名称
      */
-    static <E extends IEntity> String dynamic(List<E> entities, IMapping mapping) {
+    static <E extends IEntity> String dynamic(Collection<E> entities, IMapping mapping) {
         Set<String> tables = entities.stream().map(e -> dynamic(e, mapping)).collect(Collectors.toSet());
         if (tables.size() != 1) {
             throw new RuntimeException("Cannot batch insert data into multiple target tables:" + tables);

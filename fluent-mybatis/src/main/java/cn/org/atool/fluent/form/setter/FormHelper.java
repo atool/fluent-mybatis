@@ -287,7 +287,7 @@ public class FormHelper {
                 }
                 break;
             case GT:
-                where.apply(column, SqlOp.EQ, value);
+                where.apply(column, SqlOp.GT, value);
                 break;
             case GE:
                 where.apply(column, SqlOp.GE, value);

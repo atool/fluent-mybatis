@@ -15,7 +15,6 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import static cn.org.atool.fluent.mybatis.base.provider.SqlKitFactory.factory;
@@ -56,7 +55,7 @@ public class SqlProvider {
      * @return sql
      */
     public static String insertBatch(Map map, ProviderContext context) {
-        List entities = getParas(map, Param_List);
+        Collection entities = getParas(map, Param_List);
         assertNotEmpty(Param_List, entities);
         AMapping mapping = mapping(context);
         return sqlKit(mapping).insertBatch(mapping, entities, false, mapping.tableId());
@@ -69,7 +68,7 @@ public class SqlProvider {
      * @return sql
      */
     public static String insertBatchWithPk(Map map, ProviderContext context) {
-        List entities = getParas(map, Param_List);
+        Collection entities = getParas(map, Param_List);
         assertNotEmpty(Param_List, entities);
         AMapping mapping = mapping(context);
         return sqlKit(mapping).insertBatch(mapping, entities, true, mapping.tableId());

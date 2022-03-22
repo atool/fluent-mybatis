@@ -13,7 +13,6 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -163,7 +162,7 @@ public interface SqlKit {
      * @param tableId  主键信息
      * @return sql
      */
-    <E extends IEntity> String insertBatch(IMapping mapping, List<E> entities, boolean withPk, TableId tableId);
+    <E extends IEntity> String insertBatch(IMapping mapping, Collection<E> entities, boolean withPk, TableId tableId);
 
     /**
      * 根据WrapperData设置构建物理删除语句
