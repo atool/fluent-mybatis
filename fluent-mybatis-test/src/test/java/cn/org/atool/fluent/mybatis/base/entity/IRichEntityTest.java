@@ -46,7 +46,7 @@ class IRichEntityTest extends BaseTest {
     @DisplayName("将Entity转换为Query操作")
     @Test
     void asQuery() {
-        StudentEntity.builder().userName("user").age(34).build()
+        new StudentEntity().setUserName("user").setAge(34)
             .asQuery().to().listEntity();
         db.sqlList().wantFirstSql().end("" +
             "FROM fluent_mybatis.student " +

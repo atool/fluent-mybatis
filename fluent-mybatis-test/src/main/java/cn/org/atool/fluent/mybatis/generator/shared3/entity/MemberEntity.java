@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.base.RichEntity;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,7 +29,6 @@ import lombok.experimental.Accessors;
 )
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FluentMybatis(
     table = "t_member",
     schema = "fluent_mybatis"

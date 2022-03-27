@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.annotation.Version;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,6 @@ import lombok.experimental.Accessors;
 )
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FluentMybatis(
     table = "no_auto_id",
     schema = "fluent_mybatis",

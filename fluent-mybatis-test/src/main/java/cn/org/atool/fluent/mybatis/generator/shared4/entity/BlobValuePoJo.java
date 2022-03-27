@@ -6,7 +6,6 @@ import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.ICustomizedMapper;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,6 @@ import org.apache.ibatis.type.BlobTypeHandler;
 )
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FluentMybatis(
     table = "blob_value",
     schema = "fluent_mybatis",

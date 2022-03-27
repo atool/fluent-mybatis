@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
 import java.util.Date;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,7 +29,6 @@ import lombok.experimental.Accessors;
 )
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FluentMybatis(
     table = "home_address",
     schema = "fluent_mybatis",

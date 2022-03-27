@@ -16,12 +16,11 @@ public class HomeAddressTest extends BaseTest {
     void test() {
         ATM.dataMap.homeAddress.table().clean();
 
-        dao.save(HomeAddressEntity.builder()
-            .address("oooyyyyxxx")
-            .city("123")
-            .studentId(0L)
-            .district("-=0-9")
-            .build());
+        dao.save(new HomeAddressEntity()
+            .setAddress("oooyyyyxxx")
+            .setCity("123")
+            .setStudentId(0L)
+            .setDistrict("-=0-9"));
         HomeAddress address = dao.findHomeAddress("ooo");
         want.object(address).eqReflect(new HomeAddress("oooyyyyxxx", "123", "-=0-9"));
     }

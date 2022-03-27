@@ -17,18 +17,18 @@ public class FindOneTest extends BaseTest {
     void findOne2() {
         ATM.dataMap.student.table().clean();
         // Save操作
-        StudentEntity.builder()
-            .id(2L).userName("my.name").env("test_env")
-            .address("address").bonusPoints(34L)
-            .build().save();
+        new StudentEntity()
+            .setId(2L).setUserName("my.name").setEnv("test_env")
+            .setAddress("address").setBonusPoints(34L)
+            .save();
 
         StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(2).end();
         StudentEntity student = dao.findOne(query).orElse(null);
-        want.object(student).eqReflect(StudentEntity.builder()
-            .id(2L).userName("my.name").env("test_env")
-            .address("address").bonusPoints(34L)
-            .build(), EqMode.IGNORE_DEFAULTS);
+        want.object(student).eqReflect(new StudentEntity()
+                .setId(2L).setUserName("my.name").setEnv("test_env")
+                .setAddress("address").setBonusPoints(34L)
+            , EqMode.IGNORE_DEFAULTS);
     }
 
     @Test
@@ -36,17 +36,17 @@ public class FindOneTest extends BaseTest {
         // 数据准备，清空数据库
         ATM.dataMap.student.table().clean();
         // Save操作
-        StudentEntity.builder()
-            .id(2L).userName("my.name").env("test_env")
-            .address("address").bonusPoints(34L)
-            .build().save();
+        new StudentEntity()
+            .setId(2L).setUserName("my.name").setEnv("test_env")
+            .setAddress("address").setBonusPoints(34L)
+            .save();
         // findById操作
         StudentEntity student = new StudentEntity().setId(2L).findById();
         // 数据验证
-        want.object(student).eqReflect(StudentEntity.builder()
-            .id(2L).userName("my.name").env("test_env")
-            .address("address").bonusPoints(34L)
-            .build(), EqMode.IGNORE_DEFAULTS);
+        want.object(student).eqReflect(new StudentEntity()
+                .setId(2L).setUserName("my.name").setEnv("test_env")
+                .setAddress("address").setBonusPoints(34L)
+            , EqMode.IGNORE_DEFAULTS);
         // updateById操作
         new StudentEntity().setId(2L).setUserName("test3").setAddress("address2")
             .updateById();
