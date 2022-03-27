@@ -8,14 +8,13 @@ import cn.org.atool.fluent.mybatis.functions.TableSupplier;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings({"unchecked"})
 public abstract class BaseEntity implements IEntity {
     /**
      * 归属表, 在需要动态判断entity归属表场景下使用
      * 默认无需设置
      */
     @NotField
-    @Deprecated
     private transient TableSupplier supplier;
 
     @Override
