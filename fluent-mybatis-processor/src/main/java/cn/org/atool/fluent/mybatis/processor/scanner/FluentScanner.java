@@ -3,7 +3,6 @@ package cn.org.atool.fluent.mybatis.processor.scanner;
 import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
-import cn.org.atool.fluent.mybatis.processor.FluentMybatisProcessor;
 import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
 import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
@@ -14,11 +13,13 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.*;
 import javax.lang.model.util.ElementScanner8;
+import javax.tools.Diagnostic;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Long;
 import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_DEFAULTS;
@@ -31,14 +32,14 @@ import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR
  */
 @SuppressWarnings({"unchecked"})
 public class FluentScanner extends ElementScanner8<Void, Void> {
-    final Consumer<String> logger;
-
     @Getter
     private final FluentEntity fluent;
 
-    public FluentScanner(Consumer<String> logger) {
+    private final Supplier<Messager> messager;
+
+    public FluentScanner(Supplier<Messager> messager) {
         super();
-        this.logger = logger;
+        this.messager = messager;
         this.fluent = new FluentEntity();
     }
 
@@ -46,12 +47,12 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
     public Void visitType(TypeElement entity, Void aVoid) {
         FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
         if (fluentMybatis == null) {
-            FluentMybatisProcessor.error("Error in: " + entity.getQualifiedName().toString());
+            messager.get().printMessage(Diagnostic.Kind.ERROR, "Error in: " + entity.getQualifiedName().toString());
         } else {
             ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
             this.fluent.setClassName(className.packageName(), className.simpleName());
-            String defaults = ClassAttrParser.getClassAttr(entity, ATTR_DEFAULTS, IDefaultSetter.class);
-            String superMapper = ClassAttrParser.getClassAttr(entity, ATTR_SUPER_MAPPER, IMapper.class);
+            String defaults = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_DEFAULTS, IDefaultSetter.class);
+            String superMapper = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_SUPER_MAPPER, IMapper.class);
             this.fluent.setFluentMyBatis(fluentMybatis, defaults, superMapper);
         }
         return super.visitType(entity, aVoid);

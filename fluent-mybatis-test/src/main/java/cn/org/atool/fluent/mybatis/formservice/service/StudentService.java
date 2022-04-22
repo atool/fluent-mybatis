@@ -6,15 +6,19 @@ import cn.org.atool.fluent.mybatis.formservice.model.*;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SuppressWarnings("all")
-@FormService(entity = StudentEntity.class)
+@FormService(entity = StudentEntity.class, proxy = false)
 public interface StudentService {
     /**
      * 保存单个学生信息
      */
+    @Transactional(label = {"a", "b"})
     Student saveStudent(Student student);
 
     /**
@@ -38,6 +42,7 @@ public interface StudentService {
 
     Student findStudent(StudentQuery student);
 
+    @Cached(key = "#args[0].userName", cacheType = CacheType.LOCAL)
     long countStudentBy(StudentQuery student);
 
     List<Student> listStudentBy(StudentQuery student);

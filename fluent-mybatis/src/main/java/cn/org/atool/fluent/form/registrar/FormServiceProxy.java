@@ -8,21 +8,15 @@ import cn.org.atool.fluent.form.annotation.FormMethod;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.validator.Validation;
-import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
-import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import org.springframework.cglib.proxy.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Objects;
-
-import static cn.org.atool.fluent.form.registrar.FormServiceKit.TableEntityClass;
 
 /**
  * FormServiceFactoryBean: FormService bean封装工厂
@@ -87,51 +81,10 @@ public class FormServiceProxy implements MethodInterceptor {
         try {
             MethodMeta methodMeta = this.methodAround.cache(eClass, method);
             Object[] _args = this.methodAround.before(methodMeta, args);
-            Object result = this.doInvoke(methodMeta, _args);
+            Object result = FormServiceKit.invoke(methodMeta, _args);
             return this.methodAround.after(eClass, method, args, result);
         } catch (RuntimeException e) {
             return this.methodAround.after(eClass, method, args, e);
-        }
-    }
-
-    /**
-     * 执行Form操作
-     *
-     * @param args 方法执行行为
-     * @return 执行结果
-     */
-    private Object doInvoke(MethodMeta meta, Object[] args) {
-        if (meta.isOneArgListOrArray() && !meta.isQuery()) {
-            Collection list = asCollection(args[0]);
-            if (meta.isSave()) {
-                return FormServiceKit.save(meta, list);
-            } else if (meta.isDelete()) {
-                return FormServiceKit.delete(meta, list, false);
-            } else if (meta.isLogicDelete()) {
-                return FormServiceKit.delete(meta, list, true);
-            } else {
-                return FormServiceKit.update(meta, list);
-            }
-        } else {
-            if (meta.isSave()) {
-                return FormServiceKit.save(meta, args);
-            } else if (meta.isUpdate()) {
-                return FormServiceKit.update(meta, args);
-            } else if (meta.isDelete()) {
-                return FormServiceKit.delete(meta, false, args);
-            } else if (meta.isLogicDelete()) {
-                return FormServiceKit.delete(meta, true, args);
-            } else {
-                return FormServiceKit.query(meta, args);
-            }
-        }
-    }
-
-    private Collection asCollection(Object arg) {
-        if (arg instanceof Collection) {
-            return (Collection) arg;
-        } else {
-            return Arrays.asList((Object[]) arg);
         }
     }
 
@@ -146,7 +99,7 @@ public class FormServiceProxy implements MethodInterceptor {
         if (aMethod == null) {
             return this.getEntityClass();
         }
-        Class entity = this.getEntityClass(aMethod.entity(), aMethod.table());
+        Class entity = FormServiceKit.getEntityClass(aMethod.entity(), aMethod.table());
         if (entity == null || entity == Object.class) {
             entity = this.getEntityClass();
         }
@@ -163,8 +116,8 @@ public class FormServiceProxy implements MethodInterceptor {
      */
     private Class<? extends IEntity> getEntityClass() {
         if (this.entityClass == null) {
-            FormService api = (FormService) serviceClass.getDeclaredAnnotation(FormService.class);
-            Class klass = this.getEntityClass(api.entity(), api.table());
+            FormService annotation = (FormService) serviceClass.getDeclaredAnnotation(FormService.class);
+            Class klass = FormServiceKit.getEntityClass(annotation.entity(), annotation.table());
             if (klass != Object.class) {
                 this.entityClass = klass;
             } else if (IBaseDao.class.isAssignableFrom(this.serviceClass)) {
@@ -174,47 +127,6 @@ public class FormServiceProxy implements MethodInterceptor {
             }
         }
         return this.entityClass;
-    }
-
-    /**
-     * 根据{@link FormMethod}或{@link FormService}注解上声明的entityClass和entityTable
-     * 值解析实际的EntityClass值
-     *
-     * @param entityClass Entity类
-     * @param entityTable 表名称
-     * @return 有效的Entity Class
-     */
-    private Class getEntityClass(Class entityClass, String entityTable) {
-        if (If.notBlank(entityTable)) {
-            return this.getEntityClass(entityTable);
-        } else if (Object.class.equals(entityClass)) {
-            return Object.class;
-        } else if (IEntity.class.isAssignableFrom(entityClass)) {
-            return entityClass;
-        } else {
-            throw new RuntimeException("The value of entity() of @Action(@FormService) must be a subclass of IEntity.");
-        }
-    }
-
-    /**
-     * 根据表名称获取实例类型
-     *
-     * @param table 表名称
-     * @return 实例类型
-     */
-    public Class<? extends IEntity> getEntityClass(String table) {
-        if (If.isBlank(table)) {
-            return null;
-        }
-        if (TableEntityClass.containsKey(table)) {
-            return TableEntityClass.get(table);
-        }
-        AMapping mapping = RefKit.byTable(table);
-        if (mapping == null) {
-            throw new RuntimeException("The table[" + table + "] not found.");
-        } else {
-            return mapping.entityClass();
-        }
     }
 
     private static final KeyMap<IMethodAround> instances = new KeyMap<IMethodAround>().put(NoMethodAround.class, NoMethodAround.instance);

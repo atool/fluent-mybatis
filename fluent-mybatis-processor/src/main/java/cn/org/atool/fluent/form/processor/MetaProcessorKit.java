@@ -5,6 +5,7 @@ import cn.org.atool.fluent.form.processor.scanner.FormScanner;
 import com.squareup.javapoet.JavaFile;
 
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
@@ -13,8 +14,8 @@ import java.io.IOException;
 
 @SuppressWarnings({"unchecked", "unused", "rawtypes"})
 class MetaProcessorKit {
-    public static void generate(Element element, Filer filer) throws IOException {
-        FormScanner scanner = new FormScanner();
+    public static void generate(Element element, Filer filer, Messager messager) throws IOException {
+        FormScanner scanner = new FormScanner(() -> messager);
         scanner.scan(element);
         JavaFile javaFile = new MetaKitFiler(scanner.getClassName(), scanner.getMetas()).javaFile();
         javaFile.writeTo(filer);

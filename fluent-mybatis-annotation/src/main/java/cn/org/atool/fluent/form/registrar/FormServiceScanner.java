@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.form.registrar;
 
 import cn.org.atool.fluent.form.annotation.FormService;
+import cn.org.atool.fluent.form.meta.ClassKit;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -15,6 +16,8 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import java.util.Arrays;
 import java.util.Set;
+
+import static cn.org.atool.fluent.form.meta.ClassKit.FormServiceBeanSuffix;
 
 /**
  * FormServiceScanner: FormService扫描器
@@ -67,13 +70,18 @@ public class FormServiceScanner extends ClassPathBeanDefinitionScanner {
     }
 
     private void processBeanDefinition(String aroundClass, AbstractBeanDefinition definition) {
-        String serviceClass = definition.getBeanClassName();
-        assert serviceClass != null;
-        definition.setBeanClassName(FormServiceFactoryBean);
-        ConstructorArgumentValues constructor = definition.getConstructorArgumentValues();
-        constructor.addIndexedArgumentValue(0, serviceClass);
-        constructor.addIndexedArgumentValue(1, aroundClass);
-
+        String beanClassName = definition.getBeanClassName();
+        assert beanClassName != null;
+        Class<?> beanClass = ClassKit.forName(beanClassName);
+        FormService annotation = beanClass.getAnnotation(FormService.class);
+        if (annotation.proxy()) {
+            definition.setBeanClassName(FormServiceFactoryBean);
+            ConstructorArgumentValues constructor = definition.getConstructorArgumentValues();
+            constructor.addIndexedArgumentValue(0, beanClassName);
+            constructor.addIndexedArgumentValue(1, aroundClass);
+        } else {
+            definition.setBeanClassName(beanClassName + FormServiceBeanSuffix);
+        }
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         definition.setScope(ConfigurableBeanFactory.SCOPE_SINGLETON);
     }

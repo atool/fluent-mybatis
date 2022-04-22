@@ -1,21 +1,25 @@
 package cn.org.atool.fluent.form.registrar;
 
 import cn.org.atool.fluent.common.kits.KeyMap;
+import cn.org.atool.fluent.form.annotation.FormMethod;
+import cn.org.atool.fluent.form.annotation.FormService;
+import cn.org.atool.fluent.form.meta.ClassKit;
 import cn.org.atool.fluent.form.meta.MethodArgs;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.setter.FormHelper;
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 静态方法
@@ -24,6 +28,7 @@ import java.util.Optional;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public interface FormServiceKit {
+
     /**
      * table name 和 Entity class映射定义
      */
@@ -175,7 +180,7 @@ public interface FormServiceKit {
             /* 返回List */
             List<IEntity> list = query.to().listEntity();
             return FormHelper.entities2result(list, meta.returnParameterType);
-        } else if (meta.returnType == boolean.class || meta.returnType == Boolean.class) {
+        } else if (meta.isReturnBool()) {
             /* exists操作 */
             ((BaseQuery) query).select("1").limit(1);
             Optional ret = query.to().findOneMap();
@@ -211,6 +216,129 @@ public interface FormServiceKit {
                 total += c;
             }
             return returnUpdateResult(meta, total);
+        }
+    }
+
+    /**
+     * 根据{@link FormMethod}或{@link FormService}注解上声明的entityClass和entityTable
+     * 值解析实际的EntityClass值
+     *
+     * @param className   Entity类
+     * @param entityTable 表名称
+     * @return 有效的Entity Class
+     */
+    static Class getEntityClass(String className, String entityTable) {
+        if (If.notBlank(entityTable)) {
+            return FormServiceKit.getEntityClass(entityTable);
+        } else if (Objects.equals(Object.class.getName(), className)) {
+            return Object.class;
+        } else {
+            Class entityClass = ClassKit.forName(className);
+            if (IEntity.class.isAssignableFrom(entityClass)) {
+                return entityClass;
+            } else {
+                throw new RuntimeException("The value of entity() of @FormService must be a subclass of IEntity.");
+            }
+        }
+    }
+
+    /**
+     * 根据{@link FormMethod}或{@link FormService}注解上声明的entityClass和entityTable
+     * 值解析实际的EntityClass值
+     *
+     * @param entityClass Entity类
+     * @param entityTable 表名称
+     * @return 有效的Entity Class
+     */
+    static Class getEntityClass(Class entityClass, String entityTable) {
+        if (If.notBlank(entityTable)) {
+            return FormServiceKit.getEntityClass(entityTable);
+        } else if (Object.class.equals(entityClass)) {
+            return Object.class;
+        } else if (IEntity.class.isAssignableFrom(entityClass)) {
+            return entityClass;
+        } else {
+            throw new RuntimeException("The value of entity() of @FormService must be a subclass of IEntity.");
+        }
+    }
+
+    /**
+     * 根据表名称获取实例类型
+     *
+     * @param table 表名称
+     * @return 实例类型
+     */
+    static Class<? extends IEntity> getEntityClass(String table) {
+        if (If.isBlank(table)) {
+            return null;
+        }
+        if (TableEntityClass.containsKey(table)) {
+            return TableEntityClass.get(table);
+        }
+        AMapping mapping = RefKit.byTable(table);
+        if (mapping == null) {
+            throw new RuntimeException("The table[" + table + "] not found.");
+        } else {
+            return mapping.entityClass();
+        }
+    }
+
+    /**
+     * 执行Form操作
+     *
+     * @param args 方法执行行为
+     * @return 执行结果
+     */
+    static <T> T invoke(MethodMeta meta, Object[] args) {
+        if (meta.isOneArgListOrArray() && !meta.isQuery()) {
+            Collection list = asCollection(args[0]);
+            if (meta.isSave()) {
+                return (T) FormServiceKit.save(meta, list);
+            } else if (meta.isDelete()) {
+                return (T) FormServiceKit.delete(meta, list, false);
+            } else if (meta.isLogicDelete()) {
+                return (T) FormServiceKit.delete(meta, list, true);
+            } else {
+                return (T) FormServiceKit.update(meta, list);
+            }
+        } else {
+            if (meta.isSave()) {
+                return (T) FormServiceKit.save(meta, args);
+            } else if (meta.isUpdate()) {
+                return (T) FormServiceKit.update(meta, args);
+            } else if (meta.isDelete()) {
+                return (T) FormServiceKit.delete(meta, false, args);
+            } else if (meta.isLogicDelete()) {
+                return (T) FormServiceKit.delete(meta, true, args);
+            } else {
+                return (T) FormServiceKit.query(meta, args);
+            }
+        }
+    }
+
+    static Collection asCollection(Object arg) {
+        if (arg instanceof Collection) {
+            return (Collection) arg;
+        } else {
+            return Arrays.asList((Object[]) arg);
+        }
+    }
+
+    Map<String, MethodMeta> METHOD_CACHED = new HashMap<>();
+
+    static MethodMeta meta(Class klass, String methodName, Class... pClasses) {
+        String key = Arrays.stream(pClasses).map(Class::getName)
+            .collect(Collectors.joining(",", klass.getName() + "#" + methodName + "(", ")"));
+        if (METHOD_CACHED.containsKey(key)) {
+            return METHOD_CACHED.get(key);
+        }
+        try {
+            FormService annotation = (FormService) klass.getAnnotation(FormService.class);
+            Class entityClass = getEntityClass(annotation.entity(), annotation.table());
+            Method method = klass.getMethod(methodName, pClasses);
+            return MethodMeta.meta(entityClass, method);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("find method error:" + e.getMessage(), e);
         }
     }
 }

@@ -21,4 +21,15 @@ public @interface FormService {
      * 操作的表Entity类
      */
     Class entity() default Object.class;
+
+    /**
+     * Service描述
+     */
+    String desc() default "";
+
+    /**
+     * true: 使用代理方式加载bean
+     * false: 使用annotation processor方式生成字节码方式
+     */
+    boolean proxy() default true;
 }

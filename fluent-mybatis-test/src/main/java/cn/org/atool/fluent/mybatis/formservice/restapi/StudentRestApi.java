@@ -21,7 +21,7 @@ import static cn.org.atool.fluent.form.annotation.EntryType.Form;
 
 @SuppressWarnings("all")
 @RestController
-@FormService(table = "student")
+@FormService(table = "student", proxy = false)
 public interface StudentRestApi {
     @PostMapping(value = "/save", name = "保存学生信息")
     @FormMethod(type = MethodType.Save)

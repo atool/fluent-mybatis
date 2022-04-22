@@ -1,11 +1,10 @@
 package cn.org.atool.fluent.mybatis.processor.scanner;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,11 +24,12 @@ public class ClassAttrParser {
     /**
      * 获取@FluentMyBatis上定义的 iDao() 属性值
      *
-     * @param entity TypeElement of entity
+     * @param klass          TypeElement of entity
+     * @param annotationType 注解类型
      * @return key: @DaoInterface value值, value: @DaoInterface args值
      */
-    public static String getClassAttr(TypeElement entity, String methodName, Class defaultValue) {
-        AnnotationMirror mirror = getFluentMyBatisMirror(entity);
+    public static String getClassAttr(TypeElement klass, Class<? extends Annotation> annotationType, String methodName, Class defaultValue) {
+        AnnotationMirror mirror = getFluentMyBatisMirror(klass, annotationType);
         if (mirror == null) {
             return defaultValue.getName();
         }
@@ -47,10 +47,10 @@ public class ClassAttrParser {
         return defaultValue.getName();
     }
 
-    private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity) {
+    private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity, Class<? extends Annotation> annotationType) {
         List<? extends AnnotationMirror> annotations = entity.getAnnotationMirrors();
         for (AnnotationMirror annotation : annotations) {
-            if (annotation.getAnnotationType().toString().contains(FluentMybatis.class.getSimpleName())) {
+            if (annotation.getAnnotationType().toString().contains(annotationType.getSimpleName())) {
                 return annotation;
             }
         }
