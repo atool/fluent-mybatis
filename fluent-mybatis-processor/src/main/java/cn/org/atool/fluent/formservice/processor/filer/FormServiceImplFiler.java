@@ -47,15 +47,16 @@ public class FormServiceImplFiler {
         MethodSpec.Builder spec = MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC);
         spec.returns(ClassName.get(method.getReturnType()));
-        for (AnnotationMirror annotationMirror : method.getAnnotationMirrors()) {
-            this.addAnnotations(spec, annotationMirror);
-        }
+        method.getAnnotationMirrors().forEach(mirror -> spec.addAnnotation(this.copyAnnotation(mirror)));
+
         List<String> pNames = new ArrayList<>();
         List<String> pTypes = new ArrayList<>();
         for (VariableElement para : method.getParameters()) {
             String pName = para.getSimpleName().toString();
             TypeName pType = ClassName.get(para.asType());
-            spec.addParameter(pType, pName);
+            ParameterSpec.Builder pBuilder = ParameterSpec.builder(pType, pName);
+            para.getAnnotationMirrors().forEach(mirror -> pBuilder.addAnnotation(copyAnnotation(mirror)));
+            spec.addParameter(pBuilder.build());
             pNames.add(pName);
             pTypes.add(typeName(pType) + ".class");
         }
@@ -66,19 +67,18 @@ public class FormServiceImplFiler {
     }
 
     /**
-     * copy 接口方法上定义的注解
+     * copy 注解
      *
-     * @param mBuilder         MethodSpec.Builder
-     * @param annotationMirror 方法注解
+     * @param annotationMirror 注解
      */
-    private void addAnnotations(MethodSpec.Builder mBuilder, AnnotationMirror annotationMirror) {
+    private AnnotationSpec copyAnnotation(AnnotationMirror annotationMirror) {
         TypeName typeName = ClassName.get(annotationMirror.getAnnotationType());
         AnnotationSpec.Builder spec = AnnotationSpec.builder((ClassName) typeName);
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
             String key = entry.getKey().getSimpleName().toString();
             spec.addMember(key, "$L", entry.getValue().toString());
         }
-        mBuilder.addAnnotation(spec.build());
+        return spec.build();
     }
 
     private String typeName(TypeName type) {
