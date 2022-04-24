@@ -1,13 +1,9 @@
 package cn.org.atool.fluent.mybatis.generator.shared1.dm;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -16,12 +12,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("no_primary")
-@SuppressWarnings({"unused", "rawtypes"})
-public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class NoPrimaryDataMap extends TableDataMap<NoPrimaryDataMap> {
   @ColumnDef(
       value = "column_1",
       type = "INT"
@@ -41,25 +33,19 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
   public final transient KeyValue<NoPrimaryDataMap> alias = new KeyValue<>(this, "alias", "alias", supplier);
 
   NoPrimaryDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("no_primary", isTable);
   }
 
   NoPrimaryDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("no_primary", isTable, size);
   }
 
   /**
    * 创建NoPrimaryDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public NoPrimaryDataMap init() {
-    return this;
-  }
-
-  public NoPrimaryDataMap with(Consumer<NoPrimaryDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -79,76 +65,9 @@ public class NoPrimaryDataMap extends DataMap<NoPrimaryDataMap> {
     return new NoPrimaryDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[no_primary]数据比较
-   */
-  public NoPrimaryDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("no_primary").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[no_primary]数据比较
-   */
-  public NoPrimaryDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[no_primary]数据比较
-   */
-  public NoPrimaryDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("no_primary").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[no_primary]表数据
-   */
-  public NoPrimaryDataMap clean() {
-    IDatabase.db.cleanTable("no_primary");
-    return this;
-  }
-
-  /**
-   * 插入[no_primary]表数据
-   */
-  public NoPrimaryDataMap insert() {
-    IDatabase.db.table("no_primary").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[no_primary]表数据
-   */
-  public NoPrimaryDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public NoPrimaryDataMap table() {
-      return NoPrimaryDataMap.table();
-    }
-
-    public NoPrimaryDataMap table(int size) {
-      return  NoPrimaryDataMap.table(size);
-    }
-
-    public NoPrimaryDataMap initTable() {
-      return NoPrimaryDataMap.table().init();
-    }
-
-    public NoPrimaryDataMap initTable(int size) {
-      return  NoPrimaryDataMap.table(size).init();
-    }
-
-    public NoPrimaryDataMap entity() {
-      return NoPrimaryDataMap.entity();
-    }
-
-    public NoPrimaryDataMap entity(int size) {
-      return  NoPrimaryDataMap.entity(size);
+  public static class Factory extends BaseFactory<NoPrimaryDataMap> {
+    public Factory() {
+      super(NoPrimaryDataMap.class);
     }
   }
 }

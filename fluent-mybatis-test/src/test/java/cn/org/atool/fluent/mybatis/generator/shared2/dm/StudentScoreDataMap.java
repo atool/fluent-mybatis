@@ -1,14 +1,10 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.dm;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -17,12 +13,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("student_score")
-@SuppressWarnings({"unused", "rawtypes"})
-public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class StudentScoreDataMap extends TableDataMap<StudentScoreDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT",
@@ -102,29 +94,23 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
   public final transient KeyValue<StudentScoreDataMap> tenant = new KeyValue<>(this, "tenant", "tenant", supplier);
 
   StudentScoreDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("student_score", isTable);
   }
 
   StudentScoreDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("student_score", isTable, size);
   }
 
   /**
    * 创建StudentScoreDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public StudentScoreDataMap init() {
     this.id.autoIncrease();
     this.gmtCreated.values(new Date());
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
-    return this;
-  }
-
-  public StudentScoreDataMap with(Consumer<StudentScoreDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -144,76 +130,9 @@ public class StudentScoreDataMap extends DataMap<StudentScoreDataMap> {
     return new StudentScoreDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[student_score]数据比较
-   */
-  public StudentScoreDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("student_score").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[student_score]数据比较
-   */
-  public StudentScoreDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[student_score]数据比较
-   */
-  public StudentScoreDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("student_score").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[student_score]表数据
-   */
-  public StudentScoreDataMap clean() {
-    IDatabase.db.cleanTable("student_score");
-    return this;
-  }
-
-  /**
-   * 插入[student_score]表数据
-   */
-  public StudentScoreDataMap insert() {
-    IDatabase.db.table("student_score").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[student_score]表数据
-   */
-  public StudentScoreDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public StudentScoreDataMap table() {
-      return StudentScoreDataMap.table();
-    }
-
-    public StudentScoreDataMap table(int size) {
-      return  StudentScoreDataMap.table(size);
-    }
-
-    public StudentScoreDataMap initTable() {
-      return StudentScoreDataMap.table().init();
-    }
-
-    public StudentScoreDataMap initTable(int size) {
-      return  StudentScoreDataMap.table(size).init();
-    }
-
-    public StudentScoreDataMap entity() {
-      return StudentScoreDataMap.entity();
-    }
-
-    public StudentScoreDataMap entity(int size) {
-      return  StudentScoreDataMap.entity(size);
+  public static class Factory extends BaseFactory<StudentScoreDataMap> {
+    public Factory() {
+      super(StudentScoreDataMap.class);
     }
   }
 }

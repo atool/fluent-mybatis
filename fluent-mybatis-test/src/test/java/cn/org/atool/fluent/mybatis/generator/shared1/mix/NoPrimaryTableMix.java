@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generator.shared1.mix;
 
 import cn.org.atool.fluent.mybatis.generator.shared1.dm.NoPrimaryDataMap;
 import org.test4j.hamcrest.matcher.modes.EqMode;
+import org.test4j.module.database.datagen.BaseMix;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;
 
@@ -11,54 +12,50 @@ import org.test4j.module.spec.annotations.Step;
  * @author Powered By Test4J
  */
 @SuppressWarnings({"unused", "rawtypes", "UnusedReturnValue"})
-public class NoPrimaryTableMix implements IMix {
+public class NoPrimaryTableMix extends BaseMix<NoPrimaryTableMix, NoPrimaryDataMap> implements IMix {
+  public NoPrimaryTableMix() {
+    super("no_primary");
+  }
+
   @Step("清空表[no_primary]数据")
   public NoPrimaryTableMix cleanNoPrimaryTable() {
-    db.table("no_primary").clean();
-    return this;
+    return super.cleanTable();
   }
 
   @Step("准备表[no_primary]数据{1}")
   public NoPrimaryTableMix readyNoPrimaryTable(NoPrimaryDataMap data) {
-    db.table("no_primary").insert(data);
-    return this;
+    return super.readyTable(data);
   }
 
   @Step("验证表[no_primary]有全表数据{1}")
   public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap data, EqMode... modes) {
-    db.table("no_primary").query().eqDataMap(data, modes);
-    return this;
+    return super.checkTable(data, modes);
   }
 
   @Step("验证表[no_primary]有符合条件{1}的数据{2}")
   public NoPrimaryTableMix checkNoPrimaryTable(String where, NoPrimaryDataMap data,
       EqMode... modes) {
-    db.table("no_primary").queryWhere(where).eqDataMap(data, modes);
-    return this;
+    return super.checkTable(where, data, modes);
   }
 
   @Step("验证表[no_primary]有符合条件{1}的数据{2}")
   public NoPrimaryTableMix checkNoPrimaryTable(NoPrimaryDataMap where, NoPrimaryDataMap data,
       EqMode... modes) {
-    db.table("no_primary").queryWhere(where).eqDataMap(data, modes);
-    return this;
+    return super.checkTable(where, data, modes);
   }
 
   @Step("验证表[no_primary]有{1}条符合条件{2}的数据")
   public NoPrimaryTableMix countNoPrimaryTable(int count, NoPrimaryDataMap where) {
-    db.table("no_primary").queryWhere(where).sizeEq(count);
-    return this;
+    return super.countTable(count, where);
   }
 
   @Step("验证表[no_primary]有{1}条符合条件{2}的数据")
   public NoPrimaryTableMix countNoPrimaryTable(int count, String where) {
-    db.table("no_primary").queryWhere(where).sizeEq(count);
-    return this;
+    return super.countTable(count, where);
   }
 
   @Step("验证表[no_primary]有{1}条数据")
   public NoPrimaryTableMix countNoPrimaryTable(int count) {
-    db.table("no_primary").query().sizeEq(count);
-    return this;
+    return super.countTable(count);
   }
 }

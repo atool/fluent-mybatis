@@ -1,14 +1,10 @@
 package cn.org.atool.fluent.mybatis.generator.shared3.dm;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -17,12 +13,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("t_member")
-@SuppressWarnings({"unused", "rawtypes"})
-public class MemberDataMap extends DataMap<MemberDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class MemberDataMap extends TableDataMap<MemberDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT UNSIGNED",
@@ -77,28 +69,22 @@ public class MemberDataMap extends DataMap<MemberDataMap> {
   public final transient KeyValue<MemberDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
 
   MemberDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("t_member", isTable);
   }
 
   MemberDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("t_member", isTable, size);
   }
 
   /**
    * 创建MemberDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public MemberDataMap init() {
     this.id.autoIncrease();
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
-    return this;
-  }
-
-  public MemberDataMap with(Consumer<MemberDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -118,76 +104,9 @@ public class MemberDataMap extends DataMap<MemberDataMap> {
     return new MemberDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[t_member]数据比较
-   */
-  public MemberDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("t_member").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[t_member]数据比较
-   */
-  public MemberDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("t_member").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[t_member]数据比较
-   */
-  public MemberDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("t_member").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[t_member]表数据
-   */
-  public MemberDataMap clean() {
-    IDatabase.db.cleanTable("t_member");
-    return this;
-  }
-
-  /**
-   * 插入[t_member]表数据
-   */
-  public MemberDataMap insert() {
-    IDatabase.db.table("t_member").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[t_member]表数据
-   */
-  public MemberDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public MemberDataMap table() {
-      return MemberDataMap.table();
-    }
-
-    public MemberDataMap table(int size) {
-      return  MemberDataMap.table(size);
-    }
-
-    public MemberDataMap initTable() {
-      return MemberDataMap.table().init();
-    }
-
-    public MemberDataMap initTable(int size) {
-      return  MemberDataMap.table(size).init();
-    }
-
-    public MemberDataMap entity() {
-      return MemberDataMap.entity();
-    }
-
-    public MemberDataMap entity(int size) {
-      return  MemberDataMap.entity(size);
+  public static class Factory extends BaseFactory<MemberDataMap> {
+    public Factory() {
+      super(MemberDataMap.class);
     }
   }
 }

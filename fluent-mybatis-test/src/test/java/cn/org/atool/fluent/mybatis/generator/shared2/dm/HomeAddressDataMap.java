@@ -1,14 +1,10 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.dm;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -17,12 +13,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("home_address")
-@SuppressWarnings({"unused", "rawtypes"})
-public class HomeAddressDataMap extends DataMap<HomeAddressDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class HomeAddressDataMap extends TableDataMap<HomeAddressDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT UNSIGNED",
@@ -97,29 +89,23 @@ public class HomeAddressDataMap extends DataMap<HomeAddressDataMap> {
   public final transient KeyValue<HomeAddressDataMap> tenant = new KeyValue<>(this, "tenant", "tenant", supplier);
 
   HomeAddressDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("home_address", isTable);
   }
 
   HomeAddressDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("home_address", isTable, size);
   }
 
   /**
    * 创建HomeAddressDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public HomeAddressDataMap init() {
     this.id.autoIncrease();
     this.gmtCreated.values(new Date());
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
-    return this;
-  }
-
-  public HomeAddressDataMap with(Consumer<HomeAddressDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -139,76 +125,9 @@ public class HomeAddressDataMap extends DataMap<HomeAddressDataMap> {
     return new HomeAddressDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[home_address]数据比较
-   */
-  public HomeAddressDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("home_address").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[home_address]数据比较
-   */
-  public HomeAddressDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("home_address").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[home_address]数据比较
-   */
-  public HomeAddressDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("home_address").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[home_address]表数据
-   */
-  public HomeAddressDataMap clean() {
-    IDatabase.db.cleanTable("home_address");
-    return this;
-  }
-
-  /**
-   * 插入[home_address]表数据
-   */
-  public HomeAddressDataMap insert() {
-    IDatabase.db.table("home_address").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[home_address]表数据
-   */
-  public HomeAddressDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public HomeAddressDataMap table() {
-      return HomeAddressDataMap.table();
-    }
-
-    public HomeAddressDataMap table(int size) {
-      return  HomeAddressDataMap.table(size);
-    }
-
-    public HomeAddressDataMap initTable() {
-      return HomeAddressDataMap.table().init();
-    }
-
-    public HomeAddressDataMap initTable(int size) {
-      return  HomeAddressDataMap.table(size).init();
-    }
-
-    public HomeAddressDataMap entity() {
-      return HomeAddressDataMap.entity();
-    }
-
-    public HomeAddressDataMap entity(int size) {
-      return  HomeAddressDataMap.entity(size);
+  public static class Factory extends BaseFactory<HomeAddressDataMap> {
+    public Factory() {
+      super(HomeAddressDataMap.class);
     }
   }
 }

@@ -1,14 +1,10 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.dm;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -17,12 +13,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("student")
-@SuppressWarnings({"unused", "rawtypes"})
-public class StudentDataMap extends DataMap<StudentDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class StudentDataMap extends TableDataMap<StudentDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT UNSIGNED",
@@ -152,29 +144,23 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
   public final transient KeyValue<StudentDataMap> version = new KeyValue<>(this, "version", "version", supplier);
 
   StudentDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("student", isTable);
   }
 
   StudentDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("student", isTable, size);
   }
 
   /**
    * 创建StudentDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public StudentDataMap init() {
     this.id.autoIncrease();
     this.gmtCreated.values(new Date());
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
-    return this;
-  }
-
-  public StudentDataMap with(Consumer<StudentDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -194,76 +180,9 @@ public class StudentDataMap extends DataMap<StudentDataMap> {
     return new StudentDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[student]数据比较
-   */
-  public StudentDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("student").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[student]数据比较
-   */
-  public StudentDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("student").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[student]数据比较
-   */
-  public StudentDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("student").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[student]表数据
-   */
-  public StudentDataMap clean() {
-    IDatabase.db.cleanTable("student");
-    return this;
-  }
-
-  /**
-   * 插入[student]表数据
-   */
-  public StudentDataMap insert() {
-    IDatabase.db.table("student").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[student]表数据
-   */
-  public StudentDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public StudentDataMap table() {
-      return StudentDataMap.table();
-    }
-
-    public StudentDataMap table(int size) {
-      return  StudentDataMap.table(size);
-    }
-
-    public StudentDataMap initTable() {
-      return StudentDataMap.table().init();
-    }
-
-    public StudentDataMap initTable(int size) {
-      return  StudentDataMap.table(size).init();
-    }
-
-    public StudentDataMap entity() {
-      return StudentDataMap.entity();
-    }
-
-    public StudentDataMap entity(int size) {
-      return  StudentDataMap.entity(size);
+  public static class Factory extends BaseFactory<StudentDataMap> {
+    public Factory() {
+      super(StudentDataMap.class);
     }
   }
 }

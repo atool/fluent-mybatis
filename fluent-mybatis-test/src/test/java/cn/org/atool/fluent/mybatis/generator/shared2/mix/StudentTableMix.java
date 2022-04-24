@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.generator.shared2.mix;
 
 import cn.org.atool.fluent.mybatis.generator.shared2.dm.StudentDataMap;
 import org.test4j.hamcrest.matcher.modes.EqMode;
+import org.test4j.module.database.datagen.BaseMix;
 import org.test4j.module.spec.IMix;
 import org.test4j.module.spec.annotations.Step;
 
@@ -11,53 +12,49 @@ import org.test4j.module.spec.annotations.Step;
  * @author Powered By Test4J
  */
 @SuppressWarnings({"unused", "rawtypes", "UnusedReturnValue"})
-public class StudentTableMix implements IMix {
+public class StudentTableMix extends BaseMix<StudentTableMix, StudentDataMap> implements IMix {
+  public StudentTableMix() {
+    super("student");
+  }
+
   @Step("清空表[student]数据")
   public StudentTableMix cleanStudentTable() {
-    db.table("student").clean();
-    return this;
+    return super.cleanTable();
   }
 
   @Step("准备表[student]数据{1}")
   public StudentTableMix readyStudentTable(StudentDataMap data) {
-    db.table("student").insert(data);
-    return this;
+    return super.readyTable(data);
   }
 
   @Step("验证表[student]有全表数据{1}")
   public StudentTableMix checkStudentTable(StudentDataMap data, EqMode... modes) {
-    db.table("student").query().eqDataMap(data, modes);
-    return this;
+    return super.checkTable(data, modes);
   }
 
   @Step("验证表[student]有符合条件{1}的数据{2}")
   public StudentTableMix checkStudentTable(String where, StudentDataMap data, EqMode... modes) {
-    db.table("student").queryWhere(where).eqDataMap(data, modes);
-    return this;
+    return super.checkTable(where, data, modes);
   }
 
   @Step("验证表[student]有符合条件{1}的数据{2}")
   public StudentTableMix checkStudentTable(StudentDataMap where, StudentDataMap data,
       EqMode... modes) {
-    db.table("student").queryWhere(where).eqDataMap(data, modes);
-    return this;
+    return super.checkTable(where, data, modes);
   }
 
   @Step("验证表[student]有{1}条符合条件{2}的数据")
   public StudentTableMix countStudentTable(int count, StudentDataMap where) {
-    db.table("student").queryWhere(where).sizeEq(count);
-    return this;
+    return super.countTable(count, where);
   }
 
   @Step("验证表[student]有{1}条符合条件{2}的数据")
   public StudentTableMix countStudentTable(int count, String where) {
-    db.table("student").queryWhere(where).sizeEq(count);
-    return this;
+    return super.countTable(count, where);
   }
 
   @Step("验证表[student]有{1}条数据")
   public StudentTableMix countStudentTable(int count) {
-    db.table("student").query().sizeEq(count);
-    return this;
+    return super.countTable(count);
   }
 }

@@ -1,14 +1,10 @@
 package cn.org.atool.fluent.mybatis.generator.shared3.dm;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -17,12 +13,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("t_member_love")
-@SuppressWarnings({"unused", "rawtypes"})
-public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class MemberLoveDataMap extends TableDataMap<MemberLoveDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT UNSIGNED",
@@ -72,28 +64,22 @@ public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
   public final transient KeyValue<MemberLoveDataMap> status = new KeyValue<>(this, "status", "status", supplier);
 
   MemberLoveDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("t_member_love", isTable);
   }
 
   MemberLoveDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("t_member_love", isTable, size);
   }
 
   /**
    * 创建MemberLoveDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public MemberLoveDataMap init() {
     this.id.autoIncrease();
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
-    return this;
-  }
-
-  public MemberLoveDataMap with(Consumer<MemberLoveDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -113,76 +99,9 @@ public class MemberLoveDataMap extends DataMap<MemberLoveDataMap> {
     return new MemberLoveDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[t_member_love]数据比较
-   */
-  public MemberLoveDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("t_member_love").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[t_member_love]数据比较
-   */
-  public MemberLoveDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("t_member_love").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[t_member_love]数据比较
-   */
-  public MemberLoveDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("t_member_love").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[t_member_love]表数据
-   */
-  public MemberLoveDataMap clean() {
-    IDatabase.db.cleanTable("t_member_love");
-    return this;
-  }
-
-  /**
-   * 插入[t_member_love]表数据
-   */
-  public MemberLoveDataMap insert() {
-    IDatabase.db.table("t_member_love").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[t_member_love]表数据
-   */
-  public MemberLoveDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public MemberLoveDataMap table() {
-      return MemberLoveDataMap.table();
-    }
-
-    public MemberLoveDataMap table(int size) {
-      return  MemberLoveDataMap.table(size);
-    }
-
-    public MemberLoveDataMap initTable() {
-      return MemberLoveDataMap.table().init();
-    }
-
-    public MemberLoveDataMap initTable(int size) {
-      return  MemberLoveDataMap.table(size).init();
-    }
-
-    public MemberLoveDataMap entity() {
-      return MemberLoveDataMap.entity();
-    }
-
-    public MemberLoveDataMap entity(int size) {
-      return  MemberLoveDataMap.entity(size);
+  public static class Factory extends BaseFactory<MemberLoveDataMap> {
+    public Factory() {
+      super(MemberLoveDataMap.class);
     }
   }
 }

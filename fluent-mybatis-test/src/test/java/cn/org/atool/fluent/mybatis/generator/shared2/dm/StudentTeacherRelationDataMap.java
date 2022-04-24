@@ -1,14 +1,10 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.dm;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -17,12 +13,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("student_teacher_relation")
-@SuppressWarnings({"unused", "rawtypes"})
-public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelationDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class StudentTeacherRelationDataMap extends TableDataMap<StudentTeacherRelationDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT",
@@ -72,29 +64,23 @@ public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelatio
   public final transient KeyValue<StudentTeacherRelationDataMap> teacherId = new KeyValue<>(this, "teacher_id", "teacherId", supplier);
 
   StudentTeacherRelationDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("student_teacher_relation", isTable);
   }
 
   StudentTeacherRelationDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("student_teacher_relation", isTable, size);
   }
 
   /**
    * 创建StudentTeacherRelationDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public StudentTeacherRelationDataMap init() {
     this.id.autoIncrease();
     this.gmtCreated.values(new Date());
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
-    return this;
-  }
-
-  public StudentTeacherRelationDataMap with(Consumer<StudentTeacherRelationDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -114,76 +100,9 @@ public class StudentTeacherRelationDataMap extends DataMap<StudentTeacherRelatio
     return new StudentTeacherRelationDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[student_teacher_relation]数据比较
-   */
-  public StudentTeacherRelationDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("student_teacher_relation").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[student_teacher_relation]数据比较
-   */
-  public StudentTeacherRelationDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("student_teacher_relation").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[student_teacher_relation]数据比较
-   */
-  public StudentTeacherRelationDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("student_teacher_relation").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[student_teacher_relation]表数据
-   */
-  public StudentTeacherRelationDataMap clean() {
-    IDatabase.db.cleanTable("student_teacher_relation");
-    return this;
-  }
-
-  /**
-   * 插入[student_teacher_relation]表数据
-   */
-  public StudentTeacherRelationDataMap insert() {
-    IDatabase.db.table("student_teacher_relation").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[student_teacher_relation]表数据
-   */
-  public StudentTeacherRelationDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public StudentTeacherRelationDataMap table() {
-      return StudentTeacherRelationDataMap.table();
-    }
-
-    public StudentTeacherRelationDataMap table(int size) {
-      return  StudentTeacherRelationDataMap.table(size);
-    }
-
-    public StudentTeacherRelationDataMap initTable() {
-      return StudentTeacherRelationDataMap.table().init();
-    }
-
-    public StudentTeacherRelationDataMap initTable(int size) {
-      return  StudentTeacherRelationDataMap.table(size).init();
-    }
-
-    public StudentTeacherRelationDataMap entity() {
-      return StudentTeacherRelationDataMap.entity();
-    }
-
-    public StudentTeacherRelationDataMap entity(int size) {
-      return  StudentTeacherRelationDataMap.entity(size);
+  public static class Factory extends BaseFactory<StudentTeacherRelationDataMap> {
+    public Factory() {
+      super(StudentTeacherRelationDataMap.class);
     }
   }
 }

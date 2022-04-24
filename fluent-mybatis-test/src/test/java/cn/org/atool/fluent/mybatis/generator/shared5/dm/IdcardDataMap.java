@@ -1,13 +1,9 @@
 package cn.org.atool.fluent.mybatis.generator.shared5.dm;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.test4j.hamcrest.matcher.modes.EqMode;
-import org.test4j.module.database.IDatabase;
 import org.test4j.module.database.annotations.ColumnDef;
 import org.test4j.module.database.annotations.ScriptTable;
-import org.test4j.tools.datagen.DataMap;
-import org.test4j.tools.datagen.IDataMap;
+import org.test4j.module.database.datagen.BaseFactory;
+import org.test4j.module.database.datagen.TableDataMap;
 import org.test4j.tools.datagen.KeyValue;
 
 /**
@@ -16,12 +12,8 @@ import org.test4j.tools.datagen.KeyValue;
  * @author Powered By Test4J
  */
 @ScriptTable("idcard")
-@SuppressWarnings({"unused", "rawtypes"})
-public class IdcardDataMap extends DataMap<IdcardDataMap> {
-  private boolean isTable;
-
-  private final Supplier<Boolean> supplier = () -> this.isTable;
-
+@SuppressWarnings({"unused"})
+public class IdcardDataMap extends TableDataMap<IdcardDataMap> {
   @ColumnDef(
       value = "id",
       type = "BIGINT UNSIGNED",
@@ -52,25 +44,19 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
   public final transient KeyValue<IdcardDataMap> version = new KeyValue<>(this, "version", "version", supplier);
 
   IdcardDataMap(boolean isTable) {
-    super();
-    this.isTable = isTable;
+    super("idcard", isTable);
   }
 
   IdcardDataMap(boolean isTable, int size) {
-    super(size);
-    this.isTable = isTable;
+    super("idcard", isTable, size);
   }
 
   /**
    * 创建IdcardDataMap
    * 初始化主键和gmtCreate, gmtModified, isDeleted等特殊值
    */
+  @Override
   public IdcardDataMap init() {
-    return this;
-  }
-
-  public IdcardDataMap with(Consumer<IdcardDataMap> init) {
-    init.accept(this);
     return this;
   }
 
@@ -90,76 +76,9 @@ public class IdcardDataMap extends DataMap<IdcardDataMap> {
     return new IdcardDataMap(false, size);
   }
 
-  /**
-   * DataMap数据和表[idcard]数据比较
-   */
-  public IdcardDataMap eqTable(EqMode... modes) {
-    IDatabase.db.table("idcard").query().eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[idcard]数据比较
-   */
-  public IdcardDataMap eqQuery(String query, EqMode... modes) {
-    IDatabase.db.table("idcard").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * DataMap数据和表[idcard]数据比较
-   */
-  public IdcardDataMap eqQuery(IDataMap query, EqMode... modes) {
-    IDatabase.db.table("idcard").queryWhere(query).eqDataMap(this, modes);
-    return this;
-  }
-
-  /**
-   * 清空[idcard]表数据
-   */
-  public IdcardDataMap clean() {
-    IDatabase.db.cleanTable("idcard");
-    return this;
-  }
-
-  /**
-   * 插入[idcard]表数据
-   */
-  public IdcardDataMap insert() {
-    IDatabase.db.table("idcard").insert(this);
-    return this;
-  }
-
-  /**
-   * 先清空, 再插入[idcard]表数据
-   */
-  public IdcardDataMap cleanAndInsert() {
-    return this.clean().insert();
-  }
-
-  public static class Factory {
-    public IdcardDataMap table() {
-      return IdcardDataMap.table();
-    }
-
-    public IdcardDataMap table(int size) {
-      return  IdcardDataMap.table(size);
-    }
-
-    public IdcardDataMap initTable() {
-      return IdcardDataMap.table().init();
-    }
-
-    public IdcardDataMap initTable(int size) {
-      return  IdcardDataMap.table(size).init();
-    }
-
-    public IdcardDataMap entity() {
-      return IdcardDataMap.entity();
-    }
-
-    public IdcardDataMap entity(int size) {
-      return  IdcardDataMap.entity(size);
+  public static class Factory extends BaseFactory<IdcardDataMap> {
+    public Factory() {
+      super(IdcardDataMap.class);
     }
   }
 }
