@@ -46,10 +46,7 @@ public class SpringConfig {
         /*      new ClassPathResource("mapper/xml2.xml")
         /* );
         */
-        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
-        configuration.setLazyLoadingEnabled(true);
-        configuration.setMapUnderscoreToCamelCase(true);
-        bean.setConfiguration(configuration);
+        MapperFactory.setMapUnderscoreToCamelCase(bean);
         return bean;
     }
 

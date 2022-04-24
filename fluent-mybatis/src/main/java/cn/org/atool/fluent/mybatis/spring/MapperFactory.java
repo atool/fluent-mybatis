@@ -11,7 +11,9 @@ import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -117,5 +119,17 @@ public class MapperFactory implements IMapperFactory {
     public MapperFactory initializer(IExecutor initializer) {
         this.initializers.add(initializer);
         return this;
+    }
+
+    /**
+     * 设置驼峰转换
+     *
+     * @param sqlSessionFactoryBean SqlSessionFactoryBean
+     */
+    public static void setMapUnderscoreToCamelCase(SqlSessionFactoryBean sqlSessionFactoryBean) {
+        Configuration configuration = new Configuration();
+        configuration.setLazyLoadingEnabled(true);
+        configuration.setMapUnderscoreToCamelCase(true);
+        sqlSessionFactoryBean.setConfiguration(configuration);
     }
 }
