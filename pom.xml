@@ -9,7 +9,7 @@
         <version>1.0.4</version>
     </parent>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.9.6</version>
+    <version>1.9.7</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -25,8 +25,8 @@
 
         <!-- test jar-->
         <fluent-assert.version>1.0.6</fluent-assert.version>
-        <fluent-mock.version>1.2.2</fluent-mock.version>
-        <fluent-dbtest.version>1.0.10</fluent-dbtest.version>
+        <fluent-mock.version>1.2.4</fluent-mock.version>
+        <fluent-dbtest.version>1.1.1</fluent-dbtest.version>
         <test4j-junit5.version>2.7.12</test4j-junit5.version>
     </properties>
     <modules>

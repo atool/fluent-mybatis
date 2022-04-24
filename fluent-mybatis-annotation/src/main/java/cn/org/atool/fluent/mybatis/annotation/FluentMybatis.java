@@ -79,4 +79,9 @@ public @interface FluentMybatis {
      * 编译是, 是否生成BaseDao类
      */
     boolean useDao() default true;
+
+    /**
+     * 表描述
+     */
+    String desc() default "";
 }

@@ -5,14 +5,14 @@
     <parent>
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
-        <version>1.9.6</version>
+        <version>1.9.7</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fluent-mybatis-processor</artifactId>
     <properties>
-        <fluent-generator.version>1.3.16</fluent-generator.version>
+        <fluent-generator.version>1.3.17</fluent-generator.version>
         <mysql.version>8.0.20</mysql.version>
         <skipTests>true</skipTests>
     </properties>
