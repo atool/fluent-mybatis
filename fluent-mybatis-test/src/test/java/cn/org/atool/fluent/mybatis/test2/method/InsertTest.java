@@ -25,7 +25,7 @@ public class InsertTest extends BaseTest {
 
     @Test
     public void testInsert() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         StudentEntity student = new StudentEntity()
             .setAge(23)
             .setUserName("tom mike");
@@ -51,7 +51,7 @@ public class InsertTest extends BaseTest {
 
     @Test
     public void testInsert_NoAutoId() {
-        db.table(ATM.table.noAutoId).clean();
+        ATM.dataMap.noAutoId.cleanTable();
         idMapper.insertWithPk(new NoAutoIdEntity()
             .setId("test-id-1")
             .setColumn1("test")
@@ -79,7 +79,7 @@ public class InsertTest extends BaseTest {
 
     @Test
     public void test_insert_noPrimary() {
-        db.table(ATM.table.noPrimary).clean();
+        ATM.dataMap.noPrimary.cleanTable();
         noPrimaryMapper.insert(new NoPrimaryEntity()
             .setColumn1(23)
             .setColumn2("test")

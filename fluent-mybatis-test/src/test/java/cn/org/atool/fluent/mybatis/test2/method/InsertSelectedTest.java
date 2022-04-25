@@ -19,7 +19,7 @@ public class InsertSelectedTest extends BaseTest {
 
     @Test
     void testInsert() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         StudentEntity student = new StudentEntity()
             .setAge(23)
             .setUserName("#{G_commodityCodeSub}");
@@ -36,7 +36,7 @@ public class InsertSelectedTest extends BaseTest {
 
     @Test
     void testInsert_withId() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         StudentEntity student = new StudentEntity()
             .setUserName("${G_commodityCodeSub}")
             .setId(100L)

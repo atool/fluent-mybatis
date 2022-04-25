@@ -13,7 +13,7 @@ public class InsertWithPkTest extends BaseTest {
 
     @Test
     public void testInsertWithPk() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         StudentEntity student = new StudentEntity()
             .setId(34L)
             .setUserName("user name")

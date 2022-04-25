@@ -24,12 +24,11 @@ public class InsertBatchTest extends BaseTest {
             new StudentEntity().setUserName("${G_commodityCodeSub}").setAge(23).setTenant(0L),
             new StudentEntity().setUserName("#{G_commodityCodeSub}").setAge(24).setTenant(0L));
         mapper.insertBatch(list);
-        db.table(ATM.table.student).count().eq(2);
-        db.table(ATM.table.student).query().print()
-            .eqDataMap(ATM.dataMap.student.table(2)
-                .age.values(23, 24)
-                .userName.values("${G_commodityCodeSub}", "#{G_commodityCodeSub}")
-            );
+        ATM.dataMap.student.countEq(2);
+        ATM.dataMap.student.table(2)
+            .age.values(23, 24)
+            .userName.values("${G_commodityCodeSub}", "#{G_commodityCodeSub}")
+            .eqTable();
         want.number(list.get(0).getId()).notNull();
         want.number(list.get(1).getId()).notNull();
         db.sqlList().wantFirstSql().eq("" +
@@ -42,12 +41,12 @@ public class InsertBatchTest extends BaseTest {
 
     @Test
     public void testInsertBatch_WithId() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         List<StudentEntity> list = list(
             new StudentEntity().setId(23L).setUserName("name1").setAge(23).setTenant(0L),
             new StudentEntity().setId(24L).setUserName("name2").setAge(24).setTenant(0L));
         mapper.insertBatchWithPk(list);
-        db.table(ATM.table.student).count().eq(2);
+        ATM.dataMap.student.countEq(2);
         ATM.dataMap.student.table(2)
             .age.values(23, 24)
             .userName.values("name1", "name2")
@@ -59,12 +58,12 @@ public class InsertBatchTest extends BaseTest {
     @DisplayName("部分id有值, 插入失败")
     @Test
     public void testInsertBatch() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         List<StudentEntity> list = list(
             new StudentEntity().setUserName("name1").setAge(23).setId(101L).setTenant(0L),
             new StudentEntity().setUserName("name2").setAge(24).setTenant(0L));
         want.exception(() -> mapper.insertBatch(list), FluentMybatisException.class, MyBatisSystemException.class)
             .contains("The pk of insert entity must be null");
-        db.table(ATM.table.student).count().eq(0);
+        ATM.dataMap.student.countEq(0);
     }
 }
