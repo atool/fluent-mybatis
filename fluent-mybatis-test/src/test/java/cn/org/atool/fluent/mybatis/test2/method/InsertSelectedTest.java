@@ -24,10 +24,10 @@ public class InsertSelectedTest extends BaseTest {
             .setAge(23)
             .setUserName("#{G_commodityCodeSub}");
         userMapper.insert(student);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .age.values(23)
             .userName.values("#{G_commodityCodeSub}")
-        );
+            .eqTable();
         db.sqlList().wantFirstSql()
             .eq("INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `age`, `env`, `tenant`, `user_name`) " +
                 "VALUES (now(), now(), 0, ?, ?, ?, ?)");
@@ -42,11 +42,11 @@ public class InsertSelectedTest extends BaseTest {
             .setId(100L)
             .setHomeAddressId(200L);
         userMapper.insertWithPk(student);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(100)
             .userName.values("${G_commodityCodeSub}")
             .homeAddressId.values(200)
-        );
+            .eqTable();
         db.sqlList().wantFirstSql()
             .eq("INSERT INTO fluent_mybatis.student (`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `home_address_id`, `tenant`, `user_name`) " +
                 "VALUES (?, now(), now(), 0, ?, ?, ?, ?)");

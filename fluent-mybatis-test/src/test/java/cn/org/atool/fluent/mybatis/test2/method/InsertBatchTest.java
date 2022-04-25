@@ -48,11 +48,10 @@ public class InsertBatchTest extends BaseTest {
             new StudentEntity().setId(24L).setUserName("name2").setAge(24).setTenant(0L));
         mapper.insertBatchWithPk(list);
         db.table(ATM.table.student).count().eq(2);
-        db.table(ATM.table.student).query().print()
-            .eqDataMap(ATM.dataMap.student.table(2)
-                .age.values(23, 24)
-                .userName.values("name1", "name2")
-            );
+        ATM.dataMap.student.table(2)
+            .age.values(23, 24)
+            .userName.values("name1", "name2")
+            .eqTable();
         want.array(list.stream().map(StudentEntity::getId).toArray())
             .eqReflect(new long[]{23, 24});
     }

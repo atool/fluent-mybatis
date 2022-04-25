@@ -259,7 +259,7 @@ public class FormServiceTest extends BaseTest {
 
     @Test
     void createStudent() {
-        ATM.dataMap.student.table().clean();
+        ATM.dataMap.student.cleanTable();
         Student student = service.saveStudent(new Student().setUserName("test").setAge(34));
         want.object(student).eqReflect(new Student().setUserName("test").setAge(34), EqMode.IGNORE_DEFAULTS);
         want.number(student.getId()).isGt(0L);
@@ -268,12 +268,12 @@ public class FormServiceTest extends BaseTest {
 
     @Test
     void createStudents() {
-        ATM.dataMap.student.table().clean();
+        ATM.dataMap.student.cleanTable();
         service.saveStudent(list(
             new Student().setUserName("test1").setAge(34),
             new Student().setUserName("test2").setAge(44)
         ));
-        ATM.dataMap.student.table(2).eqTable();
+        ATM.dataMap.student.countEq(2);
     }
 
     @Test

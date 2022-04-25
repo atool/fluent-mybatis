@@ -14,7 +14,7 @@ public class FormApiTest extends BaseTest {
 
     @Test
     void createStudent() {
-        ATM.dataMap.student.table().clean();
+        ATM.dataMap.student.cleanTable();
         Student student = api.save(new Student().setUserName("test").setAge(34));
         want.object(student).eqReflect(new Student().setUserName("test").setAge(34), EqMode.IGNORE_DEFAULTS);
         want.number(student.getId()).isGt(0L);

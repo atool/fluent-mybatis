@@ -27,10 +27,10 @@ public class DeleteByIdTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
-        );
+            .eqTable();
     }
 
     @Test
@@ -46,11 +46,11 @@ public class DeleteByIdTest extends BaseTest {
                 "SET `gmt_modified` = now(), `is_deleted` = ? " +
                 "WHERE `id` = ?"
             , StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user2")
             .isDeleted.values(0, 1)
-        );
+            .eqTable();
     }
 
     @Test
@@ -65,10 +65,10 @@ public class DeleteByIdTest extends BaseTest {
             .eq("DELETE FROM fluent_mybatis.student " +
                 "WHERE `id` IN (?, ?)", StringMode.SameAsSpace);
         db.sqlList().wantFirstPara().eqList(24, 25);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
-        );
+            .eqTable();
     }
 
     @Test
@@ -84,19 +84,19 @@ public class DeleteByIdTest extends BaseTest {
 
     @Test
     public void test_deleteById_noPrimary() {
-        db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
+        ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
-        );
+            .cleanAndInsert();
         want.exception(() -> noPrimaryMapper.deleteById(3L), MyBatisSystemException.class, RuntimeException.class);
     }
 
     @Test
     public void test_logicDeleteById_noLogicDeletedField() {
-        db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
+        ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
-        );
+            .cleanAndInsert();
         want.exception(() -> noPrimaryMapper.logicDeleteById(3L),
                 MyBatisSystemException.class, RuntimeException.class)
             .contains("logic delete column(@LogicDelete) not found.");

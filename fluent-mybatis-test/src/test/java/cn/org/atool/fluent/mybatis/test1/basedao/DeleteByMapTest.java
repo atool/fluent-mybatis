@@ -31,7 +31,7 @@ public class DeleteByMapTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `user_name` = ?");
-        db.table(ATM.table.student).count().eq(8);
+        ATM.dataMap.student.countEq(8);
     }
 
     @Test

@@ -57,13 +57,13 @@ public class BatchCrudTest extends BaseTest {
                     "UPDATE `home_address` SET `gmt_modified` = now(), `address` = ? WHERE `id` = ?; " +
                     "DELETE FROM `home_address` WHERE `id` >= ?"
                 , StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(3)
+        ATM.dataMap.student.table(3)
             .id.values(23L, 24L, 100L)
             .userName.values("user name23", "user", "user 100")
-        );
-        db.table(ATM.table.homeAddress).query().eqDataMap(ATM.dataMap.homeAddress.table(1)
+            .eqTable();
+        ATM.dataMap.homeAddress.table(1)
             .id.values(23)
             .address.values("address")
-        );
+            .eqTable();
     }
 }

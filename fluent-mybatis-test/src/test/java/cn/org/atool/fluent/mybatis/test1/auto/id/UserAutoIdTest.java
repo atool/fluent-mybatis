@@ -16,7 +16,7 @@ public class UserAutoIdTest extends BaseTest {
 
     @Test
     void saveWithId() {
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         StudentEntity student = new StudentEntity()
             .setId(124L)
             .setUserName("fluent mybatis");
@@ -33,13 +33,13 @@ public class UserAutoIdTest extends BaseTest {
     void saveWithoutId() {
         StudentEntity student = new StudentEntity()
             .setUserName("fluent mybatis");
-        db.table(ATM.table.student).clean();
+        ATM.dataMap.student.cleanTable();
         List<Long> ids = new ArrayList<>();
         for (int index = 0; index < 10; index++) {
             int count = mapper.insert(student.setId(null));
             want.number(count).isEqualTo(1);
             ids.add(student.getId());
         }
-        db.table(ATM.table.student).query().eqByProperties("id", ids);
+        ATM.dataMap.student.query().eqByProperties("id", ids);
     }
 }

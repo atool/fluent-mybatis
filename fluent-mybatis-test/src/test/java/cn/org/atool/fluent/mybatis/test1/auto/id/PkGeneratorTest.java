@@ -18,7 +18,7 @@ public class PkGeneratorTest extends BaseTest {
 
     @Test
     void saveOrUpdate() {
-        ATM.dataMap.homeAddress.table().clean();
+        ATM.dataMap.homeAddress.cleanTable();
         // mock, 模拟雪花id为100
         mocks.SnowFlakeGenerator().uuid.thenReturn(100L);
         mapper.saveOrUpdate(new HomeAddressEntity()
@@ -34,7 +34,7 @@ public class PkGeneratorTest extends BaseTest {
 
     @Test
     void insertWithPk() {
-        ATM.dataMap.homeAddress.table().clean();
+        ATM.dataMap.homeAddress.cleanTable();
         // mock, 模拟雪花id为100
         mocks.SnowFlakeGenerator().uuid.thenReturn(100L);
 
@@ -51,7 +51,7 @@ public class PkGeneratorTest extends BaseTest {
 
     @Test
     void insertBatchWithPk() {
-        ATM.dataMap.homeAddress.table().clean();
+        ATM.dataMap.homeAddress.cleanTable();
         mocks.SnowFlakeGenerator().uuid.thenReturn(200L, 300L);
         mocks.SnowFlakeGenerator().fake.thenReturn(345L);
         mapper.insertBatchWithPk(list(

@@ -17,7 +17,7 @@ public class ListPoJosTest extends BaseTest {
 
     @Test
     public void statistics() {
-        db.table(ATM.table.studentScore).clean();
+        ATM.dataMap.studentScore.cleanTable();
         ATM.dataMap.studentScore
             .table(10).init()
             .schoolTerm.values(2001)
@@ -40,7 +40,7 @@ public class ListPoJosTest extends BaseTest {
 
     @Test
     public void statistics2() {
-        db.table(ATM.table.studentScore).clean();
+        ATM.dataMap.studentScore.cleanTable();
         ATM.dataMap.studentScore
             .table(10).init()
             .schoolTerm.values(2001)

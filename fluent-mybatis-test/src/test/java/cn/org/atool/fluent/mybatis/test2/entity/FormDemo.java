@@ -35,7 +35,7 @@ public class FormDemo extends BaseTest {
         want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(10)
             .userName.values("I am FluentMybatis")
         );
-        db.table(ATM.table.student).count().isEqualTo(11);
+        ATM.dataMap.student.countEq(11);
     }
 
     private StudentEntity newStudent() {
@@ -75,7 +75,7 @@ public class FormDemo extends BaseTest {
         want.list(list.getData()).eqDataMap(ATM.dataMap.student.entity(5)
             .userName.values("I am FluentMybatis")
         );
-        db.table(ATM.table.student).count().isEqualTo(11);
+        ATM.dataMap.student.countEq(11);
     }
 
     @Test

@@ -19,11 +19,10 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne() throws Exception {
-        db.table(ATM.table.student).clean()
-            .insert(ATM.dataMap.student.initTable(4)
-                .id.values(23, 24, 25, 26)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.dataMap.student.initTable(4)
+            .id.values(23, 24, 25, 26)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end();
         StudentEntity student = mapper.findOne(query);
@@ -45,11 +44,10 @@ public class SelectOneTest extends BaseTest {
 
     @Test
     public void test_selectOne_hasMultiple() throws Exception {
-        db.table(ATM.table.student).clean()
-            .insert(ATM.dataMap.student.initTable(4)
-                .id.values(23, 24, 25, 26)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.dataMap.student.initTable(4)
+            .id.values(23, 24, 25, 26)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end();
         want.exception(() -> mapper.findOne(query), FluentMybatisException.class)

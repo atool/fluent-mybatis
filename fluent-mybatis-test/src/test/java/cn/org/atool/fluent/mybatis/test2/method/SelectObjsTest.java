@@ -19,11 +19,10 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs() {
-        db.table(ATM.table.student).clean()
-            .insert(ATM.dataMap.student.initTable(4)
-                .id.values(23, 24, 25, 26)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.dataMap.student.initTable(4)
+            .id.values(23, 24, 25, 26)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .select.apply(Ref.Field.Student.userName)
             .end()
@@ -37,11 +36,10 @@ public class SelectObjsTest extends BaseTest {
 
     @Test
     public void test_selectObjs_hasMultiple() {
-        db.table(ATM.table.student).clean()
-            .insert(ATM.dataMap.student.initTable(4)
-                .id.values(23, 24, 25, 26)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.dataMap.student.initTable(4)
+            .id.values(23, 24, 25, 26)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .select.userName().age().end()
             .where.userName().eq("u2")

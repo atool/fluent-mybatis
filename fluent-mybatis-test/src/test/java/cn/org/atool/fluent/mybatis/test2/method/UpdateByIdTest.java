@@ -40,11 +40,11 @@ public class UpdateByIdTest extends BaseTest {
                 "`age` = ?, `user_name` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
 
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
-        );
+            .eqTable();
     }
 
     @Test
@@ -69,11 +69,11 @@ public class UpdateByIdTest extends BaseTest {
                 "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
 
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
-        );
+            .eqTable();
     }
 
     @Test
@@ -98,10 +98,10 @@ public class UpdateByIdTest extends BaseTest {
                 "SET `gmt_created` = ?, `gmt_modified` = ?, " +
                 "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "test name")
             .age.values((Object) null, 45)
-        );
+            .eqTable();
     }
 }

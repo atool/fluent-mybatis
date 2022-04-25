@@ -24,10 +24,10 @@ public class DeleteTest extends BaseTest {
         mapper.delete(query);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
-        );
+            .eqTable();
     }
 
     @Test
@@ -54,10 +54,10 @@ public class DeleteTest extends BaseTest {
         mapper.delete(query);
         db.sqlList().wantFirstSql()
             .eq("DELETE FROM fluent_mybatis.student WHERE user_name=?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(1)
+        ATM.dataMap.student.table(1)
             .id.values(23L)
             .userName.values("user1")
-        );
+            .eqTable();
     }
 
 

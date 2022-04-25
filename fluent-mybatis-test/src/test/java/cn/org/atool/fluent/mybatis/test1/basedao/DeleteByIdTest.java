@@ -21,7 +21,7 @@ public class DeleteByIdTest extends BaseTest {
         dao.deleteById(4L);
         db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student " +
             "WHERE `id` = ?");
-        db.table(ATM.table.student).count().eq(9);
+        ATM.dataMap.student.countEq(9);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class DeleteByIdTest extends BaseTest {
         dao.deleteById(4L, 5L, 6L);
         db.sqlList().wantFirstSql().eq("DELETE FROM fluent_mybatis.student " +
             "WHERE `id` IN (?, ?, ?)");
-        db.table(ATM.table.student).count().eq(7);
+        ATM.dataMap.student.countEq(7);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class DeleteByIdTest extends BaseTest {
             .eq("DELETE FROM fluent_mybatis.student " +
                     "WHERE `id` IN (?, ?, ?)"
                 , StringMode.SameAsSpace);
-        db.table(ATM.table.student).count().eq(7);
+        ATM.dataMap.student.countEq(7);
     }
 
     @Test

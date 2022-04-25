@@ -26,7 +26,7 @@ public class DeleteByEntityIdsTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM fluent_mybatis.student " +
             "WHERE `id` IN (?, ?)");
-        db.table(ATM.table.student).count().isEqualTo(8);
+        ATM.dataMap.student.countEq(8);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class DeleteByEntityIdsTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "DELETE FROM fluent_mybatis.student " +
             "WHERE `id` IN (?, ?)");
-        db.table(ATM.table.student).count().isEqualTo(8);
+        ATM.dataMap.student.countEq(8);
     }
 
     @Test

@@ -49,10 +49,10 @@ public class UpdateBatchTest extends BaseTest {
         db.sqlList().wantSql(1).eq("" +
             "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user name24")
-        );
+            .eqTable();
     }
 
     @Test
@@ -62,10 +62,10 @@ public class UpdateBatchTest extends BaseTest {
             new StudentEntity().setId(24L).setUserName("user name24"));
         batchMapper.updateStudentBatch(students);
         /* 验证SQL参数 **/
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user name24")
-        );
+            .eqTable();
     }
 
     @DisplayName("批量更新同一张表")
@@ -79,10 +79,10 @@ public class UpdateBatchTest extends BaseTest {
                 "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?"
             , StringMode.SameAsSpace);
         /* 验证SQL参数 **/
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user name24")
-        );
+            .eqTable();
         /* 返回的update值是最后一条sql **/
         want.number(count).isEqualTo(1);
     }
@@ -102,14 +102,14 @@ public class UpdateBatchTest extends BaseTest {
                     "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ? WHERE `id` = ?; " +
                     "UPDATE `home_address` SET `gmt_modified` = now(), `address` = ? WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?",
                 StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user name23", "user")
-        );
-        db.table(ATM.table.homeAddress).query().eqDataMap(ATM.dataMap.homeAddress.table(2)
+            .eqTable();
+        ATM.dataMap.homeAddress.table(2)
             .id.values(23, 24)
             .address.values("address", "address")
-        );
+            .eqTable();
         /* 返回的update值是最后一条sql **/
         want.number(count).isEqualTo(1);
     }

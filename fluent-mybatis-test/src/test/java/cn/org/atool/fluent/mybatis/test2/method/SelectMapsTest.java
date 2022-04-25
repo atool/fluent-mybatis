@@ -20,11 +20,10 @@ public class SelectMapsTest extends BaseTest {
 
     @Test
     public void test_selectMaps() throws Exception {
-        db.table(ATM.table.student).clean()
-            .insert(ATM.dataMap.student.initTable(4)
-                .id.values(23, 24, 25, 26)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.dataMap.student.initTable(4)
+            .id.values(23, 24, 25, 26)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .where.id().eq(24L).end();
         List<Map<String, Object>> users = mapper.listMaps(query);
@@ -36,11 +35,10 @@ public class SelectMapsTest extends BaseTest {
 
     @Test
     public void test_selectMaps_hasMultiple() throws Exception {
-        db.table(ATM.table.student).clean()
-            .insert(ATM.dataMap.student.initTable(4)
-                .id.values(23, 24, 25, 26)
-                .userName.values("u1", "u2", "u3", "u2")
-            );
+        ATM.dataMap.student.initTable(4)
+            .id.values(23, 24, 25, 26)
+            .userName.values("u1", "u2", "u3", "u2")
+            .cleanAndInsert();
         StudentQuery query = StudentQuery.emptyQuery()
             .where.userName().eq("u2").end();
         List<Map<String, Object>> users = mapper.listMaps(query);

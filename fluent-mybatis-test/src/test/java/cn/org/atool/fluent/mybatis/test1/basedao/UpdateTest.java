@@ -28,9 +28,8 @@ public class UpdateTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?");
-        db.table(ATM.table.student).queryWhere("id=4")
-            .eqDataMap(ATM.dataMap.student.table(1)
-                .userName.values("new_user_name")
-            );
+        ATM.dataMap.student.table(1)
+            .userName.values("new_user_name")
+            .eqQuery("id=4");
     }
 }

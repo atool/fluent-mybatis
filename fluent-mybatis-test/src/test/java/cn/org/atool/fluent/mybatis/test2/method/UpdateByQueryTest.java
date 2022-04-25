@@ -27,10 +27,10 @@ public class UpdateByQueryTest extends BaseTest {
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ? " +
             "WHERE `id` = ? AND 1=1", StringMode.SameAsSpace);
-        db.table(ATM.table.student).query().eqDataMap(ATM.dataMap.student.table(2)
+        ATM.dataMap.student.table(2)
             .id.values(23L, 24L)
             .userName.values("user1", "user name2")
-        );
+            .eqTable();
     }
 
     @Test

@@ -37,10 +37,10 @@ public class SelectByIdTest extends BaseTest {
 
     @Test
     public void test_selectById_noPrimary() throws Exception {
-        db.table(ATM.table.noPrimary).clean().insert(ATM.dataMap.noPrimary.initTable(3)
+        ATM.dataMap.noPrimary.initTable(3)
             .column1.values(1, 2, 3)
             .column2.values("c1", "c2", "c3")
-        );
+            .cleanAndInsert();
         want.exception(() -> noPrimaryMapper.findById(3L), FluentMybatisException.class)
             .contains("primary not found");
     }

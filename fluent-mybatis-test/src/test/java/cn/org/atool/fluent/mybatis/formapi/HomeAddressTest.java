@@ -14,7 +14,7 @@ public class HomeAddressTest extends BaseTest {
 
     @Test
     void test() {
-        ATM.dataMap.homeAddress.table().clean();
+        ATM.dataMap.homeAddress.cleanTable();
 
         dao.save(new HomeAddressEntity()
             .setAddress("oooyyyyxxx")

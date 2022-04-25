@@ -28,7 +28,7 @@ public class UpdateByEntityIdTest extends BaseTest {
             .eq("UPDATE fluent_mybatis.student " +
                 "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).queryWhere("id=2")
+        ATM.dataMap.student.query("id=2")
             .eqDataMap(ATM.dataMap.student.table(1)
                 .userName.values("test3")
                 .age.values(30)
@@ -50,7 +50,7 @@ public class UpdateByEntityIdTest extends BaseTest {
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).queryWhere("id in (2, 3)")
+        ATM.dataMap.student.query("id in (2, 3)")
             .eqDataMap(ATM.dataMap.student.table(2)
                 .userName.values("test2", "test3")
                 .age.values(20, 30)
@@ -70,11 +70,10 @@ public class UpdateByEntityIdTest extends BaseTest {
             "WHERE `id` = ?; " +
             "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
             "WHERE `id` = ?", StringMode.SameAsSpace);
-        db.table(ATM.table.student).queryWhere("id in (2, 3)")
-            .eqDataMap(ATM.dataMap.student.table(2)
-                .userName.values("test2", "test3")
-                .age.values(20, 30)
-            );
+        ATM.dataMap.student.table(2)
+            .userName.values("test2", "test3")
+            .age.values(20, 30)
+            .eqQuery("id in (2, 3)");
     }
 
     @Test
@@ -91,11 +90,10 @@ public class UpdateByEntityIdTest extends BaseTest {
                 "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `user_name` = ?, `age` = ? " +
                 "WHERE `is_deleted` = ? AND `env` = ? AND `id` = ?"
             , StringMode.SameAsSpace);
-        db.table(ATM.table.student).queryWhere("id = 3")
-            .eqDataMap(ATM.dataMap.student.table(1)
-                .userName.values("test2")
-                .age.values(20)
-            );
+        ATM.dataMap.student.table(1)
+            .userName.values("test2")
+            .age.values(20)
+            .eqQuery("id = 3");
         want.number(count).isEqualTo(1);
     }
 }
