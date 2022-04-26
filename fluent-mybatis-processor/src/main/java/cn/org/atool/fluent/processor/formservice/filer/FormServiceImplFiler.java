@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.formservice.processor.filer;
+package cn.org.atool.fluent.processor.formservice.filer;
 
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.registrar.FormServiceKit;

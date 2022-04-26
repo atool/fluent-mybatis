@@ -2,8 +2,8 @@ package cn.org.atool.fluent.processor.formservice;
 
 import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.form.annotation.FormService;
-import cn.org.atool.fluent.formservice.processor.filer.FormServiceImplFiler;
-import cn.org.atool.fluent.formservice.processor.scanner.FormServiceScanner;
+import cn.org.atool.fluent.processor.formservice.filer.FormServiceImplFiler;
+import cn.org.atool.fluent.processor.formservice.scanner.FormServiceScanner;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 

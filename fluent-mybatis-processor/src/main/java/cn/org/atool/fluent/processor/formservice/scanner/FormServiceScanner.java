@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.formservice.processor.scanner;
+package cn.org.atool.fluent.processor.formservice.scanner;
 
 import cn.org.atool.fluent.mybatis.If;
 import com.squareup.javapoet.ClassName;
