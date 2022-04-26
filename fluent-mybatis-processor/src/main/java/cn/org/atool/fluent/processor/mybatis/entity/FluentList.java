@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.mybatis.processor.entity;
+package cn.org.atool.fluent.processor.mybatis.entity;
 
-import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.RefFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.refs.RelationFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
+import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
+import cn.org.atool.fluent.processor.mybatis.filer.refs.RefFiler;
+import cn.org.atool.fluent.processor.mybatis.filer.refs.RelationFiler;
+import cn.org.atool.fluent.processor.mybatis.filer.segment.*;
 import cn.org.atool.generator.javafile.AbstractFile;
 import cn.org.atool.generator.util.GeneratorHelper;
 

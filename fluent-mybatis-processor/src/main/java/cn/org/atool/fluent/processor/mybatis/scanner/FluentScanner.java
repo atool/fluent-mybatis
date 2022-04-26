@@ -1,13 +1,13 @@
-package cn.org.atool.fluent.mybatis.processor.scanner;
+package cn.org.atool.fluent.processor.mybatis.scanner;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
-import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
-import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.fluent.processor.mybatis.entity.CommonField;
+import cn.org.atool.fluent.processor.mybatis.entity.EntityRefMethod;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.entity.PrimaryField;
+import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
 import cn.org.atool.generator.database.model.FieldType;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Long;
-import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_DEFAULTS;
-import static cn.org.atool.fluent.mybatis.processor.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
+import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_Long;
+import static cn.org.atool.fluent.processor.mybatis.scanner.ClassAttrParser.ATTR_DEFAULTS;
+import static cn.org.atool.fluent.processor.mybatis.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
 
 /**
  * FluentScanner 对{@link FluentMybatis}Entity上的注解进行解析

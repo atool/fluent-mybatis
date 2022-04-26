@@ -1,7 +1,7 @@
-package cn.org.atool.fluent.mybatis.processor.base;
+package cn.org.atool.fluent.processor.mybatis.base;
 
-import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import cn.org.atool.fluent.mybatis.processor.filer.segment.*;
+import cn.org.atool.fluent.processor.mybatis.entity.CommonField;
+import cn.org.atool.fluent.processor.mybatis.filer.segment.*;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.ClassName;
 import lombok.AccessLevel;

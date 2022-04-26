@@ -2,8 +2,8 @@ package cn.org.atool.fluent.processor.mybatis;
 
 import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.processor.scanner.FluentScanner2;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentList;
+import cn.org.atool.fluent.processor.mybatis.scanner.FluentScanner2;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.Processor;

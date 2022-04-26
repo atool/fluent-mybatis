@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.base;
+package cn.org.atool.fluent.processor.mybatis.base;
 
 public interface MethodName {
 

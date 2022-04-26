@@ -1,13 +1,13 @@
-package cn.org.atool.fluent.mybatis.processor.filer.segment;
+package cn.org.atool.fluent.processor.mybatis.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
-import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
+import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
+import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import com.squareup.javapoet.*;
 import org.apache.ibatis.annotations.CacheNamespace;
@@ -16,8 +16,8 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Consumer_Mapper;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List_Str;
+import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_Consumer_Mapper;
+import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_List_Str;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**

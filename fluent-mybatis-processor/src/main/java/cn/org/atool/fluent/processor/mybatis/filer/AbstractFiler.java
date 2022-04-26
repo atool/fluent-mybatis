@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.processor.mybatis.filer;
 
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_MAPPING;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_Optional_IMapping;
+import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_Optional_IMapping;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.NEWLINE;
 
 @SuppressWarnings({"rawtypes", "UnusedReturnValue"})

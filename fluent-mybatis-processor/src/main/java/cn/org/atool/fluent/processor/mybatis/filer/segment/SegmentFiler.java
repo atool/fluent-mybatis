@@ -1,12 +1,12 @@
-package cn.org.atool.fluent.mybatis.processor.filer.segment;
+package cn.org.atool.fluent.processor.mybatis.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.processor.entity.CommonField;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
+import cn.org.atool.fluent.processor.mybatis.entity.CommonField;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
@@ -21,8 +21,8 @@ import java.util.List;
 
 import static cn.org.atool.fluent.common.kits.StringKit.PRE_SET;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.suppressWarnings;
+import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.PUBLIC_STATIC_FINAL;
+import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.suppressWarnings;
 
 /**
  * Query&Updater辅助类文件生成

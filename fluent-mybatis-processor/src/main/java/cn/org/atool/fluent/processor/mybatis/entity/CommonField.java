@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.entity;
+package cn.org.atool.fluent.processor.mybatis.entity;
 
 
 import cn.org.atool.generator.database.model.FieldType;

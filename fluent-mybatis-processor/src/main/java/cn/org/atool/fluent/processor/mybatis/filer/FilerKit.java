@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.processor.mybatis.filer;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;

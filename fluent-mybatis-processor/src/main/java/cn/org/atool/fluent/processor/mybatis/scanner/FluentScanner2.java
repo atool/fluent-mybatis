@@ -1,8 +1,8 @@
-package cn.org.atool.fluent.mybatis.processor.scanner;
+package cn.org.atool.fluent.processor.mybatis.scanner;
 
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import lombok.Getter;
 
 import javax.annotation.processing.Messager;

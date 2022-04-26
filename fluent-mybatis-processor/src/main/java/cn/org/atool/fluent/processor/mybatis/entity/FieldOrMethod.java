@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.entity;
+package cn.org.atool.fluent.processor.mybatis.entity;
 
 import com.squareup.javapoet.TypeName;
 import lombok.EqualsAndHashCode;

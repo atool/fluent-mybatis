@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.scanner;
+package cn.org.atool.fluent.processor.mybatis.scanner;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;

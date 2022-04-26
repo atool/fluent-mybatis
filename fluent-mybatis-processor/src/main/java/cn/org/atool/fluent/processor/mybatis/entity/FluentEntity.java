@@ -1,10 +1,10 @@
-package cn.org.atool.fluent.mybatis.processor.entity;
+package cn.org.atool.fluent.processor.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import lombok.Getter;
 import lombok.Setter;

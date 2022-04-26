@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.processor.filer;
+package cn.org.atool.fluent.processor.mybatis.filer;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;

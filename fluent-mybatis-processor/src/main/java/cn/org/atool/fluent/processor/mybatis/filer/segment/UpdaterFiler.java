@@ -1,12 +1,12 @@
-package cn.org.atool.fluent.mybatis.processor.filer.segment;
+package cn.org.atool.fluent.processor.mybatis.filer.segment;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.crud.BaseUpdate;
 import cn.org.atool.fluent.mybatis.functions.StringSupplier;
-import cn.org.atool.fluent.mybatis.processor.base.FluentClassName;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
+import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
@@ -16,8 +16,8 @@ import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.common.kits.StringKit.PRE_SET;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_DEFAULT_UPDATER;
-import static cn.org.atool.fluent.mybatis.processor.base.MethodName.M_EMPTY_UPDATER;
+import static cn.org.atool.fluent.processor.mybatis.base.MethodName.M_DEFAULT_UPDATER;
+import static cn.org.atool.fluent.processor.mybatis.base.MethodName.M_EMPTY_UPDATER;
 
 /**
  * updater代码生成

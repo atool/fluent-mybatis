@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.processor.filer.refs;
+package cn.org.atool.fluent.processor.mybatis.filer.refs;
 
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -9,8 +9,8 @@ import com.squareup.javapoet.TypeSpec;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_Ref;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.PUBLIC_STATIC_FINAL;
+import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.PUBLIC_STATIC;
+import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.PUBLIC_STATIC_FINAL;
 
 /**
  * Ref 文件构造

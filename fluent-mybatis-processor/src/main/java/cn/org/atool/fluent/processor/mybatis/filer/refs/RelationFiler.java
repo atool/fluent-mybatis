@@ -1,10 +1,10 @@
-package cn.org.atool.fluent.mybatis.processor.filer.refs;
+package cn.org.atool.fluent.processor.mybatis.filer.refs;
 
 import cn.org.atool.fluent.mybatis.base.EntityRefKit;
 import cn.org.atool.fluent.mybatis.base.intf.IRelation;
-import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
+import cn.org.atool.fluent.processor.mybatis.entity.EntityRefMethod;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.generator.javafile.AbstractFile;
 import com.squareup.javapoet.*;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cn.org.atool.fluent.mybatis.processor.filer.ClassNames2.CN_List;
-import static cn.org.atool.fluent.mybatis.processor.filer.FilerKit.publicMethod;
+import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_List;
+import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.publicMethod;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.capitalFirst;
 
 /**

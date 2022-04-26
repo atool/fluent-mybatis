@@ -1,19 +1,19 @@
-package cn.org.atool.fluent.mybatis.processor.filer.segment;
+package cn.org.atool.fluent.processor.mybatis.filer.segment;
 
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
-import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
-import cn.org.atool.fluent.mybatis.processor.filer.AbstractFiler;
-import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
-import cn.org.atool.fluent.mybatis.processor.filer.FilerKit;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
+import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
+import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
-import static cn.org.atool.fluent.mybatis.processor.filer.segment.MapperFiler.getMapperName;
+import static cn.org.atool.fluent.processor.mybatis.filer.segment.MapperFiler.getMapperName;
 
 /**
  * BaseDaoGenerator: *BaseDao文件生成
