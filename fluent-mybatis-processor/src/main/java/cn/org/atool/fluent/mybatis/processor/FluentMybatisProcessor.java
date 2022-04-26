@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.processor;
 import cn.org.atool.fluent.BaseProcessor;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
-import cn.org.atool.fluent.mybatis.processor.scanner.FluentScanner;
+import cn.org.atool.fluent.mybatis.processor.scanner.FluentScanner2;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.Processor;
@@ -28,7 +28,7 @@ public class FluentMybatisProcessor extends BaseProcessor {
 
     @Override
     protected void doFileProcessor(TypeElement element) {
-        FluentScanner scanner = new FluentScanner(() -> messager);
+        FluentScanner2 scanner = new FluentScanner2(super.messager);
         scanner.scan(element);
         FluentList.addFluent(scanner.getFluent());
     }

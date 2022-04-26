@@ -45,63 +45,75 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
 
     @Override
     public Void visitType(TypeElement entity, Void aVoid) {
+        visitEntity(this.fluent, entity, messager.get());
+        return super.visitType(entity, aVoid);
+    }
+
+    public static void visitEntity(FluentEntity fluent, TypeElement entity, Messager messager) {
         FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
         if (fluentMybatis == null) {
-            messager.get().printMessage(Diagnostic.Kind.ERROR, "Error in: " + entity.getQualifiedName().toString());
+            messager.printMessage(Diagnostic.Kind.ERROR, "Error in: " + entity.getQualifiedName().toString());
         } else {
             ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
-            this.fluent.setClassName(className.packageName(), className.simpleName());
+            fluent.setClassName(className.packageName(), className.simpleName());
             String defaults = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_DEFAULTS, IDefaultSetter.class);
             String superMapper = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_SUPER_MAPPER, IMapper.class);
-            this.fluent.setFluentMyBatis(fluentMybatis, defaults, superMapper);
+            fluent.setFluentMyBatis(fluentMybatis, defaults, superMapper);
         }
-        return super.visitType(entity, aVoid);
     }
 
     @Override
     public Void visitExecutable(ExecutableElement element, Void aVoid) {
+        visitMethod(this.fluent, element);
+        return super.visitExecutable(element, aVoid);
+    }
+
+    public static void visitMethod(FluentEntity fluent, ExecutableElement element) {
         if (element.getModifiers().contains(Modifier.STATIC) ||
             element.getModifiers().contains(Modifier.ABSTRACT) ||
             !element.getModifiers().contains(Modifier.PUBLIC)) {
-            return super.visitExecutable(element, aVoid);
+            return;
         }
         RefMethod ref = element.getAnnotation(RefMethod.class);
         if (ref == null) {
-            return super.visitExecutable(element, aVoid);
+            return;
         }
         String methodName = element.getSimpleName().toString();
         EntityRefMethod method = new EntityRefMethod(methodName, ClassName.get(element.getReturnType()));
         method.setValue(ref.value());
-        this.fluent.addMethod(method);
-        return super.visitExecutable(element, aVoid);
+        fluent.addMethod(method);
     }
 
     @Override
     public Void visitVariable(VariableElement element, Void aVoid) {
+        visitVariable(this.fluent, element);
+        return super.visitVariable(element, aVoid);
+    }
+
+    public static void visitVariable(FluentEntity fluent, VariableElement element) {
         if (element.getKind() != ElementKind.FIELD ||
             element.getModifiers().contains(Modifier.STATIC) ||
             element.getModifiers().contains(Modifier.TRANSIENT) ||
             element.getAnnotation(NotField.class) != null) {
-            return super.visitVariable(element, aVoid);
+            return;
         }
         TableId tableId = element.getAnnotation(TableId.class);
         String fieldName = element.getSimpleName().toString();
 
         if (tableId == null) {
             CommonField field = parseCommonField(fieldName, element);
-            this.fluent.addField(field);
+            fluent.addField(field);
             if (element.getAnnotation(LogicDelete.class) != null) {
-                this.fluent.setLogicDelete(field.getName());
-                this.fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
+                fluent.setLogicDelete(field.getName());
+                fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
             }
             if (element.getAnnotation(Version.class) != null) {
-                this.fluent.setVersionField(field.getName());
+                fluent.setVersionField(field.getName());
             }
         } else {
-            PrimaryField field = this.parsePrimaryField(fieldName, element, tableId);
-            this.fluent.addField(field);
+            PrimaryField field = parsePrimaryField(fieldName, element, tableId);
+            fluent.addField(field);
         }
-        return super.visitVariable(element, aVoid);
     }
 
     /**
@@ -111,7 +123,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
      * @param var       var
      * @return ignore
      */
-    private CommonField parseCommonField(String fieldName, VariableElement var) {
+    public static CommonField parseCommonField(String fieldName, VariableElement var) {
         CommonField field = new CommonField(fieldName, getJavaType(var));
         TableField tableField = var.getAnnotation(TableField.class);
         if (tableField == null) {
@@ -123,12 +135,12 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         field.setNotLarge(tableField.notLarge());
         field.setNumericScale(tableField.numericScale());
         field.setJdbcType(tableField.jdbcType().name());
-        field.setTypeHandler(this.getTypeHandler(var, TableField.class.getSimpleName()));
+        field.setTypeHandler(getTypeHandler(var, TableField.class.getSimpleName()));
 
         return field;
     }
 
-    private TypeName getJavaType(VariableElement var) {
+    private static TypeName getJavaType(VariableElement var) {
         TypeName type = ClassName.get(var.asType());
         if (type instanceof ParameterizedTypeName) {
             return ((ParameterizedTypeName) type).rawType;
@@ -145,13 +157,13 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
      * @param tableId   Annotation
      * @return ignore
      */
-    private PrimaryField parsePrimaryField(String fieldName, VariableElement var, TableId tableId) {
+    private static PrimaryField parsePrimaryField(String fieldName, VariableElement var, TableId tableId) {
         PrimaryField field = new PrimaryField(fieldName, getJavaType(var));
         field.setColumn(tableId.value());
         field.setAutoIncrease(tableId.auto());
         field.setSeqIsBeforeOrder(tableId.before());
         field.setJdbcType(tableId.jdbcType().name());
-        field.setTypeHandler(this.getTypeHandler(var, TableId.class.getSimpleName()));
+        field.setTypeHandler(getTypeHandler(var, TableId.class.getSimpleName()));
         field.setSeqName(tableId.seqName());
         return field;
     }
@@ -163,7 +175,7 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
      * @param aName "TableId" or "TableField"
      * @return TypeName
      */
-    private TypeName getTypeHandler(VariableElement var, String aName) {
+    private static TypeName getTypeHandler(VariableElement var, String aName) {
         for (AnnotationMirror annotationMirror : var.getAnnotationMirrors()) {
             String aTypeName = annotationMirror.getAnnotationType().toString();
             if (!aTypeName.contains(aName)) {
