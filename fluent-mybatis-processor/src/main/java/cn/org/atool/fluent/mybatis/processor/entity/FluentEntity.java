@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -153,6 +154,14 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
             this.primary = (PrimaryField) field;
         }
         this.fields.add(field);
+    }
+
+    /**
+     * 对字段进行排序
+     */
+    public FluentEntity sortFields() {
+        this.fields.sort(Comparator.naturalOrder());
+        return this;
     }
 
     @Override

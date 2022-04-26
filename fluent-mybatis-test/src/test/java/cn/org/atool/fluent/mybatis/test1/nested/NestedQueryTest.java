@@ -90,8 +90,8 @@ public class NestedQueryTest extends BaseTest {
             .end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`,")
-            .end("FROM fluent_mybatis.student " +
+            .start("SELECT `id`, `address`,")
+            .end(", `gmt_created`, `gmt_modified`, `is_deleted` FROM fluent_mybatis.student " +
                 "WHERE `id` IN (SELECT `student_id` " +
                 "   FROM `home_address` WHERE `address` LIKE ?)", StringMode.SameAsSpace);
     }

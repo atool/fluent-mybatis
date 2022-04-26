@@ -33,10 +33,10 @@ public class InsertBatchTest extends BaseTest {
         want.number(list.get(1).getId()).notNull();
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`gmt_created`, `gmt_modified`, `is_deleted`, `age`, `env`, `tenant`, `user_name`) " +
+            "(`age`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(now(), now(), 0, ?, ?, ?, ?), " +
-            "(now(), now(), 0, ?, ?, ?, ?)");
+            "(?, ?, ?, ?, now(), now(), 0), " +
+            "(?, ?, ?, ?, now(), now(), 0)");
     }
 
     @Test

@@ -28,8 +28,8 @@ public class FormObjectTest extends BaseTest {
         want.number(entity.getId()).isGt(0L);
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`gmt_created`, `gmt_modified`, `is_deleted`, `age`, `env`, `tenant`, `user_name`) " +
-            "VALUES (now(), now(), 0, ?, ?, ?, ?)");
+            "(`age`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES (?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList(23, "test_env", 234567L, "form test");
     }
 

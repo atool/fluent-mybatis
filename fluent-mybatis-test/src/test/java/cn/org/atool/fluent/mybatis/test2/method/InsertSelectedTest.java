@@ -29,8 +29,8 @@ public class InsertSelectedTest extends BaseTest {
             .userName.values("#{G_commodityCodeSub}")
             .eqTable();
         db.sqlList().wantFirstSql()
-            .eq("INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `age`, `env`, `tenant`, `user_name`) " +
-                "VALUES (now(), now(), 0, ?, ?, ?, ?)");
+            .eq("INSERT INTO fluent_mybatis.student (`age`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+                "VALUES (?, ?, ?, ?, now(), now(), 0)");
         want.number(student.getId()).isGt(0L);
     }
 
@@ -48,8 +48,8 @@ public class InsertSelectedTest extends BaseTest {
             .homeAddressId.values(200)
             .eqTable();
         db.sqlList().wantFirstSql()
-            .eq("INSERT INTO fluent_mybatis.student (`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `home_address_id`, `tenant`, `user_name`) " +
-                "VALUES (?, now(), now(), 0, ?, ?, ?, ?)");
+            .eq("INSERT INTO fluent_mybatis.student (`id`, `env`, `home_address_id`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+                "VALUES (?, ?, ?, ?, ?, now(), now(), 0)");
         want.number(student.getId()).eq(100L);
     }
 }

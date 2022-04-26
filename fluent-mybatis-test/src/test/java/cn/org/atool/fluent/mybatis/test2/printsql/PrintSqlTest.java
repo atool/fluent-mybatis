@@ -27,23 +27,23 @@ public class PrintSqlTest extends Test4J {
         List<String> sql = StudentMapper.print(0, m -> m.insert(new StudentEntity()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
+            "(`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(now(), now(), 0, ?, ?)");
+            "(?, ?, now(), now(), 0)");
 
         sql = StudentMapper.print(1, m -> m.insert(new StudentEntity()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
+            "(`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(now(), now(), 0, 'test_env', 234567)");
+            "('test_env', 234567, now(), now(), 0)");
 
         sql = StudentMapper.print(2, m -> m.insert(new StudentEntity()));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
+            "(`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(now(), now(), 0, #{ew.env}, #{ew.tenant})");
+            "(#{ew.env}, #{ew.tenant}, now(), now(), 0)");
     }
 
     @Test
@@ -51,9 +51,9 @@ public class PrintSqlTest extends Test4J {
         List<String> sql = StudentMapper.print(0, m -> m.insertWithPk(new StudentEntity().setId(1L)));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
+            "(`id`, `env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(?, now(), now(), 0, ?, ?)");
+            "(?, ?, ?, now(), now(), 0)");
     }
 
     @Test
@@ -62,10 +62,10 @@ public class PrintSqlTest extends Test4J {
         List<String> sql = StudentMapper.print(0, m -> m.insertBatch(list));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
+            "(`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(now(), now(), 0, ?, ?), " +
-            "(now(), now(), 0, ?, ?)");
+            "(?, ?, now(), now(), 0), " +
+            "(?, ?, now(), now(), 0)");
     }
 
     @Test
@@ -74,17 +74,17 @@ public class PrintSqlTest extends Test4J {
         List<String> sql = StudentMapper.print(0, m -> m.insertBatchWithPk(list));
         want.list(sql).eqList("" +
             "INSERT INTO fluent_mybatis.student " +
-            "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
+            "(`id`, `env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(?, now(), now(), 0, ?, ?), " +
-            "(?, now(), now(), 0, ?, ?)");
+            "(?, ?, ?, now(), now(), 0), " +
+            "(?, ?, ?, now(), now(), 0)");
     }
 
     @Test
     void listEntity() {
         List<String> sql = StudentMapper.print(0, m -> m.listEntity(new StudentQuery()));
         want.list(sql).eqList("" +
-            "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
+            "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ?");
@@ -123,7 +123,7 @@ public class PrintSqlTest extends Test4J {
     void listObjs() {
         List<String> sql = StudentMapper.print(0, m -> m.listObjs(new StudentQuery()));
         want.list(sql).eqList("" +
-            "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
+            "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ?");
@@ -133,7 +133,7 @@ public class PrintSqlTest extends Test4J {
     void listMaps() {
         List<String> sql = StudentMapper.print(0, m -> m.listMaps(new StudentQuery().limit(10)));
         want.list(sql).eqList("" +
-            "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
+            "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ? " +
@@ -159,7 +159,7 @@ public class PrintSqlTest extends Test4J {
                 "FROM fluent_mybatis.student " +
                 "WHERE `is_deleted` = ? " +
                 "AND `env` = ?",
-            "SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version` " +
+            "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
                 "FROM fluent_mybatis.student " +
                 "WHERE `is_deleted` = ? " +
                 "AND `env` = ?");
@@ -170,8 +170,8 @@ public class PrintSqlTest extends Test4J {
         List<String> sql = StudentMapper.print(0, m -> new StudentEntity().save());
         want.list(sql).eqList("" +
             "INSERT INTO " +
-            "fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`) " +
-            "VALUES (now(), now(), 0, ?, ?)");
+            "fluent_mybatis.student (`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES (?, ?, now(), now(), 0)");
     }
 
     @Test
@@ -189,8 +189,8 @@ public class PrintSqlTest extends Test4J {
             .where.age().in(new int[]{1, 2, 4}).end().to().insertSelect());
         want.list(list).eqList("" +
             "INSERT INTO `t_member` " +
-            "(`gmt_modified`, `is_deleted`, `age`, `gmt_created`, `is_girl`, `school`, `user_name`) " +
-            "SELECT `gmt_modified`, `is_deleted`, `age`, `gmt_created`, `is_girl`, `school`, `user_name` " +
+            "(`age`, `is_girl`, `school`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "SELECT `age`, `is_girl`, `school`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM `t_member` " +
             "WHERE `age` IN (?, ?, ?)");
     }

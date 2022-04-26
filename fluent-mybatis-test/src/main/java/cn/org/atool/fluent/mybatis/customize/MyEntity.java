@@ -1,8 +1,6 @@
 package cn.org.atool.fluent.mybatis.customize;
 
-import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
-import cn.org.atool.fluent.mybatis.annotation.TableField;
-import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.Getter;
@@ -40,6 +38,7 @@ public abstract class MyEntity<E extends IEntity> extends RichEntity {
         insert = "now()",
         desc = "创建时间"
     )
+    @GmtCreate
     private Date gmtCreated;
 
     @TableField(
@@ -48,6 +47,7 @@ public abstract class MyEntity<E extends IEntity> extends RichEntity {
         update = "now()",
         desc = "更新时间"
     )
+    @GmtModified
     private Date gmtModified;
 
     @TableField(

@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.processor.entity.EntityRefMethod;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentEntity;
 import cn.org.atool.fluent.mybatis.processor.entity.PrimaryField;
 import cn.org.atool.fluent.mybatis.processor.filer.ClassNames2;
+import cn.org.atool.generator.database.model.FieldType;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
@@ -103,16 +104,29 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
         if (tableId == null) {
             CommonField field = parseCommonField(fieldName, element);
             fluent.addField(field);
-            if (element.getAnnotation(LogicDelete.class) != null) {
-                fluent.setLogicDelete(field.getName());
-                fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
-            }
-            if (element.getAnnotation(Version.class) != null) {
-                fluent.setVersionField(field.getName());
-            }
+            setFieldType(fluent, field, element);
         } else {
             PrimaryField field = parsePrimaryField(fieldName, element, tableId);
+            field.setType(field.isAutoIncrease() ? FieldType.PrimaryId : FieldType.PrimaryKey);
             fluent.addField(field);
+        }
+    }
+
+    private static void setFieldType(FluentEntity fluent, CommonField field, VariableElement element) {
+        if (element.getAnnotation(LogicDelete.class) != null) {
+            fluent.setLogicDelete(field.getName());
+            fluent.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
+            field.setType(FieldType.IsDeleted);
+        }
+        if (element.getAnnotation(Version.class) != null) {
+            fluent.setVersionField(field.getName());
+            field.setType(FieldType.Version);
+        }
+        if (element.getAnnotation(GmtCreate.class) != null) {
+            field.setType(FieldType.GmtCreate);
+        }
+        if (element.getAnnotation(GmtModified.class) != null) {
+            field.setType(FieldType.GmtModified);
         }
     }
 

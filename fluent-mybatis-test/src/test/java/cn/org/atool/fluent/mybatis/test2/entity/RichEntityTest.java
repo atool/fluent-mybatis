@@ -32,7 +32,7 @@ public class RichEntityTest extends BaseTest {
         StudentEntity entity = new StudentEntity().setId(1L).setUserName("test2").updateById();
         db.sqlList().wantFirstSql()
             .eq("UPDATE fluent_mybatis.student " +
-                "SET `gmt_modified` = now(), `user_name` = ? " +
+                "SET `user_name` = ?, `gmt_modified` = now() " +
                 "WHERE `id` = ?");
         ATM.dataMap.student.table(1)
             .userName.values("test2")

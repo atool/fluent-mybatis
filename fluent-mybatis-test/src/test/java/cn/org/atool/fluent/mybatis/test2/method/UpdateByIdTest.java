@@ -35,9 +35,8 @@ public class UpdateByIdTest extends BaseTest {
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE fluent_mybatis.student " +
-                "SET `gmt_modified` = now(), " +
-                "`is_deleted` = ?, " +
-                "`age` = ?, `user_name` = ? " +
+                "SET `age` = ?, `user_name` = ?, " +
+                "`gmt_modified` = now(), `is_deleted` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
 
         ATM.dataMap.student.table(2)
@@ -65,8 +64,8 @@ public class UpdateByIdTest extends BaseTest {
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE fluent_mybatis.student " +
-                "SET `gmt_created` = ?, `gmt_modified` = now(), " +
-                "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
+                "SET `age` = ?, `user_name` = ?, " +
+                "`gmt_created` = ?, `gmt_modified` = now(), `is_deleted` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
 
         ATM.dataMap.student.table(2)
@@ -95,8 +94,8 @@ public class UpdateByIdTest extends BaseTest {
         mapper.updateById(update);
         db.sqlList().wantFirstSql()
             .eq("UPDATE fluent_mybatis.student " +
-                "SET `gmt_created` = ?, `gmt_modified` = ?, " +
-                "`is_deleted` = ?, `age` = ?, `user_name` = ? " +
+                "SET `age` = ?, `user_name` = ?, " +
+                "`gmt_created` = ?, `gmt_modified` = ?, `is_deleted` = ? " +
                 "WHERE `id` = ?", StringMode.SameAsSpace);
         ATM.dataMap.student.table(2)
             .id.values(23L, 24L)

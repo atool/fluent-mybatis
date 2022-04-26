@@ -27,8 +27,8 @@ public class PkGeneratorTest extends BaseTest {
         );
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO `home_address` " +
-            "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
-            "VALUES (?, now(), now(), 0, ?, ?, ?, ?)");
+            "(`id`, `address`, `env`, `student_id`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES (?, ?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList(100L, "add", "test_env", 0L, 234567L);
     }
 
@@ -102,8 +102,8 @@ public class PkGeneratorTest extends BaseTest {
             .setStudentId(0L)
         );
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO `home_address` (`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `student_id`, `tenant`) " +
-            "VALUES (?, now(), now(), 0, ?, ?, ?, ?)");
+            "INSERT INTO `home_address` (`id`, `address`, `env`, `student_id`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES (?, ?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList(400L, "add", "test_env", 0L, 234567L);
     }
 }

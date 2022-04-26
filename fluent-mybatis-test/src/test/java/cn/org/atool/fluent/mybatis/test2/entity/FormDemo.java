@@ -108,8 +108,8 @@ public class FormDemo extends BaseTest {
             .set("address", "宇宙深处")
             .insert();
         db.sqlList().wantFirstSql().eq("" +
-            "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `env`, `tenant`, `user_name`) " +
-            "VALUES (now(), now(), 0, ?, ?, ?, ?)");
+            "INSERT INTO fluent_mybatis.student (`address`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES (?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList("宇宙深处", "test_env", 234567L, "I am FluentMybatis");
     }
 }

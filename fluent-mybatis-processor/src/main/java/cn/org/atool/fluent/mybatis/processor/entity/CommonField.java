@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.processor.entity;
 
 
+import cn.org.atool.generator.database.model.FieldType;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 import lombok.AccessLevel;
@@ -25,7 +26,7 @@ import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 @Setter
 @ToString
 @Accessors(chain = true)
-public class CommonField extends FieldOrMethod {
+public class CommonField extends FieldOrMethod implements Comparable<CommonField> {
     /**
      * 字段对应的表字段
      * 对关联字段非必须
@@ -46,6 +47,8 @@ public class CommonField extends FieldOrMethod {
     private String insert;
 
     private String update;
+
+    private FieldType type = FieldType.Common;
 
     public CommonField(String property, TypeName javaType) {
         super(property, javaType);
@@ -88,5 +91,15 @@ public class CommonField extends FieldOrMethod {
 
     public boolean isPrimary() {
         return false;
+    }
+
+    @Override
+    public int compareTo(CommonField field) {
+        int compare = this.type.compareTo(field.type);
+        if (compare == 0) {
+            return this.name.compareTo(field.name);
+        } else {
+            return compare;
+        }
     }
 }

@@ -15,7 +15,7 @@ public class UpdateById_WithDefault extends BaseTest {
             .updateById();
         db.sqlList().wantFirstSql().eq("" +
             "UPDATE `home_address` " +
-            "SET `address` = ?, `gmt_modified` = now(), `city` = ?, `province` = ? " +
+            "SET `address` = ?, `city` = ?, `province` = ?, `gmt_modified` = now() " +
             "WHERE `id` = ?");
     }
 }

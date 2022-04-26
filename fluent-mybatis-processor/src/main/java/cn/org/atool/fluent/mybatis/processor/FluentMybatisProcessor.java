@@ -30,7 +30,7 @@ public class FluentMybatisProcessor extends BaseProcessor {
     protected void doFileProcessor(TypeElement element) {
         FluentScanner2 scanner = new FluentScanner2(super.messager);
         scanner.scan(element);
-        FluentList.addFluent(scanner.getFluent());
+        FluentList.addFluent(scanner.getFluent().sortFields());
     }
 
     @Override

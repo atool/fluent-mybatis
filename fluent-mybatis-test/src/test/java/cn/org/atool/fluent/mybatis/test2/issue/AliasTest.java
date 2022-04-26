@@ -40,7 +40,7 @@ public class AliasTest extends BaseTest {
             .select.apply("*").end();
         mapper.listMaps(query);
         db.sqlList().wantFirstSql().containsInOrder(
-            "SELECT * FROM (SELECT `id`, `",
-            "`, `version` FROM fluent_mybatis.student WHERE `age` > ?) aa");
+            "SELECT * FROM (SELECT `",
+            "` FROM fluent_mybatis.student WHERE `age` > ?) aa");
     }
 }

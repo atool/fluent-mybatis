@@ -30,7 +30,7 @@ public class SelectApplyTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .notContain("`id`")
             .notContain("`user_name`")
-            .contains("`gmt_created`, `gmt_modified`, `is_deleted`,")
+            .contains(", `gmt_created`, `gmt_modified`, `is_deleted`")
             .end("FROM fluent_mybatis.student");
     }
 
@@ -41,7 +41,7 @@ public class SelectApplyTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .notContain("`id`")
             .notContain("`user_name`")
-            .contains("`gmt_created`, `gmt_modified`, `is_deleted`,")
+            .contains(", `gmt_created`, `gmt_modified`, `is_deleted`")
             .end("FROM fluent_mybatis.student");
     }
 
@@ -52,7 +52,7 @@ public class SelectApplyTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .notContain("`id`")
             .notContain("`user_name`")
-            .contains("`gmt_created`, `gmt_modified`, `is_deleted`,")
+            .contains(", `gmt_created`, `gmt_modified`, `is_deleted`")
             .end("FROM fluent_mybatis.student");
     }
 
@@ -63,7 +63,7 @@ public class SelectApplyTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .notContain("`id`")
             .notContain("`user_name`")
-            .contains("`gmt_created`, `gmt_modified`, `is_deleted`,")
+            .contains(", `gmt_created`, `gmt_modified`, `is_deleted`")
             .end("FROM fluent_mybatis.student");
     }
 
@@ -75,7 +75,7 @@ public class SelectApplyTest extends BaseTest {
         db.sqlList().wantFirstSql()
             .notContain("`id`")
             .notContain("`user_name`")
-            .contains("`gmt_created`, `gmt_modified`, `is_deleted`,")
+            .contains(", `gmt_created`, `gmt_modified`, `is_deleted`")
             .end("FROM `student`");
     }
 

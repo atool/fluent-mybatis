@@ -14,6 +14,7 @@ import org.test4j.hamcrest.matcher.string.StringMode;
 
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public class InsertSelectTest extends BaseTest {
     @Autowired
     private StudentMapper mapper;
@@ -89,9 +90,9 @@ public class InsertSelectTest extends BaseTest {
 
         db.sqlList().wantFirstSql()
             .containsInOrder(
-                "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
-                "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)",
-                "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `address`, `age`, `env`, `tenant`, `user_name`)")
+                "INSERT INTO fluent_mybatis.student (`address`, `age`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`)",
+                "INSERT INTO fluent_mybatis.student (`address`, `age`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`)",
+                "INSERT INTO fluent_mybatis.student (`address`, `age`, `env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`)")
             .end("INSERT INTO student (`user_name`, `age`, `address`) " +
                     "SELECT `user_name`, 40, 'test address' " +
                     "FROM fluent_mybatis.student " +

@@ -26,7 +26,7 @@ public class SaveOrUpdateTest extends BaseTest {
         db.sqlList().wantFirstSql().eq("" +
             "SELECT COUNT(*) FROM fluent_mybatis.student WHERE `id` = ? LIMIT ?, ?", StringMode.SameAsSpace);
         db.sqlList().wantSql(1).eq("" +
-            "UPDATE fluent_mybatis.student SET `gmt_modified` = now(), `age` = ?, `user_name` = ? " +
+            "UPDATE fluent_mybatis.student SET `age` = ?, `user_name` = ?, `gmt_modified` = now() " +
             "WHERE `id` = ?");
         ATM.dataMap.student.query("id=3").eqDataMap(
             ATM.dataMap.student.table(1)

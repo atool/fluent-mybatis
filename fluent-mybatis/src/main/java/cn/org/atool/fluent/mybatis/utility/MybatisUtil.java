@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.utility;
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.NotField;
+import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -63,15 +64,22 @@ public class MybatisUtil {
      */
     public static List<Field> getFieldList(Class entityClass) {
         Map<String, Field> map = new HashMap<>();
-        Field[] fields = entityClass.getDeclaredFields();
-        for (Field field : fields) {
-            if (!isStatic(field) &&
-                field.getAnnotation(NotField.class) == null &&
-                !map.containsKey(field.getName())) {
-                map.put(field.getName(), field);
+        while (notBaseEntity(entityClass)) {
+            Field[] fields = entityClass.getDeclaredFields();
+            for (Field field : fields) {
+                if (!isStatic(field) &&
+                    field.getAnnotation(NotField.class) == null &&
+                    !map.containsKey(field.getName())) {
+                    map.put(field.getName(), field);
+                }
             }
+            entityClass = entityClass.getSuperclass();
         }
         return new ArrayList<>(map.values());
+    }
+
+    public static boolean notBaseEntity(Class klass) {
+        return klass != Object.class && klass != BaseEntity.class && klass != RichEntity.class;
     }
 
     /**

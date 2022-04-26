@@ -49,8 +49,8 @@ public class InsertDefaultTest extends BaseTest {
             .isDeleted.values(0)
             .eqTable();
         db.sqlList().wantFirstSql().eq(
-            "INSERT INTO fluent_mybatis.student (`gmt_created`, `gmt_modified`, `is_deleted`, `env`, `tenant`, `user_name`) " +
-                "VALUES (now(), now(), 0, ?, ?, ?)");
+            "INSERT INTO fluent_mybatis.student (`env`, `tenant`, `user_name`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+                "VALUES (?, ?, ?, now(), now(), 0)");
     }
 
     @DisplayName("save操作pkGenerator验证")
@@ -58,8 +58,8 @@ public class InsertDefaultTest extends BaseTest {
     void saveWithPkGenerate() {
         new HomeAddressEntity().setProvince("test").setCity("test").setStudentId(1L).save();
         db.sqlList().wantFirstSql().eq("INSERT INTO `home_address` " +
-            "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `city`, `env`, `province`, `student_id`, `tenant`) " +
-            "VALUES (?, now(), now(), 0, ?, ?, ?, ?, ?)");
+            "(`id`, `city`, `env`, `province`, `student_id`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES (?, ?, ?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList(201L, "test", "test_env", "test", 1, 234567L);
     }
 
@@ -71,10 +71,10 @@ public class InsertDefaultTest extends BaseTest {
         addressMapper.save(list(entity1, entity2));
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO `home_address` " +
-            "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `city`, `env`, `province`, `student_id`, `tenant`) " +
+            "(`id`, `city`, `env`, `province`, `student_id`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(?, now(), now(), 0, ?, ?, ?, ?, ?), " +
-            "(?, now(), now(), 0, ?, ?, ?, ?, ?)");
+            "(?, ?, ?, ?, ?, ?, now(), now(), 0), " +
+            "(?, ?, ?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList(
             201L, "test", "test_env", "test", 1, 234567L,
             202L, "test", "test_env", "test", 1, 234567L);
@@ -89,10 +89,10 @@ public class InsertDefaultTest extends BaseTest {
 
         db.sqlList().wantFirstSql().eq("" +
             "INSERT INTO `home_address` " +
-            "(`id`, `gmt_created`, `gmt_modified`, `is_deleted`, `city`, `env`, `province`, `student_id`, `tenant`) " +
+            "(`id`, `city`, `env`, `province`, `student_id`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
-            "(?, now(), now(), 0, ?, ?, ?, ?, ?), " +
-            "(?, now(), now(), 0, ?, ?, ?, ?, ?)");
+            "(?, ?, ?, ?, ?, ?, now(), now(), 0), " +
+            "(?, ?, ?, ?, ?, ?, now(), now(), 0)");
         db.sqlList().wantFirstPara().eqList(
             201L, "test", "test_env", "test", 1, 234567L,
             202L, "test", "test_env", "test", 1, 234567L);

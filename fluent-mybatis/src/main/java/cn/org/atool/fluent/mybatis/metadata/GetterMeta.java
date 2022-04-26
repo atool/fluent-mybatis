@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 
 import static cn.org.atool.fluent.common.kits.StringKit.PRE_GET;
 import static cn.org.atool.fluent.common.kits.StringKit.PRE_IS;
-import static cn.org.atool.fluent.mybatis.metadata.SetterMeta.notBaseEntity;
+import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.notBaseEntity;
 
 /**
  * getter方法元数据

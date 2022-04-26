@@ -51,8 +51,8 @@ public class HintTest extends BaseTest {
             .where.userName().eq("test").end();
         mapper.listEntity(query);
         db.sqlList().wantFirstSql()
-            .start("SELECT `id`, `gmt_created`, `gmt_modified`, `is_deleted`,")
-            .contains("FROM fluent_mybatis.student /** hint **/");
+            .start("SELECT `id`, ")
+            .contains(", `gmt_created`, `gmt_modified`, `is_deleted` FROM fluent_mybatis.student /** hint **/");
     }
 
     @Test
