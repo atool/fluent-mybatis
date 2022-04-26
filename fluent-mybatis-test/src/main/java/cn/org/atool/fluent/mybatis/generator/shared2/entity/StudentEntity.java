@@ -1,16 +1,17 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.*;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
+import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * StudentEntity: 数据映射实体定义
@@ -35,35 +36,6 @@ import java.util.List;
 )
 public class StudentEntity extends MyEntity<StudentEntity> {
   private static final long serialVersionUID = 1L;
-
-  @TableId(
-      value = "id",
-      desc = "主键id"
-  )
-  private Long id;
-
-  @TableField(
-      value = "gmt_created",
-      insert = "now()",
-      desc = "创建时间"
-  )
-  private Date gmtCreated;
-
-  @TableField(
-      value = "gmt_modified",
-      insert = "now()",
-      update = "now()",
-      desc = "更新时间"
-  )
-  private Date gmtModified;
-
-  @TableField(
-      value = "is_deleted",
-      insert = "0",
-      desc = "是否逻辑删除"
-  )
-  @LogicDelete
-  private Boolean isDeleted;
 
   @TableField(
       value = "address",
@@ -102,12 +74,6 @@ public class StudentEntity extends MyEntity<StudentEntity> {
   private String email;
 
   @TableField(
-      value = "env",
-      desc = "数据隔离环境"
-  )
-  private String env;
-
-  @TableField(
       value = "gender",
       desc = "性别, 0:女; 1:男"
   )
@@ -142,12 +108,6 @@ public class StudentEntity extends MyEntity<StudentEntity> {
       desc = "状态(字典)"
   )
   private String status;
-
-  @TableField(
-      value = "tenant",
-      desc = "租户标识"
-  )
-  private Long tenant;
 
   @TableField(
       value = "user_name",
