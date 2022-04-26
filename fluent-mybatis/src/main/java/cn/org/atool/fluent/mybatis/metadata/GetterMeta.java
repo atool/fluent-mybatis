@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 
 import static cn.org.atool.fluent.common.kits.StringKit.PRE_GET;
 import static cn.org.atool.fluent.common.kits.StringKit.PRE_IS;
+import static cn.org.atool.fluent.mybatis.metadata.SetterMeta.notBaseEntity;
 
 /**
  * getter方法元数据
@@ -63,16 +64,18 @@ public class GetterMeta {
     }
 
     private static KeyMap<GetterMeta> buildMetas(Class klass) {
-        Method[] methods = klass.getDeclaredMethods();
         KeyMap<GetterMeta> classMethods = new KeyMap<>();
-        for (Method m : methods) {
-            String name = m.getName();
-            if (!name.startsWith(PRE_GET) && !name.startsWith(PRE_IS) || m.getParameterCount() != 0) {
-                continue;
+        while (notBaseEntity(klass)) {
+            for (Method m : klass.getDeclaredMethods()) {
+                String name = m.getName();
+                if (!name.startsWith(PRE_GET) && !name.startsWith(PRE_IS) || m.getParameterCount() != 0) {
+                    continue;
+                }
+                m.setAccessible(true);
+                GetterMeta meta = new GetterMeta(m);
+                classMethods.put(meta.fieldName, meta);
             }
-            m.setAccessible(true);
-            GetterMeta meta = new GetterMeta(m);
-            classMethods.put(meta.fieldName, meta);
+            klass = klass.getSuperclass();
         }
         return classMethods;
     }

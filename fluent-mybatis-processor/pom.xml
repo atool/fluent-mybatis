@@ -12,7 +12,7 @@
 
     <artifactId>fluent-mybatis-processor</artifactId>
     <properties>
-        <fluent-generator.version>1.3.17</fluent-generator.version>
+        <fluent-generator.version>1.4.0</fluent-generator.version>
         <mysql.version>8.0.20</mysql.version>
         <skipTests>true</skipTests>
     </properties>

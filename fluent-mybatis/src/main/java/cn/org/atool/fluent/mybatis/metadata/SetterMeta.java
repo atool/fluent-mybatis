@@ -2,6 +2,8 @@ package cn.org.atool.fluent.mybatis.metadata;
 
 import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.SegmentLocks;
+import cn.org.atool.fluent.mybatis.base.BaseEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,16 +60,22 @@ public class SetterMeta {
     }
 
     private static KeyMap<SetterMeta> buildMetas(Class klass) {
-        Method[] methods = klass.getDeclaredMethods();
         KeyMap<SetterMeta> classMethods = new KeyMap<>();
-        for (Method m : methods) {
-            if (!m.getName().startsWith(PRE_SET) || m.getParameterCount() != 1) {
-                continue;
+        while (notBaseEntity(klass)) {
+            for (Method m : klass.getDeclaredMethods()) {
+                if (!m.getName().startsWith(PRE_SET) || m.getParameterCount() != 1) {
+                    continue;
+                }
+                m.setAccessible(true);
+                SetterMeta meta = new SetterMeta(m);
+                classMethods.put(meta.fieldName, meta);
             }
-            m.setAccessible(true);
-            SetterMeta meta = new SetterMeta(m);
-            classMethods.put(meta.fieldName, meta);
+            klass = klass.getSuperclass();
         }
         return classMethods;
+    }
+
+    public static boolean notBaseEntity(Class klass) {
+        return klass != Object.class && klass != BaseEntity.class && klass != RichEntity.class;
     }
 }

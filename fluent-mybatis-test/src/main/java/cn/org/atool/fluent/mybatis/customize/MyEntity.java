@@ -1,36 +1,90 @@
 package cn.org.atool.fluent.mybatis.customize;
 
+import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
+import lombok.Getter;
 
 import java.util.Date;
 
 /**
  * IBaseEntity 应用通用接口
  *
- * @author:darui.wu Created by darui.wu on 2020/6/2.
+ * @author darui.wu Created by darui.wu on 2020/6/2.
  */
-public interface MyEntity<E extends IEntity> {
-    String getEnv();
+@SuppressWarnings({"unchecked"})
+@Getter
+public abstract class MyEntity<E extends IEntity> extends RichEntity {
+    @TableId(
+        value = "id",
+        desc = "主键id"
+    )
+    private Long id;
 
-    Long getTenant();
+    @TableField(
+        value = "env",
+        desc = "数据隔离环境"
+    )
+    private String env;
 
-    Long getId();
+    @TableField(
+        value = "tenant",
+        desc = "租户标识"
+    )
+    private Long tenant;
 
-    Date getGmtCreated();
+    @TableField(
+        value = "gmt_created",
+        insert = "now()",
+        desc = "创建时间"
+    )
+    private Date gmtCreated;
 
-    Date getGmtModified();
+    @TableField(
+        value = "gmt_modified",
+        insert = "now()",
+        update = "now()",
+        desc = "更新时间"
+    )
+    private Date gmtModified;
 
-    Boolean getIsDeleted();
+    @TableField(
+        value = "is_deleted",
+        insert = "0",
+        desc = "是否逻辑删除"
+    )
+    @LogicDelete
+    private Boolean isDeleted;
 
-    E setEnv(String env);
+    public E setEnv(String env) {
+        this.env = env;
+        return (E) this;
+    }
 
-    E setTenant(Long tenantId);
+    public E setTenant(Long tenant) {
+        this.tenant = tenant;
+        return (E) this;
+    }
 
-    E setId(Long id);
+    public E setId(Long id) {
+        this.id = id;
+        return (E) this;
+    }
 
-    E setGmtCreated(Date date);
+    public E setGmtCreated(Date gmtCreated) {
+        this.gmtCreated = gmtCreated;
+        return (E) this;
+    }
 
-    E setGmtModified(Date date);
+    public E setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
+        return (E) this;
+    }
 
-    E setIsDeleted(Boolean isDeleted);
+    public E setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+        return (E) this;
+    }
 }
