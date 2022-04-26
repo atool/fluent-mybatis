@@ -44,7 +44,7 @@ public class FluentScanner2 extends AScanner {
     private void parseEntity(TypeElement element) {
         for (Element item : element.getEnclosedElements()) {
             if (item instanceof VariableElement) {
-                FluentScanner.visitVariable(this.fluent, (VariableElement) item);
+                this.fluent.visitVariable((VariableElement) item);
             }
             if (item instanceof ExecutableElement) {
                 this.fluent.addMethod((ExecutableElement) item);

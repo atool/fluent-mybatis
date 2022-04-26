@@ -1,26 +1,25 @@
 package cn.org.atool.fluent.processor.mybatis.entity;
 
-import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
-import cn.org.atool.fluent.mybatis.annotation.RefMethod;
+import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
+import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
+import cn.org.atool.generator.database.model.FieldType;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import javax.lang.model.element.*;
+import java.util.*;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
+import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_Long;
 import static javax.lang.model.element.Modifier.*;
 
 /**
@@ -170,6 +169,11 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         return this;
     }
 
+    @Override
+    public int compareTo(FluentEntity fluentEntity) {
+        return this.className.compareTo(fluentEntity.getClassName());
+    }
+
     /**
      * 解析RefMethod方法
      *
@@ -186,13 +190,119 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         this.addMethod(method);
     }
 
+    public void visitVariable(VariableElement element) {
+        if (this.isTableField(element)) {
+            return;
+        }
+        TableId tableId = element.getAnnotation(TableId.class);
+        String fieldName = element.getSimpleName().toString();
+
+        if (tableId == null) {
+            CommonField field = parseCommonField(fieldName, element);
+            this.addField(field);
+            this.setFieldType(field, element);
+        } else {
+            PrimaryField field = parsePrimaryField(fieldName, element, tableId);
+            field.setType(field.isAutoIncrease() ? FieldType.PrimaryId : FieldType.PrimaryKey);
+            this.addField(field);
+        }
+    }
+
+    private boolean isTableField(VariableElement element) {
+        return element.getKind() != ElementKind.FIELD ||
+            element.getModifiers().contains(Modifier.STATIC) ||
+            element.getModifiers().contains(Modifier.TRANSIENT) ||
+            element.getAnnotation(NotField.class) != null;
+    }
+
     private boolean isPublicMethod(ExecutableElement element) {
         Set<Modifier> set = element.getModifiers();
         return set.contains(PUBLIC) && !set.contains(STATIC) && !set.contains(ABSTRACT);
     }
 
-    @Override
-    public int compareTo(FluentEntity fluentEntity) {
-        return this.className.compareTo(fluentEntity.getClassName());
+    private void setFieldType(CommonField field, VariableElement element) {
+        if (element.getAnnotation(LogicDelete.class) != null) {
+            this.setLogicDelete(field.getName());
+            this.setLongTypeOfLogicDelete(Objects.equals(field.getJavaType(), CN_Long));
+            field.setType(FieldType.IsDeleted);
+        }
+        if (element.getAnnotation(Version.class) != null) {
+            this.setVersionField(field.getName());
+            field.setType(FieldType.Version);
+        }
+        if (element.getAnnotation(GmtCreate.class) != null) {
+            field.setType(FieldType.GmtCreate);
+        }
+        if (element.getAnnotation(GmtModified.class) != null) {
+            field.setType(FieldType.GmtModified);
+        }
+    }
+
+    /**
+     * 解析普通字段注解信息
+     *
+     * @param fieldName name of field
+     * @param var       var
+     * @return ignore
+     */
+    private CommonField parseCommonField(String fieldName, VariableElement var) {
+        CommonField field = new CommonField(fieldName, ClassNames2.javaType(var));
+        TableField tableField = var.getAnnotation(TableField.class);
+        if (tableField == null) {
+            return field;
+        }
+        field.setColumn(tableField.value());
+        field.setInsert(tableField.insert());
+        field.setUpdate(tableField.update());
+        field.setNotLarge(tableField.notLarge());
+        field.setNumericScale(tableField.numericScale());
+        field.setJdbcType(tableField.jdbcType().name());
+        field.setTypeHandler(getTypeHandler(var, TableField.class.getSimpleName()));
+
+        return field;
+    }
+
+    /**
+     * 解析主键主机信息
+     *
+     * @param fieldName name of field
+     * @param var       var
+     * @param tableId   Annotation
+     * @return ignore
+     */
+    private PrimaryField parsePrimaryField(String fieldName, VariableElement var, TableId tableId) {
+        PrimaryField field = new PrimaryField(fieldName, ClassNames2.javaType(var));
+        field.setColumn(tableId.value());
+        field.setAutoIncrease(tableId.auto());
+        field.setSeqIsBeforeOrder(tableId.before());
+        field.setJdbcType(tableId.jdbcType().name());
+        field.setTypeHandler(getTypeHandler(var, TableId.class.getSimpleName()));
+        field.setSeqName(tableId.seqName());
+        return field;
+    }
+
+    /**
+     * 获取 {@link TableId}和{@link TableField}上的typeHandler属性
+     *
+     * @param var   注解实例
+     * @param aName "TableId" or "TableField"
+     * @return TypeName
+     */
+    private TypeName getTypeHandler(VariableElement var, String aName) {
+        for (AnnotationMirror annotationMirror : var.getAnnotationMirrors()) {
+            String aTypeName = annotationMirror.getAnnotationType().toString();
+            if (!aTypeName.contains(aName)) {
+                continue;
+            }
+            Map<ExecutableElement, AnnotationValue> values = (Map<ExecutableElement, AnnotationValue>) annotationMirror.getElementValues();
+            for (Map.Entry<ExecutableElement, AnnotationValue> entry : values.entrySet()) {
+                String method = entry.getKey().getSimpleName().toString();
+                AnnotationValue value = entry.getValue();
+                if ("typeHandler".equals(method)) {
+                    return ClassNames2.getClassName(value.getValue().toString());
+                }
+            }
+        }
+        return null;
     }
 }

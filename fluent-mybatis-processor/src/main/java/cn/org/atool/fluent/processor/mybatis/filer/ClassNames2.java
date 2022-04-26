@@ -6,8 +6,10 @@ import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.generator.util.ClassNames;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 
 import javax.annotation.Resource;
+import javax.lang.model.element.VariableElement;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -42,5 +44,14 @@ public interface ClassNames2 extends ClassNames {
         String packName = index < 0 ? "" : fullClassName.substring(0, index);
         String klasName = index < 0 ? fullClassName : fullClassName.substring(index + 1);
         return ClassName.get(packName, klasName);
+    }
+
+    static TypeName javaType(VariableElement var) {
+        TypeName type = ClassName.get(var.asType());
+        if (type instanceof ParameterizedTypeName) {
+            return ((ParameterizedTypeName) type).rawType;
+        } else {
+            return type;
+        }
     }
 }
