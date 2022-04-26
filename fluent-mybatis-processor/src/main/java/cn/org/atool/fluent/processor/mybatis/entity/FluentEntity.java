@@ -1,21 +1,27 @@
 package cn.org.atool.fluent.processor.mybatis.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.RefMethod;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
+import com.squareup.javapoet.ClassName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
+import static javax.lang.model.element.Modifier.*;
 
 /**
  * fluent mybatis生成代码Entity信息
@@ -162,6 +168,27 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     public FluentEntity sort() {
         this.fields.sort(Comparator.naturalOrder());
         return this;
+    }
+
+    /**
+     * 解析RefMethod方法
+     *
+     * @param element ExecutableElement
+     */
+    public void addMethod(ExecutableElement element) {
+        RefMethod ref = element.getAnnotation(RefMethod.class);
+        if (ref == null || !this.isPublicMethod(element)) {
+            return;
+        }
+        String methodName = element.getSimpleName().toString();
+        EntityRefMethod method = new EntityRefMethod(methodName, ClassName.get(element.getReturnType()));
+        method.setValue(ref.value());
+        this.addMethod(method);
+    }
+
+    private boolean isPublicMethod(ExecutableElement element) {
+        Set<Modifier> set = element.getModifiers();
+        return set.contains(PUBLIC) && !set.contains(STATIC) && !set.contains(ABSTRACT);
     }
 
     @Override

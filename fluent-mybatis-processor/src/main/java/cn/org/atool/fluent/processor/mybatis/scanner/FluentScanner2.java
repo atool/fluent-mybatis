@@ -2,6 +2,7 @@ package cn.org.atool.fluent.processor.mybatis.scanner;
 
 import cn.org.atool.fluent.mybatis.base.BaseEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
+import cn.org.atool.fluent.processor.AScanner;
 import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import lombok.Getter;
 
@@ -15,16 +16,15 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import java.util.Objects;
 
-public class FluentScanner2 {
-    private final Messager messager;
-
+public class FluentScanner2 extends AScanner {
     @Getter
     private final FluentEntity fluent = new FluentEntity();
 
     public FluentScanner2(Messager messager) {
-        this.messager = messager;
+        super(messager);
     }
 
+    @Override
     public void scan(TypeElement element) {
         this.visitType(element);
         while (!this.isBaseEntity(element)) {
@@ -47,7 +47,7 @@ public class FluentScanner2 {
                 FluentScanner.visitVariable(this.fluent, (VariableElement) item);
             }
             if (item instanceof ExecutableElement) {
-                FluentScanner.visitMethod(this.fluent, (ExecutableElement) item);
+                this.fluent.addMethod((ExecutableElement) item);
             }
         }
     }

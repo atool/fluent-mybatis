@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.annotation.*;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultSetter;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import cn.org.atool.fluent.processor.mybatis.entity.CommonField;
-import cn.org.atool.fluent.processor.mybatis.entity.EntityRefMethod;
 import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.processor.mybatis.entity.PrimaryField;
 import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
@@ -65,24 +64,8 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
 
     @Override
     public Void visitExecutable(ExecutableElement element, Void aVoid) {
-        visitMethod(this.fluent, element);
+        this.fluent.addMethod(element);
         return super.visitExecutable(element, aVoid);
-    }
-
-    public static void visitMethod(FluentEntity fluent, ExecutableElement element) {
-        if (element.getModifiers().contains(Modifier.STATIC) ||
-            element.getModifiers().contains(Modifier.ABSTRACT) ||
-            !element.getModifiers().contains(Modifier.PUBLIC)) {
-            return;
-        }
-        RefMethod ref = element.getAnnotation(RefMethod.class);
-        if (ref == null) {
-            return;
-        }
-        String methodName = element.getSimpleName().toString();
-        EntityRefMethod method = new EntityRefMethod(methodName, ClassName.get(element.getReturnType()));
-        method.setValue(ref.value());
-        fluent.addMethod(method);
     }
 
     @Override
