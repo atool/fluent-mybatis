@@ -31,12 +31,6 @@ public class MemberDataMap extends TableDataMap<MemberDataMap> {
   public final transient KeyValue<MemberDataMap> age = new KeyValue<>(this, "age", "age", supplier);
 
   @ColumnDef(
-      value = "gmt_created",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<MemberDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
-
-  @ColumnDef(
       value = "is_girl",
       type = "BIT",
       defaultValue = "0"
@@ -54,6 +48,12 @@ public class MemberDataMap extends TableDataMap<MemberDataMap> {
       type = "VARCHAR(45)"
   )
   public final transient KeyValue<MemberDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
+
+  @ColumnDef(
+      value = "gmt_created",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<MemberDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
@@ -83,6 +83,7 @@ public class MemberDataMap extends TableDataMap<MemberDataMap> {
   @Override
   public MemberDataMap init() {
     this.id.autoIncrease();
+    this.gmtCreated.values(new Date());
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
     return this;

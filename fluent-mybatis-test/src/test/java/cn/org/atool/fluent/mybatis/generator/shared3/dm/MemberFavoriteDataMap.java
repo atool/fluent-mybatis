@@ -31,17 +31,17 @@ public class MemberFavoriteDataMap extends TableDataMap<MemberFavoriteDataMap> {
   public final transient KeyValue<MemberFavoriteDataMap> favorite = new KeyValue<>(this, "favorite", "favorite", supplier);
 
   @ColumnDef(
-      value = "gmt_created",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<MemberFavoriteDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
-
-  @ColumnDef(
       value = "member_id",
       type = "BIGINT",
       notNull = true
   )
   public final transient KeyValue<MemberFavoriteDataMap> memberId = new KeyValue<>(this, "member_id", "memberId", supplier);
+
+  @ColumnDef(
+      value = "gmt_created",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<MemberFavoriteDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
 
   @ColumnDef(
       value = "gmt_modified",
@@ -71,6 +71,7 @@ public class MemberFavoriteDataMap extends TableDataMap<MemberFavoriteDataMap> {
   @Override
   public MemberFavoriteDataMap init() {
     this.id.autoIncrease();
+    this.gmtCreated.values(new Date());
     this.gmtModified.values(new Date());
     this.isDeleted.values(false);
     return this;

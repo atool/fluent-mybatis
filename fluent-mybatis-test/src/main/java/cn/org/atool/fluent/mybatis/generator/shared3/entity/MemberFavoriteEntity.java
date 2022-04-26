@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.generator.shared3.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.GmtCreate;
 import cn.org.atool.fluent.mybatis.annotation.GmtModified;
 import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
@@ -48,16 +49,18 @@ public class MemberFavoriteEntity extends RichEntity {
   private String favorite;
 
   @TableField(
-      value = "gmt_created",
-      desc = "创建时间"
-  )
-  private Date gmtCreated;
-
-  @TableField(
       value = "member_id",
       desc = "member表外键"
   )
   private Long memberId;
+
+  @TableField(
+      value = "gmt_created",
+      insert = "now()",
+      desc = "创建时间"
+  )
+  @GmtCreate
+  private Date gmtCreated;
 
   @TableField(
       value = "gmt_modified",

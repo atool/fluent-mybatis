@@ -76,7 +76,7 @@ public class FluentMyBatisGeneratorMain {
         /* Entity类parent package路径 **/
         srcDir = SrcDir, daoDir = SrcDir, testDir = TestDir, basePack = BasePack + 3,
         /* 如果表定义记录创建，记录修改，逻辑删除字段 **/
-        gmtCreated = "gmt_create", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
+        gmtCreated = "gmt_created", gmtModified = "gmt_modified", logicDeleted = "is_deleted",
         /* 需要生成文件的表 ( 表名称:对应的Entity名称 ) **/
         tables = @Table(value = {"t_member", "t_member_love", "t_member_favorite"}, tablePrefix = "t_"),
         relations = {

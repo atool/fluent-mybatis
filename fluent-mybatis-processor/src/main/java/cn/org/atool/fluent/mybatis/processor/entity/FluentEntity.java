@@ -159,7 +159,7 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
     /**
      * 对字段进行排序
      */
-    public FluentEntity sortFields() {
+    public FluentEntity sort() {
         this.fields.sort(Comparator.naturalOrder());
         return this;
     }
