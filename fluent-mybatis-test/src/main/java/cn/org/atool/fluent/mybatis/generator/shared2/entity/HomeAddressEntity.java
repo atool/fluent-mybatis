@@ -4,15 +4,15 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
-import cn.org.atool.fluent.mybatis.base.RichEntity;
 import cn.org.atool.fluent.mybatis.customize.MyCustomerInterface;
 import cn.org.atool.fluent.mybatis.customize.MyEntity;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * HomeAddressEntity: 数据映射实体定义
@@ -35,7 +35,7 @@ import lombok.experimental.Accessors;
     mapperBeanPrefix = "my",
     defaults = MyCustomerInterface.class
 )
-public class HomeAddressEntity extends RichEntity implements MyEntity<HomeAddressEntity> {
+public class HomeAddressEntity extends MyEntity<HomeAddressEntity> {
   private static final long serialVersionUID = 1L;
 
   @TableId(
