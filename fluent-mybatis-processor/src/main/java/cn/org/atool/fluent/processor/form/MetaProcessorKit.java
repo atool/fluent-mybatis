@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.processor.form;
 
-import cn.org.atool.fluent.form.processor.filer.MetaKitFiler;
-import cn.org.atool.fluent.form.processor.scanner.FormScanner;
+import cn.org.atool.fluent.processor.form.filer.MetaKitFiler;
+import cn.org.atool.fluent.processor.form.scanner.FormScanner;
 import com.squareup.javapoet.JavaFile;
 
 import javax.annotation.processing.Filer;

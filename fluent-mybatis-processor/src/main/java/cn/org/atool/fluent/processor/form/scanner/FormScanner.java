@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.form.processor.scanner;
+package cn.org.atool.fluent.processor.form.scanner;
 
 import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
-import cn.org.atool.fluent.form.processor.model.FormField;
+import cn.org.atool.fluent.processor.form.model.FormField;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;

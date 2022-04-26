@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.processor.model;
+package cn.org.atool.fluent.processor.form.model;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import com.squareup.javapoet.ClassName;

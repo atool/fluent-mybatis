@@ -1,9 +1,9 @@
-package cn.org.atool.fluent.form.processor.filer;
+package cn.org.atool.fluent.processor.form.filer;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.entry.EntryMetaKit;
-import cn.org.atool.fluent.form.processor.model.FormField;
+import cn.org.atool.fluent.processor.form.model.FormField;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
