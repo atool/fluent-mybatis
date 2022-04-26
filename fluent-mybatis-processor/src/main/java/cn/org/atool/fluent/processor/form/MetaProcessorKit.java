@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.form.processor;
+package cn.org.atool.fluent.processor.form;
 
 import cn.org.atool.fluent.form.processor.filer.MetaKitFiler;
 import cn.org.atool.fluent.form.processor.scanner.FormScanner;

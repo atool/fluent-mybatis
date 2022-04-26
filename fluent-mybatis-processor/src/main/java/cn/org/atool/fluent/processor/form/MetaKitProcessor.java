@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.form.processor;
+package cn.org.atool.fluent.processor.form;
 
-import cn.org.atool.fluent.BaseProcessor;
+import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.form.annotation.Form;
 import com.google.auto.service.AutoService;
 
@@ -8,7 +8,6 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
 

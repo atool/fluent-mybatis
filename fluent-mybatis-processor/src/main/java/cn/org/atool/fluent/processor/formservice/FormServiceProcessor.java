@@ -1,10 +1,9 @@
-package cn.org.atool.fluent.formservice.processor;
+package cn.org.atool.fluent.processor.formservice;
 
-import cn.org.atool.fluent.BaseProcessor;
+import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.form.annotation.FormService;
 import cn.org.atool.fluent.formservice.processor.filer.FormServiceImplFiler;
 import cn.org.atool.fluent.formservice.processor.scanner.FormServiceScanner;
-import cn.org.atool.fluent.mybatis.processor.FluentMybatisProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 

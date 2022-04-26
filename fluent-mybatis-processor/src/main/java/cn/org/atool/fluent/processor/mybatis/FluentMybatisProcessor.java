@@ -1,6 +1,6 @@
-package cn.org.atool.fluent.mybatis.processor;
+package cn.org.atool.fluent.processor.mybatis;
 
-import cn.org.atool.fluent.BaseProcessor;
+import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.processor.entity.FluentList;
 import cn.org.atool.fluent.mybatis.processor.scanner.FluentScanner2;

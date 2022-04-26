@@ -1,4 +1,4 @@
-package cn.org.atool.fluent;
+package cn.org.atool.fluent.processor;
 
 import cn.org.atool.fluent.mybatis.processor.base.IProcessor;
 import cn.org.atool.generator.util.GeneratorHelper;
