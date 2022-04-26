@@ -25,6 +25,18 @@ public class TeacherDataMap extends TableDataMap<TeacherDataMap> {
   public final transient KeyValue<TeacherDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
+      value = "env",
+      type = "VARCHAR(10)"
+  )
+  public final transient KeyValue<TeacherDataMap> env = new KeyValue<>(this, "env", "env", supplier);
+
+  @ColumnDef(
+      value = "user_name",
+      type = "VARCHAR(20)"
+  )
+  public final transient KeyValue<TeacherDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
+
+  @ColumnDef(
       value = "gmt_created",
       type = "DATETIME"
   )
@@ -42,18 +54,6 @@ public class TeacherDataMap extends TableDataMap<TeacherDataMap> {
       defaultValue = "0"
   )
   public final transient KeyValue<TeacherDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
-
-  @ColumnDef(
-      value = "env",
-      type = "VARCHAR(10)"
-  )
-  public final transient KeyValue<TeacherDataMap> env = new KeyValue<>(this, "env", "env", supplier);
-
-  @ColumnDef(
-      value = "user_name",
-      type = "VARCHAR(20)"
-  )
-  public final transient KeyValue<TeacherDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
 
   TeacherDataMap(boolean isTable) {
     super("teacher", isTable);

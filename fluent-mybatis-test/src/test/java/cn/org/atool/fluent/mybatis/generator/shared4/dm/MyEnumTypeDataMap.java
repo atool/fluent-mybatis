@@ -24,13 +24,6 @@ public class MyEnumTypeDataMap extends TableDataMap<MyEnumTypeDataMap> {
   public final transient KeyValue<MyEnumTypeDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
-      value = "is_deleted",
-      type = "TINYINT",
-      defaultValue = "0"
-  )
-  public final transient KeyValue<MyEnumTypeDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
-
-  @ColumnDef(
       value = "enum-num",
       type = "INT"
   )
@@ -41,6 +34,13 @@ public class MyEnumTypeDataMap extends TableDataMap<MyEnumTypeDataMap> {
       type = "VARCHAR(20)"
   )
   public final transient KeyValue<MyEnumTypeDataMap> enumString = new KeyValue<>(this, "enum_string", "enumString", supplier);
+
+  @ColumnDef(
+      value = "is_deleted",
+      type = "TINYINT",
+      defaultValue = "0"
+  )
+  public final transient KeyValue<MyEnumTypeDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   MyEnumTypeDataMap(boolean isTable) {
     super("my_enum_type", isTable);

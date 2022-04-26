@@ -25,25 +25,6 @@ public class StudentDataMap extends TableDataMap<StudentDataMap> {
   public final transient KeyValue<StudentDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
-      value = "gmt_created",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<StudentDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
-
-  @ColumnDef(
-      value = "gmt_modified",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<StudentDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
-
-  @ColumnDef(
-      value = "is_deleted",
-      type = "TINYINT",
-      defaultValue = "0"
-  )
-  public final transient KeyValue<StudentDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
-
-  @ColumnDef(
       value = "address",
       type = "VARCHAR(200)"
   )
@@ -142,6 +123,25 @@ public class StudentDataMap extends TableDataMap<StudentDataMap> {
       type = "VARCHAR(200)"
   )
   public final transient KeyValue<StudentDataMap> version = new KeyValue<>(this, "version", "version", supplier);
+
+  @ColumnDef(
+      value = "gmt_created",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<StudentDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
+
+  @ColumnDef(
+      value = "gmt_modified",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<StudentDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
+
+  @ColumnDef(
+      value = "is_deleted",
+      type = "TINYINT",
+      defaultValue = "0"
+  )
+  public final transient KeyValue<StudentDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   StudentDataMap(boolean isTable) {
     super("student", isTable);

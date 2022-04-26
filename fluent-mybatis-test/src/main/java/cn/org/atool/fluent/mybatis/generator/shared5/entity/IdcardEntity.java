@@ -43,14 +43,6 @@ public class IdcardEntity extends BaseEntity {
   )
   private Long id;
 
-  @TableField(
-      value = "is_deleted",
-      insert = "0",
-      desc = "是否逻辑删除"
-  )
-  @LogicDelete
-  private Long isDeleted;
-
   @TableField("code")
   private String code;
 
@@ -62,6 +54,14 @@ public class IdcardEntity extends BaseEntity {
   )
   @Version
   private Long version;
+
+  @TableField(
+      value = "is_deleted",
+      insert = "0",
+      desc = "是否逻辑删除"
+  )
+  @LogicDelete
+  private Long isDeleted;
 
   @Override
   public final Class entityClass() {

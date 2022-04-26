@@ -25,25 +25,6 @@ public class HomeAddressDataMap extends TableDataMap<HomeAddressDataMap> {
   public final transient KeyValue<HomeAddressDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
-      value = "gmt_created",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<HomeAddressDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
-
-  @ColumnDef(
-      value = "gmt_modified",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<HomeAddressDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
-
-  @ColumnDef(
-      value = "is_deleted",
-      type = "TINYINT",
-      defaultValue = "0"
-  )
-  public final transient KeyValue<HomeAddressDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
-
-  @ColumnDef(
       value = "address",
       type = "VARCHAR(100)"
   )
@@ -87,6 +68,25 @@ public class HomeAddressDataMap extends TableDataMap<HomeAddressDataMap> {
       defaultValue = "0"
   )
   public final transient KeyValue<HomeAddressDataMap> tenant = new KeyValue<>(this, "tenant", "tenant", supplier);
+
+  @ColumnDef(
+      value = "gmt_created",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<HomeAddressDataMap> gmtCreated = new KeyValue<>(this, "gmt_created", "gmtCreated", supplier);
+
+  @ColumnDef(
+      value = "gmt_modified",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<HomeAddressDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
+
+  @ColumnDef(
+      value = "is_deleted",
+      type = "TINYINT",
+      defaultValue = "0"
+  )
+  public final transient KeyValue<HomeAddressDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   HomeAddressDataMap(boolean isTable) {
     super("home_address", isTable);

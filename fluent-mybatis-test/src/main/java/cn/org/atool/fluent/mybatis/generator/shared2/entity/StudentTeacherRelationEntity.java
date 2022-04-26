@@ -1,6 +1,8 @@
 package cn.org.atool.fluent.mybatis.generator.shared2.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.GmtCreate;
+import cn.org.atool.fluent.mybatis.annotation.GmtModified;
 import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
@@ -38,29 +40,6 @@ public class StudentTeacherRelationEntity extends RichEntity {
   private Long id;
 
   @TableField(
-      value = "gmt_created",
-      insert = "now()",
-      desc = "创建时间"
-  )
-  private Date gmtCreated;
-
-  @TableField(
-      value = "gmt_modified",
-      insert = "now()",
-      update = "now()",
-      desc = "更新时间"
-  )
-  private Date gmtModified;
-
-  @TableField(
-      value = "is_deleted",
-      insert = "0",
-      desc = "是否逻辑删除"
-  )
-  @LogicDelete
-  private Boolean isDeleted;
-
-  @TableField(
       value = "env",
       desc = "数据隔离环境"
   )
@@ -71,6 +50,31 @@ public class StudentTeacherRelationEntity extends RichEntity {
 
   @TableField("teacher_id")
   private Long teacherId;
+
+  @TableField(
+      value = "gmt_created",
+      insert = "now()",
+      desc = "创建时间"
+  )
+  @GmtCreate
+  private Date gmtCreated;
+
+  @TableField(
+      value = "gmt_modified",
+      insert = "now()",
+      update = "now()",
+      desc = "更新时间"
+  )
+  @GmtModified
+  private Date gmtModified;
+
+  @TableField(
+      value = "is_deleted",
+      insert = "0",
+      desc = "是否逻辑删除"
+  )
+  @LogicDelete
+  private Boolean isDeleted;
 
   @Override
   public final Class entityClass() {

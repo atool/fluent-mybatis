@@ -25,19 +25,6 @@ public class MemberFavoriteDataMap extends TableDataMap<MemberFavoriteDataMap> {
   public final transient KeyValue<MemberFavoriteDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
-      value = "gmt_modified",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<MemberFavoriteDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
-
-  @ColumnDef(
-      value = "is_deleted",
-      type = "TINYINT",
-      defaultValue = "0"
-  )
-  public final transient KeyValue<MemberFavoriteDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
-
-  @ColumnDef(
       value = "favorite",
       type = "VARCHAR(45)"
   )
@@ -55,6 +42,19 @@ public class MemberFavoriteDataMap extends TableDataMap<MemberFavoriteDataMap> {
       notNull = true
   )
   public final transient KeyValue<MemberFavoriteDataMap> memberId = new KeyValue<>(this, "member_id", "memberId", supplier);
+
+  @ColumnDef(
+      value = "gmt_modified",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<MemberFavoriteDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
+
+  @ColumnDef(
+      value = "is_deleted",
+      type = "TINYINT",
+      defaultValue = "0"
+  )
+  public final transient KeyValue<MemberFavoriteDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   MemberFavoriteDataMap(boolean isTable) {
     super("t_member_favorite", isTable);

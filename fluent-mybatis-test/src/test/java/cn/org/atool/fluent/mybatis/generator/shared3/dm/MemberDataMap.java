@@ -25,19 +25,6 @@ public class MemberDataMap extends TableDataMap<MemberDataMap> {
   public final transient KeyValue<MemberDataMap> id = new KeyValue<>(this, "id", "id", supplier);
 
   @ColumnDef(
-      value = "gmt_modified",
-      type = "DATETIME"
-  )
-  public final transient KeyValue<MemberDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
-
-  @ColumnDef(
-      value = "is_deleted",
-      type = "BIT",
-      defaultValue = "0"
-  )
-  public final transient KeyValue<MemberDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
-
-  @ColumnDef(
       value = "age",
       type = "INT"
   )
@@ -67,6 +54,19 @@ public class MemberDataMap extends TableDataMap<MemberDataMap> {
       type = "VARCHAR(45)"
   )
   public final transient KeyValue<MemberDataMap> userName = new KeyValue<>(this, "user_name", "userName", supplier);
+
+  @ColumnDef(
+      value = "gmt_modified",
+      type = "DATETIME"
+  )
+  public final transient KeyValue<MemberDataMap> gmtModified = new KeyValue<>(this, "gmt_modified", "gmtModified", supplier);
+
+  @ColumnDef(
+      value = "is_deleted",
+      type = "BIT",
+      defaultValue = "0"
+  )
+  public final transient KeyValue<MemberDataMap> isDeleted = new KeyValue<>(this, "is_deleted", "isDeleted", supplier);
 
   MemberDataMap(boolean isTable) {
     super("t_member", isTable);

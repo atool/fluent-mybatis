@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.generator.shared3.entity;
 
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.GmtModified;
 import cn.org.atool.fluent.mybatis.annotation.LogicDelete;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;
@@ -41,22 +42,6 @@ public class MemberFavoriteEntity extends RichEntity {
   private Long id;
 
   @TableField(
-      value = "gmt_modified",
-      insert = "now()",
-      update = "now()",
-      desc = "更新时间"
-  )
-  private Date gmtModified;
-
-  @TableField(
-      value = "is_deleted",
-      insert = "0",
-      desc = "是否逻辑删除"
-  )
-  @LogicDelete
-  private Boolean isDeleted;
-
-  @TableField(
       value = "favorite",
       desc = "爱好: 电影, 爬山, 徒步..."
   )
@@ -73,6 +58,23 @@ public class MemberFavoriteEntity extends RichEntity {
       desc = "member表外键"
   )
   private Long memberId;
+
+  @TableField(
+      value = "gmt_modified",
+      insert = "now()",
+      update = "now()",
+      desc = "更新时间"
+  )
+  @GmtModified
+  private Date gmtModified;
+
+  @TableField(
+      value = "is_deleted",
+      insert = "0",
+      desc = "是否逻辑删除"
+  )
+  @LogicDelete
+  private Boolean isDeleted;
 
   @Override
   public final Class entityClass() {

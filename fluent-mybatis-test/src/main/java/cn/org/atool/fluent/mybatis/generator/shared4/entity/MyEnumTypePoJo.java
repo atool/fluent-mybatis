@@ -47,14 +47,6 @@ public class MyEnumTypePoJo extends RichEntity {
   private Long id;
 
   @TableField(
-      value = "is_deleted",
-      insert = "0",
-      desc = "是否逻辑删除"
-  )
-  @LogicDelete
-  private Boolean isDeleted;
-
-  @TableField(
       value = "enum-num",
       typeHandler = EnumOrdinalTypeHandler.class,
       desc = "枚举类型, 序号"
@@ -67,6 +59,14 @@ public class MyEnumTypePoJo extends RichEntity {
       desc = "枚举类型, 字符"
   )
   private MyEnum enumString;
+
+  @TableField(
+      value = "is_deleted",
+      insert = "0",
+      desc = "是否逻辑删除"
+  )
+  @LogicDelete
+  private Boolean isDeleted;
 
   @Override
   public final Class entityClass() {
