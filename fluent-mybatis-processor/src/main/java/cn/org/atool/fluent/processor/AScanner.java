@@ -2,6 +2,8 @@ package cn.org.atool.fluent.processor;
 
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 
 /**
  * Scanner基类
@@ -15,5 +17,9 @@ public abstract class AScanner {
         this.messager = messager;
     }
 
-    public abstract void scan(TypeElement element);
+    public abstract AScanner scan(TypeElement element);
+
+    protected TypeElement asTypeElement(TypeMirror typeMirror) {
+        return (TypeElement) ((DeclaredType) typeMirror).asElement();
+    }
 }

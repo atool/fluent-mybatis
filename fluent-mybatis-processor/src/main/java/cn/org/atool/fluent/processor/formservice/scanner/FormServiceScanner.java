@@ -1,15 +1,14 @@
 package cn.org.atool.fluent.processor.formservice.scanner;
 
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.processor.AScanner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
@@ -17,17 +16,19 @@ import java.util.*;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.DOT_STR;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
-public class FormServiceScanner {
+public class FormServiceScanner extends AScanner {
     private final Queue<TypeElement> interfaces = new LinkedList<>();
     private final Set<String> hasParsed = new HashSet<>();
 
     @Getter
     private final List<ExecutableElement> abstractMethods = new ArrayList<>();
 
-    private Messager messager;
+    public FormServiceScanner(ProcessingEnvironment env) {
+        super(env.getMessager());
+    }
 
-    public FormServiceScanner(TypeElement element, ProcessingEnvironment env) {
-        this.messager = env.getMessager();
+    @Override
+    public FormServiceScanner scan(TypeElement element) {
         while (!Objects.equals(element.toString(), Object.class.getName())) {
             this.parseAbstractMethod(element);
 
@@ -41,10 +42,7 @@ public class FormServiceScanner {
             TypeElement type = interfaces.poll();
             parseAbstractMethod(type);
         }
-    }
-
-    private TypeElement asTypeElement(TypeMirror typeMirror) {
-        return (TypeElement) ((DeclaredType) typeMirror).asElement();
+        return this;
     }
 
     private void parseAbstractMethod(TypeElement element) {

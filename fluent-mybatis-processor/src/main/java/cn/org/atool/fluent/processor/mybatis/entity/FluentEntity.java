@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
 import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
+import cn.org.atool.fluent.processor.mybatis.scanner.ClassAttrParser;
 import cn.org.atool.generator.database.model.FieldType;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
@@ -16,10 +17,13 @@ import lombok.ToString;
 
 import javax.lang.model.element.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_Long;
+import static cn.org.atool.fluent.processor.mybatis.scanner.ClassAttrParser.ATTR_DEFAULTS;
+import static cn.org.atool.fluent.processor.mybatis.scanner.ClassAttrParser.ATTR_SUPER_MAPPER;
 import static javax.lang.model.element.Modifier.*;
 
 /**
@@ -27,7 +31,7 @@ import static javax.lang.model.element.Modifier.*;
  *
  * @author wudarui
  */
-@SuppressWarnings({"UnusedReturnValue"})
+@SuppressWarnings({"UnusedReturnValue", "unchecked"})
 @Getter
 @ToString
 public class FluentEntity extends FluentClassName implements Comparable<FluentEntity> {
@@ -144,6 +148,19 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         this.usedCached = fluentMyBatis.useCached();
         this.useDao = fluentMyBatis.useDao();
         return this;
+    }
+
+    public void parseEntity(TypeElement entity, Consumer<String> log) {
+        FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
+        if (fluentMybatis == null) {
+            log.accept("Error in: " + entity.getQualifiedName().toString());
+        } else {
+            ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
+            this.setClassName(className.packageName(), className.simpleName());
+            String defaults = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_DEFAULTS, IDefaultSetter.class);
+            String superMapper = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_SUPER_MAPPER, IMapper.class);
+            this.setFluentMyBatis(fluentMybatis, defaults, superMapper);
+        }
     }
 
     public FluentEntity addMethod(EntityRefMethod method) {

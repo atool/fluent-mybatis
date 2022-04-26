@@ -11,9 +11,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
 import java.util.Objects;
 
 public class FluentScanner2 extends AScanner {
@@ -25,30 +25,27 @@ public class FluentScanner2 extends AScanner {
     }
 
     @Override
-    public void scan(TypeElement element) {
-        this.visitType(element);
+    public FluentScanner2 scan(TypeElement element) {
+        this.fluent.parseEntity(element, err -> this.messager.printMessage(Diagnostic.Kind.ERROR, err));
         while (!this.isBaseEntity(element)) {
-            this.parseEntity(element);
+            for (Element item : element.getEnclosedElements()) {
+                this.visitElement(item);
+            }
             TypeMirror typeMirror = element.getSuperclass();
             if (typeMirror instanceof NoType) {
                 break;
             }
             element = this.asTypeElement(typeMirror);
         }
+        return this;
     }
 
-    private void visitType(TypeElement element) {
-        FluentScanner.visitEntity(this.fluent, element, this.messager);
-    }
-
-    private void parseEntity(TypeElement element) {
-        for (Element item : element.getEnclosedElements()) {
-            if (item instanceof VariableElement) {
-                this.fluent.visitVariable((VariableElement) item);
-            }
-            if (item instanceof ExecutableElement) {
-                this.fluent.addMethod((ExecutableElement) item);
-            }
+    private void visitElement(Element item) {
+        if (item instanceof VariableElement) {
+            this.fluent.visitVariable((VariableElement) item);
+        }
+        if (item instanceof ExecutableElement) {
+            this.fluent.addMethod((ExecutableElement) item);
         }
     }
 
@@ -61,9 +58,5 @@ public class FluentScanner2 extends AScanner {
         } else {
             return Objects.equals(Object.class.getName(), name);
         }
-    }
-
-    private TypeElement asTypeElement(TypeMirror typeMirror) {
-        return (TypeElement) ((DeclaredType) typeMirror).asElement();
     }
 }

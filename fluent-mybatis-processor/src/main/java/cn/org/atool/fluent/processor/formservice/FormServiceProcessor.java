@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.processor.formservice;
 
-import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.form.annotation.FormService;
+import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.processor.formservice.filer.FormServiceImplFiler;
 import cn.org.atool.fluent.processor.formservice.scanner.FormServiceScanner;
 import com.google.auto.service.AutoService;
@@ -34,7 +34,7 @@ public class FormServiceProcessor extends BaseProcessor {
         if (annotation.proxy()) {
             return;
         }
-        List<ExecutableElement> methods = new FormServiceScanner(element, env).getAbstractMethods();
+        List<ExecutableElement> methods = new FormServiceScanner(env).scan(element).getAbstractMethods();
 
         JavaFile javaFile = new FormServiceImplFiler(element, methods).javaFile();
         javaFile.writeTo(filer);
