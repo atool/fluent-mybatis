@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
-import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.model.ISqlOp;
 import cn.org.atool.fluent.mybatis.base.model.SqlOp;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
@@ -74,7 +74,7 @@ public class WrapperData implements IWrapperData, IDataByColumn {
 
 
     /**
-     * 外部传入的where条件, 只在 {@link IEntityMapper#logicDelete(IQuery)}场景下使用
+     * 外部传入的where条件, 只在 {@link IRichMapper#logicDelete(IQuery)}场景下使用
      *
      * @param query IQuery
      */
@@ -202,27 +202,31 @@ public class WrapperData implements IWrapperData, IDataByColumn {
     public IFragment sql(boolean withPaged) {
         IFragment withoutPaged = this.withoutPaged();
         if (!withPaged || this.paged == null) {
-            return withoutPaged;
+            return this.union(withoutPaged);
         }
-        return m -> {
+        IFragment hasPaged = m -> {
             Parameters p = this.getParameters();
             String offset = p.putParameter(null, paged.getOffset());
             String size = p.putParameter(null, paged.getLimit());
             String endOffset = p.putParameter(null, paged.getEndOffset());
             return m.db().paged(withoutPaged.get(m), offset, size, endOffset);
         };
+        return this.union(hasPaged);
     }
 
     private IFragment withoutPaged() {
         if (customizedSql.notEmpty()) {
             return customizedSql;
         }
-        IFragment segment = m -> {
+        return m -> {
             MapperSql text = new MapperSql();
             text.SELECT(m, this.table(), this, this.select());
             text.WHERE_GROUP_ORDER_BY(m, this);
             return text.toString();
         };
+    }
+
+    private IFragment union(IFragment segment) {
         segment = unions.isEmpty() ? segment : BracketFrag.set(segment);
         for (Union union : this.unions) {
             segment = segment.plus(SPACE + union.key + SPACE).plus(BracketFrag.set(union.query));

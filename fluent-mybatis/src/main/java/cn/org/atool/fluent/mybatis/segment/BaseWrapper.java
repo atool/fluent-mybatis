@@ -175,9 +175,6 @@ public abstract class BaseWrapper<
      * @return union后的IQuery
      */
     protected IQuery union(String key, IQuery... queries) {
-        if (this.data.paged() != null) {
-            throw new RuntimeException("Limit syntax is not supported for union queries.");
-        }
         if (queries == null || queries.length == 0) {
             throw new IllegalArgumentException("The size of parameter[queries] should be greater than zero.");
         }
