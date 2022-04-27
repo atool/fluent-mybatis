@@ -89,14 +89,14 @@ public class EntityMappingFiler extends AbstractFiler {
     }
 
     private FieldSpec f_Table_Name() {
-        return FieldSpec.builder(String.class, "Table_Name", PUBLIC_STATIC_FINAL)
+        return FieldSpec.builder(String.class, "TABLE_NAME", PUBLIC_STATIC_FINAL)
             .initializer("$S", fluent.getTableName())
             .addJavadoc(super.codeBlock("表名称"))
             .build();
     }
 
     private FieldSpec f_Entity_Name() {
-        return FieldSpec.builder(String.class, "Entity_Name", PUBLIC_STATIC_FINAL)
+        return FieldSpec.builder(String.class, "ENTITY_NAME", PUBLIC_STATIC_FINAL)
             .initializer("$S", fluent.getClassName())
             .addJavadoc(super.codeBlock("Entity名称"))
             .build();
@@ -167,7 +167,7 @@ public class EntityMappingFiler extends AbstractFiler {
         MethodSpec.Builder spec = MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PROTECTED)
             .addStatement("super($T.$L)", DbType.class, fluent.getDbType().name())
-            .addStatement("super.tableName = Table_Name");
+            .addStatement("super.tableName = TABLE_NAME");
         PrimaryField p = fluent.getPrimary();
         if (p != null) {
             spec.addStatement("super.tableId = new $T($S, $S, $L, $S, $L)",
