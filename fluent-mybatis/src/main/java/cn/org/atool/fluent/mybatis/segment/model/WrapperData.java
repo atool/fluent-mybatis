@@ -200,18 +200,26 @@ public class WrapperData implements IWrapperData, IDataByColumn {
 
     @Override
     public IFragment sql(boolean withPaged) {
-        IFragment withoutPaged = this.withoutPaged();
+        IFragment withoutPagedSegment = this.withoutPaged();
+        IFragment withPagedSegment = this.withPaged(withPaged, withoutPagedSegment);
+        return this.union(withPagedSegment);
+    }
+
+    /**
+     * 添加limit语句
+     */
+    private IFragment withPaged(boolean withPaged, IFragment withoutPaged) {
         if (!withPaged || this.paged == null) {
-            return this.union(withoutPaged);
+            return withoutPaged;
+        } else {
+            return m -> {
+                Parameters p = this.getParameters();
+                String offset = p.putParameter(null, paged.getOffset());
+                String size = p.putParameter(null, paged.getLimit());
+                String endOffset = p.putParameter(null, paged.getEndOffset());
+                return m.db().paged(withoutPaged.get(m), offset, size, endOffset);
+            };
         }
-        IFragment hasPaged = m -> {
-            Parameters p = this.getParameters();
-            String offset = p.putParameter(null, paged.getOffset());
-            String size = p.putParameter(null, paged.getLimit());
-            String endOffset = p.putParameter(null, paged.getEndOffset());
-            return m.db().paged(withoutPaged.get(m), offset, size, endOffset);
-        };
-        return this.union(hasPaged);
     }
 
     private IFragment withoutPaged() {
