@@ -3,7 +3,7 @@ package cn.org.atool.fluent.dbtest;
 import cn.org.atool.fluent.mybatis.db.oracle11.mapper.OracleMapper;
 import cn.org.atool.fluent.mybatis.db.oracle11.wrapper.OracleQuery;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

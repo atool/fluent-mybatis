@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.where.nested;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

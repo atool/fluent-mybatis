@@ -2,7 +2,7 @@ package cn.org.atool.fluent.dbtest;
 
 import cn.org.atool.fluent.mybatis.db.sqlite.mapper.SqliteStudentMapper;
 import cn.org.atool.fluent.mybatis.db.sqlite.wrapper.SqliteStudentQuery;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

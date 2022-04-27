@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.string.StringMode;

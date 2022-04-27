@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.formservice.model.HomeAddress;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.dao.intf.HomeAddressDao;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

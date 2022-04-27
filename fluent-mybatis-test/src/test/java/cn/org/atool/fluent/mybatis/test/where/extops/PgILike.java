@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.where.extops;
 import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
 import cn.org.atool.fluent.mybatis.base.model.op.SqlOps;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

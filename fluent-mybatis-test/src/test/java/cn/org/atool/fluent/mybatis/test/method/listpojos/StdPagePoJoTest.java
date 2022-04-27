@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentScoreQuery;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.segment.JoinQuery;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

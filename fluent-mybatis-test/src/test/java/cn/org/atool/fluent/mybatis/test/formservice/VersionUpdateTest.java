@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.test.formservice;
 
 import cn.org.atool.fluent.mybatis.formservice.service.IdCardService;
 import cn.org.atool.fluent.mybatis.formservice.service.IdCardService.VForm;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

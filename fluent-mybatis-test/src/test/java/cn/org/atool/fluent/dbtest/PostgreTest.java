@@ -3,7 +3,7 @@ package cn.org.atool.fluent.dbtest;
 import cn.org.atool.fluent.mybatis.db.pg.entity.PgStudentEntity;
 import cn.org.atool.fluent.mybatis.db.pg.mapper.PgStudentMapper;
 import cn.org.atool.fluent.mybatis.db.pg.wrapper.PgStudentQuery;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

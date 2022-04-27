@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.test.method.listpojos;
 import cn.org.atool.fluent.mybatis.customize.model.ScoreStatistics;
 import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared2.dao.intf.StudentScoreDao;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.test4j.hamcrest.matcher.modes.EqMode;

@@ -8,7 +8,7 @@ import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.HomeAddressUpdate;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentUpdate;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

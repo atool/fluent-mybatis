@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.test.mymapper;
 
 import cn.org.atool.fluent.mybatis.customize.mapper.MyXmlMapper;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

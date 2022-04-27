@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.generator.shared1.entity.NoAutoIdEntity;
 import cn.org.atool.fluent.mybatis.generator.shared1.mapper.NoAutoIdMapper;
 import cn.org.atool.fluent.mybatis.generator.shared1.wrapper.NoAutoIdUpdate;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;

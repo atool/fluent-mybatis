@@ -4,7 +4,7 @@ import cn.org.atool.fluent.mybatis.generator.ATM;
 import cn.org.atool.fluent.mybatis.generator.shared5.entity.IdcardEntity;
 import cn.org.atool.fluent.mybatis.generator.shared5.mapper.IdcardMapper;
 import cn.org.atool.fluent.mybatis.generator.shared5.wrapper.IdcardUpdate;
-import cn.org.atool.fluent.mybatis.test1.BaseTest;
+import cn.org.atool.fluent.mybatis.test.BaseTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
