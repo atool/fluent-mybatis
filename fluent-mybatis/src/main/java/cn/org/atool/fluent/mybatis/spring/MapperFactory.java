@@ -10,6 +10,7 @@ import cn.org.atool.fluent.mybatis.typehandler.IConvertor;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -34,6 +35,7 @@ public class MapperFactory implements IMapperFactory {
     private ApplicationContext context;
 
     @Getter
+    @Setter
     private static boolean isInitialized = false;
 
     @Getter
