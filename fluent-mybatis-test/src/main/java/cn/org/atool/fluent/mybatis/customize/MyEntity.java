@@ -1,7 +1,6 @@
 package cn.org.atool.fluent.mybatis.customize;
 
 import cn.org.atool.fluent.mybatis.annotation.*;
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.RichEntity;
 import lombok.Getter;
 
@@ -14,7 +13,7 @@ import java.util.Date;
  */
 @SuppressWarnings({"unchecked"})
 @Getter
-public abstract class MyEntity<E extends IEntity> extends RichEntity {
+public abstract class MyEntity<E extends MyEntity<E>> extends RichEntity {
     @TableId(
         value = "id",
         desc = "主键id"
