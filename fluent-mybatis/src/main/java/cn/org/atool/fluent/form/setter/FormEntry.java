@@ -38,6 +38,7 @@ public class FormEntry implements Serializable {
     public FormEntry() {
     }
 
+    @SafeVarargs
     public FormEntry(String item, String op, Object... value) {
         this.field = item;
         this.op = op;

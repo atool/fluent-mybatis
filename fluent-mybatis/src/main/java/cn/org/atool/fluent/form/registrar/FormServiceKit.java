@@ -41,6 +41,7 @@ public interface FormServiceKit {
      * @param args 入参
      * @return entity实例
      */
+    @SafeVarargs
     static Object save(MethodMeta meta, Object... args) {
         IEntity entity = FormHelper.newEntity(meta, args);
         Object pk = RefKit.mapper(meta.entityClass).save(entity);
@@ -107,6 +108,7 @@ public interface FormServiceKit {
      * @param args 入参
      * @return ignore
      */
+    @SafeVarargs
     static Object update(MethodMeta meta, Object... args) {
         IUpdate update = FormHelper.newUpdate(new MethodArgs(meta, args));
         int count = RefKit.mapper(meta.entityClass).updateBy(update);
@@ -121,6 +123,7 @@ public interface FormServiceKit {
      * @param args    入参
      * @return ignore
      */
+    @SafeVarargs
     static Object delete(MethodMeta meta, boolean isLogic, Object... args) {
         IQuery query = FormHelper.newQuery(new MethodArgs(meta, args));
         int count;
@@ -160,6 +163,7 @@ public interface FormServiceKit {
      * @param args 入参
      * @return 查询实例
      */
+    @SafeVarargs
     static Object query(MethodMeta meta, Object... args) {
         IQuery query = FormHelper.newQuery(new MethodArgs(meta, args));
         if (meta.isCount()) {
@@ -326,6 +330,7 @@ public interface FormServiceKit {
 
     Map<String, MethodMeta> METHOD_CACHED = new HashMap<>();
 
+    @SafeVarargs
     static MethodMeta meta(Class klass, String methodName, Class... pClasses) {
         String key = Arrays.stream(pClasses).map(Class::getName)
             .collect(Collectors.joining(",", klass.getName() + "#" + methodName + "(", ")"));

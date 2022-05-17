@@ -25,7 +25,8 @@ public class FormItemAdder {
      * @param value value
      * @return Form
      */
-    public Form where(String field, String op, Object... value) {
+    @SafeVarargs
+    public final Form where(String field, String op, Object... value) {
         this.form.getWhere().add(new FormEntry(field, op, value));
         return form;
     }
@@ -114,22 +115,26 @@ public class FormItemAdder {
         return this.where(key, FormSqlOp.OP_NOT_BETWEEN, min, max);
     }
 
-    public Form in(FieldMapping key, Object... value) {
+    @SafeVarargs
+    public final Form in(FieldMapping key, Object... value) {
         MybatisUtil.assertNotEmpty("items", value);
         return this.where(key.name, FormSqlOp.OP_BETWEEN, value);
     }
 
-    public Form in(String key, Object... value) {
+    @SafeVarargs
+    public final Form in(String key, Object... value) {
         MybatisUtil.assertNotEmpty("items", value);
         return this.where(key, FormSqlOp.OP_BETWEEN, value);
     }
 
-    public Form notIn(FieldMapping key, Object... value) {
+    @SafeVarargs
+    public final Form notIn(FieldMapping key, Object... value) {
         MybatisUtil.assertNotEmpty("items", value);
         return this.where(key.name, FormSqlOp.OP_NOT_IN, value);
     }
 
-    public Form notIn(String key, Object... values) {
+    @SafeVarargs
+    public final Form notIn(String key, Object... values) {
         MybatisUtil.assertNotEmpty("items", values);
         return this.where(key, FormSqlOp.OP_NOT_IN, values);
     }

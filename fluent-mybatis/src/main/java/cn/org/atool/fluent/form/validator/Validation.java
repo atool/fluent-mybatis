@@ -32,6 +32,7 @@ public class Validation {
      *
      * @param objects Form对象
      */
+    @SafeVarargs
     public static void validate(String prefix, Object... objects) throws IllegalArgumentException {
         if (objects == null) {
             throw new IllegalArgumentException("validate object can't be null.");
@@ -118,6 +119,7 @@ public class Validation {
      *
      * @param args 参数列表
      */
+    @SafeVarargs
     private static void validateArgsByIValidate(Object... args) {
         for (Object arg : args) {
             if (arg == null) {

@@ -63,6 +63,7 @@ public class FormKit {
      * @param args        入参
      * @return ActionMeta
      */
+    @SafeVarargs
     public static MethodMeta buildUpdate(Class entityClass, Method method, Class returnType, ArgumentMeta... args) {
         return MethodMeta.meta(entityClass, method, Update, args, returnType, null);
     }
@@ -75,6 +76,7 @@ public class FormKit {
      * @param args        入参
      * @return ActionMeta
      */
+    @SafeVarargs
     public static MethodMeta buildQuery(Class entityClass, Method method, Class returnType, ArgumentMeta... args) {
         return MethodMeta.meta(entityClass, method, Query, args, returnType, null);
     }
@@ -87,6 +89,7 @@ public class FormKit {
      * @param args                入参
      * @return ActionMeta
      */
+    @SafeVarargs
     public static MethodMeta buildList(Class entityClass, Method method, Class returnParameterType, ArgumentMeta... args) {
         return MethodMeta.meta(entityClass, method, Query, args, List.class, returnParameterType);
     }
@@ -99,6 +102,7 @@ public class FormKit {
      * @param args                入参
      * @return ActionMeta
      */
+    @SafeVarargs
     public static MethodMeta buildStdPage(Class entityClass, Method method, Class returnParameterType, ArgumentMeta... args) {
         return MethodMeta.meta(entityClass, method, Query, args, StdPagedList.class, returnParameterType);
     }
@@ -111,6 +115,7 @@ public class FormKit {
      * @param args                入参
      * @return ActionMeta
      */
+    @SafeVarargs
     public static MethodMeta buildTagPage(Class entityClass, Method method, Class returnParameterType, ArgumentMeta... args) {
         return MethodMeta.meta(entityClass, method, Query, args, TagPagedList.class, returnParameterType);
     }
