@@ -265,7 +265,8 @@ public class PrinterMapper implements IWrapperMapper {
         this.mapping = mapping;
         this.mapperClass = mapping.mapperClass();
     }
-
+    //Fix #I56PNZ: the Generic varargs are NOT changed in this method, so it is type safe.
+    @SafeVarargs
     public static List<String> print(int mode, IMapping mapping, Consumer<IWrapperMapper>... simulators) {
         try {
             PrinterMapper mapper = (PrinterMapper) PrinterMapper.set(mode, mapping);
