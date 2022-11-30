@@ -179,6 +179,15 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         }
     }
 
+    public <E extends IEntity> E valueByColumn(E entity, String column, Object value) {
+        if (entity != null) {
+            FieldMapping f = this.columnMap.get(column);
+            Object obj = ConvertorKit.convertValueToClass(value, f.javaType);
+            f.setter.set(entity, obj);
+        }
+        return entity;
+    }
+
     @Override
     public <T extends IEntity> T copy(IEntity entity) {
         T copy = this.newEntity();

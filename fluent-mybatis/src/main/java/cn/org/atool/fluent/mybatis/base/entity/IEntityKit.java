@@ -81,5 +81,13 @@ public interface IEntityKit {
      */
     <T> T valueByColumn(IEntity entity, String column);
 
-
+    /**
+     * 设置实体属性值
+     *
+     * @param entity     Entity instance
+     * @param columnName 数据库字段名称
+     * @param value      属性值
+     * @return ignore
+     */
+    <E extends IEntity> E valueByColumn(E entity, String columnName, Object value);
 }

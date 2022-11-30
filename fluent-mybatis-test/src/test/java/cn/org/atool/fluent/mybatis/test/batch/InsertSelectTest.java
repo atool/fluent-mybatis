@@ -77,7 +77,7 @@ public class InsertSelectTest extends BaseTest {
     @Test
     void testBatchInsertSelect() {
         ATM.dataMap.student.table().clean();
-        mapper.batchCrud(BatchCrud.batch()
+        BatchCrud.batch()
             .addInsert(newStudent("user1"), newStudent("user2"), newStudent("test1"))
             .addInsertSelect(ATM.table.student,
                 new FieldMapping[]{
@@ -86,7 +86,7 @@ public class InsertSelectTest extends BaseTest {
                     Ref.Field.Student.address},
                 StudentQuery.emptyQuery().select.userName().apply("40", "'test address'").end()
                     .where.userName().startWith("user").end())
-        );
+            .execute();
 
         db.sqlList().wantFirstSql()
             .containsInOrder(

@@ -26,6 +26,15 @@ public interface BatchCrud {
     }
 
     /**
+     * 语句是否为空
+     *
+     * @return ignore
+     */
+    boolean isEmpty();
+
+    void execute();
+
+    /**
      * 按顺序添加Insert语句
      *
      * @param entities 实例列表

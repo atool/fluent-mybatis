@@ -2,6 +2,7 @@ package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.If;
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.entity.AMapping;
@@ -19,6 +20,7 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.typehandler.IConvertor;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +69,27 @@ public final class RefKit {
         if (ENTITY_MAPPING.containsKey(entityClass)) {
             return ENTITY_MAPPING.get(entityClass);
         }
-        throw new RuntimeException("the class[" + entityClass + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
+        try {
+            AMapping mapping = getAMapping(entityClass);
+            ENTITY_MAPPING.put(entityClass, mapping);
+            return mapping;
+        } catch (Exception e) {
+            throw new RuntimeException("the class[" + entityClass + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
+        }
+    }
+
+    private static AMapping getAMapping(String entityClass) {
+        try {
+            Class clazz = Class.forName(entityClass);
+            FluentMybatis anno = (FluentMybatis) clazz.getDeclaredAnnotation(FluentMybatis.class);
+            String suffix = anno.suffix();
+            String mappingClassName = entityClass.replace(".entity.", ".helper.").replace(suffix, "Mapping");
+            Class mappingClass = Class.forName(mappingClassName);
+            Field field = mappingClass.getField("MAPPING");
+            return (AMapping) field.get(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

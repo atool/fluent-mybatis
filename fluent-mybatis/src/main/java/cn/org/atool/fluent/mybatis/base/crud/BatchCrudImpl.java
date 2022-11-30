@@ -5,6 +5,7 @@ import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
 import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
@@ -50,6 +51,7 @@ public class BatchCrudImpl implements BatchCrud {
             }
             updater.data().sharedParameter(data);
             list.add((m, kit) -> kit.updateBy(m, updater.data()));
+            this.setMapperBy(updater);
         }
         return this;
     }
@@ -62,15 +64,21 @@ public class BatchCrudImpl implements BatchCrud {
             }
             query.data().sharedParameter(data);
             list.add((m, kit) -> kit.deleteBy(m, query.data()));
+            this.setMapperBy(query);
         }
         return this;
     }
 
     private AMapping findMapping(Class<? extends IEntity> klass) {
-        return (AMapping) RefKit.byEntity(klass);
+        return RefKit.byEntity(klass);
     }
 
     private static final String ENTITY_LIST_KEY = "list";
+
+    @Override
+    public boolean isEmpty() {
+        return this.list.isEmpty();
+    }
 
     @Override
     public BatchCrud addInsert(IEntity... entities) {
@@ -78,6 +86,7 @@ public class BatchCrudImpl implements BatchCrud {
             if (entity == null) {
                 continue;
             }
+            this.setMapperBy(entity);
             if (!data.getParameters().containsKey(ENTITY_LIST_KEY)) {
                 data.getParameters().put(ENTITY_LIST_KEY, new ArrayList<>());
             }
@@ -97,6 +106,39 @@ public class BatchCrudImpl implements BatchCrud {
         assertNotNull("query", query);
         query.data().sharedParameter(data);
         list.add((m, kit) -> kit.insertSelect(m, insertTable, fields, query));
+        this.setMapperBy(query);
         return this;
+    }
+
+    private IEntityMapper mapper;
+
+    @Override
+    public void execute() {
+        if (isEmpty()) {
+            return;
+        }
+        if (mapper != null) {
+            mapper.batchCrud(this);
+        } else {
+            throw new RuntimeException("execute mapper can't be null.");
+        }
+    }
+
+    private void setMapperBy(IEntity entity) {
+        if (mapper == null) {
+            mapper = RefKit.mapperByEntity(entity.entityClass());
+        }
+    }
+
+    private void setMapperBy(IUpdate updater) {
+        if (mapper == null) {
+            updater.mapping().ifPresent(m -> mapper = RefKit.mapperByEntity(((IMapping) m).entityClass()));
+        }
+    }
+
+    private void setMapperBy(IQuery query) {
+        if (mapper != null) {
+            query.mapping().ifPresent(m -> mapper = RefKit.mapperByEntity(((IMapping) m).entityClass()));
+        }
     }
 }

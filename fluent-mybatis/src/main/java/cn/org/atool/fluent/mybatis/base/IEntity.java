@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes", "unused"})
+@SuppressWarnings({"unchecked", "rawtypes", "unused", "UnusedReturnValue"})
 public interface IEntity extends IDataByColumn, Serializable {
     /**
      * 返回实体主键
@@ -84,6 +84,23 @@ public interface IEntity extends IDataByColumn, Serializable {
         return RefKit.entityKit(this.entityClass()).copy(this);
     }
 
+    default <E extends IEntity, O> E copy(IEntity entity) {
+        Map<String, Object> values = entity.toEntityMap();
+        return this.valueByFields(values);
+    }
+
+    /**
+     * 设置字段值
+     *
+     * @param columnName 数据库字段名称
+     * @param value      值
+     * @return ignore
+     */
+    default <E extends IEntity> E valueByColumn(String columnName, Object value) {
+        RefKit.entityKit(this.entityClass()).valueByColumn(this, columnName, value);
+        return (E) this;
+    }
+
     /**
      * 设置字段值
      *
@@ -127,6 +144,17 @@ public interface IEntity extends IDataByColumn, Serializable {
      */
     default <T> T valueByColumn(String column) {
         return RefKit.entityKit(this.entityClass()).valueByColumn(this, column);
+    }
+
+    /**
+     * 设置entity属性值
+     *
+     * @param values 属性值
+     * @return ignore
+     */
+    default <E extends IEntity> E valueByColumns(Map<String, ?> values) {
+        values.forEach(this::valueByColumn);
+        return (E) this;
     }
 
     /**
