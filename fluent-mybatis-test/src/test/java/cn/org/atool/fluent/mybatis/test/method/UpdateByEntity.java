@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
+
 @SuppressWarnings("unchecked")
 public class UpdateByEntity extends BaseTest {
     @Autowired
@@ -115,6 +117,27 @@ public class UpdateByEntity extends BaseTest {
         db.sqlList().wantFirstSql()
             .contains("`user_name` = ?,")
             .contains("`gmt_modified` = ?,")
+            .notContain(", `id` = ?,")
+            .notContain("`address` = ?,")
+            .notContain("`birthday` = ?,")
+            .end("WHERE `id` = ?")
+        ;
+    }
+
+    @DisplayName("按BiPredicate结果更新")
+    @Test
+    void byEntity_BiPredicate() {
+        StudentEntity student = new StudentEntity()
+            .setId(1L)
+            .setUserName("test")
+            .setAddress("test");
+        StudentUpdate updater = mapper.emptyUpdater()
+            .set.byEntity(student, (k, v) -> v != null && !Arrays.asList("address", "tenant").contains(k)).end()
+            .where.eqByEntity(student, (k, v) -> "id".equals(k)).end();
+        mapper.updateBy(updater);
+
+        db.sqlList().wantFirstSql()
+            .contains("`gmt_modified` = now(),")
             .notContain(", `id` = ?,")
             .notContain("`address` = ?,")
             .notContain("`birthday` = ?,")

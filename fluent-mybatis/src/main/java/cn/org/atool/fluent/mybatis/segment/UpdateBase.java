@@ -8,7 +8,9 @@ import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 import cn.org.atool.fluent.mybatis.utility.MappingKits;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
@@ -100,6 +102,27 @@ public abstract class UpdateBase<
             Column _column = Column.set(this.wrapper, column);
             this.data().updateSet(_column, value);
         }, false, Arrays.asList(columns));
+        return (S) this;
+    }
+
+    /**
+     * 根据entity值更新
+     * <pre>
+     * o 指定字段列表, 可以是 null 值
+     * o 无指定字段时, 除主键外的非空entity字段
+     * </pre>
+     *
+     * @param entity 实例
+     * @param filter 要更新的字段判断, (BiPredicate arg 1: 数据库字段, BiPredicate arg 2: entity对应字段值)
+     * @return self
+     */
+    public S byEntity(IEntity entity, BiPredicate<String, Object> filter) {
+        super.byEntity(entity, (column, value) -> {
+            if (filter.test(column, value)) {
+                Column _column = Column.set(this.wrapper, column);
+                this.data().updateSet(_column, value);
+            }
+        }, false, Collections.emptyList());
         return (S) this;
     }
 
