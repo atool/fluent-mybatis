@@ -5,6 +5,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.test4j.integration.DataProvider;
 import org.test4j.junit5.Test4J;
 
+import java.util.Date;
+
+@SuppressWarnings("rawtypes")
 class ConvertorKitTest extends Test4J {
 
     @ParameterizedTest
@@ -25,6 +28,21 @@ class ConvertorKitTest extends Test4J {
             .data("TRUE", boolean.class, true)
             .data("XX", boolean.class, false)
             ;
+    }
+
+    @MethodSource("data4convertDate")
+    @ParameterizedTest
+    void convertDate(Object value, String expected) {
+        Date date = ConvertorKit.convertValueToClass(value, Date.class);
+        want.date(date).eqByFormat(expected);
+    }
+
+    public static DataProvider data4convertDate() {
+        return new DataProvider()
+            .data("2022-11-30 18:58:12", "2022-11-30 18:58:12")
+            .data("2022-11-30 18:58:12.000", "2022-11-30 18:58:12")
+            .data("2022-11-30", "2022-11-30 00:00:00")
+            .data(1669805892000L, "2022-11-30 18:58:12");
     }
 
     public enum ETest {

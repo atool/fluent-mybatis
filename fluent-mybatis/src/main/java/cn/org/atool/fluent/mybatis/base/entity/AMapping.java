@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.common.kits.KeyMap;
+import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseDefaults;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -16,6 +17,7 @@ import cn.org.atool.fluent.mybatis.functions.TableDynamic;
 import cn.org.atool.fluent.mybatis.metadata.DbType;
 import cn.org.atool.fluent.mybatis.segment.fragment.CachedFrag;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
+import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +34,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked", "AlibabaClassNamingShouldBeCamel"})
 @Getter
 public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     extends BaseDefaults<E, Q, U>
@@ -156,6 +158,17 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         }
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
+    @Override
+    public <E extends IEntity> E valueByField(E entity, String fieldName, Object value) {
+        if (If.notBlank(fieldName) && entity != null) {
+            FieldMapping f = this.fieldsMap.get(fieldName);
+            Object obj = ConvertorKit.convertValueToClass(value, f.javaType);
+            f.setter.set(entity, obj);
+        }
+        return entity;
+    }
+
     @Override
     public <T> T valueByColumn(IEntity entity, String column) {
         if (entity == null || column == null) {
@@ -177,7 +190,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
 
     private final CachedFrag tableSegment = CachedFrag.set(m -> {
         DbType db = m.db();
-        if (NeedSchemaDb.contains(db) && notBlank(schema)) {
+        if (NEED_SCHEMA_DB.contains(db) && notBlank(schema)) {
             return this.schema + "." + db.wrap(this.tableName);
         } else {
             return db.wrap(this.tableName);
@@ -200,7 +213,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     /**
      * 表查询需要带上schema的数据库类型
      */
-    static final List<DbType> NeedSchemaDb = Arrays.asList(
+    static final List<DbType> NEED_SCHEMA_DB = Arrays.asList(
         DbType.DERBY, DbType.POSTGRE_SQL, DbType.SQL_SERVER2012, DbType.SQL_SERVER2005
     );
 

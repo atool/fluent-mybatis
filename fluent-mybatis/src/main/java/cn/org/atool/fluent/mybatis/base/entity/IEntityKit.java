@@ -63,6 +63,16 @@ public interface IEntityKit {
     <T> T valueByField(IEntity entity, String fieldName);
 
     /**
+     * 设置实体属性值
+     *
+     * @param entity    Entity instance
+     * @param fieldName 实体属性名称
+     * @param value     属性值
+     * @return ignore
+     */
+    <E extends IEntity> E valueByField(E entity, String fieldName, Object value);
+
+    /**
      * 根据数据库字段名称返回属性值
      *
      * @param entity Entity instance
@@ -70,4 +80,6 @@ public interface IEntityKit {
      * @return 属性值
      */
     <T> T valueByColumn(IEntity entity, String column);
+
+
 }

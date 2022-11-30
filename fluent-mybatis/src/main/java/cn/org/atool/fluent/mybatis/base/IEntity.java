@@ -85,6 +85,18 @@ public interface IEntity extends IDataByColumn, Serializable {
     }
 
     /**
+     * 设置字段值
+     *
+     * @param fieldName 字段名称
+     * @param value     值
+     * @return ignore
+     */
+    default IEntity value(String fieldName, Object value) {
+        RefKit.entityKit(this.entityClass()).valueByField(this, fieldName, value);
+        return this;
+    }
+
+    /**
      * 获取entity的属性field值
      *
      * @param field 属性名称
@@ -122,6 +134,7 @@ public interface IEntity extends IDataByColumn, Serializable {
      * 只有在插入数据时, 不想使用默认对应的数据库表, 想动态调整时才需要
      *
      * @param supplier 动态归属表
+     * @return ignore
      */
     default <E extends IEntity> E tableSupplier(TableSupplier supplier) {
         return (E) this;
@@ -132,6 +145,7 @@ public interface IEntity extends IDataByColumn, Serializable {
      * 只有在插入数据时, 不想使用默认对应的数据库表, 想动态调整时才需要
      *
      * @param supplier 动态归属表
+     * @return ignore
      */
     default <E extends IEntity> E tableSupplier(String supplier) {
         return (E) this;

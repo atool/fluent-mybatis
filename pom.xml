@@ -9,7 +9,7 @@
         <version>1.0.4</version>
     </parent>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.9.8</version>
+    <version>1.9.9</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
