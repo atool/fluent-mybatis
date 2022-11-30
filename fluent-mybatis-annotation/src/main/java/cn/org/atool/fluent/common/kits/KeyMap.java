@@ -9,6 +9,7 @@ import java.util.*;
  * @param <T> value值类型
  * @author wudarui
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class KeyMap<T> {
     private Map<String, T> map;
 
@@ -62,5 +63,13 @@ public class KeyMap<T> {
 
     public Collection<T> values() {
         return this.map.values();
+    }
+
+    public <O> Map<String, O> map() {
+        return (Map) this.map;
+    }
+
+    public static <O> KeyMap<O> instance() {
+        return new KeyMap();
     }
 }

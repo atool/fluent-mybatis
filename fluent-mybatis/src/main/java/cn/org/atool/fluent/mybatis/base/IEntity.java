@@ -91,9 +91,20 @@ public interface IEntity extends IDataByColumn, Serializable {
      * @param value     值
      * @return ignore
      */
-    default IEntity value(String fieldName, Object value) {
+    default <E extends IEntity> E valueByField(String fieldName, Object value) {
         RefKit.entityKit(this.entityClass()).valueByField(this, fieldName, value);
-        return this;
+        return (E) this;
+    }
+
+    /**
+     * 设置entity属性值
+     *
+     * @param values 属性值
+     * @return ignore
+     */
+    default <E extends IEntity> E valueByFields(Map<String, ?> values) {
+        values.forEach(this::valueByField);
+        return (E) this;
     }
 
     /**
