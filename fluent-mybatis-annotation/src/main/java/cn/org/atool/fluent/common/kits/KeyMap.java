@@ -17,6 +17,10 @@ public class KeyMap<T> {
         this.map = new HashMap<>();
     }
 
+    public KeyMap(int initialCapacity) {
+        this.map = new HashMap<>(initialCapacity);
+    }
+
     public T get(Type klass) {
         return this.map.get(klass.getTypeName());
     }
@@ -71,5 +75,9 @@ public class KeyMap<T> {
 
     public static <O> KeyMap<O> instance() {
         return new KeyMap();
+    }
+
+    public static <O> KeyMap<O> instance(int initialCapacity) {
+        return new KeyMap(initialCapacity);
     }
 }

@@ -40,6 +40,20 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
     }
 
     /**
+     * 根据update对象更新记录
+     *
+     * @param updates 更新列表
+     * @return ignore
+     */
+    default <U extends IUpdate> int updateBy(Collection<U> updates) {
+        if (updates.isEmpty()) {
+            return 0;
+        } else {
+            return this.updateBy(updates.toArray(new IUpdate[0]));
+        }
+    }
+
+    /**
      * 根据 ID 查询
      *
      * @param id 主键ID
