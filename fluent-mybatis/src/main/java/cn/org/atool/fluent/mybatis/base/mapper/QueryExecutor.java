@@ -58,7 +58,7 @@ public class QueryExecutor<E extends IEntity> {
         return this.mapper.listMaps(this.query);
     }
 
-    public List listObjs() {
+    public <O> List<O> listObjs() {
         return this.mapper.listObjs(this.query);
     }
 

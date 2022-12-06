@@ -29,12 +29,34 @@ public class OrderByApply<
     }
 
     /**
+     * 按照正序排
+     *
+     * @param isAsc true:正序排; false: 逆序排
+     * @return ignore
+     */
+    public O asc(boolean isAsc) {
+        this.segment.applyField(this.current(), isAsc);
+        return this.segment;
+    }
+
+    /**
      * 按照逆序排
      *
      * @return ignore
      */
     public O desc() {
         this.segment.applyField(this.current(), false);
+        return this.segment;
+    }
+
+    /**
+     * 按照逆序排
+     *
+     * @param isDesc true:逆序排; false: 正序排
+     * @return ignore
+     */
+    public O desc(boolean isDesc) {
+        this.segment.applyField(this.current(), !isDesc);
         return this.segment;
     }
 
