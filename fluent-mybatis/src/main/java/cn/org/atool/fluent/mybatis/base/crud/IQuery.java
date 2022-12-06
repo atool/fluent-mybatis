@@ -12,7 +12,6 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertTrue;
@@ -68,18 +67,7 @@ public interface IQuery<E extends IEntity> {
      * @param test  是否添加limit条件
      * @return self
      */
-    default <Q extends IQuery<E>> Q limit(int limit, Supplier<Boolean> test) {
-        return test.get() ? this.limit(limit) : (Q) this;
-    }
-
-    /**
-     * 设置limit值
-     *
-     * @param limit 最大查询数量
-     * @param test  是否添加limit条件
-     * @return self
-     */
-    default <Q extends IQuery<E>> Q limit(int limit, boolean test) {
+    default <Q extends IQuery<E>> Q limit(Integer limit, boolean test) {
         return test ? this.limit(limit) : (Q) this;
     }
 
@@ -100,19 +88,7 @@ public interface IQuery<E extends IEntity> {
      * @param test  是否添加limit条件
      * @return self
      */
-    default <Q extends IQuery<E>> Q limit(int start, int limit, Supplier<Boolean> test) {
-        return test.get() ? this.limit(start, limit) : (Q) this;
-    }
-
-    /**
-     * 设置limit值
-     *
-     * @param start 开始查询偏移量
-     * @param limit 最大查询数量
-     * @param test  是否添加limit条件
-     * @return self
-     */
-    default <Q extends IQuery<E>> Q limit(int start, int limit, boolean test) {
+    default <Q extends IQuery<E>> Q limit(Integer start, Integer limit, boolean test) {
         return test ? this.limit(start, limit) : (Q) this;
     }
 
