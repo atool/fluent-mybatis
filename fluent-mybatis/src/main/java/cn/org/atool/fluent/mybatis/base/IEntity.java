@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.base;
 
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.intf.IDataByColumn;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.TableSupplier;
@@ -84,7 +85,15 @@ public interface IEntity extends IDataByColumn, Serializable {
         return RefKit.entityKit(this.entityClass()).copy(this);
     }
 
-    default <E extends IEntity, O> E copy(IEntity entity) {
+    /**
+     * 从 entity 拷贝同名属性值
+     *
+     * @param entity 拷贝对象
+     * @param <E>    类型
+     * @return self
+     */
+    @SuppressWarnings("JavadocDeclaration")
+    default <E extends IEntity> E copy(IEntity entity) {
         Map<String, Object> values = entity.toEntityMap();
         return this.valueByFields(values);
     }
@@ -114,13 +123,18 @@ public interface IEntity extends IDataByColumn, Serializable {
     }
 
     /**
-     * 设置entity属性值
+     * 从 values 拷贝设置同名属性值
      *
      * @param values 属性值
      * @return ignore
      */
     default <E extends IEntity> E valueByFields(Map<String, ?> values) {
-        values.forEach(this::valueByField);
+        AMapping kit = RefKit.byEntity(this.entityClass());
+        for (Map.Entry<String, ?> entry : values.entrySet()) {
+            if (kit.fieldsMap.containsKey(entry.getKey())) {
+                kit.valueByField(this, entry.getKey(), entry.getValue());
+            }
+        }
         return (E) this;
     }
 
