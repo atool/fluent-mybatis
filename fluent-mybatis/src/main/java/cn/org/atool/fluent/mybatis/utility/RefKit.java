@@ -125,7 +125,7 @@ public final class RefKit {
      * @param mapperClass Mapper类类型
      * @return AMapping
      */
-    public static AMapping byMapper(String mapperClass) {
+    public static IMapping byMapper(String mapperClass) {
         if (MAPPER_MAPPING.containsKey(mapperClass)) {
             return MAPPER_MAPPING.get(mapperClass);
         }
@@ -337,7 +337,7 @@ public final class RefKit {
      * @param eClass 实体类
      * @return ignore
      */
-    public static IRichMapper mapper(Class<? extends IEntity> eClass) {
+    public static <E extends IEntity> IRichMapper<E> mapper(Class<E> eClass) {
         eClass = entityClass(eClass);
         IWrapperMapper mapper = mapperByEntity(eClass.getName());
         mapper = PrinterMapper.get(mapper, eClass);

@@ -12,7 +12,7 @@ import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.BaseQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
-import cn.org.atool.fluent.mybatis.base.entity.AMapping;
+import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.model.StdPagedList;
 import cn.org.atool.fluent.mybatis.model.TagPagedList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
@@ -279,7 +279,7 @@ public interface FormServiceKit {
         if (TableEntityClass.containsKey(table)) {
             return TableEntityClass.get(table);
         }
-        AMapping mapping = RefKit.byTable(table);
+        IMapping mapping = RefKit.byTable(table);
         if (mapping == null) {
             throw new RuntimeException("The table[" + table + "] not found.");
         } else {

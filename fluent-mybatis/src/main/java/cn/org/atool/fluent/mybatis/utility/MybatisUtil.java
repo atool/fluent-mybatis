@@ -631,7 +631,7 @@ public class MybatisUtil {
      * @param eClass 实例类
      * @return ignore
      */
-    public static Class<? extends IEntity> entityClass(Class eClass) {
+    public static <E extends IEntity>  Class<E> entityClass(Class eClass) {
         Class aClass = eClass;
         while (aClass != Object.class && aClass != RichEntity.class) {
             if (aClass.getAnnotation(FluentMybatis.class) != null) {
