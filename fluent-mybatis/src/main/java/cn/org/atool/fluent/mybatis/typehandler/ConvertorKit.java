@@ -47,6 +47,9 @@ public class ConvertorKit {
     }
 
     public static <O> O convertValueToClass(Object value, Class type) {
+        if (value == null) {
+            return null;
+        }
         if (type.isAssignableFrom(value.getClass())) {
             return (O) value;
         }
