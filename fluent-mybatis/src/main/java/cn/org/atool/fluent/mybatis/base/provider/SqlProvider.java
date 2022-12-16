@@ -221,7 +221,7 @@ public class SqlProvider {
         return sqlKit(mapping).updateBy(mapping, (IUpdate[]) wrapper);
     }
 
-    private static SqlKit sqlKit(AMapping mapping) {
+    public static SqlKit sqlKit(AMapping mapping) {
         return factory(mapping);
     }
 

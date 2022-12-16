@@ -1,11 +1,16 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
+import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.provider.SqlKit;
+import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
+import cn.org.atool.fluent.mybatis.segment.model.IWrapperData;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
+import cn.org.atool.fluent.utils.StrKey;
 
 import java.io.Serializable;
 import java.util.List;
@@ -90,4 +95,12 @@ public interface IWrapper<
     Optional<IMapping> mapping();
 
     List<String> allFields();
+
+    @SuppressWarnings("rawtypes")
+    default StrKey<IWrapperData> sqlData() {
+        SqlKit kit = SqlProvider.sqlKit((AMapping) this.mapping().orElseThrow(() -> new RuntimeException("")));
+        IWrapperData data = this.data();
+
+        return new StrKey<>("", data);
+    }
 }

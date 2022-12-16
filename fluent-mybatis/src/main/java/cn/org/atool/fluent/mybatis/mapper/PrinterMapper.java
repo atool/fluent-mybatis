@@ -73,61 +73,61 @@ public class PrinterMapper implements IWrapperMapper {
 
     @Override
     public int insertWithPk(IEntity entity) {
-        return this.simulate(M_insertWithPk, map(Param_EW, entity), SqlProvider::insertWithPk);
+        return this.simulate(M_InsertWithPk, map(Param_EW, entity), SqlProvider::insertWithPk);
     }
 
     @Override
     public int insertBatchWithPk(Collection entities) {
-        return this.simulate(M_insertBatchWithPk, map(Param_List, entities), SqlProvider::insertBatchWithPk);
+        return this.simulate(M_InsertBatchWithPk, map(Param_List, entities), SqlProvider::insertBatchWithPk);
     }
 
     @Override
     public int insertSelect(String[] fields, IQuery query) {
         Map<String, Object> map = this.map(Param_EW, query, Param_Fields, fields);
-        return this.simulate(M_insertSelect, map, SqlProvider::insertSelect);
+        return this.simulate(M_InsertSelect, map, SqlProvider::insertSelect);
     }
 
     @Override
     public int updateBy(IUpdate... updates) {
-        return this.simulate(M_updateBy, map(Param_EW, updates), SqlProvider::updateBy);
+        return this.simulate(M_UpdateBy, map(Param_EW, updates), SqlProvider::updateBy);
     }
 
     @Override
     public List internalListEntity(IQuery query) {
-        this.simulate(M_listEntity, map(Param_EW, query), SqlProvider::listEntity);
+        this.simulate(M_ListEntity, map(Param_EW, query), SqlProvider::listEntity);
         return Collections.emptyList();
     }
 
     @Override
     public List<Map<String, Object>> listMaps(IQuery query) {
-        this.simulate(M_listMaps, map(Param_EW, query), SqlProvider::listMaps);
+        this.simulate(M_ListMaps, map(Param_EW, query), SqlProvider::listMaps);
         return Collections.emptyList();
     }
 
     @Override
     public List listObjs(IQuery query) {
-        this.simulate(M_listObjs, map(Param_EW, query), SqlProvider::listObjs);
+        this.simulate(M_ListObjs, map(Param_EW, query), SqlProvider::listObjs);
         return Collections.emptyList();
     }
 
     @Override
     public int count(IQuery query) {
-        return this.simulate(M_count, map(Param_EW, query), SqlProvider::count);
+        return this.simulate(M_Count, map(Param_EW, query), SqlProvider::count);
     }
 
     @Override
     public int countNoLimit(IQuery query) {
-        return this.simulate(M_countNoLimit, map(Param_EW, query), SqlProvider::countNoLimit);
+        return this.simulate(M_CountNoLimit, map(Param_EW, query), SqlProvider::countNoLimit);
     }
 
     @Override
     public int delete(IQuery query) {
-        return this.simulate(M_delete, map(Param_EW, query), SqlProvider::delete);
+        return this.simulate(M_Delete, map(Param_EW, query), SqlProvider::delete);
     }
 
     @Override
     public void batchCrud(BatchCrud crud) {
-        this.simulate(M_batchCrud, map(Param_EW, crud), SqlProvider::batchCrud);
+        this.simulate(M_BatchCrud, map(Param_EW, crud), SqlProvider::batchCrud);
     }
 
     @Override
@@ -143,7 +143,8 @@ public class PrinterMapper implements IWrapperMapper {
 
     private int simulate(String method, Map map, BiFunction<Map, ProviderContext, String> simulator) {
         ProviderContext context = newProviderContext(this.mapperClass, this.method(method));
-        this.addSQL(map, () -> simulator.apply(map, context));
+        Supplier<String> sqler = () -> simulator.apply(map, context);
+        this.addSQL(map, sqler);
         return 1;
     }
 
@@ -265,6 +266,7 @@ public class PrinterMapper implements IWrapperMapper {
         this.mapping = mapping;
         this.mapperClass = mapping.mapperClass();
     }
+
     //Fix #I56PNZ: the Generic varargs are NOT changed in this method, so it is type safe.
     @SafeVarargs
     public static List<String> print(int mode, IMapping mapping, Consumer<IWrapperMapper>... simulators) {
