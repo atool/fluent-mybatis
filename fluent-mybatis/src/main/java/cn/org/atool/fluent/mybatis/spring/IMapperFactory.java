@@ -56,15 +56,13 @@ public interface IMapperFactory {
         Collection<IEntityMapper> mappers = this.getMappers();
         for (IEntityMapper mapper : mappers) {
             AMapping mapping = (AMapping) mapper.mapping();
-            RefKit.ENTITY_MAPPING.put(mapping.entityClass(), mapping);
-            RefKit.TABLE_MAPPING.put(mapping.getTableName(), mapping);
+            RefKit.MAPPINGS.put(mapping.entityClass(), mapping);
+            RefKit.MAPPINGS.put(mapping.getTableName(), mapping);
             RefKit.ENTITY_MAPPER.put(mapping.entityClass(), mapper);
-            RefKit.MAPPER_MAPPING.put(mapping.mapperClass(), mapping);
+            RefKit.MAPPINGS.put(mapping.mapperClass(), mapping);
         }
-        RefKit.ENTITY_MAPPING.unmodified();
-        RefKit.TABLE_MAPPING.unmodified();
+        RefKit.MAPPINGS.unmodified();
         RefKit.ENTITY_MAPPER.unmodified();
-        RefKit.MAPPER_MAPPING.unmodified();
         // 执行初始化环境方法
         this.getInitializers().forEach(IExecutor::execute);
 
@@ -77,7 +75,7 @@ public interface IMapperFactory {
         // 初始化SqlProvider方法定义
         Collection<SqlSessionFactory> factories = this.getSessionFactories();
         for (SqlSessionFactory factory : factories) {
-            new ConfigurationKit(factory.getConfiguration(), RefKit.MAPPER_MAPPING)
+            new ConfigurationKit(factory.getConfiguration(), RefKit.MAPPINGS)
                 .insert()
                 .batchInsert()
                 .listEntity();

@@ -1,5 +1,8 @@
 package cn.org.atool.fluent.mybatis.test.printsql;
 
+import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.mybatis.base.crud.IQuery;
+import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
@@ -7,12 +10,15 @@ import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentUpdate;
 import cn.org.atool.fluent.mybatis.generator.shared3.entity.MemberEntity;
 import cn.org.atool.fluent.mybatis.generator.shared3.wrapper.MemberQuery;
+import cn.org.atool.fluent.mybatis.segment.model.IWrapperData;
+import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class PrintSqlTest extends Test4J {
@@ -88,6 +94,21 @@ public class PrintSqlTest extends Test4J {
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ?");
+    }
+
+    @Test
+    void listEntity2() {
+        String name = LambdaUtil.resolve(StudentEntity::getUserName);
+        StrKey<IWrapperData> data = StudentQuery.query().sql(IEntityMapper::listEntity);
+        want.string(data.key()).eq("" +
+            "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
+            "FROM fluent_mybatis.student " +
+            "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
+            "AND `env` = #{ew.data.parameters.variable_1_2}");
+    }
+
+    public static interface KK {
+        String ekk(IQuery query, Consumer<IQuery> consumer);
     }
 
     @Test

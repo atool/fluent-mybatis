@@ -14,7 +14,6 @@ import static cn.org.atool.fluent.common.kits.StringKit.PRE_IS;
  * @author darui.wu
  */
 public class LambdaUtil {
-
     /**
      * 返回getter lambda表达式
      *
@@ -31,7 +30,7 @@ public class LambdaUtil {
     }
 
     @SuppressWarnings("all")
-    private static String lambdaName(Object lambda) {
+    public static String lambdaName(Object lambda) {
         try {
             String m_WRITE_REPLACE = "writeReplace";
             Method writeReplace = lambda.getClass().getDeclaredMethod(m_WRITE_REPLACE);

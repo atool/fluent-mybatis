@@ -43,21 +43,17 @@ public final class RefKit {
      */
     public static final KeyMap<IGetter> relations = new KeyMap<>();
     /**
-     * EntityClass 和 AMapping关联关系
+     * 包含下面关系
+     * EntityClass 和 AMapping映射关系
+     * tableName 和 AMapping映射关系
+     * MapperClass 和 AMapping映射关系
      */
-    public static final KeyMap<AMapping> ENTITY_MAPPING = new KeyMap<>();
-    /**
-     * EntityClass 和 AMapping关联关系
-     */
-    public static final KeyMap<AMapping> TABLE_MAPPING = new KeyMap<>();
+    public static final KeyMap<AMapping> MAPPINGS = new KeyMap<>();
+
     /**
      * EntityClass 和 Mapper实例关联关系
      */
     public static final KeyMap<IEntityMapper> ENTITY_MAPPER = new KeyMap<>();
-    /**
-     * MapperClass 和 AMapping关联关系
-     */
-    public static final KeyMap<AMapping> MAPPER_MAPPING = new KeyMap<>();
 
     /**
      * 返回对应实体类的映射关系
@@ -66,12 +62,12 @@ public final class RefKit {
      * @return AMapping
      */
     public static AMapping byEntity(String entityClass) {
-        if (ENTITY_MAPPING.containsKey(entityClass)) {
-            return ENTITY_MAPPING.get(entityClass);
+        if (MAPPINGS.containsKey(entityClass)) {
+            return MAPPINGS.get(entityClass);
         }
         try {
             AMapping mapping = getAMapping(entityClass);
-            ENTITY_MAPPING.put(entityClass, mapping);
+            MAPPINGS.put(entityClass, mapping);
             return mapping;
         } catch (Exception e) {
             throw new RuntimeException("the class[" + entityClass + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
@@ -84,6 +80,14 @@ public final class RefKit {
             FluentMybatis anno = (FluentMybatis) clazz.getDeclaredAnnotation(FluentMybatis.class);
             String suffix = anno.suffix();
             String mappingClassName = entityClass.replace(".entity.", ".helper.").replace(suffix, "Mapping");
+            return getMappingBy(mappingClassName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static AMapping getMappingBy(String mappingClassName) {
+        try {
             Class mappingClass = Class.forName(mappingClassName);
             Field field = mappingClass.getField("MAPPING");
             return (AMapping) field.get(null);
@@ -99,8 +103,8 @@ public final class RefKit {
      * @return AMapping
      */
     public static AMapping byTable(String table) {
-        if (TABLE_MAPPING.containsKey(table)) {
-            return TABLE_MAPPING.get(table);
+        if (MAPPINGS.containsKey(table)) {
+            return MAPPINGS.get(table);
         }
         throw new RuntimeException("the entity of table[" + table + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
     }
@@ -115,21 +119,26 @@ public final class RefKit {
         return byEntity(clazz.getName());
     }
 
-    public static IEntityKit entityKit(Class clazz) {
-        return byEntity(clazz.getName());
-    }
-
     /**
      * 返回对应Mapper类的映射关系
      *
      * @param mapperClass Mapper类类型
      * @return AMapping
      */
-    public static IMapping byMapper(String mapperClass) {
-        if (MAPPER_MAPPING.containsKey(mapperClass)) {
-            return MAPPER_MAPPING.get(mapperClass);
+    public static AMapping byMapper(String mapperClass) {
+        if (MAPPINGS.containsKey(mapperClass)) {
+            return MAPPINGS.get(mapperClass);
         }
-        throw notFluentMybatisMapper(mapperClass);
+        try {
+            String mappingClassName = mapperClass
+                .replace(".mapper.", ".helper.")
+                .replace("Mapper", "Mapping");
+            AMapping mapping = getMappingBy(mappingClassName);
+            MAPPINGS.put(mapperClass, mapping);
+            return mapping;
+        } catch (Exception e) {
+            throw new RuntimeException("the class[" + mapperClass + "] is not a @FluentMybatis Entity or it's Mapper not defined as bean.");
+        }
     }
 
     /**
@@ -138,8 +147,12 @@ public final class RefKit {
      * @param clazz Mapper类类型
      * @return AMapping
      */
-    public static IMapping byMapper(Class clazz) {
+    public static AMapping byMapper(Class clazz) {
         return byMapper(clazz.getName());
+    }
+
+    public static IEntityKit entityKit(Class clazz) {
+        return byEntity(clazz.getName());
     }
 
     public static <M extends IEntityMapper> M mapperByEntity(Class entityClass) {
