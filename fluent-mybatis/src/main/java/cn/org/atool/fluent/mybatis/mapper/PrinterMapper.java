@@ -5,14 +5,11 @@ import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
-import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
-import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
 import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
@@ -21,22 +18,19 @@ import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
-import static org.apache.ibatis.builder.annotation.ProviderContextKit.newProviderContext;
 
 /**
  * PrinterMapper: 不实际执行sql语句, 只输出sql语句
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class PrinterMapper implements IWrapperMapper {
     @Setter
     private static Configuration configuration = new Configuration();
@@ -44,8 +38,6 @@ public class PrinterMapper implements IWrapperMapper {
     private static final ThreadLocal<PrinterMapper> local = new ThreadLocal<>();
 
     private IMapping mapping;
-
-    private Class<? extends IWrapperMapper> mapperClass;
 
     private final int mode;
 
@@ -63,71 +55,71 @@ public class PrinterMapper implements IWrapperMapper {
 
     @Override
     public int insert(IEntity entity) {
-        return this.simulate(M_Insert, map(Param_EW, entity), SqlProvider::insert);
+        return this.simulate(M_Insert, map(Param_EW, entity));
     }
 
     @Override
     public int insertBatch(Collection entities) {
-        return this.simulate(M_InsertBatch, map(Param_List, entities), SqlProvider::insertBatch);
+        return this.simulate(M_InsertBatch, map(Param_List, entities));
     }
 
     @Override
     public int insertWithPk(IEntity entity) {
-        return this.simulate(M_InsertWithPk, map(Param_EW, entity), SqlProvider::insertWithPk);
+        return this.simulate(M_InsertWithPk, map(Param_EW, entity));
     }
 
     @Override
     public int insertBatchWithPk(Collection entities) {
-        return this.simulate(M_InsertBatchWithPk, map(Param_List, entities), SqlProvider::insertBatchWithPk);
+        return this.simulate(M_InsertBatchWithPk, map(Param_List, entities));
     }
 
     @Override
     public int insertSelect(String[] fields, IQuery query) {
         Map<String, Object> map = this.map(Param_EW, query, Param_Fields, fields);
-        return this.simulate(M_InsertSelect, map, SqlProvider::insertSelect);
+        return this.simulate(M_InsertSelect, map);
     }
 
     @Override
     public int updateBy(IUpdate... updates) {
-        return this.simulate(M_UpdateBy, map(Param_EW, updates), SqlProvider::updateBy);
+        return this.simulate(M_UpdateBy, map(Param_EW, updates));
     }
 
     @Override
     public List internalListEntity(IQuery query) {
-        this.simulate(M_ListEntity, map(Param_EW, query), SqlProvider::listEntity);
+        this.simulate(M_ListEntity, map(Param_EW, query));
         return Collections.emptyList();
     }
 
     @Override
     public List<Map<String, Object>> listMaps(IQuery query) {
-        this.simulate(M_ListMaps, map(Param_EW, query), SqlProvider::listMaps);
+        this.simulate(M_ListMaps, map(Param_EW, query));
         return Collections.emptyList();
     }
 
     @Override
     public List listObjs(IQuery query) {
-        this.simulate(M_ListObjs, map(Param_EW, query), SqlProvider::listObjs);
+        this.simulate(M_ListObjs, map(Param_EW, query));
         return Collections.emptyList();
     }
 
     @Override
     public int count(IQuery query) {
-        return this.simulate(M_Count, map(Param_EW, query), SqlProvider::count);
+        return this.simulate(M_Count, map(Param_EW, query));
     }
 
     @Override
     public int countNoLimit(IQuery query) {
-        return this.simulate(M_CountNoLimit, map(Param_EW, query), SqlProvider::countNoLimit);
+        return this.simulate(M_CountNoLimit, map(Param_EW, query));
     }
 
     @Override
     public int delete(IQuery query) {
-        return this.simulate(M_Delete, map(Param_EW, query), SqlProvider::delete);
+        return this.simulate(M_Delete, map(Param_EW, query));
     }
 
     @Override
     public void batchCrud(BatchCrud crud) {
-        this.simulate(M_BatchCrud, map(Param_EW, crud), SqlProvider::batchCrud);
+        this.simulate(M_BatchCrud, map(Param_EW, crud));
     }
 
     @Override
@@ -141,9 +133,8 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
 
-    private int simulate(String method, Map map, BiFunction<Map, ProviderContext, String> simulator) {
-        ProviderContext context = newProviderContext(this.mapperClass, this.method(method));
-        Supplier<String> sqler = () -> simulator.apply(map, context);
+    private int simulate(String method, Map map) {
+        Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(map);
         this.addSQL(map, sqler);
         return 1;
     }
@@ -154,18 +145,6 @@ public class PrinterMapper implements IWrapperMapper {
             map.put((String) kvs[index - 1], kvs[index]);
         }
         return map;
-    }
-
-    private static Map<String, Method> methods = null;
-
-    private Method method(String methodName) {
-        if (methods == null) {
-            methods = new HashMap<>(16);
-            for (Method m : IEntityMapper.class.getDeclaredMethods()) {
-                methods.put(m.getName(), m);
-            }
-        }
-        return methods.get(methodName);
     }
 
     private <P> void addSQL(P object, Supplier<String> supplier) {
@@ -264,7 +243,6 @@ public class PrinterMapper implements IWrapperMapper {
 
     private void mapping(IMapping mapping) {
         this.mapping = mapping;
-        this.mapperClass = mapping.mapperClass();
     }
 
     //Fix #I56PNZ: the Generic varargs are NOT changed in this method, so it is type safe.
