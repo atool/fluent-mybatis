@@ -210,7 +210,7 @@ public class SqlProvider {
      * @param map k-v条件
      * @return ignore
      */
-    public static String updateBy(Map<String, Object> map, ProviderContext context) {
+    public static String updateBy(Map map, ProviderContext context) {
         Object wrapper = map.get(Param_EW);
         if (If.isEmpty(wrapper)) {
             throw FluentMybatisException.instance("the parameter[%s] can't be empty.", Param_EW);

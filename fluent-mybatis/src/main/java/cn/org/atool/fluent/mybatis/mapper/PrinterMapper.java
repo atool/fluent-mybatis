@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
+import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -39,7 +40,11 @@ public class PrinterMapper implements IWrapperMapper {
     private static final ThreadLocal<PrinterMapper> local = new ThreadLocal<>();
 
     private IMapping mapping;
-
+    /**
+     * 0: 输出'?'占位符语句;
+     * 1: 输出实际参数值语句;
+     * 2: 输出mybatis #{prop} 占位符语句
+     */
     private final int mode;
 
     @Getter
@@ -134,18 +139,10 @@ public class PrinterMapper implements IWrapperMapper {
 
 
     private int simulate(String method, StrKey... kvs) {
-        Map values = this.map(kvs);
+        Map values = KeyMap.map(kvs).map();
         Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(values);
         this.addSQL(values, sqler);
         return 1;
-    }
-
-    private Map<String, Object> map(StrKey... kvs) {
-        Map<String, Object> map = new HashMap<>();
-        for (StrKey kv : kvs) {
-            map.put(kv.key(), kv.val());
-        }
-        return map;
     }
 
     private <P> void addSQL(P object, Supplier<String> supplier) {
@@ -246,6 +243,14 @@ public class PrinterMapper implements IWrapperMapper {
         this.mapping = mapping;
     }
 
+    /**
+     * 打印sql语句
+     *
+     * @param mode       0: 输出'?'占位符语句; 1: 输出实际参数值语句; 2:输出mybatis #{prop} 占位符语句
+     * @param mapping    fluent mybatis mapping
+     * @param simulators Consumer<IWrapperMapper>
+     * @return sql语句列表
+     */
     //Fix #I56PNZ: the Generic varargs are NOT changed in this method, so it is type safe.
     @SafeVarargs
     public static List<String> print(int mode, IMapping mapping, Consumer<IWrapperMapper>... simulators) {

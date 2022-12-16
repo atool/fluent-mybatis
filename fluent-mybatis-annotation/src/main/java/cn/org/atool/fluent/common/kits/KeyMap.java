@@ -73,6 +73,20 @@ public class KeyMap<T> {
         return (Map) this.map;
     }
 
+    /**
+     * 根据键值对列表构造Map对象
+     *
+     * @param kvs 键值对列表
+     * @return KeyMap
+     */
+    public static KeyMap<Object> map(StrKey... kvs) {
+        KeyMap<Object> map = new KeyMap<>();
+        for (StrKey kv : kvs) {
+            map.put(kv.key(), kv.val());
+        }
+        return map;
+    }
+
     public static <O> KeyMap<O> instance() {
         return new KeyMap();
     }

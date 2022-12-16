@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.common.kits;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,6 +15,11 @@ public class KvList {
 
     public <O> KvList kv(String key, O val) {
         this.kvs.add(StrKey.kv(key, val));
+        return this;
+    }
+
+    public <O> KvList kv(StrKey... kvs) {
+        this.kvs.addAll(Arrays.asList(kvs));
         return this;
     }
 
