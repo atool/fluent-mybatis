@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.utils;
+package cn.org.atool.fluent.common.kits;
 
 /**
  * 简单键值对封装

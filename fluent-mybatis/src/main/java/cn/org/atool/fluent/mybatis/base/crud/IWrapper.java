@@ -10,7 +10,7 @@ import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
 import cn.org.atool.fluent.mybatis.segment.model.IWrapperData;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-import cn.org.atool.fluent.utils.StrKey;
+import cn.org.atool.fluent.common.kits.StrKey;
 
 import java.io.Serializable;
 import java.util.List;

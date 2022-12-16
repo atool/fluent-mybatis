@@ -8,6 +8,7 @@ import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
+import cn.org.atool.fluent.common.kits.StrKey;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.mapping.BoundSql;
@@ -55,71 +56,70 @@ public class PrinterMapper implements IWrapperMapper {
 
     @Override
     public int insert(IEntity entity) {
-        return this.simulate(M_Insert, map(Param_EW, entity));
+        return this.simulate(M_Insert, StrKey.kv(Param_EW, entity));
     }
 
     @Override
     public int insertBatch(Collection entities) {
-        return this.simulate(M_InsertBatch, map(Param_List, entities));
+        return this.simulate(M_InsertBatch, StrKey.kv(Param_List, entities));
     }
 
     @Override
     public int insertWithPk(IEntity entity) {
-        return this.simulate(M_InsertWithPk, map(Param_EW, entity));
+        return this.simulate(M_InsertWithPk, StrKey.kv(Param_EW, entity));
     }
 
     @Override
     public int insertBatchWithPk(Collection entities) {
-        return this.simulate(M_InsertBatchWithPk, map(Param_List, entities));
+        return this.simulate(M_InsertBatchWithPk, StrKey.kv(Param_List, entities));
     }
 
     @Override
     public int insertSelect(String[] fields, IQuery query) {
-        Map<String, Object> map = this.map(Param_EW, query, Param_Fields, fields);
-        return this.simulate(M_InsertSelect, map);
+        return this.simulate(M_InsertSelect, StrKey.kv(Param_EW, query), StrKey.kv(Param_Fields, fields));
     }
 
     @Override
     public int updateBy(IUpdate... updates) {
-        return this.simulate(M_UpdateBy, map(Param_EW, updates));
+        return this.simulate(M_UpdateBy, StrKey.kv(Param_EW, updates));
     }
 
     @Override
     public List internalListEntity(IQuery query) {
-        this.simulate(M_ListEntity, map(Param_EW, query));
+        this.simulate(M_ListEntity, StrKey.kv(Param_EW, query));
         return Collections.emptyList();
     }
 
     @Override
     public List<Map<String, Object>> listMaps(IQuery query) {
-        this.simulate(M_ListMaps, map(Param_EW, query));
+        this.simulate(M_ListMaps, StrKey.kv(Param_EW, query));
         return Collections.emptyList();
     }
 
     @Override
     public List listObjs(IQuery query) {
-        this.simulate(M_ListObjs, map(Param_EW, query));
+        this.simulate(M_ListObjs, StrKey.kv(Param_EW, query));
         return Collections.emptyList();
     }
 
     @Override
     public int count(IQuery query) {
-        return this.simulate(M_Count, map(Param_EW, query));
+        return this.simulate(M_Count, StrKey.kv(Param_EW, query));
     }
 
     @Override
     public int countNoLimit(IQuery query) {
-        return this.simulate(M_CountNoLimit, map(Param_EW, query));
+        return this.simulate(M_CountNoLimit, StrKey.kv(Param_EW, query));
     }
 
     @Override
     public int delete(IQuery query) {
-        return this.simulate(M_Delete, map(Param_EW, query));
+        return this.simulate(M_Delete, StrKey.kv(Param_EW, query));
     }
 
     @Override
     public void batchCrud(BatchCrud crud) {
-        this.simulate(M_BatchCrud, map(Param_EW, crud));
+        this.simulate(M_BatchCrud, StrKey.kv(Param_EW, crud));
     }
 
     @Override
@@ -133,16 +133,17 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
 
-    private int simulate(String method, Map map) {
-        Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(map);
-        this.addSQL(map, sqler);
+    private int simulate(String method, StrKey... kvs) {
+        Map values = this.map(kvs);
+        Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(values);
+        this.addSQL(values, sqler);
         return 1;
     }
 
-    private Map<String, Object> map(Object... kvs) {
+    private Map<String, Object> map(StrKey... kvs) {
         Map<String, Object> map = new HashMap<>();
-        for (int index = 1; index < kvs.length; index += 2) {
-            map.put((String) kvs[index - 1], kvs[index]);
+        for (StrKey kv : kvs) {
+            map.put(kv.key(), kv.val());
         }
         return map;
     }
