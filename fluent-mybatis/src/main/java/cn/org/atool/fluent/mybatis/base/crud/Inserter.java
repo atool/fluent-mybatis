@@ -6,8 +6,11 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.functions.SqlFunction;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
+import lombok.Getter;
 
 import java.util.*;
+
+import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
 /**
  * 插入实例操作
@@ -22,10 +25,6 @@ public class Inserter implements IOptMapping {
     public <E extends IEntity> Inserter insert(E entity) {
         this.entities.add(entity);
         return this;
-    }
-
-    public boolean notPk() {
-        return this.entities.isEmpty() || this.entities.get(0).findPk() == null;
     }
 
     public <E extends IEntity> Inserter insert(E[] entities) {
@@ -49,6 +48,30 @@ public class Inserter implements IOptMapping {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public <E extends IEntity> Collection<E> entities() {
         return (List) this.entities;
+    }
+
+    @Getter
+    private String lastSql = EMPTY;
+
+//    public Object onDuplicateUpdate() {
+//        return null;
+//    }
+//
+//    /**
+//     * 追加在sql语句的末尾
+//     * !!!慎用!!!
+//     * 有sql注入风险
+//     *
+//     * @param lastSql 追加SQL
+//     * @return self
+//     */
+//    public Inserter last(String lastSql) {
+//        this.lastSql = lastSql;
+//        return this;
+//    }
+
+    public boolean notPk() {
+        return this.entities.isEmpty() || this.entities.get(0).findPk() == null;
     }
 
     /**

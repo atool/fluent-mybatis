@@ -1,9 +1,5 @@
 package cn.org.atool.fluent.mybatis.test.printsql;
 
-import cn.org.atool.fluent.common.kits.StrKey;
-import cn.org.atool.fluent.mybatis.base.crud.Inserter;
-import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
-import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
@@ -73,18 +69,6 @@ public class PrintSqlTest extends Test4J {
     }
 
     @Test
-    void insert_batch() {
-        List<StudentEntity> list = Arrays.asList(new StudentEntity(), new StudentEntity());
-        StrKey sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
-        want.string(sql.key()).eq("" +
-            "INSERT INTO fluent_mybatis.student (`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
-            "VALUES " +
-            "(#{list[0].env}, #{list[0].tenant}, now(), now(), 0), " +
-            "(#{list[1].env}, #{list[1].tenant}, now(), now(), 0)");
-        want.list((List) sql.val()).sizeEq(2);
-    }
-
-    @Test
     void insertBatchWithPk() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(2L));
         List<String> sql = StudentMapper.print(0, m -> m.insertBatchWithPk(list));
@@ -104,17 +88,6 @@ public class PrintSqlTest extends Test4J {
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = ? " +
             "AND `env` = ?");
-    }
-
-    @Test
-    void listEntity2() {
-        StrKey data = StudentQuery.query().sql(IEntityMapper::listEntity);
-        want.string(data.key()).eq("" +
-            "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
-            "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
-            "AND `env` = #{ew.data.parameters.variable_1_2}");
-
     }
 
     @Test

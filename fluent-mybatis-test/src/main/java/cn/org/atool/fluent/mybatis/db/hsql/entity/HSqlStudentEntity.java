@@ -1,5 +1,6 @@
 package cn.org.atool.fluent.mybatis.db.hsql.entity;
 
+
 import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.annotation.TableField;
 import cn.org.atool.fluent.mybatis.annotation.TableId;

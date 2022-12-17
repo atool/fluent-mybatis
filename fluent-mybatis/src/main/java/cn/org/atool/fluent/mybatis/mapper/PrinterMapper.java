@@ -232,9 +232,9 @@ public class PrinterMapper implements IWrapperMapper {
      *
      * @return PrinterMapper
      */
-    public static IWrapperMapper get(IWrapperMapper mapper, Class eClass) {
+    public static IWrapperMapper get(Class eClass) {
         if (local.get() == null) {
-            return mapper;
+            return null;
         } else {
             local.get().mapping(RefKit.byEntity(eClass));
             return local.get();

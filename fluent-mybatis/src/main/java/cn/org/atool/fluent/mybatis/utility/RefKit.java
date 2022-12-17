@@ -352,9 +352,8 @@ public final class RefKit {
      */
     public static <E extends IEntity> IRichMapper<E> mapper(Class<E> eClass) {
         eClass = entityClass(eClass);
-        IWrapperMapper mapper = mapperByEntity(eClass.getName());
-        mapper = PrinterMapper.get(mapper, eClass);
-        return mapper;
+        IWrapperMapper mapper = PrinterMapper.get(eClass);
+        return mapper == null ? mapperByEntity(eClass.getName()) : mapper;
     }
 
     public static Set<String> getEntityClass(Class<? extends IEntity>[] eClasses) {

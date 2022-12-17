@@ -106,7 +106,7 @@ class SqlFunctions {
         KeyVal kv = (KeyVal) obj;
         return KeyMap.instance()
             .put(Param_EW, kv.key())
-            .put(Param_List, kv.val())
+            .put(Param_Fields, kv.val())
             .map();
     }
 
