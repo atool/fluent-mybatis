@@ -28,6 +28,11 @@ import static java.util.stream.Collectors.toList;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
+
+    default int insert(Inserter inserts) {
+        return this.insertBatch(inserts.entities());
+    }
+
     /**
      * 根据id修改
      *

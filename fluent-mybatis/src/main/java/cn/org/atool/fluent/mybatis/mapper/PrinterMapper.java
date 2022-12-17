@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
-import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.KeyVal;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
@@ -8,6 +7,8 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
+import cn.org.atool.fluent.mybatis.functions.SqlFunction;
+import cn.org.atool.fluent.mybatis.functions.SqlSupplier;
 import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
@@ -22,7 +23,6 @@ import org.apache.ibatis.session.Configuration;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -125,8 +125,9 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
     @Override
-    public void batchCrud(BatchCrud crud) {
+    public Object batchCrud(BatchCrud crud) {
         this.simulate(M_BatchCrud, crud);
+        return null;
     }
 
     @Override
@@ -141,7 +142,7 @@ public class PrinterMapper implements IWrapperMapper {
 
 
     private int simulate(String method, Object value) {
-        Map values = WRAPPER_PARAMETER.get(method).apply(value);
+        Object values = SqlFunction.wrapperParameter(method, value);
         Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(values);
         this.addSQL(values, sqler);
         return 1;
@@ -265,34 +266,5 @@ public class PrinterMapper implements IWrapperMapper {
         } finally {
             PrinterMapper.clear();
         }
-    }
-
-    static Function<Object, Map> EW_FUNCTION = obj -> wrapper(Param_EW, obj);
-    public static KeyMap<Function<Object, Map>> WRAPPER_PARAMETER = KeyMap.<Function<Object, Map>>instance()
-        .put(M_Insert, EW_FUNCTION)
-        .put(M_InsertWithPk, EW_FUNCTION)
-        .put(M_InsertBatch, entities -> wrapper(Param_List, entities))
-        .put(M_ListEntity, EW_FUNCTION)
-        .put(M_ListMaps, EW_FUNCTION)
-        .put(M_ListObjs, EW_FUNCTION)
-        .put(M_Count, EW_FUNCTION)
-        .put(M_CountNoLimit, EW_FUNCTION)
-        .put(M_UpdateBy, EW_FUNCTION)
-        .put(M_Delete, EW_FUNCTION)
-        .put(M_BatchCrud, EW_FUNCTION)
-        .put(M_InsertSelect, PrinterMapper::insertSelectFunction)
-        .put(M_InsertBatchWithPk, entities -> wrapper(Param_List, entities));
-
-    private static Map<String, Object> wrapper(String param_List, Object entities) {
-        KeyMap kv = KeyMap.instance().put(param_List, entities);
-        return kv.map();
-    }
-
-    private static Map<String, Object> insertSelectFunction(Object obj) {
-        KeyVal kv = (KeyVal) obj;
-        return KeyMap.instance()
-            .put(Param_EW, kv.key())
-            .put(Param_List, kv.val())
-            .map();
     }
 }

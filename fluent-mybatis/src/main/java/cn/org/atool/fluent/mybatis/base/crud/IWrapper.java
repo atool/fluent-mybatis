@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.HintType;
@@ -9,7 +9,6 @@ import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
@@ -26,7 +25,7 @@ public interface IWrapper<
     E extends IEntity,
     W extends IWrapper<E, W, NQ>,
     NQ extends IBaseQuery<E, NQ>>
-    extends Serializable {
+    extends IOptMapping, Serializable {
 
     /**
      * 返回where
@@ -81,13 +80,6 @@ public interface IWrapper<
      * @return ISqlSegment
      */
     IFragment table(boolean notFoundError);
-
-    /**
-     * 数据库映射定义
-     *
-     * @return Optional<IMapping>
-     */
-    Optional<IMapping> mapping();
 
     List<String> allFields();
 }

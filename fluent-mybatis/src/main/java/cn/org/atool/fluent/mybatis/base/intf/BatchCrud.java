@@ -7,6 +7,7 @@ import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
+import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
  * @author wudarui
  */
 @SuppressWarnings({"rawtypes"})
-public interface BatchCrud {
+public interface BatchCrud  {
     /**
      * 构造批量增删改构造器
      *
@@ -41,6 +42,19 @@ public interface BatchCrud {
      * @return BatchCrud
      */
     BatchCrud addInsert(IEntity... entities);
+
+    /**
+     * 按顺序添加Insert语句
+     *
+     * @param entities 实例列表
+     * @return BatchCrud
+     */
+    default BatchCrud addInsert(Collection<? extends IEntity> entities) {
+        for (IEntity entity : entities) {
+            this.addInsert(entity);
+        }
+        return this;
+    }
 
     /**
      * 添加  insert into a_table (fields) select fields from b_table where ...;

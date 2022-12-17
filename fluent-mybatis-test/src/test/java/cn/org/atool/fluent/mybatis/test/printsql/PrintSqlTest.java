@@ -1,7 +1,9 @@
 package cn.org.atool.fluent.mybatis.test.printsql;
 
 import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.mybatis.base.crud.Inserter;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.Ref;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
@@ -68,6 +70,13 @@ public class PrintSqlTest extends Test4J {
             "VALUES " +
             "(?, ?, now(), now(), 0), " +
             "(?, ?, now(), now(), 0)");
+    }
+
+    @Test
+    void batchCrud() {
+        List<StudentEntity> list = Arrays.asList(new StudentEntity(), new StudentEntity());
+        StrKey sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
+        System.out.println(sql.key());
     }
 
     @Test

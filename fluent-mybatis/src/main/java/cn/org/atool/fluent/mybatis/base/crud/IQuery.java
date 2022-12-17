@@ -2,18 +2,17 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.common.kits.StrKey;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.entity.IMapping;
+import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
-import cn.org.atool.fluent.mybatis.mapper.WrapperFunction;
-import cn.org.atool.fluent.mybatis.mapper.WrapperFunction.IQueryFunction;
+import cn.org.atool.fluent.mybatis.functions.SqlFunction;
+import cn.org.atool.fluent.mybatis.functions.SqlFunction.IQueryFunction;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.OrderByBase;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
@@ -26,14 +25,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertTrue;
  * @author wudarui
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public interface IQuery<E extends IEntity> {
-    /**
-     * 数据库映射定义
-     *
-     * @return Optional<IMapping>
-     */
-    Optional<IMapping> mapping();
-
+public interface IQuery<E extends IEntity> extends IOptMapping {
     /**
      * distinct 查询
      *
@@ -209,6 +201,6 @@ public interface IQuery<E extends IEntity> {
      */
     @SuppressWarnings("rawtypes")
     default StrKey sql(IQueryFunction query) {
-        return WrapperFunction.sql((IWrapper) this, query);
+        return SqlFunction.sql(this, query);
     }
 }
