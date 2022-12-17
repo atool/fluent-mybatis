@@ -24,6 +24,10 @@ public class Inserter implements IOptMapping {
         return this;
     }
 
+    public boolean notPk() {
+        return this.entities.isEmpty() || this.entities.get(0).findPk() == null;
+    }
+
     public <E extends IEntity> Inserter insert(E[] entities) {
         this.entities.addAll(Arrays.asList(entities));
         return this;

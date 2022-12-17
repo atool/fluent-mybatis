@@ -4,6 +4,8 @@ import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.*;
 import cn.org.atool.fluent.mybatis.base.entity.PkGeneratorKits;
+import cn.org.atool.fluent.mybatis.base.free.FreeQuery;
+import cn.org.atool.fluent.mybatis.base.free.FreeUpdate;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.exception.FluentMybatisException;
 import cn.org.atool.fluent.mybatis.functions.MapFunction;
@@ -13,6 +15,7 @@ import cn.org.atool.fluent.mybatis.utility.PoJoHelper;
 import lombok.NonNull;
 
 import java.util.*;
+import java.util.function.BiFunction;
 
 import static cn.org.atool.fluent.mybatis.If.isEmpty;
 import static cn.org.atool.fluent.mybatis.base.model.SqlOp.EQ;
@@ -30,7 +33,11 @@ import static java.util.stream.Collectors.toList;
 public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
 
     default int insert(Inserter inserts) {
-        return this.insertBatch(inserts.entities());
+        if (inserts.notPk()) {
+            return this.insertBatch(inserts.entities());
+        } else {
+            return this.insertBatchWithPk(inserts.entities());
+        }
     }
 
     /**
@@ -574,5 +581,15 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      */
     default int logicDeleteByEntityIds(E... entities) {
         return this.logicDeleteByEntityIds(Arrays.asList(entities));
+    }
+
+    default void execute(String sql, Object parameter) {
+        IUpdate updater = new FreeUpdate("").customizedByPlaceholder(sql, parameter);
+        this.updateBy(updater);
+    }
+
+    default <R> R query(BiFunction<IRichMapper, IQuery, Object> function, String sql, Object parameter) {
+        IQuery query = new FreeQuery("").customizedByPlaceholder(sql, parameter);
+        return (R) function.apply(this, query);
     }
 }

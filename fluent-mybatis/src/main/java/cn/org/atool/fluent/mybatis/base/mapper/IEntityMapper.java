@@ -87,7 +87,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * @param entity 实例
      * @return ignore
-     * @see SqlProvider#insertBatchWithPk(Map, ProviderContext)
+     * @see SqlProvider#insertWithPk(Map, ProviderContext)
      */
     @InsertProvider(type = SqlProvider.class, method = M_InsertWithPk)
     int insertWithPk(@Param(Param_EW) E entity);

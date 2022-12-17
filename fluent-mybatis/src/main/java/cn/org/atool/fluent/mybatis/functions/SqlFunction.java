@@ -12,6 +12,7 @@ import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
+import com.sun.tools.javac.util.List;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -23,17 +24,17 @@ import static cn.org.atool.fluent.mybatis.functions.SqlFunctions.WRAPPER_PARAMET
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public interface SqlFunction<E extends IOptMapping> extends BiFunction<IRichMapper, E, Object>, Serializable {
+public interface SqlFunction<E extends IOptMapping> extends BiFunction<IRichMapper, E, Object> {
     @FunctionalInterface
-    interface IQueryFunction extends SqlFunction<IQuery> {
+    interface IQueryFunction extends SqlFunction<IQuery>, Serializable {
     }
 
     @FunctionalInterface
-    interface IUpdateFunction extends SqlFunction<IUpdate> {
+    interface IUpdateFunction extends SqlFunction<IUpdate>, Serializable {
     }
 
     @FunctionalInterface
-    interface IInsertFunction extends SqlFunction<Inserter> {
+    interface IInsertFunction extends SqlFunction<Inserter>, Serializable {
     }
 
     /**
@@ -46,12 +47,16 @@ public interface SqlFunction<E extends IOptMapping> extends BiFunction<IRichMapp
     static StrKey sql(IOptMapping queryUpdaterInserter, SqlFunction mapperFunction) {
         IMapping mapping = queryUpdaterInserter.mapping().orElseThrow(() -> new RuntimeException("IMapping not found."));
         PrinterMapper mapper = (PrinterMapper) PrinterMapper.set(2, mapping);
-        mapperFunction.apply(mapper, queryUpdaterInserter);
-        String sql = mapper.getSql().get(0);
-        String method = LambdaUtil.lambdaName(mapperFunction);
-        Function wrapper = WRAPPER_PARAMETER.get(method);
-        Object data = wrapper.apply(queryUpdaterInserter);
-        return new StrKey(sql, data);
+        try {
+            mapperFunction.apply(mapper, queryUpdaterInserter);
+            String sql = mapper.getSql().get(0);
+            String method = LambdaUtil.lambdaName(mapperFunction);
+            Function<Object, Map> wrapper = WRAPPER_PARAMETER.get(method);
+            Map data = wrapper.apply(queryUpdaterInserter);
+            return new StrKey(sql, data);
+        } finally {
+            PrinterMapper.clear();
+        }
     }
 
     static Map wrapperParameter(String method, Object parameter) {
@@ -71,11 +76,19 @@ class SqlFunctions {
         .put(M_ListObjs, EW_FUNCTION)
         .put(M_Count, EW_FUNCTION)
         .put(M_CountNoLimit, EW_FUNCTION)
-        .put(M_UpdateBy, EW_FUNCTION)
+        .put(M_UpdateBy, SqlFunctions::updateBy)
         .put(M_Delete, EW_FUNCTION)
         .put(M_BatchCrud, EW_FUNCTION)
         .put(M_InsertSelect, SqlFunctions::insertSelectFunction)
         .put(M_InsertBatchWithPk, entities -> wrapper(Param_List, entities));
+
+    private static Map<String, Object> updateBy(Object obj) {
+        if (obj instanceof IUpdate) {
+            return wrapper(Param_EW, List.of(obj));
+        } else {
+            return wrapper(Param_EW, obj);
+        }
+    }
 
     private static Map<String, Object> insert(Object obj) {
         if (obj instanceof IEntity) {

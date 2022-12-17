@@ -73,10 +73,15 @@ public class PrintSqlTest extends Test4J {
     }
 
     @Test
-    void batchCrud() {
+    void insert_batch() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity(), new StudentEntity());
         StrKey sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
-        System.out.println(sql.key());
+        want.string(sql.key()).eq("" +
+            "INSERT INTO fluent_mybatis.student (`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
+            "VALUES " +
+            "(#{list[0].env}, #{list[0].tenant}, now(), now(), 0), " +
+            "(#{list[1].env}, #{list[1].tenant}, now(), now(), 0)");
+        want.list((List) sql.val()).sizeEq(2);
     }
 
     @Test
@@ -109,6 +114,7 @@ public class PrintSqlTest extends Test4J {
             "FROM fluent_mybatis.student " +
             "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
             "AND `env` = #{ew.data.parameters.variable_1_2}");
+
     }
 
     @Test

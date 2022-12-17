@@ -39,7 +39,11 @@ public class LambdaUtil {
             SerializedLambda serializedLambda = (SerializedLambda) writeReplace.invoke(lambda);
             String method = serializedLambda.getImplMethodName();
             writeReplace.setAccessible(accessible);
-            return method;
+            if (method.startsWith("lambda$")) {
+                method = method.substring("lambda$".length());
+            }
+            int index = method.indexOf('$');
+            return index > 0 ? method.substring(0, index) : method;
         } catch (Exception e) {
             throw new RuntimeException("can't parser getter name of " + lambda.getClass().getSimpleName(), e);
         }
