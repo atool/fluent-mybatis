@@ -125,9 +125,8 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
     @Override
-    public Object batchCrud(BatchCrud crud) {
+    public void batchCrud(BatchCrud crud) {
         this.simulate(M_BatchCrud, crud);
-        return null;
     }
 
     @Override
@@ -142,7 +141,7 @@ public class PrinterMapper implements IWrapperMapper {
 
 
     private int simulate(String method, Object value) {
-        Object values = SqlFunction.wrapperParameter(method, value);
+        Map values = SqlFunction.wrapperParameter(method, value);
         Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(values);
         this.addSQL(values, sqler);
         return 1;

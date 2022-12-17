@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.mapper;
+package cn.org.atool.fluent.mybatis.functions;
 
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import org.apache.ibatis.builder.annotation.ProviderContext;
@@ -24,6 +24,12 @@ public interface SqlSupplier extends Function<Map, String> {
         return map -> supplier.apply(map, context);
     }
 
+    /**
+     * BiFunction
+     * 入参一: IEntityMapper方法参数对象
+     * 入参二: ProviderContext
+     * 出参: 封装后的SQL语句
+     */
     @FunctionalInterface
     interface SqlSupplierByProviderContext extends BiFunction<Map, ProviderContext, String> {
     }

@@ -54,15 +54,15 @@ public interface SqlFunction<E extends IOptMapping> extends BiFunction<IRichMapp
         return new StrKey(sql, data);
     }
 
-    static Object wrapperParameter(String method, Object parameter) {
+    static Map wrapperParameter(String method, Object parameter) {
         return WRAPPER_PARAMETER.get(method).apply(parameter);
     }
 }
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 class SqlFunctions {
-    static final Function EW_FUNCTION = obj -> wrapper(Param_EW, obj);
-    static final KeyMap<Function> WRAPPER_PARAMETER = KeyMap.<Function>instance()
+    static final Function<Object, Map> EW_FUNCTION = obj -> wrapper(Param_EW, obj);
+    static final KeyMap<Function<Object, Map>> WRAPPER_PARAMETER = KeyMap.<Function<Object, Map>>instance()
         .put(M_Insert, SqlFunctions::insert)
         .put(M_InsertWithPk, SqlFunctions::insert)
         .put(M_InsertBatch, SqlFunctions::insert)
@@ -77,21 +77,16 @@ class SqlFunctions {
         .put(M_InsertSelect, SqlFunctions::insertSelectFunction)
         .put(M_InsertBatchWithPk, entities -> wrapper(Param_List, entities));
 
-    private static Object insert(Object obj) {
+    private static Map<String, Object> insert(Object obj) {
         if (obj instanceof IEntity) {
             return wrapper(Param_EW, obj);
         } else if (obj instanceof Collection) {
             return wrapper(Param_List, obj);
         } else if (obj instanceof Inserter) {
-            return ((Inserter) obj).entities();
+            return wrapper(Param_List, ((Inserter) obj).entities());
         } else {
             throw new RuntimeException("Not support");
         }
-    }
-
-    private static Map<String, Object> wrapper(String param_List, Object entities) {
-        KeyMap kv = KeyMap.instance().put(param_List, entities);
-        return kv.map();
     }
 
     private static Map<String, Object> insertSelectFunction(Object obj) {
@@ -100,5 +95,10 @@ class SqlFunctions {
             .put(Param_EW, kv.key())
             .put(Param_List, kv.val())
             .map();
+    }
+
+    private static Map<String, Object> wrapper(String param_List, Object entities) {
+        KeyMap kv = KeyMap.instance().put(param_List, entities);
+        return kv.map();
     }
 }

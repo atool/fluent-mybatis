@@ -3,7 +3,7 @@ package org.apache.ibatis.builder.annotation;
 import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.mybatis.base.mapper.IEntityMapper;
 import cn.org.atool.fluent.mybatis.base.provider.SqlProvider;
-import cn.org.atool.fluent.mybatis.mapper.SqlSupplier.SqlSupplierByProviderContext;
+import cn.org.atool.fluent.mybatis.functions.SqlSupplier.SqlSupplierByProviderContext;
 
 import java.lang.reflect.Method;
 import java.util.Collections;

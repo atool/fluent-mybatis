@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.test.partition;
 
-import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.StudentEntity;
 import cn.org.atool.fluent.mybatis.generator.shared2.mapper.StudentMapper;
 import cn.org.atool.fluent.mybatis.generator.shared2.wrapper.StudentQuery;
@@ -43,7 +42,7 @@ public class InsertDynamicTable extends BaseTest {
     @Test
     void insert() {
         want.exception(() ->
-            mapper.insert((IEntity) new StudentEntity()
+            mapper.insert((StudentEntity) new StudentEntity()
                 .setUserName("name")
                 .tableSupplier("my_student")), BadSqlGrammarException.class);
         db.sqlList().wantFirstSql().start("INSERT INTO my_student (`");
