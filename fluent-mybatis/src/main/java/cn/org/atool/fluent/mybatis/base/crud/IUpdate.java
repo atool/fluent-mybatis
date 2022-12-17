@@ -1,9 +1,11 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
+import cn.org.atool.fluent.common.kits.StrKey;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.UpdaterExecutor;
+import cn.org.atool.fluent.mybatis.mapper.WrapperFunction;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
@@ -13,6 +15,7 @@ import cn.org.atool.fluent.mybatis.utility.RefKit;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static cn.org.atool.fluent.mybatis.mapper.WrapperFunction.IUpdateFunction;
 import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 
 /**
@@ -113,5 +116,16 @@ public interface IUpdate<E extends IEntity> {
     @Deprecated
     default int execute(Function<IUpdate<E>, Integer> executor) {
         return executor.apply(this);
+    }
+
+    /**
+     * 获取mybatis占位符sql语句和参数上下文
+     *
+     * @param updater IUpdateFunction
+     * @return sql语句 + 上下文
+     */
+    @SuppressWarnings("rawtypes")
+    default StrKey sql(IUpdateFunction updater) {
+        return WrapperFunction.sql((IWrapper) this, updater);
     }
 }

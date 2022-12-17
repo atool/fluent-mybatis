@@ -2,21 +2,17 @@ package cn.org.atool.fluent.mybatis.base.crud;
 
 import cn.org.atool.fluent.common.kits.StrKey;
 import cn.org.atool.fluent.mybatis.base.IEntity;
-import cn.org.atool.fluent.mybatis.base.entity.AMapping;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.base.mapper.QueryExecutor;
-import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
-import cn.org.atool.fluent.mybatis.mapper.QueryFunction;
+import cn.org.atool.fluent.mybatis.mapper.WrapperFunction;
+import cn.org.atool.fluent.mybatis.mapper.WrapperFunction.IQueryFunction;
 import cn.org.atool.fluent.mybatis.segment.BaseWrapper;
 import cn.org.atool.fluent.mybatis.segment.OrderByBase;
 import cn.org.atool.fluent.mybatis.segment.WhereBase;
 import cn.org.atool.fluent.mybatis.segment.model.WrapperData;
-import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -208,18 +204,11 @@ public interface IQuery<E extends IEntity> {
     /**
      * 获取mybatis占位符sql语句和参数上下文
      *
-     * @param query IWrapper方法
+     * @param query IQueryFunction方法
      * @return sql语句 + 上下文
      */
     @SuppressWarnings("rawtypes")
-    default StrKey sql(QueryFunction query) {
-        AMapping mapping = (AMapping) this.mapping().orElseThrow(() -> new RuntimeException("IMapping not found."));
-        PrinterMapper mapper = (PrinterMapper) PrinterMapper.set(2, mapping);
-        query.apply(mapper, this);
-        String sql = mapper.getSql().get(0);
-        String method = LambdaUtil.lambdaName(query);
-        Map<String, Object> data = new HashMap<>(2);
-        data.put("ew", this);
-        return new StrKey<>(sql, data);
+    default StrKey sql(IQueryFunction query) {
+        return WrapperFunction.sql((IWrapper) this, query);
     }
 }

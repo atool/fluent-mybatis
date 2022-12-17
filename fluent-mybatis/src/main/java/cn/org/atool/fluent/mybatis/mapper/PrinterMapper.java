@@ -1,6 +1,7 @@
 package cn.org.atool.fluent.mybatis.mapper;
 
 import cn.org.atool.fluent.common.kits.KeyMap;
+import cn.org.atool.fluent.common.kits.KeyVal;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -9,7 +10,6 @@ import cn.org.atool.fluent.mybatis.base.intf.BatchCrud;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.typehandler.ConvertorKit;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
-import cn.org.atool.fluent.common.kits.StrKey;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.mapping.BoundSql;
@@ -22,6 +22,7 @@ import org.apache.ibatis.session.Configuration;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static cn.org.atool.fluent.mybatis.If.isBlank;
@@ -61,70 +62,71 @@ public class PrinterMapper implements IWrapperMapper {
 
     @Override
     public int insert(IEntity entity) {
-        return this.simulate(M_Insert, StrKey.kv(Param_EW, entity));
+        return this.simulate(M_Insert, entity);
     }
 
     @Override
     public int insertBatch(Collection entities) {
-        return this.simulate(M_InsertBatch, StrKey.kv(Param_List, entities));
+        return this.simulate(M_InsertBatch, entities);
     }
 
     @Override
     public int insertWithPk(IEntity entity) {
-        return this.simulate(M_InsertWithPk, StrKey.kv(Param_EW, entity));
+        return this.simulate(M_InsertWithPk, entity);
     }
 
     @Override
     public int insertBatchWithPk(Collection entities) {
-        return this.simulate(M_InsertBatchWithPk, StrKey.kv(Param_List, entities));
+        return this.simulate(M_InsertBatchWithPk, entities);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public int insertSelect(String[] fields, IQuery query) {
-        return this.simulate(M_InsertSelect, StrKey.kv(Param_EW, query), StrKey.kv(Param_Fields, fields));
+        return this.simulate(M_InsertSelect, new KeyVal(query, fields));
     }
 
     @Override
     public int updateBy(IUpdate... updates) {
-        return this.simulate(M_UpdateBy, StrKey.kv(Param_EW, updates));
+        return this.simulate(M_UpdateBy, updates);
     }
 
     @Override
     public List internalListEntity(IQuery query) {
-        this.simulate(M_ListEntity, StrKey.kv(Param_EW, query));
+        this.simulate(M_ListEntity, query);
         return Collections.emptyList();
     }
 
     @Override
     public List<Map<String, Object>> listMaps(IQuery query) {
-        this.simulate(M_ListMaps, StrKey.kv(Param_EW, query));
+        this.simulate(M_ListMaps, query);
         return Collections.emptyList();
     }
 
     @Override
     public List listObjs(IQuery query) {
-        this.simulate(M_ListObjs, StrKey.kv(Param_EW, query));
+        this.simulate(M_ListObjs, query);
         return Collections.emptyList();
     }
 
     @Override
     public int count(IQuery query) {
-        return this.simulate(M_Count, StrKey.kv(Param_EW, query));
+        return this.simulate(M_Count, query);
     }
 
     @Override
     public int countNoLimit(IQuery query) {
-        return this.simulate(M_CountNoLimit, StrKey.kv(Param_EW, query));
+        return this.simulate(M_CountNoLimit, query);
     }
 
     @Override
     public int delete(IQuery query) {
-        return this.simulate(M_Delete, StrKey.kv(Param_EW, query));
+        return this.simulate(M_Delete, query);
     }
 
     @Override
     public void batchCrud(BatchCrud crud) {
-        this.simulate(M_BatchCrud, StrKey.kv(Param_EW, crud));
+        this.simulate(M_BatchCrud, crud);
     }
 
     @Override
@@ -138,8 +140,8 @@ public class PrinterMapper implements IWrapperMapper {
     }
 
 
-    private int simulate(String method, StrKey... kvs) {
-        Map values = KeyMap.map(kvs).map();
+    private int simulate(String method, Object value) {
+        Map values = WRAPPER_PARAMETER.get(method).apply(value);
         Supplier<String> sqler = () -> SqlSupplier.get(this.mapping, method).apply(values);
         this.addSQL(values, sqler);
         return 1;
@@ -263,5 +265,34 @@ public class PrinterMapper implements IWrapperMapper {
         } finally {
             PrinterMapper.clear();
         }
+    }
+
+    static Function<Object, Map> EW_FUNCTION = obj -> wrapper(Param_EW, obj);
+    public static KeyMap<Function<Object, Map>> WRAPPER_PARAMETER = KeyMap.<Function<Object, Map>>instance()
+        .put(M_Insert, EW_FUNCTION)
+        .put(M_InsertWithPk, EW_FUNCTION)
+        .put(M_InsertBatch, entities -> wrapper(Param_List, entities))
+        .put(M_ListEntity, EW_FUNCTION)
+        .put(M_ListMaps, EW_FUNCTION)
+        .put(M_ListObjs, EW_FUNCTION)
+        .put(M_Count, EW_FUNCTION)
+        .put(M_CountNoLimit, EW_FUNCTION)
+        .put(M_UpdateBy, EW_FUNCTION)
+        .put(M_Delete, EW_FUNCTION)
+        .put(M_BatchCrud, EW_FUNCTION)
+        .put(M_InsertSelect, PrinterMapper::insertSelectFunction)
+        .put(M_InsertBatchWithPk, entities -> wrapper(Param_List, entities));
+
+    private static Map<String, Object> wrapper(String param_List, Object entities) {
+        KeyMap kv = KeyMap.instance().put(param_List, entities);
+        return kv.map();
+    }
+
+    private static Map<String, Object> insertSelectFunction(Object obj) {
+        KeyVal kv = (KeyVal) obj;
+        return KeyMap.instance()
+            .put(Param_EW, kv.key())
+            .put(Param_List, kv.val())
+            .map();
     }
 }
