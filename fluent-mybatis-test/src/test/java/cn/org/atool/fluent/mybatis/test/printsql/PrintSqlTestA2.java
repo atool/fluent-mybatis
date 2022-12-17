@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes"})
-public class PrintSqlTest2 extends BaseTest {
+public class PrintSqlTestA2 extends BaseTest {
 
     @BeforeAll
     static void setup() {
@@ -47,46 +47,49 @@ public class PrintSqlTest2 extends BaseTest {
             "VALUES " +
             "(#{list[0].env}, #{list[0].tenant}, now(), now(), 0), " +
             "(#{list[1].env}, #{list[1].tenant}, now(), now(), 0)");
-        want.list((List) sql.val()).sizeEq(2);
     }
 
     @Test
     void insertBatchWithPk() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(2L));
-        StrKey sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
+        StrKey data = Inserter.instance().insert(list).sql(IRichMapper::insert);
 
-        want.string(sql.key()).eq("" +
+        want.string(sql(data)).eq("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`id`, `env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
             "(#{list[0].id}, #{list[0].env}, #{list[0].tenant}, now(), now(), 0), " +
             "(#{list[1].id}, #{list[1].env}, #{list[1].tenant}, now(), now(), 0)");
-        RefKit.mapper(StudentEntity.class).execute(sql.key(), sql.val());
+        RefKit.mapper(StudentEntity.class).execute(data.key(), data.val());
     }
 
     @Test
     void listEntity() {
         ATM.dataMap.student.cleanTable();
         new StudentEntity().setAge(12).setUserName("test").setEnv("test_env").save();
-        StrKey sql = new StudentQuery().sql(IRichMapper::listEntity);
-        want.string(sql.key()).eq("" +
+        StrKey data = new StudentQuery().sql(IRichMapper::listEntity);
+        want.string(sql(data)).eq("" +
             "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
-            "AND `env` = #{ew.data.parameters.variable_1_2}");
-        List<StudentEntity> value = RefKit.mapper(StudentEntity.class).query(IRichMapper::listEntity, sql.key(), sql.val());
+            "WHERE `is_deleted` = #{ew.data.parameters.variable} " +
+            "AND `env` = #{ew.data.parameters.variable}");
+        List<StudentEntity> value = RefKit.mapper(StudentEntity.class).query(IRichMapper::listEntity, data.key(), data.val());
         want.list(value).sizeEq(1);
     }
 
     @Test
     void listEntity2() {
         StrKey data = StudentQuery.query().sql(IRichMapper::listEntity);
-        want.string(data.key()).eq("" +
+        want.string(sql(data)).eq("" +
             "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
-            "AND `env` = #{ew.data.parameters.variable_1_2}");
+            "WHERE `is_deleted` = #{ew.data.parameters.variable} " +
+            "AND `env` = #{ew.data.parameters.variable}");
         RefKit.mapper(StudentEntity.class).execute(data.key(), data.val());
+    }
+
+    private static String sql(StrKey data) {
+        return data.key().replaceAll("variable_\\d+_\\d+", "variable");
     }
 
     @Test
@@ -94,23 +97,23 @@ public class PrintSqlTest2 extends BaseTest {
         StudentUpdate update = new StudentUpdate().set.email().is("test@163.com").end();
         StrKey sql = update.sql(IRichMapper::updateBy);
         RefKit.mapper(StudentEntity.class).execute(sql.key(), sql.val());
-        want.string(sql.key()).eq("" +
+        want.string(sql(sql)).eq("" +
             "UPDATE fluent_mybatis.student " +
             "SET `gmt_modified` = now(), " +
-            "`email` = #{ew[0].data.parameters.variable_1_3} " +
-            "WHERE `is_deleted` = #{ew[0].data.parameters.variable_1_1} " +
-            "AND `env` = #{ew[0].data.parameters.variable_1_2}"
+            "`email` = #{ew[0].data.parameters.variable} " +
+            "WHERE `is_deleted` = #{ew[0].data.parameters.variable} " +
+            "AND `env` = #{ew[0].data.parameters.variable}"
         );
     }
 
     @Test
     void listObjs() {
         StrKey sql = new StudentQuery().sql(IRichMapper::listObjs);
-        want.string(sql.key()).eq("" +
+        want.string(sql(sql)).eq("" +
             "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
-            "AND `env` = #{ew.data.parameters.variable_1_2}");
+            "WHERE `is_deleted` = #{ew.data.parameters.variable} " +
+            "AND `env` = #{ew.data.parameters.variable}");
     }
 
     @Test
@@ -126,12 +129,12 @@ public class PrintSqlTest2 extends BaseTest {
 
     @Test
     void count() {
-        StrKey sql = new StudentQuery().limit(10).sql(IRichMapper::count);
-        want.string(sql.key()).eq("" +
+        StrKey data = new StudentQuery().limit(10).sql(IRichMapper::count);
+        want.string(sql(data)).eq("" +
             "SELECT COUNT(*) " +
             "FROM fluent_mybatis.student " +
-            "WHERE `is_deleted` = #{ew.data.parameters.variable_1_1} " +
-            "AND `env` = #{ew.data.parameters.variable_1_2} " +
-            "LIMIT #{ew.data.parameters.variable_1_3}, #{ew.data.parameters.variable_1_4}");
+            "WHERE `is_deleted` = #{ew.data.parameters.variable} " +
+            "AND `env` = #{ew.data.parameters.variable} " +
+            "LIMIT #{ew.data.parameters.variable}, #{ew.data.parameters.variable}");
     }
 }
