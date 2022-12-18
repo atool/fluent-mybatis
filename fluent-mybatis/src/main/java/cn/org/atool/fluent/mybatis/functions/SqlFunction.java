@@ -12,10 +12,10 @@ import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.mapper.PrinterMapper;
 import cn.org.atool.fluent.mybatis.utility.LambdaUtil;
-import com.sun.tools.javac.util.List;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -84,7 +84,7 @@ class SqlFunctions {
 
     private static Map<String, Object> updateBy(Object obj) {
         if (obj instanceof IUpdate) {
-            return wrapper(Param_EW, List.of(obj));
+            return wrapper(Param_EW, Collections.singleton(obj));
         } else {
             return wrapper(Param_EW, obj);
         }
