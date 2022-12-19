@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.common.kits.KeyStr;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
@@ -200,7 +200,7 @@ public interface IQuery<E extends IEntity> extends IOptMapping {
      * @return sql语句 + 上下文
      */
     @SuppressWarnings("rawtypes")
-    default StrKey sql(IQueryFunction query) {
+    default KeyStr sql(IQueryFunction query) {
         return SqlFunction.sql(this, query);
     }
 }

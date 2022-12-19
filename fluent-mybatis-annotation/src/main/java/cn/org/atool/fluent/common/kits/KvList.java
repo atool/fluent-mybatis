@@ -11,19 +11,19 @@ import java.util.List;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public class KvList {
-    private final List<StrKey> kvs = new ArrayList<>(16);
+    private final List<KeyStr> kvs = new ArrayList<>(16);
 
     public <O> KvList kv(String key, O val) {
-        this.kvs.add(StrKey.kv(key, val));
+        this.kvs.add(KeyStr.kv(key, val));
         return this;
     }
 
-    public <O> KvList kv(StrKey... kvs) {
+    public <O> KvList kv(KeyStr... kvs) {
         this.kvs.addAll(Arrays.asList(kvs));
         return this;
     }
 
-    public <O> List<StrKey<O>> list() {
+    public <O> List<KeyStr<O>> list() {
         return (List) kvs;
     }
 }

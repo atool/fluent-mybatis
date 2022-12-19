@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.common.kits.KeyStr;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
@@ -117,7 +117,7 @@ public interface IUpdate<E extends IEntity> extends IOptMapping {
      * @return sql语句 + 上下文
      */
     @SuppressWarnings("rawtypes")
-    default StrKey sql(IUpdateFunction updater) {
+    default KeyStr sql(IUpdateFunction updater) {
         return SqlFunction.sql(this, updater);
     }
 }

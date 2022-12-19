@@ -5,8 +5,8 @@ package cn.org.atool.fluent.common.kits;
  *
  * @author wudarui
  */
-public class StrKey<O> extends KeyVal<String, O> {
-    public StrKey(String key, O val) {
+public class KeyStr<O> extends KeyVal<String, O> {
+    public KeyStr(String key, O val) {
         super(key, val);
     }
 
@@ -15,7 +15,7 @@ public class StrKey<O> extends KeyVal<String, O> {
         return super.key();
     }
 
-    public static <O> StrKey<O> kv(String key, O val) {
-        return new StrKey<>(key, val);
+    public static <O> KeyStr<O> kv(String key, O val) {
+        return new KeyStr<>(key, val);
     }
 }

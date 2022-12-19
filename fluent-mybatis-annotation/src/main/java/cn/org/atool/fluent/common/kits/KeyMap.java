@@ -79,9 +79,9 @@ public class KeyMap<T> {
      * @param kvs 键值对列表
      * @return KeyMap
      */
-    public static KeyMap<Object> map(StrKey... kvs) {
+    public static KeyMap<Object> map(KeyStr... kvs) {
         KeyMap<Object> map = new KeyMap<>();
-        for (StrKey kv : kvs) {
+        for (KeyStr kv : kvs) {
             map.put(kv.key(), kv.val());
         }
         return map;

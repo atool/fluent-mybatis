@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.base.crud;
 
-import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.common.kits.KeyStr;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
@@ -81,7 +81,7 @@ public class Inserter implements IOptMapping {
      * @return sql语句 + 上下文
      */
     @SuppressWarnings("rawtypes")
-    public StrKey sql(SqlFunction.IInsertFunction insertFunction) {
+    public KeyStr sql(SqlFunction.IInsertFunction insertFunction) {
         return SqlFunction.sql(this, insertFunction);
     }
 

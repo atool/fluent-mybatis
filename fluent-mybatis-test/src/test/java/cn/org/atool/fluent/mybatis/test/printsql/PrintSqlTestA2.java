@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.mybatis.test.printsql;
 
-import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.common.kits.KeyStr;
 import cn.org.atool.fluent.mybatis.base.crud.Inserter;
 import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.generator.ATM;
@@ -28,7 +28,7 @@ public class PrintSqlTestA2 extends BaseTest {
     @Test
     void insertBatch() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity(), new StudentEntity());
-        StrKey sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
+        KeyStr sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
         want.string(sql.key()).eq("" +
             "INSERT INTO fluent_mybatis.student " +
             "(`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
@@ -41,7 +41,7 @@ public class PrintSqlTestA2 extends BaseTest {
     @Test
     void insert_batch() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity(), new StudentEntity());
-        StrKey sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
+        KeyStr sql = Inserter.instance().insert(list).sql(IRichMapper::insert);
         want.string(sql.key()).eq("" +
             "INSERT INTO fluent_mybatis.student (`env`, `tenant`, `gmt_created`, `gmt_modified`, `is_deleted`) " +
             "VALUES " +
@@ -52,7 +52,7 @@ public class PrintSqlTestA2 extends BaseTest {
     @Test
     void insertBatchWithPk() {
         List<StudentEntity> list = Arrays.asList(new StudentEntity().setId(1L), new StudentEntity().setId(2L));
-        StrKey data = Inserter.instance().insert(list).sql(IRichMapper::insert);
+        KeyStr data = Inserter.instance().insert(list).sql(IRichMapper::insert);
 
         want.string(sql(data)).eq("" +
             "INSERT INTO fluent_mybatis.student " +
@@ -67,7 +67,7 @@ public class PrintSqlTestA2 extends BaseTest {
     void listEntity() {
         ATM.dataMap.student.cleanTable();
         new StudentEntity().setAge(12).setUserName("test").setEnv("test_env").save();
-        StrKey data = new StudentQuery().sql(IRichMapper::listEntity);
+        KeyStr data = new StudentQuery().sql(IRichMapper::listEntity);
         want.string(sql(data)).eq("" +
             "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
@@ -79,7 +79,7 @@ public class PrintSqlTestA2 extends BaseTest {
 
     @Test
     void listEntity2() {
-        StrKey data = StudentQuery.query().sql(IRichMapper::listEntity);
+        KeyStr data = StudentQuery.query().sql(IRichMapper::listEntity);
         want.string(sql(data)).eq("" +
             "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
@@ -88,14 +88,14 @@ public class PrintSqlTestA2 extends BaseTest {
         RefKit.mapper(StudentEntity.class).execute(data.key(), data.val());
     }
 
-    private static String sql(StrKey data) {
+    private static String sql(KeyStr data) {
         return data.key().replaceAll("variable_\\d+_\\d+", "variable");
     }
 
     @Test
     void updateBy() {
         StudentUpdate update = new StudentUpdate().set.email().is("test@163.com").end();
-        StrKey sql = update.sql(IRichMapper::updateBy);
+        KeyStr sql = update.sql(IRichMapper::updateBy);
         RefKit.mapper(StudentEntity.class).execute(sql.key(), sql.val());
         want.string(sql(sql)).eq("" +
             "UPDATE fluent_mybatis.student " +
@@ -108,7 +108,7 @@ public class PrintSqlTestA2 extends BaseTest {
 
     @Test
     void listObjs() {
-        StrKey sql = new StudentQuery().sql(IRichMapper::listObjs);
+        KeyStr sql = new StudentQuery().sql(IRichMapper::listObjs);
         want.string(sql(sql)).eq("" +
             "SELECT `id`, `address`, `age`, `birthday`, `bonus_points`, `desk_mate_id`, `email`, `env`, `gender`, `grade`, `home_address_id`, `home_county_id`, `phone`, `status`, `tenant`, `user_name`, `version`, `gmt_created`, `gmt_modified`, `is_deleted` " +
             "FROM fluent_mybatis.student " +
@@ -129,7 +129,7 @@ public class PrintSqlTestA2 extends BaseTest {
 
     @Test
     void count() {
-        StrKey data = new StudentQuery().limit(10).sql(IRichMapper::count);
+        KeyStr data = new StudentQuery().limit(10).sql(IRichMapper::count);
         want.string(sql(data)).eq("" +
             "SELECT COUNT(*) " +
             "FROM fluent_mybatis.student " +

@@ -2,7 +2,7 @@ package cn.org.atool.fluent.mybatis.functions;
 
 import cn.org.atool.fluent.common.kits.KeyMap;
 import cn.org.atool.fluent.common.kits.KeyVal;
-import cn.org.atool.fluent.common.kits.StrKey;
+import cn.org.atool.fluent.common.kits.KeyStr;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.crud.IQuery;
 import cn.org.atool.fluent.mybatis.base.crud.IUpdate;
@@ -44,7 +44,7 @@ public interface SqlFunction<E extends IOptMapping> extends BiFunction<IRichMapp
      * @param mapperFunction       IEntityMapper方法函数
      * @return SQL语句+入参
      */
-    static StrKey sql(IOptMapping queryUpdaterInserter, SqlFunction mapperFunction) {
+    static KeyStr sql(IOptMapping queryUpdaterInserter, SqlFunction mapperFunction) {
         IMapping mapping = queryUpdaterInserter.mapping().orElseThrow(() -> new RuntimeException("IMapping not found."));
         PrinterMapper mapper = (PrinterMapper) PrinterMapper.set(2, mapping);
         try {
@@ -53,7 +53,7 @@ public interface SqlFunction<E extends IOptMapping> extends BiFunction<IRichMapp
             String method = LambdaUtil.lambdaName(mapperFunction);
             Function<Object, Map> wrapper = WRAPPER_PARAMETER.get(method);
             Map data = wrapper.apply(queryUpdaterInserter);
-            return new StrKey(sql, data);
+            return new KeyStr(sql, data);
         } finally {
             PrinterMapper.clear();
         }

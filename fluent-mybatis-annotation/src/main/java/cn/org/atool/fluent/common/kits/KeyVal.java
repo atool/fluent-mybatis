@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.common.kits;
 
+import java.io.Serializable;
+
 /**
  * 简单键值对封装
  *
@@ -7,7 +9,7 @@ package cn.org.atool.fluent.common.kits;
  * @param <V> val值类型
  * @author wudarui
  */
-public class KeyVal<K, V> {
+public class KeyVal<K, V> implements Serializable {
     private final K key;
 
     private final V val;
