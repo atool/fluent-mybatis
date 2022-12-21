@@ -26,4 +26,9 @@ public class KeyVal<K, V> implements Serializable {
     public V val() {
         return this.val;
     }
+
+    @Override
+    public String toString() {
+        return "{'key':'" + key + "', 'val':'" + val + "'}";
+    }
 }
