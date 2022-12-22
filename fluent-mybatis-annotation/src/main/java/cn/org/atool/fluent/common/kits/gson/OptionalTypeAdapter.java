@@ -17,6 +17,7 @@ import java.util.Optional;
  * use in GsonBuilder
  * instance.registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY)
  *
+ * @author davey
  * @param <E>
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
