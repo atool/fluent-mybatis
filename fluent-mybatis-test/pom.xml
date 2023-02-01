@@ -13,7 +13,7 @@
 
     <artifactId>fluent-mybatis-test</artifactId>
     <properties>
-        <spring.verison>5.3.3</spring.verison>
+        <spring.verison>5.3.18</spring.verison>
         <spring-boot.version>2.4.2</spring-boot.version>
     </properties>
     <dependencyManagement>
