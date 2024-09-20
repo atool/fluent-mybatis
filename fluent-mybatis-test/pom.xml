@@ -40,6 +40,11 @@
     <dependencies>
         <dependency>
             <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis-annotation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.atool</groupId>
             <artifactId>fluent-mybatis</artifactId>
             <version>${project.version}</version>
         </dependency>

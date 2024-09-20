@@ -1,5 +1,7 @@
 package cn.org.atool.fluent.processor.formservice.filer;
 
+import cn.org.atool.fluent.form.annotation.EntryType;
+import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.registrar.FormServiceKit;
 import com.squareup.javapoet.*;
@@ -26,6 +28,7 @@ public class FormServiceImplFiler {
         this.methods = methods;
     }
 
+
     public JavaFile javaFile() {
         ClassName metaKit = ClassName.get(this.className.packageName(), this.className.simpleName() + FormServiceBeanSuffix);
         TypeSpec.Builder type = TypeSpec.classBuilder(metaKit).addModifiers(Modifier.PUBLIC)
@@ -41,6 +44,8 @@ public class FormServiceImplFiler {
         }
 
         return JavaFile.builder(this.className.packageName(), type.build())
+            .addStaticImport(EntryType.class,"*")
+            .addStaticImport(MethodType.class,"*")
             .skipJavaLangImports(true)
             .build();
     }
@@ -77,6 +82,7 @@ public class FormServiceImplFiler {
     private AnnotationSpec copyAnnotation(AnnotationMirror annotationMirror) {
         TypeName typeName = ClassName.get(annotationMirror.getAnnotationType());
         AnnotationSpec.Builder spec = AnnotationSpec.builder((ClassName) typeName);
+
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
             String key = entry.getKey().getSimpleName().toString();
             spec.addMember(key, "$L", entry.getValue().toString());

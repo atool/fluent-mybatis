@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Getter;
+
 /**
  * Entity基类, 充血模式
  *
@@ -15,6 +17,24 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings({"unchecked"})
 public abstract class RichEntity extends BaseEntity implements IRichEntity {
+    /**
+     * 当RichEntity作为查询参数时, params用于设置额外的参数, 比如范围（开始,结束）等
+     */
+    @Getter
+    @NotField
+    protected transient Map<String, Object> inlayParams = new ConcurrentHashMap<>(4);
+
+    /**
+     * 设置params参数
+     *
+     * @param key   参数key
+     * @param value 参数值
+     * @return self
+     */
+    public RichEntity inlayParams(String key, Object value) {
+        this.inlayParams.put(key, value);
+        return this;
+    }
 
     /**
      * 数据缓存, 避免多次查询

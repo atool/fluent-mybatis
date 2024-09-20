@@ -320,7 +320,7 @@ public class WhereApply<
     @Override
     public WHERE applyFunc(Predicate<Object[]> predicate, ISqlOp op, String expression, Object... args) {
         if (predicate.test(args)) {
-            this.apply(op, expression, args);
+            this.applyFunc(op, expression, args);
         }
         return this.segment.and;
     }

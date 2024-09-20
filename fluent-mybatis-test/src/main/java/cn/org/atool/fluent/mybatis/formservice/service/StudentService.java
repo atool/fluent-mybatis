@@ -10,13 +10,13 @@ import lombok.ToString;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.type.JdbcType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Observable;
 
-import static org.apache.ibatis.type.JdbcType.DATE;
 
 @SuppressWarnings("all")
 @FormService(entity = StudentEntity.class, proxy = false)
@@ -44,7 +44,7 @@ public interface StudentService {
     /**
      * 按学号物理删除学生信息
      */
-    @Result(javaType = ToString.class, jdbcType = DATE)
+    @Result(javaType = ToString.class, jdbcType = JdbcType.DATE)
     int deleteById(int... ids);
 
     int logicDeleteStudent(StudentQuery student);
