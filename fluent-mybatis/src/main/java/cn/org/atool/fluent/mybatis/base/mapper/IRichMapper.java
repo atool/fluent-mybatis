@@ -135,7 +135,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
      * @param ids 主键列表
      * @return ignore
      */
-    default int deleteById(Object... ids) {
+    default <ID> int deleteById(ID... ids) {
         assertNotEmpty("ids", ids);
         IQuery query = factory(this).queryByIds(this.mapping(), ids);
         return this.delete(query);
@@ -346,7 +346,7 @@ public interface IRichMapper<E extends IEntity> extends IEntityMapper<E> {
         if (list != null && list.size() > 1) {
             throw new RuntimeException("The expected result is one, but the returned result is multiple.");
         }
-        Map<String, Object> map = list == null || list.size() == 0 ? null : list.get(0);
+        Map<String, Object> map = list == null || list.isEmpty() ? null : list.get(0);
         return Optional.ofNullable(map);
     }
 

@@ -37,6 +37,16 @@ public abstract class RichEntity extends BaseEntity implements IRichEntity {
     }
 
     /**
+     * 返回params参数
+     *
+     * @param key 参数key
+     * @return 参数值
+     */
+    public <P> P inlayParams(String key) {
+        return (P)this.inlayParams.get(key);
+    }
+
+    /**
      * 数据缓存, 避免多次查询
      */
     @NotField

@@ -9,6 +9,7 @@ import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
 import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import com.squareup.javapoet.*;
 
+import javax.annotation.PostConstruct;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
@@ -20,6 +21,7 @@ import static cn.org.atool.fluent.processor.mybatis.filer.segment.MapperFiler.ge
  *
  * @author wudarui
  */
+@SuppressWarnings("rawtypes")
 public class BaseDaoFiler extends AbstractFiler {
     public BaseDaoFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
@@ -38,6 +40,8 @@ public class BaseDaoFiler extends AbstractFiler {
             .superclass(paraType(BaseDao.class, fluent.entity(), fluent.query(), fluent.updater()));
 
         builder.addField(this.f_mapper())
+            .addField(this.f_instance())
+            .addMethod(this.m_initInstance())
             .addMethod(this.m_mapper())
             .addMethod(this.m_defaults())
             .addMethod(this.m_setMapper());
@@ -55,6 +59,19 @@ public class BaseDaoFiler extends AbstractFiler {
     private FieldSpec f_mapper() {
         return FieldSpec.builder(fluent.mapper(), "mapper")
             .addModifiers(Modifier.PROTECTED)
+            .build();
+    }
+
+    private FieldSpec f_instance() {
+        return FieldSpec.builder(fluent.mapper(), "INSTANCE")
+            .addModifiers(Modifier.PROTECTED, Modifier.STATIC)
+            .build();
+    }
+
+    private MethodSpec m_initInstance() {
+        return FilerKit.protectMethod("initInstance", Void.class)
+            .addAnnotation(PostConstruct.class)
+            .addStatement(super.codeBlock("INSTANCE = this"))
             .build();
     }
 
