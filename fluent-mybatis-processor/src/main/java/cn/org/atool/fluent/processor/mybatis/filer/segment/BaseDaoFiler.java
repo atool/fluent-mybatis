@@ -3,6 +3,7 @@ package cn.org.atool.fluent.processor.mybatis.filer.segment;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
 import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
 import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
@@ -12,8 +13,7 @@ import com.squareup.javapoet.*;
 import javax.annotation.PostConstruct;
 import javax.lang.model.element.Modifier;
 
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Pack_BaseDao;
-import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_BaseDao;
+import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.processor.mybatis.filer.segment.MapperFiler.getMapperName;
 
 /**
@@ -27,6 +27,14 @@ public class BaseDaoFiler extends AbstractFiler {
         super(fluentEntity);
         this.packageName = fluentEntity.getPackageName(Pack_BaseDao);
         this.klassName = fluentEntity.getNoSuffix() + Suffix_BaseDao;
+    }
+
+    public static String getClassName(FluentClassName fluentEntity) {
+        return fluentEntity.getNoSuffix() + Suffix_BaseDao;
+    }
+
+    public static String getPackageName(FluentClassName fluentEntity) {
+        return fluentEntity.getPackageName(Pack_BaseDao);
     }
 
     @Override
@@ -63,15 +71,16 @@ public class BaseDaoFiler extends AbstractFiler {
     }
 
     private FieldSpec f_instance() {
-        return FieldSpec.builder(fluent.mapper(), "INSTANCE")
+        return FieldSpec.builder(fluent.baseDao(), "INSTANCE")
             .addModifiers(Modifier.PROTECTED, Modifier.STATIC)
             .build();
     }
 
     private MethodSpec m_initInstance() {
-        return FilerKit.protectMethod("initInstance", Void.class)
+        return MethodSpec.methodBuilder("initInstance")
             .addAnnotation(PostConstruct.class)
             .addStatement(super.codeBlock("INSTANCE = this"))
+            .addModifiers(Modifier.PROTECTED)
             .build();
     }
 

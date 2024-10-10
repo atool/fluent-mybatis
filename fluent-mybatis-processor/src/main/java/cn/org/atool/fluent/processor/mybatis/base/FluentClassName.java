@@ -102,6 +102,17 @@ public abstract class FluentClassName {
     }
 
     /**
+     * ClassName of XyzBaseDao
+     *
+     * @return BaseDao ClassName
+     */
+    public ClassName baseDao() {
+        return ClassName.get(
+            BaseDaoFiler.getPackageName(this),
+            BaseDaoFiler.getClassName(this));
+    }
+
+    /**
      * ClassName of XyzQuery
      *
      * @return Query ClassName
