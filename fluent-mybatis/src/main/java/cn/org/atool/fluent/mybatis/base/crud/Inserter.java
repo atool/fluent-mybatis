@@ -4,6 +4,7 @@ import cn.org.atool.fluent.common.kits.KeyStr;
 import cn.org.atool.fluent.mybatis.base.IEntity;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.intf.IOptMapping;
+import cn.org.atool.fluent.mybatis.base.mapper.IRichMapper;
 import cn.org.atool.fluent.mybatis.functions.SqlFunction;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 /**
  * 插入实例操作
  */
+@SuppressWarnings("rawtypes")
 public class Inserter implements IOptMapping {
     public static Inserter instance() {
         return new Inserter();
@@ -80,9 +82,17 @@ public class Inserter implements IOptMapping {
      * @param insertFunction IInsertFunction方法
      * @return sql语句 + 上下文
      */
-    @SuppressWarnings("rawtypes")
     public KeyStr sql(SqlFunction.IInsertFunction insertFunction) {
         return SqlFunction.sql(this, insertFunction);
+    }
+
+    /**
+     * 获取mybatis占位符sql语句和参数上下文
+     *
+     * @return insert sql语句 + 上下文
+     */
+    public KeyStr sql() {
+        return sql(IRichMapper::insert);
     }
 
     @Override
