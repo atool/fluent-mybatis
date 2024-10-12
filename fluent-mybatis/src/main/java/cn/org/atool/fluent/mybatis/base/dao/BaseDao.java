@@ -22,7 +22,8 @@ public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends 
     /**
      * 空格符
      */
-    protected static final String SPACE = " ";
+    public static final String SPACE_STR = " ";
+    public static final String EMPTY_STR = "";
 
     /**
      * 实体类class
