@@ -20,6 +20,11 @@ import java.util.List;
 public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
     implements IBaseDao<E>, IProtectedDao<E> {
     /**
+     * 空格符
+     */
+    protected static final String SPACE = " ";
+
+    /**
      * 实体类class
      *
      * @return Entity class
