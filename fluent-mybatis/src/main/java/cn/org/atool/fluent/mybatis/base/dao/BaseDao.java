@@ -10,6 +10,8 @@ import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.kits.IStrEnums;
+
 /**
  * BaseDaoImpl
  *
@@ -18,12 +20,7 @@ import java.util.List;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
-    implements IBaseDao<E>, IProtectedDao<E> {
-    /**
-     * 空格符
-     */
-    public static final String SPACE_STR = " ";
-    public static final String EMPTY_STR = "";
+    implements IBaseDao<E>, IProtectedDao<E>, IStrEnums {
 
     /**
      * 实体类class
