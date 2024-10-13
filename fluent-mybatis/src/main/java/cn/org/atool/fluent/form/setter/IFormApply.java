@@ -4,7 +4,6 @@ import cn.org.atool.fluent.mybatis.functions.IGetter;
 
 /**
  * 简单表单查询
- * 简单表单查询
  *
  * @author wudarui
  */
