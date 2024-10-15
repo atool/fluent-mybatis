@@ -2,6 +2,8 @@ package cn.org.atool.fluent.mybatis.base.entity;
 
 import cn.org.atool.fluent.mybatis.base.IEntity;
 
+import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+
 import java.util.Map;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Map;
  *
  * @author wudarui
  */
+@SuppressWarnings({"UnusedReturnValue", "rawtypes"})
 public interface IEntityKit {
     /**
      * new Entity
@@ -25,7 +28,7 @@ public interface IEntityKit {
      * @param allowedNull is allowed null, true: 所有字段, false: 只允许非空值
      * @return 实例属性名称:属性值
      */
-    Map<String, Object> toEntityMap(IEntity entity, boolean allowedNull);
+    Map<String, Object> toEntityMap(IEntity entity, boolean allowedNull, FieldMapping... fields);
 
     /**
      * entity对象转换为map对象
@@ -35,7 +38,7 @@ public interface IEntityKit {
      * @param allowedNull is allowed null, true: 所有字段, false: 只允许非空值
      * @return 实例数据库字段名: 属性值
      */
-    Map<String, Object> toColumnMap(IEntity entity, boolean allowedNull);
+    Map<String, Object> toColumnMap(IEntity entity, boolean allowedNull, FieldMapping... fields);
 
     /**
      * map对应属性值设置到Entity对象中, 同JSON反序列化
@@ -60,7 +63,7 @@ public interface IEntityKit {
      * @param fieldName 实体属性名称
      * @return 属性值
      */
-    <T> T valueByField(IEntity entity, String fieldName);
+    <E> E valueByField(IEntity entity, String fieldName);
 
     /**
      * 设置实体属性值
@@ -79,7 +82,7 @@ public interface IEntityKit {
      * @param column 数据库字段名称
      * @return 属性值
      */
-    <T> T valueByColumn(IEntity entity, String column);
+    <E> E valueByColumn(IEntity entity, String column);
 
     /**
      * 设置实体属性值

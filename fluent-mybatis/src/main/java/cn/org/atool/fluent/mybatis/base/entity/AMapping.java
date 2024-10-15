@@ -124,12 +124,13 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * @param allowedNull is allowed null, true:  允许空值, false:只允许非空值
      * @return entity value map
      */
-    private Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean allowedNull) {
-        Map<String, Object> map = new HashMap<>(this.allFields.size());
+    private Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean allowedNull, FieldMapping... fields) {
         if (entity == null) {
-            return map;
+            return new HashMap<>();
         }
-        for (FieldMapping f : this.allFields()) {
+        List<FieldMapping> fs = fields.length == 0 ? this.allFields() : Arrays.asList(fields);
+        Map<String, Object> map = new HashMap<>(fs.size());
+        for (FieldMapping f : fs) {
             Object value = f.getter.get(entity);
             if (allowedNull || value != null) {
                 map.put(isProperty ? f.name : f.column, value);
@@ -139,13 +140,13 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     }
 
     @Override
-    public Map<String, Object> toColumnMap(IEntity entity, boolean allowedNull) {
-        return this.toMap(entity, false, allowedNull);
+    public Map<String, Object> toColumnMap(IEntity entity, boolean allowedNull, FieldMapping... fields) {
+        return this.toMap(entity, false, allowedNull, fields);
     }
 
     @Override
-    public Map<String, Object> toEntityMap(IEntity entity, boolean allowedNull) {
-        return this.toMap(entity, true, allowedNull);
+    public Map<String, Object> toEntityMap(IEntity entity, boolean allowedNull, FieldMapping... fields) {
+        return this.toMap(entity, true, allowedNull, fields);
     }
 
     @Override
@@ -158,9 +159,8 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         }
     }
 
-    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Override
-    public <E extends IEntity> E valueByField(E entity, String fieldName, Object value) {
+    public <T extends IEntity> T valueByField(T entity, String fieldName, Object value) {
         if (If.notBlank(fieldName) && entity != null) {
             FieldMapping f = this.fieldsMap.get(fieldName);
             Object obj = ConvertorKit.convertValueToClass(value, f.javaType);
@@ -179,7 +179,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
         }
     }
 
-    public <E extends IEntity> E valueByColumn(E entity, String column, Object value) {
+    public <T extends IEntity> T valueByColumn(T entity, String column, Object value) {
         if (entity != null) {
             FieldMapping f = this.columnMap.get(column);
             Object obj = ConvertorKit.convertValueToClass(value, f.javaType);
