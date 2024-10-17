@@ -1,4 +1,4 @@
-package org.apache.ibatis.kits;
+package cn.org.atool.fluent.mybatis.utility;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 

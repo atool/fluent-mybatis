@@ -1,7 +1,7 @@
-package org.apache.ibatis.kits;
+package cn.org.atool.fluent.kits;
 
 @SuppressWarnings("unused")
-public interface IStrEnums {
+public interface IStrEnum {
     String STR_ZERO = "0";
     String STR_ONE = "1";
     String OK_SUCCESS = "OK";

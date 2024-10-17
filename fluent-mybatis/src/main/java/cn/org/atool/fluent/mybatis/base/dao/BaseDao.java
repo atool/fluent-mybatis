@@ -10,7 +10,7 @@ import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.kits.IStrEnums;
+import cn.org.atool.fluent.kits.IStrEnum;
 
 /**
  * BaseDaoImpl
@@ -20,7 +20,7 @@ import org.apache.ibatis.kits.IStrEnums;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class BaseDao<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
-    implements IBaseDao<E>, IProtectedDao<E>, IStrEnums {
+    implements IBaseDao<E>, IProtectedDao<E>, IStrEnum {
 
     /**
      * 实体类class
