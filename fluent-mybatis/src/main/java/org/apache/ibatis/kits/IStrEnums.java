@@ -4,6 +4,7 @@ package org.apache.ibatis.kits;
 public interface IStrEnums {
     String STR_ZERO = "0";
     String STR_ONE = "1";
+    String OK_SUCCESS = "OK";
     /**
      * 空格符
      */
