@@ -3,6 +3,7 @@ package cn.org.atool.fluent.mybatis.segment;
 import cn.org.atool.fluent.mybatis.base.crud.IBaseUpdate;
 import cn.org.atool.fluent.mybatis.ifs.Ifs;
 import cn.org.atool.fluent.mybatis.ifs.IfsPredicate;
+import cn.org.atool.fluent.mybatis.kits.ApplyFunc;
 import cn.org.atool.fluent.mybatis.segment.fragment.Column;
 
 import java.util.function.Predicate;
@@ -120,6 +121,17 @@ public class UpdateApply<
     public S applyFunc(boolean condition, String function, Object... args) {
         if (condition) {
             this.applyFunc(function, args);
+        }
+        return this.segment;
+    }
+
+    public S applyFunc(ApplyFunc func) {
+        return applyFunc(func.getFunction(), func.args());
+    }
+
+    public S applyFunc(boolean condition, ApplyFunc func) {
+        if (condition) {
+            applyFunc(func);
         }
         return this.segment;
     }

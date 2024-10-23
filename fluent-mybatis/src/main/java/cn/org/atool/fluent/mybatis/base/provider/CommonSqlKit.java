@@ -293,9 +293,10 @@ public class CommonSqlKit implements SqlKit {
 
     @Override
     public void setLogicDeleted(IMapping mapping, IUpdate update) {
-        String logicDeleted = mapping.logicDeleteColumn();
-        assertNotNull("logical delete field of table(" + mapping.getTableName() + ")", logicDeleted);
-        if (mapping.longTypeOfLogicDelete()) {
+        IMapping mp = update.mapping().orElse(mapping);
+        String logicDeleted = mp.logicDeleteColumn();
+        assertNotNull("logical delete field of table(" + mp.getTableName() + ")", logicDeleted);
+        if (mp.longTypeOfLogicDelete()) {
             update.updateSet(logicDeleted, currentTimeMillis());
         } else {
             update.updateSet(logicDeleted, true);
@@ -328,8 +329,9 @@ public class CommonSqlKit implements SqlKit {
         if (query.data().getCustomizedSql().notEmpty()) {
             throw new FluentMybatisException("Logical deletion does not support custom SQL.");
         } else {
-            IUpdate update = mapping.updater();
-            this.setLogicDeleted(mapping, update);
+            IMapping mp = query.mapping().orElse(mapping);
+            IUpdate update = mp.updater();
+            this.setLogicDeleted(mp, update);
             update.data().replacedByQuery(query);
             return update;
         }
@@ -344,7 +346,8 @@ public class CommonSqlKit implements SqlKit {
         List<String> list = new ArrayList<>(updaters.length);
         int index = 0;
         for (IUpdate updater : updaters) {
-            String sql = updateBy(mapping, updater.data());
+            IMapping mp = updater.mapping().orElse(mapping);
+            String sql = updateBy(mp, updater.data());
             sql = SqlProviderKit.addEwParaIndex(sql, format("[%d]", index));
             index++;
             list.add(sql.trim());

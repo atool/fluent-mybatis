@@ -1,4 +1,4 @@
-package cn.org.atool.fluent.mybatis.utility;
+package cn.org.atool.fluent.mybatis.kits;
 
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 
@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"rawtypes", "unused"})
-public interface PgKits {
+public interface PgKit {
     static <T> String joining(T[] fields, Function<T, String> mapping) {
         return Arrays.stream(fields)
             .map(mapping)

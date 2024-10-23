@@ -35,6 +35,8 @@ public interface BatchCrud  {
 
     void execute();
 
+    void execute(IEntityMapper mapper);
+
     /**
      * 按顺序添加Insert语句
      *

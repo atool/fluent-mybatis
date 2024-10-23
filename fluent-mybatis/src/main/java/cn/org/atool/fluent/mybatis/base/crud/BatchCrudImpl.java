@@ -50,7 +50,10 @@ public class BatchCrudImpl implements BatchCrud {
                 throw new IllegalArgumentException("the updater should be instance of BaseWrapper");
             }
             updater.data().sharedParameter(data);
-            list.add((m, kit) -> kit.updateBy(m, updater.data()));
+            list.add((m, kit) -> {
+                IMapping mp = updater.mapping().orElse(m);
+                return kit.updateBy(mp, updater.data());
+            });
             this.setMapperBy(updater);
         }
         return this;
@@ -63,7 +66,10 @@ public class BatchCrudImpl implements BatchCrud {
                 throw new IllegalArgumentException("the query should be instance of BaseWrapper");
             }
             query.data().sharedParameter(data);
-            list.add((m, kit) -> kit.deleteBy(m, query.data()));
+            list.add((m, kit) -> {
+                IMapping mp = query.mapping().orElse(m);
+                return kit.deleteBy(mp, query.data());
+            });
             this.setMapperBy(query);
         }
         return this;
@@ -111,6 +117,11 @@ public class BatchCrudImpl implements BatchCrud {
     }
 
     private IEntityMapper mapper;
+
+    public void execute(IEntityMapper mapper) {
+        this.mapper = mapper;
+        this.execute();
+    }
 
     @Override
     public void execute() {
