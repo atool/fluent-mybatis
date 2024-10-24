@@ -28,5 +28,7 @@ public interface IStrEnum {
     String STR_UNDERSCORE = "_";
     String STR_DASH = "-";
     String STR_PLUS = "+";
+    String STR_EXCLAMATION = "!";
+    String STR_SPLIT = "|";
     String STR_NEW_LINE = "\n";
 }

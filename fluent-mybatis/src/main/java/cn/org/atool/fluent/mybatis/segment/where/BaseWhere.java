@@ -16,7 +16,7 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
  * @param <WHERE>
  * @param <NQ>
  */
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "rawtypes"})
 public interface BaseWhere<
     WHERE extends WhereBase<WHERE, ?, NQ>,
     NQ extends IBaseQuery<?, NQ>
@@ -196,9 +196,14 @@ public interface BaseWhere<
     WHERE applyFunc(ISqlOp op, String expression, Object... args);
 
     /**
-     * use {@link #applyFunc(Predicate, ISqlOp, String, Object...)}
+     * 自定义 函数或表达式
+     *
+     * @param condition  true时成立
+     * @param op         比较符号
+     * @param expression 函数或表达式
+     * @param args       函数或表达式的参数
+     * @return ignore
      */
-    @Deprecated
     default WHERE applyFunc(boolean condition, ISqlOp op, String expression, Object... args) {
         return this.applyFunc(a -> condition, op, expression, args);
     }
