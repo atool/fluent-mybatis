@@ -3,6 +3,7 @@ package cn.org.atool.fluent.processor.mybatis.filer.segment;
 import cn.org.atool.fluent.mybatis.base.crud.IDefaultGetter;
 import cn.org.atool.fluent.mybatis.base.dao.BaseDao;
 import cn.org.atool.fluent.mybatis.base.mapper.IMapper;
+import cn.org.atool.fluent.processor.mybatis.AnnotationKit;
 import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
 import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
@@ -10,7 +11,6 @@ import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
 import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import com.palantir.javapoet.*;
 
-import jakarta.annotation.PostConstruct;
 import javax.lang.model.element.Modifier;
 
 import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
@@ -78,7 +78,7 @@ public class BaseDaoFiler extends AbstractFiler {
 
     private MethodSpec m_initInstance() {
         return MethodSpec.methodBuilder("initInstance")
-            .addAnnotation(PostConstruct.class)
+            .addAnnotation(AnnotationKit.getPostConstructClass())
             .addStatement(super.codeBlock("INSTANCE = this"))
             .addModifiers(Modifier.PROTECTED)
             .build();

@@ -3,12 +3,12 @@ package cn.org.atool.fluent.processor.mybatis.filer;
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
+import cn.org.atool.fluent.processor.mybatis.AnnotationKit;
 import cn.org.atool.generator.util.ClassNames;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.ParameterizedTypeName;
 import com.palantir.javapoet.TypeName;
 
-import jakarta.annotation.Resource;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  */
 public interface ClassNames2 extends ClassNames {
 
-    ClassName Spring_Resource = ClassName.get(Resource.class);
+    ClassName Spring_Resource = AnnotationKit.getResourceClass();
 
     ClassName FN_FieldMapping = ClassName.get(FieldMapping.class);
 

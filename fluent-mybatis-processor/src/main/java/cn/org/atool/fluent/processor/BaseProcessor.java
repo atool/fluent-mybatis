@@ -85,6 +85,7 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
             e.printStackTrace(print);
             return writer.toString();
         } catch (IOException ex) {
+            //noinspection CallToPrintStackTrace
             ex.printStackTrace();
             throw new RuntimeException(ex);
         }
@@ -100,6 +101,7 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
         //文件管理者
         StandardJavaFileManager fileMgr = complier.getStandardFileManager(null, null, null);
         //获取文件
+        @SuppressWarnings("rawtypes")
         Iterable units = fileMgr.getJavaFileObjects(path);
         //编译任务
         JavaCompiler.CompilationTask t = complier.getTask(null, fileMgr, null, null, null, units);
@@ -108,6 +110,7 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
         fileMgr.close();
     }
 
+    @SuppressWarnings("unused")
     public void error(String message) {
         messager.printMessage(ERROR, message);
     }
