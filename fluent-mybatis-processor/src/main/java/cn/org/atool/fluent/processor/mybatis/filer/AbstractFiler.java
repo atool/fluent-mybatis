@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.processor.mybatis.filer;
 
 import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;

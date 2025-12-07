@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.processor.mybatis.filer;
 
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.AnnotationSpec;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 import java.util.stream.Collectors;

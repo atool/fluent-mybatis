@@ -1,9 +1,9 @@
 package cn.org.atool.fluent.processor.mybatis.entity;
 
 import cn.org.atool.generator.database.config.impl.RelationConfig;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.ParameterizedTypeName;
+import com.palantir.javapoet.TypeName;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -66,7 +66,7 @@ public class EntityRefMethod extends FieldOrMethod {
         if (this.javaType instanceof ClassName) {
             return ((ClassName) this.javaType).simpleName();
         } else if (this.javaType instanceof ParameterizedTypeName) {
-            List<TypeName> args = ((ParameterizedTypeName) javaType).typeArguments;
+            List<TypeName> args = ((ParameterizedTypeName) javaType).typeArguments();
             if (args.size() == 1 && args.get(0) instanceof ClassName) {
                 return ((ClassName) args.get(0)).simpleName();
             }
@@ -78,7 +78,7 @@ public class EntityRefMethod extends FieldOrMethod {
         if (this.javaType instanceof ClassName) {
             return this.javaType;
         } else if (this.javaType instanceof ParameterizedTypeName) {
-            List<TypeName> args = ((ParameterizedTypeName) javaType).typeArguments;
+            List<TypeName> args = ((ParameterizedTypeName) javaType).typeArguments();
             if (args.size() == 1 && args.get(0) instanceof ClassName) {
                 return args.get(0);
             }
@@ -88,7 +88,7 @@ public class EntityRefMethod extends FieldOrMethod {
 
     public boolean returnList() {
         if (this.javaType instanceof ParameterizedTypeName) {
-            ClassName type = ((ParameterizedTypeName) this.javaType).rawType;
+            ClassName type = ((ParameterizedTypeName) this.javaType).rawType();
             return List.class.getSimpleName().equals(type.simpleName());
         } else {
             return false;

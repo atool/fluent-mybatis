@@ -2,9 +2,9 @@ package cn.org.atool.fluent.processor.mybatis.filer.refs;
 
 import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import cn.org.atool.generator.javafile.AbstractFile;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.JavaFile;
+import com.palantir.javapoet.TypeSpec;
 
 import java.util.List;
 

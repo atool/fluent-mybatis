@@ -2,9 +2,9 @@ package cn.org.atool.fluent.processor.formservice.scanner;
 
 import cn.org.atool.fluent.mybatis.If;
 import cn.org.atool.fluent.processor.AScanner;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.ParameterizedTypeName;
+import com.palantir.javapoet.TypeName;
 import lombok.Getter;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -85,7 +85,7 @@ public class FormServiceScanner extends AScanner {
             return pack + (If.isBlank(pack) ? EMPTY : DOT_STR) + ((ClassName) type).simpleName();
         } else if (type instanceof ParameterizedTypeName) {
             ParameterizedTypeName pType = (ParameterizedTypeName) type;
-            return className(pType.rawType);
+            return className(pType.rawType());
         }
         return type.toString();
     }

@@ -4,9 +4,9 @@ import cn.org.atool.fluent.form.annotation.Entry;
 import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.Form;
 import cn.org.atool.fluent.processor.form.model.FormField;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.ParameterizedTypeName;
+import com.palantir.javapoet.TypeName;
 import lombok.Getter;
 
 import javax.annotation.processing.Messager;
@@ -79,6 +79,6 @@ public class FormScanner extends ElementScanner8<Void, Void> {
 
     private TypeName getJavaType(VariableElement var) {
         TypeName type = ClassName.get(var.asType());
-        return type instanceof ParameterizedTypeName ? ((ParameterizedTypeName) type).rawType : type;
+        return type instanceof ParameterizedTypeName ? ((ParameterizedTypeName) type).rawType() : type;
     }
 }

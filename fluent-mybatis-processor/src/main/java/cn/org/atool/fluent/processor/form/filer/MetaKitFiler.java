@@ -4,7 +4,7 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.meta.EntryMeta;
 import cn.org.atool.fluent.form.meta.entry.EntryMetaKit;
 import cn.org.atool.fluent.processor.form.model.FormField;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;

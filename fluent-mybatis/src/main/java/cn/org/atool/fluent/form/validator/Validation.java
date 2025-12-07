@@ -3,10 +3,10 @@ package cn.org.atool.fluent.form.validator;
 import cn.org.atool.fluent.mybatis.If;
 import org.springframework.validation.beanvalidation.MethodValidationInterceptor;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.executable.ExecutableValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.executable.ExecutableValidator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -23,7 +23,7 @@ import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
  */
 @SuppressWarnings({"rawtypes"})
 public class Validation {
-    private static final ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory();
+    private static final ValidatorFactory factory = jakarta.validation.Validation.buildDefaultValidatorFactory();
     private static final Validator objectValidator = factory.getValidator();
     private static final ExecutableValidator methodValidator = factory.getValidator().forExecutables();
 
@@ -32,7 +32,6 @@ public class Validation {
      *
      * @param objects Form对象
      */
-    @SafeVarargs
     public static void validate(String prefix, Object... objects) throws IllegalArgumentException {
         if (objects == null) {
             throw new IllegalArgumentException("validate object can't be null.");
@@ -98,7 +97,7 @@ public class Validation {
             Annotation[] as = p.getDeclaredAnnotations();
             boolean hasValidation = false;
             for (Annotation a : as) {
-                if (a.getClass().getName().startsWith("javax.validation.")) {
+                if (a.getClass().getName().startsWith("jakarta.validation.")) {
                     hasValidation = true;
                     break;
                 }
@@ -119,7 +118,6 @@ public class Validation {
      *
      * @param args 参数列表
      */
-    @SafeVarargs
     private static void validateArgsByIValidate(Object... args) {
         for (Object arg : args) {
             if (arg == null) {

@@ -3,8 +3,8 @@ package cn.org.atool.fluent.form.validator;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.lang.reflect.Method;
 
 class ValidationTest extends Test4J {

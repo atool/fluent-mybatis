@@ -1,8 +1,8 @@
 package cn.org.atool.fluent.processor.form.model;
 
 import cn.org.atool.fluent.form.annotation.EntryType;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.TypeName;
 import lombok.AccessLevel;
 import lombok.Getter;
 

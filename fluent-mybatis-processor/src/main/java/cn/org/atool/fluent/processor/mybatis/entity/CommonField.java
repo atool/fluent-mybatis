@@ -2,8 +2,8 @@ package cn.org.atool.fluent.processor.mybatis.entity;
 
 
 import cn.org.atool.generator.database.model.FieldType;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.TypeName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

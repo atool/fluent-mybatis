@@ -4,11 +4,11 @@ import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 import cn.org.atool.fluent.mybatis.base.mapper.IWrapperMapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.generator.util.ClassNames;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.ParameterizedTypeName;
+import com.palantir.javapoet.TypeName;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +49,7 @@ public interface ClassNames2 extends ClassNames {
     static TypeName javaType(VariableElement var) {
         TypeName type = ClassName.get(var.asType());
         if (type instanceof ParameterizedTypeName) {
-            return ((ParameterizedTypeName) type).rawType;
+            return ((ParameterizedTypeName) type).rawType();
         } else {
             return type;
         }

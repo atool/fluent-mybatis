@@ -5,7 +5,7 @@ import cn.org.atool.fluent.mybatis.base.IBaseDao;
 import cn.org.atool.fluent.mybatis.formservice.model.HomeAddress;
 import cn.org.atool.fluent.mybatis.generator.shared2.entity.HomeAddressEntity;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 import static cn.org.atool.fluent.form.annotation.EntryType.IN;

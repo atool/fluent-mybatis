@@ -1,6 +1,6 @@
 package cn.org.atool.fluent.processor.mybatis.entity;
 
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.TypeName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

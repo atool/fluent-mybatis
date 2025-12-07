@@ -1,7 +1,7 @@
 package cn.org.atool.fluent.form.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class CheckCaseValidator implements ConstraintValidator<CheckCase, String> {
     private CaseMode caseMode;

@@ -12,7 +12,7 @@ import java.lang.annotation.*;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unused", "rawtypes"})
+@SuppressWarnings({"unused"})
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented

@@ -4,7 +4,8 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import cn.org.atool.fluent.form.annotation.MethodType;
 import cn.org.atool.fluent.form.meta.MethodMeta;
 import cn.org.atool.fluent.form.registrar.FormServiceKit;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
+import org.apache.ibatis.type.JdbcType;
 
 import javax.lang.model.element.*;
 import java.util.ArrayList;
@@ -44,8 +45,9 @@ public class FormServiceImplFiler {
         }
 
         return JavaFile.builder(this.className.packageName(), type.build())
-            .addStaticImport(EntryType.class,"*")
-            .addStaticImport(MethodType.class,"*")
+            .addStaticImport(EntryType.class, "*")
+            .addStaticImport(MethodType.class, "*")
+            .addStaticImport(JdbcType.class, "*")
             .skipJavaLangImports(true)
             .build();
     }
@@ -92,11 +94,11 @@ public class FormServiceImplFiler {
 
     private String typeName(TypeName type) {
         if (type instanceof ParameterizedTypeName) {
-            return ((ParameterizedTypeName) type).rawType.simpleName();
+            return ((ParameterizedTypeName) type).rawType().simpleName();
         } else if (type instanceof ClassName) {
             return ((ClassName) type).simpleName();
         } else if (type instanceof ArrayTypeName) {
-            TypeName cType = ((ArrayTypeName) type).componentType;
+            TypeName cType = ((ArrayTypeName) type).componentType();
             return this.typeName(cType) + "[]";
         } else {
             return type.toString();

@@ -5,7 +5,7 @@ import cn.org.atool.fluent.processor.BaseProcessor;
 import cn.org.atool.fluent.processor.formservice.filer.FormServiceImplFiler;
 import cn.org.atool.fluent.processor.formservice.scanner.FormServiceScanner;
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.JavaFile;
+import com.palantir.javapoet.JavaFile;
 
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -22,7 +22,6 @@ import java.util.List;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes"})
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes("cn.org.atool.fluent.form.annotation.FormService")

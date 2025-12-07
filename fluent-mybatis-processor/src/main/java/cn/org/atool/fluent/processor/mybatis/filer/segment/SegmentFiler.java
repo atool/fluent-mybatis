@@ -13,7 +13,7 @@ import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
 import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.Arrays;

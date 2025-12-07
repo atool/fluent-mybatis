@@ -5,7 +5,7 @@ import cn.org.atool.fluent.form.annotation.EntryType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import static cn.org.atool.fluent.form.annotation.EntryType.OrderBy;
 

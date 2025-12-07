@@ -4,8 +4,8 @@ import org.hibernate.validator.constraints.Range;
 import org.junit.jupiter.api.Test;
 import org.test4j.junit5.Test4J;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

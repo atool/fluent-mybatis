@@ -9,7 +9,7 @@ import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
 import cn.org.atool.fluent.processor.mybatis.filer.ClassNames2;
 import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.apache.ibatis.annotations.CacheNamespace;
 
 import javax.lang.model.element.Modifier;

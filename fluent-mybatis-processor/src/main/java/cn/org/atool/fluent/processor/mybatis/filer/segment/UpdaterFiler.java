@@ -10,7 +10,7 @@ import cn.org.atool.fluent.processor.mybatis.filer.FilerKit;
 import cn.org.atool.fluent.mybatis.segment.fragment.Fragments;
 import cn.org.atool.fluent.mybatis.segment.fragment.IFragment;
 import cn.org.atool.fluent.mybatis.segment.model.Parameters;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 

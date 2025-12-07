@@ -5,15 +5,14 @@
     <parent>
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
-        <version>1.9.10</version>
+        <version>1.9.11</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fluent-mybatis-processor</artifactId>
     <properties>
-        <fluent-generator.version>1.4.1</fluent-generator.version>
-        <mysql.version>8.0.20</mysql.version>
+        <fluent-generator.version>1.5.0</fluent-generator.version>
         <skipTests>true</skipTests>
     </properties>
     <dependencyManagement>
@@ -29,10 +28,15 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.squareup</groupId>-->
+<!--                <artifactId>javapoet</artifactId>-->
+<!--                <version>1.13.0</version>-->
+<!--            </dependency>-->
             <dependency>
-                <groupId>com.squareup</groupId>
+                <groupId>com.palantir.javapoet</groupId>
                 <artifactId>javapoet</artifactId>
-                <version>1.13.0</version>
+                <version>0.9.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -55,7 +59,7 @@
         <dependency>
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.2</version>
             <exclusions>
                 <exclusion>
                     <artifactId>javax.annotation-api</artifactId>
@@ -63,19 +67,25 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>javax.annotation</groupId>-->
+<!--            <artifactId>javax.annotation-api</artifactId>-->
+<!--            <version>1.3.2</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.squareup</groupId>
+<!--            <groupId>com.squareup</groupId>-->
+            <groupId>com.palantir.javapoet</groupId>
             <artifactId>javapoet</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
-            <version>1.0</version>
+            <version>1.1.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -87,7 +97,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.0-jre</version>
+            <version>33.5.0-jre</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

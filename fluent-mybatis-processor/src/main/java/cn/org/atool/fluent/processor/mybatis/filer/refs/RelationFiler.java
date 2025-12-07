@@ -7,7 +7,7 @@ import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
 import cn.org.atool.fluent.processor.mybatis.entity.FluentList;
 import cn.org.atool.fluent.mybatis.utility.RefKit;
 import cn.org.atool.generator.javafile.AbstractFile;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;

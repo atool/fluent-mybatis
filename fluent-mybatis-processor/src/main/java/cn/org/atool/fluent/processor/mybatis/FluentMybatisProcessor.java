@@ -20,7 +20,6 @@ import static javax.tools.Diagnostic.Kind.NOTE;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes"})
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes("cn.org.atool.fluent.mybatis.annotation.FluentMybatis")
