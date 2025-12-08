@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * RefFunction2: 分组关联
  *
- * @param <E>
+ * @param <E> 元素类型
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @AllArgsConstructor
 public class RefFinder<E> implements IGetter<List<E>> {
     private final Class entityClass;

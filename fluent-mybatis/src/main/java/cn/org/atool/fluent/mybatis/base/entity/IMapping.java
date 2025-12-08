@@ -26,6 +26,9 @@ import java.util.function.Function;
 public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库表名
+     *
+     * @param data 数据
+     * @return table fragment
      */
     IFragment table(IDataByColumn data);
 
@@ -38,6 +41,8 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
 
     /**
      * 返回不加反义符的表名
+     *
+     * @return 表名
      */
     String getTableName();
 
@@ -57,6 +62,8 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
 
     /**
      * 返回用 ', ' 连接好的所有字段
+     *
+     * @return 字段列表片段
      */
     CachedFrag getSelectAll();
 
@@ -163,6 +170,8 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      * 返回指定关联关系设置
      *
      * @param refKey 指定关联关系
+     * @param <S>    源实体类型
+     * @param <R>    关联实体类型
      * @return 关联设置
      */
     default <S extends IEntity, R extends IEntity> RefKey<S, R> findRefKey(String refKey) {

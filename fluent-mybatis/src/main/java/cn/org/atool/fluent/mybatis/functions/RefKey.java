@@ -7,11 +7,11 @@ import lombok.AllArgsConstructor;
 /**
  * 实体关联关系key值构造
  *
- * @param <S>
- * @param <D>
+ * @param <S> 源类型
+ * @param <D> 目标类型
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @AllArgsConstructor
 public class RefKey<S, D> {
     /**
@@ -39,8 +39,8 @@ public class RefKey<S, D> {
      * 构造关联关系
      */
     public static <S, D> RefKey<S, D> refKey(String refName, boolean isList,
-                                             RefKeyFunc<S> src, RefKeyFunc<D> ref,
-                                             IGetter finder) {
+            RefKeyFunc<S> src, RefKeyFunc<D> ref,
+            IGetter finder) {
         return new RefKey(refName, src, ref, isList, finder);
     }
 }

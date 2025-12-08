@@ -10,6 +10,8 @@ import cn.org.atool.fluent.mybatis.metadata.DbType;
 public interface IHasDbType {
     /**
      * 返回对应的数据库类型
+     *
+     * @return DbType
      */
     DbType db();
 

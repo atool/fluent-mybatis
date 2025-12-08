@@ -10,33 +10,58 @@ import static cn.org.atool.fluent.mybatis.segment.model.Aggregate.*;
  *
  * @author wudarui
  */
-@SuppressWarnings({"unchecked"})
-public abstract class AggregateSegment<
-    S extends AggregateSegment<S, Q, R>,
-    Q extends IBaseQuery<?, Q>,
-    R
-    >
-    extends BaseSegment<R, Q> {
+@SuppressWarnings({ "unchecked" })
+public abstract class AggregateSegment<S extends AggregateSegment<S, Q, R>, Q extends IBaseQuery<?, Q>, R>
+        extends BaseSegment<R, Q> {
+    /**
+     * 当前聚合片段
+     */
     public final S and = (S) this;
     /**
      * 聚合对象max,min,sum...等实例的原始实例来源(aggregate=null)
      */
     protected S origin;
 
+    /**
+     * 聚合函数
+     */
     protected final IAggregate aggregate;
 
+    /**
+     * max
+     */
     public S max;
 
+    /**
+     * min
+     */
     public S min;
 
+    /**
+     * sum
+     */
     public S sum;
 
+    /**
+     * avg
+     */
     public S avg;
 
+    /**
+     * count
+     */
     public S count;
 
+    /**
+     * group_concat
+     */
     public S group_concat;
 
+    /**
+     * 构造函数
+     *
+     * @param query 查询对象
+     */
     protected AggregateSegment(Q query) {
         super(query);
         this.aggregate = null;
@@ -47,13 +72,19 @@ public abstract class AggregateSegment<
         this.count = this.aggregateSegment(COUNT);
         this.group_concat = this.aggregateSegment(GROUP_CONCAT);
         this.init(max)
-            .init(min)
-            .init(sum)
-            .init(avg)
-            .init(count)
-            .init(group_concat);
+                .init(min)
+                .init(sum)
+                .init(avg)
+                .init(count)
+                .init(group_concat);
     }
 
+    /**
+     * 构造函数
+     *
+     * @param origin    源片段
+     * @param aggregate 聚合函数
+     */
     protected AggregateSegment(S origin, IAggregate aggregate) {
         super((Q) origin.wrapper);
         this.aggregate = aggregate;
@@ -78,6 +109,11 @@ public abstract class AggregateSegment<
      */
     protected abstract S aggregateSegment(IAggregate aggregate);
 
+    /**
+     * 获取源片段
+     *
+     * @return S
+     */
     protected S getOrigin() {
         return this.aggregate == null || this.origin == null ? (S) this : this.origin;
     }

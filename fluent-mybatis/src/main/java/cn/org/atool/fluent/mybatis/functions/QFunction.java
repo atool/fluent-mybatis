@@ -5,7 +5,7 @@ import java.util.function.Function;
 /**
  * 入参和出参是同一个对象的Function
  *
- * @param <R>
+ * @param <R> 返回值类型
  * @author wudarui
  */
 @FunctionalInterface

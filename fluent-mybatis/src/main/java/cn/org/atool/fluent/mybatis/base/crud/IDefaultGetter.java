@@ -7,7 +7,7 @@ import cn.org.atool.fluent.mybatis.functions.StringSupplier;
  *
  * @author wudarui
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({ "rawtypes" })
 public interface IDefaultGetter {
     /**
      * Entity class
@@ -22,16 +22,43 @@ public interface IDefaultGetter {
      * @param <Q> IQuery类型
      * @return IQuery
      */
+    /**
+     * 创建一个空查询器(不包括{@link IDefaultSetter#setQueryDefault(IQuery)} 设置的默认条件)
+     *
+     * @param <Q> IQuery类型
+     * @return IQuery
+     */
     <Q extends IQuery> Q emptyQuery();
 
+    /**
+     * 创建一个空查询器
+     *
+     * @param alias 表别名
+     * @param <Q>   IQuery类型
+     * @return IQuery
+     */
     <Q extends IQuery> Q emptyQuery(String alias);
 
+    /**
+     * 创建一个空查询器
+     *
+     * @param alias 表别名
+     * @param <Q>   IQuery类型
+     * @return IQuery
+     */
     <Q extends IQuery> Q emptyQuery(StringSupplier alias);
 
     /**
      * 实例化查询构造器
      * o - 设置默认查询条件
      *
+     * @return 查询构造器
+     */
+    /**
+     * 实例化查询构造器
+     * o - 设置默认查询条件
+     *
+     * @param <Q> IQuery类型
      * @return 查询构造器
      */
     <Q extends IQuery> Q query();
@@ -55,6 +82,13 @@ public interface IDefaultGetter {
      */
     <Q extends IQuery> Q query(String alias);
 
+    /**
+     * 实例化查询构造器
+     *
+     * @param alias 别名
+     * @param <Q>   IQuery类型
+     * @return 查询构造器
+     */
     <Q extends IQuery> Q query(StringSupplier alias);
 
     /**
@@ -69,6 +103,13 @@ public interface IDefaultGetter {
      * 实例化更新构造器
      * o - 设置默认更新条件
      *
+     * @return 更新构造器
+     */
+    /**
+     * 实例化更新构造器
+     * o - 设置默认更新条件
+     *
+     * @param <U> IUpdate类型
      * @return 更新构造器
      */
     <U extends IUpdate> U updater();
