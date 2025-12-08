@@ -11,7 +11,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fluent-mybatis-boot-starter</artifactId>
-
+    <name>fluent-mybatis-boot-starter</name>
+    <description>fluent-mybatis-boot-starter</description>
+    <url>https://github.com/atool/fluent-mybatis</url>
+    <scm>
+        <connection>scm:git:git://github.com/atool/fluent-mybatis.git</connection>
+        <developerConnection>scm:git:git://github.com/atool/fluent-mybatis.git</developerConnection>
+        <url>https://github.com/atool/fluent-mybatis</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>davey.wu</name>
+            <email>darui.wu@163.com</email>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
         <dependency>

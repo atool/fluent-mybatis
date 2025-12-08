@@ -11,10 +11,30 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fluent-mybatis-processor</artifactId>
+    <name>fluent-mybatis-processor</name>
+    <description>fluent-mybatis-processor</description>
+    <url>https://github.com/atool/fluent-mybatis</url>
+    <scm>
+        <connection>scm:git:git://github.com/atool/fluent-mybatis.git</connection>
+        <developerConnection>scm:git:git://github.com/atool/fluent-mybatis.git</developerConnection>
+        <url>https://github.com/atool/fluent-mybatis</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>davey.wu</name>
+            <email>darui.wu@163.com</email>
+        </developer>
+    </developers>
     <properties>
         <fluent-generator.version>1.5.0</fluent-generator.version>
         <skipTests>true</skipTests>
     </properties>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -28,11 +48,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.squareup</groupId>-->
-<!--                <artifactId>javapoet</artifactId>-->
-<!--                <version>1.13.0</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>com.palantir.javapoet</groupId>
                 <artifactId>javapoet</artifactId>
@@ -45,6 +60,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>db-feature</artifactId>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.atool</groupId>
@@ -54,6 +70,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>generator</artifactId>
+            <version>1.5.0</version>
         </dependency>
 
         <dependency>
@@ -68,9 +85,9 @@
             </exclusions>
         </dependency>
         <dependency>
-<!--            <groupId>com.squareup</groupId>-->
             <groupId>com.palantir.javapoet</groupId>
             <artifactId>javapoet</artifactId>
+            <version>0.9.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>

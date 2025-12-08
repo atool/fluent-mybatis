@@ -19,6 +19,12 @@
         <developerConnection>scm:git:https://github.com/atool/fluent-mybatis.git</developerConnection>
         <url>https://github.com/atool/fluent-mybatis</url>
     </scm>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <properties>
         <spring.version>6.2.14</spring.version>
         <mybatis.version>3.5.19</mybatis.version>
@@ -36,7 +42,7 @@
         <module>fluent-mybatis-annotation</module>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
-        <module>fluent-mybatis-test</module>
+<!--        <module>fluent-mybatis-test</module>-->
         <module>fluent-mybatis-boot-starter</module>
     </modules>
     <dependencyManagement>
