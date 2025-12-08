@@ -28,6 +28,12 @@ public class RelationFiler extends AbstractFile {
 
     private final List<FluentEntity> fluents;
 
+    /**
+     * 构造函数
+     *
+     * @param basePackage base package
+     * @param fluents     FluentEntity list
+     */
     public RelationFiler(String basePackage, List<FluentEntity> fluents) {
         this.packageName = basePackage;
         this.fluents = fluents;
@@ -63,28 +69,28 @@ public class RelationFiler extends AbstractFile {
 
     private MethodSpec m_abstractMethod(FluentEntity fluent, EntityRefMethod refField) {
         return MethodSpec.methodBuilder(refField.getRefMethod(fluent))
-            .addParameter(fluent.entity(), "entity")
-            .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-            .returns(refField.getJavaType())
-            .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refField.getName())
-            .build();
+                .addParameter(fluent.entity(), "entity")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .returns(refField.getJavaType())
+                .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refField.getName())
+                .build();
     }
 
     private MethodSpec m_defaultMethod(FluentEntity fluent, EntityRefMethod refMethod) {
         FluentEntity ref = FluentList.getFluentEntity(refMethod.getReturnEntity());
 
         MethodSpec.Builder spec = MethodSpec.methodBuilder(refMethod.getRefMethod(fluent))
-            .returns(ParameterizedTypeName.get(CN_List, refMethod.getReturnType()))
-            .addParameter(ParameterizedTypeName.get(CN_List, fluent.entity()), "entities")
-            .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
-            .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refMethod.getName());
+                .returns(ParameterizedTypeName.get(CN_List, refMethod.getReturnType()))
+                .addParameter(ParameterizedTypeName.get(CN_List, fluent.entity()), "entities")
+                .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+                .addJavadoc("{@link $L#$L()}", fluent.getClassName(), refMethod.getName());
 
         spec.addCode("return new $T()\n", ref.query());
         int index = 0;
         for (Map.Entry<String, String> entry : refMethod.getMapping().entrySet()) {
             spec.addCode(index == 0 ? "\t.where" : "\t.and")
-                .addCode(".$L().in(values(entities, $T::get$L))\n",
-                    entry.getKey(), fluent.entity(), capitalFirst(entry.getValue()));
+                    .addCode(".$L().in(values(entities, $T::get$L))\n",
+                            entry.getKey(), fluent.entity(), capitalFirst(entry.getValue()));
             index++;
         }
         spec.addStatement("\t.end().to().listEntity()");
@@ -93,14 +99,15 @@ public class RelationFiler extends AbstractFile {
 
     private MethodSpec m_initialize() {
         MethodSpec.Builder spec = publicMethod("initialize", (TypeName) null)
-            .addModifiers(Modifier.DEFAULT);
+                .addModifiers(Modifier.DEFAULT);
         List<CodeBlock> codes = new ArrayList<>();
         for (FluentEntity fluent : this.fluents) {
             for (EntityRefMethod method : fluent.getRefMethods()) {
                 if (method.isAbstractMethod()) {
                     codes.add(CodeBlock.of("put(this::$L);", method.getRefMethod(fluent)));
                 } else {
-                    codes.add(CodeBlock.of("put($T.class, $S, this::$L);", fluent.entity(), method.getName(), method.getRefMethod(fluent)));
+                    codes.add(CodeBlock.of("put($T.class, $S, this::$L);", fluent.entity(), method.getName(),
+                            method.getRefMethod(fluent)));
                 }
             }
         }

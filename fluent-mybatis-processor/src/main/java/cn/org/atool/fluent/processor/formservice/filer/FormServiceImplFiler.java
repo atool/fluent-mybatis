@@ -23,18 +23,30 @@ public class FormServiceImplFiler {
     private final ClassName className;
     private final List<ExecutableElement> methods;
 
+    /**
+     * 构造函数
+     *
+     * @param element TypeElement
+     * @param methods List of ExecutableElement
+     */
     public FormServiceImplFiler(TypeElement element, List<ExecutableElement> methods) {
         this.element = element;
         this.className = ClassName.get(element);
         this.methods = methods;
     }
 
-
+    /**
+     * 生成Java文件
+     *
+     * @return JavaFile
+     */
     public JavaFile javaFile() {
-        ClassName metaKit = ClassName.get(this.className.packageName(), this.className.simpleName() + FormServiceBeanSuffix);
+        ClassName metaKit = ClassName.get(this.className.packageName(),
+                this.className.simpleName() + FormServiceBeanSuffix);
         TypeSpec.Builder type = TypeSpec.classBuilder(metaKit).addModifiers(Modifier.PUBLIC)
-            .addJavadoc("$T\n@author powered by FluentMybatis", metaKit)
-            .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{$S}", "unused").build());
+                .addJavadoc("$T\n@author powered by FluentMybatis", metaKit)
+                .addAnnotation(
+                        AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{$S}", "unused").build());
         if (element.getKind().isInterface()) {
             type.addSuperinterface(this.className);
         } else {
@@ -45,17 +57,17 @@ public class FormServiceImplFiler {
         }
 
         return JavaFile.builder(this.className.packageName(), type.build())
-            .addStaticImport(EntryType.class, "*")
-            .addStaticImport(MethodType.class, "*")
-            .addStaticImport(JdbcType.class, "*")
-            .skipJavaLangImports(true)
-            .build();
+                .addStaticImport(EntryType.class, "*")
+                .addStaticImport(MethodType.class, "*")
+                .addStaticImport(JdbcType.class, "*")
+                .skipJavaLangImports(true)
+                .build();
     }
 
     private MethodSpec m_implements(ExecutableElement method) {
         String methodName = method.getSimpleName().toString();
         MethodSpec.Builder spec = MethodSpec.methodBuilder(methodName)
-            .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC);
         spec.returns(ClassName.get(method.getReturnType()));
         method.getAnnotationMirrors().forEach(mirror -> spec.addAnnotation(this.copyAnnotation(mirror)));
 
@@ -72,7 +84,8 @@ public class FormServiceImplFiler {
         }
         spec.addStatement("$T meta = $T.meta($T.class, $S$L)", MethodMeta.class, FormServiceKit.class, className,
                 methodName, pTypes.stream().collect(Collectors.joining(", ", ", ", "")))
-            .addStatement("return $T.invoke(meta, new Object[]{$L})", FormServiceKit.class, String.join(", ", pNames));
+                .addStatement("return $T.invoke(meta, new Object[]{$L})", FormServiceKit.class,
+                        String.join(", ", pNames));
         return spec.build();
     }
 
@@ -85,7 +98,8 @@ public class FormServiceImplFiler {
         TypeName typeName = ClassName.get(annotationMirror.getAnnotationType());
         AnnotationSpec.Builder spec = AnnotationSpec.builder((ClassName) typeName);
 
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror
+                .getElementValues().entrySet()) {
             String key = entry.getKey().getSimpleName().toString();
             spec.addMember(key, "$L", entry.getValue().toString());
         }

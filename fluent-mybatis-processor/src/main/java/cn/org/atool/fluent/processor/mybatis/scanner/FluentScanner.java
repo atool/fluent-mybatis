@@ -23,6 +23,11 @@ public class FluentScanner extends ElementScanner8<Void, Void> {
 
     private final Supplier<Messager> messager;
 
+    /**
+     * 构造函数
+     *
+     * @param messager Messager Supplier
+     */
     public FluentScanner(Supplier<Messager> messager) {
         super();
         this.messager = messager;

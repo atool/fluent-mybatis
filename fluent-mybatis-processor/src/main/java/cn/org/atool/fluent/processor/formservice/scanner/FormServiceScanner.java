@@ -16,6 +16,11 @@ import java.util.*;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.DOT_STR;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
 
+/**
+ * FormServiceScanner
+ *
+ * @author wudarui
+ */
 public class FormServiceScanner extends AScanner {
     private final Queue<TypeElement> interfaces = new LinkedList<>();
     private final Set<String> hasParsed = new HashSet<>();
@@ -23,6 +28,11 @@ public class FormServiceScanner extends AScanner {
     @Getter
     private final List<ExecutableElement> abstractMethods = new ArrayList<>();
 
+    /**
+     * 构造函数
+     *
+     * @param env ProcessingEnvironment
+     */
     public FormServiceScanner(ProcessingEnvironment env) {
         super(env.getMessager());
     }
@@ -56,9 +66,9 @@ public class FormServiceScanner extends AScanner {
             if (!hasParsed.contains(signature) && modifiers.contains(Modifier.ABSTRACT)) {
                 abstractMethods.add(executable);
             }
-//            if (signature.contains("updateEntityByIds")) {
-//                messager.printMessage(Diagnostic.Kind.ERROR, signature);
-//            }
+            // if (signature.contains("updateEntityByIds")) {
+            // messager.printMessage(Diagnostic.Kind.ERROR, signature);
+            // }
             hasParsed.add(signature);
         }
         for (TypeMirror typeMirror : element.getInterfaces()) {
@@ -79,6 +89,12 @@ public class FormServiceScanner extends AScanner {
         return className(typeName);
     }
 
+    /**
+     * 获取TypeName对应的类名
+     *
+     * @param type TypeName
+     * @return class name
+     */
     public static String className(TypeName type) {
         if (type instanceof ClassName) {
             String pack = ((ClassName) type).packageName();

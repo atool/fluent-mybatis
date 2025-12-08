@@ -34,10 +34,14 @@ public class FormScanner extends ElementScanner8<Void, Void> {
 
     private final Supplier<Messager> messager;
 
+    /**
+     * 构造函数
+     *
+     * @param messager Messager Supplier
+     */
     public FormScanner(Supplier<Messager> messager) {
         this.messager = messager;
     }
-
 
     @Override
     public Void visitType(TypeElement entity, Void aVoid) {
@@ -56,8 +60,8 @@ public class FormScanner extends ElementScanner8<Void, Void> {
     @Override
     public Void visitVariable(VariableElement element, Void aVoid) {
         if (element.getKind() != ElementKind.FIELD ||
-            element.getModifiers().contains(Modifier.STATIC) ||
-            element.getModifiers().contains(Modifier.TRANSIENT)) {
+                element.getModifiers().contains(Modifier.STATIC) ||
+                element.getModifiers().contains(Modifier.TRANSIENT)) {
             return super.visitVariable(element, aVoid);
         }
         Entry entry = element.getAnnotation(Entry.class);

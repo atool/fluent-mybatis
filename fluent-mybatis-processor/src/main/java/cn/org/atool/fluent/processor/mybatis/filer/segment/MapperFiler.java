@@ -27,6 +27,11 @@ import static cn.org.atool.fluent.mybatis.utility.StrConstant.EMPTY;
  */
 public class MapperFiler extends AbstractFiler {
 
+    /**
+     * 构造函数
+     *
+     * @param fluentEntity FluentEntity
+     */
     public MapperFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
@@ -34,10 +39,22 @@ public class MapperFiler extends AbstractFiler {
         this.comment = "Mapper接口";
     }
 
+    /**
+     * 获取类名
+     *
+     * @param fluentEntity FluentClassName
+     * @return class name
+     */
     public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_Mapper;
     }
 
+    /**
+     * 获取包名
+     *
+     * @param fluentEntity FluentClassName
+     * @return package name
+     */
     public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_Mapper);
     }
@@ -49,36 +66,35 @@ public class MapperFiler extends AbstractFiler {
 
     @Override
     protected void build(TypeSpec.Builder spec) {
-        spec.addSuperinterface(paraType(ClassName.get(IWrapperMapper.class), fluent.entity(), fluent.query(), fluent.updater()))
-            .addSuperinterface(paraType(ClassNames2.getClassName(fluent.getSuperMapper()), fluent.entity()))
-            .addAnnotation(ClassNames2.Mybatis_Mapper)
-            .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Component)
-                .addMember("value", "$S", getMapperName(this.fluent)).build()
-            );
+        spec.addSuperinterface(
+                paraType(ClassName.get(IWrapperMapper.class), fluent.entity(), fluent.query(), fluent.updater()))
+                .addSuperinterface(paraType(ClassNames2.getClassName(fluent.getSuperMapper()), fluent.entity()))
+                .addAnnotation(ClassNames2.Mybatis_Mapper)
+                .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Component)
+                        .addMember("value", "$S", getMapperName(this.fluent)).build());
         if (fluent.isUsedCached()) {
             spec.addAnnotation(AnnotationSpec.builder(CacheNamespace.class)
-                .addMember("blocking", "true").build()
-            );
+                    .addMember("blocking", "true").build());
         }
         spec.addMethod(this.m_mapping())
-            .addMethod(this.m_print());
+                .addMethod(this.m_print());
     }
 
     @Override
     protected MethodSpec m_mapping() {
         return FilerKit.publicMethod(Suffix_mapping, IMapping.class)
-            .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
-            .addStatement("return $L", Suffix_MAPPING)
-            .build();
+                .addModifiers(Modifier.DEFAULT, Modifier.PUBLIC)
+                .addStatement("return $L", Suffix_MAPPING)
+                .build();
     }
 
     private MethodSpec m_print() {
         return FilerKit.publicMethod("print", false, CN_List_Str)
-            .addModifiers(Modifier.STATIC)
-            .addParameter(int.class, "mode")
-            .addParameter(CN_Consumer_Mapper, "simulators")
-            .addStatement("return $T.print(mode, MAPPING, simulators)", PrinterMapper.class)
-            .build();
+                .addModifiers(Modifier.STATIC)
+                .addParameter(int.class, "mode")
+                .addParameter(CN_Consumer_Mapper, "simulators")
+                .addStatement("return $T.print(mode, MAPPING, simulators)", PrinterMapper.class)
+                .build();
     }
 
     /**

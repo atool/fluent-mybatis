@@ -50,11 +50,15 @@ public class FluentMybatisProcessor extends BaseProcessor {
         return FluentMybatis.class;
     }
 
+    /**
+     * use Jakarta Annotation
+     */
     public static boolean useJakartaAnnotation = false;
     private boolean jakartaDetected = false;
 
     private void detectSpringBootVersion() {
-        if (jakartaDetected) return;
+        if (jakartaDetected)
+            return;
 
         // 尝试查找 jakarta 类
         javax.lang.model.util.Elements elementUtils = processingEnv.getElementUtils();
@@ -66,13 +70,11 @@ public class FluentMybatisProcessor extends BaseProcessor {
         if (jakartaServlet != null || jakartaPostConstruct != null) {
             useJakartaAnnotation = true;
             processingEnv.getMessager().printMessage(
-                Diagnostic.Kind.NOTE, "Detected Spring Boot 3.x (Jakarta EE)"
-            );
+                    Diagnostic.Kind.NOTE, "Detected Spring Boot 3.x (Jakarta EE)");
         } else if (javaxServlet != null) {
             useJakartaAnnotation = false;
             processingEnv.getMessager().printMessage(
-                Diagnostic.Kind.NOTE, "Detected Spring Boot 2.x (Java EE)"
-            );
+                    Diagnostic.Kind.NOTE, "Detected Spring Boot 2.x (Java EE)");
         }
         jakartaDetected = true;
     }

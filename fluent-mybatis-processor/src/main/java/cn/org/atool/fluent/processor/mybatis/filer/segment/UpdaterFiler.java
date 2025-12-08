@@ -25,6 +25,11 @@ import static cn.org.atool.fluent.processor.mybatis.base.MethodName.M_EMPTY_UPDA
  * @author wudarui
  */
 public class UpdaterFiler extends AbstractFiler {
+    /**
+     * 构造函数
+     *
+     * @param fluentEntity FluentEntity
+     */
     public UpdaterFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = getPackageName(fluentEntity);
@@ -32,10 +37,22 @@ public class UpdaterFiler extends AbstractFiler {
         this.comment = "更新构造";
     }
 
+    /**
+     * 获取类名
+     *
+     * @param fluentEntity FluentClassName
+     * @return class name
+     */
     public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_Update;
     }
 
+    /**
+     * 获取包名
+     *
+     * @param fluentEntity FluentClassName
+     * @return package name
+     */
     public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_Wrapper);
     }
@@ -50,27 +67,27 @@ public class UpdaterFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.superclass(this.superKlass())
-            .addField(this.f_setter())
-            .addField(this.f_where())
-            .addField(this.f_orderBy());
+                .addField(this.f_setter())
+                .addField(this.f_where())
+                .addField(this.f_orderBy());
         /* method */
         spec.addMethod(this.constructor0())
-            .addMethod(this.constructor4_Default_Table_Alias_Parameter())
-            .addMethod(this.m_where())
-            .addMethod(this.m_mapping());
+                .addMethod(this.constructor4_Default_Table_Alias_Parameter())
+                .addMethod(this.m_where())
+                .addMethod(this.m_mapping());
         /* static method */
         spec.addMethod(this.m_emptyUpdater())
-            .addMethod(this.m_emptyUpdater_table())
-            .addMethod(this.m_updater())
-            .addMethod(this.m_defaultUpdater())
-            .addMethod(this.m_updater_table());
+                .addMethod(this.m_emptyUpdater_table())
+                .addMethod(this.m_updater())
+                .addMethod(this.m_defaultUpdater())
+                .addMethod(this.m_updater_table());
     }
 
     private FieldSpec f_setter() {
         return FieldSpec.builder(fluent.updateSetter(),
                 PRE_SET, Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new $T(this)", fluent.updateSetter())
-            .build();
+                .initializer("new $T(this)", fluent.updateSetter())
+                .build();
     }
 
     /**
@@ -81,8 +98,8 @@ public class UpdaterFiler extends AbstractFiler {
     private FieldSpec f_where() {
         return FieldSpec.builder(fluent.updateWhere(),
                 "where", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new $T(this)", fluent.updateWhere())
-            .build();
+                .initializer("new $T(this)", fluent.updateWhere())
+                .build();
     }
 
     /**
@@ -93,8 +110,8 @@ public class UpdaterFiler extends AbstractFiler {
     private FieldSpec f_orderBy() {
         return FieldSpec.builder(fluent.updateOrderBy(),
                 "orderBy", Modifier.PUBLIC, Modifier.FINAL)
-            .initializer("new $T(this)", fluent.updateOrderBy())
-            .build();
+                .initializer("new $T(this)", fluent.updateOrderBy())
+                .build();
     }
 
     /**
@@ -104,26 +121,26 @@ public class UpdaterFiler extends AbstractFiler {
      */
     private MethodSpec constructor0() {
         return MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addStatement("this(true, null, null, null)")
-            .build();
+                .addModifiers(Modifier.PUBLIC)
+                .addStatement("this(true, null, null, null)")
+                .build();
     }
 
     private MethodSpec constructor4_Default_Table_Alias_Parameter() {
         return MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(boolean.class, "defaults")
-            .addParameter(IFragment.class, "table")
-            .addParameter(StringSupplier.class, "alias")
-            .addParameter(Parameters.class, "shared")
-            .addStatement("super(table, alias, $T.class)", fluent.entity())
-            .beginControlFlow("if(shared != null)")
-            .addStatement("this.sharedParameter(shared)")
-            .endControlFlow()
-            .beginControlFlow("if (defaults)")
-            .addStatement("$L.defaultSetter().setUpdateDefault(this)", Suffix_MAPPING)
-            .endControlFlow()
-            .build();
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(boolean.class, "defaults")
+                .addParameter(IFragment.class, "table")
+                .addParameter(StringSupplier.class, "alias")
+                .addParameter(Parameters.class, "shared")
+                .addStatement("super(table, alias, $T.class)", fluent.entity())
+                .beginControlFlow("if(shared != null)")
+                .addStatement("this.sharedParameter(shared)")
+                .endControlFlow()
+                .beginControlFlow("if (defaults)")
+                .addStatement("$L.defaultSetter().setUpdateDefault(this)", Suffix_MAPPING)
+                .endControlFlow()
+                .build();
     }
 
     private ParameterizedTypeName superKlass() {
@@ -141,40 +158,40 @@ public class UpdaterFiler extends AbstractFiler {
      */
     private MethodSpec m_where() {
         return FilerKit.publicMethod("where", fluent.updateWhere())
-            .addStatement("return this.where")
-            .build();
+                .addStatement("return this.where")
+                .build();
     }
 
     private MethodSpec m_emptyUpdater() {
         return FilerKit.staticMethod(M_EMPTY_UPDATER, fluent.updater())
-            .addStatement("return new $T(false, null, null, null)", fluent.updater())
-            .build();
+                .addStatement("return new $T(false, null, null, null)", fluent.updater())
+                .build();
     }
 
     private MethodSpec m_emptyUpdater_table() {
         return FilerKit.staticMethod(M_EMPTY_UPDATER, fluent.updater())
-            .addParameter(StringSupplier.class, "table")
-            .addStatement("return new $T(false, fragment(table), null, null)", fluent.updater())
-            .build();
+                .addParameter(StringSupplier.class, "table")
+                .addStatement("return new $T(false, fragment(table), null, null)", fluent.updater())
+                .build();
     }
 
     private MethodSpec m_updater() {
         return FilerKit.staticMethod(M_DEFAULT_UPDATER, fluent.updater())
-            .addStatement("return new $T(true, null, null, null)", fluent.updater())
-            .build();
+                .addStatement("return new $T(true, null, null, null)", fluent.updater())
+                .build();
     }
 
     private MethodSpec m_defaultUpdater() {
         return FilerKit.staticMethod("defaultUpdater", fluent.updater())
-            .addStatement("return updater()")
-            .build();
+                .addStatement("return updater()")
+                .build();
     }
 
     private MethodSpec m_updater_table() {
         return FilerKit.staticMethod(M_DEFAULT_UPDATER, fluent.updater())
-            .addParameter(StringSupplier.class, "table")
-            .addStatement("return new $T(true, fragment(table), null, null)", fluent.updater())
-            .build();
+                .addParameter(StringSupplier.class, "table")
+                .addStatement("return new $T(true, fragment(table), null, null)", fluent.updater())
+                .build();
     }
 
     @Override

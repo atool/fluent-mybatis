@@ -41,6 +41,13 @@ public class FormField {
      */
     private boolean ignoreNull;
 
+    /**
+     * 构造函数
+     *
+     * @param entryName 表单项名称
+     * @param fieldName 字段名称
+     * @param fieldType 字段类型
+     */
     public FormField(String entryName, String fieldName, TypeName fieldType) {
         this.entryName = entryName;
         this.fieldName = fieldName;
@@ -58,11 +65,22 @@ public class FormField {
         return text.substring(index, index + 1).toUpperCase() + text.substring(index + 1);
     }
 
+    /**
+     * 设置表单项类型
+     *
+     * @param type       表单项类型
+     * @param ignoreNull 是否忽略空值
+     */
     public void setEntryType(EntryType type, boolean ignoreNull) {
         this.entryType = type;
         this.ignoreNull = ignoreNull;
     }
 
+    /**
+     * 获取getter方法名称
+     *
+     * @return getter name
+     */
     public String getterName() {
         if (Objects.equals(fieldType, boolean.class.getName())) {
             return PRE_IS + this.capital;
@@ -71,6 +89,11 @@ public class FormField {
         }
     }
 
+    /**
+     * 获取setter方法名称
+     *
+     * @return setter name
+     */
     public String setterName() {
         return PRE_SET + this.capital;
     }

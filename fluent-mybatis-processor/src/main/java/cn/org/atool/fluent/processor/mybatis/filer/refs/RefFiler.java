@@ -20,14 +20,20 @@ import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.PUBLIC_STATIC
 public class RefFiler extends AbstractFile {
     private final List<FluentEntity> fluents;
 
+    /**
+     * 构造函数
+     *
+     * @param basePackage base package
+     * @param fluents     FluentEntity list
+     */
     public RefFiler(String basePackage, List<FluentEntity> fluents) {
         this.packageName = basePackage;
         this.fluents = fluents;
         this.klassName = Suffix_Ref;
         this.comment = "\n" +
-            " o - 查询器，更新器工厂类单例引用\n" +
-            " o - 应用所有Mapper Bean引用\n" +
-            " o - Entity关联对象延迟加载查询实现";
+                " o - 查询器，更新器工厂类单例引用\n" +
+                " o - 应用所有Mapper Bean引用\n" +
+                " o - Entity关联对象延迟加载查询实现";
     }
 
     @Override
@@ -38,13 +44,13 @@ public class RefFiler extends AbstractFile {
     @Override
     protected void build(TypeSpec.Builder spec) {
         spec.addType(this.type_field())
-            .addType(this.type_query());
+                .addType(this.type_query());
     }
 
     private TypeSpec type_field() {
         TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Field")
-            .addJavadoc("所有Entity FieldMapping引用")
-            .addModifiers(PUBLIC_STATIC);
+                .addJavadoc("所有Entity FieldMapping引用")
+                .addModifiers(PUBLIC_STATIC);
         for (FluentEntity fluent : this.fluents) {
             spec.addType(this.type_mapping(fluent));
         }
@@ -53,14 +59,14 @@ public class RefFiler extends AbstractFile {
 
     private TypeSpec type_mapping(FluentEntity fluent) {
         return TypeSpec.classBuilder(fluent.getNoSuffix())
-            .addModifiers(PUBLIC_STATIC_FINAL)
-            .superclass(fluent.entityMapping())
-            .build();
+                .addModifiers(PUBLIC_STATIC_FINAL)
+                .superclass(fluent.entityMapping())
+                .build();
     }
 
     private TypeSpec type_query() {
         TypeSpec.Builder spec = TypeSpec.interfaceBuilder("Query")
-            .addModifiers(PUBLIC_STATIC);
+                .addModifiers(PUBLIC_STATIC);
         for (FluentEntity fluent : this.fluents) {
             spec.addField(this.f_mapping(fluent));
         }
@@ -69,8 +75,8 @@ public class RefFiler extends AbstractFile {
 
     private FieldSpec f_mapping(FluentEntity fluent) {
         return FieldSpec.builder(fluent.entityMapping(), fluent.lowerNoSuffix(), PUBLIC_STATIC_FINAL)
-            .initializer("$T.MAPPING", fluent.entityMapping())
-            .build();
+                .initializer("$T.MAPPING", fluent.entityMapping())
+                .build();
     }
 
     @Override

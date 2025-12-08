@@ -16,10 +16,20 @@ import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.util.Objects;
 
+/**
+ * FluentScanner2
+ *
+ * @author wudarui
+ */
 public class FluentScanner2 extends AScanner {
     @Getter
     private final FluentEntity fluent = new FluentEntity();
 
+    /**
+     * 构造函数
+     *
+     * @param messager Messager
+     */
     public FluentScanner2(Messager messager) {
         super(messager);
     }

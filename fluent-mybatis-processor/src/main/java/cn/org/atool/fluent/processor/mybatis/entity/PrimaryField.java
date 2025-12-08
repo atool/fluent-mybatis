@@ -27,6 +27,12 @@ public class PrimaryField extends CommonField {
 
     private boolean seqIsBeforeOrder;
 
+    /**
+     * 构造函数
+     *
+     * @param name     属性名
+     * @param javaType Java类型
+     */
     public PrimaryField(String name, TypeName javaType) {
         super(name, javaType);
     }

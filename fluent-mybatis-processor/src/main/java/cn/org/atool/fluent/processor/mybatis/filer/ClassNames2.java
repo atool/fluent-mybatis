@@ -40,22 +40,22 @@ public interface ClassNames2 extends ClassNames {
     ClassName Mybatis_Mapper = ClassName.get("org.apache.ibatis.annotations", "Mapper");
 
     /**
-     * Consumer<IWrapperMapper>
+     * {@code Consumer<IWrapperMapper>}
      */
     ParameterizedTypeName CN_Consumer_Mapper = ParameterizedTypeName.get(Consumer.class, IWrapperMapper.class);
 
     /**
-     * List<FieldMapping>
+     * {@code List<FieldMapping>}
      */
     ParameterizedTypeName CN_List_FMapping = ParameterizedTypeName.get(List.class, FieldMapping.class);
 
     /**
-     * List<String>
+     * {@code List<String>}
      */
     ParameterizedTypeName CN_List_Str = ParameterizedTypeName.get(List.class, String.class);
 
     /**
-     * Optional<IMapping>
+     * {@code Optional<IMapping>}
      */
     ParameterizedTypeName CN_Optional_IMapping = ParameterizedTypeName.get(Optional.class, IMapping.class);
 
