@@ -19,13 +19,28 @@ public class AppendFlag implements IFragment {
 
     private final List<Object> list = new ArrayList<>();
 
+    /**
+     * 追加Fragment
+     *
+     * @param frag 待追加的Fragment
+     * @return AppendFlag
+     */
     public static AppendFlag set(IFragment frag) {
         return frag instanceof AppendFlag ? (AppendFlag) frag : new AppendFlag().append(frag);
     }
 
+    /**
+     * 构造函数
+     */
     public AppendFlag() {
     }
 
+    /**
+     * 追加参数
+     *
+     * @param args 参数
+     * @return AppendFlag
+     */
     public AppendFlag append(Object... args) {
         for (Object o : args) {
             if (this.allowed(o)) {

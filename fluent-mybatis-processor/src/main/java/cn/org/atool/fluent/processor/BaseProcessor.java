@@ -18,11 +18,25 @@ import java.util.Set;
 import static javax.tools.Diagnostic.Kind.ERROR;
 import static javax.tools.Diagnostic.Kind.NOTE;
 
+/**
+ * BaseProcessor
+ *
+ * @author wudarui
+ */
 public abstract class BaseProcessor extends AbstractProcessor implements IProcessor {
+    /**
+     * ProcessingEnvironment
+     */
     protected ProcessingEnvironment env;
 
+    /**
+     * Filer
+     */
     protected Filer filer;
 
+    /**
+     * Messager
+     */
     protected Messager messager;
 
     private boolean generated = false;
@@ -64,6 +78,9 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
 
     /**
      * 单个文件处理
+     *
+     * @param element TypeElement
+     * @throws Exception 异常
      */
     protected abstract void doFileProcessor(TypeElement element) throws Exception;
 
@@ -73,6 +90,11 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
     protected void doFileSummary() {
     }
 
+    /**
+     * 注解类型
+     *
+     * @return Class
+     */
     protected abstract Class<? extends Annotation> annotation();
 
     @Override
@@ -80,12 +102,18 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
         return messager;
     }
 
+    /**
+     * 异常转字符串
+     *
+     * @param e 异常
+     * @return 字符串
+     */
     public static String toString(Throwable e) {
         try (StringWriter writer = new StringWriter(); PrintWriter print = new PrintWriter(writer)) {
             e.printStackTrace(print);
             return writer.toString();
         } catch (IOException ex) {
-            //noinspection CallToPrintStackTrace
+            // noinspection CallToPrintStackTrace
             ex.printStackTrace();
             throw new RuntimeException(ex);
         }
@@ -94,22 +122,27 @@ public abstract class BaseProcessor extends AbstractProcessor implements IProces
     /**
      * 编译文件
      */
-    @SuppressWarnings({"unused", "unchecked"})
+    @SuppressWarnings({ "unused", "unchecked" })
     private void compile(String path) throws IOException {
-        //拿到编译器
+        // 拿到编译器
         JavaCompiler complier = ToolProvider.getSystemJavaCompiler();
-        //文件管理者
+        // 文件管理者
         StandardJavaFileManager fileMgr = complier.getStandardFileManager(null, null, null);
-        //获取文件
+        // 获取文件
         @SuppressWarnings("rawtypes")
         Iterable units = fileMgr.getJavaFileObjects(path);
-        //编译任务
+        // 编译任务
         JavaCompiler.CompilationTask t = complier.getTask(null, fileMgr, null, null, null, units);
-        //进行编译
+        // 进行编译
         t.call();
         fileMgr.close();
     }
 
+    /**
+     * 打印错误信息
+     *
+     * @param message 错误信息
+     */
     @SuppressWarnings("unused")
     public void error(String message) {
         messager.printMessage(ERROR, message);

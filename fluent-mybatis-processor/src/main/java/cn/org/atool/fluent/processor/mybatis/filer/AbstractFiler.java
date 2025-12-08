@@ -14,16 +14,38 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.Suffix_mapping;
 import static cn.org.atool.fluent.processor.mybatis.filer.ClassNames2.CN_Optional_IMapping;
 import static cn.org.atool.fluent.mybatis.utility.StrConstant.NEWLINE;
 
-@SuppressWarnings({"rawtypes", "UnusedReturnValue"})
+/**
+ * AbstractFiler
+ *
+ * @author wudarui
+ */
+@SuppressWarnings({ "rawtypes", "UnusedReturnValue" })
 public abstract class AbstractFiler {
+    /**
+     * FluentEntity
+     */
     protected FluentEntity fluent;
 
+    /**
+     * 包名
+     */
     protected String packageName;
 
+    /**
+     * 类名
+     */
     protected String klassName;
 
+    /**
+     * 类注释
+     */
     protected String comment;
 
+    /**
+     * 构造函数
+     *
+     * @param fluent FluentEntity
+     */
     public AbstractFiler(FluentEntity fluent) {
         this.fluent = fluent;
     }
@@ -42,10 +64,9 @@ public abstract class AbstractFiler {
         }
         this.build(builder);
         CodeBlock comment = this.codeBlock("",
-            this.klassName + (this.comment == null ? "" : ": " + this.comment),
-            "",
-            "@author powered by FluentMybatis"
-        );
+                this.klassName + (this.comment == null ? "" : ": " + this.comment),
+                "",
+                "@author powered by FluentMybatis");
         builder.addJavadoc(comment);
         JavaFile.Builder javaBuilder = JavaFile.builder(packageName, builder.build());
         this.staticImport(javaBuilder);
@@ -53,6 +74,11 @@ public abstract class AbstractFiler {
         return javaBuilder.build();
     }
 
+    /**
+     * 静态导入
+     *
+     * @param spec JavaFile.Builder
+     */
     protected void staticImport(JavaFile.Builder spec) {
     }
 
@@ -66,18 +92,44 @@ public abstract class AbstractFiler {
         return CodeBlock.join(Stream.of(lines).map(CodeBlock::of).collect(Collectors.toList()), NEWLINE);
     }
 
+    /**
+     * build
+     *
+     * @param builder TypeSpec.Builder
+     */
     protected abstract void build(TypeSpec.Builder builder);
 
+    /**
+     * 参数化类型
+     *
+     * @param raw   原始类
+     * @param paras 参数
+     * @return TypeName
+     */
     protected TypeName paraType(ClassName raw, Object... paras) {
         TypeName[] types = typeNames(paras);
         return ParameterizedTypeName.get(raw, types);
     }
 
+    /**
+     * 参数化类型
+     *
+     * @param raw   原始类
+     * @param paras 参数
+     * @return TypeName
+     */
     protected TypeName paraType(Class raw, Object... paras) {
         TypeName[] types = typeNames(paras);
         return ParameterizedTypeName.get(ClassName.get(raw), types);
     }
 
+    /**
+     * 参数化类型
+     *
+     * @param typeName 类名
+     * @param paras    参数
+     * @return TypeName
+     */
     @SuppressWarnings("all")
     protected TypeName paraType(String typeName, Object... paras) {
         TypeName[] types = typeNames(paras);
@@ -112,7 +164,7 @@ public abstract class AbstractFiler {
      */
     protected MethodSpec m_mapping() {
         return FilerKit.publicMethod(Suffix_mapping, CN_Optional_IMapping)
-            .addStatement("return Optional.of($L)", Suffix_MAPPING)
-            .build();
+                .addStatement("return Optional.of($L)", Suffix_MAPPING)
+                .build();
     }
 }

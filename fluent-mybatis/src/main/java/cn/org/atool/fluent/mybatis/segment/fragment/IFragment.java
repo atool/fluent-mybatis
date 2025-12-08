@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.mybatis.segment.fragment;
 
-
 import cn.org.atool.fluent.mybatis.base.entity.IMapping;
 
 import java.io.Serializable;
@@ -16,6 +15,7 @@ public interface IFragment extends Serializable {
     /**
      * SQL 片段
      *
+     * @param mapping 实体映射
      * @return ignore
      */
     String get(IMapping mapping);

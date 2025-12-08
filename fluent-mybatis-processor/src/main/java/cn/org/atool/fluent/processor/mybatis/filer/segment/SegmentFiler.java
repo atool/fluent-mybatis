@@ -24,10 +24,9 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.suppressWarnings;
 
-/**
- * Query&Updater辅助类文件生成
- *
- * @author wudarui
+*Query&Updater辅助类文件生成**
+
+@author wudarui
  */
 @SuppressWarnings({"rawtypes"})
 public class SegmentFiler extends AbstractFiler {
