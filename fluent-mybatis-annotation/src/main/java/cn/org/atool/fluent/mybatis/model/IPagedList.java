@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 分页查询结果
  *
- * @param <E>
+ * @param <E> Element type
  */
 public interface IPagedList<E> {
     /**

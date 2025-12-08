@@ -15,6 +15,8 @@ public class MethodArgs {
 
     /**
      * 查询数据接口
+     *
+     * @return true/false
      */
     public boolean isQuery() {
         return meta.isQuery();
@@ -22,6 +24,8 @@ public class MethodArgs {
 
     /**
      * 更新数据接口
+     *
+     * @return true/false
      */
     public boolean isUpdate() {
         return meta.isUpdate();
@@ -29,6 +33,8 @@ public class MethodArgs {
 
     /**
      * 创建实例接口
+     *
+     * @return true/false
      */
     public boolean isSave() {
         return meta.isSave();
@@ -43,10 +49,20 @@ public class MethodArgs {
         return this.meta.metas().getPageSize(args);
     }
 
+    /**
+     * Return current page
+     *
+     * @return Integer
+     */
     public Integer getCurrPage() {
         return this.meta.metas().getCurrPage(args);
     }
 
+    /**
+     * Return paged tag
+     *
+     * @return Object
+     */
     public Object getPagedTag() {
         return this.meta.metas().getPagedTag(args);
     }

@@ -3,14 +3,28 @@ package cn.org.atool.fluent.form.meta;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ClassKit
+ *
+ * @author darui.wu
+ */
 public interface ClassKit {
     /**
      * FormService实现类后缀名称
      */
     String FormServiceBeanSuffix = "FormService";
 
+    /**
+     * Class cache
+     */
     Map<String, Class> CACHED = new HashMap<>(16);
 
+    /**
+     * Class.forName
+     *
+     * @param className class name
+     * @return Class
+     */
     static Class forName(String className) {
         if (className == null || className.trim().isEmpty()) {
             return null;

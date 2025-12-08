@@ -18,22 +18,30 @@ public @interface TableField {
     /**
      * 数据库字段名称
      * 默认采用驼峰命名转换为下划线命名
+     *
+     * @return 字段名称
      */
     String value() default "";
 
     /**
      * 字段 update set 默认值
+     *
+     * @return 默认值
      */
     String update() default "";
 
     /**
      * insert的时候默认值
+     *
+     * @return 默认值
      */
     String insert() default "";
 
     /**
      * 是否非大字段
-     * <p>使用 select(true, FieldMeta::notLarge)排除大字段查询</p>
+     * <p>
+     * 使用 select(true, FieldMeta::notLarge)排除大字段查询
+     * </p>
      */
     boolean notLarge() default true;
 

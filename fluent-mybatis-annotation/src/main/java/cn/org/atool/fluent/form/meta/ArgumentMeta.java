@@ -22,8 +22,8 @@ import static cn.org.atool.fluent.common.kits.StringKit.notBlank;
  *
  * @author darui.wu
  */
-@ToString(of = {"index", "entryName", "entryType"})
-@SuppressWarnings({"unused", "rawtypes", "unchecked"})
+@ToString(of = { "index", "entryName", "entryType" })
+@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 public class ArgumentMeta {
     /**
      * 表单项名称
@@ -55,6 +55,16 @@ public class ArgumentMeta {
      */
     public final boolean ignoreNull;
 
+    /**
+     * Constructor
+     *
+     * @param methodType MethodType
+     * @param entryName  entry name
+     * @param type       entry type
+     * @param argType    argument type
+     * @param index      argument index
+     * @param types      generic types map
+     */
     public ArgumentMeta(MethodType methodType, String entryName, EntryType type, Type argType, int index, Map types) {
         this.entryName = entryName;
         this.entryType = type == null ? EntryType.EQ : type;
@@ -65,6 +75,15 @@ public class ArgumentMeta {
         this.ignoreNull = true;
     }
 
+    /**
+     * Constructor
+     *
+     * @param methodType  MethodType
+     * @param parameter   Parameter
+     * @param defaultName default name
+     * @param index       argument index
+     * @param types       generic types map
+     */
     public ArgumentMeta(MethodType methodType, Parameter parameter, String defaultName, int index, Map types) {
         this.isList = Collection.class.isAssignableFrom(parameter.getType());
         this.isArray = parameter.getType().isArray();
@@ -76,7 +95,8 @@ public class ArgumentMeta {
             this.entryType = notFormObject(this.type) ? EntryType.EQ : EntryType.Form;
             /* 未声明@Entry注解 && 没有从方法中解析出变量名称 && 非Form复杂类型 */
             if (this.entryType == EntryType.EQ && defaultName == null) {
-                throw new IllegalStateException("Unable to resolve parameter[index=" + index + "] name of method[" + parameter.getDeclaringExecutable().toString() + "].");
+                throw new IllegalStateException("Unable to resolve parameter[index=" + index + "] name of method["
+                        + parameter.getDeclaringExecutable().toString() + "].");
             }
         } else {
             this.entryName = this.findEntryName(parameter, entry.value(), defaultName);

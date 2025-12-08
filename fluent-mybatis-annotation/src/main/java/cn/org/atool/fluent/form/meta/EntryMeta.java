@@ -15,7 +15,7 @@ import static cn.org.atool.fluent.common.kits.StringKit.wrap;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "unused", "rawtypes"})
+@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
 @ToString(of = "name")
 public class EntryMeta implements IEntryMeta {
     /**
@@ -43,6 +43,14 @@ public class EntryMeta implements IEntryMeta {
      */
     public final boolean ignoreNull;
 
+    /**
+     * Constructor
+     *
+     * @param name       entry name
+     * @param javaType   java type
+     * @param entryType  entry type
+     * @param ignoreNull ignore null value
+     */
     protected EntryMeta(String name, Type javaType, EntryType entryType, boolean ignoreNull) {
         this.name = name;
         this.javaType = javaType;
@@ -52,7 +60,20 @@ public class EntryMeta implements IEntryMeta {
         this.setter = this.setter();
     }
 
-    public <F, V> EntryMeta(String name, Type javaType, EntryType entryType, Function<F, V> getter, BiConsumer<F, V> setter, boolean ignoreNull) {
+    /**
+     * Constructor
+     *
+     * @param name       entry name
+     * @param javaType   java type
+     * @param entryType  entry type
+     * @param getter     getter method
+     * @param setter     setter method
+     * @param ignoreNull ignore null value
+     * @param <F>        Function type
+     * @param <V>        Value type
+     */
+    public <F, V> EntryMeta(String name, Type javaType, EntryType entryType, Function<F, V> getter,
+            BiConsumer<F, V> setter, boolean ignoreNull) {
         this.name = name;
         this.javaType = javaType;
         this.entryType = entryType;
@@ -61,14 +82,23 @@ public class EntryMeta implements IEntryMeta {
         this.ignoreNull = ignoreNull;
     }
 
+    /**
+     * Return getter function
+     *
+     * @return Function
+     */
     protected Function getter() {
         return null;
     }
 
+    /**
+     * Return setter BiConsumer
+     *
+     * @return BiConsumer
+     */
     protected BiConsumer setter() {
         return null;
     }
-
 
     /**
      * 返回字段值

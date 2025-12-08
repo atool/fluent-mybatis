@@ -18,9 +18,9 @@ import java.util.Optional;
  * instance.registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY)
  *
  * @author davey
- * @param <E>
+ * @param <E> Element type
  */
-@SuppressWarnings({"unchecked", "rawtypes", "unused"})
+@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 public class OptionalTypeAdapter<E> extends TypeAdapter<Optional<E>> {
     public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
         @Override

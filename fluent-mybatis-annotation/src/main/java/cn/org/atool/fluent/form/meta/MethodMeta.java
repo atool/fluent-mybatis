@@ -26,7 +26,7 @@ import static cn.org.atool.fluent.form.annotation.MethodType.*;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes", "unused"})
+@SuppressWarnings({ "rawtypes", "unused" })
 @Accessors(chain = true)
 public class MethodMeta {
     /**
@@ -42,6 +42,9 @@ public class MethodMeta {
      */
     public final MethodType methodType;
 
+    /**
+     * 参数名称
+     */
     public final MethodArgNames argNames;
     /**
      * 入参类型
@@ -57,7 +60,8 @@ public class MethodMeta {
      */
     public final Class returnParameterType;
 
-    private MethodMeta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] metas, Class returnType, Class returnParameterType) {
+    private MethodMeta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] metas, Class returnType,
+            Class returnParameterType) {
         this.entityClass = entityClass;
         this.method = method == null ? UUID.randomUUID() + "()" : method.toString();
         this.methodType = methodType;
@@ -98,11 +102,18 @@ public class MethodMeta {
      */
     private final static SegmentLocks<String> MethodLock = new SegmentLocks<>(16);
 
+    /**
+     * Cache
+     */
     public static final KeyMap<EntryMetas> MethodArgsMeta = new KeyMap<>();
 
     /**
      * 构造MethodMeta
      * 缓存在 {@link IMethodAround#cache(Class, Method)} 中处理
+     *
+     * @param entityClass Entity Class
+     * @param method      Method
+     * @return MethodMeta
      */
     public static MethodMeta meta(Class entityClass, Method method) {
         return new MethodMeta(entityClass, method);
@@ -111,8 +122,17 @@ public class MethodMeta {
     /**
      * 显式构造MethodMeta
      * 缓存在 {@link IMethodAround#cache(Class, Method)} 中处理
+     *
+     * @param entityClass         Entity Class
+     * @param method              Method
+     * @param methodType          Method Type
+     * @param args                Arguments
+     * @param returnType          Return Type
+     * @param returnParameterType Return Parameter Type
+     * @return MethodMeta
      */
-    public static MethodMeta meta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] args, Class returnType, Class returnParameterType) {
+    public static MethodMeta meta(Class entityClass, Method method, MethodType methodType, ArgumentMeta[] args,
+            Class returnType, Class returnParameterType) {
         return new MethodMeta(entityClass, method, methodType, args, returnType, returnParameterType);
     }
 
@@ -144,7 +164,8 @@ public class MethodMeta {
         if (isBlank(method)) {
             return this.buildMetasFromArgs();
         } else {
-            MethodLock.lockDoing(MethodArgsMeta::containsKey, method, () -> MethodArgsMeta.put(method, this.buildMetasFromArgs()));
+            MethodLock.lockDoing(MethodArgsMeta::containsKey, method,
+                    () -> MethodArgsMeta.put(method, this.buildMetasFromArgs()));
             return MethodArgsMeta.get(method);
         }
     }
@@ -168,6 +189,11 @@ public class MethodMeta {
         return argsMetas;
     }
 
+    /**
+     * Is AND logic
+     *
+     * @return true/false
+     */
     public boolean isAnd() {
         return this.argNames == null || this.argNames.isAnd;
     }
@@ -208,6 +234,11 @@ public class MethodMeta {
         return this.methodType == Query && (this.isReturnInt() || this.isReturnLong());
     }
 
+    /**
+     * Is return number
+     *
+     * @return true/false
+     */
     public boolean isReturnNumber() {
         return isReturnInt() || isReturnLong();
     }
@@ -305,6 +336,8 @@ public class MethodMeta {
 
     /**
      * 查询数据接口
+     *
+     * @return true/false
      */
     public boolean isQuery() {
         return methodType == null || methodType == Query;
@@ -312,6 +345,8 @@ public class MethodMeta {
 
     /**
      * 更新数据接口
+     *
+     * @return true/false
      */
     public boolean isUpdate() {
         return methodType == Update;
@@ -319,6 +354,8 @@ public class MethodMeta {
 
     /**
      * 创建实例接口
+     *
+     * @return true/false
      */
     public boolean isSave() {
         return methodType == Save;
@@ -326,6 +363,8 @@ public class MethodMeta {
 
     /**
      * 物理删除接口
+     *
+     * @return true/false
      */
     public boolean isDelete() {
         return methodType == Delete;
@@ -333,6 +372,8 @@ public class MethodMeta {
 
     /**
      * 逻辑删除接口
+     *
+     * @return true/false
      */
     public boolean isLogicDelete() {
         return methodType == LogicDelete;

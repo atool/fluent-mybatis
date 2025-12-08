@@ -8,18 +8,29 @@ import cn.org.atool.fluent.form.meta.EntryMeta;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class ArgEntryMeta extends EntryMeta {
     private final ArgumentMeta arg;
 
     private final EntryMeta meta;
 
+    /**
+     * Constructor
+     *
+     * @param arg ArgumentMeta
+     */
     public ArgEntryMeta(ArgumentMeta arg) {
         super(arg.entryName, arg.type, arg.entryType, arg.ignoreNull);
         this.arg = arg;
         this.meta = null;
     }
 
+    /**
+     * Constructor
+     *
+     * @param arg  ArgumentMeta
+     * @param meta EntryMeta
+     */
     public ArgEntryMeta(ArgumentMeta arg, EntryMeta meta) {
         super(meta.name, arg.type, meta.entryType, meta.ignoreNull);
         this.arg = arg;

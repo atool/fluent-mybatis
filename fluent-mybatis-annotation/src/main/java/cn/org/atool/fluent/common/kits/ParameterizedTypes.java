@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ParameterizedTypes {
     /**
      * 返回type有关declared通配符genericName的实际类型
@@ -119,6 +119,7 @@ public class ParameterizedTypes {
     /**
      * 非Form Object对象
      *
+     * @param type 类型
      * @return true/false
      */
     public static boolean notFormObject(Class type) {

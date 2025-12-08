@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
  * @author darui.wu
  */
 public enum MethodType {
+    /**
+     * 自动
+     */
     Auto,
     /**
      * 根据入参和返回值自动判断
@@ -39,6 +42,12 @@ public enum MethodType {
         this.prefixes = prefixes;
     }
 
+    /**
+     * Match method name
+     *
+     * @param method method name
+     * @return true/false
+     */
     public boolean match(String method) {
         for (String prefix : prefixes) {
             if (method.startsWith(prefix)) {
@@ -51,5 +60,6 @@ public enum MethodType {
     /**
      * 所有可能自动推断的前缀值列表
      */
-    public static Set<String> AUTO_PREFIX = Arrays.stream(MethodType.values()).flatMap(t -> Arrays.stream(t.prefixes)).collect(Collectors.toSet());
+    public static Set<String> AUTO_PREFIX = Arrays.stream(MethodType.values()).flatMap(t -> Arrays.stream(t.prefixes))
+            .collect(Collectors.toSet());
 }

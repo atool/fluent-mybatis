@@ -16,12 +16,21 @@ import static cn.org.atool.fluent.common.kits.StringKit.wrap;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({ "rawtypes" })
 public class MethodEntryMeta extends EntryMeta {
     private final Method getter;
 
     private final Method setter;
 
+    /**
+     * Constructor
+     *
+     * @param name       entry name
+     * @param type       entry type
+     * @param getter     getter method
+     * @param setter     setter method
+     * @param ignoreNull ignore null value
+     */
     public MethodEntryMeta(String name, EntryType type, Method getter, Method setter, boolean ignoreNull) {
         super(name, getJavaType(getter, setter), type, ignoreNull);
         this.getter = getter;
@@ -67,7 +76,8 @@ public class MethodEntryMeta extends EntryMeta {
             try {
                 setter.invoke(target, value);
             } catch (IllegalArgumentException e) {
-                String err = "method:" + setter + ", value " + (value == null ? "<null>" : value.getClass()) + ":" + value;
+                String err = "method:" + setter + ", value " + (value == null ? "<null>" : value.getClass()) + ":"
+                        + value;
                 throw new IllegalArgumentException(err, e);
             } catch (Exception e) {
                 throw wrap(e);

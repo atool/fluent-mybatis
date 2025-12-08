@@ -26,10 +26,13 @@ import static cn.org.atool.fluent.common.kits.StringKit.*;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
+@SuppressWarnings({ "unchecked", "rawtypes", "UnusedReturnValue" })
 @Getter
 @ToString(of = "objType")
 public class EntryMetas implements IEntryMeta {
+    /**
+     * Object Type
+     */
     public final Class objType;
 
     /**
@@ -57,6 +60,12 @@ public class EntryMetas implements IEntryMeta {
      */
     private final boolean isAnd;
 
+    /**
+     * Constructor
+     *
+     * @param objType Object Type
+     * @param isAnd   is AND logic
+     */
     public EntryMetas(Class objType, boolean isAnd) {
         this.objType = objType;
         this.isAnd = isAnd;
@@ -74,6 +83,11 @@ public class EntryMetas implements IEntryMeta {
         return pagedTag == null ? null : pagedTag.get(form);
     }
 
+    /**
+     * add EntryMeta
+     *
+     * @param meta EntryMeta
+     */
     public void addMeta(EntryMeta meta) {
         if (meta == null) {
             return;
@@ -134,12 +148,10 @@ public class EntryMetas implements IEntryMeta {
     /*** ============================ ***/
     private static final KeyMap<EntryMetas> ClassFormMetas = new KeyMap<>();
 
-
     static List<String> root_classes = Arrays.asList(
-        Object.class.getName(),
-        "cn.org.atool.fluent.mybatis.base.RichEntity",
-        "cn.org.atool.fluent.mybatis.base.BaseEntity"
-    );
+            Object.class.getName(),
+            "cn.org.atool.fluent.mybatis.base.RichEntity",
+            "cn.org.atool.fluent.mybatis.base.BaseEntity");
 
     /**
      * 按class类进行加锁
@@ -153,7 +165,8 @@ public class EntryMetas implements IEntryMeta {
      * @return FormMetas
      */
     public static EntryMetas getFormMeta(Class aClass) {
-        ClassLock.lockDoing(ClassFormMetas::containsKey, aClass, () -> ClassFormMetas.put(aClass, buildFormMeta(aClass)));
+        ClassLock.lockDoing(ClassFormMetas::containsKey, aClass,
+                () -> ClassFormMetas.put(aClass, buildFormMeta(aClass)));
         return ClassFormMetas.get(aClass);
     }
 
@@ -163,7 +176,8 @@ public class EntryMetas implements IEntryMeta {
         /* 放在构造元数据前面, 避免子对象循环构造 */
         ClassFormMetas.put(aClass, metas);
         Class declared = aClass;
-        while (!root_classes.contains(declared.getName()) && !declared.isPrimitive() && !declared.getName().startsWith("java.")) {
+        while (!root_classes.contains(declared.getName()) && !declared.isPrimitive()
+                && !declared.getName().startsWith("java.")) {
             try {
                 metas.addMetasByFormKits(declared);
             } catch (Exception ignored) {
@@ -183,7 +197,8 @@ public class EntryMetas implements IEntryMeta {
         if (Objects.equals(declared, Object.class)) {
             return;
         }
-        EntryMetaKit kit = (EntryMetaKit) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor().newInstance();
+        EntryMetaKit kit = (EntryMetaKit) Class.forName(declared.getName() + "MetaKit").getDeclaredConstructor()
+                .newInstance();
         kit.entryMetas().forEach(this::addMeta);
     }
 
