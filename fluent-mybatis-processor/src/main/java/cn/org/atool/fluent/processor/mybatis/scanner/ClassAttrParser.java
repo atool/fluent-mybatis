@@ -15,10 +15,16 @@ import java.util.Objects;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({ "rawtypes" })
 public class ClassAttrParser {
+    /**
+     * defaults()
+     */
     public static final String ATTR_DEFAULTS = "defaults()";
 
+    /**
+     * superMapper()
+     */
     public static final String ATTR_SUPER_MAPPER = "superMapper()";
 
     /**
@@ -26,9 +32,12 @@ public class ClassAttrParser {
      *
      * @param klass          TypeElement of entity
      * @param annotationType 注解类型
+     * @param methodName     方法名
+     * @param defaultValue   默认值
      * @return key: @DaoInterface value值, value: @DaoInterface args值
      */
-    public static String getClassAttr(TypeElement klass, Class<? extends Annotation> annotationType, String methodName, Class defaultValue) {
+    public static String getClassAttr(TypeElement klass, Class<? extends Annotation> annotationType, String methodName,
+            Class defaultValue) {
         AnnotationMirror mirror = getFluentMyBatisMirror(klass, annotationType);
         if (mirror == null) {
             return defaultValue.getName();
@@ -47,7 +56,8 @@ public class ClassAttrParser {
         return defaultValue.getName();
     }
 
-    private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity, Class<? extends Annotation> annotationType) {
+    private static AnnotationMirror getFluentMyBatisMirror(TypeElement entity,
+            Class<? extends Annotation> annotationType) {
         List<? extends AnnotationMirror> annotations = entity.getAnnotationMirrors();
         for (AnnotationMirror annotation : annotations) {
             if (annotation.getAnnotationType().toString().contains(annotationType.getSimpleName())) {

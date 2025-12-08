@@ -26,10 +26,21 @@ import static cn.org.atool.generator.util.GeneratorHelper.isBlank;
 public class EntityRefMethod extends FieldOrMethod {
     private final Map<String, String> mapping = new HashMap<>();
 
+    /**
+     * 构造函数
+     *
+     * @param property 属性名
+     * @param javaType java类型
+     */
     public EntityRefMethod(String property, TypeName javaType) {
         super(property, javaType);
     }
 
+    /**
+     * 设置映射值
+     *
+     * @param value 映射值
+     */
     public void setValue(String value) {
         String[] pairs = value.split("&");
         for (String pair : pairs) {
@@ -58,10 +69,20 @@ public class EntityRefMethod extends FieldOrMethod {
         return methodNameOfEntity(this.name, fluent.getClassName());
     }
 
+    /**
+     * 是否自动映射
+     *
+     * @return true: auto mapping
+     */
     public boolean isAutoMapping() {
         return !mapping.isEmpty();
     }
 
+    /**
+     * 获取返回实体类名
+     *
+     * @return entity class name
+     */
     public String getReturnEntity() {
         if (this.javaType instanceof ClassName) {
             return ((ClassName) this.javaType).simpleName();
@@ -71,9 +92,15 @@ public class EntityRefMethod extends FieldOrMethod {
                 return ((ClassName) args.get(0)).simpleName();
             }
         }
-        throw new RuntimeException("not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
+        throw new RuntimeException(
+                "not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
     }
 
+    /**
+     * 获取返回类型
+     *
+     * @return return type
+     */
     public TypeName getReturnType() {
         if (this.javaType instanceof ClassName) {
             return this.javaType;
@@ -83,9 +110,15 @@ public class EntityRefMethod extends FieldOrMethod {
                 return args.get(0);
             }
         }
-        throw new RuntimeException("not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
+        throw new RuntimeException(
+                "not support the type[" + this.javaType.toString() + "], only support return: Entity or List<Entity>.");
     }
 
+    /**
+     * 是否返回List
+     *
+     * @return true: return list
+     */
     public boolean returnList() {
         if (this.javaType instanceof ParameterizedTypeName) {
             ClassName type = ((ParameterizedTypeName) this.javaType).rawType();

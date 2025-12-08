@@ -31,7 +31,7 @@ import static javax.lang.model.element.Modifier.*;
  *
  * @author wudarui
  */
-@SuppressWarnings({"UnusedReturnValue", "unchecked"})
+@SuppressWarnings({ "UnusedReturnValue", "unchecked" })
 @Getter
 @ToString
 public class FluentEntity extends FluentClassName implements Comparable<FluentEntity> {
@@ -114,6 +114,13 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
 
     private boolean useDao = true;
 
+    /**
+     * 设置className
+     *
+     * @param entityPack entity package
+     * @param className  entity class name
+     * @return FluentEntity
+     */
     public FluentEntity setClassName(String entityPack, String className) {
         this.className = className;
         this.entityPack = entityPack;
@@ -130,6 +137,14 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
      * 设置对应的表名称
      *
      * @param fluentMyBatis Annotation @FluentMybatis
+     * @return ignore
+     */
+    /**
+     * 设置对应的表名称
+     *
+     * @param fluentMyBatis Annotation @FluentMybatis
+     * @param defaults      默认值
+     * @param superMapper   通用mapper
      * @return ignore
      */
     public FluentEntity setFluentMyBatis(FluentMybatis fluentMyBatis, String defaults, String superMapper) {
@@ -150,6 +165,12 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         return this;
     }
 
+    /**
+     * 解析Entity
+     *
+     * @param entity TypeElement
+     * @param log    Consumer
+     */
     public void parseEntity(TypeElement entity, Consumer<String> log) {
         FluentMybatis fluentMybatis = entity.getAnnotation(FluentMybatis.class);
         if (fluentMybatis == null) {
@@ -157,17 +178,30 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         } else {
             ClassName className = ClassNames2.getClassName(entity.getQualifiedName().toString());
             this.setClassName(className.packageName(), className.simpleName());
-            String defaults = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_DEFAULTS, IDefaultSetter.class);
-            String superMapper = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_SUPER_MAPPER, IMapper.class);
+            String defaults = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_DEFAULTS,
+                    IDefaultSetter.class);
+            String superMapper = ClassAttrParser.getClassAttr(entity, FluentMybatis.class, ATTR_SUPER_MAPPER,
+                    IMapper.class);
             this.setFluentMyBatis(fluentMybatis, defaults, superMapper);
         }
     }
 
+    /**
+     * 添加RefMethod
+     *
+     * @param method EntityRefMethod
+     * @return FluentEntity
+     */
     public FluentEntity addMethod(EntityRefMethod method) {
         this.refMethods.add(method);
         return this;
     }
 
+    /**
+     * 添加Field
+     *
+     * @param field CommonField
+     */
     public void addField(CommonField field) {
         if (this.fields.contains(field)) {
             return;
@@ -180,6 +214,8 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
 
     /**
      * 对字段进行排序
+     *
+     * @return FluentEntity
      */
     public FluentEntity sort() {
         this.fields.sort(Comparator.naturalOrder());
@@ -207,6 +243,11 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
         this.addMethod(method);
     }
 
+    /**
+     * visitVariable
+     *
+     * @param element VariableElement
+     */
     public void visitVariable(VariableElement element) {
         if (this.isTableField(element)) {
             return;
@@ -227,9 +268,9 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
 
     private boolean isTableField(VariableElement element) {
         return element.getKind() != ElementKind.FIELD ||
-            element.getModifiers().contains(Modifier.STATIC) ||
-            element.getModifiers().contains(Modifier.TRANSIENT) ||
-            element.getAnnotation(NotField.class) != null;
+                element.getModifiers().contains(Modifier.STATIC) ||
+                element.getModifiers().contains(Modifier.TRANSIENT) ||
+                element.getAnnotation(NotField.class) != null;
     }
 
     private boolean isPublicMethod(ExecutableElement element) {
@@ -311,7 +352,8 @@ public class FluentEntity extends FluentClassName implements Comparable<FluentEn
             if (!aTypeName.contains(aName)) {
                 continue;
             }
-            Map<ExecutableElement, AnnotationValue> values = (Map<ExecutableElement, AnnotationValue>) annotationMirror.getElementValues();
+            Map<ExecutableElement, AnnotationValue> values = (Map<ExecutableElement, AnnotationValue>) annotationMirror
+                    .getElementValues();
             for (Map.Entry<ExecutableElement, AnnotationValue> entry : values.entrySet()) {
                 String method = entry.getKey().getSimpleName().toString();
                 AnnotationValue value = entry.getValue();

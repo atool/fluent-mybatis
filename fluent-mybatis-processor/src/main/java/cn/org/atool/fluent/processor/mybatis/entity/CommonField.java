@@ -1,6 +1,5 @@
 package cn.org.atool.fluent.processor.mybatis.entity;
 
-
 import cn.org.atool.generator.database.model.FieldType;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.TypeName;
@@ -34,28 +33,58 @@ public class CommonField extends FieldOrMethod implements Comparable<CommonField
     @Setter(AccessLevel.NONE)
     protected String column;
 
+    /**
+     * jdbc类型
+     */
     private String jdbcType;
 
+    /**
+     * numeric scale
+     */
     private String numericScale;
     /**
      * type handler
      */
     private TypeName typeHandler;
 
+    /**
+     * not large
+     */
     private boolean notLarge = true;
 
+    /**
+     * insert
+     */
     private String insert;
 
+    /**
+     * update
+     */
     private String update;
 
+    /**
+     * file type
+     */
     private FieldType type = FieldType.Common;
 
+    /**
+     * 构造函数
+     *
+     * @param property 属性名
+     * @param javaType java类型
+     */
     public CommonField(String property, TypeName javaType) {
         super(property, javaType);
         // 设置column默认值
         this.column = camelToUnderline(this.name, false);
     }
 
+    /**
+     * 设置列名
+     *
+     * @param column 列名
+     * @return CommonField
+     */
     public CommonField setColumn(String column) {
         if (!isBlank(column)) {
             this.column = column;
@@ -89,6 +118,11 @@ public class CommonField extends FieldOrMethod implements Comparable<CommonField
         }
     }
 
+    /**
+     * 是否主键
+     *
+     * @return true: primary key
+     */
     public boolean isPrimary() {
         return false;
     }

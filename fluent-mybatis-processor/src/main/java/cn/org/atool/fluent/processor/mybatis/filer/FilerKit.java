@@ -17,34 +17,65 @@ import java.util.stream.Stream;
 @SuppressWarnings("rawtypes")
 public interface FilerKit {
 
-    Modifier[] PUBLIC_STATIC_FINAL = {Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL};
+    /**
+     * PUBLIC STATIC FINAL
+     */
+    Modifier[] PUBLIC_STATIC_FINAL = { Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL };
 
-    Modifier[] PUBLIC_FINAL = {Modifier.PUBLIC, Modifier.FINAL};
+    /**
+     * PUBLIC FINAL
+     */
+    Modifier[] PUBLIC_FINAL = { Modifier.PUBLIC, Modifier.FINAL };
 
-    Modifier[] PRIVATE_STATIC_FINAL = {Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL};
+    /**
+     * PRIVATE STATIC FINAL
+     */
+    Modifier[] PRIVATE_STATIC_FINAL = { Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL };
 
-    Modifier[] PRIVATE_STATIC = {Modifier.PRIVATE, Modifier.STATIC};
+    /**
+     * PRIVATE STATIC
+     */
+    Modifier[] PRIVATE_STATIC = { Modifier.PRIVATE, Modifier.STATIC };
 
-    Modifier[] PUBLIC_STATIC = {Modifier.PUBLIC, Modifier.STATIC};
+    /**
+     * PUBLIC STATIC
+     */
+    Modifier[] PUBLIC_STATIC = { Modifier.PUBLIC, Modifier.STATIC };
 
+    /**
+     * static method
+     *
+     * @param methodName  method name
+     * @param returnKlass return type
+     * @return MethodSpec.Builder
+     */
     static MethodSpec.Builder staticMethod(String methodName, TypeName returnKlass) {
         return publicMethod(methodName, false, returnKlass)
-            .addModifiers(Modifier.STATIC);
+                .addModifiers(Modifier.STATIC);
     }
 
+    /**
+     * static method
+     *
+     * @param methodName  method name
+     * @param returnKlass return type
+     * @return MethodSpec.Builder
+     */
     static MethodSpec.Builder staticMethod(String methodName, Class returnKlass) {
         return publicMethod(methodName, false, ClassName.get(returnKlass))
-            .addModifiers(Modifier.STATIC);
+                .addModifiers(Modifier.STATIC);
     }
 
     /**
      * 定义方式如下的方法
+     * 
      * <pre>
      * public abstract Xyz methodName(...);
      * </pre>
      *
-     * @param methodName name of method
-     * @param isOverride 是否注解@Override
+     * @param methodName  name of method
+     * @param isOverride  是否注解@Override
+     * @param returnKlass return type
      * @return ignore
      */
     static MethodSpec.Builder publicMethod(String methodName, boolean isOverride, TypeName returnKlass) {
@@ -59,18 +90,46 @@ public interface FilerKit {
         return builder;
     }
 
+    /**
+     * public method
+     *
+     * @param methodName  name of method
+     * @param returnKlass return type
+     * @return MethodSpec.Builder
+     */
     static MethodSpec.Builder publicMethod(String methodName, Class returnKlass) {
         return publicMethod(methodName, true, returnKlass == null ? null : ClassName.get(returnKlass));
     }
 
+    /**
+     * public method
+     *
+     * @param methodName  name of method
+     * @param returnKlass return type
+     * @return MethodSpec.Builder
+     */
     static MethodSpec.Builder publicMethod(String methodName, TypeName returnKlass) {
         return publicMethod(methodName, true, returnKlass);
     }
 
+    /**
+     * protected method
+     *
+     * @param methodName  name of method
+     * @param returnKlass return type
+     * @return MethodSpec.Builder
+     */
     static MethodSpec.Builder protectMethod(String methodName, Class returnKlass) {
         return protectMethod(methodName, ClassName.get(returnKlass));
     }
 
+    /**
+     * protected method
+     *
+     * @param methodName  name of method
+     * @param returnKlass return type
+     * @return MethodSpec.Builder
+     */
     static MethodSpec.Builder protectMethod(String methodName, TypeName returnKlass) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(methodName);
         builder.addAnnotation(Override.class);
@@ -81,12 +140,18 @@ public interface FilerKit {
         return builder;
     }
 
+    /**
+     * suppress warnings
+     *
+     * @param values warnings
+     * @return AnnotationSpec
+     */
     @SuppressWarnings("all")
     static AnnotationSpec suppressWarnings(String... values) {
         String format = Stream.of(values).map(s -> "$S")
-            .collect(Collectors.joining(", ", "{", "}"));
+                .collect(Collectors.joining(", ", "{", "}"));
         return AnnotationSpec.builder(SuppressWarnings.class)
-            .addMember("value", format, values)
-            .build();
+                .addMember("value", format, values)
+                .build();
     }
 }

@@ -20,6 +20,11 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 @SuppressWarnings("unused")
 public abstract class FluentClassName {
 
+    /**
+     * getNoSuffix
+     *
+     * @return String
+     */
     public abstract String getNoSuffix();
 
     /**
@@ -31,17 +36,42 @@ public abstract class FluentClassName {
         return MybatisUtil.lowerFirst(this.getNoSuffix(), "");
     }
 
-
+    /**
+     * getBasePack
+     *
+     * @return String
+     */
     public abstract String getBasePack();
 
+    /**
+     * getEntityPack
+     *
+     * @return String
+     */
     public abstract String getEntityPack();
 
+    /**
+     * getPackageName
+     *
+     * @param suffix 后缀
+     * @return String
+     */
     public String getPackageName(String suffix) {
         return this.getBasePack() + "." + suffix;
     }
 
+    /**
+     * getClassName
+     *
+     * @return String
+     */
     public abstract String getClassName();
 
+    /**
+     * getFields
+     *
+     * @return List
+     */
     public abstract List<CommonField> getFields();
 
     /**
@@ -50,6 +80,11 @@ public abstract class FluentClassName {
     @Getter(AccessLevel.NONE)
     private String All_Fields = null;
 
+    /**
+     * getAllFields
+     *
+     * @return String
+     */
     public String getAllFields() {
         if (this.All_Fields == null) {
             All_Fields = this.getFields().stream().map(CommonField::getColumn).collect(Collectors.joining(", "));
@@ -75,8 +110,8 @@ public abstract class FluentClassName {
      */
     public ClassName updater() {
         return ClassName.get(
-            UpdaterFiler.getPackageName(this),
-            UpdaterFiler.getClassName(this));
+                UpdaterFiler.getPackageName(this),
+                UpdaterFiler.getClassName(this));
     }
 
     /**
@@ -86,8 +121,8 @@ public abstract class FluentClassName {
      */
     public ClassName entityMapping() {
         return ClassName.get(
-            EntityMappingFiler.getPackageName(this),
-            EntityMappingFiler.getClassName(this));
+                EntityMappingFiler.getPackageName(this),
+                EntityMappingFiler.getClassName(this));
     }
 
     /**
@@ -97,8 +132,8 @@ public abstract class FluentClassName {
      */
     public ClassName mapper() {
         return ClassName.get(
-            MapperFiler.getPackageName(this),
-            MapperFiler.getClassName(this));
+                MapperFiler.getPackageName(this),
+                MapperFiler.getClassName(this));
     }
 
     /**
@@ -108,8 +143,8 @@ public abstract class FluentClassName {
      */
     public ClassName baseDao() {
         return ClassName.get(
-            BaseDaoFiler.getPackageName(this),
-            BaseDaoFiler.getClassName(this));
+                BaseDaoFiler.getPackageName(this),
+                BaseDaoFiler.getClassName(this));
     }
 
     /**
@@ -119,83 +154,138 @@ public abstract class FluentClassName {
      */
     public ClassName query() {
         return ClassName.get(
-            QueryFiler.getPackageName(this),
-            QueryFiler.getClassName(this));
+                QueryFiler.getPackageName(this),
+                QueryFiler.getClassName(this));
     }
 
+    /**
+     * ClassName of XyzQuery
+     *
+     * @return Query ClassName
+     */
     public ClassName wrapperHelper() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this));
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this));
     }
 
+    /**
+     * ClassName of XyzQueryWhere
+     *
+     * @return Query ClassName
+     */
     public ClassName queryWhere() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_QueryWhere);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_QueryWhere);
     }
 
+    /**
+     * ClassName of XyzUpdateWhere
+     *
+     * @return Update ClassName
+     */
     public ClassName updateWhere() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_UpdateWhere);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_UpdateWhere);
     }
 
+    /**
+     * ClassName of XyzSelector
+     *
+     * @return Selector ClassName
+     */
     public ClassName selector() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_Selector);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_Selector);
     }
 
+    /**
+     * ClassName of XyzGroupBy
+     *
+     * @return GroupBy ClassName
+     */
     public ClassName groupBy() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_GroupBy);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_GroupBy);
     }
 
+    /**
+     * ClassName of XyzHaving
+     *
+     * @return Having ClassName
+     */
     public ClassName having() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_Having);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_Having);
     }
 
+    /**
+     * ClassName of XyzQueryOrderBy
+     *
+     * @return QueryOrderBy ClassName
+     */
     public ClassName queryOrderBy() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_QueryOrderBy);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_QueryOrderBy);
     }
 
+    /**
+     * ClassName of XyzUpdateOrderBy
+     *
+     * @return UpdateOrderBy ClassName
+     */
     public ClassName updateOrderBy() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_UpdateOrderBy);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_UpdateOrderBy);
     }
 
+    /**
+     * ClassName of XyzUpdateSetter
+     *
+     * @return UpdateSetter ClassName
+     */
     public ClassName updateSetter() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_UpdateSetter);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_UpdateSetter);
     }
 
+    /**
+     * ClassName of XyzSegment
+     *
+     * @return Segment ClassName
+     */
     public ClassName segment() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_ISegment);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_ISegment);
     }
 
+    /**
+     * ClassName of XyzFormSetter
+     *
+     * @return FormSetter ClassName
+     */
     public ClassName formSetter() {
         return ClassName.get(
-            SegmentFiler.getPackageName(this),
-            SegmentFiler.getClassName(this),
-            Suffix_EntityFormSetter);
+                SegmentFiler.getPackageName(this),
+                SegmentFiler.getClassName(this),
+                Suffix_EntityFormSetter);
     }
 }

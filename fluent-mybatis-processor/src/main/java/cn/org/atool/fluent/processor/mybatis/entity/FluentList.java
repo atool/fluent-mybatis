@@ -30,6 +30,11 @@ public class FluentList {
 
     private static final Map<String, FluentEntity> map = new HashMap<>();
 
+    /**
+     * 添加FluentEntity
+     *
+     * @param fluent FluentEntity
+     */
     public static void addFluent(FluentEntity fluent) {
         map.put(fluent.getClassName(), fluent);
         String _package = fluent.getBasePack();
@@ -39,6 +44,12 @@ public class FluentList {
         fluents.get(_package).add(fluent);
     }
 
+    /**
+     * 获取FluentEntity
+     *
+     * @param entityName entity name
+     * @return FluentEntity
+     */
     public static FluentEntity getFluentEntity(String entityName) {
         return map.get(entityName);
     }
@@ -111,12 +122,11 @@ public class FluentList {
      */
     private static List<AbstractFiler> generateJavaFile(FluentEntity fluent) {
         return Arrays.asList(
-            new MapperFiler(fluent),
-            new EntityMappingFiler(fluent),
-            new SegmentFiler(fluent),
-            new QueryFiler(fluent),
-            new UpdaterFiler(fluent),
-            new BaseDaoFiler(fluent)
-        );
+                new MapperFiler(fluent),
+                new EntityMappingFiler(fluent),
+                new SegmentFiler(fluent),
+                new QueryFiler(fluent),
+                new UpdaterFiler(fluent),
+                new BaseDaoFiler(fluent));
     }
 }

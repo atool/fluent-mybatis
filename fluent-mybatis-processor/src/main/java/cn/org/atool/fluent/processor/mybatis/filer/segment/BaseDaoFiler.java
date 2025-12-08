@@ -23,16 +23,33 @@ import static cn.org.atool.fluent.processor.mybatis.filer.segment.MapperFiler.ge
  */
 @SuppressWarnings("rawtypes")
 public class BaseDaoFiler extends AbstractFiler {
+    /**
+     * 构造函数
+     *
+     * @param fluentEntity FluentEntity
+     */
     public BaseDaoFiler(FluentEntity fluentEntity) {
         super(fluentEntity);
         this.packageName = fluentEntity.getPackageName(Pack_BaseDao);
         this.klassName = fluentEntity.getNoSuffix() + Suffix_BaseDao;
     }
 
+    /**
+     * 获取类名
+     *
+     * @param fluentEntity FluentEntity
+     * @return 类名
+     */
     public static String getClassName(FluentClassName fluentEntity) {
         return fluentEntity.getNoSuffix() + Suffix_BaseDao;
     }
 
+    /**
+     * 获取包名
+     *
+     * @param fluentEntity FluentEntity
+     * @return 包名
+     */
     public static String getPackageName(FluentClassName fluentEntity) {
         return fluentEntity.getPackageName(Pack_BaseDao);
     }
@@ -45,18 +62,19 @@ public class BaseDaoFiler extends AbstractFiler {
     @Override
     protected void build(TypeSpec.Builder builder) {
         builder.addModifiers(Modifier.ABSTRACT)
-            .superclass(paraType(BaseDao.class, fluent.entity(), fluent.query(), fluent.updater()));
+                .superclass(paraType(BaseDao.class, fluent.entity(), fluent.query(), fluent.updater()));
 
         builder.addField(this.f_mapper())
-            .addField(this.f_instance())
-            .addMethod(this.m_initInstance())
-            .addMethod(this.m_mapper())
-            .addMethod(this.m_defaults())
-            .addMethod(this.m_setMapper());
+                .addField(this.f_instance())
+                .addMethod(this.m_initInstance())
+                .addMethod(this.m_mapper())
+                .addMethod(this.m_defaults())
+                .addMethod(this.m_setMapper());
     }
 
     /**
      * protected EntityMapper mapper;
+     * 
      * <pre>
      * 从 @Autowired + @Qualifier 改为 @Resource
      * 方便未依赖spring环境使用
@@ -66,32 +84,31 @@ public class BaseDaoFiler extends AbstractFiler {
      */
     private FieldSpec f_mapper() {
         return FieldSpec.builder(fluent.mapper(), "mapper")
-            .addModifiers(Modifier.PROTECTED)
-            .build();
+                .addModifiers(Modifier.PROTECTED)
+                .build();
     }
 
     private FieldSpec f_instance() {
         return FieldSpec.builder(fluent.baseDao(), "INSTANCE")
-            .addModifiers(Modifier.PROTECTED, Modifier.STATIC)
-            .build();
+                .addModifiers(Modifier.PROTECTED, Modifier.STATIC)
+                .build();
     }
 
     private MethodSpec m_initInstance() {
         return MethodSpec.methodBuilder("initInstance")
-            .addAnnotation(AnnotationKit.getPostConstructClass())
-            .addStatement(super.codeBlock("INSTANCE = this"))
-            .addModifiers(Modifier.PROTECTED)
-            .build();
+                .addAnnotation(AnnotationKit.getPostConstructClass())
+                .addStatement(super.codeBlock("INSTANCE = this"))
+                .addModifiers(Modifier.PROTECTED)
+                .build();
     }
 
     private MethodSpec m_setMapper() {
         return FilerKit.publicMethod("setMapper", (Class) null)
-            .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Resource)
-                .addMember("name", "$S", getMapperName(fluent)).build()
-            )
-            .addParameter(ParameterizedTypeName.get(ClassName.get(IMapper.class), fluent.entity()), "mapper")
-            .addStatement("this.mapper = ($T)mapper", fluent.mapper())
-            .build();
+                .addAnnotation(AnnotationSpec.builder(ClassNames2.Spring_Resource)
+                        .addMember("name", "$S", getMapperName(fluent)).build())
+                .addParameter(ParameterizedTypeName.get(ClassName.get(IMapper.class), fluent.entity()), "mapper")
+                .addStatement("this.mapper = ($T)mapper", fluent.mapper())
+                .build();
     }
 
     /**
@@ -101,14 +118,14 @@ public class BaseDaoFiler extends AbstractFiler {
      */
     private MethodSpec m_mapper() {
         return FilerKit.publicMethod("mapper", fluent.mapper())
-            .addStatement(super.codeBlock("return mapper"))
-            .build();
+                .addStatement(super.codeBlock("return mapper"))
+                .build();
     }
 
     private MethodSpec m_defaults() {
         return FilerKit.protectMethod("defaults", ClassName.get(IDefaultGetter.class))
-            .addStatement("return $T.MAPPING", fluent.entityMapping())
-            .build();
+                .addStatement("return $T.MAPPING", fluent.entityMapping())
+                .build();
     }
 
     @Override

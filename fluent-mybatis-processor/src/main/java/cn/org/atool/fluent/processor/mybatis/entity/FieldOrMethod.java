@@ -25,6 +25,12 @@ public abstract class FieldOrMethod {
      */
     protected final TypeName javaType;
 
+    /**
+     * 构造函数
+     *
+     * @param name     名称
+     * @param javaType 类型
+     */
     protected FieldOrMethod(String name, TypeName javaType) {
         this.name = name;
         this.javaType = javaType;

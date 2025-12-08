@@ -3,16 +3,16 @@ package cn.org.atool.fluent.processor.mybatis.filer.segment;
 import cn.org.atool.fluent.mybatis.base.crud.IWrapper;
 import cn.org.atool.fluent.mybatis.base.model.FieldMapping;
 import cn.org.atool.fluent.mybatis.functions.IAggregate;
-import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
-import cn.org.atool.fluent.processor.mybatis.entity.CommonField;
-import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
-import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
 import cn.org.atool.fluent.mybatis.segment.*;
 import cn.org.atool.fluent.mybatis.segment.where.BooleanWhere;
 import cn.org.atool.fluent.mybatis.segment.where.NumericWhere;
 import cn.org.atool.fluent.mybatis.segment.where.ObjectWhere;
 import cn.org.atool.fluent.mybatis.segment.where.StringWhere;
 import cn.org.atool.fluent.mybatis.utility.MybatisUtil;
+import cn.org.atool.fluent.processor.mybatis.base.FluentClassName;
+import cn.org.atool.fluent.processor.mybatis.entity.CommonField;
+import cn.org.atool.fluent.processor.mybatis.entity.FluentEntity;
+import cn.org.atool.fluent.processor.mybatis.filer.AbstractFiler;
 import com.palantir.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -24,9 +24,10 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
 import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.PUBLIC_STATIC_FINAL;
 import static cn.org.atool.fluent.processor.mybatis.filer.FilerKit.suppressWarnings;
 
-*Query&Updater辅助类文件生成**
-
-@author wudarui
+/**
+ * Query&Updater辅助类文件生成**
+ *
+ * @author wudarui
  */
 @SuppressWarnings({"rawtypes"})
 public class SegmentFiler extends AbstractFiler {
