@@ -9,7 +9,7 @@
         <version>1.0.5</version>
     </parent>
     <artifactId>fluent-mybatis-parent</artifactId>
-    <version>1.9.11</version>
+    <version>1.10.0</version>
     <packaging>pom</packaging>
     <name>fluent mybatis parent pom</name>
     <description>fluent mybatis parent pom</description>
@@ -42,8 +42,8 @@
         <module>fluent-mybatis-annotation</module>
         <module>fluent-mybatis</module>
         <module>fluent-mybatis-processor</module>
-<!--        <module>fluent-mybatis-test</module>-->
         <module>fluent-mybatis-boot-starter</module>
+        <!--        <module>fluent-mybatis-test</module>-->
     </modules>
     <dependencyManagement>
         <dependencies>

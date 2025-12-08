@@ -163,13 +163,6 @@ public class CommonSqlKit implements SqlKit {
         return !withPk && tableId != null && tableId.isSeqBefore(mapping.db());
     }
 
-    /**
-     * https://blog.csdn.net/w_y_t_/article/details/51416201
-     * <p>
-     * https://www.cnblogs.com/xunux/p/4882761.html
-     * <p>
-     * https://blog.csdn.net/weixin_41175479/article/details/80608512
-     */
     protected void insertSelect(IMapping mapping, TableId tableId, boolean withPk, MapperSql sql, List<Map> maps, List<FieldMapping> nonFields) {
         List<String> columns = new ArrayList<>();
         if (!withPk && tableId != null) {
@@ -249,7 +242,7 @@ public class CommonSqlKit implements SqlKit {
         if (mapping.longTypeOfLogicDelete()) {
             updater.updateSet(logicDeleteColumn, currentTimeMillis());
         } else {
-            updater.updateSet(logicDeleteColumn, true);
+            updater.updateSet(logicDeleteColumn, mapping.boolTypeOfLogicDelete() ? true : 1);
         }
         String primary = mapping.primaryId(true);
         if (ids.length == 1) {
@@ -299,7 +292,7 @@ public class CommonSqlKit implements SqlKit {
         if (mp.longTypeOfLogicDelete()) {
             update.updateSet(logicDeleted, currentTimeMillis());
         } else {
-            update.updateSet(logicDeleted, true);
+            update.updateSet(logicDeleted, mp.boolTypeOfLogicDelete() ? true : 1);
         }
     }
 

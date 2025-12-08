@@ -5,7 +5,7 @@
     <parent>
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
-        <version>1.9.11</version>
+        <version>1.10.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,7 +25,7 @@
         </developer>
     </developers>
     <properties>
-        <fluent-generator.version>1.5.0</fluent-generator.version>
+        <fluent-generator.version>1.5.1</fluent-generator.version>
         <skipTests>true</skipTests>
     </properties>
     <licenses>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>com.github.atool</groupId>
             <artifactId>generator</artifactId>
-            <version>1.5.0</version>
+            <version>${fluent-generator.version}</version>
         </dependency>
 
         <dependency>
