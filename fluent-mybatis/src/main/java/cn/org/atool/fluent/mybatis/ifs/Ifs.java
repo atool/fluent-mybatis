@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 /**
  * 分支设置
  *
- * @param <T>
+ * @param <T> 值类型
  * @author wudarui
  */
 @Getter

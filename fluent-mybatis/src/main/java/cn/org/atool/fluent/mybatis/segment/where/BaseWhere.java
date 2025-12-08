@@ -13,14 +13,11 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.*;
 /**
  * 基础比较: apply, is null, not null, eq, ne
  *
- * @param <WHERE>
- * @param <NQ>
+ * @param <WHERE> 条件设置器类型
+ * @param <NQ>    对应的查询器类型
  */
-@SuppressWarnings({"unchecked", "unused", "rawtypes"})
-public interface BaseWhere<
-    WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IBaseQuery<?, NQ>
-    > {
+@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
+public interface BaseWhere<WHERE extends WhereBase<WHERE, ?, NQ>, NQ extends IBaseQuery<?, NQ>> {
 
     /**
      * is null
@@ -40,7 +37,6 @@ public interface BaseWhere<
     default WHERE isNull(boolean condition) {
         return this.apply(args -> condition, IS_NULL);
     }
-
 
     /**
      * not null

@@ -13,14 +13,12 @@ import static cn.org.atool.fluent.mybatis.base.model.SqlOp.NOT_LIKE;
 /**
  * 字符串相关的比较
  *
- * @param <WHERE>
- * @param <NQ>
+ * @param <WHERE> 条件设置器类型
+ * @param <NQ>    对应的查询器类型
  */
-@SuppressWarnings({"unused"})
-public interface StringWhere<
-    WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IBaseQuery<?, NQ>
-    > extends ObjectWhere<WHERE, NQ> {
+@SuppressWarnings({ "unused" })
+public interface StringWhere<WHERE extends WhereBase<WHERE, ?, NQ>, NQ extends IBaseQuery<?, NQ>>
+        extends ObjectWhere<WHERE, NQ> {
 
     /**
      * like '%value%'

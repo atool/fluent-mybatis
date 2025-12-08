@@ -36,7 +36,6 @@ public interface IProtectedDao<E extends IEntity> {
      * @param fields 要插入的字段
      * @param query  select数据
      * @return 拷贝插入的记录数
-     * @see SqlProvider#insertSelect(Map)
      */
     default int insertSelect(String[] fields, IQuery query) {
         return this.mapper().insertSelect(fields, query);
@@ -48,7 +47,6 @@ public interface IProtectedDao<E extends IEntity> {
      * @param fields 要插入的字段
      * @param query  select数据
      * @return 拷贝插入的记录数
-     * @see SqlProvider#insertSelect(Map)
      */
     default int insertSelect(FieldMapping[] fields, IQuery query) {
         return this.insertSelect(Stream.of(fields).map(c -> c.column).toArray(String[]::new), query);

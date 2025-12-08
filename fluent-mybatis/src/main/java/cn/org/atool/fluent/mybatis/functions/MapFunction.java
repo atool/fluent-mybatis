@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * Map对象映射Function
  *
- * @param <R>
+ * @param <R> 返回值类型
  * @author wudarui
  */
 @SuppressWarnings("rawtypes")

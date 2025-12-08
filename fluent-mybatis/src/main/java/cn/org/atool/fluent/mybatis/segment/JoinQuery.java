@@ -18,13 +18,13 @@ import static cn.org.atool.fluent.mybatis.utility.StrConstant.UNION_ALL;
 /**
  * 联合查询条件
  *
- * @param <QL>
+ * @param <QL> 左查询类型
  */
-@SuppressWarnings({"rawtypes", "unused", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unused", "unchecked" })
 @Accessors(chain = true)
 public class JoinQuery<QL extends BaseQuery<?, QL>>
-    extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
-    implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinToBuilder<QL> {
+        extends BaseWrapper<IEntity, JoinQuery<QL>, JoinQuery<QL>>
+        implements IBaseQuery<IEntity, JoinQuery<QL>>, JoinToBuilder<QL> {
     /**
      * 主查询条件
      */
@@ -75,7 +75,7 @@ public class JoinQuery<QL extends BaseQuery<?, QL>>
     }
 
     private <QR extends BaseQuery<?, QR>> JoinOn<QL, QR, JoinToBuilder<QL>> join(
-        JoinType joinType, QR query) {
+            JoinType joinType, QR query) {
         this.assertQueryAlias(query);
         query.sharedParameter(this.query);
 

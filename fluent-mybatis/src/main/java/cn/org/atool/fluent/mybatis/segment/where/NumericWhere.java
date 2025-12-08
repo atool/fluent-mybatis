@@ -12,14 +12,12 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
 /**
  * 数字相关的比较
  *
- * @param <WHERE>
- * @param <NQ>
+ * @param <WHERE> 条件设置器类型
+ * @param <NQ>    对应的查询器类型
  */
-@SuppressWarnings({"unused"})
-public interface NumericWhere<
-    WHERE extends WhereBase<WHERE, ?, NQ>,
-    NQ extends IBaseQuery<?, NQ>
-    > extends ObjectWhere<WHERE, NQ> {
+@SuppressWarnings({ "unused" })
+public interface NumericWhere<WHERE extends WhereBase<WHERE, ?, NQ>, NQ extends IBaseQuery<?, NQ>>
+        extends ObjectWhere<WHERE, NQ> {
     /**
      * in (values)
      *
@@ -40,7 +38,6 @@ public interface NumericWhere<
     default WHERE in(int[] values, Predicate<int[]> when) {
         return this.apply(args -> when.test(values), IN, toArray(values));
     }
-
 
     /**
      * in (values)
@@ -105,7 +102,6 @@ public interface NumericWhere<
     default WHERE notIn(int[] values, Predicate<int[]> when) {
         return this.apply(args -> when.test(values), NOT_IN, toArray(values));
     }
-
 
     /**
      * not in (values)

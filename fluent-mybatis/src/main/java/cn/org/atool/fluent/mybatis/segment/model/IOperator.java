@@ -10,10 +10,10 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.toArray;
 /**
  * 比较操作
  *
- * @param <R>
+ * @param <R> 返回值类型
  * @author wudarui
  */
-@SuppressWarnings({"unused", "rawtypes"})
+@SuppressWarnings({ "unused", "rawtypes" })
 public interface IOperator<R> {
     /**
      * 执行比较操作

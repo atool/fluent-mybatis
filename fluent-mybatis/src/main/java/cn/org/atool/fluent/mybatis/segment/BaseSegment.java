@@ -18,11 +18,11 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertNotNull;
 /**
  * BaseSegment
  *
- * @param <R>
- * @param <W>
- * @author darui.wu  2020/6/22 10:47 上午
+ * @param <R> 返回值类型
+ * @param <W> 查询器类型
+ * @author darui.wu 2020/6/22 10:47 上午
  */
-@SuppressWarnings({"unchecked", "rawtypes", "unused"})
+@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
     /**
      * 当前查询（更新）器
@@ -88,9 +88,11 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
      *
      * @param entity   实例
      * @param consumer 设置条件
+     * @param allowPk  是否允许主键参与条件
      * @param columns  要设置条件的字段
      */
-    protected void byEntity(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> columns) {
+    protected void byEntity(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk,
+            List<String> columns) {
         assertNotNull("entity", entity);
         Map<String, Object> map = entity.toColumnMap(true);
 
@@ -107,14 +109,15 @@ public abstract class BaseSegment<R, W extends IWrapper<?, W, ?>> {
                 continue;
             }
             if (!columns.isEmpty() && !columns.contains(column) ||
-                columns.isEmpty() && value == null) {
+                    columns.isEmpty() && value == null) {
                 continue;
             }
             consumer.accept(column, value);
         }
     }
 
-    protected void byExclude(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk, List<String> excludes) {
+    protected void byExclude(IEntity entity, BiConsumer<String, Object> consumer, boolean allowPk,
+            List<String> excludes) {
         assertNotNull("entity", entity);
         Map<String, Object> map = entity.toColumnMap(true);
         String pk = RefKit.primaryId(entity.entityClass());
