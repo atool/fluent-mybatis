@@ -6,12 +6,30 @@
         <artifactId>fluent-mybatis-parent</artifactId>
         <groupId>com.github.atool</groupId>
         <version>1.9.11</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fluent-mybatis-annotation</artifactId>
-
+    <name>fluent-mybatis-annotation</name>
+    <description>fluent-mybatis-annotation</description>
+    <url>https://github.com/atool/fluent-mybatis</url>
+    <scm>
+        <connection>scm:git:git://github.com/atool/fluent-mybatis.git</connection>
+        <developerConnection>scm:git:git://github.com/atool/fluent-mybatis.git</developerConnection>
+        <url>https://github.com/atool/fluent-mybatis</url>
+    </scm>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>davey.wu</name>
+            <email>darui.wu@163.com</email>
+        </developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>com.github.atool</groupId>
