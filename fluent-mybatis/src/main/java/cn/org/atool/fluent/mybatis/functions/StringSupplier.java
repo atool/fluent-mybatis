@@ -3,7 +3,7 @@ package cn.org.atool.fluent.mybatis.functions;
 import java.util.function.Supplier;
 
 /**
- * Supplier<String>
+ * Supplier&lt;String&gt;
  *
  * @author darui.wu
  */

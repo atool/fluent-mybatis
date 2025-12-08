@@ -24,7 +24,7 @@ import static cn.org.atool.fluent.mybatis.utility.MybatisUtil.assertTrue;
  * @param <E> 实体类型
  * @author wudarui
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public interface IQuery<E extends IEntity> extends IOptMapping {
     /**
      * distinct 查询
@@ -134,6 +134,7 @@ public interface IQuery<E extends IEntity> extends IOptMapping {
 
     /**
      * 根据Query定义执行后续操作
+     * 
      * <pre>
      *   要使用本方法
      *   需要定义 {@link cn.org.atool.fluent.mybatis.spring.MapperFactory} spring bean
@@ -166,7 +167,7 @@ public interface IQuery<E extends IEntity> extends IOptMapping {
      * @param executor 具体查询操作
      * @param <R>      结果类型
      * @return 结果
-     * @deprecated replaced by {@link #of(IRichMapper).method(...)}
+     * @deprecated replaced by {@code #of(IRichMapper).method(...)}
      */
     @Deprecated
     default <R> R execute(Function<IQuery<E>, R> executor) {

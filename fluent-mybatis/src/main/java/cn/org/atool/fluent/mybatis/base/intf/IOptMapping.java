@@ -13,7 +13,7 @@ public interface IOptMapping {
     /**
      * 数据库映射定义
      *
-     * @return Optional<IMapping>
+     * @return Optional&lt;IMapping&gt;
      */
     Optional<IMapping> mapping();
 }

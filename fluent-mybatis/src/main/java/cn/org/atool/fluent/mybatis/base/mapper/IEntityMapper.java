@@ -28,7 +28,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author wudarui 2019-06-25 14:00
  */
-@SuppressWarnings({"rawtypes", "UnusedReturnValue", "unchecked"})
+@SuppressWarnings({ "rawtypes", "UnusedReturnValue", "unchecked" })
 public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMapping {
 
     /**
@@ -118,7 +118,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * <pre>
      * 传入多个Update时, 需要数据库支持
-     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * 比如MySql需要在jdbc url链接中附加设置 &amp;allowMultiQueries=true
      * </pre>
      *
      * @param updates 更新列表
@@ -131,7 +131,6 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
     /**
      * 根据 query 条件，查询全部记录
      * 注意： 只返回第一个字段的值
-     * </p>
      *
      * @param query 实体对象封装操作类（可以为 null）
      * @return ignore
@@ -187,7 +186,7 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      *
      * <pre>
      * 传入多个操作时, 需要数据库支持
-     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * 比如MySql需要在jdbc url链接中附加设置 &amp;allowMultiQueries=true
      * </pre>
      *
      * @param crud 增删改操作
@@ -200,7 +199,8 @@ public interface IEntityMapper<E extends IEntity> extends IMapper<E>, IHasMappin
      * 调用存储过程
      *
      * @param procedure 存储过程及参数, 比如:
-     *                  procedureName(#{p.input1, mode=IN, jdbcType=INTEGER}, #{p.output1, mode=OUT, jdbcType=INTEGER})
+     *                  procedureName(#{p.input1, mode=IN, jdbcType=INTEGER},
+     *                  #{p.output1, mode=OUT, jdbcType=INTEGER})
      * @param parameter 存储过程引用的入参和出参设置对象, 以前缀 "p." 引用属性
      */
     @Options(statementType = StatementType.CALLABLE)

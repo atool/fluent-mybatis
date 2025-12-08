@@ -16,9 +16,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * PostgreSQL JSONB 类型处理器 - List<Long>
+ * PostgreSQL JSONB 类型处理器 - List&lt;Long&gt;
  * <p>
- * 将 Java 的 List<Long> 类型映射为 PostgreSQL 的 JSONB 类型
+ * 将 Java 的 List&lt;Long&gt; 类型映射为 PostgreSQL 的 JSONB 类型
  * <p>
  * 使用示例：
  *
@@ -41,7 +41,7 @@ public class PgJsonbLongListTypeHandler extends BaseTypeHandler<List<Long>> {
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, List<Long> parameter, JdbcType jdbcType)
-        throws SQLException {
+            throws SQLException {
         try {
             PGobject jsonObject = new PGobject();
             jsonObject.setType("jsonb");

@@ -30,7 +30,7 @@ public interface Fragments {
     /**
      * 构造IFragment
      *
-     * @param supplier Supplier<String>
+     * @param supplier Supplier&lt;String&gt;
      * @return IFragment
      */
     static IFragment fragment(Supplier<String> supplier) {

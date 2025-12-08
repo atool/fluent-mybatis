@@ -15,7 +15,7 @@ public interface IToMap {
     /**
      * 实现对象转map操作
      *
-     * @return Map<String, Object>
+     * @return Map&lt;String, Object&gt;
      */
     default Map<String, Object> toMap() {
         return toMap(this);
@@ -25,7 +25,7 @@ public interface IToMap {
      * 实现对象转map操作
      *
      * @param obj 目标对象
-     * @return Map<String, Object>
+     * @return Map&lt;String, Object&gt;
      */
     static Map<String, Object> toMap(Object obj) {
         Map<String, Object> map = new HashMap<>();
@@ -37,7 +37,8 @@ public interface IToMap {
             try {
                 map.put(meta.fieldName, meta.getValue(obj));
             } catch (Exception e) {
-                throw new RuntimeException("Error getting value of property[" + meta.fieldName + "] of object[" + obj.getClass().getName() + "].", e);
+                throw new RuntimeException("Error getting value of property[" + meta.fieldName + "] of object["
+                        + obj.getClass().getName() + "].", e);
             }
         }
         return map;

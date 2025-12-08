@@ -19,7 +19,8 @@ import java.util.stream.Stream;
 
 /**
  * IDaoProtected: 被限制在Dao类中使用的方法, 只允许在子类中调用，不暴露给更高层的Service外部直接访问
- * * <p>
+ * *
+ * <p>
  * * ！！！！！！！！！！！！
  * * 理由：
  * * 不希望在更高层Service中直接构造Query, Update等具体查询条件, 希望对外接口是语义化的
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
  * @param <E> 实体类
  * @author Created by darui.wu on 2020/6/24.
  */
-@SuppressWarnings({"rawtypes", "unused"})
+@SuppressWarnings({ "rawtypes", "unused" })
 public interface IProtectedDao<E extends IEntity> {
     /**
      * insert into a_table(fields) select fields from b_table;
@@ -58,7 +59,7 @@ public interface IProtectedDao<E extends IEntity> {
      *
      * <pre>
      * 传入多个操作时, 需要数据库支持
-     * 比如MySql需要在jdbc url链接中附加设置 &allowMultiQueries=true
+     * 比如MySql需要在jdbc url链接中附加设置 &amp;allowMultiQueries=true
      * </pre>
      *
      * @param crud 增删改操作

@@ -34,11 +34,11 @@ import static java.util.stream.Collectors.toList;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes", "unchecked", "AlibabaClassNamingShouldBeCamel"})
+@SuppressWarnings({ "rawtypes", "unchecked", "AlibabaClassNamingShouldBeCamel" })
 @Getter
 public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends IUpdate<E>>
-    extends BaseDefaults<E, Q, U>
-    implements IMapping, IEntityKit {
+        extends BaseDefaults<E, Q, U>
+        implements IMapping, IEntityKit {
     /**
      * schema
      */
@@ -91,7 +91,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
     /**
      * 返回所有字段定义
      *
-     * @return List<FieldMapping>
+     * @return List&lt;FieldMapping&gt;
      */
     public abstract List<FieldMapping> allFields();
 
@@ -121,7 +121,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      *
      * @param entity      Entity
      * @param isProperty  true: 实体属性值, false: 数据库字段值
-     * @param allowedNull is allowed null, true:  允许空值, false:只允许非空值
+     * @param allowedNull is allowed null, true: 允许空值, false:只允许非空值
      * @return entity value map
      */
     private Map<String, Object> toMap(IEntity entity, boolean isProperty, boolean allowedNull, FieldMapping... fields) {
@@ -223,8 +223,7 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * 表查询需要带上schema的数据库类型
      */
     static final List<DbType> NEED_SCHEMA_DB = Arrays.asList(
-        DbType.DERBY, DbType.POSTGRE_SQL, DbType.SQL_SERVER2012, DbType.SQL_SERVER2005
-    );
+            DbType.DERBY, DbType.POSTGRE_SQL, DbType.SQL_SERVER2012, DbType.SQL_SERVER2005);
 
     @Override
     public DbType db() {
@@ -270,7 +269,8 @@ public abstract class AMapping<E extends IEntity, Q extends IQuery<E>, U extends
      * @param finder  find Ref 方法
      * @return ignore
      */
-    protected <R> AMapping ref(String refName, RefKeyFunc<E> src, boolean isList, RefKeyFunc<R> ref, IGetter<E> finder) {
+    protected <R> AMapping ref(String refName, RefKeyFunc<E> src, boolean isList, RefKeyFunc<R> ref,
+            IGetter<E> finder) {
         Ref_Keys.put(refName, RefKey.refKey(refName, isList, src, ref, finder));
         return this;
     }

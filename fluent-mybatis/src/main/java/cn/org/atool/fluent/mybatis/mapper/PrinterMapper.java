@@ -33,7 +33,7 @@ import static cn.org.atool.fluent.mybatis.mapper.FluentConst.*;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({ "rawtypes" })
 public class PrinterMapper implements IWrapperMapper {
     @Setter
     private static Configuration configuration = new Configuration();
@@ -138,7 +138,6 @@ public class PrinterMapper implements IWrapperMapper {
     public IMapping mapping() {
         return this.mapping;
     }
-
 
     private int simulate(String method, Object value) {
         Map values = SqlFunction.wrapperParameter(method, value);
@@ -250,10 +249,11 @@ public class PrinterMapper implements IWrapperMapper {
      *
      * @param mode       0: 输出'?'占位符语句; 1: 输出实际参数值语句; 2:输出mybatis #{prop} 占位符语句
      * @param mapping    fluent mybatis mapping
-     * @param simulators Consumer<IWrapperMapper>
+     * @param simulators Consumer&lt;IWrapperMapper&gt;
      * @return sql语句列表
      */
-    //Fix #I56PNZ: the Generic varargs are NOT changed in this method, so it is type safe.
+    // Fix #I56PNZ: the Generic varargs are NOT changed in this method, so it is
+    // type safe.
     @SafeVarargs
     public static List<String> print(int mode, IMapping mapping, Consumer<IWrapperMapper>... simulators) {
         try {

@@ -29,13 +29,10 @@ import static cn.org.atool.fluent.mybatis.utility.StrConstant.UNION_ALL;
  * @param <Q> 查询器
  * @author darui.wu 2020/6/17 3:13 下午
  */
-@SuppressWarnings({"unchecked", "rawtypes", "unused"})
-public abstract class BaseQuery<
-    E extends IEntity,
-    Q extends BaseQuery<E, Q>
-    >
-    extends BaseWrapper<E, Q, Q>
-    implements IBaseQuery<E, Q> {
+@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+public abstract class BaseQuery<E extends IEntity, Q extends BaseQuery<E, Q>>
+        extends BaseWrapper<E, Q, Q>
+        implements IBaseQuery<E, Q> {
 
     protected BaseQuery(StringSupplier table, StringSupplier alias, Class entityClass) {
         super(Fragments.fragment(table), alias, entityClass);
@@ -117,7 +114,7 @@ public abstract class BaseQuery<
 
     /**
      * <pre>
-     *  构造JoinBuild<左查询,右查询>
+     *  构造JoinBuild&lt;左查询,右查询&gt;
      * </pre>
      *
      * @param query 右查询
@@ -130,7 +127,7 @@ public abstract class BaseQuery<
 
     /**
      * <pre>
-     *  构造JoinBuild<左查询,右查询>
+     *  构造JoinBuild&lt;左查询,右查询&gt;
      * </pre>
      *
      * @param joinType 连接类型

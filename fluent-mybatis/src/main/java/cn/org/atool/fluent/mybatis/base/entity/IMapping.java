@@ -22,7 +22,7 @@ import java.util.function.Function;
  *
  * @author darui.wu
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库表名
@@ -44,14 +44,14 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
     /**
      * 返回数据库字段映射关系
      *
-     * @return Map<String, FieldMapping>
+     * @return Map&lt;String, FieldMapping&gt;
      */
     Map<String, FieldMapping> getColumnMap();
 
     /**
      * 返回Entity属性映射关系
      *
-     * @return Map<String, FieldMapping>
+     * @return Map&lt;String, FieldMapping&gt;
      */
     Map<String, FieldMapping> getFieldsMap();
 
@@ -128,7 +128,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      */
     default String versionColumn() {
         return this.findField(UniqueType.LOCK_VERSION)
-            .map(m -> m.column).orElse(null);
+                .map(m -> m.column).orElse(null);
     }
 
     /**
@@ -138,7 +138,7 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      */
     default String logicDeleteColumn() {
         return this.findField(UniqueType.LOGIC_DELETED)
-            .map(c -> c.column).orElse(null);
+                .map(c -> c.column).orElse(null);
     }
 
     /**
@@ -148,8 +148,8 @@ public interface IMapping extends IDefaultGetter, IHasDbType {
      */
     default boolean longTypeOfLogicDelete() {
         return this.findField(UniqueType.LOGIC_DELETED)
-            .map(m -> m.javaType == Long.class)
-            .orElse(false);
+                .map(m -> m.javaType == Long.class)
+                .orElse(false);
     }
 
     /**

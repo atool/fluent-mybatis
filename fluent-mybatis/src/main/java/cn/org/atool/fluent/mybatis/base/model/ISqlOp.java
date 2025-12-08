@@ -46,7 +46,7 @@ public interface ISqlOp {
      * sql 操作符
      * 如果自定义函数expression不为空, 则按自定义函数形式处理
      * 如果无自定义函数, 且是不定项参数方式(placeHolder中有%s), 则先处理不定项参数项为占位符'?'
-     * <p/>
+     * <p>
      * 最后根据占位符'?'和参数值, 给每个'?'分配具体的表达式项
      *
      * @param column     映射字段, 如果 = null, 表示非原始字段赋值
