@@ -149,4 +149,14 @@ public interface If {
     static <T> InIfs<T> testIn() {
         return new InIfs<>();
     }
+
+    /**
+     * 判断数组是否为 between 条件值
+     *
+     * @param values 条件值, 数组长度必须大于等于2且值不为 null
+     * @return ignore
+     */
+    static <T> boolean isBetween(T[] values) {
+        return values != null && values.length >= 2 && values[0] != null && values[1] != null;
+    }
 }

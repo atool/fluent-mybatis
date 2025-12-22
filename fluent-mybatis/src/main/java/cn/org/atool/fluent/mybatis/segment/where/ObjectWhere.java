@@ -414,6 +414,27 @@ public interface ObjectWhere<
     WHERE notIn(boolean condition, IQuery query);
 
     /**
+     * between value1 and value2
+     *
+     * @param values 条件值, 数组长度必须大于等于2且值不为 null
+     * @return 查询器或更新器
+     */
+    default <T> WHERE between(T[] values) {
+        return this.apply(BETWEEN, values);
+    }
+
+    /**
+     * between value1 and value2
+     *
+     * @param values 条件值
+     * @param when when.test(values) 为真时成立
+     * @return 查询器或更新器
+     */
+    default <T> WHERE between(T[] values, Predicate<T[]> when) {
+        return this.apply(args -> when.test(values), BETWEEN, values);
+    }
+
+    /**
      * @param value1 条件值
      * @param value2 条件值
      * @return 查询器或更新器
